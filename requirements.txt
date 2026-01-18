@@ -1,1 +1,31 @@
 # adding the required imports we will need, run from a virtual environment for ease of use 
+
+#Core HTTP + CONFIG
+requests>=2.32.3
+python-dotenv>=1.0.1
+
+# LLm - Client 
+openai>=1.55.0
+
+# data models and validation (JSON Contract)
+pydantic>=2.9.2
+jsonschema>=4.23.0
+
+#pubmed/ XML parsing 
+lxml>=5.3.0
+
+#CLI lgging/ pretty debug info 
+
+rich>=13.9.2
+
+# utils
+tqdm>=4.66.5
+
+# testing and code qualtiy
+
+pytest>=8.3.3
+ruff>=0.8.4
+
+# graphing visuals if we want them 
+graphviz>=0.20.3
+
