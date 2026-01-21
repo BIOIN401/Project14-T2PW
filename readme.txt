@@ -27,3 +27,4 @@ Download llama 3.1 8B and 3.3 70B  (leave this for now if you cant run it might 
 for now just get 3.1 8B 
 Go to developer section and start the server, and update the Model and URL in the env file 
 
+Now fire up the venv and install all dependencies as above 
