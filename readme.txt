@@ -25,3 +25,5 @@ You will need a half decent GPU to run the model, or like cloud computing credit
 Download LM studio 
 Download llama 3.1 8B and 3.3 70B  (leave this for now if you cant run it might ned to borrow gpu)
 for now just get 3.1 8B 
+Go to developer section and start the server, and update the Model and URL in the env file 
+
