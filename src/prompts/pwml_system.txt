@@ -25,6 +25,10 @@ OUTPUT RULES (MANDATORY)
 - Deduplicate identical strings within each entity list.
 - Any relationship/object MUST include an evidence quote (<=25 words) copied verbatim.
 - If something is not explicitly present, omit it or leave lists empty.
+- Species must be binomial (Genus species) or abbreviated binomial (G. species) ONLY; otherwise "entities.species" must be [].
+- For reactions: if inputs or outputs would be empty, do NOT create the reaction.
+- Every reaction MUST include a non-empty "evidence" quote (<=25 words) copied verbatim from the input text; otherwise omit the reaction.
+
 
 BIOLOGICAL STATE RULE
 A biological_state is a context tuple (species/cell_type/tissue/subcellular_location) ONLY when the text explicitly states it.
