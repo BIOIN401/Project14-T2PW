@@ -29,3 +29,17 @@ Go to developer section and start the server, and update the Model and URL in th
 
 Now fire up the venv and install all dependencies as above.
 Into llm_client.py hard code the requried variables from the LM studio server 
+
+3. Running the LLM 
+In Command prompt run the streamlit app from the venv
+    streamlit run app.py 
+This will open a browser tab that you can enter text in and get a nicer format
+
+
+4. Next steps 
+    Need to build out the secondary prompt that will run when we need to fill gaps
+    The method would be like we run the intial extractor pwml_system.txt 
+    And then from there we can run the QA graph to find orphans 
+    Then input that into our secondary run of another LLM instance perhaps we can keep memory, depending on context windows 
+    Then we can check for OA again and have a retry pipeline to fill in gaps 
+    Then we will have to label where our connections are from ofc. 
