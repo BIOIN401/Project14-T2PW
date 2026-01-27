@@ -42,4 +42,4 @@ This will open a browser tab that you can enter text in and get a nicer format
     And then from there we can run the QA graph to find orphans 
     Then input that into our secondary run of another LLM instance perhaps we can keep memory, depending on context windows 
     Then we can check for OA again and have a retry pipeline to fill in gaps 
-    Then we will have to label where our connections are from ofc. 
+    Then we will have to label where our connections are from. 
