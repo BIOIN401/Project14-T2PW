@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "n_reactions": 4,
+    "n_transports": 0,
+    "n_interactions": 0,
+    "n_reaction_coupled_transports": 0
+  },
+  "n_nodes": 11,
+  "n_edges": 0,
+  "n_components": 11,
+  "main_component_size": 1,
+  "orphan_components": [
+    {
+      "size": 1,
+      "nodes": [
+        "compound:glutathione"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "compound:glycine"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "compound:cysteine"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "compound:glutamate"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "compound:gamma-glutamylcysteine"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "compound:GSH"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "protein:glutamate-cysteine ligase"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "protein:glutathione synthetase"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "protein:GSH synthetase"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "protein:gamma-glutamylcysteine synthetase"
+      ]
+    }
+  ],
+  "dangling_nodes": [
+    {
+      "node": "compound:GSH",
+      "degree": 0
+    },
+    {
+      "node": "compound:L-Glutamic acid",
+      "degree": 0
+    },
+    {
+      "node": "compound:cysteine",
+      "degree": 0
+    },
+    {
+      "node": "compound:gamma-glutamylcysteine",
+      "degree": 0
+    },
+    {
+      "node": "compound:glutamate",
+      "degree": 0
+    },
+    {
+      "node": "compound:glutathione",
+      "degree": 0
+    },
+    {
+      "node": "compound:glycine",
+      "degree": 0
+    },
+    {
+      "node": "protein:GSH synthetase",
+      "degree": 0
+    },
+    {
+      "node": "protein:gamma-glutamylcysteine synthetase",
+      "degree": 0
+    },
+    {
+      "node": "protein:glutamate-cysteine ligase",
+      "degree": 0
+    },
+    {
+      "node": "protein:glutathione synthetase",
+      "degree": 0
+    }
+  ],
+  "missing_links_suspected": [
+    {
+      "hint": "compound appears in entities but is not connected to any process/location",
+      "node": "compound:L-Glutamic acid"
+    },
+    {
+      "hint": "compound appears in entities but is not connected to any process/location",
+      "node": "compound:glutathione"
+    },
+    {
+      "hint": "compound appears in entities but is not connected to any process/location",
+      "node": "compound:glycine"
+    },
+    {
+      "hint": "compound appears in entities but is not connected to any process/location",
+      "node": "compound:cysteine"
+    },
+    {
+      "hint": "compound appears in entities but is not connected to any process/location",
+      "node": "compound:glutamate"
+    },
+    {
+      "hint": "compound appears in entities but is not connected to any process/location",
+      "node": "compound:gamma-glutamylcysteine"
+    },
+    {
+      "hint": "compound appears in entities but is not connected to any process/location",
+      "node": "compound:GSH"
+    },
+    {
+      "hint": "protein appears in entities but is not connected to any process/location",
+      "node": "protein:glutamate-cysteine ligase"
+    },
+    {
+      "hint": "protein appears in entities but is not connected to any process/location",
+      "node": "protein:glutathione synthetase"
+    },
+    {
+      "hint": "protein appears in entities but is not connected to any process/location",
+      "node": "protein:GSH synthetase"
+    },
+    {
+      "hint": "protein appears in entities but is not connected to any process/location",
+      "node": "protein:gamma-glutamylcysteine synthetase"
+    }
+  ],
+  "species_violations": [
+    "plants",
+    "microbes",
+    "mammals"
+  ],
+  "notes": [
+    "Orphan components are any connected component not equal to the largest component.",
+    "Dangling nodes are degree <= 1 and often indicate missing links or incomplete extraction."
+  ]
+}
