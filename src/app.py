@@ -46,7 +46,7 @@ with st.form("pwml_pipeline"):
 
     enable_chunking = st.checkbox(
         "Enable automatic chunking for long inputs",
-        value=False,
+        value=True,
         help="When enabled, Stage 1 splits long inputs into overlapping chunks before extraction.",
     )
 
@@ -97,7 +97,6 @@ with st.form("pwml_pipeline"):
         max_value=3000,
         value=1200,
         step=100,
-        disabled=not enable_chunking,
     )
     chunk_overlap = chunk_cols[1].number_input(
         "Chunk overlap (words)",
@@ -105,7 +104,6 @@ with st.form("pwml_pipeline"):
         max_value=500,
         value=200,
         step=50,
-        disabled=not enable_chunking,
     )
 
     submit = st.form_submit_button("Run pipeline")
