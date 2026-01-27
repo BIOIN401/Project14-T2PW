@@ -102,6 +102,78 @@ def merge_additions(
     return merged
 
 
+def merge_stage_one_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Merge multiple Stage-1 extraction payloads (e.g., chunked runs) into a single dict.
+    """
+    merged: Dict[str, Any] = {}
+    for payload in outputs:
+        if isinstance(payload, dict):
+            _merge_dict_in_place(merged, payload)
+    return merged
+
+
+def run_stage_one_with_chunking(
+    input_text: str,
+    *,
+    enable_chunking: bool,
+    chunk_word_limit: int = 1500,
+    chunk_overlap: int = 200,
+    max_attempts: int = 2,
+    temperature: float = 0.0,
+    max_tokens: int = 2000,
+) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+    """
+    Optionally chunk the input text before running Stage 1 extraction. Returns the merged JSON
+    plus per-chunk details (inputs, outputs, attempts) for inspection.
+    """
+    words = input_text.split()
+    use_chunks = enable_chunking and len(words) > chunk_word_limit
+
+    if not use_chunks:
+        output, attempts = run_extraction_pipeline(
+            input_text,
+            max_attempts=max_attempts,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        chunk_meta = {
+            "chunk_id": 1,
+            "start_word": 0,
+            "end_word": len(words),
+            "text": input_text,
+            "output": output,
+            "attempts": attempts,
+        }
+        return output, [chunk_meta]
+
+    chunks = chunk_text(input_text, chunk_word_limit, chunk_overlap)
+    chunk_results: List[Dict[str, Any]] = []
+    outputs: List[Dict[str, Any]] = []
+
+    for chunk in chunks:
+        try:
+            parsed, attempts = run_extraction_pipeline(
+                chunk["text"],
+                max_attempts=max_attempts,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+        except PipelineFailure as failure:
+            raise PipelineFailure(
+                stage=f"extraction chunk {chunk['chunk_id']}",
+                message=f"Chunk {chunk['chunk_id']} failed to produce valid JSON.",
+                attempts=failure.attempts,
+            ) from failure
+
+        chunk_entry = {**chunk, "output": parsed, "attempts": attempts}
+        chunk_results.append(chunk_entry)
+        outputs.append(parsed)
+
+    merged = merge_stage_one_outputs(outputs)
+    return merged, chunk_results
+
+
 def _extend_unique(target: List[Any], new_items: List[Any]) -> None:
     """
     Append only novel entries into target, using JSON serialization as a dedupe signature.
@@ -117,6 +189,57 @@ def _extend_unique(target: List[Any], new_items: List[Any]) -> None:
             continue
         target.append(item)
         seen.add(signature)
+
+
+def chunk_text(text: str, chunk_word_limit: int, overlap_words: int) -> List[Dict[str, Any]]:
+    """
+    Split text into overlapping chunks measured in approximate word counts.
+    """
+    words = text.split()
+    if not words:
+        return []
+
+    chunk_size = max(int(chunk_word_limit), 1)
+    overlap = max(0, min(int(overlap_words), chunk_size - 1))
+
+    chunks: List[Dict[str, Any]] = []
+    start = 0
+    chunk_id = 1
+
+    while start < len(words):
+        end = min(start + chunk_size, len(words))
+        chunk_words = words[start:end]
+        chunk_text_value = " ".join(chunk_words)
+        chunks.append(
+            {
+                "chunk_id": chunk_id,
+                "start_word": start,
+                "end_word": end,
+                "text": chunk_text_value,
+            }
+        )
+        if end >= len(words):
+            break
+        start = max(end - overlap, start + 1)
+        chunk_id += 1
+
+    return chunks
+
+
+def _merge_dict_in_place(target: Dict[str, Any], source: Dict[str, Any]) -> None:
+    for key, value in source.items():
+        if isinstance(value, dict):
+            dest = target.get(key)
+            if not isinstance(dest, dict):
+                target[key] = deepcopy(value)
+            else:
+                _merge_dict_in_place(dest, value)
+        elif isinstance(value, list):
+            dest_list = target.setdefault(key, [])
+            _extend_unique(dest_list, value)
+        else:
+            if key not in target or target[key] in ("", None):
+                target[key] = value
 
 
 def _run_json_stage(

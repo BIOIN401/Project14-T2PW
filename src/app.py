@@ -6,8 +6,8 @@ import streamlit as st
 from pipeline import (
     PipelineFailure,
     merge_additions,
-    run_extraction_pipeline,
     run_inference_pipeline,
+    run_stage_one_with_chunking,
 )
 from qa_graph import build_graph, connected_components
 
@@ -42,6 +42,12 @@ with st.form("pwml_pipeline"):
         "Run inference/enrichment stage",
         value=True,
         help="Stage 1 always runs. Disable when you only want strict extraction.",
+    )
+
+    enable_chunking = st.checkbox(
+        "Enable automatic chunking for long inputs",
+        value=False,
+        help="When enabled, Stage 1 splits long inputs into overlapping chunks before extraction.",
     )
 
     col_a, col_b, col_c = st.columns(3)
@@ -84,6 +90,24 @@ with st.form("pwml_pipeline"):
         step=100,
     )
 
+    chunk_cols = st.columns(2)
+    chunk_size = chunk_cols[0].number_input(
+        "Chunk size (approx. words)",
+        min_value=200,
+        max_value=3000,
+        value=1200,
+        step=100,
+        disabled=not enable_chunking,
+    )
+    chunk_overlap = chunk_cols[1].number_input(
+        "Chunk overlap (words)",
+        min_value=0,
+        max_value=500,
+        value=200,
+        step=50,
+        disabled=not enable_chunking,
+    )
+
     submit = st.form_submit_button("Run pipeline")
 
 if submit:
@@ -95,8 +119,11 @@ if submit:
     st.subheader("Stage 1 · Strict extraction")
     try:
         with st.spinner("Running Stage 1 extraction..."):
-            stage_one, stage_one_attempts = run_extraction_pipeline(
+            stage_one, chunk_details = run_stage_one_with_chunking(
                 text,
+                enable_chunking=enable_chunking,
+                chunk_word_limit=int(chunk_size),
+                chunk_overlap=int(chunk_overlap),
                 max_attempts=int(extract_attempts),
                 temperature=temperature,
                 max_tokens=int(extract_tokens),
@@ -107,13 +134,27 @@ if submit:
         st.stop()
 
     st.json(stage_one)
-    render_attempts("Stage 1 attempts", stage_one_attempts)
     st.download_button(
         "Download Stage 1 JSON",
         json.dumps(stage_one, indent=2),
         file_name="stage1_extract.json",
         mime="application/json",
     )
+
+    chunk_count = len(chunk_details)
+    if chunk_count > 1:
+        st.info(f"Chunked input into {chunk_count} slices (~{int(chunk_size)} words, overlap {int(chunk_overlap)}).")
+
+    for chunk in chunk_details:
+        chunk_label = f"Chunk {chunk['chunk_id']} · words {chunk['start_word']}–{chunk['end_word']}"
+        with st.expander(chunk_label, expanded=False):
+            preview = chunk["text"][:400]
+            if len(chunk["text"]) > 400:
+                preview += "..."
+            st.caption(preview)
+            st.markdown("**Chunk output JSON**")
+            st.json(chunk["output"])
+        render_attempts(f"{chunk_label} attempts", chunk["attempts"])
 
     final_payload = stage_one
     qa_hints = None
