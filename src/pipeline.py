@@ -283,6 +283,41 @@ def _summarize_failure(attempts: AttemptLogs, preview_chars: int = 500) -> Tuple
     return last_error, raw_preview
 
 
+def _extract_json_from_text(raw: str) -> Optional[Dict[str, Any]]:
+    text = (raw or "").strip()
+    if not text:
+        return None
+
+    # Try fenced code block first.
+    fence_start = text.find("```")
+    if fence_start != -1:
+        fence_end = text.find("```", fence_start + 3)
+        if fence_end != -1:
+            fenced = text[fence_start + 3 : fence_end].strip()
+            if fenced.lower().startswith("json"):
+                lines = fenced.splitlines()
+                if lines and lines[0].strip().lower() == "json":
+                    fenced = "\n".join(lines[1:]).strip()
+            try:
+                parsed = json.loads(fenced)
+                return parsed if isinstance(parsed, dict) else None
+            except json.JSONDecodeError:
+                pass
+
+    # Fall back to first {...} span.
+    obj_start = text.find("{")
+    obj_end = text.rfind("}")
+    if obj_start != -1 and obj_end != -1 and obj_end > obj_start:
+        candidate = text[obj_start : obj_end + 1]
+        try:
+            parsed = json.loads(candidate)
+            return parsed if isinstance(parsed, dict) else None
+        except json.JSONDecodeError:
+            pass
+
+    return None
+
+
 def _compact_stage_one_for_inference(stage_one: Dict[str, Any]) -> Dict[str, Any]:
     return _strip_empty_and_evidence(stage_one)
 
@@ -479,9 +514,17 @@ def _run_json_stage(
 
         try:
             parsed = json.loads(raw)
+            if not isinstance(parsed, dict):
+                raise json.JSONDecodeError(
+                    f"Expected JSON object, got {type(parsed).__name__}", raw, 0
+                )
             attempts.append(log_entry)
             return parsed, attempts
         except json.JSONDecodeError as exc:
+            extracted = _extract_json_from_text(raw)
+            if extracted is not None:
+                attempts.append(log_entry)
+                return extracted, attempts
             error_msg = f"{exc.__class__.__name__}: {exc}"
             log_entry["error"] = error_msg
             attempts.append(log_entry)
