@@ -189,6 +189,7 @@ def run_stage_two_with_chunking(
                     attempts=failure.attempts,
                 ) from failure
 
+        parsed = clean_inference_output(parsed)
         chunk_entry = {**chunk, "stage_one": chunk_stage_one, "output": parsed, "attempts": attempts}
         chunk_results.append(chunk_entry)
         outputs.append(parsed)
@@ -206,6 +207,7 @@ def merge_additions(
     Deduplication is signature-based (JSON string) to avoid exact duplicates.
     """
     merged = deepcopy(base)
+    inference_additions = clean_inference_output(inference_additions or {})
     additions = (inference_additions or {}).get("additions", {})
 
     entities_add = additions.get("entities", {})
@@ -240,6 +242,8 @@ def merge_inference_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
     for payload in outputs:
         if not isinstance(payload, dict):
             continue
+
+        payload = clean_inference_output(payload)
 
         additions = payload.get("additions")
         if isinstance(additions, dict):
@@ -434,6 +438,348 @@ def _is_empty_value(value: Any) -> bool:
     return False
 
 
+def _safe_list(value: Any) -> List[Any]:
+    return value if isinstance(value, list) else []
+
+
+def _clean_entities(entities: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(entities, dict):
+        return {}
+
+    cleaned: Dict[str, Any] = {}
+    entity_keys = [
+        "cell_types",
+        "species",
+        "tissues",
+        "subcellular_locations",
+        "compounds",
+        "element_collections",
+        "nucleic_acids",
+        "proteins",
+        "protein_complexes",
+    ]
+
+    for key in entity_keys:
+        items = _safe_list(entities.get(key, []))
+        cleaned_items: List[Dict[str, Any]] = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            name = (item.get("name") or "").strip()
+            if not name:
+                continue
+            cleaned_item = {k: v for k, v in item.items() if not _is_empty_value(v)}
+            cleaned_item["name"] = name
+            for list_key in ("components", "cofactors", "modifications"):
+                if isinstance(cleaned_item.get(list_key), list):
+                    cleaned_item[list_key] = [
+                        v for v in cleaned_item[list_key] if isinstance(v, str) and v.strip()
+                    ]
+                    if not cleaned_item[list_key]:
+                        cleaned_item.pop(list_key, None)
+            cleaned_items.append(cleaned_item)
+
+        if cleaned_items:
+            cleaned[key] = cleaned_items
+
+    return cleaned
+
+
+def _clean_biological_states(states: List[Any]) -> List[Dict[str, Any]]:
+    cleaned: List[Dict[str, Any]] = []
+    for item in _safe_list(states):
+        if not isinstance(item, dict):
+            continue
+        trimmed: Dict[str, Any] = {}
+        for key in ["name", "species", "cell_type", "tissue", "subcellular_location", "evidence"]:
+            value = item.get(key)
+            if isinstance(value, str):
+                value = value.strip()
+            if not _is_empty_value(value):
+                trimmed[key] = value
+        if any(trimmed.get(k) for k in ["name", "species", "cell_type", "tissue", "subcellular_location"]):
+            cleaned.append(trimmed)
+    return cleaned
+
+
+def _clean_element_locations(locations: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(locations, dict):
+        return {}
+    cleaned: Dict[str, Any] = {}
+    for key, entity_key in [
+        ("compound_locations", "compound"),
+        ("element_collection_locations", "element_collection"),
+        ("nucleic_acid_locations", "nucleic_acid"),
+        ("protein_locations", "protein"),
+    ]:
+        items: List[Dict[str, Any]] = []
+        for item in _safe_list(locations.get(key, [])):
+            if not isinstance(item, dict):
+                continue
+            entity = (item.get(entity_key) or "").strip()
+            if not entity:
+                continue
+            entry: Dict[str, Any] = {entity_key: entity}
+            biological_state = (item.get("biological_state") or "").strip()
+            if biological_state:
+                entry["biological_state"] = biological_state
+            evidence = (item.get("evidence") or "").strip()
+            if evidence:
+                entry["evidence"] = evidence
+            items.append(entry)
+        if items:
+            cleaned[key] = items
+    return cleaned
+
+
+def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
+    cleaned: List[Dict[str, Any]] = []
+    for item in _safe_list(enzymes):
+        if not isinstance(item, dict):
+            continue
+        entry: Dict[str, Any] = {}
+        protein_complex = (item.get("protein_complex") or "").strip()
+        if protein_complex:
+            entry["protein_complex"] = protein_complex
+        evidence = (item.get("evidence") or "").strip()
+        if evidence:
+            entry["evidence"] = evidence
+        inference = item.get("inference")
+        if inference and not _is_empty_value(inference):
+            entry["inference"] = inference
+        if entry:
+            cleaned.append(entry)
+    return cleaned
+
+
+def _clean_elements_with_states(items: Any) -> List[Dict[str, Any]]:
+    cleaned: List[Dict[str, Any]] = []
+    for item in _safe_list(items):
+        if not isinstance(item, dict):
+            continue
+        element = (item.get("element") or "").strip()
+        if not element:
+            continue
+        entry: Dict[str, Any] = {"element": element}
+        side = (item.get("side") or "").strip()
+        if side:
+            entry["side"] = side
+        biological_state = (item.get("biological_state") or "").strip()
+        if biological_state:
+            entry["biological_state"] = biological_state
+        evidence = (item.get("evidence") or "").strip()
+        if evidence:
+            entry["evidence"] = evidence
+        cleaned.append(entry)
+    return cleaned
+
+
+def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(processes, dict):
+        return {}
+    cleaned: Dict[str, Any] = {}
+
+    reactions_out: List[Dict[str, Any]] = []
+    for item in _safe_list(processes.get("reactions", [])):
+        if not isinstance(item, dict):
+            continue
+        inputs = [v.strip() for v in _safe_list(item.get("inputs")) if isinstance(v, str) and v.strip()]
+        outputs = [v.strip() for v in _safe_list(item.get("outputs")) if isinstance(v, str) and v.strip()]
+        if not inputs or not outputs:
+            continue
+        entry: Dict[str, Any] = {"inputs": inputs, "outputs": outputs}
+        name = (item.get("name") or "").strip()
+        if name:
+            entry["name"] = name
+        enzymes = _clean_enzymes(item.get("enzymes"))
+        if enzymes:
+            entry["enzymes"] = enzymes
+        biological_state = (item.get("biological_state") or "").strip()
+        if biological_state:
+            entry["biological_state"] = biological_state
+        evidence = (item.get("evidence") or "").strip()
+        if evidence:
+            entry["evidence"] = evidence
+        inference = item.get("inference")
+        if inference and not _is_empty_value(inference):
+            entry["inference"] = inference
+        reactions_out.append(entry)
+
+    if reactions_out:
+        cleaned["reactions"] = reactions_out
+
+    transports_out: List[Dict[str, Any]] = []
+    for item in _safe_list(processes.get("transports", [])):
+        if not isinstance(item, dict):
+            continue
+        entry: Dict[str, Any] = {}
+        name = (item.get("name") or "").strip()
+        if name:
+            entry["name"] = name
+        cargo = (item.get("cargo") or "").strip()
+        if cargo:
+            entry["cargo"] = cargo
+        from_state = (item.get("from_biological_state") or "").strip()
+        if from_state:
+            entry["from_biological_state"] = from_state
+        to_state = (item.get("to_biological_state") or "").strip()
+        if to_state:
+            entry["to_biological_state"] = to_state
+        transporters = _clean_enzymes(item.get("transporters"))
+        if transporters:
+            entry["transporters"] = transporters
+        elements = _clean_elements_with_states(item.get("elements_with_states"))
+        if elements:
+            entry["elements_with_states"] = elements
+        evidence = (item.get("evidence") or "").strip()
+        if evidence:
+            entry["evidence"] = evidence
+        inference = item.get("inference")
+        if inference and not _is_empty_value(inference):
+            entry["inference"] = inference
+        if any(k in entry for k in ["cargo", "transporters", "elements_with_states"]):
+            transports_out.append(entry)
+
+    if transports_out:
+        cleaned["transports"] = transports_out
+
+    rct_out: List[Dict[str, Any]] = []
+    for item in _safe_list(processes.get("reaction_coupled_transports", [])):
+        if not isinstance(item, dict):
+            continue
+        entry: Dict[str, Any] = {}
+        name = (item.get("name") or "").strip()
+        if name:
+            entry["name"] = name
+        reaction = (item.get("reaction") or "").strip()
+        if reaction:
+            entry["reaction"] = reaction
+        transport = (item.get("transport") or "").strip()
+        if transport:
+            entry["transport"] = transport
+        enzymes = _clean_enzymes(item.get("enzymes"))
+        if enzymes:
+            entry["enzymes"] = enzymes
+        elements = _clean_elements_with_states(item.get("elements_with_states"))
+        if elements:
+            entry["elements_with_states"] = elements
+        evidence = (item.get("evidence") or "").strip()
+        if evidence:
+            entry["evidence"] = evidence
+        inference = item.get("inference")
+        if inference and not _is_empty_value(inference):
+            entry["inference"] = inference
+        if any(k in entry for k in ["reaction", "transport", "elements_with_states"]):
+            rct_out.append(entry)
+
+    if rct_out:
+        cleaned["reaction_coupled_transports"] = rct_out
+
+    interactions_out: List[Dict[str, Any]] = []
+    for item in _safe_list(processes.get("interactions", [])):
+        if not isinstance(item, dict):
+            continue
+        e1 = (item.get("entity_1") or "").strip()
+        e2 = (item.get("entity_2") or "").strip()
+        if not e1 or not e2:
+            continue
+        entry: Dict[str, Any] = {"entity_1": e1, "entity_2": e2}
+        name = (item.get("name") or "").strip()
+        if name:
+            entry["name"] = name
+        relationship = (item.get("relationship") or "").strip()
+        if relationship:
+            entry["relationship"] = relationship
+        biological_state = (item.get("biological_state") or "").strip()
+        if biological_state:
+            entry["biological_state"] = biological_state
+        evidence = (item.get("evidence") or "").strip()
+        if evidence:
+            entry["evidence"] = evidence
+        inference = item.get("inference")
+        if inference and not _is_empty_value(inference):
+            entry["inference"] = inference
+        interactions_out.append(entry)
+
+    if interactions_out:
+        cleaned["interactions"] = interactions_out
+
+    return cleaned
+
+
+def clean_stage_one(payload: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {}
+    cleaned: Dict[str, Any] = {}
+
+    entities = _clean_entities(payload.get("entities", {}))
+    if entities:
+        cleaned["entities"] = entities
+
+    biological_states = _clean_biological_states(_safe_list(payload.get("biological_states", [])))
+    if biological_states:
+        cleaned["biological_states"] = biological_states
+
+    element_locations = _clean_element_locations(payload.get("element_locations", {}))
+    if element_locations:
+        cleaned["element_locations"] = element_locations
+
+    processes = _clean_processes(payload.get("processes", {}))
+    if processes:
+        cleaned["processes"] = processes
+
+    return cleaned
+
+
+def clean_inference_output(payload: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(payload, dict):
+        return {"additions": {}}
+
+    additions: Any = payload.get("additions")
+    if additions is None:
+        additions = {}
+        if isinstance(payload.get("entities"), dict):
+            additions["entities"] = payload.get("entities")
+        if isinstance(payload.get("processes"), dict):
+            additions["processes"] = payload.get("processes")
+
+    if not isinstance(additions, dict):
+        additions = {}
+
+    entities = additions.get("entities")
+    if isinstance(entities, dict) and "processes" in entities:
+        misplaced = entities.pop("processes")
+        if isinstance(misplaced, dict):
+            additions.setdefault("processes", {})
+            if isinstance(additions.get("processes"), dict):
+                _merge_dict_in_place(additions["processes"], misplaced)
+
+    cleaned_additions: Dict[str, Any] = {}
+    cleaned_entities = _clean_entities(additions.get("entities", {}))
+    if cleaned_entities:
+        cleaned_additions["entities"] = cleaned_entities
+    cleaned_processes = _clean_processes(additions.get("processes", {}))
+    if cleaned_processes:
+        cleaned_additions["processes"] = cleaned_processes
+
+    result: Dict[str, Any] = {"additions": cleaned_additions}
+    qa_hints = payload.get("qa_hints")
+    if isinstance(qa_hints, dict):
+        qa_clean: Dict[str, Any] = {}
+        intended = qa_hints.get("intended_effect")
+        if isinstance(intended, str) and intended.strip():
+            qa_clean["intended_effect"] = intended.strip()
+        changes = qa_hints.get("expected_changes")
+        if isinstance(changes, list):
+            cleaned_changes = [c for c in changes if isinstance(c, str) and c.strip()]
+            if cleaned_changes:
+                qa_clean["expected_changes"] = cleaned_changes
+        if qa_clean:
+            result["qa_hints"] = qa_clean
+
+    return result
+
+
 def merge_stage_one_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Merge multiple Stage-1 extraction payloads (e.g., chunked runs) into a single dict.
@@ -469,6 +815,7 @@ def run_stage_one_with_chunking(
             temperature=temperature,
             max_tokens=max_tokens,
         )
+        output = clean_stage_one(output)
         chunk_meta = {
             "chunk_id": 1,
             "start_word": 0,
@@ -498,11 +845,13 @@ def run_stage_one_with_chunking(
                 attempts=failure.attempts,
             ) from failure
 
+        parsed = clean_stage_one(parsed)
         chunk_entry = {**chunk, "output": parsed, "attempts": attempts}
         chunk_results.append(chunk_entry)
         outputs.append(parsed)
 
     merged = merge_stage_one_outputs(outputs)
+    merged = clean_stage_one(merged)
     return merged, chunk_results
 
 

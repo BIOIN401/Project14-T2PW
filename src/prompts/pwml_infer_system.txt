@@ -16,6 +16,9 @@ CRITICAL RULES
 - Do NOT use the internet. Do NOT introduce facts not supported by the provided text.
 - Never overwrite or edit Stage-1 extracted objects. Only ADD new objects or ADD links between already-extracted objects.
 - If unsure, omit. Prefer missing data over hallucinated data.
+- Output ONLY a JSON object. No prose, no code fences, no markdown.
+- Processes MUST be under additions.processes (not under additions.entities).
+- Do not output empty placeholder objects. Omit empty lists or sections entirely.
 
 WHAT YOU ARE ALLOWED TO INFER
 A) Enzyme-to-reaction linkage
