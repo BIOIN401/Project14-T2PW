@@ -19,7 +19,9 @@ def render_attempts(label: str, attempts: List[Dict[str, Any]]) -> None:
     with st.expander(label, expanded=False):
         for log in attempts:
             status = "✅ success" if not log.get("error") else "⚠️ retry"
-            st.markdown(f"**Attempt {log['attempt']}** — {status}")
+            phase = log.get("phase")
+            phase_label = f" ({phase})" if phase else ""
+            st.markdown(f"**Attempt {log['attempt']}{phase_label}** — {status}")
             st.code(log["raw"], language="json")
             if log.get("error"):
                 st.caption(log["error"])
@@ -176,7 +178,8 @@ if submit:
                 )
         except PipelineFailure as failure:
             st.error(f"Inference stage failed: {failure}")
-            render_attempts("Stage 2 attempts", failure.attempts)
+            label = f"{failure.stage} attempts" if getattr(failure, "stage", None) else "Stage 2 attempts"
+            render_attempts(label, failure.attempts)
             st.stop()
 
         st.json(stage_two)

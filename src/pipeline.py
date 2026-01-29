@@ -1,4 +1,5 @@
 import json
+import logging
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -9,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent
 PROMPTS_DIR = BASE_DIR / "prompts"
 EXTRACT_SYSTEM = (PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8")
 INFER_SYSTEM = (PROMPTS_DIR / "pwml_infer_system.txt").read_text(encoding="utf-8")
+logger = logging.getLogger(__name__)
 
 
 class PipelineFailure(RuntimeError):
@@ -81,6 +83,9 @@ def run_stage_two_with_chunking(
     max_attempts: int = 2,
     temperature: float = 0.0,
     max_tokens: int = 2000,
+    retry_on_failure: bool = True,
+    retry_max_tokens: Optional[int] = None,
+    retry_compact_stage_one: bool = True,
 ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """
     Optionally chunk Stage-2 inference by reusing Stage-1 chunk outputs.
@@ -122,11 +127,60 @@ def run_stage_two_with_chunking(
                 max_tokens=max_tokens,
             )
         except PipelineFailure as failure:
-            raise PipelineFailure(
-                stage=f"inference chunk {chunk['chunk_id']}",
-                message=f"Chunk {chunk['chunk_id']} failed to produce valid JSON.",
-                attempts=failure.attempts,
-            ) from failure
+            logger.warning(
+                "Stage-2 inference failed for chunk %s (%s-%s).",
+                chunk.get("chunk_id"),
+                chunk.get("start_word"),
+                chunk.get("end_word"),
+            )
+            logger.debug("Stage-2 failure details: %s", failure.attempts)
+
+            if retry_on_failure:
+                compact_stage_one = (
+                    _compact_stage_one_for_inference(chunk_stage_one)
+                    if retry_compact_stage_one
+                    else chunk_stage_one
+                )
+                retry_tokens = (
+                    retry_max_tokens
+                    if retry_max_tokens is not None
+                    else max(200, int(max_tokens * 0.6))
+                )
+                try:
+                    retry_parsed, retry_attempts = run_inference_pipeline(
+                        chunk["text"],
+                        compact_stage_one,
+                        max_attempts=max_attempts,
+                        temperature=temperature,
+                        max_tokens=retry_tokens,
+                    )
+                    attempts = _tag_attempts(failure.attempts, "initial")
+                    attempts.extend(_tag_attempts(retry_attempts, "retry"))
+                    parsed = retry_parsed
+                except PipelineFailure as retry_failure:
+                    attempts = _tag_attempts(failure.attempts, "initial")
+                    attempts.extend(_tag_attempts(retry_failure.attempts, "retry"))
+                    last_error, raw_preview = _summarize_failure(attempts)
+                    message = (
+                        f"Chunk {chunk.get('chunk_id')} failed to produce valid JSON after retry. "
+                        f"Last error: {last_error}. Raw preview: {raw_preview}"
+                    )
+                    raise PipelineFailure(
+                        stage=f"inference chunk {chunk.get('chunk_id')}",
+                        message=message,
+                        attempts=attempts,
+                    ) from retry_failure
+            else:
+                last_error, raw_preview = _summarize_failure(failure.attempts)
+                message = (
+                    f"Chunk {chunk.get('chunk_id')} failed to produce valid JSON. "
+                    f"Last error: {last_error}. Raw preview: {raw_preview}"
+                )
+                raise PipelineFailure(
+                    stage=f"inference chunk {chunk.get('chunk_id')}",
+                    message=message,
+                    attempts=failure.attempts,
+                ) from failure
 
         chunk_entry = {**chunk, "stage_one": chunk_stage_one, "output": parsed, "attempts": attempts}
         chunk_results.append(chunk_entry)
@@ -206,6 +260,58 @@ def merge_inference_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
         result["qa_hints"] = qa_hints
 
     return result
+
+
+def _tag_attempts(attempts: AttemptLogs, phase: str) -> AttemptLogs:
+    tagged: AttemptLogs = []
+    for entry in attempts:
+        tagged_entry = dict(entry)
+        tagged_entry["phase"] = phase
+        tagged.append(tagged_entry)
+    return tagged
+
+
+def _summarize_failure(attempts: AttemptLogs, preview_chars: int = 500) -> Tuple[str, str]:
+    last_error = "Unknown error"
+    raw_preview = ""
+    for entry in reversed(attempts):
+        if entry.get("error"):
+            last_error = str(entry.get("error") or last_error)
+            raw = str(entry.get("raw") or "")
+            raw_preview = raw[:preview_chars].replace("\n", " ").strip()
+            break
+    return last_error, raw_preview
+
+
+def _compact_stage_one_for_inference(stage_one: Dict[str, Any]) -> Dict[str, Any]:
+    return _strip_empty_and_evidence(stage_one)
+
+
+def _strip_empty_and_evidence(value: Any) -> Any:
+    if isinstance(value, dict):
+        compact: Dict[str, Any] = {}
+        for key, item in value.items():
+            if key == "evidence":
+                continue
+            cleaned = _strip_empty_and_evidence(item)
+            if _is_empty_value(cleaned):
+                continue
+            compact[key] = cleaned
+        return compact
+    if isinstance(value, list):
+        items = [_strip_empty_and_evidence(item) for item in value]
+        return [item for item in items if not _is_empty_value(item)]
+    return value
+
+
+def _is_empty_value(value: Any) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, str) and not value.strip():
+        return True
+    if isinstance(value, (list, dict)) and not value:
+        return True
+    return False
 
 
 def merge_stage_one_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
