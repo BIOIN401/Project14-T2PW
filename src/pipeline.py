@@ -160,10 +160,10 @@ def run_stage_two_with_chunking(
                 except PipelineFailure as retry_failure:
                     attempts = _tag_attempts(failure.attempts, "initial")
                     attempts.extend(_tag_attempts(retry_failure.attempts, "retry"))
-                    last_error, raw_preview = _summarize_failure(attempts)
+                    last_error, raw_preview, raw_length = _summarize_failure(attempts)
                     message = (
                         f"Chunk {chunk.get('chunk_id')} failed to produce valid JSON after retry. "
-                        f"Last error: {last_error}. Raw preview: {raw_preview}"
+                        f"Last error: {last_error}. Raw length: {raw_length}. Raw preview: {raw_preview}"
                     )
                     raise PipelineFailure(
                         stage=f"inference chunk {chunk.get('chunk_id')}",
@@ -171,10 +171,10 @@ def run_stage_two_with_chunking(
                         attempts=attempts,
                     ) from retry_failure
             else:
-                last_error, raw_preview = _summarize_failure(failure.attempts)
+                last_error, raw_preview, raw_length = _summarize_failure(failure.attempts)
                 message = (
                     f"Chunk {chunk.get('chunk_id')} failed to produce valid JSON. "
-                    f"Last error: {last_error}. Raw preview: {raw_preview}"
+                    f"Last error: {last_error}. Raw length: {raw_length}. Raw preview: {raw_preview}"
                 )
                 raise PipelineFailure(
                     stage=f"inference chunk {chunk.get('chunk_id')}",
@@ -271,16 +271,18 @@ def _tag_attempts(attempts: AttemptLogs, phase: str) -> AttemptLogs:
     return tagged
 
 
-def _summarize_failure(attempts: AttemptLogs, preview_chars: int = 500) -> Tuple[str, str]:
+def _summarize_failure(attempts: AttemptLogs, preview_chars: int = 500) -> Tuple[str, str, int]:
     last_error = "Unknown error"
     raw_preview = ""
+    raw_length = 0
     for entry in reversed(attempts):
         if entry.get("error"):
             last_error = str(entry.get("error") or last_error)
             raw = str(entry.get("raw") or "")
+            raw_length = len(raw)
             raw_preview = raw[:preview_chars].replace("\n", " ").strip()
             break
-    return last_error, raw_preview
+    return last_error, raw_preview, raw_length
 
 
 def _extract_json_from_text(raw: str) -> Optional[Dict[str, Any]]:
@@ -288,33 +290,51 @@ def _extract_json_from_text(raw: str) -> Optional[Dict[str, Any]]:
     if not text:
         return None
 
-    # Try fenced code block first.
-    fence_start = text.find("```")
-    if fence_start != -1:
-        fence_end = text.find("```", fence_start + 3)
-        if fence_end != -1:
-            fenced = text[fence_start + 3 : fence_end].strip()
-            if fenced.lower().startswith("json"):
-                lines = fenced.splitlines()
-                if lines and lines[0].strip().lower() == "json":
-                    fenced = "\n".join(lines[1:]).strip()
-            try:
-                parsed = json.loads(fenced)
-                return parsed if isinstance(parsed, dict) else None
-            except json.JSONDecodeError:
-                pass
+    # Remove common code fence markers without dropping JSON content.
+    text = text.replace("```json", "```")
+    text = text.replace("```", "")
 
-    # Fall back to first {...} span.
     obj_start = text.find("{")
-    obj_end = text.rfind("}")
-    if obj_start != -1 and obj_end != -1 and obj_end > obj_start:
-        candidate = text[obj_start : obj_end + 1]
-        try:
-            parsed = json.loads(candidate)
-            return parsed if isinstance(parsed, dict) else None
-        except json.JSONDecodeError:
-            pass
+    if obj_start == -1:
+        return None
 
+    obj_end = _find_matching_brace(text, obj_start)
+    if obj_end is None:
+        return None
+
+    candidate = text[obj_start : obj_end + 1]
+    try:
+        parsed = json.loads(candidate)
+        return parsed if isinstance(parsed, dict) else None
+    except json.JSONDecodeError:
+        pass
+
+    return None
+
+
+def _find_matching_brace(text: str, start: int) -> Optional[int]:
+    depth = 0
+    in_string = False
+    escape = False
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+
+        if ch == '"':
+            in_string = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return i
     return None
 
 
