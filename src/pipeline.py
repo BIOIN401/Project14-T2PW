@@ -70,6 +70,72 @@ def run_inference_pipeline(
     )
 
 
+def run_stage_two_with_chunking(
+    input_text: str,
+    stage_one: Dict[str, Any],
+    chunk_details: Optional[List[Dict[str, Any]]] = None,
+    *,
+    enable_chunking: bool,
+    chunk_word_limit: int = 1500,
+    chunk_overlap: int = 200,
+    max_attempts: int = 2,
+    temperature: float = 0.0,
+    max_tokens: int = 2000,
+) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+    """
+    Optionally chunk Stage-2 inference by reusing Stage-1 chunk outputs.
+    Returns merged inference additions plus per-chunk details.
+    """
+    chunks: List[Dict[str, Any]] = []
+
+    if enable_chunking and chunk_details and len(chunk_details) > 1:
+        chunks = chunk_details
+    else:
+        words = input_text.split()
+        use_chunks = enable_chunking and len(words) > chunk_word_limit
+        if use_chunks:
+            chunks = chunk_text(input_text, chunk_word_limit, chunk_overlap)
+        else:
+            chunks = [
+                {
+                    "chunk_id": 1,
+                    "start_word": 0,
+                    "end_word": len(words),
+                    "text": input_text,
+                }
+            ]
+
+    chunk_results: List[Dict[str, Any]] = []
+    outputs: List[Dict[str, Any]] = []
+
+    for chunk in chunks:
+        chunk_stage_one = chunk.get("output") if isinstance(chunk, dict) else None
+        if not isinstance(chunk_stage_one, dict):
+            chunk_stage_one = stage_one
+
+        try:
+            parsed, attempts = run_inference_pipeline(
+                chunk["text"],
+                chunk_stage_one,
+                max_attempts=max_attempts,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+        except PipelineFailure as failure:
+            raise PipelineFailure(
+                stage=f"inference chunk {chunk['chunk_id']}",
+                message=f"Chunk {chunk['chunk_id']} failed to produce valid JSON.",
+                attempts=failure.attempts,
+            ) from failure
+
+        chunk_entry = {**chunk, "stage_one": chunk_stage_one, "output": parsed, "attempts": attempts}
+        chunk_results.append(chunk_entry)
+        outputs.append(parsed)
+
+    merged = merge_inference_outputs(outputs)
+    return merged, chunk_results
+
+
 def merge_additions(
     base: Dict[str, Any],
     inference_additions: Dict[str, Any],
@@ -100,6 +166,46 @@ def merge_additions(
             _extend_unique(merged["processes"][key], items)
 
     return merged
+
+
+def merge_inference_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Merge multiple Stage-2 inference outputs into a single additions payload.
+    """
+    merged_additions: Dict[str, Any] = {}
+    intended_effect: Optional[str] = None
+    expected_changes: List[str] = []
+
+    for payload in outputs:
+        if not isinstance(payload, dict):
+            continue
+
+        additions = payload.get("additions")
+        if isinstance(additions, dict):
+            _merge_dict_in_place(merged_additions, additions)
+
+        qa_hints = payload.get("qa_hints")
+        if isinstance(qa_hints, dict):
+            effect = qa_hints.get("intended_effect")
+            if not intended_effect and isinstance(effect, str) and effect.strip():
+                intended_effect = effect
+
+            changes = qa_hints.get("expected_changes")
+            if isinstance(changes, list):
+                for item in changes:
+                    if isinstance(item, str) and item not in expected_changes:
+                        expected_changes.append(item)
+
+    result: Dict[str, Any] = {"additions": merged_additions}
+    if intended_effect or expected_changes:
+        qa_hints: Dict[str, Any] = {}
+        if intended_effect:
+            qa_hints["intended_effect"] = intended_effect
+        if expected_changes:
+            qa_hints["expected_changes"] = expected_changes
+        result["qa_hints"] = qa_hints
+
+    return result
 
 
 def merge_stage_one_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:

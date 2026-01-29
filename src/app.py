@@ -6,7 +6,7 @@ import streamlit as st
 from pipeline import (
     PipelineFailure,
     merge_additions,
-    run_inference_pipeline,
+    run_stage_two_with_chunking,
     run_stage_one_with_chunking,
 )
 from qa_graph import build_graph, connected_components
@@ -156,16 +156,20 @@ if submit:
 
     final_payload = stage_one
     qa_hints = None
-    stage_two_attempts: List[Dict[str, Any]] = []
+    stage_two_chunks: List[Dict[str, Any]] = []
 
     # Stage 2: inference/enrichment + auto-repair
     if run_inference:
         st.subheader("Stage 2 · Inference / enrichment")
         try:
             with st.spinner("Running Stage 2 inference..."):
-                stage_two, stage_two_attempts = run_inference_pipeline(
+                stage_two, stage_two_chunks = run_stage_two_with_chunking(
                     text,
                     stage_one,
+                    chunk_details=chunk_details,
+                    enable_chunking=enable_chunking,
+                    chunk_word_limit=int(chunk_size),
+                    chunk_overlap=int(chunk_overlap),
                     max_attempts=int(infer_attempts),
                     temperature=temperature,
                     max_tokens=int(infer_tokens),
@@ -176,7 +180,22 @@ if submit:
             st.stop()
 
         st.json(stage_two)
-        render_attempts("Stage 2 attempts", stage_two_attempts)
+        chunk_count = len(stage_two_chunks)
+        if chunk_count > 1:
+            st.info(
+                f"Chunked inference into {chunk_count} slices (~{int(chunk_size)} words, overlap {int(chunk_overlap)})."
+            )
+
+        for chunk in stage_two_chunks:
+            chunk_label = f"Chunk {chunk['chunk_id']} Â· words {chunk['start_word']}â€“{chunk['end_word']}"
+            with st.expander(chunk_label, expanded=False):
+                preview = chunk["text"][:400]
+                if len(chunk["text"]) > 400:
+                    preview += "..."
+                st.caption(preview)
+                st.markdown("**Chunk additions JSON**")
+                st.json(chunk["output"])
+            render_attempts(f"{chunk_label} attempts", chunk["attempts"])
         qa_hints = stage_two.get("qa_hints", {})
         final_payload = merge_additions(stage_one, stage_two)
 
