@@ -21,7 +21,9 @@ def render_attempts(label: str, attempts: List[Dict[str, Any]]) -> None:
             status = "✅ success" if not log.get("error") else "⚠️ retry"
             phase = log.get("phase")
             phase_label = f" ({phase})" if phase else ""
-            st.markdown(f"**Attempt {log['attempt']}{phase_label}** — {status}")
+            note = log.get("note")
+            note_label = f" [{note}]" if note else ""
+            st.markdown(f"**Attempt {log['attempt']}{phase_label}** — {status}{note_label}")
             st.code(log["raw"], language="json")
             if log.get("error"):
                 st.caption(log["error"])

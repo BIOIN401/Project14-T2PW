@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -83,6 +84,7 @@ def run_stage_two_with_chunking(
     max_attempts: int = 2,
     temperature: float = 0.0,
     max_tokens: int = 2000,
+    compact_stage_one: bool = True,
     retry_on_failure: bool = True,
     retry_max_tokens: Optional[int] = None,
     retry_compact_stage_one: bool = True,
@@ -117,6 +119,9 @@ def run_stage_two_with_chunking(
         chunk_stage_one = chunk.get("output") if isinstance(chunk, dict) else None
         if not isinstance(chunk_stage_one, dict):
             chunk_stage_one = stage_one
+
+        if compact_stage_one:
+            chunk_stage_one = _compact_stage_one_for_inference(chunk_stage_one)
 
         try:
             parsed, attempts = run_inference_pipeline(
@@ -160,10 +165,11 @@ def run_stage_two_with_chunking(
                 except PipelineFailure as retry_failure:
                     attempts = _tag_attempts(failure.attempts, "initial")
                     attempts.extend(_tag_attempts(retry_failure.attempts, "retry"))
-                    last_error, raw_preview, raw_length = _summarize_failure(attempts)
+                    last_error, raw_preview, raw_length, raw_tail = _summarize_failure(attempts)
                     message = (
                         f"Chunk {chunk.get('chunk_id')} failed to produce valid JSON after retry. "
-                        f"Last error: {last_error}. Raw length: {raw_length}. Raw preview: {raw_preview}"
+                        f"Last error: {last_error}. Raw length: {raw_length}. "
+                        f"Raw preview: {raw_preview}. Raw tail: {raw_tail}"
                     )
                     raise PipelineFailure(
                         stage=f"inference chunk {chunk.get('chunk_id')}",
@@ -171,10 +177,11 @@ def run_stage_two_with_chunking(
                         attempts=attempts,
                     ) from retry_failure
             else:
-                last_error, raw_preview, raw_length = _summarize_failure(failure.attempts)
+                last_error, raw_preview, raw_length, raw_tail = _summarize_failure(failure.attempts)
                 message = (
                     f"Chunk {chunk.get('chunk_id')} failed to produce valid JSON. "
-                    f"Last error: {last_error}. Raw length: {raw_length}. Raw preview: {raw_preview}"
+                    f"Last error: {last_error}. Raw length: {raw_length}. "
+                    f"Raw preview: {raw_preview}. Raw tail: {raw_tail}"
                 )
                 raise PipelineFailure(
                     stage=f"inference chunk {chunk.get('chunk_id')}",
@@ -271,18 +278,20 @@ def _tag_attempts(attempts: AttemptLogs, phase: str) -> AttemptLogs:
     return tagged
 
 
-def _summarize_failure(attempts: AttemptLogs, preview_chars: int = 500) -> Tuple[str, str, int]:
+def _summarize_failure(attempts: AttemptLogs, preview_chars: int = 500) -> Tuple[str, str, int, str]:
     last_error = "Unknown error"
     raw_preview = ""
     raw_length = 0
+    raw_tail = ""
     for entry in reversed(attempts):
         if entry.get("error"):
             last_error = str(entry.get("error") or last_error)
             raw = str(entry.get("raw") or "")
             raw_length = len(raw)
             raw_preview = raw[:preview_chars].replace("\n", " ").strip()
+            raw_tail = raw[-preview_chars:].replace("\n", " ").strip()
             break
-    return last_error, raw_preview, raw_length
+    return last_error, raw_preview, raw_length, raw_tail
 
 
 def _extract_json_from_text(raw: str) -> Optional[Dict[str, Any]]:
@@ -299,15 +308,30 @@ def _extract_json_from_text(raw: str) -> Optional[Dict[str, Any]]:
         return None
 
     obj_end = _find_matching_brace(text, obj_start)
-    if obj_end is None:
-        return None
+    if obj_end is not None:
+        candidate = text[obj_start : obj_end + 1]
+        candidate = _strip_trailing_commas(candidate)
+        try:
+            parsed = json.loads(candidate)
+            return parsed if isinstance(parsed, dict) else None
+        except json.JSONDecodeError:
+            pass
 
-    candidate = text[obj_start : obj_end + 1]
+    candidate = text[obj_start:]
+    repaired = _auto_close_json(candidate)
+    if repaired is not None:
+        repaired = _strip_trailing_commas(repaired)
+        try:
+            parsed = json.loads(repaired)
+            return parsed if isinstance(parsed, dict) else None
+        except json.JSONDecodeError:
+            pass
+
     try:
         parsed = json.loads(candidate)
         return parsed if isinstance(parsed, dict) else None
     except json.JSONDecodeError:
-        pass
+        return None
 
     return None
 
@@ -336,6 +360,47 @@ def _find_matching_brace(text: str, start: int) -> Optional[int]:
             if depth == 0:
                 return i
     return None
+
+
+def _auto_close_json(text: str) -> Optional[str]:
+    stack: List[str] = []
+    in_string = False
+    escape = False
+    for ch in text:
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+
+        if ch == '"':
+            in_string = True
+        elif ch in "{[":
+            stack.append(ch)
+        elif ch in "}]":
+            if stack:
+                stack.pop()
+
+    if in_string:
+        return None
+    if not stack:
+        return text
+
+    closers = {"{": "}", "[": "]"}
+    suffix = "".join(closers[ch] for ch in reversed(stack))
+    return text + suffix
+
+
+def _strip_trailing_commas(text: str) -> str:
+    previous = None
+    cleaned = text
+    while cleaned != previous:
+        previous = cleaned
+        cleaned = re.sub(r",\s*([}\]])", r"\1", cleaned)
+    return cleaned
 
 
 def _compact_stage_one_for_inference(stage_one: Dict[str, Any]) -> Dict[str, Any]:
@@ -543,6 +608,7 @@ def _run_json_stage(
         except json.JSONDecodeError as exc:
             extracted = _extract_json_from_text(raw)
             if extracted is not None:
+                log_entry["note"] = "salvaged_json"
                 attempts.append(log_entry)
                 return extracted, attempts
             error_msg = f"{exc.__class__.__name__}: {exc}"
