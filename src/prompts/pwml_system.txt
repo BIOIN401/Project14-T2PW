@@ -26,6 +26,7 @@ OUTPUT RULES (MANDATORY)
 - Any relationship/object MUST include an evidence quote (<=25 words) copied verbatim.
 - If something is not explicitly present, omit it or leave lists empty.
 - Do NOT output empty placeholder objects (e.g., {"name": ""}). Omit those entries entirely.
+- Do NOT output empty reactions or processes (no inputs/outputs). Omit them.
 - Species must be binomial (Genus species) or abbreviated binomial (G. species) ONLY; otherwise "entities.species" must be [].
 - For reactions: if inputs or outputs would be empty, do NOT create the reaction.
 - Every reaction MUST include a non-empty "evidence" quote (<=25 words) copied verbatim from the input text; otherwise omit the reaction.

@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "n_reactions": 19,
+    "n_transports": 0,
+    "n_interactions": 0,
+    "n_reaction_coupled_transports": 0
+  },
+  "n_nodes": 27,
+  "n_edges": 29,
+  "n_components": 5,
+  "main_component_size": 23,
+  "orphan_components": [
+    {
+      "size": 1,
+      "nodes": [
+        "protein:succinate dehydrogenase"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "protein:citrate synthase"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "protein:aconitase"
+      ]
+    },
+    {
+      "size": 1,
+      "nodes": [
+        "protein_complex:succinate dehydrogenase complex"
+      ]
+    }
+  ],
+  "dangling_nodes": [
+    {
+      "node": "protein:aconitase",
+      "degree": 0
+    },
+    {
+      "node": "protein:citrate synthase",
+      "degree": 0
+    },
+    {
+      "node": "protein:succinate dehydrogenase",
+      "degree": 0
+    },
+    {
+      "node": "protein_complex:succinate dehydrogenase complex",
+      "degree": 0
+    },
+    {
+      "node": "compound:acetyl-CoA",
+      "degree": 1
+    }
+  ],
+  "missing_links_suspected": [
+    {
+      "hint": "protein appears in entities but is not connected to any process/location",
+      "node": "protein:succinate dehydrogenase"
+    },
+    {
+      "hint": "protein appears in entities but is not connected to any process/location",
+      "node": "protein:citrate synthase"
+    },
+    {
+      "hint": "protein appears in entities but is not connected to any process/location",
+      "node": "protein:aconitase"
+    },
+    {
+      "hint": "protein_complex appears in entities but is not connected to any process/location",
+      "node": "protein_complex:succinate dehydrogenase complex"
+    }
+  ],
+  "species_violations": [],
+  "notes": [
+    "Orphan components are any connected component not equal to the largest component.",
+    "Dangling nodes are degree <= 1 and often indicate missing links or incomplete extraction."
+  ]
+}

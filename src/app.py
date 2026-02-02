@@ -40,6 +40,16 @@ def graph_summary(payload: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def qa_summary_line(payload: Dict[str, Any]) -> str:
+    stats = graph_summary(payload)
+    orphans = max(stats["n_components"] - 1, 0)
+    return (
+        f"Components: {stats['n_components']} | "
+        f"Main size: {stats['main_component_size']} | "
+        f"Orphans: {orphans}"
+    )
+
+
 with st.form("pwml_pipeline"):
     text = st.text_area("Paste pathway description:", height=220)
     run_inference = st.checkbox(
@@ -136,6 +146,7 @@ if submit:
         st.stop()
 
     st.json(stage_one)
+    st.caption(f"Stage 1 QA: {qa_summary_line(stage_one)}")
     st.download_button(
         "Download Stage 1 JSON",
         json.dumps(stage_one, indent=2),
@@ -216,6 +227,7 @@ if submit:
 
     st.subheader("Final merged output")
     st.json(final_payload)
+    st.caption(f"Final QA: {qa_summary_line(final_payload)}")
     st.download_button(
         "Download merged JSON",
         json.dumps(final_payload, indent=2),
