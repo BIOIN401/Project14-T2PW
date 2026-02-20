@@ -1,0 +1,437 @@
+{
+  "entities": {
+    "cell_types": [
+      {
+        "name": "higher plants"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "oil body (storage vacuole) membrane"
+      },
+      {
+        "name": "mitochondrial inner membrane"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "triacylglycerol"
+      },
+      {
+        "name": "1,2-diglyceride"
+      },
+      {
+        "name": "2-acylglycerol"
+      },
+      {
+        "name": "1-monoglyceride"
+      },
+      {
+        "name": "glycerol"
+      },
+      {
+        "name": "glycerol 3-phosphate"
+      },
+      {
+        "name": "glycerone phosphate"
+      }
+    ],
+    "element_collections": [
+      {
+        "name": "oil body (storage vacuole)"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "triacylglycerol lipase"
+      },
+      {
+        "name": "diglyceride lipase"
+      },
+      {
+        "name": "acylhydrolase"
+      },
+      {
+        "name": "glycerol kinase"
+      },
+      {
+        "name": "glycerol-3-phosphate dehydrogenase"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "higher plants"
+    },
+    {
+      "name": "oil body (storage vacuole)"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "triacylglycerol"
+      },
+      {
+        "compound": "1,2-diglyceride"
+      },
+      {
+        "compound": "2-acylglycerol"
+      },
+      {
+        "compound": "1-monoglyceride"
+      },
+      {
+        "compound": "glycerol"
+      },
+      {
+        "compound": "glycerol 3-phosphate"
+      },
+      {
+        "compound": "glycerone phosphate"
+      }
+    ],
+    "element_collection_locations": [
+      {
+        "element_collection": "oil body (storage vacuole)"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "triacylglycerol"
+        ],
+        "outputs": [
+          "1,2-diglyceride"
+        ],
+        "name": "conversion of a triglyceride into a 1,2-diglyceride",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by triacylglycerol lipase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "1,2-diglyceride"
+        ],
+        "outputs": [
+          "2-acylglycerol"
+        ],
+        "name": "conversion of a 1,2-diglyceride into a 2-acylglycerol",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by diglyceride lipase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2-acylglycerol"
+        ],
+        "outputs": [
+          "1-monoglyceride"
+        ],
+        "name": "conversion of a 2-acylglycerol into a 1-monoglyceride"
+      },
+      {
+        "inputs": [
+          "1-monoglyceride"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of a 1-monoglyceride into glycerol",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by acylhydrolase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "glycerol"
+        ],
+        "outputs": [
+          "glycerol 3-phosphate"
+        ],
+        "name": "conversion of glycerol into glycerol 3-phosphate",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by glycerol kinase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "glycerol 3-phosphate"
+        ],
+        "outputs": [
+          "glycerone phosphate"
+        ],
+        "name": "conversion of glycerol 3-phosphate into glycerone phosphate",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by glycerol-3-phosphate dehydrogenase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "triacylglycerol"
+        ],
+        "outputs": [
+          "1,2-diglyceride"
+        ],
+        "name": "conversion of a triglyceride into a 1,2-diglyceride",
+        "enzymes": [
+          {
+            "evidence": "First, triacylglycerol lipase, an enzyme localized to the oil body (storage vacuole) membrane, catalyzes the conversion of a triglyceride into a 1,2-diglyceride.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "1,2-diglyceride"
+        ],
+        "outputs": [
+          "2-acylglycerol"
+        ],
+        "name": "conversion of a 1,2-diglyceride into a 2-acylglycerol",
+        "enzymes": [
+          {
+            "evidence": "The predicted enzyme diglyceride lipase (coloured orange in the image) is theorized to catalyze the conversion of a 1,2-diglyceride into a 2-acylglycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "2-acylglycerol"
+        ],
+        "outputs": [
+          "1-monoglyceride"
+        ],
+        "name": "conversion of a 2-acylglycerol into a 1-monoglyceride",
+        "evidence": "A 2-acylglycerol is spontaneously converted into a 1-monoglyceride.",
+        "inference": {
+          "method": "inference",
+          "confidence": 0.9,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "1-monoglyceride"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of a 1-monoglyceride into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerol"
+        ],
+        "outputs": [
+          "glycerol 3-phosphate"
+        ],
+        "name": "conversion of glycerol into glycerol 3-phosphate",
+        "enzymes": [
+          {
+            "evidence": "Glycerol kinase catalyzes the conversion of glycerol into glycerol 3-phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerol 3-phosphate"
+        ],
+        "outputs": [
+          "glycerone phosphate"
+        ],
+        "name": "conversion of glycerol 3-phosphate into glycerone phosphate",
+        "enzymes": [
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerone phosphate"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of glycerone phosphate into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerol"
+        ],
+        "outputs": [
+          "glycerone phosphate"
+        ],
+        "name": "conversion of glycerol into glycerone phosphate",
+        "enzymes": [
+          {
+            "evidence": "Glycerol kinase catalyzes the conversion of glycerol into glycerol 3-phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          },
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerone phosphate"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of glycerone phosphate into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          },
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerone phosphate"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of glycerone phosphate into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          },
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8
+        }
+      }
+    ]
+  }
+}

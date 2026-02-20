@@ -1,0 +1,760 @@
+{
+  "root_tag": "super-pathway-visualization",
+  "root_children": [
+    "named-for-id",
+    "named-for-type",
+    "cached-name",
+    "cached-description",
+    "cached-subject",
+    "pw-id",
+    "pathway-visualization-contexts"
+  ],
+  "pv_path": "./pathway-visualization-contexts/pathway-visualization-context/pathway-visualization",
+  "pv_children": [
+    "height",
+    "width",
+    "background-color",
+    "id",
+    "pathway",
+    "cell-types",
+    "species",
+    "subcellular-locations",
+    "tissues",
+    "biological-states",
+    "bounds",
+    "compounds",
+    "element-collections",
+    "nucleic-acids",
+    "proteins",
+    "protein-complexes",
+    "reactions",
+    "reaction-coupled-transports",
+    "transports",
+    "interactions",
+    "bound-visualizations",
+    "compound-locations",
+    "element-collection-locations",
+    "nucleic-acid-locations",
+    "protein-locations",
+    "protein-complex-visualizations",
+    "edges",
+    "reaction-visualizations",
+    "reaction-coupled-transport_visualizations",
+    "transport-visualizations",
+    "interaction-visualizations",
+    "sub-pathway-visualizations",
+    "vacuous-compound-visualizations",
+    "vacuous-edge-visualizations",
+    "vacuous-nucleic-acid-visualizations",
+    "vacuous-element-collection-visualizations",
+    "vacuous-protein-visualizations",
+    "drawable-element-locations",
+    "membrane-visualizations",
+    "label-locations",
+    "zoom-visualizations"
+  ],
+  "pathway_children": [
+    "id",
+    "name",
+    "description",
+    "subject",
+    "species-id",
+    "sub-pathways",
+    "references"
+  ],
+  "sections": {
+    "height": {
+      "container_tag": "height",
+      "item_tag": "height",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "width": {
+      "container_tag": "width",
+      "item_tag": "width",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "background-color": {
+      "container_tag": "background-color",
+      "item_tag": "background-color",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "id": {
+      "container_tag": "id",
+      "item_tag": "id",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "cell-types": {
+      "container_tag": "cell-types",
+      "item_tag": "cell-type",
+      "required_fields": [
+        "id",
+        "name",
+        "ontology-id"
+      ],
+      "integer_fields": [
+        "id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "species": {
+      "container_tag": "species",
+      "item_tag": "species",
+      "required_fields": [
+        "id",
+        "name",
+        "taxonomy-id",
+        "classification",
+        "common-name"
+      ],
+      "integer_fields": [
+        "id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "subcellular-locations": {
+      "container_tag": "subcellular-locations",
+      "item_tag": "subcellular-location",
+      "required_fields": [
+        "id",
+        "name",
+        "ontology-id"
+      ],
+      "integer_fields": [
+        "id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "tissues": {
+      "container_tag": "tissues",
+      "item_tag": "tissue",
+      "required_fields": [
+        "id",
+        "name",
+        "ontology-id",
+        "visualization-template-id",
+        "drawable-image-id"
+      ],
+      "integer_fields": [
+        "drawable-image-id",
+        "id",
+        "visualization-template-id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": [
+        "drawable-image-id",
+        "visualization-template-id"
+      ]
+    },
+    "biological-states": {
+      "container_tag": "biological-states",
+      "item_tag": "biological-state",
+      "required_fields": [
+        "id",
+        "tissue-id",
+        "subcellular-location-id",
+        "species-id",
+        "cell-type-id",
+        "pwbs-id"
+      ],
+      "integer_fields": [
+        "cell-type-id",
+        "id",
+        "species-id",
+        "subcellular-location-id",
+        "tissue-id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": [
+        "tissue-id"
+      ]
+    },
+    "bounds": {
+      "container_tag": "bounds",
+      "item_tag": "bound",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "compounds": {
+      "container_tag": "compounds",
+      "item_tag": "compound",
+      "required_fields": [
+        "id",
+        "name",
+        "hmdb-id",
+        "description",
+        "cas",
+        "kegg-id",
+        "pubchem-cid",
+        "chebi-id",
+        "biocyc-id",
+        "chemspider-id",
+        "drugbank-id",
+        "moldb-smiles",
+        "moldb-formula",
+        "moldb-inchi",
+        "moldb-inchikey",
+        "moldb-iupac",
+        "moldb-average-mass",
+        "moldb-mono-mass",
+        "moldb-alogps-logs",
+        "moldb-donor-count",
+        "moldb-traditional-iupac",
+        "moldb-formal-charge",
+        "moldb-physiological-charge",
+        "drugbank-metabolite-id",
+        "foodb-id",
+        "synonyms",
+        "pwc-id",
+        "short-name",
+        "element-states"
+      ],
+      "integer_fields": [
+        "id",
+        "moldb-formal-charge",
+        "moldb-physiological-charge"
+      ],
+      "boolean_fields": [],
+      "nil_fields": [
+        "biocyc-id",
+        "cas",
+        "drugbank-id",
+        "drugbank-metabolite-id",
+        "foodb-id",
+        "moldb-alogps-logs"
+      ]
+    },
+    "element-collections": {
+      "container_tag": "element-collections",
+      "item_tag": "element-collection",
+      "required_fields": [
+        "id",
+        "name",
+        "element-type",
+        "element-id",
+        "collection-type",
+        "pwec-id",
+        "external-id",
+        "external-id-type",
+        "short-name"
+      ],
+      "integer_fields": [
+        "id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": [
+        "element-id"
+      ]
+    },
+    "nucleic-acids": {
+      "container_tag": "nucleic-acids",
+      "item_tag": "nucleic-acid",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "proteins": {
+      "container_tag": "proteins",
+      "item_tag": "protein",
+      "required_fields": [
+        "id",
+        "name",
+        "uniprot-id",
+        "description",
+        "hmdbp-id",
+        "gene-name",
+        "locus",
+        "drugbank-id",
+        "genbank-id",
+        "species-id",
+        "ec-numbers",
+        "synonyms",
+        "element-states"
+      ],
+      "integer_fields": [
+        "id",
+        "species-id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": [
+        "description",
+        "drugbank-id",
+        "genbank-id",
+        "gene-name",
+        "hmdbp-id",
+        "locus",
+        "synonyms"
+      ]
+    },
+    "protein-complexes": {
+      "container_tag": "protein-complexes",
+      "item_tag": "protein-complex",
+      "required_fields": [
+        "id",
+        "name",
+        "species-id",
+        "pwp-id",
+        "protein_complex-proteins",
+        "element-states"
+      ],
+      "integer_fields": [
+        "id",
+        "species-id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "reactions": {
+      "container_tag": "reactions",
+      "item_tag": "reaction",
+      "required_fields": [
+        "id",
+        "spontaneous",
+        "pwr-id",
+        "direction",
+        "reaction-left-elements",
+        "reaction-right-elements",
+        "reaction-enzymes"
+      ],
+      "integer_fields": [
+        "id"
+      ],
+      "boolean_fields": [
+        "spontaneous"
+      ],
+      "nil_fields": [
+        "spontaneous"
+      ]
+    },
+    "reaction-coupled-transports": {
+      "container_tag": "reaction-coupled-transports",
+      "item_tag": "reaction-coupled-transport",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "transports": {
+      "container_tag": "transports",
+      "item_tag": "transport",
+      "required_fields": [
+        "id",
+        "pwt-id",
+        "transport-type",
+        "transport-elements",
+        "transport-transporters"
+      ],
+      "integer_fields": [
+        "id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": [
+        "transport-type"
+      ]
+    },
+    "interactions": {
+      "container_tag": "interactions",
+      "item_tag": "interaction",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "bound-visualizations": {
+      "container_tag": "bound-visualizations",
+      "item_tag": "bound-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "compound-locations": {
+      "container_tag": "compound-locations",
+      "item_tag": "compound-location",
+      "required_fields": [
+        "id",
+        "compound-id",
+        "biological-state-id",
+        "visualization-template-id",
+        "hidden",
+        "x",
+        "y",
+        "zindex",
+        "font-size",
+        "width",
+        "height"
+      ],
+      "integer_fields": [
+        "biological-state-id",
+        "compound-id",
+        "id",
+        "visualization-template-id",
+        "x",
+        "y",
+        "zindex"
+      ],
+      "boolean_fields": [
+        "hidden"
+      ],
+      "nil_fields": []
+    },
+    "element-collection-locations": {
+      "container_tag": "element-collection-locations",
+      "item_tag": "element-collection-location",
+      "required_fields": [
+        "id",
+        "element-collection-id",
+        "visualization-template-id",
+        "biological-state-id",
+        "hidden",
+        "x",
+        "y",
+        "zindex",
+        "font-size",
+        "width",
+        "height"
+      ],
+      "integer_fields": [
+        "biological-state-id",
+        "element-collection-id",
+        "id",
+        "visualization-template-id",
+        "x",
+        "y",
+        "zindex"
+      ],
+      "boolean_fields": [
+        "hidden"
+      ],
+      "nil_fields": []
+    },
+    "nucleic-acid-locations": {
+      "container_tag": "nucleic-acid-locations",
+      "item_tag": "nucleic-acid-location",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "protein-locations": {
+      "container_tag": "protein-locations",
+      "item_tag": "protein-location",
+      "required_fields": [
+        "id",
+        "protein-id",
+        "biological-state-id",
+        "visualization-template-id",
+        "hidden",
+        "x",
+        "y",
+        "zindex",
+        "label-type",
+        "font-size",
+        "width",
+        "height"
+      ],
+      "integer_fields": [
+        "biological-state-id",
+        "id",
+        "protein-id",
+        "visualization-template-id",
+        "x",
+        "y",
+        "zindex"
+      ],
+      "boolean_fields": [
+        "hidden"
+      ],
+      "nil_fields": []
+    },
+    "protein-complex-visualizations": {
+      "container_tag": "protein-complex-visualizations",
+      "item_tag": "protein-complex-visualization",
+      "required_fields": [
+        "id",
+        "protein-complex-id",
+        "pathway-visualization-id",
+        "biological-state-id",
+        "protein_complex_protein_visualizations"
+      ],
+      "integer_fields": [
+        "biological-state-id",
+        "id",
+        "pathway-visualization-id",
+        "protein-complex-id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "edges": {
+      "container_tag": "edges",
+      "item_tag": "edge",
+      "required_fields": [
+        "id",
+        "path",
+        "visualization-template-id",
+        "hidden",
+        "zindex"
+      ],
+      "integer_fields": [
+        "id",
+        "visualization-template-id",
+        "zindex"
+      ],
+      "boolean_fields": [
+        "hidden"
+      ],
+      "nil_fields": []
+    },
+    "reaction-visualizations": {
+      "container_tag": "reaction-visualizations",
+      "item_tag": "reaction-visualization",
+      "required_fields": [
+        "id",
+        "pathway-visualization-id",
+        "reaction-id",
+        "biological-state-id",
+        "reaction_compound_visualizations",
+        "reaction_element_collection_visualizations",
+        "reaction_enzyme_visualizations"
+      ],
+      "integer_fields": [
+        "biological-state-id",
+        "id",
+        "pathway-visualization-id",
+        "reaction-id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "reaction-coupled-transport_visualizations": {
+      "container_tag": "reaction-coupled-transport_visualizations",
+      "item_tag": "reaction-coupled-transport-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "transport-visualizations": {
+      "container_tag": "transport-visualizations",
+      "item_tag": "transport-visualization",
+      "required_fields": [
+        "id",
+        "transport-id",
+        "pathway-visualization-id",
+        "transport_compound_visualizations",
+        "transport_transporter_visualizations"
+      ],
+      "integer_fields": [
+        "id",
+        "pathway-visualization-id",
+        "transport-id"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "interaction-visualizations": {
+      "container_tag": "interaction-visualizations",
+      "item_tag": "interaction-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "sub-pathway-visualizations": {
+      "container_tag": "sub-pathway-visualizations",
+      "item_tag": "sub-pathway-visualization",
+      "required_fields": [
+        "id",
+        "sub-pathway-id",
+        "pathway-visualization-id",
+        "visualization-template-id",
+        "hidden",
+        "x",
+        "y",
+        "zindex",
+        "font-size",
+        "sub_pathway_element_collection_visualizations"
+      ],
+      "integer_fields": [
+        "id",
+        "pathway-visualization-id",
+        "sub-pathway-id",
+        "visualization-template-id",
+        "x",
+        "y",
+        "zindex"
+      ],
+      "boolean_fields": [
+        "hidden"
+      ],
+      "nil_fields": []
+    },
+    "vacuous-compound-visualizations": {
+      "container_tag": "vacuous-compound-visualizations",
+      "item_tag": "vacuous-compound-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "vacuous-edge-visualizations": {
+      "container_tag": "vacuous-edge-visualizations",
+      "item_tag": "vacuous-edge-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "vacuous-nucleic-acid-visualizations": {
+      "container_tag": "vacuous-nucleic-acid-visualizations",
+      "item_tag": "vacuous-nucleic-acid-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "vacuous-element-collection-visualizations": {
+      "container_tag": "vacuous-element-collection-visualizations",
+      "item_tag": "vacuous-element-collection-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "vacuous-protein-visualizations": {
+      "container_tag": "vacuous-protein-visualizations",
+      "item_tag": "vacuous-protein-visualization",
+      "required_fields": [],
+      "integer_fields": [],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "drawable-element-locations": {
+      "container_tag": "drawable-element-locations",
+      "item_tag": "drawable-element-location",
+      "required_fields": [
+        "id",
+        "visualization-template-id",
+        "x",
+        "y",
+        "scale-x",
+        "scale-y",
+        "degree",
+        "zindex",
+        "drawable-image-id",
+        "width",
+        "height"
+      ],
+      "integer_fields": [
+        "degree",
+        "drawable-image-id",
+        "id",
+        "visualization-template-id",
+        "x",
+        "y",
+        "zindex"
+      ],
+      "boolean_fields": [],
+      "nil_fields": [
+        "visualization-template-id"
+      ]
+    },
+    "membrane-visualizations": {
+      "container_tag": "membrane-visualizations",
+      "item_tag": "membrane-visualization",
+      "required_fields": [
+        "id",
+        "path",
+        "visualization-template-id",
+        "complete-membrane",
+        "zindex",
+        "width",
+        "height"
+      ],
+      "integer_fields": [
+        "id",
+        "visualization-template-id",
+        "zindex"
+      ],
+      "boolean_fields": [
+        "complete-membrane"
+      ],
+      "nil_fields": []
+    },
+    "label-locations": {
+      "container_tag": "label-locations",
+      "item_tag": "label-location",
+      "required_fields": [
+        "id",
+        "visualization-template-id",
+        "label-text",
+        "x",
+        "y",
+        "zindex",
+        "scale-x",
+        "scale-y",
+        "width",
+        "height"
+      ],
+      "integer_fields": [
+        "id",
+        "visualization-template-id",
+        "x",
+        "y",
+        "zindex"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    },
+    "zoom-visualizations": {
+      "container_tag": "zoom-visualizations",
+      "item_tag": "zoom-visualization",
+      "required_fields": [
+        "id",
+        "p1x",
+        "p1y",
+        "p2x",
+        "p2y",
+        "p3x",
+        "p3y",
+        "visualization-template-id",
+        "color",
+        "zindex",
+        "label",
+        "width",
+        "height"
+      ],
+      "integer_fields": [
+        "id",
+        "p1x",
+        "p1y",
+        "p2x",
+        "p2y",
+        "p3x",
+        "p3y",
+        "visualization-template-id",
+        "zindex"
+      ],
+      "boolean_fields": [],
+      "nil_fields": []
+    }
+  }
+}
