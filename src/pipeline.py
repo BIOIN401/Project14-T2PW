@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from llm_client import chat
+from qa_graph import build_graph, connected_components, degrees, get_entities
 
 BASE_DIR = Path(__file__).resolve().parent
 PROMPTS_DIR = BASE_DIR / "prompts"
@@ -53,6 +54,7 @@ def run_inference_pipeline(
     input_text: str,
     stage_one: Dict[str, Any],
     *,
+    qa_feedback: Optional[Dict[str, Any]] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
     max_tokens: int = 2000,
@@ -65,7 +67,11 @@ def run_inference_pipeline(
         stage_name="inference",
         system_prompt=INFER_SYSTEM,
         build_user_prompt=lambda prev_output, last_error: _build_inference_prompt(
-            input_text, stage_one_str, prev_output, last_error
+            input_text,
+            stage_one_str,
+            prev_output,
+            last_error,
+            qa_feedback,
         ),
         max_attempts=max_attempts,
         temperature=temperature,
@@ -78,6 +84,7 @@ def run_stage_two_with_chunking(
     stage_one: Dict[str, Any],
     chunk_details: Optional[List[Dict[str, Any]]] = None,
     *,
+    qa_feedback: Optional[Dict[str, Any]] = None,
     enable_chunking: bool,
     chunk_word_limit: int = 1500,
     chunk_overlap: int = 200,
@@ -127,6 +134,7 @@ def run_stage_two_with_chunking(
             parsed, attempts = run_inference_pipeline(
                 chunk["text"],
                 chunk_stage_one,
+                qa_feedback=qa_feedback,
                 max_attempts=max_attempts,
                 temperature=temperature,
                 max_tokens=max_tokens,
@@ -155,6 +163,7 @@ def run_stage_two_with_chunking(
                     retry_parsed, retry_attempts = run_inference_pipeline(
                         chunk["text"],
                         compact_stage_one,
+                        qa_feedback=qa_feedback,
                         max_attempts=max_attempts,
                         temperature=temperature,
                         max_tokens=retry_tokens,
@@ -198,6 +207,156 @@ def run_stage_two_with_chunking(
     return merged, chunk_results
 
 
+def build_qa_feedback(payload: Dict[str, Any], *, hint_limit: int = 25) -> Dict[str, Any]:
+    """
+    Build deterministic graph-QA hints that can be fed back into Stage 2.
+    """
+    adj, meta = build_graph(payload)
+    entities = get_entities(payload)
+
+    for compound_name in entities["compounds"]:
+        adj.setdefault(f"compound:{compound_name}", set())
+    for protein_name in entities["proteins"]:
+        adj.setdefault(f"protein:{protein_name}", set())
+    for nucleic_acid_name in entities["nucleic_acids"]:
+        adj.setdefault(f"nucleic_acid:{nucleic_acid_name}", set())
+    for element_collection_name in entities["element_collections"]:
+        adj.setdefault(f"element_collection:{element_collection_name}", set())
+    for protein_complex_name in entities["protein_complexes"]:
+        adj.setdefault(f"protein_complex:{protein_complex_name}", set())
+
+    comps = connected_components(adj)
+    comps_sorted = sorted(comps, key=lambda comp: len(comp), reverse=True)
+    deg = degrees(adj)
+
+    orphan_components: List[Dict[str, Any]] = []
+    for comp in comps_sorted[1:]:
+        orphan_components.append(
+            {
+                "size": len(comp),
+                "nodes": sorted(comp)[:hint_limit],
+            }
+        )
+
+    dangling_nodes = [
+        {"node": node_name, "degree": degree}
+        for node_name, degree in sorted(deg.items(), key=lambda pair: (pair[1], pair[0]))
+        if degree <= 1
+    ][:hint_limit]
+
+    missing_links: List[Dict[str, Any]] = []
+    for kind, names in [
+        ("compound", entities["compounds"]),
+        ("protein", entities["proteins"]),
+        ("nucleic_acid", entities["nucleic_acids"]),
+        ("element_collection", entities["element_collections"]),
+        ("protein_complex", entities["protein_complexes"]),
+    ]:
+        for name in names:
+            node_name = f"{kind}:{name}"
+            if deg.get(node_name, 0) == 0:
+                missing_links.append(
+                    {
+                        "node": node_name,
+                        "hint": f"{kind} exists but is disconnected from processes/locations",
+                    }
+                )
+
+    return {
+        "meta": meta,
+        "n_nodes": len(adj),
+        "n_edges": sum(len(v) for v in adj.values()) // 2,
+        "n_components": len(comps_sorted),
+        "main_component_size": len(comps_sorted[0]) if comps_sorted else 0,
+        "orphan_components": orphan_components[: max(1, hint_limit // 5)],
+        "dangling_nodes": dangling_nodes,
+        "missing_links_suspected": missing_links[:hint_limit],
+    }
+
+
+def run_stage_two_with_feedback_loop(
+    input_text: str,
+    stage_one: Dict[str, Any],
+    chunk_details: Optional[List[Dict[str, Any]]] = None,
+    *,
+    qa_rounds: int = 2,
+    enable_chunking: bool,
+    chunk_word_limit: int = 1500,
+    chunk_overlap: int = 200,
+    max_attempts: int = 2,
+    temperature: float = 0.0,
+    max_tokens: int = 2000,
+    compact_stage_one: bool = True,
+    retry_on_failure: bool = True,
+    retry_max_tokens: Optional[int] = None,
+    retry_compact_stage_one: bool = True,
+) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """
+    Run Stage 2 one or more times, feeding graph-QA hints into later rounds.
+    Returns merged additions, flattened per-chunk details, and per-round summaries.
+    """
+    total_rounds = max(1, int(qa_rounds))
+    base_stage_one = deepcopy(stage_one)
+    working_stage_one = deepcopy(stage_one)
+    all_outputs: List[Dict[str, Any]] = []
+    all_chunk_results: List[Dict[str, Any]] = []
+    round_summaries: List[Dict[str, Any]] = []
+
+    last_signature = ""
+    for round_index in range(1, total_rounds + 1):
+        qa_feedback = build_qa_feedback(working_stage_one) if round_index > 1 else {}
+
+        output, chunk_results = run_stage_two_with_chunking(
+            input_text,
+            working_stage_one,
+            chunk_details=chunk_details if round_index == 1 else None,
+            qa_feedback=qa_feedback,
+            enable_chunking=enable_chunking,
+            chunk_word_limit=chunk_word_limit,
+            chunk_overlap=chunk_overlap,
+            max_attempts=max_attempts,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            compact_stage_one=compact_stage_one,
+            retry_on_failure=retry_on_failure,
+            retry_max_tokens=retry_max_tokens,
+            retry_compact_stage_one=retry_compact_stage_one,
+        )
+
+        tagged_chunks: List[Dict[str, Any]] = []
+        for chunk in chunk_results:
+            tagged = dict(chunk)
+            tagged["qa_round"] = round_index
+            tagged_chunks.append(tagged)
+        all_chunk_results.extend(tagged_chunks)
+
+        all_outputs.append(output)
+        merged_additions = merge_inference_outputs(all_outputs)
+        merged_payload = merge_additions(base_stage_one, merged_additions)
+        signature = json.dumps(merged_additions, sort_keys=True)
+
+        round_summaries.append(
+            {
+                "qa_round": round_index,
+                "chunk_count": len(chunk_results),
+                "used_feedback": bool(qa_feedback),
+                "feedback_missing_links": len(qa_feedback.get("missing_links_suspected", []))
+                if isinstance(qa_feedback, dict)
+                else 0,
+                "feedback_dangling_nodes": len(qa_feedback.get("dangling_nodes", []))
+                if isinstance(qa_feedback, dict)
+                else 0,
+            }
+        )
+
+        if signature == last_signature:
+            break
+        last_signature = signature
+        working_stage_one = merged_payload
+
+    return merge_inference_outputs(all_outputs), all_chunk_results, round_summaries
+
+
 def merge_additions(
     base: Dict[str, Any],
     inference_additions: Dict[str, Any],
@@ -227,6 +386,20 @@ def merge_additions(
                 continue
             merged["processes"].setdefault(key, [])
             _extend_unique(merged["processes"][key], items)
+
+    states_add = additions.get("biological_states", [])
+    if isinstance(states_add, list):
+        merged.setdefault("biological_states", [])
+        _extend_unique(merged["biological_states"], states_add)
+
+    locations_add = additions.get("element_locations", {})
+    if isinstance(locations_add, dict):
+        merged.setdefault("element_locations", {})
+        for key, items in locations_add.items():
+            if not isinstance(items, list):
+                continue
+            merged["element_locations"].setdefault(key, [])
+            _extend_unique(merged["element_locations"][key], items)
 
     return merged
 
@@ -742,6 +915,10 @@ def clean_inference_output(payload: Dict[str, Any]) -> Dict[str, Any]:
             additions["entities"] = payload.get("entities")
         if isinstance(payload.get("processes"), dict):
             additions["processes"] = payload.get("processes")
+        if isinstance(payload.get("biological_states"), list):
+            additions["biological_states"] = payload.get("biological_states")
+        if isinstance(payload.get("element_locations"), dict):
+            additions["element_locations"] = payload.get("element_locations")
 
     if not isinstance(additions, dict):
         additions = {}
@@ -761,6 +938,12 @@ def clean_inference_output(payload: Dict[str, Any]) -> Dict[str, Any]:
     cleaned_processes = _clean_processes(additions.get("processes", {}))
     if cleaned_processes:
         cleaned_additions["processes"] = cleaned_processes
+    cleaned_states = _clean_biological_states(_safe_list(additions.get("biological_states", [])))
+    if cleaned_states:
+        cleaned_additions["biological_states"] = cleaned_states
+    cleaned_locations = _clean_element_locations(additions.get("element_locations", {}))
+    if cleaned_locations:
+        cleaned_additions["element_locations"] = cleaned_locations
 
     result: Dict[str, Any] = {"additions": cleaned_additions}
     qa_hints = payload.get("qa_hints")
@@ -1008,6 +1191,7 @@ def _build_inference_prompt(
     stage_one_json: str,
     prev_output: Optional[str],
     last_error: Optional[str],
+    qa_feedback: Optional[Dict[str, Any]],
 ) -> str:
     prompt = [
         "Use the original description and Stage-1 strict JSON to propose conservative PWML additions.",
@@ -1023,6 +1207,19 @@ def _build_inference_prompt(
         stage_one_json,
         ">>>",
     ]
+
+    if qa_feedback:
+        qa_json = json.dumps(qa_feedback, indent=2, ensure_ascii=False)
+        prompt.extend(
+            [
+                "",
+                "Graph QA feedback (use only as repair hints, stay conservative):",
+                "<<<",
+                qa_json,
+                ">>>",
+                "Prioritize reconnecting disconnected entities by adding supported reactions, locations, or state links.",
+            ]
+        )
 
     if prev_output and last_error:
         prompt.extend(
