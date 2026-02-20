@@ -109,7 +109,7 @@ with st.form("pwml_pipeline"):
         "Stage 2 QA rounds",
         min_value=1,
         max_value=4,
-        value=2,
+        value=1,
         step=1,
         help="Round 1 is normal inference. Additional rounds include graph QA feedback hints.",
     )
@@ -126,7 +126,7 @@ with st.form("pwml_pipeline"):
         "Stage 2 max tokens",
         min_value=500,
         max_value=4000,
-        value=2000,
+        value=1500,
         step=100,
     )
 
@@ -145,6 +145,7 @@ with st.form("pwml_pipeline"):
         value=200,
         step=50,
     )
+    st.caption("Runtime scales with: chunks x Stage 2 QA rounds x retry attempts.")
 
     submit = st.form_submit_button("Run pipeline")
 
@@ -154,7 +155,6 @@ if submit:
         st.stop()
 
     # Stage 1: strict extraction with auto-repair
-    st.subheader("Stage 1 - Strict extraction")
     try:
         with st.spinner("Running Stage 1 extraction..."):
             stage_one, chunk_details = run_stage_one_with_chunking(
@@ -171,37 +171,14 @@ if submit:
         render_attempts("Stage 1 attempts", failure.attempts)
         st.stop()
 
-    st.json(stage_one)
-    st.caption(f"Stage 1 QA: {qa_summary_line(stage_one)}")
-    st.download_button(
-        "Download Stage 1 JSON",
-        json.dumps(stage_one, indent=2),
-        file_name="stage1_extract.json",
-        mime="application/json",
-    )
-
-    chunk_count = len(chunk_details)
-    if chunk_count > 1:
-        st.info(f"Chunked input into {chunk_count} slices (~{int(chunk_size)} words, overlap {int(chunk_overlap)}).")
-
-    for chunk in chunk_details:
-        chunk_label = f"Chunk {chunk['chunk_id']} - words {chunk['start_word']}-{chunk['end_word']}"
-        with st.expander(chunk_label, expanded=False):
-            preview = chunk["text"][:400]
-            if len(chunk["text"]) > 400:
-                preview += "..."
-            st.caption(preview)
-            st.markdown("**Chunk output JSON**")
-            st.json(chunk["output"])
-        render_attempts(f"{chunk_label} attempts", chunk["attempts"])
-
     final_payload = stage_one
-    qa_hints = None
+    stage_two = None
     stage_two_chunks: List[Dict[str, Any]] = []
+    stage_two_rounds: List[Dict[str, Any]] = []
+    qa_hints = None
 
     # Stage 2: inference/enrichment + auto-repair
     if run_inference:
-        st.subheader("Stage 2 - Inference / enrichment")
         try:
             with st.spinner("Running Stage 2 inference..."):
                 stage_two, stage_two_chunks, stage_two_rounds = run_stage_two_with_feedback_loop(
@@ -222,6 +199,55 @@ if submit:
             render_attempts(label, failure.attempts)
             st.stop()
 
+        qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
+        final_payload = merge_additions(stage_one, stage_two if isinstance(stage_two, dict) else {})
+
+    st.session_state["pipeline_ready"] = True
+    st.session_state["run_inference_enabled"] = bool(run_inference)
+    st.session_state["stage_one"] = stage_one
+    st.session_state["chunk_details"] = chunk_details
+    st.session_state["stage_two"] = stage_two
+    st.session_state["stage_two_chunks"] = stage_two_chunks
+    st.session_state["stage_two_rounds"] = stage_two_rounds
+    st.session_state["qa_hints"] = qa_hints
+    st.session_state["final_payload"] = final_payload
+
+if st.session_state.get("pipeline_ready"):
+    run_inference_from_state = bool(st.session_state.get("run_inference_enabled", False))
+    stage_one = st.session_state.get("stage_one", {})
+    chunk_details = st.session_state.get("chunk_details", [])
+    stage_two = st.session_state.get("stage_two")
+    stage_two_chunks = st.session_state.get("stage_two_chunks", [])
+    stage_two_rounds = st.session_state.get("stage_two_rounds", [])
+    qa_hints = st.session_state.get("qa_hints")
+    final_payload = st.session_state.get("final_payload", {})
+
+    st.subheader("Stage 1 - Strict extraction")
+    st.json(stage_one)
+    st.caption(f"Stage 1 QA: {qa_summary_line(stage_one)}")
+    st.download_button(
+        "Download Stage 1 JSON",
+        json.dumps(stage_one, indent=2),
+        file_name="stage1_extract.json",
+        mime="application/json",
+    )
+
+    chunk_count = len(chunk_details)
+    if chunk_count > 1:
+        st.info(f"Chunked input into {chunk_count} slices (~{int(chunk_size)} words, overlap {int(chunk_overlap)}).")
+    for chunk in chunk_details:
+        chunk_label = f"Chunk {chunk['chunk_id']} - words {chunk['start_word']}-{chunk['end_word']}"
+        with st.expander(chunk_label, expanded=False):
+            preview = chunk["text"][:400]
+            if len(chunk["text"]) > 400:
+                preview += "..."
+            st.caption(preview)
+            st.markdown("**Chunk output JSON**")
+            st.json(chunk["output"])
+        render_attempts(f"{chunk_label} attempts", chunk["attempts"])
+
+    if run_inference_from_state and isinstance(stage_two, dict):
+        st.subheader("Stage 2 - Inference / enrichment")
         st.json(stage_two)
         if stage_two_rounds:
             st.write("Stage 2 QA rounds", stage_two_rounds)
@@ -230,7 +256,6 @@ if submit:
             st.info(
                 f"Chunked inference into {chunk_count} slices (~{int(chunk_size)} words, overlap {int(chunk_overlap)})."
             )
-
         for chunk in stage_two_chunks:
             chunk_label = (
                 f"Round {chunk.get('qa_round', 1)} - "
@@ -244,16 +269,12 @@ if submit:
                 st.markdown("**Chunk additions JSON**")
                 st.json(chunk["output"])
             render_attempts(f"{chunk_label} attempts", chunk["attempts"])
-        qa_hints = stage_two.get("qa_hints", {})
-        final_payload = merge_additions(stage_one, stage_two)
-
         st.download_button(
             "Download Stage 2 additions",
             json.dumps(stage_two, indent=2),
             file_name="stage2_additions.json",
             mime="application/json",
         )
-
         if qa_hints:
             st.write("QA hints", qa_hints)
 
@@ -292,8 +313,6 @@ if submit:
 
     if st.button("Generate PWML from final JSON"):
         payload_for_writer = final_payload
-        grounding_report: Dict[str, Any] = {}
-
         if grounding_enabled:
             try:
                 grounding_path = resolve_path(grounding_path_text)
@@ -311,7 +330,6 @@ if submit:
             except Exception as exc:
                 st.error(f"Grounding failed: {exc}")
                 st.stop()
-
         try:
             reference_path = resolve_path(ref_path_text)
             signature = discover_structure_signature(reference_path)
@@ -333,13 +351,11 @@ if submit:
             xml_bytes = etree.tostring(
                 repaired.getroot(), encoding="utf-8", xml_declaration=True, pretty_print=True
             )
-
             st.write("PWML generation summary", build.counts)
             st.write("Dummy geometry generated", build.geometry_generated)
             st.write("PWML structural validation", {"ok": report["ok"], "issue_count": report["issue_count"]})
             if not report["ok"]:
                 st.json(report["issues"])
-
             st.download_button(
                 "Download PWML",
                 data=xml_bytes,
@@ -358,5 +374,5 @@ if submit:
     st.subheader("Connectivity snapshot")
     stats = graph_summary(final_payload)
     st.write(stats)
-    if run_inference:
+    if run_inference_from_state:
         st.write("Connectivity repair hints used for later rounds", build_qa_feedback(final_payload))
