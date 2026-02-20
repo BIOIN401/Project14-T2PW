@@ -157,7 +157,7 @@ def run_stage_two_with_chunking(
                 retry_tokens = (
                     retry_max_tokens
                     if retry_max_tokens is not None
-                    else max(200, int(max_tokens * 0.6))
+                    else _default_retry_tokens(max_tokens, failure.attempts)
                 )
                 try:
                     retry_parsed, retry_attempts = run_inference_pipeline(
@@ -205,6 +205,30 @@ def run_stage_two_with_chunking(
 
     merged = merge_inference_outputs(outputs)
     return merged, chunk_results
+
+
+def _default_retry_tokens(max_tokens: int, attempts: AttemptLogs) -> int:
+    """
+    Pick retry token budget based on observed failure mode.
+    - If JSON appears truncated, increase token budget.
+    - Otherwise keep a conservative smaller retry.
+    """
+    if _looks_truncated_json_failure(attempts):
+        return min(4000, max(max_tokens + 500, int(max_tokens * 1.5)))
+    return max(200, int(max_tokens * 0.6))
+
+
+def _looks_truncated_json_failure(attempts: AttemptLogs) -> bool:
+    if not attempts:
+        return False
+    last_error, _, _, _ = _summarize_failure(attempts)
+    error = (last_error or "").lower()
+    return (
+        "unterminated string" in error
+        or "expecting value" in error
+        or "unexpected end" in error
+        or "eof" in error
+    )
 
 
 def build_qa_feedback(payload: Dict[str, Any], *, hint_limit: int = 25) -> Dict[str, Any]:
@@ -504,6 +528,10 @@ def _extract_json_from_text(raw: str) -> Optional[Dict[str, Any]]:
         except json.JSONDecodeError:
             pass
 
+    salvaged = _salvage_truncated_json(candidate)
+    if salvaged is not None:
+        return salvaged
+
     try:
         parsed = json.loads(candidate)
         return parsed if isinstance(parsed, dict) else None
@@ -539,11 +567,17 @@ def _find_matching_brace(text: str, start: int) -> Optional[int]:
     return None
 
 
-def _auto_close_json(text: str) -> Optional[str]:
+def _scan_json_prefix(text: str) -> Tuple[bool, List[str], int]:
+    """
+    Scan JSON-like text and return:
+    (in_string, open_stack, last_safe_index_outside_string)
+    """
     stack: List[str] = []
     in_string = False
     escape = False
-    for ch in text:
+    last_safe = -1
+
+    for i, ch in enumerate(text):
         if in_string:
             if escape:
                 escape = False
@@ -555,14 +589,95 @@ def _auto_close_json(text: str) -> Optional[str]:
 
         if ch == '"':
             in_string = True
-        elif ch in "{[":
+            continue
+
+        if ch in "{[":
             stack.append(ch)
+            last_safe = i
         elif ch in "}]":
             if stack:
-                stack.pop()
+                top = stack[-1]
+                if (top == "{" and ch == "}") or (top == "[" and ch == "]"):
+                    stack.pop()
+            last_safe = i
+        elif not ch.isspace():
+            last_safe = i
 
+    return in_string, stack, last_safe
+
+
+def _find_last_safe_cut(text: str) -> Optional[int]:
+    """
+    Find a fallback cut position outside strings, preferring commas, then object/array starts.
+    """
+    in_string = False
+    escape = False
+    last_comma = -1
+    last_open = -1
+
+    for i, ch in enumerate(text):
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+
+        if ch == '"':
+            in_string = True
+            continue
+        if ch == ",":
+            last_comma = i
+        elif ch in "{[":
+            last_open = i
+
+    if last_comma >= 0:
+        return last_comma
+    if last_open >= 0:
+        return last_open + 1
+    return None
+
+
+def _salvage_truncated_json(text: str, max_steps: int = 25) -> Optional[Dict[str, Any]]:
+    """
+    Repeatedly trim tail to last safe delimiter and try to auto-close/parse.
+    Useful when output is truncated mid-field/mid-string.
+    """
+    working = text
+    for _ in range(max_steps):
+        repaired = _auto_close_json(working)
+        if repaired is not None:
+            repaired = _strip_trailing_commas(repaired)
+            try:
+                parsed = json.loads(repaired)
+                if isinstance(parsed, dict):
+                    return parsed
+            except json.JSONDecodeError:
+                pass
+
+        cut = _find_last_safe_cut(working)
+        if cut is None or cut <= 1:
+            break
+        working = working[:cut]
+
+    return None
+
+
+def _auto_close_json(text: str) -> Optional[str]:
+    in_string, stack, last_safe = _scan_json_prefix(text)
+
+    # If generation cut off inside a string, trim to the last safe position and close braces.
     if in_string:
-        return None
+        if last_safe < 0:
+            return None
+        text = text[: last_safe + 1]
+        text = _strip_trailing_commas(text)
+        in_string, stack, _ = _scan_json_prefix(text)
+        if in_string:
+            return None
+
     if not stack:
         return text
 
