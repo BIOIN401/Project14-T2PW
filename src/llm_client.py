@@ -1,29 +1,46 @@
-# llm_client.py
-# Minimal LM Studio (OpenAI-compatible) client wrapper.
-
 import os
+from typing import Any, Dict, List
+
+from dotenv import load_dotenv
 from openai import OpenAI
 
-# Defaults work out-of-the-box for LM Studio Local Server.
-# override the env variables, we can remove those later if we see fit 
-BASE_URL = os.getenv("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234/v1")
-MODEL = os.getenv("LMSTUDIO_MODEL", "meta-llama-3.1-8b-instruct")
+load_dotenv()
 
-# LM Studio doesn't require a real API key, but the OpenAI client expects one.
-client = OpenAI(base_url=BASE_URL, api_key="lm-studio")
+_provider_raw = os.getenv("LLM_PROVIDER", "local")
+PROVIDER = _provider_raw.split("#", 1)[0].strip().lower()
+
+if PROVIDER == "openrouter":
+    base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    model = os.getenv("OPENROUTER_MODEL")
+    if not api_key:
+        raise RuntimeError("Missing OPENROUTER_API_KEY in .env")
+    if not model:
+        raise RuntimeError("Missing OPENROUTER_MODEL in .env")
+    _client = OpenAI(base_url=base_url, api_key=api_key)
+    _model = model
+elif PROVIDER == "local":
+    base_url = os.getenv("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234/v1")
+    model = os.getenv("LMSTUDIO_MODEL", "meta-llama-3.1-8b-instruct")
+    _client = OpenAI(base_url=base_url, api_key="lm-studio")
+    _model = model
+else:
+    raise RuntimeError("LLM_PROVIDER must be 'local' or 'openrouter'")
 
 
-def chat(messages, temperature: float = 0.0, max_tokens: int = 800) -> str:
-    """
-    Send chat messages to the locally hosted LM Studio model and return raw text.
-    messages format: [{"role": "system"|"user"|"assistant", "content": "..."}]
-    """
-    resp = client.chat.completions.create(
-        model=MODEL,
-        messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
-    )
+def chat(messages: List[Dict[str, Any]], temperature: float = 0.0, max_tokens: int = 800) -> str:
+    kwargs: Dict[str, Any] = {
+        "model": _model,
+        "messages": messages,
+        "temperature": temperature,
+        "max_tokens": max_tokens,
+    }
+    if PROVIDER == "openrouter":
+        kwargs["extra_headers"] = {
+            "HTTP-Referer": os.getenv("OPENROUTER_SITE_URL", "http://localhost"),
+            "X-Title": os.getenv("OPENROUTER_APP_NAME", "pwml-pipeline"),
+        }
 
+    resp = _client.chat.completions.create(**kwargs)
     content = resp.choices[0].message.content
     return (content or "").strip()
