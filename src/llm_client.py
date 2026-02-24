@@ -6,7 +6,7 @@ from openai import OpenAI
 
 load_dotenv()
 
-_provider_raw = os.getenv("LLM_PROVIDER", "local")
+_provider_raw = os.getenv("LLM_PROVIDER", "openrouter")
 PROVIDER = _provider_raw.split("#", 1)[0].strip().lower()
 
 if PROVIDER == "openrouter":
