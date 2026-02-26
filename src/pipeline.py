@@ -33,7 +33,7 @@ def run_extraction_pipeline(
     *,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 2000,
+    max_tokens: int = 6000,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
     Stage 1: strict extraction. Automatically retries with self-repair instructions if JSON parsing fails.
@@ -57,7 +57,7 @@ def run_inference_pipeline(
     qa_feedback: Optional[Dict[str, Any]] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 2000,
+    max_tokens: int = 5000,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
     Stage 2: inference/enrichment pass. Uses Stage-1 output as context and retries if JSON is invalid.
@@ -86,11 +86,11 @@ def run_stage_two_with_chunking(
     *,
     qa_feedback: Optional[Dict[str, Any]] = None,
     enable_chunking: bool,
-    chunk_word_limit: int = 1500,
+    chunk_word_limit: int = 4000,
     chunk_overlap: int = 200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 2000,
+    max_tokens: int = 5000,
     compact_stage_one: bool = True,
     retry_on_failure: bool = True,
     retry_max_tokens: Optional[int] = None,
@@ -214,7 +214,7 @@ def _default_retry_tokens(max_tokens: int, attempts: AttemptLogs) -> int:
     - Otherwise keep a conservative smaller retry.
     """
     if _looks_truncated_json_failure(attempts):
-        return min(4000, max(max_tokens + 500, int(max_tokens * 1.5)))
+        return min(12000, max(max_tokens + 500, int(max_tokens * 1.5)))
     return max(200, int(max_tokens * 0.6))
 
 
@@ -305,11 +305,11 @@ def run_stage_two_with_feedback_loop(
     *,
     qa_rounds: int = 2,
     enable_chunking: bool,
-    chunk_word_limit: int = 1500,
+    chunk_word_limit: int = 4000,
     chunk_overlap: int = 200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 2000,
+    max_tokens: int = 5000,
     compact_stage_one: bool = True,
     retry_on_failure: bool = True,
     retry_max_tokens: Optional[int] = None,
@@ -1093,11 +1093,11 @@ def run_stage_one_with_chunking(
     input_text: str,
     *,
     enable_chunking: bool,
-    chunk_word_limit: int = 1500,
+    chunk_word_limit: int = 4000,
     chunk_overlap: int = 200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 2000,
+    max_tokens: int = 6000,
 ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """
     Optionally chunk the input text before running Stage 1 extraction. Returns the merged JSON
