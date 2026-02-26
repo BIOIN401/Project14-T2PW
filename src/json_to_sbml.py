@@ -142,6 +142,22 @@ def _usage_profile(processes: Dict[str, Any]) -> Dict[str, Set[str]]:
     return {"io_names": io_names, "enzyme_names": enzyme_names}
 
 
+def _split_composite_name(value: str) -> List[str]:
+    text = (value or "").strip()
+    if not text:
+        return []
+    parts = re.split(r"\s*\+\s*|\s+and\s+", text, flags=re.IGNORECASE)
+    out = [p.strip() for p in parts if p and p.strip()]
+    return out
+
+
+def _is_composite_name(value: str) -> bool:
+    text = (value or "").strip()
+    if not text:
+        return False
+    return bool(re.search(r"\s\+\s|\sand\s", text, flags=re.IGNORECASE))
+
+
 def _resolve_cross_type_name_conflicts(
     compounds: Set[str],
     proteins: Set[str],
@@ -195,6 +211,67 @@ def _resolve_cross_type_name_conflicts(
                 }
             )
     return comp_out, prot_out
+
+
+def _augment_entity_sets_from_processes(
+    compounds: Set[str],
+    proteins: Set[str],
+    processes: Dict[str, Any],
+    report: Dict[str, Any],
+) -> Tuple[Set[str], Set[str]]:
+    comp = set(compounds)
+    prot = set(proteins)
+
+    for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ["inputs", "outputs"]:
+            for name in _safe_list(reaction.get(side)):
+                if not isinstance(name, str) or not name.strip():
+                    continue
+                n = name.strip()
+                if _is_composite_name(n):
+                    report["warnings"].append(
+                        {
+                            "path": f"/processes/reactions/{ridx}/{side}",
+                            "reason": f"Composite reaction token '{n}' detected; splitting into individual names.",
+                        }
+                    )
+                    for sub in _split_composite_name(n):
+                        if sub and sub not in prot:
+                            comp.add(sub)
+                    continue
+                if n in prot:
+                    continue
+                comp.add(n)
+
+    for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+        if not isinstance(transport, dict):
+            continue
+        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        if cargo:
+            if _is_composite_name(cargo):
+                report["warnings"].append(
+                    {
+                        "path": f"/processes/transports/{tidx}/cargo",
+                        "reason": f"Composite transport cargo '{cargo}' detected; transport will be split by cargo tokens.",
+                    }
+                )
+                for sub in _split_composite_name(cargo):
+                    if sub in prot:
+                        continue
+                    comp.add(sub)
+            else:
+                if cargo not in prot:
+                    comp.add(cargo)
+        for transporter in _safe_list(transport.get("transporters")):
+            if not isinstance(transporter, dict):
+                continue
+            pname = _first_string([transporter.get("protein"), transporter.get("protein_complex"), transporter.get("name")])
+            if pname:
+                prot.add(pname)
+
+    return comp, prot
 
 
 def _pick_reaction_compartment(
@@ -284,6 +361,12 @@ def build_sbml(
     known_compounds, known_proteins = _resolve_cross_type_name_conflicts(
         raw_compounds,
         raw_proteins,
+        processes,
+        report,
+    )
+    known_compounds, known_proteins = _augment_entity_sets_from_processes(
+        known_compounds,
+        known_proteins,
         processes,
         report,
     )
@@ -408,7 +491,20 @@ def build_sbml(
         product_ids: List[str] = []
         unresolved = False
 
+        expanded_inputs: List[str] = []
         for name in inputs:
+            if _is_composite_name(name):
+                expanded_inputs.extend(_split_composite_name(name))
+            else:
+                expanded_inputs.append(name)
+        expanded_outputs: List[str] = []
+        for name in outputs:
+            if _is_composite_name(name):
+                expanded_outputs.extend(_split_composite_name(name))
+            else:
+                expanded_outputs.append(name)
+
+        for name in expanded_inputs:
             if name not in known_compounds:
                 report["hard_errors"].append(
                     {"path": f"{pointer}/inputs", "reason": f"Unknown input compound '{name}'."}
@@ -429,7 +525,7 @@ def build_sbml(
                 )
             reactant_ids.append(species_registry[key]["id"])
 
-        for name in outputs:
+        for name in expanded_outputs:
             if name not in known_compounds:
                 report["hard_errors"].append(
                     {"path": f"{pointer}/outputs", "reason": f"Unknown output compound '{name}'."}
@@ -511,7 +607,8 @@ def build_sbml(
         if not cargo:
             report["hard_errors"].append({"path": pointer, "reason": "Transport missing cargo."})
             continue
-        if cargo not in known_compounds and cargo not in known_proteins:
+        cargo_items = _split_composite_name(cargo) if _is_composite_name(cargo) else [cargo]
+        if not cargo_items:
             report["hard_errors"].append({"path": f"{pointer}/cargo", "reason": f"Unknown cargo '{cargo}'."})
             continue
 
@@ -548,29 +645,6 @@ def build_sbml(
 
         source_cid = compartment_by_name.get(from_loc, compartment_by_name[default_compartment_name])
         dest_cid = compartment_by_name.get(to_loc, compartment_by_name[default_compartment_name])
-        kind = "compound" if cargo in known_compounds else "protein"
-        source_key = (kind, cargo, source_cid)
-        dest_key = (kind, cargo, dest_cid)
-
-        if source_key not in species_registry:
-            prefix = "m" if kind == "compound" else "p"
-            sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(cargo + '|' + source_cid)}__{source_cid}")
-            species_registry[source_key] = {"id": sid, "name": cargo, "kind": kind, "compartment_id": source_cid}
-            species_id_to_meta[sid] = {"kind": kind, "name": cargo, "compartment_id": source_cid}
-        if dest_key not in species_registry:
-            prefix = "m" if kind == "compound" else "p"
-            sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(cargo + '|' + dest_cid)}__{dest_cid}")
-            species_registry[dest_key] = {"id": sid, "name": cargo, "kind": kind, "compartment_id": dest_cid}
-            species_id_to_meta[sid] = {"kind": kind, "name": cargo, "compartment_id": dest_cid}
-
-        if source_key == dest_key:
-            report["warnings"].append(
-                {
-                    "path": pointer,
-                    "reason": "Dropped degenerate transport with identical source and destination species.",
-                }
-            )
-            continue
 
         modifiers: List[str] = []
         for transporter in _safe_list(transport.get("transporters")):
@@ -582,27 +656,62 @@ def build_sbml(
                 if key in species_registry:
                     modifiers.append(species_registry[key]["id"])
 
-        reaction_id = _reaction_id(
-            [species_registry[source_key]["id"]],
-            [species_registry[dest_key]["id"]],
-            modifiers,
-            [source_cid, dest_cid],
-            kind="transport",
-        )
-        if reaction_id in seen_rids:
-            report["warnings"].append({"path": pointer, "reason": f"Duplicate transport collapsed: {reaction_id}"})
-            continue
-        seen_rids.add(reaction_id)
-        reaction_plans.append(
-            {
-                "id": reaction_id,
-                "name": (transport.get("name") or f"transport_{cargo}").strip() if isinstance(transport.get("name"), str) else f"transport_{cargo}",
-                "reactants": [species_registry[source_key]["id"]],
-                "products": [species_registry[dest_key]["id"]],
-                "modifiers": sorted(set(modifiers)),
-                "compartment_id": source_cid,
-            }
-        )
+        for cargo_item in cargo_items:
+            if cargo_item not in known_compounds and cargo_item not in known_proteins:
+                report["hard_errors"].append(
+                    {"path": f"{pointer}/cargo", "reason": f"Unknown cargo '{cargo_item}'."}
+                )
+                continue
+
+            kind = "compound" if cargo_item in known_compounds else "protein"
+            source_key = (kind, cargo_item, source_cid)
+            dest_key = (kind, cargo_item, dest_cid)
+
+            if source_key not in species_registry:
+                prefix = "m" if kind == "compound" else "p"
+                sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(cargo_item + '|' + source_cid)}__{source_cid}")
+                species_registry[source_key] = {"id": sid, "name": cargo_item, "kind": kind, "compartment_id": source_cid}
+                species_id_to_meta[sid] = {"kind": kind, "name": cargo_item, "compartment_id": source_cid}
+            if dest_key not in species_registry:
+                prefix = "m" if kind == "compound" else "p"
+                sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(cargo_item + '|' + dest_cid)}__{dest_cid}")
+                species_registry[dest_key] = {"id": sid, "name": cargo_item, "kind": kind, "compartment_id": dest_cid}
+                species_id_to_meta[sid] = {"kind": kind, "name": cargo_item, "compartment_id": dest_cid}
+
+            if source_key == dest_key:
+                report["warnings"].append(
+                    {
+                        "path": pointer,
+                        "reason": "Dropped degenerate transport with identical source and destination species.",
+                    }
+                )
+                continue
+
+            reaction_id = _reaction_id(
+                [species_registry[source_key]["id"]],
+                [species_registry[dest_key]["id"]],
+                modifiers,
+                [source_cid, dest_cid],
+                kind="transport",
+            )
+            if reaction_id in seen_rids:
+                report["warnings"].append({"path": pointer, "reason": f"Duplicate transport collapsed: {reaction_id}"})
+                continue
+            seen_rids.add(reaction_id)
+            reaction_plans.append(
+                {
+                    "id": reaction_id,
+                    "name": (
+                        (transport.get("name") or f"transport_{cargo_item}").strip()
+                        if isinstance(transport.get("name"), str)
+                        else f"transport_{cargo_item}"
+                    ),
+                    "reactants": [species_registry[source_key]["id"]],
+                    "products": [species_registry[dest_key]["id"]],
+                    "modifiers": sorted(set(modifiers)),
+                    "compartment_id": source_cid,
+                }
+            )
 
     # Build SBML document.
     doc = libsbml.SBMLDocument(3, 2)
