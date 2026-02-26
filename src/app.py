@@ -1,4 +1,5 @@
 import json
+import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List
@@ -6,7 +7,11 @@ from typing import Any, Dict, List
 import streamlit as st
 from lxml import etree
 
+from apply_audit_patch import run_apply
+from audit_json_llm import run_audit
 from grounding import apply_grounding
+from json_to_sbml import build_sbml
+from map_ids import run_mapping
 from pipeline import (
     PipelineFailure,
     build_qa_feedback,
@@ -66,6 +71,78 @@ def resolve_path(path_text: str) -> Path:
     if rooted.exists():
         return rooted
     return candidate
+
+
+def run_post_pipeline_sbml_artifacts(
+    final_payload: Dict[str, Any],
+    *,
+    use_llm_audit: bool,
+    default_compartment: str,
+    mapping_cache_path: str,
+) -> Dict[str, Any]:
+    project_root = Path(__file__).resolve().parent.parent
+    cache_path = Path(mapping_cache_path)
+    if not cache_path.is_absolute():
+        cache_path = project_root / mapping_cache_path
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp = Path(tmp_dir)
+        input_json = tmp / "final.json"
+        audit_report_path = tmp / "audit_report.json"
+        audit_patch_path = tmp / "audit_patch.json"
+        apply_report_path = tmp / "audit_apply_report.json"
+        audited_json = tmp / "final.audited.json"
+        mapped_json = tmp / "final.mapped.json"
+        mapping_report_path = tmp / "mapping_report.json"
+        sbml_path = tmp / "pathway.sbml"
+        sbml_report_json_path = tmp / "sbml_validation_report.json"
+        sbml_report_txt_path = tmp / "sbml_validation_report.txt"
+
+        input_json.write_text(json.dumps(final_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+        run_audit(
+            input_json,
+            audit_report_path,
+            audit_patch_path,
+            use_llm=use_llm_audit,
+            llm_temperature=0.0,
+            llm_max_tokens=2000,
+        )
+        run_apply(
+            input_json,
+            audit_patch_path,
+            audited_json,
+            audit_report_path=audit_report_path,
+            apply_report_path=apply_report_path,
+        )
+        mapping_report = run_mapping(
+            audited_json,
+            mapped_json,
+            mapping_report_path,
+            cache_path=cache_path,
+        )
+        sbml_build_report = build_sbml(
+            mapped_json,
+            sbml_path,
+            sbml_report_json_path,
+            sbml_report_txt_path,
+            default_compartment_name=default_compartment,
+        )
+
+        return {
+            "audit_report": json.loads(audit_report_path.read_text(encoding="utf-8")),
+            "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
+            "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
+            "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
+            "final_mapped": json.loads(mapped_json.read_text(encoding="utf-8")),
+            "mapping_report": mapping_report,
+            "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")),
+            "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
+            "sbml_xml_bytes": sbml_path.read_bytes(),
+            "sbml_build_report": sbml_build_report,
+            "mapping_cache_path": str(cache_path),
+        }
 
 
 with st.form("pwml_pipeline"):
@@ -211,6 +288,7 @@ if submit:
     st.session_state["stage_two_rounds"] = stage_two_rounds
     st.session_state["qa_hints"] = qa_hints
     st.session_state["final_payload"] = final_payload
+    st.session_state.pop("post_pipeline_artifacts", None)
 
 if st.session_state.get("pipeline_ready"):
     run_inference_from_state = bool(st.session_state.get("run_inference_enabled", False))
@@ -287,6 +365,122 @@ if st.session_state.get("pipeline_ready"):
         file_name="pwml_pipeline_output.json",
         mime="application/json",
     )
+
+    st.subheader("Post-pipeline SBML export")
+    post_col_a, post_col_b = st.columns(2)
+    use_llm_audit = post_col_a.checkbox(
+        "Use LLM in audit stage",
+        value=True,
+        help="Disabling runs deterministic audit rules only.",
+        key="post_use_llm_audit",
+    )
+    default_compartment = post_col_b.text_input(
+        "Default compartment",
+        value="cell",
+        key="post_default_compartment",
+        help="Used when location/state is missing.",
+    )
+    mapping_cache_text = st.text_input(
+        "ID mapping cache path",
+        value="id_mapping_cache.json",
+        key="post_mapping_cache",
+        help="Cache file for UniProt/compound mapping lookups.",
+    )
+
+    if st.button("Run post-pipeline SBML conversion"):
+        try:
+            with st.spinner("Running audit, patching, ID mapping, and SBML build..."):
+                artifacts = run_post_pipeline_sbml_artifacts(
+                    final_payload,
+                    use_llm_audit=bool(use_llm_audit),
+                    default_compartment=(default_compartment or "cell").strip() or "cell",
+                    mapping_cache_path=mapping_cache_text.strip() or "id_mapping_cache.json",
+                )
+            st.session_state["post_pipeline_artifacts"] = artifacts
+            st.success("Post-pipeline conversion completed.")
+        except Exception as exc:
+            st.error(f"Post-pipeline conversion failed: {exc}")
+
+    post_artifacts = st.session_state.get("post_pipeline_artifacts")
+    if isinstance(post_artifacts, dict):
+        audit_summary = post_artifacts.get("audit_report", {}).get("summary", {})
+        mapping_summary = post_artifacts.get("mapping_report", {}).get("summary", {})
+        sbml_summary = post_artifacts.get("sbml_report_json", {}).get("counts", {})
+        sbml_validation = post_artifacts.get("sbml_report_json", {}).get("validation", {})
+
+        st.write(
+            {
+                "audit": audit_summary,
+                "mapping": mapping_summary,
+                "sbml_counts": sbml_summary,
+                "sbml_validation_has_errors": sbml_validation.get("has_errors"),
+                "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
+            }
+        )
+
+        st.download_button(
+            "Download audit_report.json",
+            json.dumps(post_artifacts["audit_report"], indent=2),
+            file_name="audit_report.json",
+            mime="application/json",
+            key="dl_audit_report",
+        )
+        st.download_button(
+            "Download audit_patch.json",
+            json.dumps(post_artifacts["audit_patch"], indent=2),
+            file_name="audit_patch.json",
+            mime="application/json",
+            key="dl_audit_patch",
+        )
+        st.download_button(
+            "Download audit_apply_report.json",
+            json.dumps(post_artifacts["audit_apply_report"], indent=2),
+            file_name="audit_apply_report.json",
+            mime="application/json",
+            key="dl_audit_apply",
+        )
+        st.download_button(
+            "Download final.audited.json",
+            json.dumps(post_artifacts["final_audited"], indent=2),
+            file_name="final.audited.json",
+            mime="application/json",
+            key="dl_final_audited",
+        )
+        st.download_button(
+            "Download final.mapped.json",
+            json.dumps(post_artifacts["final_mapped"], indent=2),
+            file_name="final.mapped.json",
+            mime="application/json",
+            key="dl_final_mapped",
+        )
+        st.download_button(
+            "Download mapping_report.json",
+            json.dumps(post_artifacts["mapping_report"], indent=2),
+            file_name="mapping_report.json",
+            mime="application/json",
+            key="dl_mapping_report",
+        )
+        st.download_button(
+            "Download pathway.sbml",
+            post_artifacts["sbml_xml_bytes"],
+            file_name="pathway.sbml",
+            mime="application/xml",
+            key="dl_pathway_sbml",
+        )
+        st.download_button(
+            "Download sbml_validation_report.json",
+            json.dumps(post_artifacts["sbml_report_json"], indent=2),
+            file_name="sbml_validation_report.json",
+            mime="application/json",
+            key="dl_sbml_json",
+        )
+        st.download_button(
+            "Download sbml_validation_report.txt",
+            post_artifacts["sbml_report_txt"],
+            file_name="sbml_validation_report.txt",
+            mime="text/plain",
+            key="dl_sbml_txt",
+        )
 
     st.subheader("PWML export")
     pwml_col_a, pwml_col_b = st.columns(2)
