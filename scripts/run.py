@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any, Dict
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,7 @@ from apply_audit_patch import run_apply  # noqa: E402
 from audit_json_llm import run_audit  # noqa: E402
 from json_to_sbml import build_sbml  # noqa: E402
 from map_ids import run_mapping  # noqa: E402
+from sbml_overwatch import run_sbml_overwatch  # noqa: E402
 
 
 def _resolve_output_path(out_dir: Path, filename: str) -> Path:
@@ -45,6 +47,7 @@ def main() -> None:
         default="id_mapping_cache.json",
         help="Path to mapping cache JSON (relative to out-dir if not absolute)",
     )
+    parser.add_argument("--no-sbml-overwatch", action="store_true", help="Disable semantic SBML overwatch stage")
     args = parser.parse_args()
 
     input_path = Path(args.input_path)
@@ -61,6 +64,7 @@ def main() -> None:
     sbml_file = _resolve_output_path(out_dir, "pathway.sbml")
     sbml_report_json = _resolve_output_path(out_dir, "sbml_validation_report.json")
     sbml_report_txt = _resolve_output_path(out_dir, "sbml_validation_report.txt")
+    sbml_overwatch_report = _resolve_output_path(out_dir, "sbml_overwatch_report.json")
 
     mapping_cache = Path(args.mapping_cache)
     if not mapping_cache.is_absolute():
@@ -102,6 +106,17 @@ def main() -> None:
         default_compartment_name=str(args.default_compartment),
     )
 
+    overwatch_result: Dict[str, Any] = {}
+    if not args.no_sbml_overwatch:
+        overwatch_result = run_sbml_overwatch(
+            mapped_json,
+            sbml_file,
+            sbml_report_json,
+            sbml_overwatch_report,
+            use_llm=True,
+            llm_max_tokens=1800,
+        )
+
     summary = {
         "audit_report": str(audit_report),
         "audit_patch": str(audit_patch),
@@ -111,6 +126,8 @@ def main() -> None:
         "sbml_file": str(sbml_file),
         "sbml_validation_report_json": str(sbml_report_json),
         "sbml_validation_report_txt": str(sbml_report_txt),
+        "sbml_overwatch_report_json": str(sbml_overwatch_report) if not args.no_sbml_overwatch else "",
+        "sbml_overwatch_summary": overwatch_result.get("summary", {}),
         "sbml_validation_has_errors": bool(sbml_result.get("validation", {}).get("has_errors")),
     }
     print(json.dumps(summary, indent=2))

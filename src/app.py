@@ -12,6 +12,7 @@ from audit_json_llm import run_audit
 from grounding import apply_grounding
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
+from sbml_overwatch import run_sbml_overwatch
 from pipeline import (
     PipelineFailure,
     build_qa_feedback,
@@ -77,6 +78,7 @@ def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
     use_llm_audit: bool,
+    use_sbml_overwatch: bool,
     default_compartment: str,
     mapping_cache_path: str,
 ) -> Dict[str, Any]:
@@ -98,6 +100,7 @@ def run_post_pipeline_sbml_artifacts(
         sbml_path = tmp / "pathway.sbml"
         sbml_report_json_path = tmp / "sbml_validation_report.json"
         sbml_report_txt_path = tmp / "sbml_validation_report.txt"
+        sbml_overwatch_path = tmp / "sbml_overwatch_report.json"
 
         input_json.write_text(json.dumps(final_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
@@ -129,6 +132,16 @@ def run_post_pipeline_sbml_artifacts(
             sbml_report_txt_path,
             default_compartment_name=default_compartment,
         )
+        sbml_overwatch_report: Dict[str, Any] = {}
+        if use_sbml_overwatch:
+            sbml_overwatch_report = run_sbml_overwatch(
+                mapped_json,
+                sbml_path,
+                sbml_report_json_path,
+                sbml_overwatch_path,
+                use_llm=True,
+                llm_max_tokens=1800,
+            )
 
         return {
             "audit_report": json.loads(audit_report_path.read_text(encoding="utf-8")),
@@ -139,6 +152,7 @@ def run_post_pipeline_sbml_artifacts(
             "mapping_report": mapping_report,
             "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")),
             "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
+            "sbml_overwatch_report": sbml_overwatch_report,
             "sbml_xml_bytes": sbml_path.read_bytes(),
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
@@ -374,6 +388,12 @@ if st.session_state.get("pipeline_ready"):
         help="Disabling runs deterministic audit rules only.",
         key="post_use_llm_audit",
     )
+    use_sbml_overwatch = post_col_a.checkbox(
+        "Use SBML semantic overwatch",
+        value=True,
+        help="Runs deterministic + LLM semantic review on generated SBML.",
+        key="post_use_sbml_overwatch",
+    )
     default_compartment = post_col_b.text_input(
         "Default compartment",
         value="cell",
@@ -393,6 +413,7 @@ if st.session_state.get("pipeline_ready"):
                 artifacts = run_post_pipeline_sbml_artifacts(
                     final_payload,
                     use_llm_audit=bool(use_llm_audit),
+                    use_sbml_overwatch=bool(use_sbml_overwatch),
                     default_compartment=(default_compartment or "cell").strip() or "cell",
                     mapping_cache_path=mapping_cache_text.strip() or "id_mapping_cache.json",
                 )
@@ -407,6 +428,7 @@ if st.session_state.get("pipeline_ready"):
         mapping_summary = post_artifacts.get("mapping_report", {}).get("summary", {})
         sbml_summary = post_artifacts.get("sbml_report_json", {}).get("counts", {})
         sbml_validation = post_artifacts.get("sbml_report_json", {}).get("validation", {})
+        sbml_overwatch_summary = post_artifacts.get("sbml_overwatch_report", {}).get("summary", {})
 
         st.write(
             {
@@ -414,6 +436,7 @@ if st.session_state.get("pipeline_ready"):
                 "mapping": mapping_summary,
                 "sbml_counts": sbml_summary,
                 "sbml_validation_has_errors": sbml_validation.get("has_errors"),
+                "sbml_overwatch": sbml_overwatch_summary,
                 "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
             }
         )
@@ -481,6 +504,14 @@ if st.session_state.get("pipeline_ready"):
             mime="text/plain",
             key="dl_sbml_txt",
         )
+        if post_artifacts.get("sbml_overwatch_report"):
+            st.download_button(
+                "Download sbml_overwatch_report.json",
+                json.dumps(post_artifacts["sbml_overwatch_report"], indent=2),
+                file_name="sbml_overwatch_report.json",
+                mime="application/json",
+                key="dl_sbml_overwatch",
+            )
 
     st.subheader("PWML export")
     pwml_col_a, pwml_col_b = st.columns(2)

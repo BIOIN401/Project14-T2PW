@@ -108,6 +108,95 @@ def _known_entity_names(payload: Dict[str, Any]) -> Tuple[Set[str], Set[str]]:
     return compounds, proteins
 
 
+def _usage_profile(processes: Dict[str, Any]) -> Dict[str, Set[str]]:
+    io_names: Set[str] = set()
+    enzyme_names: Set[str] = set()
+
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ["inputs", "outputs"]:
+            for name in _safe_list(reaction.get(side)):
+                if isinstance(name, str) and name.strip():
+                    io_names.add(name.strip())
+        for enzyme in _safe_list(reaction.get("enzymes")):
+            if not isinstance(enzyme, dict):
+                continue
+            pname = _first_string([enzyme.get("protein"), enzyme.get("protein_complex"), enzyme.get("name")])
+            if pname:
+                enzyme_names.add(pname)
+
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        if cargo:
+            io_names.add(cargo)
+        for transporter in _safe_list(transport.get("transporters")):
+            if not isinstance(transporter, dict):
+                continue
+            pname = _first_string([transporter.get("protein"), transporter.get("protein_complex"), transporter.get("name")])
+            if pname:
+                enzyme_names.add(pname)
+
+    return {"io_names": io_names, "enzyme_names": enzyme_names}
+
+
+def _resolve_cross_type_name_conflicts(
+    compounds: Set[str],
+    proteins: Set[str],
+    processes: Dict[str, Any],
+    report: Dict[str, Any],
+) -> Tuple[Set[str], Set[str]]:
+    usage = _usage_profile(processes)
+    io_names = usage["io_names"]
+    enzyme_names = usage["enzyme_names"]
+
+    comp_out = set(compounds)
+    prot_out = set(proteins)
+
+    compounds_by_norm: Dict[str, List[str]] = defaultdict(list)
+    proteins_by_norm: Dict[str, List[str]] = defaultdict(list)
+    for name in compounds:
+        compounds_by_norm[_normalize(name)].append(name)
+    for name in proteins:
+        proteins_by_norm[_normalize(name)].append(name)
+
+    for norm in sorted(set(compounds_by_norm.keys()) & set(proteins_by_norm.keys())):
+        c_names = compounds_by_norm[norm]
+        p_names = proteins_by_norm[norm]
+        all_names = c_names + p_names
+        used_as_io = any(name in io_names for name in all_names)
+        used_as_enzyme = any(name in enzyme_names for name in all_names)
+
+        if used_as_io and not used_as_enzyme:
+            for p in p_names:
+                prot_out.discard(p)
+            report["warnings"].append(
+                {
+                    "path": "/entities",
+                    "reason": f"Name appears as compound+protein; keeping compound role for '{c_names[0]}'.",
+                }
+            )
+        elif used_as_enzyme and not used_as_io:
+            for c in c_names:
+                comp_out.discard(c)
+            report["warnings"].append(
+                {
+                    "path": "/entities",
+                    "reason": f"Name appears as compound+protein; keeping protein role for '{p_names[0]}'.",
+                }
+            )
+        else:
+            report["warnings"].append(
+                {
+                    "path": "/entities",
+                    "reason": f"Name '{all_names[0]}' appears as both compound and protein with dual/unclear role.",
+                }
+            )
+    return comp_out, prot_out
+
+
 def _pick_reaction_compartment(
     reaction: Dict[str, Any],
     states_to_loc: Dict[str, str],
@@ -152,6 +241,10 @@ def _reaction_id(reactants: Sequence[str], products: Sequence[str], modifiers: S
     return f"r_{_short_hash(payload)}"
 
 
+def _same_multiset(values_a: Sequence[str], values_b: Sequence[str]) -> bool:
+    return sorted(values_a) == sorted(values_b)
+
+
 def _first_string(values: Sequence[Any]) -> str:
     for value in values:
         if isinstance(value, str) and value.strip():
@@ -187,7 +280,13 @@ def build_sbml(
     processes = _safe_dict(data.get("processes"))
 
     states_to_loc = _extract_state_compartments(data)
-    known_compounds, known_proteins = _known_entity_names(data)
+    raw_compounds, raw_proteins = _known_entity_names(data)
+    known_compounds, known_proteins = _resolve_cross_type_name_conflicts(
+        raw_compounds,
+        raw_proteins,
+        processes,
+        report,
+    )
 
     # Compartments from explicit location entities + biological states + default.
     location_names: Set[str] = set()
@@ -244,6 +343,8 @@ def build_sbml(
         name = (item.get("name") or "").strip() if isinstance(item.get("name"), str) else ""
         if not name:
             continue
+        if name not in known_compounds:
+            continue
         preferred = _mapped_entity_id(item, ["chebi", "hmdb", "kegg"])
         for loc in sorted(entity_compartments.get(("compound", name), {default_compartment_name})):
             cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
@@ -262,6 +363,8 @@ def build_sbml(
             continue
         name = (item.get("name") or "").strip() if isinstance(item.get("name"), str) else ""
         if not name:
+            continue
+        if name not in known_proteins:
             continue
         preferred = _mapped_entity_id(item, ["uniprot"])
         for loc in sorted(entity_compartments.get(("protein", name), {default_compartment_name})):
@@ -359,6 +462,15 @@ def build_sbml(
                 if pkey in species_registry:
                     modifier_ids.append(species_registry[pkey]["id"])
 
+        if _same_multiset(reactant_ids, product_ids):
+            report["warnings"].append(
+                {
+                    "path": pointer,
+                    "reason": "Dropped degenerate reaction with identical reactants and products.",
+                }
+            )
+            continue
+
         reaction_id = _reaction_id(reactant_ids, product_ids, modifier_ids, [compartment_id], kind="reaction")
         if reaction_id in seen_rids:
             report["warnings"].append({"path": pointer, "reason": f"Duplicate reaction collapsed: {reaction_id}"})
@@ -451,6 +563,15 @@ def build_sbml(
             species_registry[dest_key] = {"id": sid, "name": cargo, "kind": kind, "compartment_id": dest_cid}
             species_id_to_meta[sid] = {"kind": kind, "name": cargo, "compartment_id": dest_cid}
 
+        if source_key == dest_key:
+            report["warnings"].append(
+                {
+                    "path": pointer,
+                    "reason": "Dropped degenerate transport with identical source and destination species.",
+                }
+            )
+            continue
+
         modifiers: List[str] = []
         for transporter in _safe_list(transport.get("transporters")):
             if not isinstance(transporter, dict):
@@ -488,6 +609,27 @@ def build_sbml(
     model = doc.createModel()
     model.setId("pathway_model")
     model.setName("Pathway model generated from mapped JSON")
+    model.setSubstanceUnits("Unit1")
+    model.setExtentUnits("Unit1")
+    model.setVolumeUnits("UnitVol")
+
+    unit_def = model.createUnitDefinition()
+    unit_def.setId("Unit1")
+    unit_def.setName("Mole")
+    unit = unit_def.createUnit()
+    unit.setKind(libsbml.UNIT_KIND_MOLE)
+    unit.setExponent(1)
+    unit.setScale(0)
+    unit.setMultiplier(1.0)
+
+    volume_unit_def = model.createUnitDefinition()
+    volume_unit_def.setId("UnitVol")
+    volume_unit_def.setName("Litre")
+    vunit = volume_unit_def.createUnit()
+    vunit.setKind(libsbml.UNIT_KIND_LITRE)
+    vunit.setExponent(1)
+    vunit.setScale(0)
+    vunit.setMultiplier(1.0)
 
     for loc_name, cid in sorted(compartment_by_name.items(), key=lambda kv: kv[1]):
         comp = model.createCompartment()
@@ -496,6 +638,7 @@ def build_sbml(
         comp.setConstant(True)
         comp.setSize(1.0)
         comp.setSpatialDimensions(3)
+        comp.setUnits("UnitVol")
 
     species_items = sorted(species_registry.values(), key=lambda item: item["id"])
     for item in species_items:
@@ -504,9 +647,10 @@ def build_sbml(
         sp.setName(item["name"])
         sp.setCompartment(item["compartment_id"])
         sp.setBoundaryCondition(False)
-        sp.setHasOnlySubstanceUnits(False)
+        sp.setHasOnlySubstanceUnits(True)
         sp.setConstant(False)
         sp.setInitialAmount(0.0)
+        sp.setSubstanceUnits("Unit1")
 
     for plan in sorted(reaction_plans, key=lambda item: item["id"]):
         rxn = model.createReaction()
@@ -622,4 +766,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
