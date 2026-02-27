@@ -756,9 +756,10 @@ def build_sbml(
             )
 
     # Build SBML document.
-    doc = libsbml.SBMLDocument(3, 2)
+    # PathWhiz exports are commonly Level 3 Version 1; keep this for compatibility.
+    doc = libsbml.SBMLDocument(3, 1)
     model = doc.createModel()
-    model.setId("pathway_model")
+    model.setId("PathwayModel")
     model.setName("Pathway model generated from mapped JSON")
     model.setSubstanceUnits("Unit1")
     model.setExtentUnits("Unit1")
@@ -786,7 +787,8 @@ def build_sbml(
         comp = model.createCompartment()
         comp.setId(cid)
         comp.setName(loc_name)
-        comp.setConstant(True)
+        # PathWhiz-produced SBML commonly sets compartment constant=false.
+        comp.setConstant(False)
         comp.setSize(1.0)
         comp.setSpatialDimensions(3)
         comp.setUnits("UnitVol")
@@ -808,6 +810,8 @@ def build_sbml(
         rxn.setId(plan["id"])
         if plan["name"]:
             rxn.setName(plan["name"])
+        if plan.get("compartment_id"):
+            rxn.setCompartment(plan["compartment_id"])
         rxn.setReversible(False)
         rxn.setFast(False)
         reactant_counts = Counter(plan["reactants"])

@@ -17,9 +17,6 @@ def _safe_dict(value: Any) -> Dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
-SBML_NS = {"sbml": "http://www.sbml.org/sbml/level3/version2/core"}
-
-
 def _deterministic_semantic_scan(
     mapped_payload: Dict[str, Any],
     sbml_text: str,
@@ -29,8 +26,8 @@ def _deterministic_semantic_scan(
     metrics: Dict[str, Any] = {}
 
     root = ElementTree.fromstring(sbml_text)
-    species = root.findall(".//sbml:listOfSpecies/sbml:species", SBML_NS)
-    reactions = root.findall(".//sbml:listOfReactions/sbml:reaction", SBML_NS)
+    species = root.findall(".//{*}listOfSpecies/{*}species")
+    reactions = root.findall(".//{*}listOfReactions/{*}reaction")
     metrics["species_count"] = len(species)
     metrics["reaction_count"] = len(reactions)
 
@@ -50,14 +47,14 @@ def _deterministic_semantic_scan(
         reactants = sorted(
             [
                 ref.get("species", "")
-                for ref in reaction.findall("./sbml:listOfReactants/sbml:speciesReference", SBML_NS)
+                for ref in reaction.findall("./{*}listOfReactants/{*}speciesReference")
                 if (ref.get("species") or "").strip()
             ]
         )
         products = sorted(
             [
                 ref.get("species", "")
-                for ref in reaction.findall("./sbml:listOfProducts/sbml:speciesReference", SBML_NS)
+                for ref in reaction.findall("./{*}listOfProducts/{*}speciesReference")
                 if (ref.get("species") or "").strip()
             ]
         )
