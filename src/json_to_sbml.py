@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import re
+from collections import Counter
 from collections import defaultdict
 from copy import deepcopy
 from pathlib import Path
@@ -274,6 +275,42 @@ def _augment_entity_sets_from_processes(
     return comp, prot
 
 
+def _drop_composite_entities(
+    compounds: Set[str],
+    proteins: Set[str],
+    report: Dict[str, Any],
+) -> Tuple[Set[str], Set[str]]:
+    comp_out = set(compounds)
+    prot_out = set(proteins)
+
+    dropped_compounds = sorted([name for name in comp_out if _is_composite_name(name)])
+    dropped_proteins = sorted([name for name in prot_out if _is_composite_name(name)])
+
+    for name in dropped_compounds:
+        comp_out.discard(name)
+    for name in dropped_proteins:
+        prot_out.discard(name)
+
+    if dropped_compounds:
+        report["warnings"].append(
+            {
+                "path": "/entities/compounds",
+                "reason": "Dropped composite compound names from species registry.",
+                "evidence": ", ".join(dropped_compounds[:8]),
+            }
+        )
+    if dropped_proteins:
+        report["warnings"].append(
+            {
+                "path": "/entities/proteins",
+                "reason": "Dropped composite protein names from species registry.",
+                "evidence": ", ".join(dropped_proteins[:8]),
+            }
+        )
+
+    return comp_out, prot_out
+
+
 def _pick_reaction_compartment(
     reaction: Dict[str, Any],
     states_to_loc: Dict[str, str],
@@ -368,6 +405,11 @@ def build_sbml(
         known_compounds,
         known_proteins,
         processes,
+        report,
+    )
+    known_compounds, known_proteins = _drop_composite_entities(
+        known_compounds,
+        known_proteins,
         report,
     )
 
@@ -768,16 +810,18 @@ def build_sbml(
             rxn.setName(plan["name"])
         rxn.setReversible(False)
         rxn.setFast(False)
-        for sid in plan["reactants"]:
+        reactant_counts = Counter(plan["reactants"])
+        for sid, stoich in sorted(reactant_counts.items()):
             ref = rxn.createReactant()
             ref.setSpecies(sid)
             ref.setConstant(True)
-            ref.setStoichiometry(1.0)
-        for sid in plan["products"]:
+            ref.setStoichiometry(float(stoich))
+        product_counts = Counter(plan["products"])
+        for sid, stoich in sorted(product_counts.items()):
             ref = rxn.createProduct()
             ref.setSpecies(sid)
             ref.setConstant(True)
-            ref.setStoichiometry(1.0)
+            ref.setStoichiometry(float(stoich))
         for sid in plan["modifiers"]:
             ref = rxn.createModifier()
             ref.setSpecies(sid)
