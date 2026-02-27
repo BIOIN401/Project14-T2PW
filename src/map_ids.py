@@ -26,6 +26,41 @@ def _normalize_name(value: str) -> str:
     return re.sub(r"[^a-z0-9 ]+", "", lowered)
 
 
+def _canonical_name(value: str) -> str:
+    text = (value or "").strip()
+    if not text:
+        return ""
+    text = (
+        text.replace("\u2013", "-")
+        .replace("\u2014", "-")
+        .replace("\u2212", "-")
+        .replace("\u00a0", " ")
+    )
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _name_variants(value: str, *, max_variants: int = 4) -> List[str]:
+    base = _canonical_name(value)
+    variants: List[str] = []
+    candidates = [
+        base,
+        re.sub(r"\([^)]*\)", " ", base),
+        re.sub(r"[/,;:_-]", " ", base),
+        re.sub(r"\b(protein|enzyme)\b", " ", base, flags=re.IGNORECASE),
+    ]
+    seen_norm: set = set()
+    for candidate in candidates:
+        cleaned = re.sub(r"\s+", " ", candidate).strip()
+        norm = _normalize_name(cleaned)
+        if not cleaned or not norm or norm in seen_norm:
+            continue
+        seen_norm.add(norm)
+        variants.append(cleaned)
+        if len(variants) >= max_variants:
+            break
+    return variants or ([base] if base else [])
+
+
 def _token_set(value: str) -> set:
     return {tok for tok in _normalize_name(value).split(" ") if tok}
 
@@ -191,54 +226,83 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
 
 
 def map_protein_uniprot(client: HttpClient, name: str, organism: str) -> Dict[str, Any]:
-    query_parts = [f'(protein_name:"{name}" OR gene:"{name}")']
+    variants = _name_variants(name, max_variants=4)
+    query_plan: List[Tuple[str, str, bool]] = []
+    for variant in variants:
+        query_parts = [f'(protein_name:"{variant}" OR gene:"{variant}")']
+        if organism:
+            query_parts.append(f'organism_name:"{organism}"')
+        query_plan.append((variant, " AND ".join(query_parts), True))
     if organism:
-        query_parts.append(f'organism_name:"{organism}"')
-    query = " AND ".join(query_parts)
-    params = {
-        "query": query,
-        "format": "json",
-        "size": 10,
-        "fields": "accession,protein_name,gene_names,organism_name,reviewed",
-    }
-    try:
-        resp = client.get("https://rest.uniprot.org/uniprotkb/search", params=params)
-    except Exception as exc:  # noqa: BLE001
-        return {
-            "status": "unmapped",
-            "reason": f"network_error:{exc}",
+        for variant in variants[:2]:
+            query_plan.append((variant, f'(protein_name:"{variant}" OR gene:"{variant}")', False))
+
+    aggregated: Dict[str, Dict[str, Any]] = {}
+    queries_tried: List[str] = []
+    network_errors: List[str] = []
+
+    for variant, query, used_organism in query_plan:
+        params = {
             "query": query,
-            "candidates": [],
+            "format": "json",
+            "size": 10,
+            "fields": "accession,protein_name,gene_names,organism_name,reviewed",
         }
-    if resp.status_code != 200:
-        return {
-            "status": "unmapped",
-            "reason": f"UniProt request failed with status {resp.status_code}",
-            "query": query,
-            "candidates": [],
-        }
-    payload = resp.json()
-    candidates = _extract_uniprot_candidates(payload, query_name=name, organism=organism)
+        try:
+            resp = client.get("https://rest.uniprot.org/uniprotkb/search", params=params)
+        except Exception as exc:  # noqa: BLE001
+            network_errors.append(str(exc))
+            continue
+        queries_tried.append(query)
+        if resp.status_code != 200:
+            continue
+        payload = resp.json()
+        candidates = _extract_uniprot_candidates(payload, query_name=variant, organism=organism if used_organism else "")
+        for candidate in candidates:
+            accession = str(candidate.get("accession") or "").strip()
+            if not accession:
+                continue
+            adjusted = dict(candidate)
+            if not used_organism:
+                adjusted["score"] = round(float(adjusted.get("score", 0.0)) - 0.04, 4)
+            existing = aggregated.get(accession)
+            if not existing or float(adjusted.get("score", 0.0)) > float(existing.get("score", 0.0)):
+                aggregated[accession] = adjusted
+
+        ranked = sorted(aggregated.values(), key=lambda item: item.get("score", 0.0), reverse=True)
+        if ranked:
+            best_score = float(ranked[0].get("score", 0.0))
+            second_score = float(ranked[1].get("score", 0.0)) if len(ranked) > 1 else 0.0
+            if best_score >= 0.9 and best_score >= second_score + 0.12:
+                break
+
+    candidates = sorted(aggregated.values(), key=lambda item: item.get("score", 0.0), reverse=True)
     if not candidates:
-        return {"status": "unmapped", "reason": "no_match", "query": query, "candidates": []}
+        reason = f"network_error:{network_errors[0]}" if network_errors else "no_match"
+        return {"status": "unmapped", "reason": reason, "query": " | ".join(queries_tried), "candidates": []}
+
     best = candidates[0]
-    second_score = candidates[1]["score"] if len(candidates) > 1 else 0.0
-    if best["score"] >= 0.78 and best["score"] >= second_score + 0.1:
+    second_score = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
+    strong_unique = best["score"] >= 0.78 and best["score"] >= second_score + 0.08
+    reviewed_unique = bool(best.get("reviewed")) and best["score"] >= 0.74 and best["score"] >= second_score + 0.06
+    if strong_unique or reviewed_unique:
         return {
             "status": "mapped",
-            "query": query,
+            "query": " | ".join(queries_tried),
             "mapped_ids": {"uniprot": best["accession"]},
             "confidence": best["score"],
             "chosen_rule": "top_unique_candidate",
             "candidates": candidates[:8],
             "reviewed": bool(best.get("reviewed")),
+            "queries_tried": queries_tried,
         }
     return {
         "status": "unmapped",
         "reason": "ambiguous",
-        "query": query,
+        "query": " | ".join(queries_tried),
         "confidence": best["score"],
         "candidates": candidates[:8],
+        "queries_tried": queries_tried,
     }
 
 
@@ -340,17 +404,39 @@ def _query_hmdb(client: HttpClient, name: str) -> List[Dict[str, Any]]:
 
 
 def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:
-    chebi_candidates = _query_chebi(client, name)
-    kegg_candidates = _query_kegg(client, name)
-    hmdb_candidates = _query_hmdb(client, name)
-    all_candidates = chebi_candidates + kegg_candidates + hmdb_candidates
+    variants = _name_variants(name, max_variants=3)
+    by_key: Dict[Tuple[str, str], Dict[str, Any]] = {}
+    for variant_index, variant in enumerate(variants):
+        variant_weight = max(0.8, 1.0 - (0.08 * variant_index))
+        chebi_candidates = _query_chebi(client, variant)
+        kegg_candidates = _query_kegg(client, variant)
+        hmdb_candidates = _query_hmdb(client, variant)
+        for candidate in chebi_candidates + kegg_candidates + hmdb_candidates:
+            db = str(candidate.get("database") or "").strip()
+            cid = str(candidate.get("id") or "").strip()
+            if not db or not cid:
+                continue
+            adjusted = dict(candidate)
+            adjusted["score"] = round(float(candidate.get("score", 0.0)) * variant_weight, 4)
+            key = (db, cid)
+            existing = by_key.get(key)
+            if not existing or float(adjusted.get("score", 0.0)) > float(existing.get("score", 0.0)):
+                by_key[key] = adjusted
+
+        ranked = sorted(by_key.values(), key=lambda item: item["score"], reverse=True)
+        if ranked:
+            best = ranked[0]
+            second = ranked[1]["score"] if len(ranked) > 1 else 0.0
+            if best["score"] >= 0.92 and best["score"] >= second + 0.12:
+                break
+
+    all_candidates = sorted(by_key.values(), key=lambda item: item["score"], reverse=True)
     if not all_candidates:
         return {"status": "unmapped", "reason": "no_match", "candidates": []}
 
-    all_candidates.sort(key=lambda item: item["score"], reverse=True)
     best = all_candidates[0]
     second = all_candidates[1]["score"] if len(all_candidates) > 1 else 0.0
-    if best["score"] >= 0.82 and best["score"] >= second + 0.1:
+    if best["score"] >= 0.78 and best["score"] >= second + 0.08:
         mapped_ids = {best["database"]: best["id"]}
         # Keep additional high-confidence IDs from other databases.
         for cand in all_candidates[1:]:

@@ -20,6 +20,9 @@ CRITICAL RULES
 - Output only a single JSON object. No prose, no markdown.
 - Processes must be under additions.processes, not additions.entities.
 - Do not emit empty placeholder objects or empty arrays.
+- Do not add composite entity names containing '+' or ' and '.
+- For expressions like "A + B -> C", place A and B as separate inputs, never as a single entity token.
+- Transport cargo must be a single entity token. If text implies multiple cargos, add separate transport rows.
 
 ALLOWED INFERENCES
 A) Enzyme to reaction linkage
@@ -47,6 +50,7 @@ D) Minimal protein_complex wrapper
 E) Biological state and location linking
 - You may add biological_states and element_locations when explicitly supported.
 - Prefer linking existing entities to states over inventing new entities.
+- If an inferred product/input phrase is composite, split it into multiple entities and keep the process stoichiometry explicit.
 
 F) Use graph QA feedback conservatively
 - Treat QA feedback as repair hints only.

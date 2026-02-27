@@ -30,6 +30,10 @@ OUTPUT RULES (MANDATORY)
 - Species must be binomial (Genus species) or abbreviated binomial (G. species) ONLY; otherwise "entities.species" must be [].
 - For reactions: if inputs or outputs would be empty, do NOT create the reaction.
 - Every reaction MUST include a non-empty "evidence" quote (<=25 words) copied verbatim from the input text; otherwise omit the reaction.
+- Do NOT create composite entity names containing '+' or ' and ' (e.g., "A + B", "A and B").
+- Composite phrases are process expressions, not standalone entities. Split them into separate reaction inputs/outputs.
+- Transport "cargo" MUST be exactly one entity name, never a composite expression.
+- Do not create pseudo-species like "protein + metabolite" as entity records.
 
 
 BIOLOGICAL STATE RULE

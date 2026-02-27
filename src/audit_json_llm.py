@@ -5,6 +5,7 @@ import json
 import logging
 import re
 from collections import defaultdict
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -56,6 +57,30 @@ def _join_pointer(parts: Sequence[Any]) -> str:
 def _normalize_name(value: str) -> str:
     cleaned = re.sub(r"\s+", " ", value.strip().casefold())
     return re.sub(r"[^a-z0-9 ]+", "", cleaned)
+
+
+def _split_composite_name(value: str) -> List[str]:
+    text = (value or "").strip()
+    if not text:
+        return []
+    parts = re.split(r"\s*\+\s*|\s+and\s+", text, flags=re.IGNORECASE)
+    return [part.strip() for part in parts if part and part.strip()]
+
+
+def _is_composite_name(value: str) -> bool:
+    return len(_split_composite_name(value)) > 1
+
+
+def _dedupe_preserve_order(values: Sequence[str]) -> List[str]:
+    out: List[str] = []
+    seen: set = set()
+    for value in values:
+        norm = _normalize_name(value)
+        if not norm or norm in seen:
+            continue
+        seen.add(norm)
+        out.append(value)
+    return out
 
 
 def _safe_list(value: Any) -> List[Any]:
@@ -179,6 +204,8 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
             }
         )
 
+    composite_entity_removals: List[Tuple[str, int, str]] = []
+
     # Entity name checks + duplicate conflicting attributes
     for section_name, entries in entities.items():
         if not isinstance(entries, list):
@@ -208,6 +235,17 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                 )
                 continue
 
+            if section_name in {"compounds", "proteins"} and _is_composite_name(name):
+                issues["warnings"].append(
+                    {
+                        "path": ptr,
+                        "reason": "Composite entity name detected; process-style names should not be stored as standalone entities.",
+                        "evidence": name,
+                        "source": "deterministic",
+                    }
+                )
+                composite_entity_removals.append((section_name, idx, name))
+
             normalized = _normalize_name(name)
             comparable = {k: v for k, v in entry.items() if k != "name"}
             if normalized in seen and seen[normalized] != comparable:
@@ -222,12 +260,28 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
             else:
                 seen[normalized] = comparable
 
+    for section_name, idx, name in sorted(composite_entity_removals, key=lambda item: item[1], reverse=True):
+        patch_ops.append(
+            {
+                "op": "remove",
+                "path": _join_pointer(["entities", section_name, idx]),
+                "reason": "Remove composite entity name; split process mentions should be represented in reaction/transports.",
+                "confidence": 0.99,
+                "evidence": name,
+                "source": "deterministic",
+            }
+        )
+
     names = _all_entity_name_sets(payload)
     compound_like = names["compounds"] | names["element_collections"]
     protein_like = names["proteins"] | names["protein_complexes"]
+    compound_norms = {_normalize_name(name) for name in compound_like if name}
+    protein_norms = {_normalize_name(name) for name in protein_like if name}
 
     reaction_inputs = set()
     reaction_outputs = set()
+    process_compound_refs: List[str] = []
+    process_protein_refs: List[str] = []
 
     for idx, reaction in enumerate(_safe_list(processes.get("reactions"))):
         ptr = _join_pointer(["processes", "reactions", idx])
@@ -241,8 +295,58 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                 }
             )
             continue
-        inputs = [x.strip() for x in _safe_list(reaction.get("inputs")) if isinstance(x, str) and x.strip()]
-        outputs = [x.strip() for x in _safe_list(reaction.get("outputs")) if isinstance(x, str) and x.strip()]
+        raw_inputs = [x.strip() for x in _safe_list(reaction.get("inputs")) if isinstance(x, str) and x.strip()]
+        raw_outputs = [x.strip() for x in _safe_list(reaction.get("outputs")) if isinstance(x, str) and x.strip()]
+        inputs: List[str] = []
+        outputs: List[str] = []
+        for item in raw_inputs:
+            inputs.extend(_split_composite_name(item) if _is_composite_name(item) else [item])
+        for item in raw_outputs:
+            outputs.extend(_split_composite_name(item) if _is_composite_name(item) else [item])
+        inputs = _dedupe_preserve_order(inputs)
+        outputs = _dedupe_preserve_order(outputs)
+
+        if inputs != raw_inputs and inputs:
+            patch_ops.append(
+                {
+                    "op": "replace",
+                    "path": _join_pointer(["processes", "reactions", idx, "inputs"]),
+                    "value": inputs,
+                    "reason": "Split composite reaction input token(s) into individual entities.",
+                    "confidence": 0.99,
+                    "evidence": ", ".join(raw_inputs)[:200],
+                    "source": "deterministic",
+                }
+            )
+            issues["warnings"].append(
+                {
+                    "path": _join_pointer(["processes", "reactions", idx, "inputs"]),
+                    "reason": "Composite reaction token detected; splitting into individual names.",
+                    "evidence": ", ".join(raw_inputs)[:200],
+                    "source": "deterministic",
+                }
+            )
+        if outputs != raw_outputs and outputs:
+            patch_ops.append(
+                {
+                    "op": "replace",
+                    "path": _join_pointer(["processes", "reactions", idx, "outputs"]),
+                    "value": outputs,
+                    "reason": "Split composite reaction output token(s) into individual entities.",
+                    "confidence": 0.99,
+                    "evidence": ", ".join(raw_outputs)[:200],
+                    "source": "deterministic",
+                }
+            )
+            issues["warnings"].append(
+                {
+                    "path": _join_pointer(["processes", "reactions", idx, "outputs"]),
+                    "reason": "Composite reaction token detected; splitting into individual names.",
+                    "evidence": ", ".join(raw_outputs)[:200],
+                    "source": "deterministic",
+                }
+            )
+
         if not inputs or not outputs:
             issues["errors"].append(
                 {
@@ -253,8 +357,10 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                 }
             )
         for c in inputs:
+            process_compound_refs.append(c)
             reaction_inputs.add(c)
-            if c not in compound_like:
+            norm_c = _normalize_name(c)
+            if norm_c not in compound_norms and norm_c not in protein_norms:
                 issues["errors"].append(
                     {
                         "path": _join_pointer(["processes", "reactions", idx, "inputs"]),
@@ -264,8 +370,10 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                     }
                 )
         for c in outputs:
+            process_compound_refs.append(c)
             reaction_outputs.add(c)
-            if c not in compound_like:
+            norm_c = _normalize_name(c)
+            if norm_c not in compound_norms and norm_c not in protein_norms:
                 issues["errors"].append(
                     {
                         "path": _join_pointer(["processes", "reactions", idx, "outputs"]),
@@ -283,6 +391,8 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                 candidate = enzyme["protein_complex"].strip()
             elif isinstance(enzyme.get("protein"), str):
                 candidate = enzyme["protein"].strip()
+            if candidate:
+                process_protein_refs.append(candidate)
             if candidate and candidate not in protein_like:
                 issues["warnings"].append(
                     {
@@ -306,6 +416,44 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
             )
             continue
         cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        cargo_items = _split_composite_name(cargo) if cargo else []
+        if len(cargo_items) > 1:
+            issues["warnings"].append(
+                {
+                    "path": _join_pointer(["processes", "transports", idx, "cargo"]),
+                    "reason": "Composite transport cargo detected; split into one cargo per transport row.",
+                    "evidence": cargo,
+                    "source": "deterministic",
+                }
+            )
+            patch_ops.append(
+                {
+                    "op": "replace",
+                    "path": _join_pointer(["processes", "transports", idx, "cargo"]),
+                    "value": cargo_items[0],
+                    "reason": "Transport cargo must be a single entity token.",
+                    "confidence": 0.99,
+                    "evidence": cargo,
+                    "source": "deterministic",
+                }
+            )
+            for extra in cargo_items[1:]:
+                cloned = deepcopy(transport)
+                cloned["cargo"] = extra
+                patch_ops.append(
+                    {
+                        "op": "add",
+                        "path": _join_pointer(["processes", "transports", "-"]),
+                        "value": cloned,
+                        "reason": "Split composite transport cargo into separate transport entries.",
+                        "confidence": 0.99,
+                        "evidence": cargo,
+                        "source": "deterministic",
+                    }
+                )
+        elif len(cargo_items) == 1:
+            cargo = cargo_items[0]
+
         source_state = (
             transport.get("from_biological_state") or ""
             if isinstance(transport.get("from_biological_state"), str)
@@ -325,15 +473,38 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                     "source": "deterministic",
                 }
             )
-        elif cargo not in compound_like:
-            issues["errors"].append(
-                {
-                    "path": _join_pointer(["processes", "transports", idx, "cargo"]),
-                    "reason": f"Transport cargo '{cargo}' is not in entity registries.",
-                    "evidence": cargo,
-                    "source": "deterministic",
-                }
-            )
+        else:
+            process_compound_refs.append(cargo)
+            norm_cargo = _normalize_name(cargo)
+            if norm_cargo not in compound_norms and norm_cargo not in protein_norms:
+                issues["errors"].append(
+                    {
+                        "path": _join_pointer(["processes", "transports", idx, "cargo"]),
+                        "reason": f"Transport cargo '{cargo}' is not in entity registries.",
+                        "evidence": cargo,
+                        "source": "deterministic",
+                    }
+                )
+
+        for t_idx, transporter in enumerate(_safe_list(transport.get("transporters"))):
+            if not isinstance(transporter, dict):
+                continue
+            candidate = ""
+            if isinstance(transporter.get("protein_complex"), str):
+                candidate = transporter["protein_complex"].strip()
+            elif isinstance(transporter.get("protein"), str):
+                candidate = transporter["protein"].strip()
+            if candidate:
+                process_protein_refs.append(candidate)
+            if candidate and candidate not in protein_like:
+                issues["warnings"].append(
+                    {
+                        "path": _join_pointer(["processes", "transports", idx, "transporters", t_idx]),
+                        "reason": f"Transporter reference '{candidate}' not found in proteins/protein_complexes.",
+                        "evidence": json.dumps(transporter, ensure_ascii=False)[:160],
+                        "source": "deterministic",
+                    }
+                )
         if not source_state or not dest_state:
             issues["warnings"].append(
                 {
@@ -348,6 +519,85 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                     "source": "deterministic",
                 }
             )
+
+    if not isinstance(entities.get("compounds"), list):
+        patch_ops.append(
+            {
+                "op": "add",
+                "path": _join_pointer(["entities", "compounds"]),
+                "value": [],
+                "reason": "Create missing entities.compounds list for process-linked compounds.",
+                "confidence": 0.99,
+                "evidence": "entities.compounds missing or not a list",
+                "source": "deterministic",
+            }
+        )
+    if not isinstance(entities.get("proteins"), list):
+        patch_ops.append(
+            {
+                "op": "add",
+                "path": _join_pointer(["entities", "proteins"]),
+                "value": [],
+                "reason": "Create missing entities.proteins list for process-linked proteins.",
+                "confidence": 0.99,
+                "evidence": "entities.proteins missing or not a list",
+                "source": "deterministic",
+            }
+        )
+
+    for name in _dedupe_preserve_order(process_compound_refs):
+        norm_name = _normalize_name(name)
+        if not norm_name:
+            continue
+        if norm_name in compound_norms or norm_name in protein_norms:
+            continue
+        patch_ops.append(
+            {
+                "op": "add",
+                "path": _join_pointer(["entities", "compounds", "-"]),
+                "value": {"name": name},
+                "reason": "Add missing compound referenced by reaction/transport process.",
+                "confidence": 0.99,
+                "evidence": name,
+                "source": "deterministic",
+            }
+        )
+        issues["warnings"].append(
+            {
+                "path": _join_pointer(["entities", "compounds"]),
+                "reason": f"Added missing compound '{name}' referenced in process definitions.",
+                "evidence": name,
+                "source": "deterministic",
+            }
+        )
+        compound_norms.add(norm_name)
+
+    for name in _dedupe_preserve_order(process_protein_refs):
+        norm_name = _normalize_name(name)
+        if not norm_name:
+            continue
+        if norm_name in protein_norms:
+            continue
+        patch_ops.append(
+            {
+                "op": "add",
+                "path": _join_pointer(["entities", "proteins", "-"]),
+                "value": {"name": name},
+                "reason": "Add missing protein referenced by enzyme/transporter relation.",
+                "confidence": 0.99,
+                "evidence": name,
+                "source": "deterministic",
+            }
+        )
+        issues["warnings"].append(
+            {
+                "path": _join_pointer(["entities", "proteins"]),
+                "reason": f"Added missing protein '{name}' referenced in process definitions.",
+                "evidence": name,
+                "source": "deterministic",
+            }
+        )
+        protein_norms.add(norm_name)
 
     # Orphans
     used_compounds = reaction_inputs | reaction_outputs
@@ -561,7 +811,7 @@ def run_audit(
     *,
     use_llm: bool = True,
     llm_temperature: float = 0.0,
-    llm_max_tokens: int = 1800,
+    llm_max_tokens: int = 3200,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -581,6 +831,7 @@ def run_audit(
                 ],
                 temperature=llm_temperature,
                 max_tokens=llm_max_tokens,
+                response_json=True,
             )
             llm_payload = _extract_json_object(llm_raw)
             if llm_payload is None:
@@ -640,7 +891,7 @@ def main() -> None:
     )
     parser.add_argument("--no-llm", action="store_true", help="Disable LLM auditing and run deterministic checks only.")
     parser.add_argument("--temperature", type=float, default=0.0, help="LLM temperature for audit call")
-    parser.add_argument("--max-tokens", type=int, default=1800, help="LLM max tokens for audit call")
+    parser.add_argument("--max-tokens", type=int, default=3200, help="LLM max tokens for audit call")
     args = parser.parse_args()
 
     run_audit(
@@ -657,4 +908,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

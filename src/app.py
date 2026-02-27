@@ -110,7 +110,7 @@ def run_post_pipeline_sbml_artifacts(
             audit_patch_path,
             use_llm=use_llm_audit,
             llm_temperature=0.0,
-            llm_max_tokens=2000,
+            llm_max_tokens=3600,
         )
         run_apply(
             input_json,
@@ -140,7 +140,7 @@ def run_post_pipeline_sbml_artifacts(
                 sbml_report_json_path,
                 sbml_overwatch_path,
                 use_llm=True,
-                llm_max_tokens=1800,
+                llm_max_tokens=3000,
             )
 
         return {
@@ -209,15 +209,15 @@ with st.form("pwml_pipeline"):
     extract_tokens = col_tokens_1.number_input(
         "Stage 1 max tokens",
         min_value=500,
-        max_value=32000,
-        value=12000,
+        max_value=128000,
+        value=24000,
         step=100,
     )
     infer_tokens = col_tokens_2.number_input(
         "Stage 2 max tokens",
         min_value=500,
-        max_value=32000,
-        value=10000,
+        max_value=128000,
+        value=20000,
         step=100,
     )
 
@@ -225,15 +225,15 @@ with st.form("pwml_pipeline"):
     chunk_size = chunk_cols[0].number_input(
         "Chunk size (approx. words)",
         min_value=200,
-        max_value=20000,
-        value=6000,
+        max_value=60000,
+        value=10000,
         step=100,
     )
     chunk_overlap = chunk_cols[1].number_input(
         "Chunk overlap (words)",
         min_value=0,
-        max_value=8000,
-        value=1200,
+        max_value=20000,
+        value=1600,
         step=100,
     )
     st.caption("Runtime scales with: chunks x Stage 2 QA rounds x retry attempts.")

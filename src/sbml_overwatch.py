@@ -161,6 +161,11 @@ def _parse_llm_json(raw: str) -> Optional[Dict[str, Any]]:
     return None
 
 
+def _has_pointer_path(item: Dict[str, Any]) -> bool:
+    path = item.get("path")
+    return isinstance(path, str) and path.strip().startswith("/")
+
+
 def run_sbml_overwatch(
     mapped_json_path: Path,
     sbml_path: Path,
@@ -168,7 +173,7 @@ def run_sbml_overwatch(
     output_path: Path,
     *,
     use_llm: bool = True,
-    llm_max_tokens: int = 1600,
+    llm_max_tokens: int = 2600,
 ) -> Dict[str, Any]:
     mapped_payload = json.loads(mapped_json_path.read_text(encoding="utf-8"))
     if not isinstance(mapped_payload, dict):
@@ -201,6 +206,7 @@ def run_sbml_overwatch(
                 ],
                 temperature=0.0,
                 max_tokens=llm_max_tokens,
+                response_json=True,
             )
             parsed = _parse_llm_json(raw)
             if parsed is None:
@@ -219,7 +225,19 @@ def run_sbml_overwatch(
     }
     if llm_result.get("ok"):
         llm_issues = _safe_dict(llm_result.get("issues"))
-        for key in ["errors", "warnings", "suggestions"]:
+        for item in _safe_list(llm_issues.get("errors")):
+            if not isinstance(item, dict):
+                continue
+            enriched = dict(item)
+            enriched.setdefault("source", "llm")
+            if _has_pointer_path(enriched):
+                merged["errors"].append(enriched)
+            else:
+                enriched["source"] = "llm_downgraded"
+                enriched["reason"] = f"(Downgraded from error) {enriched.get('reason', '')}".strip()
+                merged["warnings"].append(enriched)
+
+        for key in ["warnings", "suggestions"]:
             for item in _safe_list(llm_issues.get(key)):
                 if isinstance(item, dict):
                     enriched = dict(item)
@@ -247,7 +265,7 @@ def main() -> None:
     parser.add_argument("--validation", required=True, help="SBML validation report JSON path")
     parser.add_argument("--out", default="sbml_overwatch_report.json", help="Output report JSON path")
     parser.add_argument("--no-llm", action="store_true", help="Disable LLM semantic review")
-    parser.add_argument("--max-tokens", type=int, default=1600, help="LLM max tokens")
+    parser.add_argument("--max-tokens", type=int, default=2600, help="LLM max tokens")
     args = parser.parse_args()
 
     report = run_sbml_overwatch(
@@ -264,4 +282,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

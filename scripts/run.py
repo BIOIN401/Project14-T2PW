@@ -77,7 +77,7 @@ def main() -> None:
         audit_patch,
         use_llm=not args.no_llm_audit,
         llm_temperature=0.0,
-        llm_max_tokens=2000,
+        llm_max_tokens=3600,
     )
 
     # Stage 1b: deterministic patch acceptance
@@ -114,7 +114,7 @@ def main() -> None:
             sbml_report_json,
             sbml_overwatch_report,
             use_llm=True,
-            llm_max_tokens=1800,
+            llm_max_tokens=3000,
         )
 
     summary = {

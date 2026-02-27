@@ -33,7 +33,7 @@ def run_extraction_pipeline(
     *,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 6000,
+    max_tokens: int = 12000,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
     Stage 1: strict extraction. Automatically retries with self-repair instructions if JSON parsing fails.
@@ -57,7 +57,7 @@ def run_inference_pipeline(
     qa_feedback: Optional[Dict[str, Any]] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 5000,
+    max_tokens: int = 10000,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
     Stage 2: inference/enrichment pass. Uses Stage-1 output as context and retries if JSON is invalid.
@@ -86,11 +86,11 @@ def run_stage_two_with_chunking(
     *,
     qa_feedback: Optional[Dict[str, Any]] = None,
     enable_chunking: bool,
-    chunk_word_limit: int = 4000,
-    chunk_overlap: int = 200,
+    chunk_word_limit: int = 8000,
+    chunk_overlap: int = 1200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 5000,
+    max_tokens: int = 10000,
     compact_stage_one: bool = True,
     retry_on_failure: bool = True,
     retry_max_tokens: Optional[int] = None,
@@ -214,7 +214,7 @@ def _default_retry_tokens(max_tokens: int, attempts: AttemptLogs) -> int:
     - Otherwise keep a conservative smaller retry.
     """
     if _looks_truncated_json_failure(attempts):
-        return min(12000, max(max_tokens + 500, int(max_tokens * 1.5)))
+        return min(24000, max(max_tokens + 800, int(max_tokens * 1.5)))
     return max(200, int(max_tokens * 0.6))
 
 
@@ -305,11 +305,11 @@ def run_stage_two_with_feedback_loop(
     *,
     qa_rounds: int = 2,
     enable_chunking: bool,
-    chunk_word_limit: int = 4000,
-    chunk_overlap: int = 200,
+    chunk_word_limit: int = 8000,
+    chunk_overlap: int = 1200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 5000,
+    max_tokens: int = 10000,
     compact_stage_one: bool = True,
     retry_on_failure: bool = True,
     retry_max_tokens: Optional[int] = None,
@@ -730,6 +730,31 @@ def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
 
 
+def _normalize_name(value: str) -> str:
+    lowered = re.sub(r"\s+", " ", value.strip().casefold())
+    return re.sub(r"[^a-z0-9 ]+", "", lowered)
+
+
+def _dedupe_preserve_order(values: List[str]) -> List[str]:
+    out: List[str] = []
+    seen: set = set()
+    for value in values:
+        norm = _normalize_name(value)
+        if not norm or norm in seen:
+            continue
+        seen.add(norm)
+        out.append(value)
+    return out
+
+
+def _split_composite_token(value: str) -> List[str]:
+    text = (value or "").strip()
+    if not text:
+        return []
+    parts = re.split(r"\s*\+\s*|\s+and\s+", text, flags=re.IGNORECASE)
+    return [part.strip() for part in parts if part and part.strip()]
+
+
 def _clean_entities(entities: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(entities, dict):
         return {}
@@ -750,12 +775,17 @@ def _clean_entities(entities: Dict[str, Any]) -> Dict[str, Any]:
     for key in entity_keys:
         items = _safe_list(entities.get(key, []))
         cleaned_items: List[Dict[str, Any]] = []
+        seen_names: set = set()
         for item in items:
             if not isinstance(item, dict):
                 continue
             name = (item.get("name") or "").strip()
             if not name:
                 continue
+            norm_name = _normalize_name(name)
+            if not norm_name or norm_name in seen_names:
+                continue
+            seen_names.add(norm_name)
             cleaned_item = {k: v for k, v in item.items() if not _is_empty_value(v)}
             cleaned_item["name"] = name
             for list_key in ("components", "cofactors", "modifications"):
@@ -871,8 +901,20 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
     for item in _safe_list(processes.get("reactions", [])):
         if not isinstance(item, dict):
             continue
-        inputs = [v.strip() for v in _safe_list(item.get("inputs")) if isinstance(v, str) and v.strip()]
-        outputs = [v.strip() for v in _safe_list(item.get("outputs")) if isinstance(v, str) and v.strip()]
+        inputs: List[str] = []
+        for value in _safe_list(item.get("inputs")):
+            if not isinstance(value, str) or not value.strip():
+                continue
+            expanded = _split_composite_token(value)
+            inputs.extend(expanded or [value.strip()])
+        outputs: List[str] = []
+        for value in _safe_list(item.get("outputs")):
+            if not isinstance(value, str) or not value.strip():
+                continue
+            expanded = _split_composite_token(value)
+            outputs.extend(expanded or [value.strip()])
+        inputs = _dedupe_preserve_order(inputs)
+        outputs = _dedupe_preserve_order(outputs)
         if not inputs or not outputs:
             continue
         entry: Dict[str, Any] = {"inputs": inputs, "outputs": outputs}
@@ -1093,11 +1135,11 @@ def run_stage_one_with_chunking(
     input_text: str,
     *,
     enable_chunking: bool,
-    chunk_word_limit: int = 4000,
-    chunk_overlap: int = 200,
+    chunk_word_limit: int = 8000,
+    chunk_overlap: int = 1200,
     max_attempts: int = 2,
     temperature: float = 0.0,
-    max_tokens: int = 6000,
+    max_tokens: int = 12000,
 ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
     """
     Optionally chunk the input text before running Stage 1 extraction. Returns the merged JSON
@@ -1241,7 +1283,7 @@ def _run_json_stage(
             {"role": "user", "content": user_prompt},
         ]
 
-        raw = chat(messages, temperature=temperature, max_tokens=max_tokens)
+        raw = chat(messages, temperature=temperature, max_tokens=max_tokens, response_json=True)
         log_entry: AttemptLog = {"attempt": attempt, "raw": raw, "error": None}
 
         try:

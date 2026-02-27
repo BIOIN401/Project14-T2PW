@@ -11,7 +11,7 @@ messages = [
     {"role": "user", "content": f"Extract PWML-structured JSON from this text:\n<<<\n{TEXT}\n>>>"}
 ]
 
-raw = chat(messages, temperature=0, max_tokens=1200)
+raw = chat(messages, temperature=0, max_tokens=1200, response_json=True)
 print("\n=== RAW MODEL OUTPUT ===\n")
 print(raw)
 
