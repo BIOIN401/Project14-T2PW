@@ -1,6 +1,9 @@
 import json
+import inspect
 import os
+import hashlib
 import tempfile
+import time
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List
@@ -75,6 +78,14 @@ def resolve_path(path_text: str) -> Path:
     return candidate
 
 
+def _safe_dict(value: Any) -> Dict[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
+def _safe_list(value: Any) -> List[Any]:
+    return value if isinstance(value, list) else []
+
+
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
@@ -88,6 +99,8 @@ def run_post_pipeline_sbml_artifacts(
     db_user: str,
     db_password: str,
     db_schema: str,
+    audit_max_rounds: int,
+    audit_timeout_seconds: int,
 ) -> Dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     cache_path = Path(mapping_cache_path)
@@ -111,34 +124,123 @@ def run_post_pipeline_sbml_artifacts(
 
         input_json.write_text(json.dumps(final_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
-        run_audit(
-            input_json,
-            audit_report_path,
-            audit_patch_path,
-            use_llm=use_llm_audit,
-            llm_temperature=0.0,
-            llm_max_tokens=3600,
-        )
-        run_apply(
-            input_json,
-            audit_patch_path,
-            audited_json,
-            audit_report_path=audit_report_path,
-            apply_report_path=apply_report_path,
-        )
-        mapping_report = run_mapping(
-            audited_json,
-            mapped_json,
-            mapping_report_path,
-            cache_path=cache_path,
-            id_source=id_source,
-            db_config={
+        audit_iterations: List[Dict[str, Any]] = []
+        seen_hashes: set = set()
+        current_input = input_json
+        max_rounds = max(1, int(audit_max_rounds))
+        timeout_seconds = max(30, int(audit_timeout_seconds))
+        audit_started_at = time.time()
+        retry_context_note = ""
+        stop_reason = "max_rounds_reached"
+
+        for round_idx in range(1, max_rounds + 1):
+            elapsed_before = time.time() - audit_started_at
+            if elapsed_before > timeout_seconds:
+                stop_reason = "timeout"
+                break
+
+            llm_temperature = min(0.65, 0.15 * (round_idx - 1))
+            llm_max_tokens = min(8000, 3600 + 700 * (round_idx - 1))
+
+            run_audit(
+                current_input,
+                audit_report_path,
+                audit_patch_path,
+                use_llm=use_llm_audit,
+                llm_temperature=llm_temperature,
+                llm_max_tokens=llm_max_tokens,
+                context_note=retry_context_note,
+            )
+            round_audited = tmp / f"final.audited.round{round_idx}.json"
+            run_apply(
+                current_input,
+                audit_patch_path,
+                round_audited,
+                audit_report_path=audit_report_path,
+                apply_report_path=apply_report_path,
+            )
+
+            round_audit = json.loads(audit_report_path.read_text(encoding="utf-8"))
+            round_apply = json.loads(apply_report_path.read_text(encoding="utf-8"))
+            summary = _safe_dict(round_audit.get("summary"))
+            llm_info = _safe_dict(round_audit.get("llm"))
+            apply_summary = _safe_dict(round_apply.get("summary"))
+            error_count = int(summary.get("error_count", 0))
+            warning_count = int(summary.get("warning_count", 0))
+            patch_count = int(summary.get("patch_count", 0))
+            accepted_count = int(apply_summary.get("accepted_count", 0))
+            rejected_count = int(apply_summary.get("rejected_count", 0))
+            top_errors = [
+                str(_safe_dict(item).get("reason", "")).strip()
+                for item in _safe_list(round_audit.get("errors"))
+                if isinstance(item, dict) and str(item.get("reason", "")).strip()
+            ][:3]
+
+            payload_hash = hashlib.sha1(round_audited.read_bytes()).hexdigest()
+            repeated_payload = payload_hash in seen_hashes
+            seen_hashes.add(payload_hash)
+
+            audit_iterations.append(
+                {
+                    "round": round_idx,
+                    "temperature": llm_temperature,
+                    "max_tokens": llm_max_tokens,
+                    "error_count": error_count,
+                    "warning_count": warning_count,
+                    "patch_count": patch_count,
+                    "accepted_patch_count": accepted_count,
+                    "rejected_patch_count": rejected_count,
+                    "llm_ok": bool(llm_info.get("ok", False)),
+                    "llm_error": str(llm_info.get("error", "")),
+                    "llm_repair_rationale": str(llm_info.get("repair_rationale", "")),
+                    "top_errors": top_errors,
+                    "payload_repeated": repeated_payload,
+                    "elapsed_seconds": round(time.time() - audit_started_at, 3),
+                }
+            )
+
+            current_input = round_audited
+            if repeated_payload:
+                stop_reason = "loop_detected_same_payload"
+                break
+            if error_count == 0 and accepted_count == 0:
+                stop_reason = "clean_no_pending_patch"
+                break
+            if error_count == 0 and patch_count == 0:
+                stop_reason = "clean_no_patch"
+                break
+            if accepted_count == 0:
+                stop_reason = "stalled_no_accepted_patch"
+                break
+
+            retry_context_note = (
+                f"Previous attempt unresolved: errors={error_count}, warnings={warning_count}, "
+                f"accepted_patches={accepted_count}. Prioritize remaining issues: "
+                f"{'; '.join(top_errors) if top_errors else 'generic consistency fixes'}."
+            )
+        else:
+            stop_reason = "max_rounds_reached"
+
+        audited_json.write_text(current_input.read_text(encoding="utf-8"), encoding="utf-8")
+        loop_duration = round(time.time() - audit_started_at, 3)
+
+        run_mapping_params = inspect.signature(run_mapping).parameters
+        mapping_kwargs: Dict[str, Any] = {"cache_path": cache_path}
+        if "id_source" in run_mapping_params:
+            mapping_kwargs["id_source"] = id_source
+        if "db_config" in run_mapping_params:
+            mapping_kwargs["db_config"] = {
                 "host": db_host,
                 "port": db_port,
                 "user": db_user,
                 "password": db_password,
                 "schema": db_schema,
-            },
+            }
+        mapping_report = run_mapping(
+            audited_json,
+            mapped_json,
+            mapping_report_path,
+            **mapping_kwargs,
         )
         sbml_build_report = build_sbml(
             mapped_json,
@@ -174,6 +276,14 @@ def run_post_pipeline_sbml_artifacts(
             "mapping_id_source": id_source,
             "mapping_db_host": db_host,
             "mapping_db_schema": db_schema,
+            "audit_iterations": audit_iterations,
+            "audit_loop_summary": {
+                "rounds_executed": len(audit_iterations),
+                "max_rounds": max_rounds,
+                "timeout_seconds": timeout_seconds,
+                "stop_reason": stop_reason,
+                "duration_seconds": loop_duration,
+            },
         }
 
 
@@ -424,6 +534,25 @@ if st.session_state.get("pipeline_ready"):
         key="post_mapping_cache",
         help="Cache file for UniProt/compound mapping lookups.",
     )
+    repair_cols = st.columns(2)
+    audit_max_rounds = repair_cols[0].number_input(
+        "Audit repair max rounds",
+        min_value=1,
+        max_value=10,
+        value=4,
+        step=1,
+        key="post_audit_max_rounds",
+        help="Retry audit/patch cycles until stable or this round limit.",
+    )
+    audit_timeout_seconds = repair_cols[1].number_input(
+        "Audit repair timeout (seconds)",
+        min_value=30,
+        max_value=1800,
+        value=240,
+        step=10,
+        key="post_audit_timeout_seconds",
+        help="Hard timeout for all audit-repair rounds.",
+    )
     id_source_mode = post_col_b.selectbox(
         "ID mapping source",
         options=["hybrid", "db", "api"],
@@ -468,6 +597,8 @@ if st.session_state.get("pipeline_ready"):
                     db_user=(db_user or "").strip(),
                     db_password=db_password or "",
                     db_schema=(db_schema or "pathbank").strip() or "pathbank",
+                    audit_max_rounds=int(audit_max_rounds),
+                    audit_timeout_seconds=int(audit_timeout_seconds),
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
             st.success("Post-pipeline conversion completed.")
@@ -493,8 +624,12 @@ if st.session_state.get("pipeline_ready"):
                 "mapping_id_source": post_artifacts.get("mapping_id_source"),
                 "mapping_db_host": post_artifacts.get("mapping_db_host"),
                 "mapping_db_schema": post_artifacts.get("mapping_db_schema"),
+                "audit_loop": post_artifacts.get("audit_loop_summary"),
             }
         )
+        if post_artifacts.get("audit_iterations"):
+            with st.expander("Audit repair iterations", expanded=False):
+                st.write(post_artifacts.get("audit_iterations"))
 
         st.download_button(
             "Download audit_report.json",
@@ -517,6 +652,14 @@ if st.session_state.get("pipeline_ready"):
             mime="application/json",
             key="dl_audit_apply",
         )
+        if post_artifacts.get("audit_iterations"):
+            st.download_button(
+                "Download audit_iterations.json",
+                json.dumps(post_artifacts["audit_iterations"], indent=2),
+                file_name="audit_iterations.json",
+                mime="application/json",
+                key="dl_audit_iterations",
+            )
         st.download_button(
             "Download final.audited.json",
             json.dumps(post_artifacts["final_audited"], indent=2),

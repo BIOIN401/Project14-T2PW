@@ -13,16 +13,30 @@ from llm_client import PROVIDER, chat
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT = """You are a strict JSON auditor for PWML-like pathway payloads.
-You must detect schema, connectivity, location, transport, and ID-readiness issues.
+SYSTEM_PROMPT = """You are a strict JSON auditor and repair planner for PWML-like pathway payloads.
+Your job is to produce a safe, minimal patch plan that improves SBML conversion readiness.
 
-Rules:
-- Output ONLY valid JSON.
-- Do not change biological meaning.
-- Propose minimal patch operations only when evidence exists in the provided JSON.
-- No outside facts. Evidence must quote existing JSON snippets.
+Priorities (highest to lowest):
+1) Structural validity (required fields/object/list shapes)
+2) Process coherence (reaction/transport references, no impossible links)
+3) Location/compartment readiness
+4) ID-mapping readiness
+5) Cosmetic consistency
 
-Return JSON object:
+Hard constraints:
+- Output ONLY valid JSON, no markdown, no prose outside JSON.
+- Do not invent biology not supported by the input payload.
+- Do not remove core process steps unless they are exact duplicates or clearly invalid.
+- Prefer add/replace over remove.
+- Every issue and patch must include concrete evidence from input JSON.
+- Be conservative: if uncertain, emit warning/suggestion instead of risky patch.
+
+Patch policy guidance:
+- High confidence (>=0.95): deterministic structure fixes, obvious token splits, duplicate cleanup.
+- Medium confidence (0.75-0.94): location/organism propagation, minor normalization.
+- Low confidence (<0.75): avoid patching; report as warning/suggestion.
+
+Return JSON object with this shape:
 {
   "issues": {
     "errors": [ { "path": "/json/pointer", "reason": "", "evidence": "" } ],
@@ -38,7 +52,8 @@ Return JSON object:
       "confidence": 0.0,
       "evidence": ""
     }
-  ]
+  ],
+  "repair_rationale": "Short 1-3 sentence summary of why these changes are the safest next step."
 }
 """
 
@@ -742,14 +757,17 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
     return issues, patch_ops
 
 
-def _build_llm_prompt(payload: Dict[str, Any]) -> str:
+def _build_llm_prompt(payload: Dict[str, Any], *, context_note: str = "") -> str:
     payload_str = json.dumps(payload, indent=2, ensure_ascii=False)
+    note = (context_note or "").strip()
     return "\n".join(
         [
             "Audit this pathway JSON for SBML conversion readiness.",
             "Return issues and a minimal patch list.",
             "Use RFC6901 json pointers for paths.",
             "Use action add/replace/remove and include confidence 0..1.",
+            "repair_rationale must be short and concrete.",
+            f"Retry context: {note if note else 'none'}",
             "Input JSON:",
             "<<<",
             payload_str,
@@ -812,6 +830,7 @@ def run_audit(
     use_llm: bool = True,
     llm_temperature: float = 0.0,
     llm_max_tokens: int = 3200,
+    context_note: str = "",
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -827,7 +846,7 @@ def run_audit(
             llm_raw = chat(
                 [
                     {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": _build_llm_prompt(payload)},
+                    {"role": "user", "content": _build_llm_prompt(payload, context_note=context_note)},
                 ],
                 temperature=llm_temperature,
                 max_tokens=llm_max_tokens,
@@ -866,6 +885,10 @@ def run_audit(
             "ok": bool(use_llm and llm_payload is not None),
             "error": llm_error,
             "raw_preview": llm_raw[:800],
+            "repair_rationale": str(_safe_dict(llm_payload).get("repair_rationale", "")) if isinstance(llm_payload, dict) else "",
+            "context_note": context_note,
+            "temperature": float(llm_temperature),
+            "max_tokens": int(llm_max_tokens),
         },
     }
 

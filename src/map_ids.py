@@ -62,6 +62,32 @@ def _name_variants(value: str, *, max_variants: int = 4) -> List[str]:
     return variants or ([base] if base else [])
 
 
+def _search_terms(value: str, *, max_terms: int = 6) -> List[str]:
+    base = _canonical_name(value)
+    if not base:
+        return []
+    candidates = [
+        base,
+        re.sub(r"[+/]", " ", base),
+        re.sub(r"[-_]", " ", base),
+        re.sub(r"[^A-Za-z0-9 ]+", " ", base),
+        _normalize_name(base),
+        _normalize_name(base).replace(" ", ""),
+    ]
+    out: List[str] = []
+    seen: set = set()
+    for cand in candidates:
+        cleaned = re.sub(r"\s+", " ", str(cand)).strip()
+        norm = _normalize_name(cleaned)
+        if not cleaned or len(cleaned) < 2 or not norm or norm in seen:
+            continue
+        seen.add(norm)
+        out.append(cleaned)
+        if len(out) >= max_terms:
+            break
+    return out or [base]
+
+
 def _token_set(value: str) -> set:
     return {tok for tok in _normalize_name(value).split(" ") if tok}
 
@@ -323,57 +349,66 @@ class PathBankDbResolver:
         variants = _name_variants(name, max_variants=4)
         by_id: Dict[int, Dict[str, Any]] = {}
         for variant_idx, variant in enumerate(variants):
-            rows = self._query(
-                (
-                    "SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, biocyc_id, chemspider_id, drugbank_id, synonyms "
-                    "FROM compounds "
-                    "WHERE LOWER(name)=LOWER(%s) "
-                    "   OR LOWER(short_name)=LOWER(%s) "
-                    "   OR LOWER(name) LIKE LOWER(%s) "
-                    "   OR LOWER(short_name) LIKE LOWER(%s) "
-                    "   OR LOWER(synonyms) LIKE LOWER(%s) "
-                    "LIMIT 80"
-                ),
-                (variant, variant, f"%{variant}%", f"%{variant}%", f"%{variant}%"),
-            )
-            variant_penalty = 0.07 * variant_idx
-            for row in rows:
-                cid = int(row.get("id") or 0)
-                if cid <= 0:
-                    continue
-                db_name = str(row.get("name") or "")
-                short_name = str(row.get("short_name") or "")
-                synonyms = _split_synonyms(str(row.get("synonyms") or ""), max_items=40)
-                exact = _normalize_name(name) in {
-                    _normalize_name(db_name),
-                    _normalize_name(short_name),
-                }
-                syn_exact = any(_normalize_name(name) == _normalize_name(s) for s in synonyms)
-                jaccard = max(
-                    _jaccard(name, db_name),
-                    _jaccard(name, short_name),
-                    max((_jaccard(name, s) for s in synonyms), default=0.0),
+            for term_idx, term in enumerate(_search_terms(variant, max_terms=5)):
+                rows = self._query(
+                    (
+                        "SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, biocyc_id, chemspider_id, drugbank_id, synonyms "
+                        "FROM compounds "
+                        "WHERE LOWER(name)=LOWER(%s) "
+                        "   OR LOWER(short_name)=LOWER(%s) "
+                        "   OR LOWER(name) LIKE LOWER(%s) "
+                        "   OR LOWER(short_name) LIKE LOWER(%s) "
+                        "   OR LOWER(synonyms) LIKE LOWER(%s) "
+                        "LIMIT 120"
+                    ),
+                    (term, term, f"%{term}%", f"%{term}%", f"%{term}%"),
                 )
-                score = (0.9 if exact else 0.0) + (0.84 if syn_exact else 0.0) + (0.35 + 0.55 * jaccard)
-                score = max(0.0, min(1.0, score - variant_penalty))
-                mapped_ids = {
-                    "hmdb": str(row.get("hmdb_id") or "").strip(),
-                    "kegg": str(row.get("kegg_id") or "").strip(),
-                    "chebi": str(row.get("chebi_id") or "").strip(),
-                    "pubchem": str(row.get("pubchem_cid") or "").strip(),
-                    "cas": str(row.get("cas") or "").strip(),
-                }
-                mapped_ids = {k: v for k, v in mapped_ids.items() if v}
-                candidate = {
-                    "pathbank_compound_id": cid,
-                    "name": db_name,
-                    "short_name": short_name,
-                    "score": round(score, 4),
-                    "mapped_ids": mapped_ids,
-                }
-                existing = by_id.get(cid)
-                if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
-                    by_id[cid] = candidate
+                variant_penalty = 0.06 * variant_idx
+                term_penalty = 0.03 * term_idx
+                for row in rows:
+                    cid = int(row.get("id") or 0)
+                    if cid <= 0:
+                        continue
+                    db_name = str(row.get("name") or "")
+                    short_name = str(row.get("short_name") or "")
+                    synonyms = _split_synonyms(str(row.get("synonyms") or ""), max_items=60)
+                    norm_name = _normalize_name(name)
+                    exact = norm_name in {
+                        _normalize_name(db_name),
+                        _normalize_name(short_name),
+                    }
+                    syn_exact = any(norm_name == _normalize_name(s) for s in synonyms)
+                    contains_bonus = 0.0
+                    if norm_name and (norm_name in _normalize_name(db_name) or norm_name in _normalize_name(short_name)):
+                        contains_bonus = 0.08
+                    jaccard = max(
+                        _jaccard(name, db_name),
+                        _jaccard(name, short_name),
+                        max((_jaccard(name, s) for s in synonyms), default=0.0),
+                    )
+                    score = (0.9 if exact else 0.0) + (0.84 if syn_exact else 0.0) + contains_bonus + (0.35 + 0.55 * jaccard)
+                    score = max(0.0, min(1.0, score - variant_penalty - term_penalty))
+                    mapped_ids = {
+                        "hmdb": str(row.get("hmdb_id") or "").strip(),
+                        "kegg": str(row.get("kegg_id") or "").strip(),
+                        "chebi": str(row.get("chebi_id") or "").strip(),
+                        "pubchem": str(row.get("pubchem_cid") or "").strip(),
+                        "cas": str(row.get("cas") or "").strip(),
+                        "biocyc": str(row.get("biocyc_id") or "").strip(),
+                        "chemspider": str(row.get("chemspider_id") or "").strip(),
+                        "drugbank": str(row.get("drugbank_id") or "").strip(),
+                    }
+                    mapped_ids = {k: v for k, v in mapped_ids.items() if v}
+                    candidate = {
+                        "pathbank_compound_id": cid,
+                        "name": db_name,
+                        "short_name": short_name,
+                        "score": round(score, 4),
+                        "mapped_ids": mapped_ids,
+                    }
+                    existing = by_id.get(cid)
+                    if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
+                        by_id[cid] = candidate
 
         candidates = sorted(by_id.values(), key=lambda item: float(item.get("score", 0.0)), reverse=True)
         if not candidates:
@@ -382,7 +417,8 @@ class PathBankDbResolver:
         best = candidates[0]
         second = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
         mapped_ids = _safe_dict(best.get("mapped_ids"))
-        if mapped_ids and float(best.get("score", 0.0)) >= 0.78 and float(best.get("score", 0.0)) >= second + 0.06:
+        best_score = float(best.get("score", 0.0))
+        if mapped_ids and (best_score >= 0.9 or (best_score >= 0.74 and best_score >= second + 0.03)):
             merged_ids = dict(mapped_ids)
             for candidate in candidates[1:]:
                 if float(candidate.get("score", 0.0)) >= 0.9:
@@ -392,8 +428,8 @@ class PathBankDbResolver:
                 "provider": "PathBankDB",
                 "source": "db",
                 "mapped_ids": merged_ids,
-                "confidence": float(best.get("score", 0.0)),
-                "chosen_rule": "db_top_unique_candidate",
+                "confidence": best_score,
+                "chosen_rule": "db_top_candidate_relaxed",
                 "candidates": candidates[:10],
             }
 
@@ -413,60 +449,75 @@ class PathBankDbResolver:
         by_id: Dict[int, Dict[str, Any]] = {}
 
         for variant_idx, variant in enumerate(variants):
-            params: List[Any] = [variant, variant, variant, f"%{variant}%", f"%{variant}%", f"%{variant}%"]
-            species_sql = ""
-            if species_ids:
-                marks = ", ".join(["%s"] * len(species_ids))
-                species_sql = f" AND species_id IN ({marks})"
-                params.extend(species_ids)
-            rows = self._query(
-                (
-                    "SELECT id, name, uniprot_id, gene_name, species_id, synonyms "
-                    "FROM proteins "
-                    "WHERE (LOWER(name)=LOWER(%s) "
-                    "   OR LOWER(gene_name)=LOWER(%s) "
-                    "   OR LOWER(uniprot_id)=LOWER(%s) "
-                    "   OR LOWER(name) LIKE LOWER(%s) "
-                    "   OR LOWER(gene_name) LIKE LOWER(%s) "
-                    "   OR LOWER(synonyms) LIKE LOWER(%s))"
-                    f"{species_sql} "
-                    "LIMIT 100"
-                ),
-                tuple(params),
-            )
-            variant_penalty = 0.07 * variant_idx
-            for row in rows:
-                pid = int(row.get("id") or 0)
-                if pid <= 0:
-                    continue
-                db_name = str(row.get("name") or "")
-                gene_name = str(row.get("gene_name") or "")
-                uniprot_id = str(row.get("uniprot_id") or "").strip()
-                row_species_id = int(row.get("species_id") or 0)
-                synonyms = _split_synonyms(str(row.get("synonyms") or ""), max_items=40)
-                norm_name = _normalize_name(name)
-                exact = norm_name in {_normalize_name(db_name), _normalize_name(gene_name)}
-                syn_exact = any(norm_name == _normalize_name(s) for s in synonyms)
-                jaccard = max(
-                    _jaccard(name, db_name),
-                    _jaccard(name, gene_name),
-                    max((_jaccard(name, s) for s in synonyms), default=0.0),
-                )
-                species_bonus = 0.12 if species_ids and row_species_id in species_ids else 0.0
-                uniprot_bonus = 0.08 if uniprot_id else 0.0
-                score = (0.9 if exact else 0.0) + (0.83 if syn_exact else 0.0) + (0.35 + 0.52 * jaccard) + species_bonus + uniprot_bonus
-                score = max(0.0, min(1.0, score - variant_penalty))
-                candidate = {
-                    "pathbank_protein_id": pid,
-                    "name": db_name,
-                    "gene_name": gene_name,
-                    "uniprot": uniprot_id,
-                    "species_id": row_species_id,
-                    "score": round(score, 4),
-                }
-                existing = by_id.get(pid)
-                if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
-                    by_id[pid] = candidate
+            for term_idx, term in enumerate(_search_terms(variant, max_terms=5)):
+                pass_modes = [True, False] if species_ids else [False]
+                for pass_idx, use_species_filter in enumerate(pass_modes):
+                    params: List[Any] = [term, term, term, f"%{term}%", f"%{term}%", f"%{term}%"]
+                    species_sql = ""
+                    if use_species_filter and species_ids:
+                        marks = ", ".join(["%s"] * len(species_ids))
+                        species_sql = f" AND species_id IN ({marks})"
+                        params.extend(species_ids)
+                    rows = self._query(
+                        (
+                            "SELECT id, name, uniprot_id, gene_name, species_id, synonyms "
+                            "FROM proteins "
+                            "WHERE (LOWER(name)=LOWER(%s) "
+                            "   OR LOWER(gene_name)=LOWER(%s) "
+                            "   OR LOWER(uniprot_id)=LOWER(%s) "
+                            "   OR LOWER(name) LIKE LOWER(%s) "
+                            "   OR LOWER(gene_name) LIKE LOWER(%s) "
+                            "   OR LOWER(synonyms) LIKE LOWER(%s))"
+                            f"{species_sql} "
+                            "LIMIT 120"
+                        ),
+                        tuple(params),
+                    )
+                    variant_penalty = 0.06 * variant_idx
+                    term_penalty = 0.03 * term_idx
+                    relaxed_penalty = 0.02 if (not use_species_filter and pass_idx > 0) else 0.0
+                    for row in rows:
+                        pid = int(row.get("id") or 0)
+                        if pid <= 0:
+                            continue
+                        db_name = str(row.get("name") or "")
+                        gene_name = str(row.get("gene_name") or "")
+                        uniprot_id = str(row.get("uniprot_id") or "").strip()
+                        row_species_id = int(row.get("species_id") or 0)
+                        synonyms = _split_synonyms(str(row.get("synonyms") or ""), max_items=60)
+                        norm_name = _normalize_name(name)
+                        exact = norm_name in {_normalize_name(db_name), _normalize_name(gene_name)}
+                        syn_exact = any(norm_name == _normalize_name(s) for s in synonyms)
+                        contains_bonus = 0.0
+                        if norm_name and (norm_name in _normalize_name(db_name) or norm_name in _normalize_name(gene_name)):
+                            contains_bonus = 0.08
+                        jaccard = max(
+                            _jaccard(name, db_name),
+                            _jaccard(name, gene_name),
+                            max((_jaccard(name, s) for s in synonyms), default=0.0),
+                        )
+                        species_bonus = 0.14 if species_ids and row_species_id in species_ids else 0.0
+                        uniprot_bonus = 0.08 if uniprot_id else 0.0
+                        score = (
+                            (0.9 if exact else 0.0)
+                            + (0.83 if syn_exact else 0.0)
+                            + contains_bonus
+                            + (0.35 + 0.52 * jaccard)
+                            + species_bonus
+                            + uniprot_bonus
+                        )
+                        score = max(0.0, min(1.0, score - variant_penalty - term_penalty - relaxed_penalty))
+                        candidate = {
+                            "pathbank_protein_id": pid,
+                            "name": db_name,
+                            "gene_name": gene_name,
+                            "uniprot": uniprot_id,
+                            "species_id": row_species_id,
+                            "score": round(score, 4),
+                        }
+                        existing = by_id.get(pid)
+                        if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
+                            by_id[pid] = candidate
 
         candidates = sorted(by_id.values(), key=lambda item: float(item.get("score", 0.0)), reverse=True)
         if not candidates:
@@ -475,14 +526,19 @@ class PathBankDbResolver:
         best = candidates[0]
         second = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
         uniprot_id = str(best.get("uniprot") or "").strip()
-        if uniprot_id and float(best.get("score", 0.0)) >= 0.76 and float(best.get("score", 0.0)) >= second + 0.06:
+        best_score = float(best.get("score", 0.0))
+        if uniprot_id and (
+            best_score >= 0.88
+            or (best_score >= 0.72 and best_score >= second + 0.03)
+            or (len(candidates) == 1 and best_score >= 0.68)
+        ):
             return {
                 "status": "mapped",
                 "provider": "PathBankDB",
                 "source": "db",
                 "mapped_ids": {"uniprot": uniprot_id},
-                "confidence": float(best.get("score", 0.0)),
-                "chosen_rule": "db_top_unique_candidate",
+                "confidence": best_score,
+                "chosen_rule": "db_top_candidate_relaxed",
                 "candidates": candidates[:10],
             }
         reason = "ambiguous" if uniprot_id else "no_external_ids"
