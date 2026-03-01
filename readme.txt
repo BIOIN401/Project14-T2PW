@@ -35,6 +35,17 @@ In Command prompt run the streamlit app from the venv
     streamlit run app.py 
 This will open a browser tab that you can enter text in and get a nicer format
 
+PathBank DB-backed ID mapping (optional)
+- The mapper now supports `PATHBANK_ID_SOURCE=api|db|hybrid` (default `hybrid`).
+- For DB mode or hybrid mode, set:
+  - `PATHBANK_DB_HOST`
+  - `PATHBANK_DB_PORT` (default `3306`)
+  - `PATHBANK_DB_USER`
+  - `PATHBANK_DB_PASSWORD`
+  - `PATHBANK_DB_SCHEMA` (default `pathbank`)
+- CLI usage example:
+  - `python src/map_ids.py --in final.audited.json --out final.mapped.json --report mapping_report.json --id-source hybrid`
+
 
 4. Next steps 
     Need to build out the secondary prompt that will run when we need to fill gaps

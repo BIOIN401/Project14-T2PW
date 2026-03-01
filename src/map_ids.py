@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import time
 from copy import deepcopy
@@ -75,6 +76,34 @@ def _jaccard(a: str, b: str) -> float:
     return len(sa & sb) / len(sa | sb)
 
 
+def _split_synonyms(value: str, *, max_items: int = 64) -> List[str]:
+    if not isinstance(value, str) or not value.strip():
+        return []
+    parts = re.split(r"[;|]", value)
+    out: List[str] = []
+    seen: set = set()
+    for part in parts:
+        cleaned = _canonical_name(part)
+        norm = _normalize_name(cleaned)
+        if not cleaned or not norm or norm in seen:
+            continue
+        seen.add(norm)
+        out.append(cleaned)
+        if len(out) >= max_items:
+            break
+    return out
+
+
+def _merge_mapped_ids(*mapped_dicts: Dict[str, Any]) -> Dict[str, str]:
+    out: Dict[str, str] = {}
+    for item in mapped_dicts:
+        for key, value in _safe_dict(item).items():
+            sval = str(value or "").strip()
+            if sval and key not in out:
+                out[key] = sval
+    return out
+
+
 class HttpClient:
     def __init__(self, timeout: int = 15, max_retries: int = 3, backoff_seconds: float = 0.6) -> None:
         self.timeout = timeout
@@ -118,6 +147,353 @@ class MappingCache:
 
     def save(self) -> None:
         self.path.write_text(json.dumps(self.data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+class PathBankDbResolver:
+    def __init__(
+        self,
+        *,
+        host: str,
+        port: int,
+        user: str,
+        password: str,
+        schema: str,
+        connect_timeout: int = 6,
+        read_timeout: int = 20,
+        write_timeout: int = 20,
+    ) -> None:
+        self.host = host
+        self.port = port
+        self.user = user
+        self.password = password
+        self.schema = schema
+        self.connect_timeout = connect_timeout
+        self.read_timeout = read_timeout
+        self.write_timeout = write_timeout
+        self._driver = None
+        self._conn = None
+        self.last_error = ""
+        try:
+            import pymysql  # type: ignore[import-not-found]
+
+            self._driver = pymysql
+        except Exception as exc:  # noqa: BLE001
+            self.last_error = f"pymysql_unavailable:{exc}"
+
+    @classmethod
+    def from_env(cls, overrides: Optional[Dict[str, Any]] = None) -> Optional["PathBankDbResolver"]:
+        cfg = _safe_dict(overrides)
+
+        def _pick(key: str, env_key: str, default: str = "") -> str:
+            value = cfg.get(key)
+            if value is None or str(value).strip() == "":
+                return str(os.getenv(env_key, default) or "").strip()
+            return str(value).strip()
+
+        host = _pick("host", "PATHBANK_DB_HOST")
+        user = _pick("user", "PATHBANK_DB_USER")
+        password = _pick("password", "PATHBANK_DB_PASSWORD")
+        schema = _pick("schema", "PATHBANK_DB_SCHEMA", "pathbank")
+
+        if not host or not user:
+            return None
+
+        try:
+            port = int(_pick("port", "PATHBANK_DB_PORT", "3306") or "3306")
+        except ValueError:
+            port = 3306
+        try:
+            connect_timeout = int(_pick("connect_timeout", "PATHBANK_DB_CONNECT_TIMEOUT", "6") or "6")
+        except ValueError:
+            connect_timeout = 6
+        try:
+            read_timeout = int(_pick("read_timeout", "PATHBANK_DB_READ_TIMEOUT", "20") or "20")
+        except ValueError:
+            read_timeout = 20
+        try:
+            write_timeout = int(_pick("write_timeout", "PATHBANK_DB_WRITE_TIMEOUT", "20") or "20")
+        except ValueError:
+            write_timeout = 20
+
+        return cls(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            schema=schema,
+            connect_timeout=connect_timeout,
+            read_timeout=read_timeout,
+            write_timeout=write_timeout,
+        )
+
+    def available(self) -> bool:
+        return self._driver is not None
+
+    def close(self) -> None:
+        try:
+            if self._conn is not None:
+                self._conn.close()
+        except Exception:  # noqa: BLE001
+            pass
+        self._conn = None
+
+    def _ensure_connection(self) -> bool:
+        if self._conn is not None:
+            return True
+        if self._driver is None:
+            return False
+        try:
+            self._conn = self._driver.connect(
+                host=self.host,
+                port=self.port,
+                user=self.user,
+                password=self.password,
+                database=self.schema,
+                charset="utf8mb4",
+                connect_timeout=self.connect_timeout,
+                read_timeout=self.read_timeout,
+                write_timeout=self.write_timeout,
+                cursorclass=self._driver.cursors.DictCursor,
+                autocommit=True,
+            )
+            return True
+        except Exception as exc:  # noqa: BLE001
+            self.last_error = f"db_connect_failed:{exc}"
+            self._conn = None
+            return False
+
+    def _query(self, sql: str, params: Tuple[Any, ...]) -> List[Dict[str, Any]]:
+        if not self._ensure_connection():
+            return []
+        try:
+            assert self._conn is not None
+            with self._conn.cursor() as cursor:
+                cursor.execute(sql, params)
+                rows = cursor.fetchall()
+            return [dict(row) for row in rows]
+        except Exception as exc:  # noqa: BLE001
+            self.last_error = f"db_query_failed:{exc}"
+            return []
+
+    def _find_species_ids(self, organism: str) -> List[int]:
+        text = _canonical_name(organism)
+        if not text:
+            return []
+        rows = self._query(
+            (
+                "SELECT id, name, common_name, taxonomy_id "
+                "FROM species "
+                "WHERE LOWER(name)=LOWER(%s) "
+                "   OR LOWER(common_name)=LOWER(%s) "
+                "   OR taxonomy_id=%s "
+                "   OR LOWER(name) LIKE LOWER(%s) "
+                "   OR LOWER(common_name) LIKE LOWER(%s) "
+                "LIMIT 40"
+            ),
+            (text, text, text, f"%{text}%", f"%{text}%"),
+        )
+        if not rows:
+            return []
+        scored: List[Tuple[float, int]] = []
+        norm_text = _normalize_name(text)
+        for row in rows:
+            sid = int(row.get("id") or 0)
+            if sid <= 0:
+                continue
+            name = str(row.get("name") or "")
+            common_name = str(row.get("common_name") or "")
+            taxonomy_id = str(row.get("taxonomy_id") or "")
+            score = 0.0
+            if norm_text and norm_text == _normalize_name(name):
+                score = max(score, 1.0)
+            if norm_text and norm_text == _normalize_name(common_name):
+                score = max(score, 0.95)
+            if text and text == taxonomy_id:
+                score = max(score, 0.98)
+            score = max(score, 0.45 + 0.5 * _jaccard(text, name), 0.42 + 0.5 * _jaccard(text, common_name))
+            scored.append((score, sid))
+        scored.sort(key=lambda pair: pair[0], reverse=True)
+        if not scored:
+            return []
+        top = scored[0][0]
+        chosen = [sid for score, sid in scored if score >= max(0.7, top - 0.08)]
+        return chosen[:6]
+
+    def map_compound(self, name: str) -> Dict[str, Any]:
+        variants = _name_variants(name, max_variants=4)
+        by_id: Dict[int, Dict[str, Any]] = {}
+        for variant_idx, variant in enumerate(variants):
+            rows = self._query(
+                (
+                    "SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, biocyc_id, chemspider_id, drugbank_id, synonyms "
+                    "FROM compounds "
+                    "WHERE LOWER(name)=LOWER(%s) "
+                    "   OR LOWER(short_name)=LOWER(%s) "
+                    "   OR LOWER(name) LIKE LOWER(%s) "
+                    "   OR LOWER(short_name) LIKE LOWER(%s) "
+                    "   OR LOWER(synonyms) LIKE LOWER(%s) "
+                    "LIMIT 80"
+                ),
+                (variant, variant, f"%{variant}%", f"%{variant}%", f"%{variant}%"),
+            )
+            variant_penalty = 0.07 * variant_idx
+            for row in rows:
+                cid = int(row.get("id") or 0)
+                if cid <= 0:
+                    continue
+                db_name = str(row.get("name") or "")
+                short_name = str(row.get("short_name") or "")
+                synonyms = _split_synonyms(str(row.get("synonyms") or ""), max_items=40)
+                exact = _normalize_name(name) in {
+                    _normalize_name(db_name),
+                    _normalize_name(short_name),
+                }
+                syn_exact = any(_normalize_name(name) == _normalize_name(s) for s in synonyms)
+                jaccard = max(
+                    _jaccard(name, db_name),
+                    _jaccard(name, short_name),
+                    max((_jaccard(name, s) for s in synonyms), default=0.0),
+                )
+                score = (0.9 if exact else 0.0) + (0.84 if syn_exact else 0.0) + (0.35 + 0.55 * jaccard)
+                score = max(0.0, min(1.0, score - variant_penalty))
+                mapped_ids = {
+                    "hmdb": str(row.get("hmdb_id") or "").strip(),
+                    "kegg": str(row.get("kegg_id") or "").strip(),
+                    "chebi": str(row.get("chebi_id") or "").strip(),
+                    "pubchem": str(row.get("pubchem_cid") or "").strip(),
+                    "cas": str(row.get("cas") or "").strip(),
+                }
+                mapped_ids = {k: v for k, v in mapped_ids.items() if v}
+                candidate = {
+                    "pathbank_compound_id": cid,
+                    "name": db_name,
+                    "short_name": short_name,
+                    "score": round(score, 4),
+                    "mapped_ids": mapped_ids,
+                }
+                existing = by_id.get(cid)
+                if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
+                    by_id[cid] = candidate
+
+        candidates = sorted(by_id.values(), key=lambda item: float(item.get("score", 0.0)), reverse=True)
+        if not candidates:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+
+        best = candidates[0]
+        second = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
+        mapped_ids = _safe_dict(best.get("mapped_ids"))
+        if mapped_ids and float(best.get("score", 0.0)) >= 0.78 and float(best.get("score", 0.0)) >= second + 0.06:
+            merged_ids = dict(mapped_ids)
+            for candidate in candidates[1:]:
+                if float(candidate.get("score", 0.0)) >= 0.9:
+                    merged_ids = _merge_mapped_ids(merged_ids, _safe_dict(candidate.get("mapped_ids")))
+            return {
+                "status": "mapped",
+                "provider": "PathBankDB",
+                "source": "db",
+                "mapped_ids": merged_ids,
+                "confidence": float(best.get("score", 0.0)),
+                "chosen_rule": "db_top_unique_candidate",
+                "candidates": candidates[:10],
+            }
+
+        reason = "ambiguous" if mapped_ids else "no_external_ids"
+        return {
+            "status": "unmapped",
+            "reason": reason,
+            "provider": "PathBankDB",
+            "source": "db",
+            "confidence": float(best.get("score", 0.0)),
+            "candidates": candidates[:10],
+        }
+
+    def map_protein(self, name: str, organism: str) -> Dict[str, Any]:
+        variants = _name_variants(name, max_variants=4)
+        species_ids = self._find_species_ids(organism)
+        by_id: Dict[int, Dict[str, Any]] = {}
+
+        for variant_idx, variant in enumerate(variants):
+            params: List[Any] = [variant, variant, variant, f"%{variant}%", f"%{variant}%", f"%{variant}%"]
+            species_sql = ""
+            if species_ids:
+                marks = ", ".join(["%s"] * len(species_ids))
+                species_sql = f" AND species_id IN ({marks})"
+                params.extend(species_ids)
+            rows = self._query(
+                (
+                    "SELECT id, name, uniprot_id, gene_name, species_id, synonyms "
+                    "FROM proteins "
+                    "WHERE (LOWER(name)=LOWER(%s) "
+                    "   OR LOWER(gene_name)=LOWER(%s) "
+                    "   OR LOWER(uniprot_id)=LOWER(%s) "
+                    "   OR LOWER(name) LIKE LOWER(%s) "
+                    "   OR LOWER(gene_name) LIKE LOWER(%s) "
+                    "   OR LOWER(synonyms) LIKE LOWER(%s))"
+                    f"{species_sql} "
+                    "LIMIT 100"
+                ),
+                tuple(params),
+            )
+            variant_penalty = 0.07 * variant_idx
+            for row in rows:
+                pid = int(row.get("id") or 0)
+                if pid <= 0:
+                    continue
+                db_name = str(row.get("name") or "")
+                gene_name = str(row.get("gene_name") or "")
+                uniprot_id = str(row.get("uniprot_id") or "").strip()
+                row_species_id = int(row.get("species_id") or 0)
+                synonyms = _split_synonyms(str(row.get("synonyms") or ""), max_items=40)
+                norm_name = _normalize_name(name)
+                exact = norm_name in {_normalize_name(db_name), _normalize_name(gene_name)}
+                syn_exact = any(norm_name == _normalize_name(s) for s in synonyms)
+                jaccard = max(
+                    _jaccard(name, db_name),
+                    _jaccard(name, gene_name),
+                    max((_jaccard(name, s) for s in synonyms), default=0.0),
+                )
+                species_bonus = 0.12 if species_ids and row_species_id in species_ids else 0.0
+                uniprot_bonus = 0.08 if uniprot_id else 0.0
+                score = (0.9 if exact else 0.0) + (0.83 if syn_exact else 0.0) + (0.35 + 0.52 * jaccard) + species_bonus + uniprot_bonus
+                score = max(0.0, min(1.0, score - variant_penalty))
+                candidate = {
+                    "pathbank_protein_id": pid,
+                    "name": db_name,
+                    "gene_name": gene_name,
+                    "uniprot": uniprot_id,
+                    "species_id": row_species_id,
+                    "score": round(score, 4),
+                }
+                existing = by_id.get(pid)
+                if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
+                    by_id[pid] = candidate
+
+        candidates = sorted(by_id.values(), key=lambda item: float(item.get("score", 0.0)), reverse=True)
+        if not candidates:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+
+        best = candidates[0]
+        second = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
+        uniprot_id = str(best.get("uniprot") or "").strip()
+        if uniprot_id and float(best.get("score", 0.0)) >= 0.76 and float(best.get("score", 0.0)) >= second + 0.06:
+            return {
+                "status": "mapped",
+                "provider": "PathBankDB",
+                "source": "db",
+                "mapped_ids": {"uniprot": uniprot_id},
+                "confidence": float(best.get("score", 0.0)),
+                "chosen_rule": "db_top_unique_candidate",
+                "candidates": candidates[:10],
+            }
+        reason = "ambiguous" if uniprot_id else "no_external_ids"
+        return {
+            "status": "unmapped",
+            "reason": reason,
+            "provider": "PathBankDB",
+            "source": "db",
+            "confidence": float(best.get("score", 0.0)),
+            "candidates": candidates[:10],
+        }
 
 
 def _extract_global_organism(payload: Dict[str, Any]) -> str:
@@ -460,20 +836,123 @@ def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:
     }
 
 
+def _map_protein_with_strategy(
+    *,
+    id_source: str,
+    db: Optional[PathBankDbResolver],
+    client: HttpClient,
+    cache: MappingCache,
+    name: str,
+    organism: str,
+) -> Dict[str, Any]:
+    base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}"
+    db_key = f"db::{base_key}"
+    api_key = f"api::{base_key}"
+
+    if id_source in {"db", "hybrid"}:
+        db_result = cache.get("proteins", db_key)
+        if db_result is None:
+            if db and db.available():
+                db_result = db.map_protein(name, organism)
+            else:
+                db_reason = db.last_error if db else "db_not_configured"
+                db_result = {
+                    "status": "unmapped",
+                    "reason": f"db_unavailable:{db_reason}",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "candidates": [],
+                }
+            cache.set("proteins", db_key, db_result)
+        if db_result.get("status") == "mapped" or id_source == "db":
+            return db_result
+
+    if id_source in {"api", "hybrid"}:
+        api_result = cache.get("proteins", api_key)
+        if api_result is None:
+            # Backward-compatible cache key from pre-strategy versions.
+            legacy = cache.get("proteins", base_key)
+            if legacy is not None and id_source == "api":
+                api_result = legacy
+            else:
+                api_result = map_protein_uniprot(client, name, organism)
+            api_result.setdefault("provider", "UniProt")
+            api_result.setdefault("source", "api")
+            cache.set("proteins", api_key, api_result)
+        return api_result
+
+    return {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []}
+
+
+def _map_compound_with_strategy(
+    *,
+    id_source: str,
+    db: Optional[PathBankDbResolver],
+    client: HttpClient,
+    cache: MappingCache,
+    name: str,
+) -> Dict[str, Any]:
+    base_key = _normalize_name(name)
+    db_key = f"db::{base_key}"
+    api_key = f"api::{base_key}"
+
+    if id_source in {"db", "hybrid"}:
+        db_result = cache.get("compounds", db_key)
+        if db_result is None:
+            if db and db.available():
+                db_result = db.map_compound(name)
+            else:
+                db_reason = db.last_error if db else "db_not_configured"
+                db_result = {
+                    "status": "unmapped",
+                    "reason": f"db_unavailable:{db_reason}",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "candidates": [],
+                }
+            cache.set("compounds", db_key, db_result)
+        if db_result.get("status") == "mapped" or id_source == "db":
+            return db_result
+
+    if id_source in {"api", "hybrid"}:
+        api_result = cache.get("compounds", api_key)
+        if api_result is None:
+            legacy = cache.get("compounds", base_key)
+            if legacy is not None and id_source == "api":
+                api_result = legacy
+            else:
+                api_result = map_compound_all(client, name)
+            api_result.setdefault("provider", "ChEBI/KEGG/HMDB")
+            api_result.setdefault("source", "api")
+            cache.set("compounds", api_key, api_result)
+        return api_result
+
+    return {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []}
+
+
 def run_mapping(
     input_path: Path,
     output_path: Path,
     report_path: Path,
     *,
     cache_path: Path,
+    id_source: str = "hybrid",
+    db_config: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
     mapped = deepcopy(payload)
 
+    source_mode = (id_source or os.getenv("PATHBANK_ID_SOURCE", "hybrid")).strip().lower()
+    if source_mode not in {"api", "db", "hybrid"}:
+        source_mode = "hybrid"
+
     client = HttpClient()
     cache = MappingCache(cache_path)
+    db: Optional[PathBankDbResolver] = None
+    if source_mode in {"db", "hybrid"}:
+        db = PathBankDbResolver.from_env(db_config)
 
     entities = _safe_dict(mapped.get("entities"))
     proteins = _safe_list(entities.get("proteins"))
@@ -488,6 +967,10 @@ def run_mapping(
     compounds_mapped = 0
     protein_ambiguous = 0
     compound_ambiguous = 0
+    proteins_mapped_by_db = 0
+    proteins_mapped_by_api = 0
+    compounds_mapped_by_db = 0
+    compounds_mapped_by_api = 0
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -510,15 +993,21 @@ def run_mapping(
             organism = global_organism
             protein["organism"] = global_organism
 
-        cache_key = f"{_normalize_name(name)}::{_normalize_name(organism)}"
-        result = cache.get("proteins", cache_key)
-        if result is None:
-            result = map_protein_uniprot(client, name, organism)
-            cache.set("proteins", cache_key, result)
+        result = _map_protein_with_strategy(
+            id_source=source_mode,
+            db=db,
+            client=client,
+            cache=cache,
+            name=name,
+            organism=organism,
+        )
+        provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "UniProt"))
+        source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
 
         protein.setdefault("mapping_meta", {})
         protein["mapping_meta"]["query"] = {"name": name, "organism": organism}
-        protein["mapping_meta"]["provider"] = "UniProt"
+        protein["mapping_meta"]["provider"] = provider
+        protein["mapping_meta"]["source"] = source
         protein["mapping_meta"]["candidates"] = result.get("candidates", [])
         protein["mapping_meta"]["chosen_rule"] = result.get("chosen_rule", "")
         protein["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
@@ -526,7 +1015,11 @@ def run_mapping(
 
         if result.get("status") == "mapped":
             proteins_mapped += 1
-            protein["mapped_ids"] = {**_safe_dict(protein.get("mapped_ids")), **_safe_dict(result.get("mapped_ids"))}
+            if source == "db":
+                proteins_mapped_by_db += 1
+            else:
+                proteins_mapped_by_api += 1
+            protein["mapped_ids"] = _merge_mapped_ids(_safe_dict(protein.get("mapped_ids")), _safe_dict(result.get("mapped_ids")))
             status = "mapped"
             reason = ""
         else:
@@ -545,6 +1038,8 @@ def run_mapping(
                 "location": ", ".join(protein_locations.get(name, [])),
                 "organism": organism,
                 "candidate_count": len(_safe_list(result.get("candidates"))),
+                "source": source,
+                "provider": provider,
             }
         )
 
@@ -565,22 +1060,31 @@ def run_mapping(
             )
             continue
 
-        cache_key = _normalize_name(name)
-        result = cache.get("compounds", cache_key)
-        if result is None:
-            result = map_compound_all(client, name)
-            cache.set("compounds", cache_key, result)
+        result = _map_compound_with_strategy(
+            id_source=source_mode,
+            db=db,
+            client=client,
+            cache=cache,
+            name=name,
+        )
+        provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "ChEBI/KEGG/HMDB"))
+        source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
 
         compound.setdefault("mapping_meta", {})
         compound["mapping_meta"]["query"] = {"name": name}
-        compound["mapping_meta"]["providers"] = ["ChEBI", "KEGG", "HMDB"]
+        compound["mapping_meta"]["providers"] = [provider]
+        compound["mapping_meta"]["source"] = source
         compound["mapping_meta"]["candidates"] = result.get("candidates", [])
         compound["mapping_meta"]["chosen_rule"] = result.get("chosen_rule", "")
         compound["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
 
         if result.get("status") == "mapped":
             compounds_mapped += 1
-            compound["mapped_ids"] = {**_safe_dict(compound.get("mapped_ids")), **_safe_dict(result.get("mapped_ids"))}
+            if source == "db":
+                compounds_mapped_by_db += 1
+            else:
+                compounds_mapped_by_api += 1
+            compound["mapped_ids"] = _merge_mapped_ids(_safe_dict(compound.get("mapped_ids")), _safe_dict(result.get("mapped_ids")))
             status = "mapped"
             reason = ""
         else:
@@ -598,10 +1102,14 @@ def run_mapping(
                 "reason": reason,
                 "location": ", ".join(compound_locations.get(name, [])),
                 "candidate_count": len(_safe_list(result.get("candidates"))),
+                "source": source,
+                "provider": provider,
             }
         )
 
     cache.save()
+    if db is not None:
+        db.close()
     output_path.write_text(json.dumps(mapped, indent=2, ensure_ascii=False), encoding="utf-8")
 
     proteins_total = len([p for p in proteins if isinstance(p, dict) and isinstance(p.get("name"), str) and p.get("name").strip()])
@@ -615,6 +1123,13 @@ def run_mapping(
         "compounds_mapped": compounds_mapped,
         "compounds_mapped_pct": round((100.0 * compounds_mapped / compounds_total), 2) if compounds_total else 0.0,
         "compounds_ambiguous": compound_ambiguous,
+        "id_source_mode": source_mode,
+        "db_available": bool(db and db.available()),
+        "db_last_error": db.last_error if db else "",
+        "proteins_mapped_by_db": proteins_mapped_by_db,
+        "proteins_mapped_by_api": proteins_mapped_by_api,
+        "compounds_mapped_by_db": compounds_mapped_by_db,
+        "compounds_mapped_by_api": compounds_mapped_by_api,
     }
 
     report = {"summary": summary, "entities": logs}
@@ -638,6 +1153,18 @@ def main() -> None:
         default="id_mapping_cache.json",
         help="Cache file path for deterministic mapping reuse",
     )
+    parser.add_argument(
+        "--id-source",
+        dest="id_source",
+        choices=["api", "db", "hybrid"],
+        default=os.getenv("PATHBANK_ID_SOURCE", "hybrid"),
+        help="ID resolver mode: api, db, or hybrid (db first then api fallback).",
+    )
+    parser.add_argument("--db-host", dest="db_host", default=os.getenv("PATHBANK_DB_HOST", ""))
+    parser.add_argument("--db-port", dest="db_port", type=int, default=int(os.getenv("PATHBANK_DB_PORT", "3306")))
+    parser.add_argument("--db-user", dest="db_user", default=os.getenv("PATHBANK_DB_USER", ""))
+    parser.add_argument("--db-password", dest="db_password", default=os.getenv("PATHBANK_DB_PASSWORD", ""))
+    parser.add_argument("--db-schema", dest="db_schema", default=os.getenv("PATHBANK_DB_SCHEMA", "pathbank"))
     args = parser.parse_args()
 
     report = run_mapping(
@@ -645,6 +1172,14 @@ def main() -> None:
         Path(args.output_path),
         Path(args.report_path),
         cache_path=Path(args.cache_path),
+        id_source=args.id_source,
+        db_config={
+            "host": args.db_host,
+            "port": args.db_port,
+            "user": args.db_user,
+            "password": args.db_password,
+            "schema": args.db_schema,
+        },
     )
     print(f"Wrote mapped JSON: {args.output_path}")
     print(

@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 from pathlib import Path
 from types import SimpleNamespace
@@ -81,6 +82,12 @@ def run_post_pipeline_sbml_artifacts(
     use_sbml_overwatch: bool,
     default_compartment: str,
     mapping_cache_path: str,
+    id_source: str,
+    db_host: str,
+    db_port: int,
+    db_user: str,
+    db_password: str,
+    db_schema: str,
 ) -> Dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     cache_path = Path(mapping_cache_path)
@@ -124,6 +131,14 @@ def run_post_pipeline_sbml_artifacts(
             mapped_json,
             mapping_report_path,
             cache_path=cache_path,
+            id_source=id_source,
+            db_config={
+                "host": db_host,
+                "port": db_port,
+                "user": db_user,
+                "password": db_password,
+                "schema": db_schema,
+            },
         )
         sbml_build_report = build_sbml(
             mapped_json,
@@ -156,6 +171,9 @@ def run_post_pipeline_sbml_artifacts(
             "sbml_xml_bytes": sbml_path.read_bytes(),
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
+            "mapping_id_source": id_source,
+            "mapping_db_host": db_host,
+            "mapping_db_schema": db_schema,
         }
 
 
@@ -406,6 +424,34 @@ if st.session_state.get("pipeline_ready"):
         key="post_mapping_cache",
         help="Cache file for UniProt/compound mapping lookups.",
     )
+    id_source_mode = post_col_b.selectbox(
+        "ID mapping source",
+        options=["hybrid", "db", "api"],
+        index=["hybrid", "db", "api"].index((os.getenv("PATHBANK_ID_SOURCE", "hybrid") or "hybrid").strip().lower())
+        if (os.getenv("PATHBANK_ID_SOURCE", "hybrid") or "hybrid").strip().lower() in {"hybrid", "db", "api"}
+        else 0,
+        key="post_mapping_source",
+        help="hybrid = PathBank DB first, then API fallback.",
+    )
+    with st.expander("PathBank DB connection (optional)", expanded=False):
+        db_cols = st.columns(2)
+        db_host = db_cols[0].text_input("DB host", value=os.getenv("PATHBANK_DB_HOST", ""), key="post_db_host")
+        db_port = db_cols[1].number_input(
+            "DB port",
+            min_value=1,
+            max_value=65535,
+            value=int(os.getenv("PATHBANK_DB_PORT", "3306") or "3306"),
+            step=1,
+            key="post_db_port",
+        )
+        db_user = db_cols[0].text_input("DB user", value=os.getenv("PATHBANK_DB_USER", ""), key="post_db_user")
+        db_schema = db_cols[1].text_input("DB schema", value=os.getenv("PATHBANK_DB_SCHEMA", "pathbank"), key="post_db_schema")
+        db_password = st.text_input(
+            "DB password",
+            value=os.getenv("PATHBANK_DB_PASSWORD", ""),
+            type="password",
+            key="post_db_password",
+        )
 
     if st.button("Run post-pipeline SBML conversion"):
         try:
@@ -416,6 +462,12 @@ if st.session_state.get("pipeline_ready"):
                     use_sbml_overwatch=bool(use_sbml_overwatch),
                     default_compartment=(default_compartment or "cell").strip() or "cell",
                     mapping_cache_path=mapping_cache_text.strip() or "id_mapping_cache.json",
+                    id_source=(id_source_mode or "hybrid").strip().lower(),
+                    db_host=(db_host or "").strip(),
+                    db_port=int(db_port),
+                    db_user=(db_user or "").strip(),
+                    db_password=db_password or "",
+                    db_schema=(db_schema or "pathbank").strip() or "pathbank",
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
             st.success("Post-pipeline conversion completed.")
@@ -438,6 +490,9 @@ if st.session_state.get("pipeline_ready"):
                 "sbml_validation_has_errors": sbml_validation.get("has_errors"),
                 "sbml_overwatch": sbml_overwatch_summary,
                 "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
+                "mapping_id_source": post_artifacts.get("mapping_id_source"),
+                "mapping_db_host": post_artifacts.get("mapping_db_host"),
+                "mapping_db_schema": post_artifacts.get("mapping_db_schema"),
             }
         )
 
