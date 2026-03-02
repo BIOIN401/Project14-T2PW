@@ -4,7 +4,7 @@ import argparse
 import json
 import logging
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
@@ -96,6 +96,12 @@ def _dedupe_preserve_order(values: Sequence[str]) -> List[str]:
         seen.add(norm)
         out.append(value)
     return out
+
+
+def _same_multiset(values_a: Sequence[str], values_b: Sequence[str]) -> bool:
+    norm_a = [_normalize_name(v) for v in values_a if isinstance(v, str) and _normalize_name(v)]
+    norm_b = [_normalize_name(v) for v in values_b if isinstance(v, str) and _normalize_name(v)]
+    return Counter(norm_a) == Counter(norm_b)
 
 
 def _safe_list(value: Any) -> List[Any]:
@@ -298,6 +304,7 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
     process_compound_refs: List[str] = []
     process_protein_refs: List[str] = []
 
+    reaction_remove_indices: List[int] = []
     for idx, reaction in enumerate(_safe_list(processes.get("reactions"))):
         ptr = _join_pointer(["processes", "reactions", idx])
         if not isinstance(reaction, dict):
@@ -320,6 +327,18 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
             outputs.extend(_split_composite_name(item) if _is_composite_name(item) else [item])
         inputs = _dedupe_preserve_order(inputs)
         outputs = _dedupe_preserve_order(outputs)
+
+        if inputs and outputs and _same_multiset(inputs, outputs):
+            issues["errors"].append(
+                {
+                    "path": ptr,
+                    "reason": "Reaction has identical inputs and outputs with no transformation.",
+                    "evidence": json.dumps({"inputs": inputs, "outputs": outputs}, ensure_ascii=False)[:220],
+                    "source": "deterministic",
+                }
+            )
+            reaction_remove_indices.append(idx)
+            continue
 
         if inputs != raw_inputs and inputs:
             patch_ops.append(
@@ -750,6 +769,18 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                 "reason": "Potential inconsistent location spelling; consider normalization table.",
                 "evidence": json.dumps(alias_pairs, ensure_ascii=False),
                 "normalization_map": alias_pairs,
+                "source": "deterministic",
+            }
+        )
+
+    for idx in sorted(set(reaction_remove_indices), reverse=True):
+        patch_ops.append(
+            {
+                "op": "remove",
+                "path": _join_pointer(["processes", "reactions", idx]),
+                "reason": "Remove degenerate reaction with identical inputs and outputs.",
+                "confidence": 0.995,
+                "evidence": f"processes.reactions[{idx}] has identical input/output multiset",
                 "source": "deterministic",
             }
         )

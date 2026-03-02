@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple
@@ -132,7 +133,90 @@ def _threshold_for_op(op: Dict[str, Any]) -> float:
     return 1.0
 
 
-def _should_accept(op: Dict[str, Any]) -> Tuple[bool, str]:
+def _get_value_at_pointer(doc: Any, path: str) -> Any:
+    tokens = _decode_pointer(path)
+    current = doc
+    for token in tokens:
+        if isinstance(current, dict):
+            if token not in current:
+                raise KeyError(f"Pointer does not exist: {path}")
+            current = current[token]
+            continue
+        if isinstance(current, list):
+            if not _is_array_index(token):
+                raise ValueError(f"Expected array index token, got: {token}")
+            idx = int(token)
+            if idx < 0 or idx >= len(current):
+                raise IndexError(f"Array index out of range: {idx}")
+            current = current[idx]
+            continue
+        raise TypeError(f"Cannot traverse through non-container: {type(current).__name__}")
+    return current
+
+
+def _split_tokens(value: str) -> List[str]:
+    if not isinstance(value, str):
+        return []
+    parts = re.split(r"\s*\+\s*|\s+and\s+", value.strip(), flags=re.IGNORECASE)
+    return [p.strip() for p in parts if p and p.strip()]
+
+
+def _canonical_token(value: str) -> str:
+    cleaned = re.sub(r"\s+", " ", value.strip().casefold())
+    return re.sub(r"[^a-z0-9 ]+", "", cleaned)
+
+
+def _flatten_process_tokens(raw: Any) -> List[str]:
+    out: List[str] = []
+    if not isinstance(raw, list):
+        return out
+    for item in raw:
+        if not isinstance(item, str):
+            continue
+        for token in _split_tokens(item):
+            norm = _canonical_token(token)
+            if norm:
+                out.append(norm)
+    return out
+
+
+def _is_noop_reaction_obj(obj: Any) -> bool:
+    if not isinstance(obj, dict):
+        return False
+    inputs = sorted(_flatten_process_tokens(obj.get("inputs")))
+    outputs = sorted(_flatten_process_tokens(obj.get("outputs")))
+    return bool(inputs) and inputs == outputs
+
+
+def _is_noop_transport_obj(obj: Any) -> bool:
+    if not isinstance(obj, dict):
+        return False
+    src = (obj.get("from_biological_state") or "").strip() if isinstance(obj.get("from_biological_state"), str) else ""
+    dst = (obj.get("to_biological_state") or "").strip() if isinstance(obj.get("to_biological_state"), str) else ""
+    cargo = (obj.get("cargo") or "").strip() if isinstance(obj.get("cargo"), str) else ""
+    return bool(src and dst and cargo) and src == dst
+
+
+def _is_safe_core_remove(op: Dict[str, Any], source_payload: Dict[str, Any]) -> bool:
+    path = str(op.get("path", ""))
+    confidence = _float_or_default(op.get("confidence"), 0.0)
+    evidence = str(op.get("evidence", "")).strip()
+    if confidence < 0.97 or not evidence:
+        return False
+    if not re.match(r"^/processes/(reactions|transports|reaction_coupled_transports)/\d+$", path):
+        return False
+    try:
+        target = _get_value_at_pointer(source_payload, path)
+    except Exception:  # noqa: BLE001
+        return False
+    if "/processes/reactions/" in path:
+        return _is_noop_reaction_obj(target)
+    if "/processes/transports/" in path:
+        return _is_noop_transport_obj(target)
+    return False
+
+
+def _should_accept(op: Dict[str, Any], source_payload: Dict[str, Any]) -> Tuple[bool, str]:
     action = str(op.get("op", "")).lower()
     path = str(op.get("path", ""))
     confidence = _float_or_default(op.get("confidence"), 0.0)
@@ -150,7 +234,8 @@ def _should_accept(op: Dict[str, Any]) -> Tuple[bool, str]:
         if not evidence.strip():
             return False, "Connectivity changes require explicit evidence."
     if action == "remove" and _is_core_semantics_path(path):
-        return False, "Remove on core process semantics is blocked."
+        if not _is_safe_core_remove(op, source_payload):
+            return False, "Remove on core process semantics is blocked unless target is provable no-op."
     return True, "accepted"
 
 
@@ -166,7 +251,7 @@ def apply_patch_with_policy(
         if not isinstance(op, dict):
             rejected.append({"index": idx, "reason": "Patch op is not an object.", "op": op})
             continue
-        allow, reason = _should_accept(op)
+        allow, reason = _should_accept(op, source_payload)
         record = {"index": idx, "reason": reason, "op": op}
         if not allow:
             rejected.append(record)
@@ -258,4 +343,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
