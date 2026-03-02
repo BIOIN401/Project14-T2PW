@@ -14,6 +14,7 @@ from lxml import etree
 from apply_audit_patch import run_apply
 from audit_json_llm import run_audit
 from grounding import apply_grounding
+from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
@@ -101,6 +102,9 @@ def run_post_pipeline_sbml_artifacts(
     db_schema: str,
     audit_max_rounds: int,
     audit_timeout_seconds: int,
+    use_gap_resolver: bool,
+    use_llm_gap_resolver: bool,
+    gap_resolver_max_items: int,
 ) -> Dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     cache_path = Path(mapping_cache_path)
@@ -121,10 +125,12 @@ def run_post_pipeline_sbml_artifacts(
         sbml_report_json_path = tmp / "sbml_validation_report.json"
         sbml_report_txt_path = tmp / "sbml_validation_report.txt"
         sbml_overwatch_path = tmp / "sbml_overwatch_report.json"
+        gap_resolution_report_path = tmp / "gap_resolution_report.json"
 
         input_json.write_text(json.dumps(final_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
         audit_iterations: List[Dict[str, Any]] = []
+        gap_iterations: List[Dict[str, Any]] = []
         seen_hashes: set = set()
         current_input = input_json
         max_rounds = max(1, int(audit_max_rounds))
@@ -159,6 +165,31 @@ def run_post_pipeline_sbml_artifacts(
                 audit_report_path=audit_report_path,
                 apply_report_path=apply_report_path,
             )
+            round_resolved = tmp / f"final.resolved.round{round_idx}.json"
+            gap_report_round: Dict[str, Any] = {}
+            if use_gap_resolver:
+                gap_temp = min(0.45, 0.05 + 0.08 * (round_idx - 1))
+                gap_tokens = min(1400, 700 + 120 * (round_idx - 1))
+                gap_report_round = run_gap_resolution(
+                    round_audited,
+                    round_resolved,
+                    gap_resolution_report_path,
+                    id_source=id_source,
+                    db_config={
+                        "host": db_host,
+                        "port": db_port,
+                        "user": db_user,
+                        "password": db_password,
+                        "schema": db_schema,
+                    },
+                    use_llm=use_llm_gap_resolver,
+                    llm_temperature=gap_temp,
+                    llm_max_tokens=gap_tokens,
+                    max_items=max(10, int(gap_resolver_max_items)),
+                )
+                current_after_round = round_resolved
+            else:
+                current_after_round = round_audited
 
             round_audit = json.loads(audit_report_path.read_text(encoding="utf-8"))
             round_apply = json.loads(apply_report_path.read_text(encoding="utf-8"))
@@ -176,7 +207,12 @@ def run_post_pipeline_sbml_artifacts(
                 if isinstance(item, dict) and str(item.get("reason", "")).strip()
             ][:3]
 
-            payload_hash = hashlib.sha1(round_audited.read_bytes()).hexdigest()
+            gap_summary = _safe_dict(gap_report_round.get("summary")) if isinstance(gap_report_round, dict) else {}
+            mapped_ids_added = int(gap_summary.get("mapped_ids_added", 0))
+            locations_added = int(gap_summary.get("locations_added", 0))
+            states_filled = int(gap_summary.get("location_states_filled", 0))
+
+            payload_hash = hashlib.sha1(current_after_round.read_bytes()).hexdigest()
             repeated_payload = payload_hash in seen_hashes
             seen_hashes.add(payload_hash)
 
@@ -194,12 +230,23 @@ def run_post_pipeline_sbml_artifacts(
                     "llm_error": str(llm_info.get("error", "")),
                     "llm_repair_rationale": str(llm_info.get("repair_rationale", "")),
                     "top_errors": top_errors,
+                    "gap_mapped_ids_added": mapped_ids_added,
+                    "gap_locations_added": locations_added,
+                    "gap_location_states_filled": states_filled,
                     "payload_repeated": repeated_payload,
                     "elapsed_seconds": round(time.time() - audit_started_at, 3),
                 }
             )
+            if use_gap_resolver:
+                gap_iterations.append(
+                    {
+                        "round": round_idx,
+                        "summary": gap_summary,
+                        "db": _safe_dict(gap_report_round.get("db")),
+                    }
+                )
 
-            current_input = round_audited
+            current_input = current_after_round
             if repeated_payload:
                 stop_reason = "loop_detected_same_payload"
                 break
@@ -277,6 +324,7 @@ def run_post_pipeline_sbml_artifacts(
             "mapping_db_host": db_host,
             "mapping_db_schema": db_schema,
             "audit_iterations": audit_iterations,
+            "gap_resolution_iterations": gap_iterations,
             "audit_loop_summary": {
                 "rounds_executed": len(audit_iterations),
                 "max_rounds": max_rounds,
@@ -553,6 +601,28 @@ if st.session_state.get("pipeline_ready"):
         key="post_audit_timeout_seconds",
         help="Hard timeout for all audit-repair rounds.",
     )
+    gap_cols = st.columns(2)
+    use_gap_resolver = gap_cols[0].checkbox(
+        "Use Gap Resolver (DB/API/LLM retrieval)",
+        value=True,
+        key="post_use_gap_resolver",
+        help="Fills missing IDs/organisms/locations before next audit round.",
+    )
+    use_llm_gap_resolver = gap_cols[0].checkbox(
+        "Use LLM in gap resolver decisions",
+        value=True,
+        key="post_use_llm_gap_resolver",
+        help="LLM chooses among retrieved candidates; deterministic fallback always applies.",
+    )
+    gap_resolver_max_items = gap_cols[1].number_input(
+        "Gap resolver max entities",
+        min_value=10,
+        max_value=400,
+        value=80,
+        step=10,
+        key="post_gap_resolver_max_items",
+        help="Upper bound for per-round entity resolution workload.",
+    )
     id_source_mode = post_col_b.selectbox(
         "ID mapping source",
         options=["hybrid", "db", "api"],
@@ -599,6 +669,9 @@ if st.session_state.get("pipeline_ready"):
                     db_schema=(db_schema or "pathbank").strip() or "pathbank",
                     audit_max_rounds=int(audit_max_rounds),
                     audit_timeout_seconds=int(audit_timeout_seconds),
+                    use_gap_resolver=bool(use_gap_resolver),
+                    use_llm_gap_resolver=bool(use_llm_gap_resolver),
+                    gap_resolver_max_items=int(gap_resolver_max_items),
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
             st.success("Post-pipeline conversion completed.")
@@ -630,6 +703,9 @@ if st.session_state.get("pipeline_ready"):
         if post_artifacts.get("audit_iterations"):
             with st.expander("Audit repair iterations", expanded=False):
                 st.write(post_artifacts.get("audit_iterations"))
+        if post_artifacts.get("gap_resolution_iterations"):
+            with st.expander("Gap resolution iterations", expanded=False):
+                st.write(post_artifacts.get("gap_resolution_iterations"))
 
         st.download_button(
             "Download audit_report.json",
@@ -659,6 +735,14 @@ if st.session_state.get("pipeline_ready"):
                 file_name="audit_iterations.json",
                 mime="application/json",
                 key="dl_audit_iterations",
+            )
+        if post_artifacts.get("gap_resolution_iterations"):
+            st.download_button(
+                "Download gap_resolution_iterations.json",
+                json.dumps(post_artifacts["gap_resolution_iterations"], indent=2),
+                file_name="gap_resolution_iterations.json",
+                mime="application/json",
+                key="dl_gap_resolution_iterations",
             )
         st.download_button(
             "Download final.audited.json",

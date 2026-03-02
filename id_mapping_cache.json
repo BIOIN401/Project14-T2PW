@@ -1,0 +1,1406 @@
+{
+  "proteins": {
+    "db::thyroglobulin::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P01266"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 5798,
+          "name": "Thyroglobulin",
+          "gene_name": "TG",
+          "uniprot": "P01266",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 13995,
+          "name": "Thyroglobulin",
+          "gene_name": "Tg",
+          "uniprot": "O08710",
+          "species_id": 12,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17630,
+          "name": "Thyroglobulin",
+          "gene_name": "TG",
+          "uniprot": "Q95478",
+          "species_id": 5,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17631,
+          "name": "Thyroglobulin",
+          "gene_name": "Tg",
+          "uniprot": "Q9QWY7",
+          "species_id": 12,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17632,
+          "name": "Thyroglobulin",
+          "gene_name": "Tg",
+          "uniprot": "Q9JM94",
+          "species_id": 17,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::sodiumiodide symporter::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::sodiumiodide symporter::homo sapiens": {
+      "status": "mapped",
+      "query": "(protein_name:\"sodium-iodide symporter\" OR gene:\"sodium-iodide symporter\") AND organism_name:\"Homo sapiens\" | (protein_name:\"sodium iodide symporter\" OR gene:\"sodium iodide symporter\") AND organism_name:\"Homo sapiens\" | (protein_name:\"sodium-iodide symporter\" OR gene:\"sodium-iodide symporter\") | (protein_name:\"sodium iodide symporter\" OR gene:\"sodium iodide symporter\")",
+      "mapped_ids": {
+        "uniprot": "Q92911"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "accession": "Q92911",
+          "protein_name": "Sodium/iodide cotransporter",
+          "gene_names": [
+            "NIS",
+            "SLC5A5"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.85
+        },
+        {
+          "accession": "Q63008",
+          "protein_name": "Sodium/iodide cotransporter",
+          "gene_names": [
+            "Nis",
+            "Slc5a5"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q99PN0",
+          "protein_name": "Sodium/iodide cotransporter",
+          "gene_names": [
+            "Nis",
+            "Slc5a5"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q9UEU3",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3
+        },
+        {
+          "accession": "G3X8P5",
+          "protein_name": "",
+          "gene_names": [
+            "Slc5a5"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A8C6QE84",
+          "protein_name": "",
+          "gene_names": [
+            "Slc5a5"
+          ],
+          "organism": "Nannospalax galili",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6I9LW86",
+          "protein_name": "",
+          "gene_names": [
+            "Slc5a5"
+          ],
+          "organism": "Peromyscus maniculatus bairdii",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "Q9GJX7",
+          "protein_name": "",
+          "gene_names": [
+            "SLC5A5"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"sodium-iodide symporter\" OR gene:\"sodium-iodide symporter\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"sodium iodide symporter\" OR gene:\"sodium iodide symporter\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"sodium-iodide symporter\" OR gene:\"sodium-iodide symporter\")",
+        "(protein_name:\"sodium iodide symporter\" OR gene:\"sodium iodide symporter\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::pendrin::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O43511"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 2198,
+          "name": "Pendrin",
+          "gene_name": "SLC26A4",
+          "uniprot": "O43511",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 5799,
+          "name": "Pendrin",
+          "gene_name": "SLC26A4 ",
+          "uniprot": "F5H104",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::thyroid peroxidase::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P07202"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 270,
+          "name": "Thyroid peroxidase",
+          "gene_name": "TPO",
+          "uniprot": "P07202",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 14018,
+          "name": "Thyroid peroxidase",
+          "gene_name": "Tpo",
+          "uniprot": "P35419",
+          "species_id": 12,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17633,
+          "name": "Thyroid peroxidase",
+          "gene_name": "Tpo",
+          "uniprot": "P14650",
+          "species_id": 17,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17634,
+          "name": "Thyroid peroxidase",
+          "gene_name": "Tpo",
+          "uniprot": "Q8C8B1",
+          "species_id": 12,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::thyroidstimulating hormone::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::thyroidstimulating hormone::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"thyroid-stimulating hormone\" OR gene:\"thyroid-stimulating hormone\") AND organism_name:\"Homo sapiens\" | (protein_name:\"thyroid stimulating hormone\" OR gene:\"thyroid stimulating hormone\") AND organism_name:\"Homo sapiens\" | (protein_name:\"thyroid-stimulating hormone\" OR gene:\"thyroid-stimulating hormone\") | (protein_name:\"thyroid stimulating hormone\" OR gene:\"thyroid stimulating hormone\")",
+      "confidence": 0.5333,
+      "candidates": [
+        {
+          "accession": "P16473",
+          "protein_name": "Thyrotropin receptor",
+          "gene_names": [
+            "LGR3",
+            "TSHR"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.5333
+        },
+        {
+          "accession": "P01222",
+          "protein_name": "Thyrotropin subunit beta",
+          "gene_names": [
+            "TSHB"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "P01215",
+          "protein_name": "Glycoprotein hormones alpha chain",
+          "gene_names": [
+            "CGA"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "A0A0F7RQP6",
+          "protein_name": "Thyrotropin subunit beta",
+          "gene_names": [
+            "TSHB"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "A0A3T0CIU9",
+          "protein_name": "Thyrotropin subunit beta",
+          "gene_names": [
+            "TSHB"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "Q15962",
+          "protein_name": "Thyrotropin subunit beta",
+          "gene_names": [],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "A0A2R8Y709",
+          "protein_name": "",
+          "gene_names": [
+            "TSHR"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3
+        },
+        {
+          "accession": "G3V381",
+          "protein_name": "",
+          "gene_names": [
+            "TSHR"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"thyroid-stimulating hormone\" OR gene:\"thyroid-stimulating hormone\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"thyroid stimulating hormone\" OR gene:\"thyroid stimulating hormone\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"thyroid-stimulating hormone\" OR gene:\"thyroid-stimulating hormone\")",
+        "(protein_name:\"thyroid stimulating hormone\" OR gene:\"thyroid stimulating hormone\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::deiodinase::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.78,
+      "candidates": [
+        {
+          "pathbank_protein_id": 998,
+          "name": "Type I iodothyronine deiodinase",
+          "gene_name": "DIO1",
+          "uniprot": "P49895",
+          "species_id": 1,
+          "score": 0.78
+        },
+        {
+          "pathbank_protein_id": 999,
+          "name": "Type II iodothyronine deiodinase",
+          "gene_name": "DIO2",
+          "uniprot": "Q92813",
+          "species_id": 1,
+          "score": 0.78
+        },
+        {
+          "pathbank_protein_id": 4536,
+          "name": "Type III iodothyronine deiodinase",
+          "gene_name": "DIO3",
+          "uniprot": "P55073",
+          "species_id": 1,
+          "score": 0.78
+        }
+      ]
+    },
+    "api::deiodinase::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"deiodinase\" OR gene:\"deiodinase\") AND organism_name:\"Homo sapiens\" | (protein_name:\"deiodinase\" OR gene:\"deiodinase\")",
+      "confidence": 0.475,
+      "candidates": [
+        {
+          "accession": "A0A182DWI2",
+          "protein_name": "Iodothyronine deiodinase",
+          "gene_names": [
+            "DIO1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "F6RP93",
+          "protein_name": "Iodothyronine deiodinase",
+          "gene_names": [
+            "DIO1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "C6ZRC2",
+          "protein_name": "Iodothyronine deiodinase",
+          "gene_names": [
+            "DIO1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "C6ZRC1",
+          "protein_name": "Iodothyronine deiodinase",
+          "gene_names": [],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "A8K415",
+          "protein_name": "Iodothyronine deiodinase",
+          "gene_names": [
+            "DIO1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "Q6PHW0",
+          "protein_name": "Iodotyrosine deiodinase 1",
+          "gene_names": [
+            "C6orf71",
+            "DEHAL1",
+            "IYD"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "F6VN83",
+          "protein_name": "Iodotyrosine deiodinase 1",
+          "gene_names": [
+            "IYD"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "P55073",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "DIO3",
+            "ITDI3",
+            "TXDI3"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3875
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"deiodinase\" OR gene:\"deiodinase\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"deiodinase\" OR gene:\"deiodinase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::lysosomal protease enzyme::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::lysosomal protease enzyme::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"lysosomal protease enzyme\" OR gene:\"lysosomal protease enzyme\") AND organism_name:\"Homo sapiens\" | (protein_name:\"lysosomal protease\" OR gene:\"lysosomal protease\") AND organism_name:\"Homo sapiens\" | (protein_name:\"lysosomal protease enzyme\" OR gene:\"lysosomal protease enzyme\") | (protein_name:\"lysosomal protease\" OR gene:\"lysosomal protease\")",
+      "confidence": 0.01,
+      "candidates": [
+        {
+          "accession": "A0A9W9VTV4",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Penicillium cataractarum",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A0F4YX11",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Rasamsonia emersonii (strain ATCC 16479 / CBS 393.64 / IMI 116815)",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"lysosomal protease enzyme\" OR gene:\"lysosomal protease enzyme\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"lysosomal protease\" OR gene:\"lysosomal protease\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"lysosomal protease enzyme\" OR gene:\"lysosomal protease enzyme\")",
+        "(protein_name:\"lysosomal protease\" OR gene:\"lysosomal protease\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::monocarboxylate transporter 8::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P36021"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 1046,
+          "name": "Monocarboxylate transporter 8",
+          "gene_name": "SLC16A2",
+          "uniprot": "P36021",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 24152,
+          "name": "Monocarboxylate transporter 8",
+          "gene_name": "SLC16A2",
+          "uniprot": "P36021",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::organic anion transporting polypeptide 1c1::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::organic anion transporting polypeptide 1c1::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"organic anion transporting polypeptide 1C1\" OR gene:\"organic anion transporting polypeptide 1C1\") AND organism_name:\"Homo sapiens\" | (protein_name:\"organic anion transporting polypeptide 1C1\" OR gene:\"organic anion transporting polypeptide 1C1\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    }
+  },
+  "compounds": {
+    "db::thyroglobulin": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::thyroglobulin": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C16730",
+          "name": "Thyroglobulin triiodothyronine",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C16734",
+          "name": "Thyroglobulin dehydroalanine",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C16729",
+          "name": "[Thyroglobulin]-L-thyroxine",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C16731",
+          "name": "[Thyroglobulin]-3,5-diiodo-L-tyrosine",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C16732",
+          "name": "[Thyroglobulin]-3-iodo-L-tyrosine",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C16733",
+          "name": "[Thyroglobulin]-L-tyrosine",
+          "score": 0.35
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
+    },
+    "db::iodide": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0012238",
+        "kegg": "C00708",
+        "chebi": "16382",
+        "pubchem": "30165",
+        "cas": "20461-54-5",
+        "biocyc": "CPD-387",
+        "chemspider": "28015"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 7784,
+          "name": "Iodide",
+          "short_name": "Iodide",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0012238",
+            "kegg": "C00708",
+            "chebi": "16382",
+            "pubchem": "30165",
+            "cas": "20461-54-5",
+            "biocyc": "CPD-387",
+            "chemspider": "28015"
+          }
+        },
+        {
+          "pathbank_compound_id": 8929,
+          "name": "Metocurine Iodide",
+          "short_name": "Metokur",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0014560",
+            "chebi": "667201",
+            "pubchem": "24244",
+            "cas": "7601-55-0",
+            "chemspider": "22666",
+            "drugbank": "DB00416"
+          }
+        },
+        {
+          "pathbank_compound_id": 8987,
+          "name": "Gallamine Triethiodide",
+          "short_name": "Flaxedi",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0014626",
+            "chebi": "774944",
+            "pubchem": "6172",
+            "cas": "65-29-2",
+            "chemspider": "5937",
+            "drugbank": "DB00483"
+          }
+        },
+        {
+          "pathbank_compound_id": 118885,
+          "name": "Potassium Iodide",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB06715"
+          }
+        },
+        {
+          "pathbank_compound_id": 119026,
+          "name": "Iodide I-131",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB09293"
+          }
+        },
+        {
+          "pathbank_compound_id": 119077,
+          "name": "Iodide I-123",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB09420"
+          }
+        },
+        {
+          "pathbank_compound_id": 119135,
+          "name": "Sodium iodide",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB11119"
+          }
+        },
+        {
+          "pathbank_compound_id": 874,
+          "name": "Dimethylallylpyrophosphate",
+          "short_name": "Ipe",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001120",
+            "kegg": "C00235",
+            "chebi": "16057",
+            "pubchem": "647",
+            "cas": "358-72-5",
+            "biocyc": "CPD-4211",
+            "chemspider": "627",
+            "drugbank": "DB01785"
+          }
+        },
+        {
+          "pathbank_compound_id": 1677,
+          "name": "Silver",
+          "short_name": "Silver",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0002659",
+            "kegg": "C06710",
+            "chebi": "49468",
+            "pubchem": "104755",
+            "cas": "14701-21-4",
+            "biocyc": "AG%2b",
+            "chemspider": "94565"
+          }
+        },
+        {
+          "pathbank_compound_id": 9486,
+          "name": "Echothiophate",
+          "short_name": "Phospho",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0015190",
+            "kegg": "C06975",
+            "chebi": "4753",
+            "pubchem": "10548",
+            "cas": "6736-03-4",
+            "chemspider": "10108",
+            "drugbank": "DB01057"
+          }
+        }
+      ]
+    },
+    "db::iodine": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000675",
+        "kegg": "C01382",
+        "chebi": "17606",
+        "pubchem": "807",
+        "cas": "7553-56-2",
+        "biocyc": "IODINE-MOLECULE",
+        "chemspider": "785",
+        "drugbank": "DB05382"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 532,
+          "name": "Iodine",
+          "short_name": "Iodine",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000675",
+            "kegg": "C01382",
+            "chebi": "17606",
+            "pubchem": "807",
+            "cas": "7553-56-2",
+            "biocyc": "IODINE-MOLECULE",
+            "chemspider": "785",
+            "drugbank": "DB05382"
+          }
+        },
+        {
+          "pathbank_compound_id": 119102,
+          "name": "Iodine povacrylex",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB09537"
+          }
+        },
+        {
+          "pathbank_compound_id": 169,
+          "name": "Thyroxine",
+          "short_name": "T4",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000248",
+            "kegg": "C01829",
+            "chebi": "18332",
+            "pubchem": "25201348",
+            "cas": "51-48-9",
+            "biocyc": "L-THYROXINE",
+            "chemspider": "5614",
+            "drugbank": "DB00451"
+          }
+        },
+        {
+          "pathbank_compound_id": 7784,
+          "name": "Iodide",
+          "short_name": "Iodide",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0012238",
+            "kegg": "C00708",
+            "chebi": "16382",
+            "pubchem": "30165",
+            "cas": "20461-54-5",
+            "biocyc": "CPD-387",
+            "chemspider": "28015"
+          }
+        },
+        {
+          "pathbank_compound_id": 118759,
+          "name": "Undecoylium chloride iodine complex",
+          "short_name": "",
+          "score": 0.5675,
+          "mapped_ids": {
+            "drugbank": "DB09377"
+          }
+        },
+        {
+          "pathbank_compound_id": 118906,
+          "name": "Povidone-iodine",
+          "short_name": "",
+          "score": 0.43,
+          "mapped_ids": {
+            "drugbank": "DB06812"
+          }
+        },
+        {
+          "pathbank_compound_id": 15819,
+          "name": "Orthoperiodic acid",
+          "short_name": "H5Io6",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0034831",
+            "chebi": "29150",
+            "pubchem": "25289",
+            "cas": "10450-60-9",
+            "chemspider": "23622"
+          }
+        },
+        {
+          "pathbank_compound_id": 43021,
+          "name": "iodoacetate",
+          "short_name": "Ia",
+          "score": 0.35,
+          "mapped_ids": {
+            "pubchem": "5240"
+          }
+        }
+      ]
+    },
+    "db::hydrogen peroxide": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0003125",
+        "kegg": "C00027",
+        "chebi": "16240",
+        "pubchem": "784",
+        "cas": "7722-84-1",
+        "biocyc": "HYDROGEN-PEROXIDE",
+        "chemspider": "763"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1783,
+          "name": "Hydrogen peroxide",
+          "short_name": "H2O2",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0003125",
+            "kegg": "C00027",
+            "chebi": "16240",
+            "pubchem": "784",
+            "cas": "7722-84-1",
+            "biocyc": "HYDROGEN-PEROXIDE",
+            "chemspider": "763"
+          }
+        }
+      ]
+    },
+    "db::monoiodotyrosine": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000021",
+        "kegg": "C02515",
+        "chebi": "27847",
+        "pubchem": "439744",
+        "cas": "70-78-0",
+        "biocyc": "IODO-L-TYROSINE",
+        "chemspider": "388804",
+        "drugbank": "DB01758"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 14,
+          "name": "Iodotyrosine",
+          "short_name": "IYR",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000021",
+            "kegg": "C02515",
+            "chebi": "27847",
+            "pubchem": "439744",
+            "cas": "70-78-0",
+            "biocyc": "IODO-L-TYROSINE",
+            "chemspider": "388804",
+            "drugbank": "DB01758"
+          }
+        }
+      ]
+    },
+    "db::35diiodotyrosine": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0003474",
+        "kegg": "C01060",
+        "chebi": "15768",
+        "pubchem": "7058163",
+        "cas": "300-39-0 66-02-4",
+        "biocyc": "DIIODO-L-TYROSINE",
+        "chemspider": "8946",
+        "drugbank": "DB03374"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1904,
+          "name": "3,5-Diiodo-L-tyrosine",
+          "short_name": "35DLTyr",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0003474",
+            "kegg": "C01060",
+            "chebi": "15768",
+            "pubchem": "7058163",
+            "cas": "300-39-0 66-02-4",
+            "biocyc": "DIIODO-L-TYROSINE",
+            "chemspider": "8946",
+            "drugbank": "DB03374"
+          }
+        }
+      ]
+    },
+    "db::thyroxine": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000248",
+        "kegg": "C01829",
+        "chebi": "18332",
+        "pubchem": "25201348",
+        "cas": "51-48-9",
+        "biocyc": "L-THYROXINE",
+        "chemspider": "5614",
+        "drugbank": "DB00451"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 169,
+          "name": "Thyroxine",
+          "short_name": "T4",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000248",
+            "kegg": "C01829",
+            "chebi": "18332",
+            "pubchem": "25201348",
+            "cas": "51-48-9",
+            "biocyc": "L-THYROXINE",
+            "chemspider": "5614",
+            "drugbank": "DB00451"
+          }
+        },
+        {
+          "pathbank_compound_id": 1695,
+          "name": "Thyroxine sulfate",
+          "short_name": "T4s",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0002728",
+            "pubchem": "131742",
+            "cas": "77074-49-8",
+            "chemspider": "116397"
+          }
+        },
+        {
+          "pathbank_compound_id": 6336,
+          "name": "Thyroxine glucuronide",
+          "short_name": "TG",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0010326",
+            "pubchem": "152424",
+            "cas": "21462-56-6",
+            "biocyc": "Beta-D-Glucuronides",
+            "chemspider": "134339"
+          }
+        },
+        {
+          "pathbank_compound_id": 9011,
+          "name": "Dextrothyroxine",
+          "short_name": "Dt4",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0014651",
+            "chebi": "30659",
+            "pubchem": "8730",
+            "cas": "51-49-0",
+            "chemspider": "8402",
+            "drugbank": "DB00509"
+          }
+        },
+        {
+          "pathbank_compound_id": 524,
+          "name": "L-Thyronine",
+          "short_name": "Thyroni",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0000667",
+            "chebi": "30662",
+            "pubchem": "5461103",
+            "cas": "1596-67-4",
+            "chemspider": "4574450"
+          }
+        },
+        {
+          "pathbank_compound_id": 9788,
+          "name": "Liotrix",
+          "short_name": "Liotrix",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0015523",
+            "pubchem": "71371",
+            "cas": "8065-29-0",
+            "chemspider": "64467",
+            "drugbank": "DB01583"
+          }
+        }
+      ]
+    },
+    "db::liothyronine": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000265",
+        "kegg": "C02465",
+        "chebi": "18258",
+        "pubchem": "5920",
+        "cas": "6893-02-3",
+        "biocyc": "LIOTHYRONINE",
+        "chemspider": "5707",
+        "drugbank": "DB00279"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 181,
+          "name": "Liothyronine",
+          "short_name": "T3",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000265",
+            "kegg": "C02465",
+            "chebi": "18258",
+            "pubchem": "5920",
+            "cas": "6893-02-3",
+            "biocyc": "LIOTHYRONINE",
+            "chemspider": "5707",
+            "drugbank": "DB00279"
+          }
+        },
+        {
+          "pathbank_compound_id": 9788,
+          "name": "Liotrix",
+          "short_name": "Liotrix",
+          "score": 0.4875,
+          "mapped_ids": {
+            "hmdb": "HMDB0015523",
+            "pubchem": "71371",
+            "cas": "8065-29-0",
+            "chemspider": "64467",
+            "drugbank": "DB01583"
+          }
+        }
+      ]
+    },
+    "db::t4": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000248",
+        "kegg": "C01829",
+        "chebi": "18332",
+        "pubchem": "25201348",
+        "cas": "51-48-9",
+        "biocyc": "L-THYROXINE",
+        "chemspider": "5614",
+        "drugbank": "DB00451"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 169,
+          "name": "Thyroxine",
+          "short_name": "T4",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000248",
+            "kegg": "C01829",
+            "chebi": "18332",
+            "pubchem": "25201348",
+            "cas": "51-48-9",
+            "biocyc": "L-THYROXINE",
+            "chemspider": "5614",
+            "drugbank": "DB00451"
+          }
+        },
+        {
+          "pathbank_compound_id": 1695,
+          "name": "Thyroxine sulfate",
+          "short_name": "T4s",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0002728",
+            "pubchem": "131742",
+            "cas": "77074-49-8",
+            "chemspider": "116397"
+          }
+        },
+        {
+          "pathbank_compound_id": 2719,
+          "name": "Tetracosapentaenoic acid (24:5n-3)",
+          "short_name": "Cosapt4",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0006323",
+            "chebi": "77360",
+            "pubchem": "52921801",
+            "biocyc": "CPD-7421",
+            "chemspider": "30776540"
+          }
+        },
+        {
+          "pathbank_compound_id": 8302,
+          "name": "2-trans,4-cis-Decadienoylcarnitine",
+          "short_name": "2T4CD",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0013325",
+            "cas": "128305-29-3"
+          }
+        },
+        {
+          "pathbank_compound_id": 9011,
+          "name": "Dextrothyroxine",
+          "short_name": "Dt4",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0014651",
+            "chebi": "30659",
+            "pubchem": "8730",
+            "cas": "51-49-0",
+            "chemspider": "8402",
+            "drugbank": "DB00509"
+          }
+        },
+        {
+          "pathbank_compound_id": 10678,
+          "name": "L-trans-4-Methyl-2-pyrrolidinecarboxylic acid",
+          "short_name": "LT4M2PA",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0029435",
+            "pubchem": "352051",
+            "cas": "23009-50-9",
+            "chemspider": "312597"
+          }
+        },
+        {
+          "pathbank_compound_id": 11590,
+          "name": "(Z)-4-Methoxy-3,3',5,5'-tetrahydroxystilbene",
+          "short_name": "3355T4M",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0030377",
+            "pubchem": "13499471",
+            "cas": "89946-11-2",
+            "chemspider": "10298689"
+          }
+        },
+        {
+          "pathbank_compound_id": 11807,
+          "name": "5-[(4-Hydroxypheny)ethenyl]-2-(3-methyl-1-butenyl)-1,3-benzenediol",
+          "short_name": "345T4",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0030599",
+            "chemspider": "30776839"
+          }
+        },
+        {
+          "pathbank_compound_id": 11950,
+          "name": "5,7,3'-Trihydroxy-4'-methoxyflavanone",
+          "short_name": "573T4M",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0030746",
+            "chebi": "244674",
+            "pubchem": "3593",
+            "chemspider": "3467"
+          }
+        },
+        {
+          "pathbank_compound_id": 11969,
+          "name": "(-)-trans-3,4-Dihydro-4,8-dihydroxy-3-methyl-1H-2-benzopyran-1-one",
+          "short_name": "T4H",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0030765",
+            "pubchem": "169539",
+            "cas": "70287-70-6",
+            "chemspider": "148269"
+          }
+        }
+      ]
+    },
+    "db::t3": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000265",
+        "kegg": "C02465",
+        "chebi": "18258",
+        "pubchem": "5920",
+        "cas": "6893-02-3",
+        "biocyc": "LIOTHYRONINE",
+        "chemspider": "5707",
+        "drugbank": "DB00279"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 181,
+          "name": "Liothyronine",
+          "short_name": "T3",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000265",
+            "kegg": "C02465",
+            "chebi": "18258",
+            "pubchem": "5920",
+            "cas": "6893-02-3",
+            "biocyc": "LIOTHYRONINE",
+            "chemspider": "5707",
+            "drugbank": "DB00279"
+          }
+        },
+        {
+          "pathbank_compound_id": 2812,
+          "name": "Tachysterol 3",
+          "short_name": "T3",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0006560",
+            "pubchem": "5283713",
+            "cas": "17592-07-3",
+            "chemspider": "4446802"
+          }
+        },
+        {
+          "pathbank_compound_id": 8793,
+          "name": "Terconazole",
+          "short_name": "T3",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0014396",
+            "kegg": "C08080",
+            "chebi": "82980",
+            "pubchem": "441383",
+            "cas": "67915-31-5",
+            "chemspider": "390122",
+            "drugbank": "DB00251"
+          }
+        },
+        {
+          "pathbank_compound_id": 1473,
+          "name": "L-Threo-3-Phenylserine",
+          "short_name": "LT3P",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0002184",
+            "pubchem": "12314153",
+            "cas": "6254-48-4",
+            "biocyc": "CPD-644",
+            "chemspider": "13628311"
+          }
+        },
+        {
+          "pathbank_compound_id": 1641,
+          "name": "Taurochenodeoxycholate-3-sulfate",
+          "short_name": "T3S",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0002486",
+            "pubchem": "44263374",
+            "cas": "67030-59-5",
+            "chemspider": "24850141"
+          }
+        },
+        {
+          "pathbank_compound_id": 1761,
+          "name": "Triiodothyronine sulfate",
+          "short_name": "T3s",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0003036",
+            "chebi": "35432",
+            "pubchem": "122196",
+            "cas": "31135-55-4",
+            "chemspider": "108983"
+          }
+        },
+        {
+          "pathbank_compound_id": 6365,
+          "name": "Cholestane-3,7,12,25-tetrol-3-glucuronide",
+          "short_name": "C37T3G",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0010355",
+            "kegg": "C03033",
+            "pubchem": "42622727",
+            "cas": "77172-80-6",
+            "biocyc": "Beta-D-Glucuronides"
+          }
+        },
+        {
+          "pathbank_compound_id": 6367,
+          "name": "Tetrahydroaldosterone-3-glucuronide",
+          "short_name": "T3G",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0010357",
+            "pubchem": "167918",
+            "cas": "20605-81-6",
+            "biocyc": "Beta-D-Glucuronides",
+            "chemspider": "146888"
+          }
+        },
+        {
+          "pathbank_compound_id": 6728,
+          "name": "But-2-enoic acid",
+          "short_name": "But3eA",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0010720",
+            "kegg": "C01771",
+            "chebi": "41131",
+            "pubchem": "637090",
+            "cas": "3724-65-0",
+            "biocyc": "1OXO2YLIDENE",
+            "chemspider": "552744",
+            "drugbank": "DB02074"
+          }
+        },
+        {
+          "pathbank_compound_id": 7618,
+          "name": "Ganglioside GT3 (d18:0/12:0)",
+          "short_name": "GG",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0012052",
+            "pubchem": "53481328"
+          }
+        }
+      ]
+    }
+  }
+}
