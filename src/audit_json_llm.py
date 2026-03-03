@@ -98,10 +98,59 @@ def _dedupe_preserve_order(values: Sequence[str]) -> List[str]:
     return out
 
 
+def _clean_preserve_order(values: Sequence[str]) -> List[str]:
+    out: List[str] = []
+    for value in values:
+        if not isinstance(value, str):
+            continue
+        cleaned = value.strip()
+        if cleaned:
+            out.append(cleaned)
+    return out
+
+
 def _same_multiset(values_a: Sequence[str], values_b: Sequence[str]) -> bool:
     norm_a = [_normalize_name(v) for v in values_a if isinstance(v, str) and _normalize_name(v)]
     norm_b = [_normalize_name(v) for v in values_b if isinstance(v, str) and _normalize_name(v)]
     return Counter(norm_a) == Counter(norm_b)
+
+
+def _expand_stoich_token(token: str) -> List[str]:
+    text = (token or "").strip()
+    if not text:
+        return []
+    match = re.match(r"^\s*(\d+)\s+(.+)$", text)
+    if not match:
+        return [text]
+    count = max(1, min(8, int(match.group(1))))
+    base = match.group(2).strip()
+    if not base:
+        return [text]
+    return [base] * count
+
+
+def _extract_equation_tokens(name: str) -> Tuple[List[str], List[str]]:
+    text = (name or "").strip()
+    if not text:
+        return [], []
+    arrow_match = re.search(r"(->|→)", text)
+    if not arrow_match:
+        return [], []
+    lhs = text[: arrow_match.start()].strip()
+    rhs = text[arrow_match.end() :].strip()
+    if ":" in lhs:
+        lhs = lhs.split(":", 1)[1].strip()
+    lhs_parts = _split_composite_name(lhs) if lhs else []
+    rhs_parts = _split_composite_name(rhs) if rhs else []
+    lhs_out: List[str] = []
+    rhs_out: List[str] = []
+    for part in lhs_parts:
+        lhs_out.extend(_expand_stoich_token(part))
+    for part in rhs_parts:
+        rhs_out.extend(_expand_stoich_token(part))
+    lhs_out = _clean_preserve_order(lhs_out)
+    rhs_out = _clean_preserve_order(rhs_out)
+    return lhs_out, rhs_out
 
 
 def _safe_list(value: Any) -> List[Any]:
@@ -325,8 +374,53 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
             inputs.extend(_split_composite_name(item) if _is_composite_name(item) else [item])
         for item in raw_outputs:
             outputs.extend(_split_composite_name(item) if _is_composite_name(item) else [item])
-        inputs = _dedupe_preserve_order(inputs)
-        outputs = _dedupe_preserve_order(outputs)
+        inputs = _clean_preserve_order(inputs)
+        outputs = _clean_preserve_order(outputs)
+
+        reaction_name = (reaction.get("name") or "").strip() if isinstance(reaction.get("name"), str) else ""
+        eq_inputs, eq_outputs = _extract_equation_tokens(reaction_name)
+        if eq_inputs and not _same_multiset(eq_inputs, inputs):
+            patch_ops.append(
+                {
+                    "op": "replace",
+                    "path": _join_pointer(["processes", "reactions", idx, "inputs"]),
+                    "value": eq_inputs,
+                    "reason": "Align reaction inputs with explicit equation in reaction name.",
+                    "confidence": 0.985,
+                    "evidence": reaction_name[:220],
+                    "source": "deterministic",
+                }
+            )
+            issues["warnings"].append(
+                {
+                    "path": _join_pointer(["processes", "reactions", idx, "inputs"]),
+                    "reason": "Reaction name equation disagrees with listed inputs.",
+                    "evidence": reaction_name[:220],
+                    "source": "deterministic",
+                }
+            )
+            inputs = list(eq_inputs)
+        if eq_outputs and not _same_multiset(eq_outputs, outputs):
+            patch_ops.append(
+                {
+                    "op": "replace",
+                    "path": _join_pointer(["processes", "reactions", idx, "outputs"]),
+                    "value": eq_outputs,
+                    "reason": "Align reaction outputs with explicit equation in reaction name.",
+                    "confidence": 0.985,
+                    "evidence": reaction_name[:220],
+                    "source": "deterministic",
+                }
+            )
+            issues["warnings"].append(
+                {
+                    "path": _join_pointer(["processes", "reactions", idx, "outputs"]),
+                    "reason": "Reaction name equation disagrees with listed outputs.",
+                    "evidence": reaction_name[:220],
+                    "source": "deterministic",
+                }
+            )
+            outputs = list(eq_outputs)
 
         if inputs and outputs and _same_multiset(inputs, outputs):
             issues["errors"].append(
@@ -553,6 +647,47 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
                     "source": "deterministic",
                 }
             )
+        transport_name = (transport.get("name") or "").strip() if isinstance(transport.get("name"), str) else ""
+        if transport_name and source_state and dest_state:
+            match = re.search(r"\bfrom\s+(.+?)\s+to\s+(.+)$", transport_name, flags=re.IGNORECASE)
+            if match:
+                name_src = match.group(1).strip()
+                name_dst = match.group(2).strip()
+                if _normalize(name_src) and _normalize(name_dst):
+                    if _normalize(name_src) != _normalize(source_state) or _normalize(name_dst) != _normalize(dest_state):
+                        issues["warnings"].append(
+                            {
+                                "path": _join_pointer(["processes", "transports", idx, "name"]),
+                                "reason": "Transport name source/destination disagrees with transport states.",
+                                "evidence": json.dumps(
+                                    {
+                                        "name": transport_name,
+                                        "from_biological_state": source_state,
+                                        "to_biological_state": dest_state,
+                                    },
+                                    ensure_ascii=False,
+                                )[:260],
+                                "source": "deterministic",
+                            }
+                        )
+                        patched_name = re.sub(
+                            r"\bfrom\s+(.+?)\s+to\s+(.+)$",
+                            f"from {source_state} to {dest_state}",
+                            transport_name,
+                            flags=re.IGNORECASE,
+                        )
+                        if patched_name != transport_name:
+                            patch_ops.append(
+                                {
+                                    "op": "replace",
+                                    "path": _join_pointer(["processes", "transports", idx, "name"]),
+                                    "value": patched_name,
+                                    "reason": "Normalize transport name to match declared source/destination states.",
+                                    "confidence": 0.93,
+                                    "evidence": transport_name[:220],
+                                    "source": "deterministic",
+                                }
+                            )
 
     if not isinstance(entities.get("compounds"), list):
         patch_ops.append(
@@ -788,9 +923,10 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
     return issues, patch_ops
 
 
-def _build_llm_prompt(payload: Dict[str, Any], *, context_note: str = "") -> str:
+def _build_llm_prompt(payload: Dict[str, Any], *, context_note: str = "", retrieval_context: str = "") -> str:
     payload_str = json.dumps(payload, indent=2, ensure_ascii=False)
     note = (context_note or "").strip()
+    references = (retrieval_context or "").strip()
     return "\n".join(
         [
             "Audit this pathway JSON for SBML conversion readiness.",
@@ -799,6 +935,10 @@ def _build_llm_prompt(payload: Dict[str, Any], *, context_note: str = "") -> str
             "Use action add/replace/remove and include confidence 0..1.",
             "repair_rationale must be short and concrete.",
             f"Retry context: {note if note else 'none'}",
+            "Reference motifs:",
+            "<<<",
+            references if references else "none",
+            ">>>",
             "Input JSON:",
             "<<<",
             payload_str,
@@ -862,6 +1002,7 @@ def run_audit(
     llm_temperature: float = 0.0,
     llm_max_tokens: int = 3200,
     context_note: str = "",
+    retrieval_context: str = "",
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -877,7 +1018,14 @@ def run_audit(
             llm_raw = chat(
                 [
                     {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": _build_llm_prompt(payload, context_note=context_note)},
+                    {
+                        "role": "user",
+                        "content": _build_llm_prompt(
+                            payload,
+                            context_note=context_note,
+                            retrieval_context=retrieval_context,
+                        ),
+                    },
                 ],
                 temperature=llm_temperature,
                 max_tokens=llm_max_tokens,
@@ -918,6 +1066,8 @@ def run_audit(
             "raw_preview": llm_raw[:800],
             "repair_rationale": str(_safe_dict(llm_payload).get("repair_rationale", "")) if isinstance(llm_payload, dict) else "",
             "context_note": context_note,
+            "retrieval_context_present": bool((retrieval_context or "").strip()),
+            "retrieval_context_chars": len((retrieval_context or "").strip()),
             "temperature": float(llm_temperature),
             "max_tokens": int(llm_max_tokens),
         },

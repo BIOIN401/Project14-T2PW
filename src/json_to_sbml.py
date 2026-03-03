@@ -813,7 +813,6 @@ def build_sbml(
         if plan.get("compartment_id"):
             rxn.setCompartment(plan["compartment_id"])
         rxn.setReversible(False)
-        rxn.setFast(False)
         reactant_counts = Counter(plan["reactants"])
         for sid, stoich in sorted(reactant_counts.items()):
             ref = rxn.createReactant()

@@ -19,6 +19,7 @@ from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
+from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from pipeline import (
     PipelineFailure,
     build_qa_feedback,
@@ -128,6 +129,9 @@ def run_post_pipeline_sbml_artifacts(
     audit_max_rounds: int,
     audit_timeout_seconds: int,
     audit_candidate_count: int,
+    use_example_retrieval: bool,
+    example_index_path: str,
+    example_top_k: int,
     use_gap_resolver: bool,
     use_llm_gap_resolver: bool,
     gap_resolver_max_items: int,
@@ -162,6 +166,23 @@ def run_post_pipeline_sbml_artifacts(
         max_rounds = max(1, int(audit_max_rounds))
         timeout_seconds = max(30, int(audit_timeout_seconds))
         max_candidates = max(1, int(audit_candidate_count))
+        retrieval_top_k = max(1, int(example_top_k))
+        motif_index_data: Dict[str, Any] = {}
+        motif_index_error = ""
+        resolved_example_index_path = ""
+        example_path = Path(example_index_path.strip() or "tmp/sbml_motif_index.json")
+        if not example_path.is_absolute():
+            example_path = project_root / example_path
+        resolved_example_index_path = str(example_path)
+        use_example_retrieval_effective = bool(use_example_retrieval)
+        if example_path.exists():
+            use_example_retrieval_effective = True
+            try:
+                motif_index_data = load_motif_index(example_path)
+            except Exception as exc:  # noqa: BLE001
+                motif_index_error = str(exc)
+        elif use_example_retrieval:
+            motif_index_error = f"index_not_found:{example_path}"
         audit_started_at = time.time()
         retry_context_note = ""
         stop_reason = "max_rounds_reached"
@@ -177,9 +198,27 @@ def run_post_pipeline_sbml_artifacts(
             temp_offsets = [0.0, 0.14, 0.28, 0.40, 0.50]
             token_offsets = [0, 500, 900, 1300, 1700]
             candidate_count = 1 if not use_llm_audit else min(max_candidates, len(temp_offsets))
+            remaining_seconds = timeout_seconds - elapsed_before
+            if use_llm_audit and remaining_seconds < 120:
+                candidate_count = 1
             round_candidates: List[Dict[str, Any]] = []
+            timed_out_mid_round = False
+            retrieval_context = ""
+            retrieval_meta = {"selected_count": 0, "top_k": retrieval_top_k}
+            if use_example_retrieval_effective and motif_index_data:
+                round_payload_for_query = _read_json(current_input)
+                query_text = payload_to_query_text(round_payload_for_query, extra=retry_context_note)
+                retrieval_context, retrieval_meta = build_retrieval_context(
+                    query_text,
+                    motif_index_data,
+                    top_k=retrieval_top_k,
+                    max_chars=3800,
+                )
 
             for cand_idx in range(candidate_count):
+                if (time.time() - audit_started_at) > timeout_seconds:
+                    timed_out_mid_round = True
+                    break
                 cand_temperature = min(0.9, base_temperature + temp_offsets[cand_idx])
                 cand_max_tokens = min(10000, base_max_tokens + token_offsets[cand_idx])
                 cand_suffix = f"round{round_idx}.cand{cand_idx + 1}"
@@ -198,6 +237,7 @@ def run_post_pipeline_sbml_artifacts(
                     llm_temperature=cand_temperature,
                     llm_max_tokens=cand_max_tokens,
                     context_note=retry_context_note,
+                    retrieval_context=retrieval_context,
                 )
                 run_apply(
                     current_input,
@@ -251,6 +291,75 @@ def run_post_pipeline_sbml_artifacts(
                     }
                 )
 
+            if not round_candidates:
+                fallback_suffix = f"round{round_idx}.fallback"
+                cand_audit_report = tmp / f"audit_report.{fallback_suffix}.json"
+                cand_audit_patch = tmp / f"audit_patch.{fallback_suffix}.json"
+                cand_apply_report = tmp / f"audit_apply_report.{fallback_suffix}.json"
+                cand_audited = tmp / f"final.audited.{fallback_suffix}.json"
+                cand_eval_report = tmp / f"audit_eval_report.{fallback_suffix}.json"
+                cand_eval_patch = tmp / f"audit_eval_patch.{fallback_suffix}.json"
+                run_audit(
+                    current_input,
+                    cand_audit_report,
+                    cand_audit_patch,
+                    use_llm=False,
+                    llm_temperature=0.0,
+                    llm_max_tokens=1200,
+                    context_note="fallback deterministic audit after timeout/empty candidate set",
+                    retrieval_context="",
+                )
+                run_apply(
+                    current_input,
+                    cand_audit_patch,
+                    cand_audited,
+                    audit_report_path=cand_audit_report,
+                    apply_report_path=cand_apply_report,
+                )
+                run_audit(
+                    cand_audited,
+                    cand_eval_report,
+                    cand_eval_patch,
+                    use_llm=False,
+                    llm_temperature=0.0,
+                    llm_max_tokens=1200,
+                    context_note="deterministic fallback scoring",
+                    retrieval_context="",
+                )
+                cand_audit = _read_json(cand_audit_report)
+                cand_apply = _read_json(cand_apply_report)
+                cand_eval = _read_json(cand_eval_report)
+                cand_audit_summary = _safe_dict(cand_audit.get("summary"))
+                cand_apply_summary = _safe_dict(cand_apply.get("summary"))
+                cand_eval_summary = _safe_dict(cand_eval.get("summary"))
+                score = _audit_objective_score(
+                    eval_error_count=int(cand_eval_summary.get("error_count", 0)),
+                    eval_warning_count=int(cand_eval_summary.get("warning_count", 0)),
+                    source_error_count=int(cand_audit_summary.get("error_count", 0)),
+                    rejected_count=int(cand_apply_summary.get("rejected_count", 0)),
+                    accepted_count=int(cand_apply_summary.get("accepted_count", 0)),
+                    source_patch_count=int(cand_audit_summary.get("patch_count", 0)),
+                )
+                round_candidates.append(
+                    {
+                        "index": 1,
+                        "temperature": 0.0,
+                        "max_tokens": 1200,
+                        "score": list(score),
+                        "audit_error_count": int(cand_audit_summary.get("error_count", 0)),
+                        "audit_warning_count": int(cand_audit_summary.get("warning_count", 0)),
+                        "audit_patch_count": int(cand_audit_summary.get("patch_count", 0)),
+                        "accepted_patch_count": int(cand_apply_summary.get("accepted_count", 0)),
+                        "rejected_patch_count": int(cand_apply_summary.get("rejected_count", 0)),
+                        "eval_error_count": int(cand_eval_summary.get("error_count", 0)),
+                        "eval_warning_count": int(cand_eval_summary.get("warning_count", 0)),
+                        "audit_report_path": str(cand_audit_report),
+                        "audit_patch_path": str(cand_audit_patch),
+                        "apply_report_path": str(cand_apply_report),
+                        "audited_path": str(cand_audited),
+                    }
+                )
+
             selected_candidate = min(round_candidates, key=lambda c: tuple(c.get("score", [])))
             selected_audit_report = Path(str(selected_candidate["audit_report_path"]))
             selected_audit_patch = Path(str(selected_candidate["audit_patch_path"]))
@@ -262,7 +371,10 @@ def run_post_pipeline_sbml_artifacts(
             shutil.copyfile(selected_apply_report, apply_report_path)
             round_resolved = tmp / f"final.resolved.round{round_idx}.json"
             gap_report_round: Dict[str, Any] = {}
-            if use_gap_resolver:
+            if (time.time() - audit_started_at) > timeout_seconds:
+                timed_out_mid_round = True
+
+            if use_gap_resolver and not timed_out_mid_round:
                 gap_temp = min(0.45, 0.05 + 0.08 * (round_idx - 1))
                 gap_tokens = min(1400, 700 + 120 * (round_idx - 1))
                 gap_report_round = run_gap_resolution(
@@ -319,6 +431,8 @@ def run_post_pipeline_sbml_artifacts(
                     "candidate_count": candidate_count,
                     "selected_candidate_index": int(selected_candidate.get("index", 1)),
                     "selected_score": list(selected_candidate.get("score", [])),
+                    "retrieval_selected_count": int(retrieval_meta.get("selected_count", 0)),
+                    "retrieval_top_k": int(retrieval_meta.get("top_k", retrieval_top_k)),
                     "error_count": error_count,
                     "warning_count": warning_count,
                     "patch_count": patch_count,
@@ -346,6 +460,9 @@ def run_post_pipeline_sbml_artifacts(
                 )
 
             current_input = current_after_round
+            if timed_out_mid_round:
+                stop_reason = "timeout"
+                break
             if repeated_payload:
                 stop_reason = "loop_detected_same_payload"
                 break
@@ -422,6 +539,11 @@ def run_post_pipeline_sbml_artifacts(
             "mapping_id_source": id_source,
             "mapping_db_host": db_host,
             "mapping_db_schema": db_schema,
+            "example_retrieval_enabled": bool(use_example_retrieval_effective),
+            "example_retrieval_requested": bool(use_example_retrieval),
+            "example_index_path": resolved_example_index_path,
+            "example_index_error": motif_index_error,
+            "example_index_entry_count": int(motif_index_data.get("entry_count", 0)) if motif_index_data else 0,
             "audit_iterations": audit_iterations,
             "gap_resolution_iterations": gap_iterations,
             "audit_loop_summary": {
@@ -709,6 +831,28 @@ if st.session_state.get("pipeline_ready"):
         key="post_audit_candidate_count",
         help="Generates multiple LLM repair candidates and picks the best by deterministic score.",
     )
+    retrieval_cols = st.columns(3)
+    use_example_retrieval = retrieval_cols[0].checkbox(
+        "Use SBML motif retrieval",
+        value=True,
+        key="post_use_example_retrieval",
+        help="Injects nearest SBML motif examples into each audit LLM call.",
+    )
+    example_index_path = retrieval_cols[1].text_input(
+        "SBML motif index path",
+        value="tmp/sbml_motif_index.json",
+        key="post_example_index_path",
+        help="JSON index built from trusted SBML files.",
+    )
+    example_top_k = retrieval_cols[2].number_input(
+        "SBML motifs top-k",
+        min_value=1,
+        max_value=8,
+        value=3,
+        step=1,
+        key="post_example_top_k",
+        help="How many nearest examples to inject per round.",
+    )
     gap_cols = st.columns(2)
     use_gap_resolver = gap_cols[0].checkbox(
         "Use Gap Resolver (DB/API/LLM retrieval)",
@@ -778,6 +922,9 @@ if st.session_state.get("pipeline_ready"):
                     audit_max_rounds=int(audit_max_rounds),
                     audit_timeout_seconds=int(audit_timeout_seconds),
                     audit_candidate_count=int(audit_candidate_count),
+                    use_example_retrieval=bool(use_example_retrieval),
+                    example_index_path=(example_index_path or "").strip(),
+                    example_top_k=int(example_top_k),
                     use_gap_resolver=bool(use_gap_resolver),
                     use_llm_gap_resolver=bool(use_llm_gap_resolver),
                     gap_resolver_max_items=int(gap_resolver_max_items),
@@ -806,9 +953,15 @@ if st.session_state.get("pipeline_ready"):
                 "mapping_id_source": post_artifacts.get("mapping_id_source"),
                 "mapping_db_host": post_artifacts.get("mapping_db_host"),
                 "mapping_db_schema": post_artifacts.get("mapping_db_schema"),
+                "example_retrieval_enabled": post_artifacts.get("example_retrieval_enabled"),
+                "example_index_path": post_artifacts.get("example_index_path"),
+                "example_index_error": post_artifacts.get("example_index_error"),
+                "example_index_entry_count": post_artifacts.get("example_index_entry_count"),
                 "audit_loop": post_artifacts.get("audit_loop_summary"),
             }
         )
+        if str(post_artifacts.get("example_index_error", "")).strip():
+            st.warning(f"SBML motif retrieval issue: {post_artifacts.get('example_index_error')}")
         if post_artifacts.get("audit_iterations"):
             with st.expander("Audit repair iterations", expanded=False):
                 st.write(post_artifacts.get("audit_iterations"))
