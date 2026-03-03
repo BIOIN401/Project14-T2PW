@@ -544,6 +544,21 @@
       "candidates": [],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::proteolytic enzymes::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::proteolytic enzymes::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"proteolytic enzymes\" OR gene:\"proteolytic enzymes\") AND organism_name:\"Homo sapiens\" | (protein_name:\"proteolytic enzymes\" OR gene:\"proteolytic enzymes\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
     }
   },
   "compounds": {
@@ -1705,6 +1720,20 @@
           "score": 0.874
         }
       ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
+    },
+    "db::t3t4": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::t3t4": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "candidates": [],
       "provider": "ChEBI/KEGG/HMDB",
       "source": "api"
     }

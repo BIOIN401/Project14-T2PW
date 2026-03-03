@@ -4,9 +4,10 @@ import os
 import hashlib
 import tempfile
 import time
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 import streamlit as st
 from lxml import etree
@@ -87,6 +88,30 @@ def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
 
 
+def _read_json(path: Path) -> Dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _audit_objective_score(
+    *,
+    eval_error_count: int,
+    eval_warning_count: int,
+    source_error_count: int,
+    rejected_count: int,
+    accepted_count: int,
+    source_patch_count: int,
+) -> Tuple[int, int, int, int, int, int]:
+    # Lower is better.
+    return (
+        int(eval_error_count),
+        int(eval_warning_count),
+        int(source_error_count),
+        int(rejected_count),
+        -int(accepted_count),
+        int(source_patch_count),
+    )
+
+
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
@@ -102,6 +127,7 @@ def run_post_pipeline_sbml_artifacts(
     db_schema: str,
     audit_max_rounds: int,
     audit_timeout_seconds: int,
+    audit_candidate_count: int,
     use_gap_resolver: bool,
     use_llm_gap_resolver: bool,
     gap_resolver_max_items: int,
@@ -135,6 +161,7 @@ def run_post_pipeline_sbml_artifacts(
         current_input = input_json
         max_rounds = max(1, int(audit_max_rounds))
         timeout_seconds = max(30, int(audit_timeout_seconds))
+        max_candidates = max(1, int(audit_candidate_count))
         audit_started_at = time.time()
         retry_context_note = ""
         stop_reason = "max_rounds_reached"
@@ -145,26 +172,94 @@ def run_post_pipeline_sbml_artifacts(
                 stop_reason = "timeout"
                 break
 
-            llm_temperature = min(0.65, 0.15 * (round_idx - 1))
-            llm_max_tokens = min(8000, 3600 + 700 * (round_idx - 1))
+            base_temperature = min(0.65, 0.15 * (round_idx - 1))
+            base_max_tokens = min(8000, 3600 + 700 * (round_idx - 1))
+            temp_offsets = [0.0, 0.14, 0.28, 0.40, 0.50]
+            token_offsets = [0, 500, 900, 1300, 1700]
+            candidate_count = 1 if not use_llm_audit else min(max_candidates, len(temp_offsets))
+            round_candidates: List[Dict[str, Any]] = []
 
-            run_audit(
-                current_input,
-                audit_report_path,
-                audit_patch_path,
-                use_llm=use_llm_audit,
-                llm_temperature=llm_temperature,
-                llm_max_tokens=llm_max_tokens,
-                context_note=retry_context_note,
-            )
-            round_audited = tmp / f"final.audited.round{round_idx}.json"
-            run_apply(
-                current_input,
-                audit_patch_path,
-                round_audited,
-                audit_report_path=audit_report_path,
-                apply_report_path=apply_report_path,
-            )
+            for cand_idx in range(candidate_count):
+                cand_temperature = min(0.9, base_temperature + temp_offsets[cand_idx])
+                cand_max_tokens = min(10000, base_max_tokens + token_offsets[cand_idx])
+                cand_suffix = f"round{round_idx}.cand{cand_idx + 1}"
+                cand_audit_report = tmp / f"audit_report.{cand_suffix}.json"
+                cand_audit_patch = tmp / f"audit_patch.{cand_suffix}.json"
+                cand_apply_report = tmp / f"audit_apply_report.{cand_suffix}.json"
+                cand_audited = tmp / f"final.audited.{cand_suffix}.json"
+                cand_eval_report = tmp / f"audit_eval_report.{cand_suffix}.json"
+                cand_eval_patch = tmp / f"audit_eval_patch.{cand_suffix}.json"
+
+                run_audit(
+                    current_input,
+                    cand_audit_report,
+                    cand_audit_patch,
+                    use_llm=use_llm_audit,
+                    llm_temperature=cand_temperature,
+                    llm_max_tokens=cand_max_tokens,
+                    context_note=retry_context_note,
+                )
+                run_apply(
+                    current_input,
+                    cand_audit_patch,
+                    cand_audited,
+                    audit_report_path=cand_audit_report,
+                    apply_report_path=cand_apply_report,
+                )
+                run_audit(
+                    cand_audited,
+                    cand_eval_report,
+                    cand_eval_patch,
+                    use_llm=False,
+                    llm_temperature=0.0,
+                    llm_max_tokens=1200,
+                    context_note="deterministic post-apply scoring",
+                )
+
+                cand_audit = _read_json(cand_audit_report)
+                cand_apply = _read_json(cand_apply_report)
+                cand_eval = _read_json(cand_eval_report)
+                cand_audit_summary = _safe_dict(cand_audit.get("summary"))
+                cand_apply_summary = _safe_dict(cand_apply.get("summary"))
+                cand_eval_summary = _safe_dict(cand_eval.get("summary"))
+                score = _audit_objective_score(
+                    eval_error_count=int(cand_eval_summary.get("error_count", 0)),
+                    eval_warning_count=int(cand_eval_summary.get("warning_count", 0)),
+                    source_error_count=int(cand_audit_summary.get("error_count", 0)),
+                    rejected_count=int(cand_apply_summary.get("rejected_count", 0)),
+                    accepted_count=int(cand_apply_summary.get("accepted_count", 0)),
+                    source_patch_count=int(cand_audit_summary.get("patch_count", 0)),
+                )
+
+                round_candidates.append(
+                    {
+                        "index": cand_idx + 1,
+                        "temperature": cand_temperature,
+                        "max_tokens": cand_max_tokens,
+                        "score": list(score),
+                        "audit_error_count": int(cand_audit_summary.get("error_count", 0)),
+                        "audit_warning_count": int(cand_audit_summary.get("warning_count", 0)),
+                        "audit_patch_count": int(cand_audit_summary.get("patch_count", 0)),
+                        "accepted_patch_count": int(cand_apply_summary.get("accepted_count", 0)),
+                        "rejected_patch_count": int(cand_apply_summary.get("rejected_count", 0)),
+                        "eval_error_count": int(cand_eval_summary.get("error_count", 0)),
+                        "eval_warning_count": int(cand_eval_summary.get("warning_count", 0)),
+                        "audit_report_path": str(cand_audit_report),
+                        "audit_patch_path": str(cand_audit_patch),
+                        "apply_report_path": str(cand_apply_report),
+                        "audited_path": str(cand_audited),
+                    }
+                )
+
+            selected_candidate = min(round_candidates, key=lambda c: tuple(c.get("score", [])))
+            selected_audit_report = Path(str(selected_candidate["audit_report_path"]))
+            selected_audit_patch = Path(str(selected_candidate["audit_patch_path"]))
+            selected_apply_report = Path(str(selected_candidate["apply_report_path"]))
+            round_audited = Path(str(selected_candidate["audited_path"]))
+
+            shutil.copyfile(selected_audit_report, audit_report_path)
+            shutil.copyfile(selected_audit_patch, audit_patch_path)
+            shutil.copyfile(selected_apply_report, apply_report_path)
             round_resolved = tmp / f"final.resolved.round{round_idx}.json"
             gap_report_round: Dict[str, Any] = {}
             if use_gap_resolver:
@@ -191,8 +286,8 @@ def run_post_pipeline_sbml_artifacts(
             else:
                 current_after_round = round_audited
 
-            round_audit = json.loads(audit_report_path.read_text(encoding="utf-8"))
-            round_apply = json.loads(apply_report_path.read_text(encoding="utf-8"))
+            round_audit = _read_json(audit_report_path)
+            round_apply = _read_json(apply_report_path)
             summary = _safe_dict(round_audit.get("summary"))
             llm_info = _safe_dict(round_audit.get("llm"))
             apply_summary = _safe_dict(round_apply.get("summary"))
@@ -219,8 +314,11 @@ def run_post_pipeline_sbml_artifacts(
             audit_iterations.append(
                 {
                     "round": round_idx,
-                    "temperature": llm_temperature,
-                    "max_tokens": llm_max_tokens,
+                    "temperature": float(selected_candidate.get("temperature", base_temperature)),
+                    "max_tokens": int(selected_candidate.get("max_tokens", base_max_tokens)),
+                    "candidate_count": candidate_count,
+                    "selected_candidate_index": int(selected_candidate.get("index", 1)),
+                    "selected_score": list(selected_candidate.get("score", [])),
                     "error_count": error_count,
                     "warning_count": warning_count,
                     "patch_count": patch_count,
@@ -235,6 +333,7 @@ def run_post_pipeline_sbml_artifacts(
                     "gap_location_states_filled": states_filled,
                     "payload_repeated": repeated_payload,
                     "elapsed_seconds": round(time.time() - audit_started_at, 3),
+                    "candidates": round_candidates,
                 }
             )
             if use_gap_resolver:
@@ -582,7 +681,7 @@ if st.session_state.get("pipeline_ready"):
         key="post_mapping_cache",
         help="Cache file for UniProt/compound mapping lookups.",
     )
-    repair_cols = st.columns(2)
+    repair_cols = st.columns(3)
     audit_max_rounds = repair_cols[0].number_input(
         "Audit repair max rounds",
         min_value=1,
@@ -600,6 +699,15 @@ if st.session_state.get("pipeline_ready"):
         step=10,
         key="post_audit_timeout_seconds",
         help="Hard timeout for all audit-repair rounds.",
+    )
+    audit_candidate_count = repair_cols[2].number_input(
+        "Audit candidates / round",
+        min_value=1,
+        max_value=5,
+        value=3,
+        step=1,
+        key="post_audit_candidate_count",
+        help="Generates multiple LLM repair candidates and picks the best by deterministic score.",
     )
     gap_cols = st.columns(2)
     use_gap_resolver = gap_cols[0].checkbox(
@@ -669,6 +777,7 @@ if st.session_state.get("pipeline_ready"):
                     db_schema=(db_schema or "pathbank").strip() or "pathbank",
                     audit_max_rounds=int(audit_max_rounds),
                     audit_timeout_seconds=int(audit_timeout_seconds),
+                    audit_candidate_count=int(audit_candidate_count),
                     use_gap_resolver=bool(use_gap_resolver),
                     use_llm_gap_resolver=bool(use_llm_gap_resolver),
                     gap_resolver_max_items=int(gap_resolver_max_items),
