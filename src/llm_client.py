@@ -114,22 +114,6 @@ def chat(
     if response_json:
         kwargs["response_format"] = {"type": "json_object"}
 
-    for attempt in range(1, _max_retries + 1):
-        try:
-            resp = _client.chat.completions.create(**kwargs)
-            content = (resp.choices[0].message.content or "").strip()
-            if use_cache and _cache_enabled and content:
-                _cache_set(key, content)
-            return content
-        except Exception as exc:  # noqa: BLE001
-            text = str(exc).lower()
-            if "response_format" in text or "json_object" in text:
-                if "response_format" in kwargs:
-                    kwargs.pop("response_format", None)
-                    continue
-            if attempt < _max_retries and _is_retryable_error(exc):
-                time.sleep(_retry_base_seconds * attempt)
-                continue
-            raise
-
-    return ""
+    resp = _client.chat.completions.create(**kwargs)
+    content = resp.choices[0].message.content
+    return (content or "").strip()
