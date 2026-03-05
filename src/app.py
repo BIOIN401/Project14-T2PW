@@ -113,6 +113,89 @@ def _audit_objective_score(
     )
 
 
+def run_libsbml_checker(sbml_bytes: bytes) -> Dict[str, Any]:
+    try:
+        import libsbml  # type: ignore
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "error": f"python-libsbml unavailable: {exc}",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": False,
+                "messages": [],
+            },
+        }
+
+    text = ""
+    try:
+        text = sbml_bytes.decode("utf-8")
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "error": f"Invalid UTF-8 SBML payload: {exc}",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": True,
+                "messages": [],
+            },
+        }
+
+    try:
+        doc = libsbml.readSBMLFromString(text)
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "error": f"libSBML parse failure: {exc}",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": True,
+                "messages": [],
+            },
+        }
+
+    if doc is None:
+        return {
+            "ok": False,
+            "error": "libSBML returned no document.",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": True,
+                "messages": [],
+            },
+        }
+
+    check_count = int(doc.checkConsistency())
+    messages: List[Dict[str, Any]] = []
+    has_errors = False
+    for idx in range(doc.getNumErrors()):
+        err = doc.getError(idx)
+        entry = {
+            "severity": int(err.getSeverity()),
+            "category": int(err.getCategory()),
+            "message": err.getMessage(),
+            "line": int(err.getLine()),
+        }
+        messages.append(entry)
+        if entry["severity"] >= 2:
+            has_errors = True
+
+    return {
+        "ok": True,
+        "error": "",
+        "validation": {
+            "check_count": check_count,
+            "error_count": len(messages),
+            "has_errors": has_errors,
+            "messages": messages,
+        },
+    }
+
+
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
@@ -1056,6 +1139,24 @@ if st.session_state.get("pipeline_ready"):
                 file_name="sbml_overwatch_report.json",
                 mime="application/json",
                 key="dl_sbml_overwatch",
+            )
+
+        checker_key = "post_pipeline_libsbml_check"
+        if st.button("Run libSBML checker on generated SBML", key="run_libsbml_checker_btn"):
+            with st.spinner("Running libSBML checker..."):
+                st.session_state[checker_key] = run_libsbml_checker(post_artifacts["sbml_xml_bytes"])
+
+        checker_report = st.session_state.get(checker_key)
+        if isinstance(checker_report, dict):
+            st.write("libSBML checker summary", checker_report.get("validation", {}))
+            if str(checker_report.get("error", "")).strip():
+                st.error(str(checker_report.get("error", "")))
+            st.download_button(
+                "Download libsbml_checker_report.json",
+                json.dumps(checker_report, indent=2),
+                file_name="libsbml_checker_report.json",
+                mime="application/json",
+                key="dl_libsbml_checker",
             )
 
     st.subheader("PWML export")

@@ -138,11 +138,17 @@ class HttpClient:
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": "Project14-T2PW-IDMapper/1.0"})
 
-    def get(self, url: str, *, params: Optional[Dict[str, Any]] = None) -> requests.Response:
+    def get(
+        self,
+        url: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+    ) -> requests.Response:
         last_exc: Optional[Exception] = None
         for attempt in range(1, self.max_retries + 1):
             try:
-                resp = self.session.get(url, params=params, timeout=self.timeout)
+                resp = self.session.get(url, params=params, headers=headers, timeout=self.timeout)
                 if resp.status_code >= 500:
                     raise requests.HTTPError(f"Server error {resp.status_code}")
                 return resp
@@ -811,7 +817,72 @@ def _query_kegg(client: HttpClient, name: str) -> List[Dict[str, Any]]:
 
 
 def _query_hmdb(client: HttpClient, name: str) -> List[Dict[str, Any]]:
-    # HMDB has no stable public JSON search API; this is best-effort HTML extraction.
+    # HMDB has no guaranteed public search API; prefer configured API endpoint, fallback to HTML extraction.
+    api_url = str(os.getenv("HMDB_API_URL", "")).strip()
+    api_key = str(os.getenv("HMDB_API_KEY", "")).strip()
+    if api_url:
+        api_params = {
+            "query": name,
+            "q": name,
+            "term": name,
+            "search": name,
+            "limit": int(os.getenv("HMDB_API_LIMIT", "12") or "12"),
+        }
+        api_headers: Dict[str, str] = {"Accept": "application/json"}
+        if api_key:
+            auth_header = str(os.getenv("HMDB_API_AUTH_HEADER", "X-API-Key") or "X-API-Key").strip()
+            if auth_header:
+                api_headers[auth_header] = api_key
+        try:
+            api_resp = client.get(api_url, params=api_params, headers=api_headers)
+            if api_resp.status_code == 200:
+                payload = api_resp.json()
+                rows: List[Dict[str, Any]] = []
+                if isinstance(payload, dict):
+                    for key in ["results", "data", "items", "metabolites"]:
+                        value = payload.get(key)
+                        if isinstance(value, list):
+                            rows = [item for item in value if isinstance(item, dict)]
+                            break
+                    if not rows:
+                        rows = [payload]
+                elif isinstance(payload, list):
+                    rows = [item for item in payload if isinstance(item, dict)]
+
+                out_api: List[Dict[str, Any]] = []
+                seen_api: set = set()
+                for row in rows:
+                    hid = _canonical_name(
+                        str(
+                            row.get("hmdb_id")
+                            or row.get("accession")
+                            or row.get("id")
+                            or row.get("identifier")
+                            or ""
+                        )
+                    ).upper()
+                    if not hid.startswith("HMDB"):
+                        continue
+                    if hid in seen_api:
+                        continue
+                    seen_api.add(hid)
+                    cname = _canonical_name(str(row.get("name") or row.get("metabolite_name") or ""))
+                    out_api.append(
+                        {
+                            "database": "hmdb",
+                            "id": hid,
+                            "name": cname,
+                            "score": _score_compound_candidate(name, cname or hid),
+                        }
+                    )
+                    if len(out_api) >= 12:
+                        break
+                if out_api:
+                    out_api.sort(key=lambda item: float(item.get("score", 0.0)), reverse=True)
+                    return out_api[:10]
+        except Exception:  # noqa: BLE001
+            pass
+
     url = "https://hmdb.ca/unearth/q"
     params = {"query": name, "searcher": "metabolites"}
     try:
@@ -833,6 +904,29 @@ def _query_hmdb(client: HttpClient, name: str) -> List[Dict[str, Any]]:
         if len(out) >= 10:
             break
     return out
+
+
+def lookup_hmdb_background(client: HttpClient, name: str, *, max_results: int = 6) -> Dict[str, Any]:
+    rows = _query_hmdb(client, name)
+    limit = max(1, min(20, int(max_results)))
+    candidates: List[Dict[str, Any]] = []
+    for row in rows[:limit]:
+        hid = _canonical_name(str(row.get("id", ""))).upper()
+        if not hid:
+            continue
+        candidates.append(
+            {
+                "hmdb_id": hid,
+                "name": _canonical_name(str(row.get("name", ""))),
+                "score": float(row.get("score", 0.0)),
+            }
+        )
+    return {
+        "query": _canonical_name(name),
+        "provider": "hmdb",
+        "candidate_count": len(candidates),
+        "candidates": candidates,
+    }
 
 
 def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:

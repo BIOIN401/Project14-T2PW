@@ -8,7 +8,13 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from llm_client import chat
-from map_ids import HttpClient, PathBankDbResolver, map_compound_all, map_protein_uniprot
+from map_ids import (
+    HttpClient,
+    PathBankDbResolver,
+    lookup_hmdb_background,
+    map_compound_all,
+    map_protein_uniprot,
+)
 
 
 def _safe_dict(value: Any) -> Dict[str, Any]:
@@ -311,11 +317,13 @@ def _collect_stage3_issues(payload: Dict[str, Any], *, max_items: int) -> List[D
 def _default_stage3_plan(issues: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     ops: List[Dict[str, Any]] = []
     for issue in issues:
+        kind = _canonical(str(issue.get("entity_type", ""))).lower()
         ops.append(
             {
                 "issue_key": issue.get("issue_key", ""),
                 "resolve_ids": {"strategy": "db_then_api"},
                 "resolve_location": {"strategy": "db_then_default"},
+                "background": {"hmdb_lookup": bool(kind == "compound"), "max_results": 6},
                 "rationale": "default_plan",
             }
         )
@@ -340,6 +348,8 @@ def _llm_plan_stage3(
             "Do not invent issue_key values outside provided list.",
             "For resolve_ids.strategy use one of: db_then_api, api_then_db, db_only, api_only, skip.",
             "For resolve_location.strategy use one of: db_then_default, default_only, skip.",
+            "For background.hmdb_lookup use true only for compounds when additional ID context is useful.",
+            "For background.max_results use an integer from 1 to 12.",
             "Plan should prefer deterministic evidence sources and minimize API calls.",
         ],
         "output_schema": {
@@ -348,6 +358,7 @@ def _llm_plan_stage3(
                     "issue_key": "string",
                     "resolve_ids": {"strategy": "db_then_api|api_then_db|db_only|api_only|skip"},
                     "resolve_location": {"strategy": "db_then_default|default_only|skip"},
+                    "background": {"hmdb_lookup": "boolean", "max_results": "integer"},
                     "rationale": "string",
                 }
             ]
@@ -376,17 +387,24 @@ def _llm_plan_stage3(
             issue_key = _canonical(str(op.get("issue_key", "")))
             if issue_key not in allowed_issue_keys:
                 continue
+            issue_obj = next((it for it in issues if str(it.get("issue_key", "")) == issue_key), {})
+            issue_kind = _canonical(str(_safe_dict(issue_obj).get("entity_type", ""))).lower()
             ids_strategy = _canonical(str(_safe_dict(op.get("resolve_ids")).get("strategy", "db_then_api"))).lower()
             if ids_strategy not in {"db_then_api", "api_then_db", "db_only", "api_only", "skip"}:
                 ids_strategy = "db_then_api"
             loc_strategy = _canonical(str(_safe_dict(op.get("resolve_location")).get("strategy", "db_then_default"))).lower()
             if loc_strategy not in {"db_then_default", "default_only", "skip"}:
                 loc_strategy = "db_then_default"
+            bg_raw = _safe_dict(op.get("background"))
+            bg_hmdb_lookup = bool(bg_raw.get("hmdb_lookup", bool(issue_kind == "compound")))
+            bg_max_results = int(bg_raw.get("max_results", 6) or 6)
+            bg_max_results = max(1, min(12, bg_max_results))
             out_ops.append(
                 {
                     "issue_key": issue_key,
                     "resolve_ids": {"strategy": ids_strategy},
                     "resolve_location": {"strategy": loc_strategy},
+                    "background": {"hmdb_lookup": bg_hmdb_lookup, "max_results": bg_max_results},
                     "rationale": _canonical(str(op.get("rationale", ""))),
                 }
             )
@@ -439,6 +457,7 @@ def _llm_choose_id_candidate(
     *,
     issue: Dict[str, Any],
     candidates: List[Dict[str, Any]],
+    background_context: Optional[Dict[str, Any]],
     use_llm: bool,
     temperature: float,
     max_tokens: int,
@@ -452,9 +471,11 @@ def _llm_choose_id_candidate(
         "task": "Select the best ID-mapping candidate.",
         "issue": issue,
         "candidates": candidates,
+        "background_context": _safe_dict(background_context),
         "rules": [
             "Choose exactly one index from candidates by mapped ID quality and confidence.",
             "Prefer higher confidence and richer mapped_ids coverage.",
+            "Use background_context only as supporting evidence; do not invent new IDs.",
             "Return JSON only with keys: selected_index, confidence, reason.",
         ],
     }
@@ -482,6 +503,33 @@ def _llm_choose_id_candidate(
         return {"selected_index": 0, "confidence": float(candidates[0].get("confidence", 0.0)), "reason": "llm_invalid_index_fallback", "source": "llm_fallback"}
     except Exception as exc:  # noqa: BLE001
         return {"selected_index": 0, "confidence": float(candidates[0].get("confidence", 0.0)), "reason": f"llm_error_fallback:{exc}", "source": "deterministic_fallback"}
+
+
+def _id_candidates_from_hmdb_background(background: Dict[str, Any]) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    seen: set = set()
+    rows = _safe_list(background.get("candidates"))
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        hid = _canonical(str(row.get("hmdb_id", ""))).upper()
+        if not hid or not hid.startswith("HMDB"):
+            continue
+        if hid in seen:
+            continue
+        seen.add(hid)
+        score = float(row.get("score", 0.0) or 0.0)
+        confidence = max(0.45, min(0.88, score))
+        out.append(
+            {
+                "source": "api",
+                "provider": "HMDB",
+                "confidence": confidence,
+                "mapped_ids": {"hmdb": hid},
+                "chosen_rule": "stage3_hmdb_background_candidate",
+            }
+        )
+    return out
 
 
 def _run_id_strategy(
@@ -668,6 +716,13 @@ def resolve_gaps(
 
         # Stage 3A: ID query plan -> deterministic execution -> LLM selection
         ids_strategy = _canonical(str(_safe_dict(op.get("resolve_ids")).get("strategy", "db_then_api"))).lower()
+        background_cfg = _safe_dict(op.get("background"))
+        background_hmdb_lookup = bool(background_cfg.get("hmdb_lookup", bool(kind == "compound")))
+        background_max_results = max(1, min(12, int(background_cfg.get("max_results", 6) or 6)))
+        background_context: Dict[str, Any] = {}
+        if kind == "compound" and background_hmdb_lookup:
+            background_context = lookup_hmdb_background(client, name, max_results=background_max_results)
+            op_exec["background"] = background_context
         if bool(issue.get("needs_id_mapping")) and ids_strategy != "skip":
             organism = _canonical(str(item.get("organism", ""))) if kind == "protein" else ""
             id_exec = _run_id_strategy(
@@ -679,9 +734,16 @@ def resolve_gaps(
                 client=client,
             )
             id_candidates = _collect_id_candidates(kind, _safe_list(id_exec.get("attempts")))
+            if kind == "compound" and background_context:
+                id_candidates.extend(_id_candidates_from_hmdb_background(background_context))
+                id_candidates.sort(
+                    key=lambda c: (float(c.get("confidence", 0.0)), 1 if str(c.get("source", "")) == "db" else 0),
+                    reverse=True,
+                )
             id_choice = _llm_choose_id_candidate(
                 issue=issue,
                 candidates=id_candidates,
+                background_context=background_context,
                 use_llm=use_llm,
                 temperature=llm_temperature,
                 max_tokens=max(500, int(llm_max_tokens)),
