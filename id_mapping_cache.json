@@ -2085,6 +2085,42 @@
           }
         }
       ]
+    },
+    "db::thyroglobulin  liothyronine": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::thyroglobulin  liothyronine": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "candidates": [],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
+    },
+    "db::thyroglobulin  thyroxine": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::thyroglobulin  thyroxine": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.35,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C16729",
+          "name": "[Thyroglobulin]-L-thyroxine",
+          "score": 0.35
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
     }
   }
 }

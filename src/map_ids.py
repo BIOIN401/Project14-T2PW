@@ -929,6 +929,76 @@ def lookup_hmdb_background(client: HttpClient, name: str, *, max_results: int = 
     }
 
 
+def lookup_compound_api_background(client: HttpClient, name: str, *, max_results: int = 8) -> Dict[str, Any]:
+    result = map_compound_all(client, name)
+    limit = max(1, min(20, int(max_results)))
+    rows = _safe_list(result.get("candidates"))[:limit]
+    candidates: List[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        db = _canonical_name(str(row.get("database", ""))).lower()
+        cid = _canonical_name(str(row.get("id", "")))
+        if not db or not cid:
+            continue
+        candidates.append(
+            {
+                "database": db,
+                "id": cid,
+                "name": _canonical_name(str(row.get("name", ""))),
+                "score": float(row.get("score", 0.0) or 0.0),
+            }
+        )
+    return {
+        "query": _canonical_name(name),
+        "provider": "compound_api_bundle",
+        "status": str(result.get("status", "")).strip().lower(),
+        "reason": str(result.get("reason", "")).strip(),
+        "candidate_count": len(candidates),
+        "mapped_ids": _safe_dict(result.get("mapped_ids")),
+        "candidates": candidates,
+    }
+
+
+def lookup_protein_api_background(
+    client: HttpClient,
+    name: str,
+    organism: str,
+    *,
+    max_results: int = 8,
+) -> Dict[str, Any]:
+    result = map_protein_uniprot(client, name, organism)
+    limit = max(1, min(20, int(max_results)))
+    rows = _safe_list(result.get("candidates"))[:limit]
+    candidates: List[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        accession = _canonical_name(str(row.get("accession", "")))
+        if not accession:
+            continue
+        candidates.append(
+            {
+                "accession": accession,
+                "protein_name": _canonical_name(str(row.get("protein_name", ""))),
+                "organism": _canonical_name(str(row.get("organism", ""))),
+                "reviewed": bool(row.get("reviewed", False)),
+                "score": float(row.get("score", 0.0) or 0.0),
+            }
+        )
+    return {
+        "query": _canonical_name(name),
+        "organism": _canonical_name(organism),
+        "provider": "uniprot",
+        "status": str(result.get("status", "")).strip().lower(),
+        "reason": str(result.get("reason", "")).strip(),
+        "candidate_count": len(candidates),
+        "mapped_ids": _safe_dict(result.get("mapped_ids")),
+        "queries_tried": _safe_list(result.get("queries_tried")),
+        "candidates": candidates,
+    }
+
+
 def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:
     variants = _name_variants(name, max_variants=3)
     by_key: Dict[Tuple[str, str], Dict[str, Any]] = {}

@@ -11,7 +11,9 @@ from llm_client import chat
 from map_ids import (
     HttpClient,
     PathBankDbResolver,
+    lookup_compound_api_background,
     lookup_hmdb_background,
+    lookup_protein_api_background,
     map_compound_all,
     map_protein_uniprot,
 )
@@ -323,7 +325,7 @@ def _default_stage3_plan(issues: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 "issue_key": issue.get("issue_key", ""),
                 "resolve_ids": {"strategy": "db_then_api"},
                 "resolve_location": {"strategy": "db_then_default"},
-                "background": {"hmdb_lookup": bool(kind == "compound"), "max_results": 6},
+                "background": {"api_lookup": "auto", "hmdb_lookup": bool(kind == "compound"), "max_results": 6},
                 "rationale": "default_plan",
             }
         )
@@ -348,6 +350,7 @@ def _llm_plan_stage3(
             "Do not invent issue_key values outside provided list.",
             "For resolve_ids.strategy use one of: db_then_api, api_then_db, db_only, api_only, skip.",
             "For resolve_location.strategy use one of: db_then_default, default_only, skip.",
+            "For background.api_lookup use one of: auto, none, full.",
             "For background.hmdb_lookup use true only for compounds when additional ID context is useful.",
             "For background.max_results use an integer from 1 to 12.",
             "Plan should prefer deterministic evidence sources and minimize API calls.",
@@ -358,7 +361,7 @@ def _llm_plan_stage3(
                     "issue_key": "string",
                     "resolve_ids": {"strategy": "db_then_api|api_then_db|db_only|api_only|skip"},
                     "resolve_location": {"strategy": "db_then_default|default_only|skip"},
-                    "background": {"hmdb_lookup": "boolean", "max_results": "integer"},
+                    "background": {"api_lookup": "auto|none|full", "hmdb_lookup": "boolean", "max_results": "integer"},
                     "rationale": "string",
                 }
             ]
@@ -396,6 +399,9 @@ def _llm_plan_stage3(
             if loc_strategy not in {"db_then_default", "default_only", "skip"}:
                 loc_strategy = "db_then_default"
             bg_raw = _safe_dict(op.get("background"))
+            bg_api_lookup = _canonical(str(bg_raw.get("api_lookup", "auto"))).lower()
+            if bg_api_lookup not in {"auto", "none", "full"}:
+                bg_api_lookup = "auto"
             bg_hmdb_lookup = bool(bg_raw.get("hmdb_lookup", bool(issue_kind == "compound")))
             bg_max_results = int(bg_raw.get("max_results", 6) or 6)
             bg_max_results = max(1, min(12, bg_max_results))
@@ -404,7 +410,7 @@ def _llm_plan_stage3(
                     "issue_key": issue_key,
                     "resolve_ids": {"strategy": ids_strategy},
                     "resolve_location": {"strategy": loc_strategy},
-                    "background": {"hmdb_lookup": bg_hmdb_lookup, "max_results": bg_max_results},
+                    "background": {"api_lookup": bg_api_lookup, "hmdb_lookup": bg_hmdb_lookup, "max_results": bg_max_results},
                     "rationale": _canonical(str(op.get("rationale", ""))),
                 }
             )
@@ -476,6 +482,8 @@ def _llm_choose_id_candidate(
             "Choose exactly one index from candidates by mapped ID quality and confidence.",
             "Prefer higher confidence and richer mapped_ids coverage.",
             "Use background_context only as supporting evidence; do not invent new IDs.",
+            "If top candidates are close, prefer database-backed evidence over weaker API-only candidates.",
+            "Do not reject all candidates when at least one candidate has confidence >= 0.55.",
             "Return JSON only with keys: selected_index, confidence, reason.",
         ],
     }
@@ -529,6 +537,102 @@ def _id_candidates_from_hmdb_background(background: Dict[str, Any]) -> List[Dict
                 "chosen_rule": "stage3_hmdb_background_candidate",
             }
         )
+    return out
+
+
+def _id_candidates_from_api_background(kind: str, background: Dict[str, Any]) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    seen: set = set()
+    rows = _safe_list(background.get("candidates"))
+    if kind == "protein":
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            accession = _canonical(str(row.get("accession", "")))
+            if not accession:
+                continue
+            key = f"uniprot:{accession}"
+            if key in seen:
+                continue
+            seen.add(key)
+            raw_score = float(row.get("score", 0.0) or 0.0)
+            confidence = max(0.42, min(0.9, raw_score))
+            out.append(
+                {
+                    "source": "api",
+                    "provider": "UniProt",
+                    "confidence": confidence,
+                    "mapped_ids": {"uniprot": accession},
+                    "chosen_rule": "stage3_api_background_candidate",
+                }
+            )
+    else:
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            db = _canonical(str(row.get("database", ""))).lower()
+            cid = _canonical(str(row.get("id", "")))
+            if not db or not cid:
+                continue
+            key = f"{db}:{cid}"
+            if key in seen:
+                continue
+            seen.add(key)
+            raw_score = float(row.get("score", 0.0) or 0.0)
+            confidence = max(0.42, min(0.9, raw_score))
+            out.append(
+                {
+                    "source": "api",
+                    "provider": "CompoundAPI",
+                    "confidence": confidence,
+                    "mapped_ids": {db: cid},
+                    "chosen_rule": "stage3_api_background_candidate",
+                }
+            )
+    return out
+
+
+def _id_candidates_from_attempt_candidates(kind: str, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    seen: set = set()
+    for result in results:
+        if not isinstance(result, dict):
+            continue
+        source = _canonical(str(result.get("source", ""))) or "api"
+        provider = _canonical(str(result.get("provider", ""))) or ("UniProt" if kind == "protein" else "CompoundAPI")
+        rows = _safe_list(result.get("candidates"))
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            mapped_ids: Dict[str, str] = {}
+            if kind == "protein":
+                accession = _canonical(str(row.get("accession", "")))
+                if accession:
+                    mapped_ids = {"uniprot": accession}
+            else:
+                db = _canonical(str(row.get("database", ""))).lower()
+                cid = _canonical(str(row.get("id", "")))
+                if db and cid:
+                    mapped_ids = {db: cid}
+            if not mapped_ids:
+                continue
+            norm_key = tuple(sorted((k, v) for k, v in mapped_ids.items()))
+            if norm_key in seen:
+                continue
+            seen.add(norm_key)
+            raw_score = float(row.get("score", result.get("confidence", 0.0)) or 0.0)
+            if raw_score < 0.5:
+                continue
+            confidence = max(0.4, min(0.88, raw_score * 0.95))
+            out.append(
+                {
+                    "source": source,
+                    "provider": provider,
+                    "confidence": confidence,
+                    "mapped_ids": mapped_ids,
+                    "chosen_rule": "stage3_attempt_candidate_promotion",
+                }
+            )
     return out
 
 
@@ -717,12 +821,28 @@ def resolve_gaps(
         # Stage 3A: ID query plan -> deterministic execution -> LLM selection
         ids_strategy = _canonical(str(_safe_dict(op.get("resolve_ids")).get("strategy", "db_then_api"))).lower()
         background_cfg = _safe_dict(op.get("background"))
+        background_api_lookup = _canonical(str(background_cfg.get("api_lookup", "auto"))).lower()
+        if background_api_lookup not in {"auto", "none", "full"}:
+            background_api_lookup = "auto"
         background_hmdb_lookup = bool(background_cfg.get("hmdb_lookup", bool(kind == "compound")))
         background_max_results = max(1, min(12, int(background_cfg.get("max_results", 6) or 6)))
         background_context: Dict[str, Any] = {}
+
+        if background_api_lookup in {"auto", "full"}:
+            if kind == "compound":
+                background_context["compound_api"] = lookup_compound_api_background(
+                    client, name, max_results=background_max_results
+                )
+            elif kind == "protein":
+                org_for_bg = _canonical(str(item.get("organism", ""))) or global_organism
+                background_context["protein_api"] = lookup_protein_api_background(
+                    client, name, org_for_bg, max_results=background_max_results
+                )
         if kind == "compound" and background_hmdb_lookup:
-            background_context = lookup_hmdb_background(client, name, max_results=background_max_results)
+            background_context["hmdb"] = lookup_hmdb_background(client, name, max_results=background_max_results)
+        if background_context:
             op_exec["background"] = background_context
+
         if bool(issue.get("needs_id_mapping")) and ids_strategy != "skip":
             organism = _canonical(str(item.get("organism", ""))) if kind == "protein" else ""
             id_exec = _run_id_strategy(
@@ -734,12 +854,33 @@ def resolve_gaps(
                 client=client,
             )
             id_candidates = _collect_id_candidates(kind, _safe_list(id_exec.get("attempts")))
-            if kind == "compound" and background_context:
-                id_candidates.extend(_id_candidates_from_hmdb_background(background_context))
-                id_candidates.sort(
-                    key=lambda c: (float(c.get("confidence", 0.0)), 1 if str(c.get("source", "")) == "db" else 0),
-                    reverse=True,
-                )
+            id_candidates.extend(_id_candidates_from_attempt_candidates(kind, _safe_list(id_exec.get("attempts"))))
+            if kind == "compound":
+                if isinstance(background_context.get("compound_api"), dict):
+                    id_candidates.extend(_id_candidates_from_api_background(kind, _safe_dict(background_context.get("compound_api"))))
+                if isinstance(background_context.get("hmdb"), dict):
+                    id_candidates.extend(_id_candidates_from_hmdb_background(_safe_dict(background_context.get("hmdb"))))
+            elif kind == "protein":
+                if isinstance(background_context.get("protein_api"), dict):
+                    id_candidates.extend(_id_candidates_from_api_background(kind, _safe_dict(background_context.get("protein_api"))))
+
+            # de-duplicate by mapped_ids and keep strongest confidence.
+            deduped: Dict[Tuple[Tuple[str, str], ...], Dict[str, Any]] = {}
+            for cand in id_candidates:
+                if not isinstance(cand, dict):
+                    continue
+                mapped_ids = _safe_dict(cand.get("mapped_ids"))
+                if not mapped_ids:
+                    continue
+                key = tuple(sorted((str(k), str(v)) for k, v in mapped_ids.items()))
+                existing = deduped.get(key)
+                if not existing or float(cand.get("confidence", 0.0)) > float(existing.get("confidence", 0.0)):
+                    deduped[key] = cand
+            id_candidates = list(deduped.values())
+            id_candidates.sort(
+                key=lambda c: (float(c.get("confidence", 0.0)), 1 if str(c.get("source", "")) == "db" else 0),
+                reverse=True,
+            )
             id_choice = _llm_choose_id_candidate(
                 issue=issue,
                 candidates=id_candidates,
