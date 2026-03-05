@@ -261,6 +261,277 @@ def _llm_choose_location(
         }
 
 
+def _issue_key(kind: str, name: str) -> str:
+    return f"{kind}:{_normalize(name)}"
+
+
+def _collect_stage3_issues(payload: Dict[str, Any], *, max_items: int) -> List[Dict[str, Any]]:
+    entities = _safe_dict(payload.get("entities"))
+    compound_locs = _index_locations(payload, key="compound_locations", field="compound")
+    protein_locs = _index_locations(payload, key="protein_locations", field="protein")
+    issues: List[Dict[str, Any]] = []
+
+    for kind, rows in [("protein", _safe_list(entities.get("proteins"))), ("compound", _safe_list(entities.get("compounds")))]:
+        for item in rows:
+            if not isinstance(item, dict):
+                continue
+            name = _canonical(str(item.get("name", "")))
+            if not name:
+                continue
+            mapped_ids = _safe_dict(item.get("mapped_ids"))
+            location_rows = protein_locs.get(name, []) if kind == "protein" else compound_locs.get(name, [])
+            has_location_row = bool(location_rows)
+            has_location_state = any(
+                isinstance(_safe_dict(wrap.get("row")).get("biological_state"), str)
+                and _safe_dict(wrap.get("row")).get("biological_state", "").strip()
+                for wrap in location_rows
+            )
+            issue = {
+                "issue_key": _issue_key(kind, name),
+                "entity_type": kind,
+                "name": name,
+                "needs_id_mapping": not bool(mapped_ids),
+                "needs_location_link": not has_location_row,
+                "needs_location_state_fill": has_location_row and not has_location_state,
+                "needs_organism": bool(kind == "protein" and not _canonical(str(item.get("organism", "")))),
+            }
+            if any(
+                bool(issue.get(field))
+                for field in [
+                    "needs_id_mapping",
+                    "needs_location_link",
+                    "needs_location_state_fill",
+                    "needs_organism",
+                ]
+            ):
+                issues.append(issue)
+    return issues[: max(1, int(max_items))]
+
+
+def _default_stage3_plan(issues: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    ops: List[Dict[str, Any]] = []
+    for issue in issues:
+        ops.append(
+            {
+                "issue_key": issue.get("issue_key", ""),
+                "resolve_ids": {"strategy": "db_then_api"},
+                "resolve_location": {"strategy": "db_then_default"},
+                "rationale": "default_plan",
+            }
+        )
+    return ops
+
+
+def _llm_plan_stage3(
+    issues: List[Dict[str, Any]],
+    *,
+    use_llm: bool,
+    temperature: float,
+    max_tokens: int,
+) -> Dict[str, Any]:
+    if not issues or not use_llm:
+        return {"source": "deterministic_default", "operations": _default_stage3_plan(issues), "raw": ""}
+
+    prompt_obj = {
+        "task": "Plan DB/API resolution operations for entity gaps.",
+        "issues": issues,
+        "rules": [
+            "Return JSON only.",
+            "Do not invent issue_key values outside provided list.",
+            "For resolve_ids.strategy use one of: db_then_api, api_then_db, db_only, api_only, skip.",
+            "For resolve_location.strategy use one of: db_then_default, default_only, skip.",
+            "Plan should prefer deterministic evidence sources and minimize API calls.",
+        ],
+        "output_schema": {
+            "operations": [
+                {
+                    "issue_key": "string",
+                    "resolve_ids": {"strategy": "db_then_api|api_then_db|db_only|api_only|skip"},
+                    "resolve_location": {"strategy": "db_then_default|default_only|skip"},
+                    "rationale": "string",
+                }
+            ]
+        },
+    }
+    system = "You are a strict planner for deterministic DB/API resolution. Output JSON only."
+    raw = ""
+    try:
+        raw = chat(
+            [
+                {"role": "system", "content": system},
+                {"role": "user", "content": json.dumps(prompt_obj, ensure_ascii=False)},
+            ],
+            temperature=float(temperature),
+            max_tokens=int(max_tokens),
+            response_json=True,
+            use_cache=False,
+        )
+        parsed = _extract_json_object(raw) or {}
+        operations_raw = _safe_list(parsed.get("operations"))
+        allowed_issue_keys = {str(i.get("issue_key", "")) for i in issues}
+        out_ops: List[Dict[str, Any]] = []
+        for op in operations_raw:
+            if not isinstance(op, dict):
+                continue
+            issue_key = _canonical(str(op.get("issue_key", "")))
+            if issue_key not in allowed_issue_keys:
+                continue
+            ids_strategy = _canonical(str(_safe_dict(op.get("resolve_ids")).get("strategy", "db_then_api"))).lower()
+            if ids_strategy not in {"db_then_api", "api_then_db", "db_only", "api_only", "skip"}:
+                ids_strategy = "db_then_api"
+            loc_strategy = _canonical(str(_safe_dict(op.get("resolve_location")).get("strategy", "db_then_default"))).lower()
+            if loc_strategy not in {"db_then_default", "default_only", "skip"}:
+                loc_strategy = "db_then_default"
+            out_ops.append(
+                {
+                    "issue_key": issue_key,
+                    "resolve_ids": {"strategy": ids_strategy},
+                    "resolve_location": {"strategy": loc_strategy},
+                    "rationale": _canonical(str(op.get("rationale", ""))),
+                }
+            )
+        if not out_ops:
+            out_ops = _default_stage3_plan(issues)
+            return {"source": "llm_empty_fallback_default", "operations": out_ops, "raw": raw[:500]}
+        # Ensure one op per issue by filling missing with defaults.
+        existing = {str(op.get("issue_key", "")) for op in out_ops}
+        for fallback in _default_stage3_plan(issues):
+            if str(fallback.get("issue_key", "")) not in existing:
+                out_ops.append(fallback)
+        return {"source": "llm", "operations": out_ops, "raw": raw[:500]}
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "source": "llm_error_fallback_default",
+            "error": str(exc),
+            "operations": _default_stage3_plan(issues),
+            "raw": raw[:500],
+        }
+
+
+def _collect_id_candidates(kind: str, results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    candidates: List[Dict[str, Any]] = []
+    for result in results:
+        if not isinstance(result, dict):
+            continue
+        if str(result.get("status", "")).strip().lower() != "mapped":
+            continue
+        mapped_ids = _safe_dict(result.get("mapped_ids"))
+        if not mapped_ids:
+            continue
+        conf = float(result.get("confidence", 0.0) or 0.0)
+        source = str(result.get("source", "")).strip() or "unknown"
+        provider = str(result.get("provider", "")).strip() or "unknown"
+        candidates.append(
+            {
+                "source": source,
+                "provider": provider,
+                "confidence": conf,
+                "mapped_ids": mapped_ids,
+                "chosen_rule": str(result.get("chosen_rule", "")).strip(),
+            }
+        )
+    # deterministic ordering: confidence desc, prefer db ties
+    candidates.sort(key=lambda c: (float(c.get("confidence", 0.0)), 1 if str(c.get("source", "")) == "db" else 0), reverse=True)
+    return candidates
+
+
+def _llm_choose_id_candidate(
+    *,
+    issue: Dict[str, Any],
+    candidates: List[Dict[str, Any]],
+    use_llm: bool,
+    temperature: float,
+    max_tokens: int,
+) -> Dict[str, Any]:
+    if not candidates:
+        return {"selected_index": -1, "confidence": 0.0, "reason": "no_candidates", "source": "none"}
+    if len(candidates) == 1 or not use_llm:
+        return {"selected_index": 0, "confidence": float(candidates[0].get("confidence", 0.0)), "reason": "deterministic_top", "source": "deterministic"}
+
+    prompt_obj = {
+        "task": "Select the best ID-mapping candidate.",
+        "issue": issue,
+        "candidates": candidates,
+        "rules": [
+            "Choose exactly one index from candidates by mapped ID quality and confidence.",
+            "Prefer higher confidence and richer mapped_ids coverage.",
+            "Return JSON only with keys: selected_index, confidence, reason.",
+        ],
+    }
+    try:
+        raw = chat(
+            [
+                {"role": "system", "content": "You are a strict candidate selector. Output JSON only."},
+                {"role": "user", "content": json.dumps(prompt_obj, ensure_ascii=False)},
+            ],
+            temperature=float(temperature),
+            max_tokens=int(max_tokens),
+            response_json=True,
+            use_cache=False,
+        )
+        parsed = _extract_json_object(raw) or {}
+        selected_index = int(parsed.get("selected_index", -1))
+        if 0 <= selected_index < len(candidates):
+            return {
+                "selected_index": selected_index,
+                "confidence": float(parsed.get("confidence", candidates[selected_index].get("confidence", 0.0)) or 0.0),
+                "reason": _canonical(str(parsed.get("reason", ""))) or "llm_selected",
+                "source": "llm",
+                "raw": raw[:400],
+            }
+        return {"selected_index": 0, "confidence": float(candidates[0].get("confidence", 0.0)), "reason": "llm_invalid_index_fallback", "source": "llm_fallback"}
+    except Exception as exc:  # noqa: BLE001
+        return {"selected_index": 0, "confidence": float(candidates[0].get("confidence", 0.0)), "reason": f"llm_error_fallback:{exc}", "source": "deterministic_fallback"}
+
+
+def _run_id_strategy(
+    *,
+    kind: str,
+    name: str,
+    organism: str,
+    strategy: str,
+    db: Optional[PathBankDbResolver],
+    client: HttpClient,
+) -> Dict[str, Any]:
+    strategy_norm = _canonical(strategy).lower()
+    if strategy_norm not in {"db_then_api", "api_then_db", "db_only", "api_only", "skip"}:
+        strategy_norm = "db_then_api"
+
+    ordered_sources: List[str] = []
+    if strategy_norm == "skip":
+        ordered_sources = []
+    elif strategy_norm == "db_only":
+        ordered_sources = ["db"]
+    elif strategy_norm == "api_only":
+        ordered_sources = ["api"]
+    elif strategy_norm == "api_then_db":
+        ordered_sources = ["api", "db"]
+    else:
+        ordered_sources = ["db", "api"]
+
+    attempts: List[Dict[str, Any]] = []
+    for source in ordered_sources:
+        if source == "db":
+            if kind == "protein":
+                result = db.map_protein(name, organism) if db and db.available() else {"status": "unmapped", "reason": "db_unavailable", "source": "db", "provider": "PathBankDB"}
+            else:
+                result = db.map_compound(name) if db and db.available() else {"status": "unmapped", "reason": "db_unavailable", "source": "db", "provider": "PathBankDB"}
+        else:
+            if kind == "protein":
+                result = map_protein_uniprot(client, name, organism)
+                result.setdefault("provider", "UniProt")
+                result.setdefault("source", "api")
+            else:
+                result = map_compound_all(client, name)
+                result.setdefault("provider", "ChEBI/KEGG/HMDB")
+                result.setdefault("source", "api")
+        attempts.append(result)
+        if str(result.get("status", "")).strip().lower() == "mapped":
+            # keep gathering in case planner wants comparison; do not break
+            continue
+    return {"strategy": strategy_norm, "attempts": attempts}
+
+
 def _map_ids_for_entity(
     *,
     kind: str,
@@ -317,6 +588,12 @@ def resolve_gaps(
             "items_considered": 0,
         },
         "actions": [],
+        "stage3": {
+            "issues": [],
+            "planner": {},
+            "operations": [],
+            "executions": [],
+        },
     }
     entities = _safe_dict(working.get("entities"))
     elem_locs = _safe_dict(working.setdefault("element_locations", {}))
@@ -329,23 +606,53 @@ def resolve_gaps(
     client = HttpClient()
     db = PathBankDbResolver.from_env(db_config) if id_source in {"db", "hybrid"} else None
 
-    # Fill missing organisms + IDs
-    items: List[Tuple[str, Dict[str, Any]]] = []
-    for protein in _safe_list(entities.get("proteins")):
-        if isinstance(protein, dict):
-            items.append(("protein", protein))
-    for compound in _safe_list(entities.get("compounds")):
-        if isinstance(compound, dict):
-            items.append(("compound", compound))
+    issues = _collect_stage3_issues(working, max_items=max_items)
+    report["summary"]["items_considered"] = len(issues)
+    report["stage3"]["issues"] = issues
+    plan = _llm_plan_stage3(
+        issues,
+        use_llm=use_llm,
+        temperature=llm_temperature,
+        max_tokens=llm_max_tokens,
+    )
+    report["stage3"]["planner"] = {
+        "source": plan.get("source", ""),
+        "error": plan.get("error", ""),
+        "raw": plan.get("raw", ""),
+    }
+    operations = _safe_list(plan.get("operations"))[: max(1, int(max_items))]
+    report["stage3"]["operations"] = operations
 
-    for kind, item in items[: max(1, int(max_items))]:
-        name = _canonical(str(item.get("name", "")))
-        if not name:
+    issue_by_key = {str(issue.get("issue_key", "")): issue for issue in issues if isinstance(issue, dict)}
+    entity_by_key: Dict[str, Dict[str, Any]] = {}
+    for kind, rows in [("protein", _safe_list(entities.get("proteins"))), ("compound", _safe_list(entities.get("compounds")))]:
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            entity_by_key[_issue_key(kind, name)] = row
+
+    fallback_location = "cell"
+    for op in operations:
+        if not isinstance(op, dict):
             continue
-        report["summary"]["items_considered"] += 1
-        if kind == "protein":
-            organism = _canonical(str(item.get("organism", "")))
-            if not organism and global_organism:
+        issue_key = _canonical(str(op.get("issue_key", "")))
+        issue = _safe_dict(issue_by_key.get(issue_key))
+        item = entity_by_key.get(issue_key)
+        if not issue or not isinstance(item, dict):
+            report["stage3"]["executions"].append(
+                {"issue_key": issue_key, "status": "skipped", "reason": "issue_not_found"}
+            )
+            continue
+
+        kind = _canonical(str(issue.get("entity_type", "")))
+        name = _canonical(str(issue.get("name", "")))
+        op_exec: Dict[str, Any] = {"issue_key": issue_key, "entity_type": kind, "name": name, "status": "ok"}
+
+        if kind == "protein" and bool(issue.get("needs_organism")) and global_organism:
+            if not _canonical(str(item.get("organism", ""))):
                 item["organism"] = global_organism
                 report["summary"]["organisms_added"] += 1
                 report["actions"].append(
@@ -357,87 +664,102 @@ def resolve_gaps(
                         "source": "global_species",
                     }
                 )
+                op_exec["organism_added"] = global_organism
 
-        mapped_ids = _safe_dict(item.get("mapped_ids"))
-        if not mapped_ids:
+        # Stage 3A: ID query plan -> deterministic execution -> LLM selection
+        ids_strategy = _canonical(str(_safe_dict(op.get("resolve_ids")).get("strategy", "db_then_api"))).lower()
+        if bool(issue.get("needs_id_mapping")) and ids_strategy != "skip":
             organism = _canonical(str(item.get("organism", ""))) if kind == "protein" else ""
-            mapping = _map_ids_for_entity(
+            id_exec = _run_id_strategy(
                 kind=kind,
                 name=name,
                 organism=organism,
-                id_source=id_source,
+                strategy=ids_strategy,
                 db=db,
                 client=client,
             )
-            if mapping.get("status") == "mapped":
-                new_ids = _safe_dict(mapping.get("mapped_ids"))
+            id_candidates = _collect_id_candidates(kind, _safe_list(id_exec.get("attempts")))
+            id_choice = _llm_choose_id_candidate(
+                issue=issue,
+                candidates=id_candidates,
+                use_llm=use_llm,
+                temperature=llm_temperature,
+                max_tokens=max(500, int(llm_max_tokens)),
+            )
+            op_exec["id_execution"] = id_exec
+            op_exec["id_candidates"] = id_candidates[:8]
+            op_exec["id_choice"] = id_choice
+            idx = int(id_choice.get("selected_index", -1))
+            if 0 <= idx < len(id_candidates):
+                selected = id_candidates[idx]
+                new_ids = _safe_dict(selected.get("mapped_ids"))
                 if new_ids:
-                    item["mapped_ids"] = {**mapped_ids, **new_ids}
-                    item.setdefault("mapping_meta", {})
-                    item["mapping_meta"]["provider"] = mapping.get("provider", "")
-                    item["mapping_meta"]["source"] = mapping.get("source", "")
-                    item["mapping_meta"]["confidence"] = float(mapping.get("confidence", 0.0))
-                    item["mapping_meta"]["chosen_rule"] = mapping.get("chosen_rule", "")
-                    report["summary"]["mapped_ids_added"] += 1
-                    report["actions"].append(
-                        {
-                            "type": "mapped_ids_added",
-                            "entity_type": kind,
-                            "name": name,
-                            "mapped_ids": new_ids,
-                            "provider": mapping.get("provider", ""),
-                            "source": mapping.get("source", ""),
-                            "confidence": float(mapping.get("confidence", 0.0)),
-                        }
-                    )
+                    old_ids = _safe_dict(item.get("mapped_ids"))
+                    merged_ids = {**old_ids, **new_ids}
+                    if merged_ids != old_ids:
+                        item["mapped_ids"] = merged_ids
+                        item.setdefault("mapping_meta", {})
+                        item["mapping_meta"]["provider"] = selected.get("provider", "")
+                        item["mapping_meta"]["source"] = selected.get("source", "")
+                        item["mapping_meta"]["confidence"] = float(selected.get("confidence", 0.0))
+                        item["mapping_meta"]["chosen_rule"] = selected.get("chosen_rule", "")
+                        report["summary"]["mapped_ids_added"] += 1
+                        report["actions"].append(
+                            {
+                                "type": "mapped_ids_added",
+                                "entity_type": kind,
+                                "name": name,
+                                "mapped_ids": new_ids,
+                                "provider": selected.get("provider", ""),
+                                "source": selected.get("source", ""),
+                                "confidence": float(selected.get("confidence", 0.0)),
+                                "stage": "stage3",
+                            }
+                        )
 
-    # Fill missing location links
-    compound_locs = _index_locations(working, key="compound_locations", field="compound")
-    protein_locs = _index_locations(working, key="protein_locations", field="protein")
-    state_by_name, _ = _state_maps(working)
-    fallback_location = "cell"
-
-    for kind, entries in [("compound", _safe_list(entities.get("compounds"))), ("protein", _safe_list(entities.get("proteins")))]:
-        loc_key = "compound_locations" if kind == "compound" else "protein_locations"
-        name_key = "compound" if kind == "compound" else "protein"
-        by_name = compound_locs if kind == "compound" else protein_locs
-
-        for item in entries[: max(1, int(max_items))]:
-            if not isinstance(item, dict):
-                continue
-            name = _canonical(str(item.get("name", "")))
-            if not name:
-                continue
+        # Stage 3B: location query plan -> deterministic execution -> LLM selection
+        loc_strategy = _canonical(str(_safe_dict(op.get("resolve_location")).get("strategy", "db_then_default"))).lower()
+        if (bool(issue.get("needs_location_link")) or bool(issue.get("needs_location_state_fill"))) and loc_strategy != "skip":
+            compound_locs = _index_locations(working, key="compound_locations", field="compound")
+            protein_locs = _index_locations(working, key="protein_locations", field="protein")
+            loc_key = "compound_locations" if kind == "compound" else "protein_locations"
+            name_key = "compound" if kind == "compound" else "protein"
+            by_name = compound_locs if kind == "compound" else protein_locs
             rows = by_name.get(name, [])
-            valid_rows = [
-                row
-                for row in rows
-                if isinstance(row, dict)
-                and isinstance(_safe_dict(row.get("row")).get("biological_state"), str)
-                and _safe_dict(row.get("row")).get("biological_state", "").strip()
-            ]
+            has_valid_state = any(
+                isinstance(_safe_dict(wrap.get("row")).get("biological_state"), str)
+                and _safe_dict(wrap.get("row")).get("biological_state", "").strip()
+                for wrap in rows
+            )
+            need_fill_state = bool(rows) and not has_valid_state
+            need_add_row = not bool(rows)
 
-            if valid_rows:
-                # fill missing biological_state on existing location rows if any
+            loc_candidates: List[Dict[str, Any]] = []
+            if loc_strategy in {"db_then_default"}:
+                loc_candidates = _db_location_candidates(db, kind=kind, name=name, max_items=6)
+            if not loc_candidates:
+                loc_candidates = [{"location": fallback_location, "score": 1.0, "source": "default", "evidence": "fallback_cell"}]
+            loc_decision = _llm_choose_location(
+                kind=kind,
+                name=name,
+                candidates=loc_candidates,
+                use_llm=use_llm,
+                temperature=llm_temperature,
+                max_tokens=llm_max_tokens,
+            )
+            chosen_loc = _canonical(str(loc_decision.get("choice", ""))) or fallback_location
+            state_name = _ensure_biological_state(working, chosen_loc, global_organism)
+            op_exec["location_candidates"] = loc_candidates[:6]
+            op_exec["location_decision"] = loc_decision
+            op_exec["chosen_location"] = chosen_loc
+            op_exec["chosen_state"] = state_name
+
+            if need_fill_state:
                 for row_wrap in rows:
                     row = _safe_dict(row_wrap.get("row"))
-                    state_name = _canonical(str(row.get("biological_state", "")))
-                    if state_name:
+                    if _canonical(str(row.get("biological_state", ""))):
                         continue
-                    candidates = _db_location_candidates(db, kind=kind, name=name, max_items=6)
-                    if not candidates:
-                        candidates = [{"location": fallback_location, "score": 1.0, "source": "default", "evidence": "fallback_cell"}]
-                    decision = _llm_choose_location(
-                        kind=kind,
-                        name=name,
-                        candidates=candidates,
-                        use_llm=use_llm,
-                        temperature=llm_temperature,
-                        max_tokens=llm_max_tokens,
-                    )
-                    chosen_loc = _canonical(str(decision.get("choice", ""))) or fallback_location
-                    state = _ensure_biological_state(working, chosen_loc, global_organism)
-                    row["biological_state"] = state
+                    row["biological_state"] = state_name
                     report["summary"]["location_states_filled"] += 1
                     report["actions"].append(
                         {
@@ -445,40 +767,31 @@ def resolve_gaps(
                             "entity_type": kind,
                             "name": name,
                             "chosen_location": chosen_loc,
-                            "biological_state": state,
-                            "decision": decision,
-                            "candidates": candidates[:6],
+                            "biological_state": state_name,
+                            "decision": loc_decision,
+                            "candidates": loc_candidates[:6],
+                            "stage": "stage3",
                         }
                     )
-                continue
 
-            candidates = _db_location_candidates(db, kind=kind, name=name, max_items=6)
-            if not candidates:
-                candidates = [{"location": fallback_location, "score": 1.0, "source": "default", "evidence": "fallback_cell"}]
-            decision = _llm_choose_location(
-                kind=kind,
-                name=name,
-                candidates=candidates,
-                use_llm=use_llm,
-                temperature=llm_temperature,
-                max_tokens=llm_max_tokens,
-            )
-            chosen_loc = _canonical(str(decision.get("choice", ""))) or fallback_location
-            state_name = _ensure_biological_state(working, chosen_loc, global_organism)
-            new_row = {name_key: name, "biological_state": state_name}
-            _safe_list(elem_locs.get(loc_key)).append(new_row)
-            report["summary"]["locations_added"] += 1
-            report["actions"].append(
-                {
-                    "type": "location_added",
-                    "entity_type": kind,
-                    "name": name,
-                    "location_key": loc_key,
-                    "row": new_row,
-                    "decision": decision,
-                    "candidates": candidates[:6],
-                }
-            )
+            if need_add_row:
+                new_row = {name_key: name, "biological_state": state_name}
+                _safe_list(elem_locs.get(loc_key)).append(new_row)
+                report["summary"]["locations_added"] += 1
+                report["actions"].append(
+                    {
+                        "type": "location_added",
+                        "entity_type": kind,
+                        "name": name,
+                        "location_key": loc_key,
+                        "row": new_row,
+                        "decision": loc_decision,
+                        "candidates": loc_candidates[:6],
+                        "stage": "stage3",
+                    }
+                )
+
+        report["stage3"]["executions"].append(op_exec)
 
     if db is not None:
         report["db"] = {"available": db.available(), "last_error": db.last_error}

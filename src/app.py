@@ -456,6 +456,7 @@ def run_post_pipeline_sbml_artifacts(
                         "round": round_idx,
                         "summary": gap_summary,
                         "db": _safe_dict(gap_report_round.get("db")),
+                        "stage3": _safe_dict(gap_report_round.get("stage3")),
                     }
                 )
 
@@ -855,16 +856,16 @@ if st.session_state.get("pipeline_ready"):
     )
     gap_cols = st.columns(2)
     use_gap_resolver = gap_cols[0].checkbox(
-        "Use Gap Resolver (DB/API/LLM retrieval)",
+        "Use Stage 3 Targeted Resolution (LLM-planned, code-executed)",
         value=True,
         key="post_use_gap_resolver",
-        help="Fills missing IDs/organisms/locations before next audit round.",
+        help="Plans DB/API calls with LLM, executes deterministically, then applies selected patches.",
     )
     use_llm_gap_resolver = gap_cols[0].checkbox(
-        "Use LLM in gap resolver decisions",
+        "Use LLM in Stage 3 planner/selection",
         value=True,
         key="post_use_llm_gap_resolver",
-        help="LLM chooses among retrieved candidates; deterministic fallback always applies.",
+        help="LLM plans query strategy and selects among deterministic DB/API results.",
     )
     gap_resolver_max_items = gap_cols[1].number_input(
         "Gap resolver max entities",
@@ -966,7 +967,7 @@ if st.session_state.get("pipeline_ready"):
             with st.expander("Audit repair iterations", expanded=False):
                 st.write(post_artifacts.get("audit_iterations"))
         if post_artifacts.get("gap_resolution_iterations"):
-            with st.expander("Gap resolution iterations", expanded=False):
+            with st.expander("Stage 3 resolution iterations", expanded=False):
                 st.write(post_artifacts.get("gap_resolution_iterations"))
 
         st.download_button(
@@ -1000,9 +1001,9 @@ if st.session_state.get("pipeline_ready"):
             )
         if post_artifacts.get("gap_resolution_iterations"):
             st.download_button(
-                "Download gap_resolution_iterations.json",
+                "Download stage3_resolution_iterations.json",
                 json.dumps(post_artifacts["gap_resolution_iterations"], indent=2),
-                file_name="gap_resolution_iterations.json",
+                file_name="stage3_resolution_iterations.json",
                 mime="application/json",
                 key="dl_gap_resolution_iterations",
             )
