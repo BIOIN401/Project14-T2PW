@@ -653,8 +653,8 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
             if match:
                 name_src = match.group(1).strip()
                 name_dst = match.group(2).strip()
-                if _normalize(name_src) and _normalize(name_dst):
-                    if _normalize(name_src) != _normalize(source_state) or _normalize(name_dst) != _normalize(dest_state):
+                if _normalize_name(name_src) and _normalize_name(name_dst):
+                    if _normalize_name(name_src) != _normalize_name(source_state) or _normalize_name(name_dst) != _normalize_name(dest_state):
                         issues["warnings"].append(
                             {
                                 "path": _join_pointer(["processes", "transports", idx, "name"]),
