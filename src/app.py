@@ -20,6 +20,7 @@ from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
+from process_normalizer import normalize_process_payload
 from pipeline import (
     PipelineFailure,
     build_qa_feedback,
@@ -240,7 +241,8 @@ def run_post_pipeline_sbml_artifacts(
         sbml_overwatch_path = tmp / "sbml_overwatch_report.json"
         gap_resolution_report_path = tmp / "gap_resolution_report.json"
 
-        input_json.write_text(json.dumps(final_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+        normalized_input, normalization_report = normalize_process_payload(final_payload)
+        input_json.write_text(json.dumps(normalized_input, indent=2, ensure_ascii=False), encoding="utf-8")
 
         audit_iterations: List[Dict[str, Any]] = []
         gap_iterations: List[Dict[str, Any]] = []
@@ -608,6 +610,8 @@ def run_post_pipeline_sbml_artifacts(
             )
 
         return {
+            "pre_normalized_input": normalized_input,
+            "pre_normalization_report": normalization_report,
             "audit_report": json.loads(audit_report_path.read_text(encoding="utf-8")),
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
@@ -1028,6 +1032,7 @@ if st.session_state.get("pipeline_ready"):
 
         st.write(
             {
+                "pre_normalization": _safe_dict(post_artifacts.get("pre_normalization_report")).get("summary", {}),
                 "audit": audit_summary,
                 "mapping": mapping_summary,
                 "sbml_counts": sbml_summary,
@@ -1053,6 +1058,20 @@ if st.session_state.get("pipeline_ready"):
             with st.expander("Stage 3 resolution iterations", expanded=False):
                 st.write(post_artifacts.get("gap_resolution_iterations"))
 
+        st.download_button(
+            "Download pre_normalized_input.json",
+            json.dumps(post_artifacts.get("pre_normalized_input", {}), indent=2),
+            file_name="pre_normalized_input.json",
+            mime="application/json",
+            key="dl_pre_normalized_input",
+        )
+        st.download_button(
+            "Download pre_normalization_report.json",
+            json.dumps(post_artifacts.get("pre_normalization_report", {}), indent=2),
+            file_name="pre_normalization_report.json",
+            mime="application/json",
+            key="dl_pre_normalization_report",
+        )
         st.download_button(
             "Download audit_report.json",
             json.dumps(post_artifacts["audit_report"], indent=2),

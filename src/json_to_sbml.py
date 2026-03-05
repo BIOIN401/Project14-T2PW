@@ -106,6 +106,13 @@ def _known_entity_names(payload: Dict[str, Any]) -> Tuple[Set[str], Set[str]]:
         for item in _safe_list(entities.get("proteins"))
         if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip()
     }
+    proteins.update(
+        {
+            (item.get("name") or "").strip()
+            for item in _safe_list(entities.get("protein_complexes"))
+            if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip()
+        }
+    )
     return compounds, proteins
 
 
@@ -130,7 +137,12 @@ def _usage_profile(processes: Dict[str, Any]) -> Dict[str, Set[str]]:
     for transport in _safe_list(processes.get("transports")):
         if not isinstance(transport, dict):
             continue
-        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        cargo = (
+            transport.get("cargo_complex")
+            if isinstance(transport.get("cargo_complex"), str)
+            else transport.get("cargo")
+        )
+        cargo = (cargo or "").strip() if isinstance(cargo, str) else ""
         if cargo:
             io_names.add(cargo)
         for transporter in _safe_list(transport.get("transporters")):
@@ -249,7 +261,12 @@ def _augment_entity_sets_from_processes(
     for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
         if not isinstance(transport, dict):
             continue
-        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        cargo = (
+            transport.get("cargo_complex")
+            if isinstance(transport.get("cargo_complex"), str)
+            else transport.get("cargo")
+        )
+        cargo = (cargo or "").strip() if isinstance(cargo, str) else ""
         if cargo:
             if _is_composite_name(cargo):
                 report["warnings"].append(
@@ -328,9 +345,10 @@ def _pick_reaction_compartment(
         for name in _safe_list(reaction.get(side)):
             if not isinstance(name, str) or not name.strip():
                 continue
-            options = sorted(entity_compartments.get(("compound", name.strip()), []))
-            if options:
-                return options[0]
+            for kind in ["compound", "protein"]:
+                options = sorted(entity_compartments.get((kind, name.strip()), []))
+                if options:
+                    return options[0]
 
     report["defaults_applied"].append(
         {
@@ -483,26 +501,27 @@ def build_sbml(
             species_registry[key] = {"id": sid, "name": name, "kind": "compound", "compartment_id": cid}
             species_id_to_meta[sid] = {"kind": "compound", "name": name, "compartment_id": cid}
 
-    for item in _safe_list(entities.get("proteins")):
-        if not isinstance(item, dict):
-            continue
-        name = (item.get("name") or "").strip() if isinstance(item.get("name"), str) else ""
-        if not name:
-            continue
-        if name not in known_proteins:
-            continue
-        preferred = _mapped_entity_id(item, ["uniprot"])
-        for loc in sorted(entity_compartments.get(("protein", name), {default_compartment_name})):
-            cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
-            if preferred:
-                sid = sanitize_sbml_id(f"p_{preferred}__{cid}")
-            else:
-                sid = sanitize_sbml_id(f"p_unmapped_{_short_hash(name + '|' + loc)}__{cid}")
-            key = ("protein", name, cid)
-            if sid in species_id_to_meta and species_id_to_meta[sid] != {"kind": "protein", "name": name, "compartment_id": cid}:
-                sid = sanitize_sbml_id(f"{sid}_{_short_hash(name + cid, 6)}")
-            species_registry[key] = {"id": sid, "name": name, "kind": "protein", "compartment_id": cid}
-            species_id_to_meta[sid] = {"kind": "protein", "name": name, "compartment_id": cid}
+    for protein_list_key in ["proteins", "protein_complexes"]:
+        for item in _safe_list(entities.get(protein_list_key)):
+            if not isinstance(item, dict):
+                continue
+            name = (item.get("name") or "").strip() if isinstance(item.get("name"), str) else ""
+            if not name:
+                continue
+            if name not in known_proteins:
+                continue
+            preferred = _mapped_entity_id(item, ["uniprot"])
+            for loc in sorted(entity_compartments.get(("protein", name), {default_compartment_name})):
+                cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
+                if preferred:
+                    sid = sanitize_sbml_id(f"p_{preferred}__{cid}")
+                else:
+                    sid = sanitize_sbml_id(f"p_unmapped_{_short_hash(name + '|' + loc)}__{cid}")
+                key = ("protein", name, cid)
+                if sid in species_id_to_meta and species_id_to_meta[sid] != {"kind": "protein", "name": name, "compartment_id": cid}:
+                    sid = sanitize_sbml_id(f"{sid}_{_short_hash(name + cid, 6)}")
+                species_registry[key] = {"id": sid, "name": name, "kind": "protein", "compartment_id": cid}
+                species_id_to_meta[sid] = {"kind": "protein", "name": name, "compartment_id": cid}
 
     # Build reaction plans first, then write sorted by reaction ID.
     reaction_plans: List[Dict[str, Any]] = []
@@ -547,42 +566,54 @@ def build_sbml(
                 expanded_outputs.append(name)
 
         for name in expanded_inputs:
-            if name not in known_compounds:
+            kind = ""
+            if name in known_compounds:
+                kind = "compound"
+            elif name in known_proteins:
+                kind = "protein"
+            if not kind:
                 report["hard_errors"].append(
-                    {"path": f"{pointer}/inputs", "reason": f"Unknown input compound '{name}'."}
+                    {"path": f"{pointer}/inputs", "reason": f"Unknown input entity '{name}'."}
                 )
                 unresolved = True
                 continue
-            key = ("compound", name, compartment_id)
+            key = (kind, name, compartment_id)
             if key not in species_registry:
                 # Deterministic best effort: create missing per-compartment species instance.
-                sid = sanitize_sbml_id(f"m_unmapped_{_short_hash(name + '|' + compartment_id)}__{compartment_id}")
-                species_registry[key] = {"id": sid, "name": name, "kind": "compound", "compartment_id": compartment_id}
-                species_id_to_meta[sid] = {"kind": "compound", "name": name, "compartment_id": compartment_id}
+                prefix = "m" if kind == "compound" else "p"
+                sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(name + '|' + compartment_id)}__{compartment_id}")
+                species_registry[key] = {"id": sid, "name": name, "kind": kind, "compartment_id": compartment_id}
+                species_id_to_meta[sid] = {"kind": kind, "name": name, "compartment_id": compartment_id}
                 report["warnings"].append(
                     {
                         "path": f"{pointer}/inputs",
-                        "reason": f"Created missing species instance for input '{name}' in compartment '{compartment_id}'.",
+                        "reason": f"Created missing species instance for input '{name}' ({kind}) in compartment '{compartment_id}'.",
                     }
                 )
             reactant_ids.append(species_registry[key]["id"])
 
         for name in expanded_outputs:
-            if name not in known_compounds:
+            kind = ""
+            if name in known_compounds:
+                kind = "compound"
+            elif name in known_proteins:
+                kind = "protein"
+            if not kind:
                 report["hard_errors"].append(
-                    {"path": f"{pointer}/outputs", "reason": f"Unknown output compound '{name}'."}
+                    {"path": f"{pointer}/outputs", "reason": f"Unknown output entity '{name}'."}
                 )
                 unresolved = True
                 continue
-            key = ("compound", name, compartment_id)
+            key = (kind, name, compartment_id)
             if key not in species_registry:
-                sid = sanitize_sbml_id(f"m_unmapped_{_short_hash(name + '|' + compartment_id)}__{compartment_id}")
-                species_registry[key] = {"id": sid, "name": name, "kind": "compound", "compartment_id": compartment_id}
-                species_id_to_meta[sid] = {"kind": "compound", "name": name, "compartment_id": compartment_id}
+                prefix = "m" if kind == "compound" else "p"
+                sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(name + '|' + compartment_id)}__{compartment_id}")
+                species_registry[key] = {"id": sid, "name": name, "kind": kind, "compartment_id": compartment_id}
+                species_id_to_meta[sid] = {"kind": kind, "name": name, "compartment_id": compartment_id}
                 report["warnings"].append(
                     {
                         "path": f"{pointer}/outputs",
-                        "reason": f"Created missing species instance for output '{name}' in compartment '{compartment_id}'.",
+                        "reason": f"Created missing species instance for output '{name}' ({kind}) in compartment '{compartment_id}'.",
                     }
                 )
             product_ids.append(species_registry[key]["id"])
@@ -631,7 +662,12 @@ def build_sbml(
         if not isinstance(transport, dict):
             report["hard_errors"].append({"path": pointer, "reason": "Transport item is not an object."})
             continue
-        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        cargo = (
+            transport.get("cargo_complex")
+            if isinstance(transport.get("cargo_complex"), str)
+            else transport.get("cargo")
+        )
+        cargo = (cargo or "").strip() if isinstance(cargo, str) else ""
         if not cargo:
             # try side-based fallback
             left = ""
