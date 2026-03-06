@@ -5,6 +5,7 @@ import hashlib
 import tempfile
 import time
 import shutil
+from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Tuple
@@ -20,7 +21,13 @@ from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
-from process_normalizer import normalize_process_payload
+from process_normalizer import (
+    dedupe_processes,
+    normalize_composites,
+    promote_catalysts,
+    validate_no_composites,
+    validate_registry_references,
+)
 from pipeline import (
     PipelineFailure,
     build_qa_feedback,
@@ -240,8 +247,41 @@ def run_post_pipeline_sbml_artifacts(
         sbml_report_txt_path = tmp / "sbml_validation_report.txt"
         sbml_overwatch_path = tmp / "sbml_overwatch_report.json"
         gap_resolution_report_path = tmp / "gap_resolution_report.json"
+        post_normalization_probe_path = tmp / "post_normalization_probe.json"
 
-        normalized_input, normalization_report = normalize_process_payload(final_payload)
+        pre_normalization_input = deepcopy(final_payload)
+        normalized_input = deepcopy(final_payload)
+        normalization_report: Dict[str, Any] = {
+            "summary": {
+                "complexes_created": 0,
+                "composites_rewritten": 0,
+                "reactions_rewritten": 0,
+                "entities_moved_out_of_compounds": 0,
+                "entities_added_as_compounds": 0,
+                "entities_added_as_proteins": 0,
+                "catalysts_promoted_to_enzymes": 0,
+                "scaffold_inputs_added": 0,
+                "dedupe_removed_reactions": 0,
+                "dedupe_removed_transports": 0,
+                "dedupe_removed": 0,
+            },
+            "rewrite_map": {},
+            "actions": [],
+        }
+        normalize_composites(normalized_input, report=normalization_report)
+        promote_catalysts(normalized_input, report=normalization_report)
+        dedupe_processes(normalized_input, report=normalization_report)
+        validate_no_composites(normalized_input)
+        validate_registry_references(normalized_input)
+        post_normalization_probe = {
+            "normalization_stats": _safe_dict(normalization_report.get("summary")),
+            "graph_summary": graph_summary(normalized_input),
+            "payload": normalized_input,
+        }
+        post_normalization_probe_path.write_text(
+            json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
         input_json.write_text(json.dumps(normalized_input, indent=2, ensure_ascii=False), encoding="utf-8")
 
         audit_iterations: List[Dict[str, Any]] = []
@@ -610,8 +650,10 @@ def run_post_pipeline_sbml_artifacts(
             )
 
         return {
+            "pre_normalization_input": pre_normalization_input,
             "pre_normalized_input": normalized_input,
             "pre_normalization_report": normalization_report,
+            "post_normalization_probe": post_normalization_probe,
             "audit_report": json.loads(audit_report_path.read_text(encoding="utf-8")),
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
@@ -1032,7 +1074,7 @@ if st.session_state.get("pipeline_ready"):
 
         st.write(
             {
-                "pre_normalization": _safe_dict(post_artifacts.get("pre_normalization_report")).get("summary", {}),
+                "normalization_stats": _safe_dict(post_artifacts.get("pre_normalization_report")).get("summary", {}),
                 "audit": audit_summary,
                 "mapping": mapping_summary,
                 "sbml_counts": sbml_summary,
@@ -1059,6 +1101,13 @@ if st.session_state.get("pipeline_ready"):
                 st.write(post_artifacts.get("gap_resolution_iterations"))
 
         st.download_button(
+            "Download pre_normalization_input.json",
+            json.dumps(post_artifacts.get("pre_normalization_input", {}), indent=2),
+            file_name="pre_normalization_input.json",
+            mime="application/json",
+            key="dl_pre_normalization_input",
+        )
+        st.download_button(
             "Download pre_normalized_input.json",
             json.dumps(post_artifacts.get("pre_normalized_input", {}), indent=2),
             file_name="pre_normalized_input.json",
@@ -1071,6 +1120,13 @@ if st.session_state.get("pipeline_ready"):
             file_name="pre_normalization_report.json",
             mime="application/json",
             key="dl_pre_normalization_report",
+        )
+        st.download_button(
+            "Download post_normalization_probe.json",
+            json.dumps(post_artifacts.get("post_normalization_probe", {}), indent=2),
+            file_name="post_normalization_probe.json",
+            mime="application/json",
+            key="dl_post_normalization_probe",
         )
         st.download_button(
             "Download audit_report.json",
