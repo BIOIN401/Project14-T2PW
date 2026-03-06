@@ -54,3 +54,12 @@ PathBank DB-backed ID mapping (optional)
     Then input that into our secondary run of another LLM instance perhaps we can keep memory, depending on context windows 
     Then we can check for OA again and have a retry pipeline to fill in gaps 
     Then we will have to label where our connections are from. 
+
+Deterministic normalization notes
+- Protein state modifications are represented as canonical protein complexes (for example `thyroglobulin:iodotyrosine`) instead of free `A + B` strings.
+- Composite tokens with `+` are normalized before mapping/SBML; hard gates fail the run if any `+` composite leaks into compounds, reactions, or transports.
+- Transport connectivity no longer uses `cargo:*` graph nodes; transport events connect entity state nodes directly, with transporters attached to the event node.
+- Hard gates enforce:
+  - no composite leakage,
+  - all process references must exist in entity registries,
+  - scaffold proteins (for example `thyroglobulin`) cannot appear as reaction modifiers.

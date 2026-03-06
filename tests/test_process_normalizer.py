@@ -14,10 +14,15 @@ if str(SRC) not in sys.path:
 
 from json_to_sbml import build_sbml, sbml_species_id  # noqa: E402
 from map_ids import route_entity_for_mapping  # noqa: E402
+from qa_graph import build_graph, connected_components  # noqa: E402
 from process_normalizer import (  # noqa: E402
+    compute_normalization_stats,
     dedupe_processes,
+    ensure_autostates,
     normalize_composites,
     promote_catalysts,
+    rewrite_reactions_to_complex_states,
+    validate_no_scaffold_modifiers,
     validate_no_composites,
     validate_registry_references,
 )
@@ -40,7 +45,7 @@ def _thyroid_payload() -> dict:
                 {"name": "liothyronine"},
                 {"name": "thyroxine"},
             ],
-            "proteins": [{"name": "thyroid peroxidase"}],
+            "proteins": [{"name": "thyroid peroxidase"}, {"name": "pendrin"}],
             "protein_complexes": [],
             "subcellular_locations": [{"name": "follicular lumen"}],
         },
@@ -94,13 +99,13 @@ def _thyroid_payload() -> dict:
                     "cargo": "thyroglobulin + liothyronine",
                     "from_biological_state": "luminal",
                     "to_biological_state": "luminal",
-                    "transporters": [{"protein": "thyroid peroxidase"}],
+                    "transporters": [{"protein": "pendrin"}],
                 },
                 {
                     "cargo": "thyroglobulin+liothyronine",
                     "from_biological_state": "luminal",
                     "to_biological_state": "luminal",
-                    "transporters": [{"protein": "thyroid peroxidase"}],
+                    "transporters": [{"protein": "pendrin"}],
                     "inference": {"method": "inference", "confidence": 0.7},
                 },
             ],
@@ -115,28 +120,40 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "complexes_created": 0,
             "composites_rewritten": 0,
             "reactions_rewritten": 0,
+            "scaffold_split_reactions": 0,
             "entities_moved_out_of_compounds": 0,
             "entities_added_as_compounds": 0,
             "entities_added_as_proteins": 0,
             "catalysts_promoted_to_enzymes": 0,
             "scaffold_inputs_added": 0,
+            "scaffold_in_modifiers_count": 0,
+            "n_plus_tokens_remaining": 0,
+            "complexes_list": [],
+            "n_autostate_created": 0,
+            "n_entities_assigned_to_autostate": 0,
             "dedupe_removed_reactions": 0,
             "dedupe_removed_transports": 0,
             "dedupe_removed": 0,
+            "dedupe_removed_total": 0,
         },
         "actions": [],
         "rewrite_map": {},
     }
     normalize_composites(data, report=report)
+    rewrite_reactions_to_complex_states(data, report=report)
+    ensure_autostates(data, report=report)
     promote_catalysts(data, report=report)
     dedupe_processes(data, report=report)
     validate_no_composites(data)
     validate_registry_references(data)
+    validate_no_scaffold_modifiers(data, report=report)
+    compute_normalization_stats(data, report)
     return data, report
 
 
 def test_thyroid_normalization_and_dedupe() -> None:
     normalized, report = _run_normalization(_thyroid_payload())
+    summary = report.get("summary", {})
 
     complexes = {
         item["name"]
@@ -151,6 +168,7 @@ def test_thyroid_normalization_and_dedupe() -> None:
     }
     assert required.issubset(complexes)
     assert len(complexes) >= 4
+    assert int(summary.get("complexes_created", 0)) >= 4
 
     for reaction in normalized["processes"]["reactions"]:
         for side in ["inputs", "outputs"]:
@@ -164,13 +182,26 @@ def test_thyroid_normalization_and_dedupe() -> None:
     # Duplicate R0 and duplicate transport rows should be collapsed.
     assert len(normalized["processes"]["reactions"]) == 4
     assert len(normalized["processes"]["transports"]) == 1
-    assert int(report.get("summary", {}).get("dedupe_removed", 0)) >= 2
+    assert int(summary.get("dedupe_removed", 0)) >= 2
+    assert int(summary.get("dedupe_removed_total", 0)) >= 2
+    assert int(summary.get("n_plus_tokens_remaining", 1)) == 0
+    assert int(summary.get("reactions_rewritten", 0)) > 0
+    assert int(summary.get("scaffold_split_reactions", 0)) > 0
+    assert int(summary.get("scaffold_in_modifiers_count", 0)) == 0
 
     for reaction in normalized["processes"]["reactions"]:
         assert "thyroid peroxidase" not in reaction.get("inputs", [])
         enzymes = reaction.get("enzymes", [])
         names = {str(e.get("protein") or e.get("protein_complex") or e.get("name") or "") for e in enzymes if isinstance(e, dict)}
         assert "thyroid peroxidase" in names
+        assert "thyroglobulin" not in names
+
+    adj, _ = build_graph(normalized)
+    comps = connected_components(adj)
+    assert all(not n.startswith("cargo:") for n in adj.keys())
+    assert len(comps) <= 2
+    assert len(adj.get("protein:thyroid peroxidase", set())) > 0
+    assert len(adj.get("protein:pendrin", set())) > 0
 
 
 def test_mapping_route_and_species_id_helpers() -> None:

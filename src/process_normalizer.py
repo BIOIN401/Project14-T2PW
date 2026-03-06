@@ -11,6 +11,7 @@ PROTEIN_LIKE_RE = re.compile(
     r"(protein|globulin|peroxidase|symporter|deiodinase|atpase|enzyme|receptor|transporter|kinase|phosphatase)",
     flags=re.IGNORECASE,
 )
+DEFAULT_SCAFFOLD_NAMES = {"thyroglobulin"}
 
 
 def _safe_dict(value: Any) -> Dict[str, Any]:
@@ -86,14 +87,21 @@ def _new_report() -> Dict[str, Any]:
             "complexes_created": 0,
             "composites_rewritten": 0,
             "reactions_rewritten": 0,
+            "scaffold_split_reactions": 0,
             "entities_moved_out_of_compounds": 0,
             "entities_added_as_compounds": 0,
             "entities_added_as_proteins": 0,
             "catalysts_promoted_to_enzymes": 0,
             "scaffold_inputs_added": 0,
+            "scaffold_in_modifiers_count": 0,
+            "n_plus_tokens_remaining": 0,
+            "complexes_list": [],
+            "n_autostate_created": 0,
+            "n_entities_assigned_to_autostate": 0,
             "dedupe_removed_reactions": 0,
             "dedupe_removed_transports": 0,
             "dedupe_removed": 0,
+            "dedupe_removed_total": 0,
         },
         "rewrite_map": {},
         "actions": [],
@@ -185,9 +193,33 @@ def _is_protein_like(name: str, payload: Dict[str, Any]) -> bool:
     norm = _normalize(name)
     if not norm:
         return False
-    if norm in _protein_like_norms(payload):
+    protein_like_set = _protein_like_norms(payload)
+    if norm in protein_like_set:
         return True
+    try:
+        from map_ids import route_entity_for_mapping  # type: ignore
+
+        routed = route_entity_for_mapping(name, "compound", protein_like_names=protein_like_set)
+        if str(routed.get("route", "")).strip().lower() in {"protein", "complex"}:
+            return True
+    except Exception:  # noqa: BLE001
+        pass
     return bool(PROTEIN_LIKE_RE.search(name))
+
+
+def _scaffold_norms(payload: Dict[str, Any]) -> Set[str]:
+    _, _, complexes = _entity_lists(payload)
+    scaffolds = {_normalize(name) for name in DEFAULT_SCAFFOLD_NAMES if _normalize(name)}
+    for row in complexes:
+        if not isinstance(row, dict):
+            continue
+        name = _canonical(str(row.get("name", "")))
+        if ":" not in name:
+            continue
+        first = _canonical(name.split(":", 1)[0])
+        if first:
+            scaffolds.add(_normalize(first))
+    return scaffolds
 
 def _ensure_protein(name: str, payload: Dict[str, Any], report: Dict[str, Any]) -> str:
     c_name = _canonical(name)
@@ -297,7 +329,7 @@ def _rewrite_token(
     if len(parts) < 2:
         return [text]
 
-    if any(_is_protein_like(part, payload) for part in parts):
+    if _is_protein_like(parts[0], payload):
         complex_name = materialize_complex(parts[0], parts[1], payload, report=report, extra_components=parts[2:])
         rewrite_map[ckey] = complex_name
         rewrite_map[direct_norm] = complex_name
@@ -312,16 +344,10 @@ def _rewrite_token(
         )
         return [complex_name]
 
-    out: List[str] = []
-    for part in parts:
-        c_part = _canonical(part)
-        if not c_part:
-            continue
-        _ensure_compound(c_part, payload, report)
-        out.append(c_part)
-    report["summary"]["composites_rewritten"] += 1
-    report["actions"].append({"type": "composite_split", "json_pointer": pointer, "from": text, "to": out})
-    return out
+    raise ValueError(
+        f"Composite token '{text}' at {pointer} has no protein-like left component; "
+        "compound+compound composite materialization is not supported."
+    )
 
 
 def _collapse_reaction_outputs(outputs: List[str]) -> List[str]:
@@ -367,6 +393,7 @@ def rewrite_process_references(
                 collapsed = _collapse_reaction_outputs(new_tokens)
                 if collapsed != new_tokens:
                     changed = True
+                    rep["summary"]["scaffold_split_reactions"] += 1
                 new_tokens = collapsed
             reaction[side] = new_tokens
         if changed:
@@ -390,10 +417,11 @@ def rewrite_process_references(
         rewritten = _rewrite_token(cargo_raw, payload, rep, rewrite_map, pointer)
         if len(rewritten) == 1:
             cargo_value = rewritten[0]
-            row["cargo"] = cargo_value
             if ":" in cargo_value:
+                row["cargo"] = None
                 row["cargo_complex"] = cargo_value
             else:
+                row["cargo"] = cargo_value
                 row.pop("cargo_complex", None)
             rewritten_transports.append(row)
             continue
@@ -488,6 +516,10 @@ def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, 
         if _has_plus_token(name):
             parts = _split_composite(name)
             if len(parts) >= 2:
+                if not _is_protein_like(parts[0], payload):
+                    raise ValueError(
+                        f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
+                    )
                 canonical = materialize_complex(parts[0], parts[1], payload, report=rep, extra_components=parts[2:])
                 rep["rewrite_map"][_composite_key(name)] = canonical
                 rep["rewrite_map"][_normalize(name)] = canonical
@@ -507,17 +539,16 @@ def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, 
             continue
         if _has_plus_token(name):
             parts = _split_composite(name)
-            if len(parts) >= 2 and any(_is_protein_like(part, payload) for part in parts):
+            if len(parts) >= 2 and _is_protein_like(parts[0], payload):
                 canonical = materialize_complex(parts[0], parts[1], payload, report=rep, extra_components=parts[2:])
                 rep["rewrite_map"][_composite_key(name)] = canonical
                 rep["rewrite_map"][_normalize(name)] = canonical
                 rep["summary"]["entities_moved_out_of_compounds"] += 1
                 rep["summary"]["composites_rewritten"] += 1
                 continue
-            for part in _dedupe_preserve(parts):
-                _ensure_compound(part, payload, rep)
-            rep["summary"]["composites_rewritten"] += 1
-            continue
+            raise ValueError(
+                f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
+            )
         kept_compounds.append(row)
     compounds[:] = kept_compounds
 
@@ -533,11 +564,121 @@ def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, 
     return payload
 
 
+def rewrite_reactions_to_complex_states(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    reactions, _ = _process_lists(payload)
+    scaffold_norms = _scaffold_norms(payload)
+
+    for ridx, reaction in enumerate(reactions):
+        if not isinstance(reaction, dict):
+            continue
+        outputs = _dedupe_preserve([str(v) for v in _safe_list(reaction.get("outputs")) if isinstance(v, str)])
+        if not outputs:
+            continue
+
+        scaffold_tokens: List[str] = []
+        non_protein_tokens: List[str] = []
+        for token in outputs:
+            norm = _normalize(token)
+            if ":" in token:
+                continue
+            if norm in scaffold_norms:
+                scaffold_tokens.append(token)
+            elif not _is_protein_like(token, payload):
+                non_protein_tokens.append(token)
+
+        if not scaffold_tokens or not non_protein_tokens:
+            continue
+
+        rewritten = False
+        consumed_non_protein: Set[str] = set()
+        new_outputs: List[str] = []
+        base_outputs = list(outputs)
+
+        for scaffold in scaffold_tokens:
+            chosen = ""
+            for candidate in non_protein_tokens:
+                if _normalize(candidate) in consumed_non_protein:
+                    continue
+                chosen = candidate
+                break
+            if not chosen:
+                continue
+            complex_name = materialize_complex(scaffold, chosen, payload, report=rep)
+            consumed_non_protein.add(_normalize(chosen))
+            base_outputs = [
+                tok
+                for tok in base_outputs
+                if _normalize(tok) not in {_normalize(scaffold), _normalize(chosen)}
+            ]
+            new_outputs.append(complex_name)
+            rewritten = True
+
+        if rewritten:
+            base_outputs.extend(new_outputs)
+            reaction["outputs"] = _dedupe_preserve(base_outputs)
+            rep["summary"]["reactions_rewritten"] += 1
+            rep["summary"]["scaffold_split_reactions"] += 1
+            rep["actions"].append(
+                {
+                    "type": "reaction_output_scaffold_split_rewrite",
+                    "json_pointer": f"/processes/reactions/{ridx}/outputs",
+                    "outputs": reaction["outputs"],
+                }
+            )
+    return payload
+
+
+def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    auto_state_name = "__auto_state__"
+    auto_location_name = "cell"
+
+    if not isinstance(payload.get("biological_states"), list):
+        payload["biological_states"] = []
+    biological_states = _safe_list(payload.get("biological_states"))
+    existing_states = {
+        _normalize(str(row.get("name", "")))
+        for row in biological_states
+        if isinstance(row, dict) and isinstance(row.get("name"), str)
+    }
+    if _normalize(auto_state_name) not in existing_states:
+        biological_states.append({"name": auto_state_name, "subcellular_location": auto_location_name})
+        rep["summary"]["n_autostate_created"] += 1
+
+    element_locations = _safe_dict(payload.setdefault("element_locations", {}))
+    for list_key in ["compound_locations", "protein_locations"]:
+        rows = _safe_list(element_locations.get(list_key))
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            state = _canonical(str(row.get("biological_state", "")))
+            if state:
+                continue
+            row["biological_state"] = auto_state_name
+            rep["summary"]["n_entities_assigned_to_autostate"] += 1
+
+    _, transports = _process_lists(payload)
+    for row in transports:
+        if not isinstance(row, dict):
+            continue
+        from_state = _canonical(str(row.get("from_biological_state", "")))
+        to_state = _canonical(str(row.get("to_biological_state", "")))
+        if not from_state:
+            row["from_biological_state"] = auto_state_name
+            rep["summary"]["n_entities_assigned_to_autostate"] += 1
+        if not to_state:
+            row["to_biological_state"] = auto_state_name
+            rep["summary"]["n_entities_assigned_to_autostate"] += 1
+    return payload
+
+
 def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     reactions, _ = _process_lists(payload)
     _, proteins, complexes = _entity_lists(payload)
     protein_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+    scaffold_norms = _scaffold_norms(payload)
 
     for ridx, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
@@ -568,6 +709,9 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
             norm = _normalize(token)
             is_protein_token = norm in protein_norms or _is_protein_like(token, payload)
             if not is_protein_token:
+                kept_inputs.append(token)
+                continue
+            if norm in scaffold_norms:
                 kept_inputs.append(token)
                 continue
             if norm in output_complex_parts:
@@ -635,12 +779,17 @@ def _is_inferred(row: Dict[str, Any]) -> bool:
 
 
 def _best_record(a: Dict[str, Any], b: Dict[str, Any]) -> Dict[str, Any]:
-    def _score(item: Dict[str, Any]) -> Tuple[int, int, int, int]:
+    def _score(item: Dict[str, Any]) -> Tuple[int, int, int, int, int]:
         inferred = 1 if _is_inferred(item) else 0
         observed = 1 if bool(item.get("observed", False)) else 0
+        enzyme_evidence = 0
+        for key in ["enzymes", "transporters"]:
+            for row in _safe_list(item.get(key)):
+                if isinstance(row, dict) and _canonical(str(row.get("evidence", ""))):
+                    enzyme_evidence += 1
         evidence_len = _evidence_length(item)
         payload_len = len(json.dumps(item, ensure_ascii=False))
-        return (1 - inferred, observed, evidence_len, payload_len)
+        return (1 - inferred, observed, enzyme_evidence, evidence_len, payload_len)
 
     return a if _score(a) >= _score(b) else b
 
@@ -654,12 +803,11 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
         if not isinstance(reaction, dict):
             continue
         key = (
-            _normalize(str(reaction.get("name", ""))),
+            "reaction",
             tuple(sorted(_normalize(v) for v in _safe_list(reaction.get("inputs")) if isinstance(v, str) and _canonical(v))),
             tuple(sorted(_normalize(v) for v in _safe_list(reaction.get("outputs")) if isinstance(v, str) and _canonical(v))),
             _normalize(str(reaction.get("biological_state", ""))),
             tuple(sorted(_normalize(v) for v in _reaction_modifier_names(reaction))),
-            _normalize(str(reaction.get("type", "reaction"))),
         )
         existing = reaction_by_key.get(key)
         reaction_by_key[key] = reaction if existing is None else _best_record(existing, reaction)
@@ -683,11 +831,11 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
                     transporter_names.append(value)
                     break
         key = (
+            "transport",
             _normalize(str(cargo_value or "")),
             _normalize(str(transport.get("from_biological_state", ""))),
             _normalize(str(transport.get("to_biological_state", ""))),
             tuple(sorted(_normalize(v) for v in transporter_names)),
-            _normalize(str(transport.get("type", "transport"))),
         )
         existing = transport_by_key.get(key)
         transport_by_key[key] = transport if existing is None else _best_record(existing, transport)
@@ -704,6 +852,7 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
     rep["summary"]["dedupe_removed_reactions"] += removed_reactions
     rep["summary"]["dedupe_removed_transports"] += removed_transports
     rep["summary"]["dedupe_removed"] += removed_reactions + removed_transports
+    rep["summary"]["dedupe_removed_total"] = rep["summary"]["dedupe_removed"]
     return {"reactions_removed": removed_reactions, "transports_removed": removed_transports, "dedupe_removed": removed_reactions + removed_transports}
 
 
@@ -772,12 +921,82 @@ def validate_registry_references(payload: Dict[str, Any]) -> None:
         raise ValueError("Registry validation failed:\n" + "\n".join(errors[:40]))
 
 
+def validate_no_scaffold_modifiers(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> None:
+    rep = report if isinstance(report, dict) else _new_report()
+    scaffold_norms = _scaffold_norms(payload)
+    processes = _safe_dict(payload.get("processes"))
+    errors: List[str] = []
+    found = 0
+
+    for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+        if not isinstance(reaction, dict):
+            continue
+        for key in ["enzymes", "modifiers"]:
+            for midx, row in enumerate(_safe_list(reaction.get(key))):
+                if not isinstance(row, dict):
+                    continue
+                name = ""
+                for field in ["protein", "protein_complex", "name"]:
+                    candidate = _canonical(str(row.get(field, "")))
+                    if candidate:
+                        name = candidate
+                        break
+                if not name:
+                    continue
+                if _normalize(name) in scaffold_norms:
+                    found += 1
+                    errors.append(f"/processes/reactions/{ridx}/{key}/{midx} scaffold in modifier: {name}")
+    rep["summary"]["scaffold_in_modifiers_count"] = found
+    if errors:
+        raise ValueError("Scaffold modifier validation failed:\n" + "\n".join(errors[:40]))
+
+
+def compute_normalization_stats(payload: Dict[str, Any], report: Dict[str, Any]) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    entities = _safe_dict(payload.get("entities"))
+    processes = _safe_dict(payload.get("processes"))
+    complexes = [
+        _canonical(str(row.get("name", "")))
+        for row in _safe_list(entities.get("protein_complexes"))
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    ]
+
+    plus_remaining = 0
+    for row in _safe_list(entities.get("compounds")):
+        if isinstance(row, dict) and _has_plus_token(str(row.get("name", ""))):
+            plus_remaining += 1
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ["inputs", "outputs"]:
+            plus_remaining += sum(
+                1
+                for token in _safe_list(reaction.get(side))
+                if isinstance(token, str) and _has_plus_token(token)
+            )
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        for key in ["cargo", "cargo_complex"]:
+            token = transport.get(key)
+            if isinstance(token, str) and _has_plus_token(token):
+                plus_remaining += 1
+
+    rep["summary"]["n_plus_tokens_remaining"] = plus_remaining
+    rep["summary"]["complexes_list"] = sorted(set(complexes))
+    return _safe_dict(rep.get("summary"))
+
+
 def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     data = deepcopy(payload)
     report = _new_report()
     normalize_composites(data, report=report)
+    rewrite_reactions_to_complex_states(data, report=report)
+    ensure_autostates(data, report=report)
     promote_catalysts(data, report=report)
     dedupe_processes(data, report=report)
     validate_no_composites(data)
     validate_registry_references(data)
+    validate_no_scaffold_modifiers(data, report=report)
+    compute_normalization_stats(data, report)
     return data, report

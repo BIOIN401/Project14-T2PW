@@ -1502,6 +1502,7 @@ def run_mapping(
         "compounds_skipped_as_complex": compounds_skipped_as_complex,
         "protein_complexes_total": protein_complexes_total,
         "protein_complexes_skipped": protein_complexes_skipped,
+        "complexes_skipped": compounds_skipped_as_complex + protein_complexes_skipped,
     }
 
     report = {"summary": summary, "entities": logs}

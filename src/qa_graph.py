@@ -65,14 +65,33 @@ def get_entities(extracted: Dict[str, Any]) -> Dict[str, Set[str]]:
 def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[str, Any]]:
     """
     Graph model:
-      - Nodes: compound:<name>, protein:<name>, reaction:<idx or name>, transport:<idx>, interaction:<idx>
+      - Nodes: compound/protein/protein_complex/reaction/transport/interaction (+ state nodes for transport)
       - Edges:
-          compound -- reaction   (inputs/outputs)
-          protein  -- reaction   (if enzyme names are referenced; here we try best-effort)
-          cargo    -- transport  (if present)
+          entity -- reaction   (inputs/outputs)
+          enzyme/transporter -- reaction/transport
+          entity@from_state -- transport -- entity@to_state
           interaction entity_1 -- interaction -- entity_2
+      - Never creates cargo:* nodes.
     """
     adj: Dict[str, Set[str]] = defaultdict(set)
+    ents = get_entities(extracted)
+    compounds = set(ents.get("compounds", set()))
+    proteins = set(ents.get("proteins", set()))
+    complexes = set(ents.get("protein_complexes", set()))
+
+    def resolve_kind(name: str) -> str:
+        n = (name or "").strip()
+        if not n:
+            return "entity"
+        if n in proteins:
+            return "protein"
+        if n in complexes:
+            return "protein_complex"
+        if n in compounds:
+            return "compound"
+        if ":" in n:
+            return "protein_complex"
+        return "compound"
 
     processes = extracted.get("processes", {})
     reactions = safe_list(processes.get("reactions", []))
@@ -88,16 +107,20 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
         inputs = [x for x in safe_list((r or {}).get("inputs", [])) if isinstance(x, str) and x.strip()]
         outputs = [x for x in safe_list((r or {}).get("outputs", [])) if isinstance(x, str) and x.strip()]
 
-        # connect compounds to reaction
         for c in inputs + outputs:
-            add_edge(adj, node("compound", c.strip()), rid)
+            c_name = c.strip()
+            add_edge(adj, node(resolve_kind(c_name), c_name), rid)
 
-        # Best-effort: if user schema uses enzymes -> protein_complex (strings), connect complex node to reaction
         for enz in safe_list((r or {}).get("enzymes", [])):
             if isinstance(enz, dict):
-                pc = (enz.get("protein_complex") or "").strip()
-                if pc:
-                    add_edge(adj, node("protein_complex", pc), rid)
+                p_name = ""
+                for key in ["protein", "protein_complex", "name"]:
+                    candidate = (enz.get(key) or "").strip() if isinstance(enz.get(key), str) else ""
+                    if candidate:
+                        p_name = candidate
+                        break
+                if p_name:
+                    add_edge(adj, node(resolve_kind(p_name), p_name), rid)
 
     # --- Reaction-coupled transports ---
     for i, rct in enumerate(rcts):
@@ -130,22 +153,53 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
         tname = (t or {}).get("name", "").strip()
         tid = node("transport", tname if tname else f"#{i+1}")
 
-        cargo = (t or {}).get("cargo", "")
-        if isinstance(cargo, str) and cargo.strip():
-            # cargo could be compound/protein/etc; attach as generic cargo
-            add_edge(adj, node("cargo", cargo.strip()), tid)
+        cargo = ""
+        cargo_complex = (t or {}).get("cargo_complex", "")
+        if isinstance(cargo_complex, str) and cargo_complex.strip():
+            cargo = cargo_complex.strip()
+        else:
+            cargo_raw = (t or {}).get("cargo", "")
+            if isinstance(cargo_raw, str) and cargo_raw.strip():
+                cargo = cargo_raw.strip()
+        if not cargo:
+            for ews in safe_list((t or {}).get("elements_with_states", [])):
+                if not isinstance(ews, dict):
+                    continue
+                el = (ews.get("element") or "").strip() if isinstance(ews.get("element"), str) else ""
+                if el:
+                    cargo = el
+                    break
+
+        from_state = (t or {}).get("from_biological_state", "")
+        to_state = (t or {}).get("to_biological_state", "")
+        from_state_name = from_state.strip() if isinstance(from_state, str) and from_state.strip() else "unspecified"
+        to_state_name = to_state.strip() if isinstance(to_state, str) and to_state.strip() else "unspecified"
+        if cargo:
+            cargo_kind = resolve_kind(cargo)
+            base_entity = node(cargo_kind, cargo)
+            source_entity = node(f"{cargo_kind}_state", f"{cargo}@{from_state_name}")
+            dest_entity = node(f"{cargo_kind}_state", f"{cargo}@{to_state_name}")
+            add_edge(adj, base_entity, source_entity)
+            add_edge(adj, base_entity, dest_entity)
+            add_edge(adj, source_entity, tid)
+            add_edge(adj, tid, dest_entity)
 
         for tr in safe_list((t or {}).get("transporters", [])):
             if isinstance(tr, dict):
-                pc = (tr.get("protein_complex") or "").strip()
-                if pc:
-                    add_edge(adj, node("protein_complex", pc), tid)
+                p_name = ""
+                for key in ["protein", "protein_complex", "name"]:
+                    candidate = (tr.get(key) or "").strip() if isinstance(tr.get(key), str) else ""
+                    if candidate:
+                        p_name = candidate
+                        break
+                if p_name:
+                    add_edge(adj, node(resolve_kind(p_name), p_name), tid)
 
         for ews in safe_list((t or {}).get("elements_with_states", [])):
             if isinstance(ews, dict):
                 el = (ews.get("element") or "").strip()
                 if el:
-                    add_edge(adj, node("element", el), tid)
+                    add_edge(adj, node(resolve_kind(el), el), tid)
 
     # --- Interactions ---
     for i, inter in enumerate(interactions):

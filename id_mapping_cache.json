@@ -559,6 +559,21 @@
       "candidates": [],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::liothyronine::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::liothyronine::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"liothyronine\" OR gene:\"liothyronine\") AND organism_name:\"Homo sapiens\" | (protein_name:\"liothyronine\" OR gene:\"liothyronine\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
     }
   },
   "compounds": {
