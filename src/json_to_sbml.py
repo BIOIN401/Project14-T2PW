@@ -766,9 +766,15 @@ def build_sbml(
                 continue
             pname = _first_string([transporter.get("protein"), transporter.get("protein_complex"), transporter.get("name")])
             if pname and pname in known_proteins:
-                key = ("protein", pname, source_cid)
-                if key in species_registry:
-                    modifiers.append(species_registry[key]["id"])
+                source_key = ("protein", pname, source_cid)
+                dest_key = ("protein", pname, dest_cid)
+                chosen_key = source_key if source_key in species_registry else dest_key
+                if chosen_key not in species_registry:
+                    mapped_ids = _safe_dict(_safe_dict(protein_rows.get(_normalize(pname), {})).get("mapped_ids"))
+                    _register_species(kind="protein", name=pname, compartment_id=source_cid, mapped_ids=mapped_ids)
+                    chosen_key = ("protein", pname, source_cid)
+                if chosen_key in species_registry:
+                    modifiers.append(species_registry[chosen_key]["id"])
 
         for cargo_item in cargo_items:
             if cargo_item not in known_compounds and cargo_item not in known_proteins:

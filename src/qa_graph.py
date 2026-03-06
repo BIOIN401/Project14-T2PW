@@ -101,8 +101,7 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
 
     # --- Reactions ---
     for i, r in enumerate(reactions):
-        rname = (r or {}).get("name", "").strip()
-        rid = node("reaction", rname if rname else f"#{i+1}")
+        rid = node("reaction", f"#{i+1}")
 
         inputs = [x for x in safe_list((r or {}).get("inputs", [])) if isinstance(x, str) and x.strip()]
         outputs = [x for x in safe_list((r or {}).get("outputs", [])) if isinstance(x, str) and x.strip()]
@@ -124,8 +123,7 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
 
     # --- Reaction-coupled transports ---
     for i, rct in enumerate(rcts):
-        rctname = (rct or {}).get("name", "").strip()
-        rctid = node("reaction_coupled_transport", rctname if rctname else f"#{i+1}")
+        rctid = node("reaction_coupled_transport", f"#{i+1}")
 
         # connect referenced reaction/transport ids by name if present
         rx = (rct or {}).get("reaction", "").strip()
@@ -150,8 +148,7 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
 
     # --- Transports ---
     for i, t in enumerate(transports):
-        tname = (t or {}).get("name", "").strip()
-        tid = node("transport", tname if tname else f"#{i+1}")
+        tid = node("transport", f"#{i+1}")
 
         cargo = ""
         cargo_complex = (t or {}).get("cargo_complex", "")
@@ -203,8 +200,7 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
 
     # --- Interactions ---
     for i, inter in enumerate(interactions):
-        iname = (inter or {}).get("name", "").strip()
-        iid = node("interaction", iname if iname else f"#{i+1}")
+        iid = node("interaction", f"#{i+1}")
 
         e1 = (inter or {}).get("entity_1", "")
         e2 = (inter or {}).get("entity_2", "")

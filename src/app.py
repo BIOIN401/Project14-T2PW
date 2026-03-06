@@ -22,6 +22,7 @@ from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from process_normalizer import (
+    attach_transporters_from_evidence,
     compute_normalization_stats,
     dedupe_processes,
     ensure_autostates,
@@ -267,6 +268,8 @@ def run_post_pipeline_sbml_artifacts(
         sbml_overwatch_path = tmp / "sbml_overwatch_report.json"
         gap_resolution_report_path = tmp / "gap_resolution_report.json"
         post_normalization_probe_path = tmp / "post_normalization_probe.json"
+        post_transport_attachment_probe_path = tmp / "post_transport_attachment_probe.json"
+        post_dedupe_probe_path = tmp / "post_dedupe_probe.json"
         gate_fail_report_path = tmp / "gate_fail_report.json"
 
         pre_normalization_input = deepcopy(final_payload)
@@ -287,40 +290,95 @@ def run_post_pipeline_sbml_artifacts(
                 "complexes_list": [],
                 "n_autostate_created": 0,
                 "n_entities_assigned_to_autostate": 0,
+                "transporters_attached": 0,
                 "dedupe_removed_reactions": 0,
                 "dedupe_removed_transports": 0,
                 "dedupe_removed": 0,
                 "dedupe_removed_total": 0,
+                "no_op_removed_count": 0,
             },
             "rewrite_map": {},
             "actions": [],
         }
         gate_fail_report: Dict[str, Any] = {}
+        post_normalization_probe: Dict[str, Any] = {}
+        post_transport_attachment_probe: Dict[str, Any] = {}
+        post_dedupe_probe: Dict[str, Any] = {}
         try:
             normalize_composites(normalized_input, report=normalization_report)
             rewrite_reactions_to_complex_states(normalized_input, report=normalization_report)
+            compute_normalization_stats(normalized_input, normalization_report)
+            post_normalization_probe = {
+                "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                "graph_summary": graph_summary(normalized_input),
+                "payload": deepcopy(normalized_input),
+            }
+            post_normalization_probe_path.write_text(
+                json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
             ensure_autostates(normalized_input, report=normalization_report)
+            attach_transporters_from_evidence(normalized_input, report=normalization_report)
+            post_transport_attachment_probe = {
+                "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                "graph_summary": graph_summary(normalized_input),
+                "payload": deepcopy(normalized_input),
+            }
+            post_transport_attachment_probe_path.write_text(
+                json.dumps(post_transport_attachment_probe, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
             promote_catalysts(normalized_input, report=normalization_report)
             dedupe_processes(normalized_input, report=normalization_report)
             validate_no_composites(normalized_input)
             validate_registry_references(normalized_input)
             validate_no_scaffold_modifiers(normalized_input, report=normalization_report)
             compute_normalization_stats(normalized_input, normalization_report)
+            post_dedupe_probe = {
+                "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                "graph_summary": graph_summary(normalized_input),
+                "payload": deepcopy(normalized_input),
+            }
+            post_dedupe_probe_path.write_text(
+                json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
         except Exception as exc:
             gate_fail_report = {
                 "status": "failed",
                 "stage": "post_normalization_hard_gates",
                 "error": str(exc),
             }
-        post_normalization_probe = {
-            "normalization_stats": _safe_dict(normalization_report.get("summary")),
-            "graph_summary": graph_summary(normalized_input),
-            "payload": normalized_input,
-        }
-        post_normalization_probe_path.write_text(
-            json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
+            if not post_normalization_probe:
+                post_normalization_probe = {
+                    "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_normalization_probe_path.write_text(
+                    json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            if not post_transport_attachment_probe:
+                post_transport_attachment_probe = {
+                    "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_transport_attachment_probe_path.write_text(
+                    json.dumps(post_transport_attachment_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            if not post_dedupe_probe:
+                post_dedupe_probe = {
+                    "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_dedupe_probe_path.write_text(
+                    json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
         if gate_fail_report:
             gate_fail_report_path.write_text(json.dumps(gate_fail_report, indent=2, ensure_ascii=False), encoding="utf-8")
             return {
@@ -330,6 +388,8 @@ def run_post_pipeline_sbml_artifacts(
                 "pre_normalized_input": normalized_input,
                 "pre_normalization_report": normalization_report,
                 "post_normalization_probe": post_normalization_probe,
+                "post_transport_attachment_probe": post_transport_attachment_probe,
+                "post_dedupe_probe": post_dedupe_probe,
                 "audit_report": {"summary": {"error_count": 0, "warning_count": 0, "patch_count": 0}},
                 "audit_patch": {},
                 "audit_apply_report": {"summary": {"accepted_count": 0, "rejected_count": 0}},
@@ -734,6 +794,8 @@ def run_post_pipeline_sbml_artifacts(
             "pre_normalized_input": normalized_input,
             "pre_normalization_report": normalization_report,
             "post_normalization_probe": post_normalization_probe,
+            "post_transport_attachment_probe": post_transport_attachment_probe,
+            "post_dedupe_probe": post_dedupe_probe,
             "audit_report": json.loads(audit_report_path.read_text(encoding="utf-8")),
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
@@ -1159,7 +1221,9 @@ if st.session_state.get("pipeline_ready"):
         st.write(
             {
                 "normalization_stats": _safe_dict(post_artifacts.get("pre_normalization_report")).get("summary", {}),
-                "connectivity": _safe_dict(post_artifacts.get("post_normalization_probe")).get("graph_summary", {}),
+                "connectivity": _safe_dict(
+                    post_artifacts.get("post_dedupe_probe") or post_artifacts.get("post_normalization_probe")
+                ).get("graph_summary", {}),
                 "gate_failed": gate_failed,
                 "gate_fail_report": post_artifacts.get("gate_fail_report", {}),
                 "audit": audit_summary,
@@ -1219,6 +1283,20 @@ if st.session_state.get("pipeline_ready"):
             file_name="post_normalization_probe.json",
             mime="application/json",
             key="dl_post_normalization_probe",
+        )
+        st.download_button(
+            "Download post_transport_attachment_probe.json",
+            json.dumps(post_artifacts.get("post_transport_attachment_probe", {}), indent=2),
+            file_name="post_transport_attachment_probe.json",
+            mime="application/json",
+            key="dl_post_transport_attachment_probe",
+        )
+        st.download_button(
+            "Download post_dedupe_probe.json",
+            json.dumps(post_artifacts.get("post_dedupe_probe", {}), indent=2),
+            file_name="post_dedupe_probe.json",
+            mime="application/json",
+            key="dl_post_dedupe_probe",
         )
         if gate_failed:
             st.download_button(

@@ -16,6 +16,7 @@ from json_to_sbml import build_sbml, sbml_species_id  # noqa: E402
 from map_ids import route_entity_for_mapping  # noqa: E402
 from qa_graph import build_graph, connected_components  # noqa: E402
 from process_normalizer import (  # noqa: E402
+    attach_transporters_from_evidence,
     compute_normalization_stats,
     dedupe_processes,
     ensure_autostates,
@@ -47,9 +48,12 @@ def _thyroid_payload() -> dict:
             ],
             "proteins": [{"name": "thyroid peroxidase"}, {"name": "pendrin"}],
             "protein_complexes": [],
-            "subcellular_locations": [{"name": "follicular lumen"}],
+            "subcellular_locations": [{"name": "follicular lumen"}, {"name": "bloodstream"}],
         },
-        "biological_states": [{"name": "luminal", "subcellular_location": "follicular lumen"}],
+        "biological_states": [
+            {"name": "luminal", "subcellular_location": "follicular lumen"},
+            {"name": "blood", "subcellular_location": "bloodstream"},
+        ],
         "element_locations": {
             "compound_locations": [
                 {"compound": "thyroglobulin + iodotyrosine", "biological_state": "luminal"},
@@ -96,16 +100,22 @@ def _thyroid_payload() -> dict:
             ],
             "transports": [
                 {
+                    "cargo": "iodide",
+                    "from_biological_state": "blood",
+                    "to_biological_state": "luminal",
+                    "evidence": "thyroglobulin is joined by iodide that has been transported from the blood using pendrin",
+                },
+                {
                     "cargo": "thyroglobulin + liothyronine",
                     "from_biological_state": "luminal",
                     "to_biological_state": "luminal",
-                    "transporters": [{"protein": "pendrin"}],
+                    "evidence": "thyroglobulin + liothyronine complex transport",
                 },
                 {
                     "cargo": "thyroglobulin+liothyronine",
                     "from_biological_state": "luminal",
                     "to_biological_state": "luminal",
-                    "transporters": [{"protein": "pendrin"}],
+                    "evidence": "thyroglobulin + liothyronine complex transport",
                     "inference": {"method": "inference", "confidence": 0.7},
                 },
             ],
@@ -131,10 +141,12 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "complexes_list": [],
             "n_autostate_created": 0,
             "n_entities_assigned_to_autostate": 0,
+            "transporters_attached": 0,
             "dedupe_removed_reactions": 0,
             "dedupe_removed_transports": 0,
             "dedupe_removed": 0,
             "dedupe_removed_total": 0,
+            "no_op_removed_count": 0,
         },
         "actions": [],
         "rewrite_map": {},
@@ -142,6 +154,7 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     normalize_composites(data, report=report)
     rewrite_reactions_to_complex_states(data, report=report)
     ensure_autostates(data, report=report)
+    attach_transporters_from_evidence(data, report=report)
     promote_catalysts(data, report=report)
     dedupe_processes(data, report=report)
     validate_no_composites(data)
@@ -169,6 +182,7 @@ def test_thyroid_normalization_and_dedupe() -> None:
     assert required.issubset(complexes)
     assert len(complexes) >= 4
     assert int(summary.get("complexes_created", 0)) >= 4
+    assert "thyroglobulin:2-aminoacrylic acid" not in complexes
 
     for reaction in normalized["processes"]["reactions"]:
         for side in ["inputs", "outputs"]:
@@ -181,13 +195,15 @@ def test_thyroid_normalization_and_dedupe() -> None:
 
     # Duplicate R0 and duplicate transport rows should be collapsed.
     assert len(normalized["processes"]["reactions"]) == 4
-    assert len(normalized["processes"]["transports"]) == 1
+    assert len(normalized["processes"]["transports"]) == 2
     assert int(summary.get("dedupe_removed", 0)) >= 2
     assert int(summary.get("dedupe_removed_total", 0)) >= 2
     assert int(summary.get("n_plus_tokens_remaining", 1)) == 0
     assert int(summary.get("reactions_rewritten", 0)) > 0
     assert int(summary.get("scaffold_split_reactions", 0)) > 0
     assert int(summary.get("scaffold_in_modifiers_count", 0)) == 0
+    assert int(summary.get("transporters_attached", 0)) > 0
+    assert int(summary.get("dedupe_removed_total", 0)) > 0 or int(summary.get("no_op_removed_count", 0)) > 0
 
     for reaction in normalized["processes"]["reactions"]:
         assert "thyroid peroxidase" not in reaction.get("inputs", [])
@@ -199,9 +215,25 @@ def test_thyroid_normalization_and_dedupe() -> None:
     adj, _ = build_graph(normalized)
     comps = connected_components(adj)
     assert all(not n.startswith("cargo:") for n in adj.keys())
+    assert all("+" not in n for n in adj.keys())
     assert len(comps) <= 2
     assert len(adj.get("protein:thyroid peroxidase", set())) > 0
     assert len(adj.get("protein:pendrin", set())) > 0
+
+    iodide_transports = [
+        t
+        for t in normalized["processes"]["transports"]
+        if str(t.get("cargo") or t.get("cargo_complex") or "").strip().casefold() == "iodide"
+    ]
+    assert iodide_transports
+    assert any(
+        any(
+            str(r.get("protein") or r.get("protein_complex") or r.get("name") or "").strip().casefold() == "pendrin"
+            for r in t.get("transporters", [])
+            if isinstance(r, dict)
+        )
+        for t in iodide_transports
+    )
 
 
 def test_mapping_route_and_species_id_helpers() -> None:
@@ -238,3 +270,25 @@ def test_sbml_single_species_per_entity_and_compartment(tmp_path: Path) -> None:
         key = (sp.getName(), sp.getCompartment())
         assert key not in seen
         seen.add(key)
+
+    pendrin_species = [
+        model.getSpecies(i).getId()
+        for i in range(model.getNumSpecies())
+        if model.getSpecies(i).getName().strip().casefold() == "pendrin"
+    ]
+    assert pendrin_species
+    pendrin_ids = set(pendrin_species)
+    found_pendrin_transport_modifier = False
+    for ridx in range(model.getNumReactions()):
+        rxn = model.getReaction(ridx)
+        reactant_names = {
+            model.getSpecies(rxn.getReactant(r).getSpecies()).getName().strip().casefold()
+            for r in range(rxn.getNumReactants())
+        }
+        if "iodide" not in reactant_names:
+            continue
+        modifier_species_ids = {rxn.getModifier(m).getSpecies() for m in range(rxn.getNumModifiers())}
+        if modifier_species_ids & pendrin_ids:
+            found_pendrin_transport_modifier = True
+            break
+    assert found_pendrin_transport_modifier

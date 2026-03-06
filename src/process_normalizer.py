@@ -12,6 +12,16 @@ PROTEIN_LIKE_RE = re.compile(
     flags=re.IGNORECASE,
 )
 DEFAULT_SCAFFOLD_NAMES = {"thyroglobulin"}
+BYPRODUCT_SUFFIX_DENYLIST = ("acid",)
+BYPRODUCT_TOKEN_DENYLIST = {
+    "water",
+    "proton",
+    "oxygen",
+    "hydrogen peroxide",
+    "carbon dioxide",
+    "phosphate",
+    "pyrophosphate",
+}
 
 
 def _safe_dict(value: Any) -> Dict[str, Any]:
@@ -98,10 +108,12 @@ def _new_report() -> Dict[str, Any]:
             "complexes_list": [],
             "n_autostate_created": 0,
             "n_entities_assigned_to_autostate": 0,
+            "transporters_attached": 0,
             "dedupe_removed_reactions": 0,
             "dedupe_removed_transports": 0,
             "dedupe_removed": 0,
             "dedupe_removed_total": 0,
+            "no_op_removed_count": 0,
         },
         "rewrite_map": {},
         "actions": [],
@@ -259,6 +271,43 @@ def _complex_components(name: str) -> List[str]:
     return [part.strip() for part in text.split(":") if part.strip()]
 
 
+def _is_likely_byproduct(token: str) -> bool:
+    t = _canonical(token).casefold()
+    if not t:
+        return False
+    if t in BYPRODUCT_TOKEN_DENYLIST:
+        return True
+    return any(t.endswith(suffix) for suffix in BYPRODUCT_SUFFIX_DENYLIST)
+
+
+def _reaction_output_supports_complex(
+    *,
+    left: str,
+    right: str,
+    evidence_text: str,
+) -> bool:
+    evidence = _canonical(evidence_text).casefold()
+    if not evidence:
+        return False
+    left_e = re.escape(_canonical(left))
+    right_e = re.escape(_canonical(right))
+
+    compact_plus_patterns = [
+        rf"{left_e}\+\s*{right_e}",
+        rf"{left_e}\s*\+{right_e}",
+    ]
+    for pattern in compact_plus_patterns:
+        if re.search(pattern, evidence, flags=re.IGNORECASE):
+            return True
+
+    binding_patterns = [
+        rf"{left_e}\s+bound\s+to\s+{right_e}",
+        rf"{left_e}\s*-\s*{right_e}\s+complex",
+        rf"{left_e}\s+conjugated\s+to\s+{right_e}",
+    ]
+    return any(re.search(pattern, evidence, flags=re.IGNORECASE) for pattern in binding_patterns)
+
+
 def materialize_complex(
     nameA: str,
     nameB: str,
@@ -302,6 +351,8 @@ def _rewrite_token(
     report: Dict[str, Any],
     rewrite_map: Dict[str, str],
     pointer: str,
+    *,
+    evidence_text: str = "",
 ) -> List[str]:
     text = _canonical(token)
     if not text:
@@ -330,6 +381,32 @@ def _rewrite_token(
         return [text]
 
     if _is_protein_like(parts[0], payload):
+        is_reaction_output_pointer = "/processes/reactions/" in pointer and pointer.endswith("/outputs")
+        if is_reaction_output_pointer:
+            right = parts[1] if len(parts) > 1 else ""
+            supported = _reaction_output_supports_complex(left=parts[0], right=right, evidence_text=evidence_text)
+            if (not supported) or _is_likely_byproduct(right):
+                out: List[str] = []
+                for part in parts:
+                    c_part = _canonical(part)
+                    if not c_part:
+                        continue
+                    if _is_protein_like(c_part, payload):
+                        _ensure_protein(c_part, payload, report)
+                    else:
+                        _ensure_compound(c_part, payload, report)
+                    out.append(c_part)
+                report["actions"].append(
+                    {
+                        "type": "composite_not_materialized_without_evidence",
+                        "json_pointer": pointer,
+                        "from": text,
+                        "to": out,
+                        "supported_by_evidence": supported,
+                        "blocked_by_byproduct_rule": _is_likely_byproduct(right),
+                    }
+                )
+                return out
         complex_name = materialize_complex(parts[0], parts[1], payload, report=report, extra_components=parts[2:])
         rewrite_map[ckey] = complex_name
         rewrite_map[direct_norm] = complex_name
@@ -378,13 +455,21 @@ def rewrite_process_references(
         if not isinstance(reaction, dict):
             continue
         changed = False
+        reaction_evidence = _canonical(str(reaction.get("evidence", "")))
         for side in ["inputs", "outputs"]:
             pointer = f"/processes/reactions/{ridx}/{side}"
             new_tokens: List[str] = []
             for token in _safe_list(reaction.get(side)):
                 if not isinstance(token, str):
                     continue
-                rewritten = _rewrite_token(token, payload, rep, rewrite_map, pointer)
+                rewritten = _rewrite_token(
+                    token,
+                    payload,
+                    rep,
+                    rewrite_map,
+                    pointer,
+                    evidence_text=reaction_evidence,
+                )
                 if [_canonical(token)] != rewritten:
                     changed = True
                 new_tokens.extend(rewritten)
@@ -405,6 +490,7 @@ def rewrite_process_references(
             continue
         pointer = f"/processes/transports/{tidx}/cargo"
         row = deepcopy(transport)
+        transport_evidence = _canonical(str(row.get("evidence", "")))
         cargo_raw = _canonical(
             str(
                 row.get("cargo_complex") if isinstance(row.get("cargo_complex"), str) else row.get("cargo") or ""
@@ -414,7 +500,14 @@ def rewrite_process_references(
             rewritten_transports.append(row)
             continue
 
-        rewritten = _rewrite_token(cargo_raw, payload, rep, rewrite_map, pointer)
+        rewritten = _rewrite_token(
+            cargo_raw,
+            payload,
+            rep,
+            rewrite_map,
+            pointer,
+            evidence_text=transport_evidence,
+        )
         if len(rewritten) == 1:
             cargo_value = rewritten[0]
             if ":" in cargo_value:
@@ -673,6 +766,90 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     return payload
 
 
+def attach_transporters_from_evidence(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    entities = _safe_dict(payload.get("entities"))
+    element_locations = _safe_dict(payload.get("element_locations"))
+    _, transports = _process_lists(payload)
+
+    known_transporters: List[str] = [
+        _canonical(str(row.get("name", "")))
+        for row in _safe_list(entities.get("proteins"))
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    ]
+    if not known_transporters:
+        return payload
+
+    protein_location_rows = [
+        row
+        for row in _safe_list(element_locations.get("protein_locations"))
+        if isinstance(row, dict) and _canonical(str(row.get("evidence", "")))
+    ]
+
+    cue_prefix = r"(?:using|via|through|transported by)"
+
+    def _match_transporter(text: str, *, cargo_tokens: Sequence[str]) -> Optional[Tuple[str, str]]:
+        evidence_text = _canonical(text)
+        if not evidence_text:
+            return None
+        evidence_norm = evidence_text.casefold()
+        for transporter_name in sorted(known_transporters, key=len, reverse=True):
+            pname = _canonical(transporter_name)
+            if not pname:
+                continue
+            pattern = re.compile(rf"\b{cue_prefix}\s+{re.escape(pname)}\b", flags=re.IGNORECASE)
+            match = pattern.search(evidence_text)
+            if not match:
+                continue
+            if cargo_tokens:
+                cargo_hit = any(_canonical(token).casefold() in evidence_norm for token in cargo_tokens if _canonical(token))
+                if not cargo_hit:
+                    continue
+            return pname, evidence_text[match.start() : match.end()]
+        return None
+
+    for tidx, transport in enumerate(transports):
+        if not isinstance(transport, dict):
+            continue
+        if _safe_list(transport.get("transporters")):
+            continue
+
+        cargo_value = (
+            transport.get("cargo_complex")
+            if isinstance(transport.get("cargo_complex"), str) and _canonical(str(transport.get("cargo_complex", "")))
+            else transport.get("cargo")
+        )
+        cargo = _canonical(str(cargo_value or ""))
+        cargo_tokens = [cargo]
+        if ":" in cargo:
+            cargo_tokens.extend(_complex_components(cargo))
+
+        evidence = _canonical(str(transport.get("evidence", "")))
+        matched = _match_transporter(evidence, cargo_tokens=cargo_tokens) if evidence else None
+
+        if matched is None:
+            for prow in protein_location_rows:
+                prow_evidence = _canonical(str(prow.get("evidence", "")))
+                matched = _match_transporter(prow_evidence, cargo_tokens=cargo_tokens)
+                if matched is not None:
+                    break
+
+        if matched is None:
+            continue
+        transporter_name, snippet = matched
+        transport["transporters"] = [{"protein": transporter_name, "evidence": snippet}]
+        rep["summary"]["transporters_attached"] += 1
+        rep["actions"].append(
+            {
+                "type": "transporter_attached_from_evidence",
+                "json_pointer": f"/processes/transports/{tidx}/transporters",
+                "protein": transporter_name,
+                "snippet": snippet,
+            }
+        )
+    return payload
+
+
 def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     reactions, _ = _process_lists(payload)
@@ -802,10 +979,21 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
     for reaction in reactions:
         if not isinstance(reaction, dict):
             continue
+        essential = bool(reaction.get("essential", False))
+        in_norm = [_normalize(v) for v in _safe_list(reaction.get("inputs")) if isinstance(v, str) and _canonical(v)]
+        out_norm = [_normalize(v) for v in _safe_list(reaction.get("outputs")) if isinstance(v, str) and _canonical(v)]
+        if not essential and in_norm and out_norm:
+            if sorted(in_norm) == sorted(out_norm):
+                rep["summary"]["no_op_removed_count"] += 1
+                continue
+            # Proteolysis/no-op style: all outputs already present in inputs, no novel produced token.
+            if set(out_norm).issubset(set(in_norm)):
+                rep["summary"]["no_op_removed_count"] += 1
+                continue
         key = (
             "reaction",
-            tuple(sorted(_normalize(v) for v in _safe_list(reaction.get("inputs")) if isinstance(v, str) and _canonical(v))),
-            tuple(sorted(_normalize(v) for v in _safe_list(reaction.get("outputs")) if isinstance(v, str) and _canonical(v))),
+            tuple(sorted(in_norm)),
+            tuple(sorted(out_norm)),
             _normalize(str(reaction.get("biological_state", ""))),
             tuple(sorted(_normalize(v) for v in _reaction_modifier_names(reaction))),
         )
@@ -853,7 +1041,12 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
     rep["summary"]["dedupe_removed_transports"] += removed_transports
     rep["summary"]["dedupe_removed"] += removed_reactions + removed_transports
     rep["summary"]["dedupe_removed_total"] = rep["summary"]["dedupe_removed"]
-    return {"reactions_removed": removed_reactions, "transports_removed": removed_transports, "dedupe_removed": removed_reactions + removed_transports}
+    return {
+        "reactions_removed": removed_reactions,
+        "transports_removed": removed_transports,
+        "dedupe_removed": removed_reactions + removed_transports,
+        "no_op_removed_count": int(rep["summary"].get("no_op_removed_count", 0)),
+    }
 
 
 def validate_no_composites(payload: Dict[str, Any]) -> None:
@@ -993,6 +1186,7 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     normalize_composites(data, report=report)
     rewrite_reactions_to_complex_states(data, report=report)
     ensure_autostates(data, report=report)
+    attach_transporters_from_evidence(data, report=report)
     promote_catalysts(data, report=report)
     dedupe_processes(data, report=report)
     validate_no_composites(data)
