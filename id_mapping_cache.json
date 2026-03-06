@@ -574,6 +574,172 @@
       "candidates": [],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::iodotyrosine::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q6PHW0"
+      },
+      "confidence": 0.8233,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 3515,
+          "name": "Iodotyrosine dehalogenase 1",
+          "gene_name": "IYD",
+          "uniprot": "Q6PHW0",
+          "species_id": 1,
+          "score": 0.8233
+        }
+      ]
+    },
+    "db::35diiodoltyrosine::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::35diiodoltyrosine::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"3,5-diiodo-L-tyrosine\" OR gene:\"3,5-diiodo-L-tyrosine\") AND organism_name:\"Homo sapiens\" | (protein_name:\"3 5 diiodo L tyrosine\" OR gene:\"3 5 diiodo L tyrosine\") AND organism_name:\"Homo sapiens\" | (protein_name:\"3,5-diiodo-L-tyrosine\" OR gene:\"3,5-diiodo-L-tyrosine\") | (protein_name:\"3 5 diiodo L tyrosine\" OR gene:\"3 5 diiodo L tyrosine\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::2aminoacrylic acid::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::2aminoacrylic acid::homo sapiens": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"2-aminoacrylic acid\" OR gene:\"2-aminoacrylic acid\") AND organism_name:\"Homo sapiens\" | (protein_name:\"2 aminoacrylic acid\" OR gene:\"2 aminoacrylic acid\") AND organism_name:\"Homo sapiens\" | (protein_name:\"2-aminoacrylic acid\" OR gene:\"2-aminoacrylic acid\") | (protein_name:\"2 aminoacrylic acid\" OR gene:\"2 aminoacrylic acid\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::thyroxine::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 2138,
+          "name": "Thyroxine-binding globulin",
+          "gene_name": "SERPINA7",
+          "uniprot": "P05543",
+          "species_id": 1,
+          "score": 0.65
+        }
+      ]
+    },
+    "api::thyroxine::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"thyroxine\" OR gene:\"thyroxine\") AND organism_name:\"Homo sapiens\" | (protein_name:\"thyroxine\" OR gene:\"thyroxine\")",
+      "confidence": 0.475,
+      "candidates": [
+        {
+          "accession": "P55073",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "DIO3",
+            "ITDI3",
+            "TXDI3"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "Q9NYB5",
+          "protein_name": "Solute carrier organic anion transporter family member 1C1",
+          "gene_names": [
+            "OATP14",
+            "OATP1C1",
+            "OATPF",
+            "SLC21A14",
+            "SLCO1C1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "Q6IMI4",
+          "protein_name": "Sulfotransferase 6B1",
+          "gene_names": [
+            "SULT6B1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "P05543",
+          "protein_name": "Thyroxine-binding globulin",
+          "gene_names": [
+            "SERPINA7",
+            "TBG"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3
+        },
+        {
+          "accession": "A0A3G1HEF1",
+          "protein_name": "Thyroxine-binding globulin",
+          "gene_names": [],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3
+        },
+        {
+          "accession": "Q6U6H1",
+          "protein_name": "Thyroxine 5'-deiodinase",
+          "gene_names": [],
+          "organism": "Halocynthia roretzi",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "Q5I3B1",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "DIO3"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "P49897",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "Dio3",
+            "Itdi3",
+            "Txdi3"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.185
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"thyroxine\" OR gene:\"thyroxine\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"thyroxine\" OR gene:\"thyroxine\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
     }
   },
   "compounds": {
