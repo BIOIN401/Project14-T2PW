@@ -1,0 +1,1456 @@
+{
+  "entities": {
+    "cell_types": [
+      {
+        "name": "higher plants"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "oil body (storage vacuole) membrane"
+      },
+      {
+        "name": "mitochondrial inner membrane",
+        "ontology_id": "GO:0005743"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "triacylglycerol",
+        "mapping_meta": {
+          "query": {
+            "name": "triacylglycerol"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "ChEBI/KEGG/HMDB"
+          ],
+          "source": "api",
+          "candidates": [
+            {
+              "database": "kegg",
+              "id": "C00422",
+              "name": "Triacylglycerol",
+              "score": 0.95
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.95
+        },
+        "mapped_ids": {
+          "kegg": "C00422"
+        },
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok",
+            "primary_name": "Triacylglycerol",
+            "synonyms": [
+              "Triacylglycerol",
+              "Triglyceride"
+            ],
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C6H5O6R3",
+            "charge": 0,
+            "mass_monoisotopic": 0.0,
+            "mass_average": 0.0,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Lipids",
+              "Fats",
+              "Acylglycerols",
+              "C00422 Triacylglycerol",
+              "Lipids [BR:br08002]",
+              "GL Glycerolipids",
+              "GL03 Triradylglycerols",
+              "GL0301 Triacylglycerols",
+              "C00422 Triacyl-sn-glycerol"
+            ],
+            "pathways": [
+              "Glycerolipid metabolism",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Thermogenesis",
+              "Regulation of lipolysis in adipocytes",
+              "Insulin resistance",
+              "Fat digestion and absorption",
+              "Vitamin digestion and absorption",
+              "Cholesterol metabolism",
+              "Lipid and atherosclerosis"
+            ],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "kegg_id": "C00422",
+              "pubchem_id": "3712",
+              "chebi_id": "17855"
+            },
+            "sources": [
+              {
+                "source": "KEGG",
+                "id": "C00422",
+                "retrieved_at": "2026-03-07T21:34:42Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "1,2-diglyceride",
+        "mapping_meta": {
+          "query": {
+            "name": "1,2-diglyceride"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "ChEBI/KEGG/HMDB"
+          ],
+          "source": "api",
+          "candidates": [
+            {
+              "database": "kegg",
+              "id": "C03692",
+              "name": "1,2-Diacyl-3-beta-D-galactosyl-sn-glycerol",
+              "score": 0.322
+            },
+            {
+              "database": "kegg",
+              "id": "C04046",
+              "name": "3-D-Glucosyl-1,2-diacylglycerol",
+              "score": 0.322
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.322
+        }
+      },
+      {
+        "name": "2-acylglycerol",
+        "mapping_meta": {
+          "query": {
+            "name": "2-acylglycerol"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "ChEBI/KEGG/HMDB"
+          ],
+          "source": "api",
+          "candidates": [
+            {
+              "database": "kegg",
+              "id": "C02112",
+              "name": "2-Acylglycerol",
+              "score": 0.95
+            },
+            {
+              "database": "kegg",
+              "id": "C03201",
+              "name": "1-Alkyl-2-acylglycerol",
+              "score": 0.35
+            },
+            {
+              "database": "kegg",
+              "id": "C03454",
+              "name": "1-Alkenyl-2-acylglycerol",
+              "score": 0.35
+            },
+            {
+              "database": "kegg",
+              "id": "C20825",
+              "name": "Seminolipid",
+              "score": 0.35
+            },
+            {
+              "database": "kegg",
+              "id": "C20859",
+              "name": "Galactosyl-1-alkyl-2-acylglycerol",
+              "score": 0.35
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.95
+        },
+        "mapped_ids": {
+          "kegg": "C02112"
+        },
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok",
+            "primary_name": "2-Acylglycerol",
+            "synonyms": [
+              "2-Acylglycerol",
+              "2-Glyceride",
+              "2-Monoacylglycerol"
+            ],
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C4H7O4R",
+            "charge": 0,
+            "mass_monoisotopic": 0.0,
+            "mass_average": 0.0,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Lipids",
+              "Fats",
+              "Acylglycerols",
+              "C02112 2-Monoacylglycerol",
+              "Lipids [BR:br08002]",
+              "GL Glycerolipids",
+              "GL01 Monoradylglycerols",
+              "GL0101 Monoacylglycerols",
+              "C02112 2-acyl-sn-glycerol"
+            ],
+            "pathways": [
+              "Phototransduction - fly",
+              "Fat digestion and absorption",
+              "Vitamin digestion and absorption"
+            ],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "kegg_id": "C02112",
+              "pubchem_id": "5194",
+              "chebi_id": "17389"
+            },
+            "sources": [
+              {
+                "source": "KEGG",
+                "id": "C02112",
+                "retrieved_at": "2026-03-07T21:34:42Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "1-monoglyceride",
+        "mapping_meta": {
+          "query": {
+            "name": "1-monoglyceride"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "ChEBI/KEGG/HMDB"
+          ],
+          "source": "api",
+          "candidates": [
+            {
+              "database": "kegg",
+              "id": "C01885",
+              "name": "1-Acylglycerol",
+              "score": 0.598
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.598
+        }
+      },
+      {
+        "name": "glycerol",
+        "hmdb_id": "HMDB0000131",
+        "kegg_id": "C00116",
+        "chebi_id": "CHEBI:17754",
+        "mapping_meta": {
+          "query": {
+            "name": "glycerol"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "ChEBI/KEGG/HMDB"
+          ],
+          "source": "api",
+          "candidates": [
+            {
+              "database": "kegg",
+              "id": "C00116",
+              "name": "Glycerol",
+              "score": 0.95
+            },
+            {
+              "database": "kegg",
+              "id": "C02979",
+              "name": "Glycerol 2-phosphate",
+              "score": 0.65
+            },
+            {
+              "database": "kegg",
+              "id": "C03189",
+              "name": "DL-Glycerol 1-phosphate",
+              "score": 0.65
+            },
+            {
+              "database": "kegg",
+              "id": "C13860",
+              "name": "1-O-Octadec-9-enyl glycerol",
+              "score": 0.65
+            },
+            {
+              "database": "kegg",
+              "id": "C13870",
+              "name": "Tributyrin",
+              "score": 0.65
+            },
+            {
+              "database": "kegg",
+              "id": "C03947",
+              "name": "Glycerol 1,2-cyclic phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C13858",
+              "name": "1-O-Octadecyl-sn-glycerol",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C13859",
+              "name": "1-O-Hexadecyl-sn-glycerol",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C22636",
+              "name": "Glycerol dibiphytanyl glycerol tetraether phospholipid",
+              "score": 0.5
+            },
+            {
+              "database": "kegg",
+              "id": "C00093",
+              "name": "sn-Glycerol 3-phosphate",
+              "score": 0.35
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.95
+        },
+        "mapped_ids": {
+          "kegg": "C00116"
+        },
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok",
+            "primary_name": "Glycerol",
+            "synonyms": [
+              "Glycerol",
+              "Glycerin",
+              "1,2,3-Trihydroxypropane",
+              "1,2,3-Propanetriol"
+            ],
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C3H8O3",
+            "charge": 0,
+            "mass_monoisotopic": 92.0473,
+            "mass_average": 92.09,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [
+              "Compounds with biological roles [BR:br08001]",
+              "Carbohydrates",
+              "Monosaccharides",
+              "Sugar alcohols",
+              "C00116 Glycerol",
+              "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00028)]",
+              "A ALIMENTARY TRACT AND METABOLISM",
+              "A06 DRUGS FOR CONSTIPATION",
+              "A06A DRUGS FOR CONSTIPATION",
+              "A06AG Enemas",
+              "A06AG04 Glycerol",
+              "D00028 Glycerin (JP18/USP) &lt;JP&gt;",
+              "A06AX Other drugs for constipation",
+              "A06AX01 Glycerol",
+              "Therapeutic category of drugs in Japan [BR:br08301(D00028)]",
+              "2 Agents affecting individual organs",
+              "23 Digestive organ agents",
+              "235 Purgatives, clysters",
+              "2357 Glycerins",
+              "D00028 Glycerin (JP18/USP); Concentrated glycerin (JP18); Glycerol (INN)",
+              "Classification of Japanese OTC drugs [BR:br08313(D00028)]",
+              "Agents for digestive organs",
+              "18 Enema",
+              "D00028 Glycerin (JP18/USP)",
+              "Agents for integumentary system",
+              "55 Chilblain and chap remedies",
+              "Risk category of Japanese OTC drugs [BR:br08312(D00028)]",
+              "Second-class OTC drugs",
+              "Inorganic and organic chemicals",
+              "Glycerin",
+              "Third-class OTC drugs",
+              "Drug groups [BR:br08330(D00028)]",
+              "Gastrointestinal agent",
+              "DG01770 Laxative",
+              "D00028 Glycerin",
+              "Drug classes [BR:br08332(D00028)]",
+              "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00028)]",
+              "Chemicals",
+              "D00028 Concentrated glycerin"
+            ],
+            "pathways": [
+              "Pentose and glucuronate interconversions",
+              "Galactose metabolism",
+              "Glycerolipid metabolism",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Microbial metabolism in diverse environments",
+              "ABC transporters",
+              "Thermogenesis",
+              "Retrograde endocannabinoid signaling",
+              "Regulation of lipolysis in adipocytes"
+            ],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "kegg_id": "C00116",
+              "pubchem_id": "3416",
+              "chebi_id": "17754"
+            },
+            "sources": [
+              {
+                "source": "KEGG",
+                "id": "C00116",
+                "retrieved_at": "2026-03-07T21:34:42Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "glycerol 3-phosphate",
+        "mapping_meta": {
+          "query": {
+            "name": "glycerol 3-phosphate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "ChEBI/KEGG/HMDB"
+          ],
+          "source": "api",
+          "candidates": [
+            {
+              "database": "kegg",
+              "id": "C03947",
+              "name": "Glycerol 1,2-cyclic phosphate",
+              "score": 0.598
+            },
+            {
+              "database": "kegg",
+              "id": "C00093",
+              "name": "sn-Glycerol 3-phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C00416",
+              "name": "Phosphatidate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C00681",
+              "name": "1-Acyl-sn-glycerol 3-phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C01264",
+              "name": "2-Acetyl-1-alkyl-sn-glycero-3-phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03189",
+              "name": "DL-Glycerol 1-phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03506",
+              "name": "Indoleglycerol phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03849",
+              "name": "Acyl-sn-glycerol 3-phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03892",
+              "name": "Phosphatidylglycerophosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03968",
+              "name": "1-Alkyl-sn-glycero-3-phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03974",
+              "name": "2-Acyl-sn-glycerol 3-phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C04666",
+              "name": "D-erythro-1-(Imidazol-4-yl)glycerol 3-phosphate",
+              "score": 0.46
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.598
+        }
+      },
+      {
+        "name": "glycerone phosphate",
+        "mapping_meta": {
+          "query": {
+            "name": "glycerone phosphate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "ChEBI/KEGG/HMDB"
+          ],
+          "source": "api",
+          "candidates": [
+            {
+              "database": "kegg",
+              "id": "C00111",
+              "name": "Glycerone phosphate",
+              "score": 0.95
+            },
+            {
+              "database": "kegg",
+              "id": "C01192",
+              "name": "Palmitoylglycerone phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03372",
+              "name": "Acylglycerone phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03630",
+              "name": "Oleoylglycerone phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03715",
+              "name": "O-Alkylglycerone phosphate",
+              "score": 0.55
+            },
+            {
+              "database": "kegg",
+              "id": "C03805",
+              "name": "Stearoylglycerone phosphate",
+              "score": 0.55
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.95
+        },
+        "mapped_ids": {
+          "kegg": "C00111"
+        },
+        "enrichment": {
+          "compound": {
+            "enrichment_status": "ok",
+            "primary_name": "Glycerone phosphate",
+            "synonyms": [
+              "Glycerone phosphate",
+              "Dihydroxyacetone phosphate",
+              "3-Hydroxy-2-oxopropyl phosphate"
+            ],
+            "inchi": "",
+            "inchikey": "",
+            "smiles": "",
+            "formula": "C3H7O6P",
+            "charge": 0,
+            "mass_monoisotopic": 169.998,
+            "mass_average": 170.06,
+            "chebi_roles": [],
+            "ontology_parents": [],
+            "kegg_class": [],
+            "pathways": [
+              "Glycolysis / Gluconeogenesis",
+              "Pentose and glucuronate interconversions",
+              "Fructose and mannose metabolism",
+              "Galactose metabolism",
+              "Glycerolipid metabolism",
+              "Inositol phosphate metabolism",
+              "Glycerophospholipid metabolism",
+              "Glyoxylate and dicarboxylate metabolism",
+              "Propanoate metabolism",
+              "Methane metabolism",
+              "Carbon fixation by Calvin cycle",
+              "Nicotinate and nicotinamide metabolism",
+              "Metabolic pathways",
+              "Biosynthesis of secondary metabolites",
+              "Microbial metabolism in diverse environments",
+              "Carbon metabolism",
+              "Biosynthesis of amino acids"
+            ],
+            "tissue_locations": [],
+            "biofluid_locations": [],
+            "cross_references": {
+              "kegg_id": "C00111",
+              "pubchem_id": "3411",
+              "chebi_id": "16108"
+            },
+            "sources": [
+              {
+                "source": "KEGG",
+                "id": "C00111",
+                "retrieved_at": "2026-03-07T21:34:42Z",
+                "status": "ok",
+                "error_if_any": ""
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "element_collections": [
+      {
+        "name": "oil body (storage vacuole)"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "triacylglycerol lipase",
+        "mapping_meta": {
+          "query": {
+            "name": "triacylglycerol lipase",
+            "organism": ""
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "I6Y2J4",
+              "protein_name": "Triacylglycerol lipase",
+              "gene_names": [
+                "PE-PGRS63",
+                "lipY"
+              ],
+              "organism": "Mycobacterium tuberculosis (strain ATCC 25618 / H37Rv)",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "P37957",
+              "protein_name": "Lipase EstA",
+              "gene_names": [
+                "estA",
+                "lip",
+                "lipA"
+              ],
+              "organism": "Bacillus subtilis (strain 168)",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "P54317",
+              "protein_name": "Pancreatic lipase-related protein 2",
+              "gene_names": [
+                "PLRP2",
+                "PNLIPRP2"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "P07098",
+              "protein_name": "Gastric triacylglycerol lipase",
+              "gene_names": [
+                "LIPF"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "P16233",
+              "protein_name": "Pancreatic triacylglycerol lipase",
+              "gene_names": [
+                "PNLIP"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "Q71DJ5",
+              "protein_name": "Triacylglycerol lipase 1",
+              "gene_names": [
+                "LIP1"
+              ],
+              "organism": "Arabidopsis thaliana",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "P36165",
+              "protein_name": "Triacylglycerol lipase 4",
+              "gene_names": [
+                "STC1",
+                "TGL4"
+              ],
+              "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "P40308",
+              "protein_name": "Triacylglycerol lipase 3",
+              "gene_names": [
+                "TGL3"
+              ],
+              "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+              "reviewed": true,
+              "score": 0.2833
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.6,
+          "reviewed": false
+        }
+      },
+      {
+        "name": "diglyceride lipase",
+        "mapping_meta": {
+          "query": {
+            "name": "diglyceride lipase",
+            "organism": ""
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reviewed": false
+        }
+      },
+      {
+        "name": "acylhydrolase",
+        "mapping_meta": {
+          "query": {
+            "name": "acylhydrolase",
+            "organism": ""
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P06276",
+              "protein_name": "Cholinesterase",
+              "gene_names": [
+                "BCHE",
+                "CHE1"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.225
+            },
+            {
+              "accession": "Q05315",
+              "protein_name": "Galectin-10",
+              "gene_names": [
+                "CLC",
+                "LGALS10",
+                "LGALS10A"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.225
+            },
+            {
+              "accession": "P39877",
+              "protein_name": "Phospholipase A2 group V",
+              "gene_names": [
+                "PLA2G5"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.05
+            },
+            {
+              "accession": "P04054",
+              "protein_name": "Phospholipase A2",
+              "gene_names": [
+                "PLA2",
+                "PLA2A",
+                "PLA2G1B",
+                "PPLA2"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.05
+            },
+            {
+              "accession": "Q9BZM1",
+              "protein_name": "Group XIIA secretory phospholipase A2",
+              "gene_names": [
+                "PLA2G12",
+                "PLA2G12A"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.05
+            },
+            {
+              "accession": "Q9NZK7",
+              "protein_name": "Group IIE secretory phospholipase A2",
+              "gene_names": [
+                "PLA2G2E"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.05
+            },
+            {
+              "accession": "Q9BZM2",
+              "protein_name": "Group IIF secretory phospholipase A2",
+              "gene_names": [
+                "PLA2G2F"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.05
+            },
+            {
+              "accession": "P47712",
+              "protein_name": "Cytosolic phospholipase A2",
+              "gene_names": [
+                "CPLA2",
+                "PLA2G4",
+                "PLA2G4A"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.05
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.225,
+          "reviewed": false
+        }
+      },
+      {
+        "name": "glycerol kinase",
+        "uniprot_id": "P12345",
+        "gene_name": "GLPK",
+        "ec_numbers": [
+          "2.7.1.30"
+        ],
+        "mapping_meta": {
+          "query": {
+            "name": "glycerol kinase",
+            "organism": ""
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P32189",
+              "protein_name": "Glycerol kinase",
+              "gene_names": [
+                "GK"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "Q64516",
+              "protein_name": "Glycerol kinase",
+              "gene_names": [
+                "Gk",
+                "Gyk"
+              ],
+              "organism": "Mus musculus",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "P0A6F3",
+              "protein_name": "Glycerol kinase",
+              "gene_names": [
+                "glpK"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "Q63060",
+              "protein_name": "Glycerol kinase",
+              "gene_names": [
+                "Gk",
+                "Gyk"
+              ],
+              "organism": "Rattus norvegicus",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "Q9M8L4",
+              "protein_name": "Glycerol kinase",
+              "gene_names": [
+                "GLI1",
+                "GLPK",
+                "NHO1"
+              ],
+              "organism": "Arabidopsis thaliana",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "O34153",
+              "protein_name": "Glycerol kinase",
+              "gene_names": [
+                "glpK"
+              ],
+              "organism": "Enterococcus casseliflavus",
+              "reviewed": true,
+              "score": 0.6
+            },
+            {
+              "accession": "Q14410",
+              "protein_name": "Glycerol kinase 2",
+              "gene_names": [
+                "GK2",
+                "GKP2",
+                "GKTA"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "Q9WU65",
+              "protein_name": "Glycerol kinase 2",
+              "gene_names": [
+                "Gk-rs2",
+                "Gk2",
+                "Gkrs2"
+              ],
+              "organism": "Mus musculus",
+              "reviewed": true,
+              "score": 0.2833
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.6,
+          "reviewed": false
+        }
+      },
+      {
+        "name": "glycerol-3-phosphate dehydrogenase",
+        "mapping_meta": {
+          "query": {
+            "name": "glycerol-3-phosphate dehydrogenase",
+            "organism": ""
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P13035",
+              "protein_name": "Aerobic glycerol-3-phosphate dehydrogenase",
+              "gene_names": [
+                "glpD",
+                "glyD"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "P43304",
+              "protein_name": "Glycerol-3-phosphate dehydrogenase, mitochondrial",
+              "gene_names": [
+                "GPD2"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "P46919",
+              "protein_name": "Glycerol-3-phosphate dehydrogenase [NAD(P)+]",
+              "gene_names": [
+                "glyC",
+                "gpsA"
+              ],
+              "organism": "Bacillus subtilis (strain 168)",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "P0A6S7",
+              "protein_name": "Glycerol-3-phosphate dehydrogenase [NAD(P)+]",
+              "gene_names": [
+                "gpsA"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.2833
+            },
+            {
+              "accession": "Q8N335",
+              "protein_name": "Glycerol-3-phosphate dehydrogenase 1-like protein",
+              "gene_names": [
+                "GPD1L",
+                "KIAA0089"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.225
+            },
+            {
+              "accession": "P21695",
+              "protein_name": "Glycerol-3-phosphate dehydrogenase [NAD(+)], cytoplasmic",
+              "gene_names": [
+                "GPD1"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.225
+            },
+            {
+              "accession": "Q00055",
+              "protein_name": "Glycerol-3-phosphate dehydrogenase [NAD(+)] 1",
+              "gene_names": [
+                "DAR1",
+                "GPD1",
+                "HOR1",
+                "OSG1"
+              ],
+              "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+              "reviewed": true,
+              "score": 0.225
+            },
+            {
+              "accession": "Q3ULJ0",
+              "protein_name": "Glycerol-3-phosphate dehydrogenase 1-like protein",
+              "gene_names": [
+                "Gpd1l",
+                "Kiaa0089"
+              ],
+              "organism": "Mus musculus",
+              "reviewed": true,
+              "score": 0.225
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.2833,
+          "reviewed": false
+        }
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "higher plants"
+    },
+    {
+      "name": "oil body (storage vacuole)"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "triacylglycerol"
+      },
+      {
+        "compound": "1,2-diglyceride"
+      },
+      {
+        "compound": "2-acylglycerol"
+      },
+      {
+        "compound": "1-monoglyceride"
+      },
+      {
+        "compound": "glycerol"
+      },
+      {
+        "compound": "glycerol 3-phosphate"
+      },
+      {
+        "compound": "glycerone phosphate"
+      }
+    ],
+    "element_collection_locations": [
+      {
+        "element_collection": "oil body (storage vacuole)"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "triacylglycerol"
+        ],
+        "outputs": [
+          "1,2-diglyceride"
+        ],
+        "name": "conversion of a triglyceride into a 1,2-diglyceride",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by triacylglycerol lipase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "1,2-diglyceride"
+        ],
+        "outputs": [
+          "2-acylglycerol"
+        ],
+        "name": "conversion of a 1,2-diglyceride into a 2-acylglycerol",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by diglyceride lipase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "2-acylglycerol"
+        ],
+        "outputs": [
+          "1-monoglyceride"
+        ],
+        "name": "conversion of a 2-acylglycerol into a 1-monoglyceride"
+      },
+      {
+        "inputs": [
+          "1-monoglyceride"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of a 1-monoglyceride into glycerol",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by acylhydrolase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "glycerol"
+        ],
+        "outputs": [
+          "glycerol 3-phosphate"
+        ],
+        "name": "conversion of glycerol into glycerol 3-phosphate",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by glycerol kinase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "glycerol 3-phosphate"
+        ],
+        "outputs": [
+          "glycerone phosphate"
+        ],
+        "name": "conversion of glycerol 3-phosphate into glycerone phosphate",
+        "enzymes": [
+          {
+            "evidence": "catalyzed by glycerol-3-phosphate dehydrogenase"
+          }
+        ]
+      },
+      {
+        "inputs": [
+          "triacylglycerol"
+        ],
+        "outputs": [
+          "1,2-diglyceride"
+        ],
+        "name": "conversion of a triglyceride into a 1,2-diglyceride",
+        "enzymes": [
+          {
+            "evidence": "First, triacylglycerol lipase, an enzyme localized to the oil body (storage vacuole) membrane, catalyzes the conversion of a triglyceride into a 1,2-diglyceride.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "1,2-diglyceride"
+        ],
+        "outputs": [
+          "2-acylglycerol"
+        ],
+        "name": "conversion of a 1,2-diglyceride into a 2-acylglycerol",
+        "enzymes": [
+          {
+            "evidence": "The predicted enzyme diglyceride lipase (coloured orange in the image) is theorized to catalyze the conversion of a 1,2-diglyceride into a 2-acylglycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "2-acylglycerol"
+        ],
+        "outputs": [
+          "1-monoglyceride"
+        ],
+        "name": "conversion of a 2-acylglycerol into a 1-monoglyceride",
+        "evidence": "A 2-acylglycerol is spontaneously converted into a 1-monoglyceride.",
+        "inference": {
+          "method": "inference",
+          "confidence": 0.9,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "1-monoglyceride"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of a 1-monoglyceride into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerol"
+        ],
+        "outputs": [
+          "glycerol 3-phosphate"
+        ],
+        "name": "conversion of glycerol into glycerol 3-phosphate",
+        "enzymes": [
+          {
+            "evidence": "Glycerol kinase catalyzes the conversion of glycerol into glycerol 3-phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerol 3-phosphate"
+        ],
+        "outputs": [
+          "glycerone phosphate"
+        ],
+        "name": "conversion of glycerol 3-phosphate into glycerone phosphate",
+        "enzymes": [
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerone phosphate"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of glycerone phosphate into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerol"
+        ],
+        "outputs": [
+          "glycerone phosphate"
+        ],
+        "name": "conversion of glycerol into glycerone phosphate",
+        "enzymes": [
+          {
+            "evidence": "Glycerol kinase catalyzes the conversion of glycerol into glycerol 3-phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          },
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerone phosphate"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of glycerone phosphate into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          },
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8,
+          "notes": ""
+        }
+      },
+      {
+        "inputs": [
+          "glycerone phosphate"
+        ],
+        "outputs": [
+          "glycerol"
+        ],
+        "name": "conversion of glycerone phosphate into glycerol",
+        "enzymes": [
+          {
+            "evidence": "Glycerol-3-phosphate dehydrogenase (coloured dark green in the image), localized to the mitochondrial inner membrane, catalyzes the conversion of glycerol 3-phosphate into glycerone phosphate.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          },
+          {
+            "evidence": "Acylhydrolase catalyzes the conversion of a 1-monoglyceride into glycerol.",
+            "inference": {
+              "method": "inference",
+              "confidence": 0.8,
+              "notes": ""
+            }
+          }
+        ],
+        "inference": {
+          "method": "inference",
+          "confidence": 0.8
+        }
+      }
+    ]
+  }
+}

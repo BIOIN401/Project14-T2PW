@@ -1,0 +1,66 @@
+{
+  "summary": {
+    "proteins_total": 5,
+    "proteins_with_uniprot": 0,
+    "proteins_enriched_ok": 0,
+    "proteins_enriched_error": 0,
+    "compounds_total": 7,
+    "compounds_with_ids": 4,
+    "compounds_enriched_ok": 4,
+    "compounds_enriched_error": 0,
+    "cache_hits": 0,
+    "api_calls": 4
+  },
+  "calls": {
+    "uniprot": 0,
+    "chebi": 0,
+    "hmdb": 0,
+    "kegg": 4
+  },
+  "entities": [
+    {
+      "entity_type": "compound",
+      "name": "triacylglycerol",
+      "json_pointer": "/entities/compounds/0",
+      "status": "ok",
+      "cross_references": {
+        "kegg_id": "C00422",
+        "pubchem_id": "3712",
+        "chebi_id": "17855"
+      }
+    },
+    {
+      "entity_type": "compound",
+      "name": "2-acylglycerol",
+      "json_pointer": "/entities/compounds/2",
+      "status": "ok",
+      "cross_references": {
+        "kegg_id": "C02112",
+        "pubchem_id": "5194",
+        "chebi_id": "17389"
+      }
+    },
+    {
+      "entity_type": "compound",
+      "name": "glycerol",
+      "json_pointer": "/entities/compounds/4",
+      "status": "ok",
+      "cross_references": {
+        "kegg_id": "C00116",
+        "pubchem_id": "3416",
+        "chebi_id": "17754"
+      }
+    },
+    {
+      "entity_type": "compound",
+      "name": "glycerone phosphate",
+      "json_pointer": "/entities/compounds/6",
+      "status": "ok",
+      "cross_references": {
+        "kegg_id": "C00111",
+        "pubchem_id": "3411",
+        "chebi_id": "16108"
+      }
+    }
+  ]
+}
