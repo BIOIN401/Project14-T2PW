@@ -98,10 +98,23 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
     transports = safe_list(processes.get("transports", []))
     interactions = safe_list(processes.get("interactions", []))
     rcts = safe_list(processes.get("reaction_coupled_transports", []))
+    element_locations = extracted.get("element_locations", {})
+
+    def resolve_actor_name(row: Any) -> str:
+        if not isinstance(row, dict):
+            return ""
+        for key in ["protein", "protein_complex", "name"]:
+            candidate = row.get(key, "")
+            if isinstance(candidate, str) and candidate.strip():
+                return candidate.strip()
+        return ""
 
     # --- Reactions ---
     for i, r in enumerate(reactions):
         rid = node("reaction", f"#{i+1}")
+        reaction_state = (r or {}).get("biological_state", "")
+        if isinstance(reaction_state, str) and reaction_state.strip():
+            add_edge(adj, rid, node("biological_state", reaction_state.strip()))
 
         inputs = [x for x in safe_list((r or {}).get("inputs", [])) if isinstance(x, str) and x.strip()]
         outputs = [x for x in safe_list((r or {}).get("outputs", [])) if isinstance(x, str) and x.strip()]
@@ -111,15 +124,9 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
             add_edge(adj, node(resolve_kind(c_name), c_name), rid)
 
         for enz in safe_list((r or {}).get("enzymes", [])):
-            if isinstance(enz, dict):
-                p_name = ""
-                for key in ["protein", "protein_complex", "name"]:
-                    candidate = (enz.get(key) or "").strip() if isinstance(enz.get(key), str) else ""
-                    if candidate:
-                        p_name = candidate
-                        break
-                if p_name:
-                    add_edge(adj, node(resolve_kind(p_name), p_name), rid)
+            p_name = resolve_actor_name(enz)
+            if p_name:
+                add_edge(adj, node(resolve_kind(p_name), p_name), rid)
 
     # --- Reaction-coupled transports ---
     for i, rct in enumerate(rcts):
@@ -171,6 +178,8 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
         to_state = (t or {}).get("to_biological_state", "")
         from_state_name = from_state.strip() if isinstance(from_state, str) and from_state.strip() else "unspecified"
         to_state_name = to_state.strip() if isinstance(to_state, str) and to_state.strip() else "unspecified"
+        add_edge(adj, tid, node("biological_state", from_state_name))
+        add_edge(adj, tid, node("biological_state", to_state_name))
         if cargo:
             cargo_kind = resolve_kind(cargo)
             base_entity = node(cargo_kind, cargo)
@@ -182,21 +191,29 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
             add_edge(adj, tid, dest_entity)
 
         for tr in safe_list((t or {}).get("transporters", [])):
-            if isinstance(tr, dict):
-                p_name = ""
-                for key in ["protein", "protein_complex", "name"]:
-                    candidate = (tr.get(key) or "").strip() if isinstance(tr.get(key), str) else ""
-                    if candidate:
-                        p_name = candidate
-                        break
-                if p_name:
-                    add_edge(adj, node(resolve_kind(p_name), p_name), tid)
+            p_name = resolve_actor_name(tr)
+            if p_name:
+                add_edge(adj, node(resolve_kind(p_name), p_name), tid)
 
         for ews in safe_list((t or {}).get("elements_with_states", [])):
             if isinstance(ews, dict):
                 el = (ews.get("element") or "").strip()
                 if el:
                     add_edge(adj, node(resolve_kind(el), el), tid)
+
+    # --- Element locations ---
+    for row in safe_list((element_locations or {}).get("protein_locations", [])):
+        if not isinstance(row, dict):
+            continue
+        pname = resolve_actor_name(row)
+        if not pname:
+            continue
+        pnode = node(resolve_kind(pname), pname)
+        state = (row.get("biological_state") or "").strip() if isinstance(row.get("biological_state"), str) else ""
+        if state:
+            add_edge(adj, pnode, node("biological_state", state))
+        else:
+            adj.setdefault(pnode, set())
 
     # --- Interactions ---
     for i, inter in enumerate(interactions):

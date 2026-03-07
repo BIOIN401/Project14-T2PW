@@ -22,16 +22,16 @@ from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from process_normalizer import (
+    GateValidationError,
     attach_transporters_from_evidence,
     compute_normalization_stats,
     dedupe_processes,
     ensure_autostates,
     normalize_composites,
+    normalize_process_actor_schema,
     promote_catalysts,
     rewrite_reactions_to_complex_states,
-    validate_no_scaffold_modifiers,
-    validate_no_composites,
-    validate_registry_references,
+    run_strict_post_normalization_gates,
 )
 from pipeline import (
     PipelineFailure,
@@ -304,6 +304,7 @@ def run_post_pipeline_sbml_artifacts(
         post_normalization_probe: Dict[str, Any] = {}
         post_transport_attachment_probe: Dict[str, Any] = {}
         post_dedupe_probe: Dict[str, Any] = {}
+        gate_connectivity_summary: Dict[str, Any] = {}
         try:
             normalize_composites(normalized_input, report=normalization_report)
             rewrite_reactions_to_complex_states(normalized_input, report=normalization_report)
@@ -329,20 +330,46 @@ def run_post_pipeline_sbml_artifacts(
                 encoding="utf-8",
             )
             promote_catalysts(normalized_input, report=normalization_report)
+            normalize_process_actor_schema(normalized_input, report=normalization_report)
             dedupe_processes(normalized_input, report=normalization_report)
-            validate_no_composites(normalized_input)
-            validate_registry_references(normalized_input)
-            validate_no_scaffold_modifiers(normalized_input, report=normalization_report)
-            compute_normalization_stats(normalized_input, normalization_report)
+            gate_snapshot = run_strict_post_normalization_gates(
+                normalized_input,
+                report=normalization_report,
+                forbidden_complexes=["thyroglobulin:2-aminoacrylic acid"],
+                enforce_all_proteins_connected=True,
+            )
+            gate_connectivity_summary = _safe_dict(gate_snapshot.get("connectivity"))
             post_dedupe_probe = {
-                "normalization_stats": _safe_dict(normalization_report.get("summary")),
-                "graph_summary": graph_summary(normalized_input),
+                "normalization_stats": _safe_dict(gate_snapshot.get("normalization_stats")),
+                "graph_summary": gate_connectivity_summary,
                 "payload": deepcopy(normalized_input),
             }
             post_dedupe_probe_path.write_text(
                 json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
                 encoding="utf-8",
             )
+        except GateValidationError as exc:
+            gate_details = _safe_dict(getattr(exc, "details", {}))
+            gate_connectivity_summary = _safe_dict(gate_details.get("connectivity"))
+            gate_fail_report = {
+                "status": "failed",
+                "stage": "post_normalization_hard_gates",
+                "error": str(exc),
+                "errors": _safe_list(gate_details.get("errors")),
+                "normalization_stats": _safe_dict(gate_details.get("normalization_stats")),
+                "connectivity": gate_connectivity_summary,
+            }
+            if not post_dedupe_probe:
+                post_dedupe_probe = {
+                    "normalization_stats": _safe_dict(gate_details.get("normalization_stats"))
+                    or _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": gate_connectivity_summary or graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_dedupe_probe_path.write_text(
+                    json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
         except Exception as exc:
             gate_fail_report = {
                 "status": "failed",
@@ -390,6 +417,7 @@ def run_post_pipeline_sbml_artifacts(
                 "post_normalization_probe": post_normalization_probe,
                 "post_transport_attachment_probe": post_transport_attachment_probe,
                 "post_dedupe_probe": post_dedupe_probe,
+                "connectivity_summary": _safe_dict(post_dedupe_probe.get("graph_summary")),
                 "audit_report": {"summary": {"error_count": 0, "warning_count": 0, "patch_count": 0}},
                 "audit_patch": {},
                 "audit_apply_report": {"summary": {"accepted_count": 0, "rejected_count": 0}},
@@ -796,6 +824,7 @@ def run_post_pipeline_sbml_artifacts(
             "post_normalization_probe": post_normalization_probe,
             "post_transport_attachment_probe": post_transport_attachment_probe,
             "post_dedupe_probe": post_dedupe_probe,
+            "connectivity_summary": gate_connectivity_summary or _safe_dict(post_dedupe_probe.get("graph_summary")),
             "audit_report": json.loads(audit_report_path.read_text(encoding="utf-8")),
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
@@ -1221,9 +1250,8 @@ if st.session_state.get("pipeline_ready"):
         st.write(
             {
                 "normalization_stats": _safe_dict(post_artifacts.get("pre_normalization_report")).get("summary", {}),
-                "connectivity": _safe_dict(
-                    post_artifacts.get("post_dedupe_probe") or post_artifacts.get("post_normalization_probe")
-                ).get("graph_summary", {}),
+                "connectivity": _safe_dict(post_artifacts.get("connectivity_summary"))
+                or _safe_dict(post_artifacts.get("post_dedupe_probe") or post_artifacts.get("post_normalization_probe")).get("graph_summary", {}),
                 "gate_failed": gate_failed,
                 "gate_fail_report": post_artifacts.get("gate_fail_report", {}),
                 "audit": audit_summary,

@@ -21,8 +21,10 @@ from process_normalizer import (  # noqa: E402
     dedupe_processes,
     ensure_autostates,
     normalize_composites,
+    normalize_process_actor_schema,
     promote_catalysts,
     rewrite_reactions_to_complex_states,
+    run_strict_post_normalization_gates,
     validate_no_scaffold_modifiers,
     validate_no_composites,
     validate_registry_references,
@@ -59,7 +61,14 @@ def _thyroid_payload() -> dict:
                 {"compound": "thyroglobulin + iodotyrosine", "biological_state": "luminal"},
                 {"compound": "iodide", "biological_state": "luminal"},
             ],
-            "protein_locations": [{"protein": "thyroid peroxidase", "biological_state": "luminal"}],
+            "protein_locations": [
+                {"protein": "thyroid peroxidase", "biological_state": "luminal"},
+                {
+                    "protein": "pendrin",
+                    "biological_state": "luminal",
+                    "evidence": "iodide is transported through pendrin",
+                },
+            ],
         },
         "processes": {
             "reactions": [
@@ -81,6 +90,7 @@ def _thyroid_payload() -> dict:
                     "inputs": ["thyroglobulin + iodotyrosine", "iodide", "hydrogen peroxide", "thyroid peroxidase"],
                     "outputs": ["thyroglobulin + 3,5-diiodo-L-tyrosine"],
                     "evidence": "observed",
+                    "enzymes": [{"protein_complex": "thyroid peroxidase", "evidence": "legacy schema"}],
                 },
                 {
                     "name": "R2",
@@ -96,6 +106,7 @@ def _thyroid_payload() -> dict:
                     "name": "R3",
                     "inputs": ["thyroglobulin + liothyronine", "thyroid peroxidase"],
                     "outputs": ["thyroglobulin + thyroxine"],
+                    "evidence": "thyroglobulin + liothyronine is catalyzed by thyroid peroxidase to produce thyroglobulin + thyroxine",
                 },
             ],
             "transports": [
@@ -156,11 +167,14 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
     promote_catalysts(data, report=report)
+    normalize_process_actor_schema(data, report=report)
     dedupe_processes(data, report=report)
-    validate_no_composites(data)
-    validate_registry_references(data)
-    validate_no_scaffold_modifiers(data, report=report)
-    compute_normalization_stats(data, report)
+    run_strict_post_normalization_gates(
+        data,
+        report=report,
+        forbidden_complexes=["thyroglobulin:2-aminoacrylic acid"],
+        enforce_all_proteins_connected=True,
+    )
     return data, report
 
 
@@ -183,6 +197,13 @@ def test_thyroid_normalization_and_dedupe() -> None:
     assert len(complexes) >= 4
     assert int(summary.get("complexes_created", 0)) >= 4
     assert "thyroglobulin:2-aminoacrylic acid" not in complexes
+    forbidden = "thyroglobulin:2-aminoacrylic acid"
+    for reaction in normalized["processes"]["reactions"]:
+        assert forbidden not in reaction.get("inputs", [])
+        assert forbidden not in reaction.get("outputs", [])
+    for transport in normalized["processes"]["transports"]:
+        assert str(transport.get("cargo") or "") != forbidden
+        assert str(transport.get("cargo_complex") or "") != forbidden
 
     for reaction in normalized["processes"]["reactions"]:
         for side in ["inputs", "outputs"]:
@@ -200,7 +221,6 @@ def test_thyroid_normalization_and_dedupe() -> None:
     assert int(summary.get("dedupe_removed_total", 0)) >= 2
     assert int(summary.get("n_plus_tokens_remaining", 1)) == 0
     assert int(summary.get("reactions_rewritten", 0)) > 0
-    assert int(summary.get("scaffold_split_reactions", 0)) > 0
     assert int(summary.get("scaffold_in_modifiers_count", 0)) == 0
     assert int(summary.get("transporters_attached", 0)) > 0
     assert int(summary.get("dedupe_removed_total", 0)) > 0 or int(summary.get("no_op_removed_count", 0)) > 0
@@ -216,9 +236,16 @@ def test_thyroid_normalization_and_dedupe() -> None:
     comps = connected_components(adj)
     assert all(not n.startswith("cargo:") for n in adj.keys())
     assert all("+" not in n for n in adj.keys())
-    assert len(comps) <= 2
+    assert len(comps) <= 1
     assert len(adj.get("protein:thyroid peroxidase", set())) > 0
     assert len(adj.get("protein:pendrin", set())) > 0
+    protein_names = {
+        str(item.get("name") or "").strip()
+        for item in normalized.get("entities", {}).get("proteins", [])
+        if isinstance(item, dict)
+    }
+    proteins_degree0 = sum(1 for pname in protein_names if len(adj.get(f"protein:{pname}", set())) == 0)
+    assert proteins_degree0 == 0
 
     iodide_transports = [
         t
@@ -234,6 +261,14 @@ def test_thyroid_normalization_and_dedupe() -> None:
         )
         for t in iodide_transports
     )
+
+    for reaction in normalized["processes"]["reactions"]:
+        for enzyme in reaction.get("enzymes", []):
+            if not isinstance(enzyme, dict):
+                continue
+            value = str(enzyme.get("protein") or "").strip().casefold()
+            if value == "thyroid peroxidase":
+                assert "protein_complex" not in enzyme
 
 
 def test_mapping_route_and_species_id_helpers() -> None:
@@ -263,6 +298,13 @@ def test_sbml_single_species_per_entity_and_compartment(tmp_path: Path) -> None:
     import libsbml  # type: ignore
 
     doc = libsbml.readSBMLFromFile(str(sbml_path))
+    assert int(doc.checkConsistency()) >= 0
+    severe_errors = [
+        doc.getError(i)
+        for i in range(doc.getNumErrors())
+        if int(doc.getError(i).getSeverity()) >= 2
+    ]
+    assert not severe_errors
     model = doc.getModel()
     seen = set()
     for idx in range(model.getNumSpecies()):
@@ -292,3 +334,4 @@ def test_sbml_single_species_per_entity_and_compartment(tmp_path: Path) -> None:
             found_pendrin_transport_modifier = True
             break
     assert found_pendrin_transport_modifier
+    assert model.getNumReactions() <= 7

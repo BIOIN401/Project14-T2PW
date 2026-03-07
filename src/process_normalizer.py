@@ -24,6 +24,12 @@ BYPRODUCT_TOKEN_DENYLIST = {
 }
 
 
+class GateValidationError(ValueError):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+        super().__init__(message)
+        self.details = details or {}
+
+
 def _safe_dict(value: Any) -> Dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
@@ -280,32 +286,34 @@ def _is_likely_byproduct(token: str) -> bool:
     return any(t.endswith(suffix) for suffix in BYPRODUCT_SUFFIX_DENYLIST)
 
 
-def _reaction_output_supports_complex(
+def _reaction_output_complex_evidence(
     *,
     left: str,
     right: str,
     evidence_text: str,
-) -> bool:
+) -> Dict[str, bool]:
     evidence = _canonical(evidence_text).casefold()
     if not evidence:
-        return False
+        return {"supported": False, "exact_composite": False, "complex_phrase": False}
     left_e = re.escape(_canonical(left))
     right_e = re.escape(_canonical(right))
 
-    compact_plus_patterns = [
-        rf"{left_e}\+\s*{right_e}",
-        rf"{left_e}\s*\+{right_e}",
+    exact_plus_patterns = [
+        rf"{left_e}\s*\+\s*{right_e}",
     ]
-    for pattern in compact_plus_patterns:
-        if re.search(pattern, evidence, flags=re.IGNORECASE):
-            return True
+    exact_composite = any(re.search(pattern, evidence, flags=re.IGNORECASE) for pattern in exact_plus_patterns)
 
     binding_patterns = [
         rf"{left_e}\s+bound\s+to\s+{right_e}",
         rf"{left_e}\s*-\s*{right_e}\s+complex",
         rf"{left_e}\s+conjugated\s+to\s+{right_e}",
     ]
-    return any(re.search(pattern, evidence, flags=re.IGNORECASE) for pattern in binding_patterns)
+    complex_phrase = any(re.search(pattern, evidence, flags=re.IGNORECASE) for pattern in binding_patterns)
+    return {
+        "supported": bool(exact_composite or complex_phrase),
+        "exact_composite": bool(exact_composite),
+        "complex_phrase": bool(complex_phrase),
+    }
 
 
 def materialize_complex(
@@ -384,8 +392,11 @@ def _rewrite_token(
         is_reaction_output_pointer = "/processes/reactions/" in pointer and pointer.endswith("/outputs")
         if is_reaction_output_pointer:
             right = parts[1] if len(parts) > 1 else ""
-            supported = _reaction_output_supports_complex(left=parts[0], right=right, evidence_text=evidence_text)
-            if (not supported) or _is_likely_byproduct(right):
+            signal = _reaction_output_complex_evidence(left=parts[0], right=right, evidence_text=evidence_text)
+            supported = bool(signal.get("supported", False))
+            exact_composite = bool(signal.get("exact_composite", False))
+            block_for_byproduct = _is_likely_byproduct(right) and not exact_composite
+            if (not supported) or block_for_byproduct:
                 out: List[str] = []
                 for part in parts:
                     c_part = _canonical(part)
@@ -403,7 +414,8 @@ def _rewrite_token(
                         "from": text,
                         "to": out,
                         "supported_by_evidence": supported,
-                        "blocked_by_byproduct_rule": _is_likely_byproduct(right),
+                        "exact_composite_match": exact_composite,
+                        "blocked_by_byproduct_rule": block_for_byproduct,
                     }
                 )
                 return out
@@ -683,6 +695,7 @@ def rewrite_reactions_to_complex_states(payload: Dict[str, Any], *, report: Opti
         if not scaffold_tokens or not non_protein_tokens:
             continue
 
+        reaction_evidence = _canonical(str(reaction.get("evidence", "")))
         rewritten = False
         consumed_non_protein: Set[str] = set()
         new_outputs: List[str] = []
@@ -690,11 +703,26 @@ def rewrite_reactions_to_complex_states(payload: Dict[str, Any], *, report: Opti
 
         for scaffold in scaffold_tokens:
             chosen = ""
+            chosen_exact = False
+            best_score = -1
             for candidate in non_protein_tokens:
                 if _normalize(candidate) in consumed_non_protein:
                     continue
-                chosen = candidate
-                break
+                signal = _reaction_output_complex_evidence(
+                    left=scaffold,
+                    right=candidate,
+                    evidence_text=reaction_evidence,
+                )
+                if not bool(signal.get("supported", False)):
+                    continue
+                exact_composite = bool(signal.get("exact_composite", False))
+                if _is_likely_byproduct(candidate) and not exact_composite:
+                    continue
+                score = 2 if exact_composite else 1
+                if score > best_score:
+                    chosen = candidate
+                    chosen_exact = exact_composite
+                    best_score = score
             if not chosen:
                 continue
             complex_name = materialize_complex(scaffold, chosen, payload, report=rep)
@@ -706,6 +734,16 @@ def rewrite_reactions_to_complex_states(payload: Dict[str, Any], *, report: Opti
             ]
             new_outputs.append(complex_name)
             rewritten = True
+            rep["actions"].append(
+                {
+                    "type": "reaction_output_scaffold_state_bound",
+                    "json_pointer": f"/processes/reactions/{ridx}/outputs",
+                    "scaffold": scaffold,
+                    "product": chosen,
+                    "complex": complex_name,
+                    "exact_composite_match": chosen_exact,
+                }
+            )
 
         if rewritten:
             base_outputs.extend(new_outputs)
@@ -719,6 +757,104 @@ def rewrite_reactions_to_complex_states(payload: Dict[str, Any], *, report: Opti
                     "outputs": reaction["outputs"],
                 }
             )
+    return payload
+
+
+def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    entities = _safe_dict(payload.get("entities"))
+    protein_rows = _safe_list(entities.get("proteins"))
+    complex_rows = _safe_list(entities.get("protein_complexes"))
+    protein_by_norm = {
+        _normalize(_canonical(str(row.get("name", "")))): _canonical(str(row.get("name", "")))
+        for row in protein_rows
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    }
+    complex_norms = {
+        _normalize(_canonical(str(row.get("name", ""))))
+        for row in complex_rows
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    }
+    reactions, transports = _process_lists(payload)
+
+    def _rewrite_actor_rows(rows: List[Any], pointer_prefix: str) -> None:
+        for idx, row in enumerate(rows):
+            if not isinstance(row, dict):
+                continue
+            pointer = f"{pointer_prefix}/{idx}"
+            protein_name = _canonical(str(row.get("protein", "")))
+            complex_name = _canonical(str(row.get("protein_complex", "")))
+            fallback_name = _canonical(str(row.get("name", "")))
+
+            if complex_name:
+                norm = _normalize(complex_name)
+                if norm in protein_by_norm:
+                    row.pop("protein_complex", None)
+                    row["protein"] = protein_by_norm[norm]
+                    rep["actions"].append(
+                        {
+                            "type": "schema_drift_rewrite_actor_to_protein",
+                            "json_pointer": pointer,
+                            "from": "protein_complex",
+                            "name": protein_by_norm[norm],
+                        }
+                    )
+                    continue
+
+            if protein_name:
+                norm = _normalize(protein_name)
+                if norm in complex_norms and norm not in protein_by_norm:
+                    row.pop("protein", None)
+                    row["protein_complex"] = protein_name
+                    rep["actions"].append(
+                        {
+                            "type": "schema_drift_rewrite_actor_to_protein_complex",
+                            "json_pointer": pointer,
+                            "from": "protein",
+                            "name": protein_name,
+                        }
+                    )
+                    continue
+
+            if (not protein_name) and (not complex_name) and fallback_name:
+                norm = _normalize(fallback_name)
+                if norm in protein_by_norm:
+                    row["protein"] = protein_by_norm[norm]
+                    row.pop("protein_complex", None)
+                    rep["actions"].append(
+                        {
+                            "type": "schema_drift_materialize_protein_field",
+                            "json_pointer": pointer,
+                            "name": protein_by_norm[norm],
+                        }
+                    )
+                elif norm in complex_norms:
+                    row["protein_complex"] = fallback_name
+                    row.pop("protein", None)
+                    rep["actions"].append(
+                        {
+                            "type": "schema_drift_materialize_complex_field",
+                            "json_pointer": pointer,
+                            "name": fallback_name,
+                        }
+                    )
+
+    for ridx, reaction in enumerate(reactions):
+        if not isinstance(reaction, dict):
+            continue
+        for key in ["enzymes", "modifiers"]:
+            rows = _safe_list(reaction.get(key))
+            if not isinstance(reaction.get(key), list):
+                reaction[key] = rows
+            _rewrite_actor_rows(rows, f"/processes/reactions/{ridx}/{key}")
+
+    for tidx, transport in enumerate(transports):
+        if not isinstance(transport, dict):
+            continue
+        rows = _safe_list(transport.get("transporters"))
+        if not isinstance(transport.get("transporters"), list):
+            transport["transporters"] = rows
+        _rewrite_actor_rows(rows, f"/processes/transports/{tidx}/transporters")
     return payload
 
 
@@ -1091,17 +1227,20 @@ def validate_registry_references(payload: Dict[str, Any]) -> None:
             for tidx, token in enumerate(_safe_list(reaction.get(side))):
                 if isinstance(token, str) and _canonical(token) and _normalize(token) not in registry:
                     errors.append(f"/processes/reactions/{ridx}/{side}/{tidx} unknown entity: {token}")
-        for eidx, enzyme in enumerate(_safe_list(reaction.get("enzymes"))):
-            if not isinstance(enzyme, dict):
-                continue
-            enzyme_name = ""
-            for key in ["protein", "protein_complex", "name"]:
-                candidate = _canonical(str(enzyme.get(key, "")))
-                if candidate:
-                    enzyme_name = candidate
-                    break
-            if enzyme_name and _normalize(enzyme_name) not in registry:
-                errors.append(f"/processes/reactions/{ridx}/enzymes/{eidx} unknown modifier: {enzyme_name}")
+        for actor_key in ["enzymes", "modifiers"]:
+            for eidx, enzyme in enumerate(_safe_list(reaction.get(actor_key))):
+                if not isinstance(enzyme, dict):
+                    continue
+                enzyme_name = ""
+                for key in ["protein", "protein_complex", "name"]:
+                    candidate = _canonical(str(enzyme.get(key, "")))
+                    if candidate:
+                        enzyme_name = candidate
+                        break
+                if enzyme_name and _normalize(enzyme_name) not in registry:
+                    errors.append(
+                        f"/processes/reactions/{ridx}/{actor_key}/{eidx} unknown modifier: {enzyme_name}"
+                    )
 
     for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
         if not isinstance(transport, dict):
@@ -1109,6 +1248,19 @@ def validate_registry_references(payload: Dict[str, Any]) -> None:
         cargo = transport.get("cargo_complex") if isinstance(transport.get("cargo_complex"), str) and _canonical(transport.get("cargo_complex")) else transport.get("cargo")
         if isinstance(cargo, str) and _canonical(cargo) and _normalize(cargo) not in registry:
             errors.append(f"/processes/transports/{tidx}/cargo unknown entity: {cargo}")
+        for tridx, transporter in enumerate(_safe_list(transport.get("transporters"))):
+            if not isinstance(transporter, dict):
+                continue
+            transporter_name = ""
+            for key in ["protein", "protein_complex", "name"]:
+                candidate = _canonical(str(transporter.get(key, "")))
+                if candidate:
+                    transporter_name = candidate
+                    break
+            if transporter_name and _normalize(transporter_name) not in registry:
+                errors.append(
+                    f"/processes/transports/{tidx}/transporters/{tridx} unknown transporter: {transporter_name}"
+                )
 
     if errors:
         raise ValueError("Registry validation failed:\n" + "\n".join(errors[:40]))
@@ -1180,6 +1332,187 @@ def compute_normalization_stats(payload: Dict[str, Any], report: Dict[str, Any])
     return _safe_dict(rep.get("summary"))
 
 
+def run_strict_post_normalization_gates(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+    forbidden_complexes: Optional[Sequence[str]] = None,
+    enforce_all_proteins_connected: bool = False,
+) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    stats = compute_normalization_stats(payload, rep)
+    errors: List[Dict[str, str]] = []
+    forbidden_norms = {
+        _normalize(_canonical(name))
+        for name in (forbidden_complexes or ["thyroglobulin:2-aminoacrylic acid"])
+        if _normalize(_canonical(name))
+    }
+
+    entities = _safe_dict(payload.get("entities"))
+    processes = _safe_dict(payload.get("processes"))
+    element_locations = _safe_dict(payload.get("element_locations"))
+    proteins = _safe_list(entities.get("proteins"))
+    complexes = _safe_list(entities.get("protein_complexes"))
+    protein_pointer_by_norm = {
+        _normalize(_canonical(str(row.get("name", "")))): f"/entities/proteins/{idx}/name"
+        for idx, row in enumerate(proteins)
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    }
+    protein_registry_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+
+    def _add_error(path: str, reason: str) -> None:
+        errors.append({"path": path, "reason": reason})
+
+    def _check_forbidden(path: str, token: str) -> None:
+        if _normalize(_canonical(token)) in forbidden_norms:
+            _add_error(path, f"Forbidden complex reference detected: {token}")
+
+    if int(stats.get("n_plus_tokens_remaining", 0)) != 0:
+        _add_error(
+            "/normalization_stats/n_plus_tokens_remaining",
+            f"Expected 0 plus tokens, found {int(stats.get('n_plus_tokens_remaining', 0))}.",
+        )
+
+    for idx, row in enumerate(_safe_list(entities.get("compounds"))):
+        if isinstance(row, dict):
+            _check_forbidden(f"/entities/compounds/{idx}/name", str(row.get("name", "")))
+    for idx, row in enumerate(_safe_list(entities.get("proteins"))):
+        if isinstance(row, dict):
+            _check_forbidden(f"/entities/proteins/{idx}/name", str(row.get("name", "")))
+    for idx, row in enumerate(_safe_list(entities.get("protein_complexes"))):
+        if isinstance(row, dict):
+            _check_forbidden(f"/entities/protein_complexes/{idx}/name", str(row.get("name", "")))
+
+    for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ["inputs", "outputs"]:
+            for tidx, token in enumerate(_safe_list(reaction.get(side))):
+                if isinstance(token, str):
+                    _check_forbidden(f"/processes/reactions/{ridx}/{side}/{tidx}", token)
+        for key in ["enzymes", "modifiers"]:
+            for midx, actor in enumerate(_safe_list(reaction.get(key))):
+                if not isinstance(actor, dict):
+                    continue
+                actor_name = ""
+                for field in ["protein", "protein_complex", "name"]:
+                    value = _canonical(str(actor.get(field, "")))
+                    if value:
+                        actor_name = value
+                        break
+                if not actor_name:
+                    continue
+                _check_forbidden(f"/processes/reactions/{ridx}/{key}/{midx}", actor_name)
+                if _normalize(actor_name) not in protein_registry_norms:
+                    _add_error(
+                        f"/processes/reactions/{ridx}/{key}/{midx}",
+                        f"Unknown protein/modifier reference: {actor_name}",
+                    )
+
+    for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+        if not isinstance(transport, dict):
+            continue
+        for field in ["cargo_complex", "cargo"]:
+            token = transport.get(field)
+            if isinstance(token, str):
+                _check_forbidden(f"/processes/transports/{tidx}/{field}", token)
+        for tridx, actor in enumerate(_safe_list(transport.get("transporters"))):
+            if not isinstance(actor, dict):
+                continue
+            actor_name = ""
+            for field in ["protein", "protein_complex", "name"]:
+                value = _canonical(str(actor.get(field, "")))
+                if value:
+                    actor_name = value
+                    break
+            if not actor_name:
+                continue
+            _check_forbidden(f"/processes/transports/{tidx}/transporters/{tridx}", actor_name)
+            if _normalize(actor_name) not in protein_registry_norms:
+                _add_error(
+                    f"/processes/transports/{tidx}/transporters/{tridx}",
+                    f"Unknown transporter reference: {actor_name}",
+                )
+
+    try:
+        validate_no_composites(payload)
+    except Exception as exc:  # noqa: BLE001
+        _add_error("/processes", f"Composite validation failed: {exc}")
+    try:
+        validate_registry_references(payload)
+    except Exception as exc:  # noqa: BLE001
+        _add_error("/processes", f"Registry validation failed: {exc}")
+    try:
+        validate_no_scaffold_modifiers(payload, report=rep)
+    except Exception as exc:  # noqa: BLE001
+        _add_error("/processes/reactions/*/enzymes", f"Scaffold modifier validation failed: {exc}")
+
+    from qa_graph import build_graph, connected_components, degrees, get_entities, node  # type: ignore
+
+    adj, meta = build_graph(payload)
+    comps = connected_components(adj)
+    deg = degrees(adj)
+    n_edges = sum(len(v) for v in adj.values()) // 2
+    main_size = max((len(c) for c in comps), default=0)
+    n_nodes = len(adj)
+    ents = get_entities(payload)
+    protein_nodes = [node("protein", name) for name in sorted(ents.get("proteins", set()))]
+    proteins_degree0 = sum(1 for pname in protein_nodes if deg.get(pname, 0) == 0)
+    proteins_total = len(protein_nodes)
+    proteins_attached = max(0, proteins_total - proteins_degree0)
+    connectivity = {
+        **meta,
+        "n_nodes": n_nodes,
+        "n_edges": n_edges,
+        "n_components": len(comps),
+        "main_component_size": main_size,
+        "largest_component_pct": round((100.0 * main_size / n_nodes), 2) if n_nodes else 0.0,
+        "n_isolated_nodes": sum(1 for _, d in deg.items() if d == 0),
+        "proteins_degree0": proteins_degree0,
+        "proteins_attached_pct": round((100.0 * proteins_attached / proteins_total), 2) if proteins_total else 100.0,
+    }
+
+    located_norm_to_pointers: Dict[str, List[str]] = {}
+    for idx, prow in enumerate(_safe_list(element_locations.get("protein_locations"))):
+        if not isinstance(prow, dict):
+            continue
+        pname = _canonical(str(prow.get("protein", "")))
+        if not pname:
+            continue
+        norm = _normalize(pname)
+        located_norm_to_pointers.setdefault(norm, []).append(f"/element_locations/protein_locations/{idx}/protein")
+
+    for protein_name in sorted(ents.get("proteins", set())):
+        pnode = node("protein", protein_name)
+        if deg.get(pnode, 0) > 0:
+            continue
+        norm = _normalize(protein_name)
+        if norm in located_norm_to_pointers:
+            _add_error(
+                located_norm_to_pointers[norm][0],
+                f"Located protein is isolated in connectivity graph: {protein_name}",
+            )
+
+    if enforce_all_proteins_connected and proteins_degree0 > 0:
+        for protein_name in sorted(ents.get("proteins", set())):
+            pnode = node("protein", protein_name)
+            if deg.get(pnode, 0) == 0:
+                pnorm = _normalize(protein_name)
+                _add_error(
+                    protein_pointer_by_norm.get(pnorm, f"/entities/proteins/{protein_name}"),
+                    f"Protein has degree 0 after normalization: {protein_name}",
+                )
+
+    details = {
+        "normalization_stats": stats,
+        "connectivity": connectivity,
+        "errors": errors,
+    }
+    if errors:
+        raise GateValidationError("Hard-gate validation failed after normalization.", details=details)
+    return details
+
+
 def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     data = deepcopy(payload)
     report = _new_report()
@@ -1188,9 +1521,7 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
     promote_catalysts(data, report=report)
+    normalize_process_actor_schema(data, report=report)
     dedupe_processes(data, report=report)
-    validate_no_composites(data)
-    validate_registry_references(data)
-    validate_no_scaffold_modifiers(data, report=report)
-    compute_normalization_stats(data, report)
+    run_strict_post_normalization_gates(data, report=report, enforce_all_proteins_connected=True)
     return data, report
