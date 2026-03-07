@@ -15,6 +15,7 @@ from lxml import etree
 
 from apply_audit_patch import run_apply
 from audit_json_llm import run_audit
+from enrich_entities import run_enrichment
 from grounding import apply_grounding
 from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
@@ -262,7 +263,9 @@ def run_post_pipeline_sbml_artifacts(
         apply_report_path = tmp / "audit_apply_report.json"
         audited_json = tmp / "final.audited.json"
         mapped_json = tmp / "final.mapped.json"
+        enriched_json = tmp / "final.enriched.json"
         mapping_report_path = tmp / "mapping_report.json"
+        enrichment_report_path = tmp / "enrichment_report.json"
         sbml_path = tmp / "pathway.sbml"
         sbml_report_json_path = tmp / "sbml_validation_report.json"
         sbml_report_txt_path = tmp / "sbml_validation_report.txt"
@@ -429,12 +432,14 @@ def run_post_pipeline_sbml_artifacts(
                 "final_audited": normalized_input,
                 "final_mapped": normalized_input,
                 "mapping_report": {"summary": {}},
+                "enrichment_report": {"summary": {}},
                 "sbml_report_json": {"counts": {}, "validation": {"has_errors": True}},
                 "sbml_report_txt": "",
                 "sbml_overwatch_report": {},
                 "sbml_xml_bytes": b"",
                 "sbml_build_report": {},
                 "mapping_cache_path": str(cache_path),
+                "enrichment_cache_path": str(cache_path.with_name("enrichment_cache.json")),
                 "mapping_id_source": id_source,
                 "mapping_db_host": db_host,
                 "mapping_db_schema": db_schema,
@@ -689,6 +694,7 @@ def run_post_pipeline_sbml_artifacts(
                     llm_temperature=gap_temp,
                     llm_max_tokens=gap_tokens,
                     max_items=max(10, int(gap_resolver_max_items)),
+                    enable_id_resolution=False,
                 )
                 current_after_round = round_resolved
             else:
@@ -802,8 +808,25 @@ def run_post_pipeline_sbml_artifacts(
             mapping_report_path,
             **mapping_kwargs,
         )
+        enrichment_cache_path = cache_path.with_name("enrichment_cache.json")
+        enrichment_report: Dict[str, Any] = {}
+        sbml_input_path = mapped_json
+        try:
+            enrichment_report = run_enrichment(
+                mapped_json,
+                enriched_json,
+                enrichment_report_path,
+                cache_path=enrichment_cache_path,
+            )
+            sbml_input_path = enriched_json
+        except Exception as exc:
+            enrichment_report = {
+                "summary": {"enrichment_failed": True},
+                "error": str(exc),
+            }
+            sbml_input_path = mapped_json
         sbml_build_report = build_sbml(
-            mapped_json,
+            sbml_input_path,
             sbml_path,
             sbml_report_json_path,
             sbml_report_txt_path,
@@ -812,7 +835,7 @@ def run_post_pipeline_sbml_artifacts(
         sbml_overwatch_report: Dict[str, Any] = {}
         if use_sbml_overwatch:
             sbml_overwatch_report = run_sbml_overwatch(
-                mapped_json,
+                sbml_input_path,
                 sbml_path,
                 sbml_report_json_path,
                 sbml_overwatch_path,
@@ -834,14 +857,16 @@ def run_post_pipeline_sbml_artifacts(
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
             "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
-            "final_mapped": json.loads(mapped_json.read_text(encoding="utf-8")),
+            "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
             "mapping_report": mapping_report,
+            "enrichment_report": enrichment_report,
             "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")),
             "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
             "sbml_overwatch_report": sbml_overwatch_report,
             "sbml_xml_bytes": sbml_path.read_bytes(),
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
+            "enrichment_cache_path": str(enrichment_cache_path),
             "mapping_id_source": id_source,
             "mapping_db_host": db_host,
             "mapping_db_schema": db_schema,
@@ -1248,6 +1273,7 @@ if st.session_state.get("pipeline_ready"):
         gate_failed = bool(post_artifacts.get("gate_failed", False))
         audit_summary = post_artifacts.get("audit_report", {}).get("summary", {})
         mapping_summary = post_artifacts.get("mapping_report", {}).get("summary", {})
+        enrichment_summary = post_artifacts.get("enrichment_report", {}).get("summary", {})
         sbml_summary = post_artifacts.get("sbml_report_json", {}).get("counts", {})
         sbml_validation = post_artifacts.get("sbml_report_json", {}).get("validation", {})
         sbml_overwatch_summary = post_artifacts.get("sbml_overwatch_report", {}).get("summary", {})
@@ -1261,10 +1287,12 @@ if st.session_state.get("pipeline_ready"):
                 "gate_fail_report": post_artifacts.get("gate_fail_report", {}),
                 "audit": audit_summary,
                 "mapping": mapping_summary,
+                "enrichment": enrichment_summary,
                 "sbml_counts": sbml_summary,
                 "sbml_validation_has_errors": sbml_validation.get("has_errors"),
                 "sbml_overwatch": sbml_overwatch_summary,
                 "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
+                "enrichment_cache_path": post_artifacts.get("enrichment_cache_path"),
                 "mapping_id_source": post_artifacts.get("mapping_id_source"),
                 "mapping_db_host": post_artifacts.get("mapping_db_host"),
                 "mapping_db_schema": post_artifacts.get("mapping_db_schema"),
@@ -1396,6 +1424,13 @@ if st.session_state.get("pipeline_ready"):
             file_name="mapping_report.json",
             mime="application/json",
             key="dl_mapping_report",
+        )
+        st.download_button(
+            "Download enrichment_report.json",
+            json.dumps(post_artifacts.get("enrichment_report", {}), indent=2),
+            file_name="enrichment_report.json",
+            mime="application/json",
+            key="dl_enrichment_report",
         )
         if post_artifacts.get("sbml_xml_bytes"):
             st.download_button(

@@ -729,6 +729,7 @@ def resolve_gaps(
     llm_temperature: float = 0.15,
     llm_max_tokens: int = 900,
     max_items: int = 80,
+    enable_id_resolution: bool = True,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     working = deepcopy(payload)
     report: Dict[str, Any] = {
@@ -819,106 +820,112 @@ def resolve_gaps(
                 op_exec["organism_added"] = global_organism
 
         # Stage 3A: ID query plan -> deterministic execution -> LLM selection
-        ids_strategy = _canonical(str(_safe_dict(op.get("resolve_ids")).get("strategy", "db_then_api"))).lower()
-        background_cfg = _safe_dict(op.get("background"))
-        background_api_lookup = _canonical(str(background_cfg.get("api_lookup", "auto"))).lower()
-        if background_api_lookup not in {"auto", "none", "full"}:
-            background_api_lookup = "auto"
-        background_hmdb_lookup = bool(background_cfg.get("hmdb_lookup", bool(kind == "compound")))
-        background_max_results = max(1, min(12, int(background_cfg.get("max_results", 6) or 6)))
-        background_context: Dict[str, Any] = {}
+        if enable_id_resolution:
+            ids_strategy = _canonical(str(_safe_dict(op.get("resolve_ids")).get("strategy", "db_then_api"))).lower()
+            background_cfg = _safe_dict(op.get("background"))
+            background_api_lookup = _canonical(str(background_cfg.get("api_lookup", "auto"))).lower()
+            if background_api_lookup not in {"auto", "none", "full"}:
+                background_api_lookup = "auto"
+            background_hmdb_lookup = bool(background_cfg.get("hmdb_lookup", bool(kind == "compound")))
+            background_max_results = max(1, min(12, int(background_cfg.get("max_results", 6) or 6)))
+            background_context: Dict[str, Any] = {}
 
-        if background_api_lookup in {"auto", "full"}:
-            if kind == "compound":
-                background_context["compound_api"] = lookup_compound_api_background(
-                    client, name, max_results=background_max_results
+            if background_api_lookup in {"auto", "full"}:
+                if kind == "compound":
+                    background_context["compound_api"] = lookup_compound_api_background(
+                        client, name, max_results=background_max_results
+                    )
+                elif kind == "protein":
+                    org_for_bg = _canonical(str(item.get("organism", ""))) or global_organism
+                    background_context["protein_api"] = lookup_protein_api_background(
+                        client, name, org_for_bg, max_results=background_max_results
+                    )
+            if kind == "compound" and background_hmdb_lookup:
+                background_context["hmdb"] = lookup_hmdb_background(client, name, max_results=background_max_results)
+            if background_context:
+                op_exec["background"] = background_context
+
+            if bool(issue.get("needs_id_mapping")) and ids_strategy != "skip":
+                organism = _canonical(str(item.get("organism", ""))) if kind == "protein" else ""
+                id_exec = _run_id_strategy(
+                    kind=kind,
+                    name=name,
+                    organism=organism,
+                    strategy=ids_strategy,
+                    db=db,
+                    client=client,
                 )
-            elif kind == "protein":
-                org_for_bg = _canonical(str(item.get("organism", ""))) or global_organism
-                background_context["protein_api"] = lookup_protein_api_background(
-                    client, name, org_for_bg, max_results=background_max_results
+                id_candidates = _collect_id_candidates(kind, _safe_list(id_exec.get("attempts")))
+                id_candidates.extend(_id_candidates_from_attempt_candidates(kind, _safe_list(id_exec.get("attempts"))))
+                if kind == "compound":
+                    if isinstance(background_context.get("compound_api"), dict):
+                        id_candidates.extend(_id_candidates_from_api_background(kind, _safe_dict(background_context.get("compound_api"))))
+                    if isinstance(background_context.get("hmdb"), dict):
+                        id_candidates.extend(_id_candidates_from_hmdb_background(_safe_dict(background_context.get("hmdb"))))
+                elif kind == "protein":
+                    if isinstance(background_context.get("protein_api"), dict):
+                        id_candidates.extend(_id_candidates_from_api_background(kind, _safe_dict(background_context.get("protein_api"))))
+
+                # de-duplicate by mapped_ids and keep strongest confidence.
+                deduped: Dict[Tuple[Tuple[str, str], ...], Dict[str, Any]] = {}
+                for cand in id_candidates:
+                    if not isinstance(cand, dict):
+                        continue
+                    mapped_ids = _safe_dict(cand.get("mapped_ids"))
+                    if not mapped_ids:
+                        continue
+                    key = tuple(sorted((str(k), str(v)) for k, v in mapped_ids.items()))
+                    existing = deduped.get(key)
+                    if not existing or float(cand.get("confidence", 0.0)) > float(existing.get("confidence", 0.0)):
+                        deduped[key] = cand
+                id_candidates = list(deduped.values())
+                id_candidates.sort(
+                    key=lambda c: (float(c.get("confidence", 0.0)), 1 if str(c.get("source", "")) == "db" else 0),
+                    reverse=True,
                 )
-        if kind == "compound" and background_hmdb_lookup:
-            background_context["hmdb"] = lookup_hmdb_background(client, name, max_results=background_max_results)
-        if background_context:
-            op_exec["background"] = background_context
-
-        if bool(issue.get("needs_id_mapping")) and ids_strategy != "skip":
-            organism = _canonical(str(item.get("organism", ""))) if kind == "protein" else ""
-            id_exec = _run_id_strategy(
-                kind=kind,
-                name=name,
-                organism=organism,
-                strategy=ids_strategy,
-                db=db,
-                client=client,
-            )
-            id_candidates = _collect_id_candidates(kind, _safe_list(id_exec.get("attempts")))
-            id_candidates.extend(_id_candidates_from_attempt_candidates(kind, _safe_list(id_exec.get("attempts"))))
-            if kind == "compound":
-                if isinstance(background_context.get("compound_api"), dict):
-                    id_candidates.extend(_id_candidates_from_api_background(kind, _safe_dict(background_context.get("compound_api"))))
-                if isinstance(background_context.get("hmdb"), dict):
-                    id_candidates.extend(_id_candidates_from_hmdb_background(_safe_dict(background_context.get("hmdb"))))
-            elif kind == "protein":
-                if isinstance(background_context.get("protein_api"), dict):
-                    id_candidates.extend(_id_candidates_from_api_background(kind, _safe_dict(background_context.get("protein_api"))))
-
-            # de-duplicate by mapped_ids and keep strongest confidence.
-            deduped: Dict[Tuple[Tuple[str, str], ...], Dict[str, Any]] = {}
-            for cand in id_candidates:
-                if not isinstance(cand, dict):
-                    continue
-                mapped_ids = _safe_dict(cand.get("mapped_ids"))
-                if not mapped_ids:
-                    continue
-                key = tuple(sorted((str(k), str(v)) for k, v in mapped_ids.items()))
-                existing = deduped.get(key)
-                if not existing or float(cand.get("confidence", 0.0)) > float(existing.get("confidence", 0.0)):
-                    deduped[key] = cand
-            id_candidates = list(deduped.values())
-            id_candidates.sort(
-                key=lambda c: (float(c.get("confidence", 0.0)), 1 if str(c.get("source", "")) == "db" else 0),
-                reverse=True,
-            )
-            id_choice = _llm_choose_id_candidate(
-                issue=issue,
-                candidates=id_candidates,
-                background_context=background_context,
-                use_llm=use_llm,
-                temperature=llm_temperature,
-                max_tokens=max(500, int(llm_max_tokens)),
-            )
-            op_exec["id_execution"] = id_exec
-            op_exec["id_candidates"] = id_candidates[:8]
-            op_exec["id_choice"] = id_choice
-            idx = int(id_choice.get("selected_index", -1))
-            if 0 <= idx < len(id_candidates):
-                selected = id_candidates[idx]
-                new_ids = _safe_dict(selected.get("mapped_ids"))
-                if new_ids:
-                    old_ids = _safe_dict(item.get("mapped_ids"))
-                    merged_ids = {**old_ids, **new_ids}
-                    if merged_ids != old_ids:
-                        item["mapped_ids"] = merged_ids
-                        item.setdefault("mapping_meta", {})
-                        item["mapping_meta"]["provider"] = selected.get("provider", "")
-                        item["mapping_meta"]["source"] = selected.get("source", "")
-                        item["mapping_meta"]["confidence"] = float(selected.get("confidence", 0.0))
-                        item["mapping_meta"]["chosen_rule"] = selected.get("chosen_rule", "")
-                        report["summary"]["mapped_ids_added"] += 1
-                        report["actions"].append(
-                            {
-                                "type": "mapped_ids_added",
-                                "entity_type": kind,
-                                "name": name,
-                                "mapped_ids": new_ids,
-                                "provider": selected.get("provider", ""),
-                                "source": selected.get("source", ""),
-                                "confidence": float(selected.get("confidence", 0.0)),
-                                "stage": "stage3",
-                            }
-                        )
+                id_choice = _llm_choose_id_candidate(
+                    issue=issue,
+                    candidates=id_candidates,
+                    background_context=background_context,
+                    use_llm=use_llm,
+                    temperature=llm_temperature,
+                    max_tokens=max(500, int(llm_max_tokens)),
+                )
+                op_exec["id_execution"] = id_exec
+                op_exec["id_candidates"] = id_candidates[:8]
+                op_exec["id_choice"] = id_choice
+                idx = int(id_choice.get("selected_index", -1))
+                if 0 <= idx < len(id_candidates):
+                    selected = id_candidates[idx]
+                    new_ids = _safe_dict(selected.get("mapped_ids"))
+                    if new_ids:
+                        old_ids = _safe_dict(item.get("mapped_ids"))
+                        merged_ids = {**old_ids, **new_ids}
+                        if merged_ids != old_ids:
+                            item["mapped_ids"] = merged_ids
+                            item.setdefault("mapping_meta", {})
+                            item["mapping_meta"]["provider"] = selected.get("provider", "")
+                            item["mapping_meta"]["source"] = selected.get("source", "")
+                            item["mapping_meta"]["confidence"] = float(selected.get("confidence", 0.0))
+                            item["mapping_meta"]["chosen_rule"] = selected.get("chosen_rule", "")
+                            report["summary"]["mapped_ids_added"] += 1
+                            report["actions"].append(
+                                {
+                                    "type": "mapped_ids_added",
+                                    "entity_type": kind,
+                                    "name": name,
+                                    "mapped_ids": new_ids,
+                                    "provider": selected.get("provider", ""),
+                                    "source": selected.get("source", ""),
+                                    "confidence": float(selected.get("confidence", 0.0)),
+                                    "stage": "stage3",
+                                }
+                            )
+        else:
+            op_exec["id_resolution"] = {
+                "status": "skipped",
+                "reason": "disabled_by_configuration",
+            }
 
         # Stage 3B: location query plan -> deterministic execution -> LLM selection
         loc_strategy = _canonical(str(_safe_dict(op.get("resolve_location")).get("strategy", "db_then_default"))).lower()
@@ -1016,6 +1023,7 @@ def run_gap_resolution(
     llm_temperature: float = 0.15,
     llm_max_tokens: int = 900,
     max_items: int = 80,
+    enable_id_resolution: bool = True,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -1028,6 +1036,7 @@ def run_gap_resolution(
         llm_temperature=llm_temperature,
         llm_max_tokens=llm_max_tokens,
         max_items=max_items,
+        enable_id_resolution=enable_id_resolution,
     )
     output_path.write_text(json.dumps(resolved, indent=2, ensure_ascii=False), encoding="utf-8")
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -1046,6 +1055,11 @@ def main() -> None:
     parser.add_argument("--db-password", dest="db_password", default="")
     parser.add_argument("--db-schema", dest="db_schema", default="pathbank")
     parser.add_argument("--no-llm", action="store_true", help="Disable LLM candidate selection and use deterministic top-choice.")
+    parser.add_argument(
+        "--skip-id-resolution",
+        action="store_true",
+        help="Skip Stage-3 ID resolution and only fill organism/location gaps.",
+    )
     parser.add_argument("--temperature", type=float, default=0.15)
     parser.add_argument("--max-tokens", type=int, default=900)
     parser.add_argument("--max-items", type=int, default=80)
@@ -1067,6 +1081,7 @@ def main() -> None:
         llm_temperature=float(args.temperature),
         llm_max_tokens=int(args.max_tokens),
         max_items=int(args.max_items),
+        enable_id_resolution=not args.skip_id_resolution,
     )
 
 
