@@ -17,6 +17,7 @@ from map_ids import route_entity_for_mapping  # noqa: E402
 from qa_graph import build_graph, connected_components  # noqa: E402
 from process_normalizer import (  # noqa: E402
     attach_transporters_from_evidence,
+    cleanup_disallowed_complexes,
     compute_normalization_stats,
     dedupe_processes,
     ensure_autostates,
@@ -90,7 +91,7 @@ def _thyroid_payload() -> dict:
                     "inputs": ["thyroglobulin + iodotyrosine", "iodide", "hydrogen peroxide", "thyroid peroxidase"],
                     "outputs": ["thyroglobulin + 3,5-diiodo-L-tyrosine"],
                     "evidence": "observed",
-                    "enzymes": [{"protein_complex": "thyroid peroxidase", "evidence": "legacy schema"}],
+                    "enzymes": [{"protein_complex": "thyroid_peroxidase_complex", "evidence": "legacy schema"}],
                 },
                 {
                     "name": "R2",
@@ -115,6 +116,7 @@ def _thyroid_payload() -> dict:
                     "from_biological_state": "blood",
                     "to_biological_state": "luminal",
                     "evidence": "thyroglobulin is joined by iodide that has been transported from the blood using pendrin",
+                    "transporters": [{"protein_complex": "pendrin_complex", "evidence": "legacy schema"}],
                 },
                 {
                     "cargo": "thyroglobulin + liothyronine",
@@ -153,6 +155,9 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "n_autostate_created": 0,
             "n_entities_assigned_to_autostate": 0,
             "transporters_attached": 0,
+            "modifier_refs_canonicalized": 0,
+            "modifier_refs_dropped": 0,
+            "forbidden_complexes_removed": 0,
             "dedupe_removed_reactions": 0,
             "dedupe_removed_transports": 0,
             "dedupe_removed": 0,
@@ -164,6 +169,7 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     }
     normalize_composites(data, report=report)
     rewrite_reactions_to_complex_states(data, report=report)
+    cleanup_disallowed_complexes(data, report=report)
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
     promote_catalysts(data, report=report)
@@ -198,6 +204,7 @@ def test_thyroid_normalization_and_dedupe() -> None:
     assert int(summary.get("complexes_created", 0)) >= 4
     assert "thyroglobulin:2-aminoacrylic acid" not in complexes
     forbidden = "thyroglobulin:2-aminoacrylic acid"
+    assert forbidden not in json.dumps(normalized)
     for reaction in normalized["processes"]["reactions"]:
         assert forbidden not in reaction.get("inputs", [])
         assert forbidden not in reaction.get("outputs", [])
@@ -223,6 +230,7 @@ def test_thyroid_normalization_and_dedupe() -> None:
     assert int(summary.get("reactions_rewritten", 0)) > 0
     assert int(summary.get("scaffold_in_modifiers_count", 0)) == 0
     assert int(summary.get("transporters_attached", 0)) > 0
+    assert int(summary.get("modifier_refs_canonicalized", 0)) > 0
     assert int(summary.get("dedupe_removed_total", 0)) > 0 or int(summary.get("no_op_removed_count", 0)) > 0
 
     for reaction in normalized["processes"]["reactions"]:
@@ -261,6 +269,11 @@ def test_thyroid_normalization_and_dedupe() -> None:
         )
         for t in iodide_transports
     )
+    for transport in normalized["processes"]["transports"]:
+        for transporter in transport.get("transporters", []):
+            if not isinstance(transporter, dict):
+                continue
+            assert "pendrin_complex" not in str(transporter.get("protein_complex") or "").casefold()
 
     for reaction in normalized["processes"]["reactions"]:
         for enzyme in reaction.get("enzymes", []):
@@ -269,6 +282,47 @@ def test_thyroid_normalization_and_dedupe() -> None:
             value = str(enzyme.get("protein") or "").strip().casefold()
             if value == "thyroid peroxidase":
                 assert "protein_complex" not in enzyme
+            assert "thyroid_peroxidase_complex" not in str(enzyme.get("protein_complex") or "").casefold()
+
+
+def test_generic_explicit_composite_still_materializes_complex() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "ligand x"}],
+            "proteins": [{"name": "carrier protein"}],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cytosol"}],
+        },
+        "biological_states": [{"name": "cyto_state", "subcellular_location": "cytosol"}],
+        "element_locations": {
+            "compound_locations": [{"compound": "ligand x", "biological_state": "cyto_state"}],
+            "protein_locations": [{"protein": "carrier protein", "biological_state": "cyto_state"}],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "carrier binding",
+                    "inputs": ["carrier protein", "ligand x"],
+                    "outputs": ["carrier protein + ligand x"],
+                    "biological_state": "cyto_state",
+                    "evidence": "carrier protein + ligand x forms in cytosol",
+                }
+            ],
+            "transports": [],
+        },
+    }
+
+    normalized, report = _run_normalization(payload)
+    complexes = {
+        item["name"]
+        for item in normalized["entities"]["protein_complexes"]
+        if isinstance(item, dict) and isinstance(item.get("name"), str)
+    }
+    assert "carrier protein:ligand x" in complexes
+    assert "carrier protein:ligand x" in normalized["processes"]["reactions"][0]["outputs"]
+    assert int(report.get("summary", {}).get("n_plus_tokens_remaining", 1)) == 0
+    adj, _ = build_graph(normalized)
+    assert len(connected_components(adj)) <= 1
 
 
 def test_mapping_route_and_species_id_helpers() -> None:

@@ -24,6 +24,7 @@ from sbml_examples import build_retrieval_context, load_motif_index, payload_to_
 from process_normalizer import (
     GateValidationError,
     attach_transporters_from_evidence,
+    cleanup_disallowed_complexes,
     compute_normalization_stats,
     dedupe_processes,
     ensure_autostates,
@@ -291,6 +292,9 @@ def run_post_pipeline_sbml_artifacts(
                 "n_autostate_created": 0,
                 "n_entities_assigned_to_autostate": 0,
                 "transporters_attached": 0,
+                "modifier_refs_canonicalized": 0,
+                "modifier_refs_dropped": 0,
+                "forbidden_complexes_removed": 0,
                 "dedupe_removed_reactions": 0,
                 "dedupe_removed_transports": 0,
                 "dedupe_removed": 0,
@@ -308,6 +312,7 @@ def run_post_pipeline_sbml_artifacts(
         try:
             normalize_composites(normalized_input, report=normalization_report)
             rewrite_reactions_to_complex_states(normalized_input, report=normalization_report)
+            cleanup_disallowed_complexes(normalized_input, report=normalization_report)
             compute_normalization_stats(normalized_input, normalization_report)
             post_normalization_probe = {
                 "normalization_stats": _safe_dict(normalization_report.get("summary")),
