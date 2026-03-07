@@ -7,15 +7,16 @@
     "compounds_total": 7,
     "compounds_with_ids": 4,
     "compounds_enriched_ok": 4,
+    "compounds_enriched_ok_with_warnings": 0,
     "compounds_enriched_error": 0,
-    "cache_hits": 0,
-    "api_calls": 4
+    "cache_hits": 4,
+    "api_calls": 0
   },
   "calls": {
     "uniprot": 0,
     "chebi": 0,
     "hmdb": 0,
-    "kegg": 4
+    "kegg": 0
   },
   "entities": [
     {
@@ -62,5 +63,8 @@
         "chebi_id": "16108"
       }
     }
-  ]
+  ],
+  "artifacts": {
+    "enrichment_dump_path": "out\\enrichment_dump.json"
+  }
 }

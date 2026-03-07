@@ -1,0 +1,908 @@
+{
+  "compound:iodide|HMDB0012238": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Iodide",
+    "synonyms": [
+      "Iodide",
+      "I-",
+      "Iodide ion"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "I",
+    "charge": 0,
+    "mass_monoisotopic": 126.9045,
+    "mass_average": 126.9,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Thyroid hormone synthesis"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0012238",
+      "kegg_id": "C00708",
+      "chebi_id": "16382",
+      "pubchem_id": "30165",
+      "cas": "20461-54-5",
+      "biocyc": "CPD-387",
+      "chemspider": "28015"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00708",
+      "primary_name": "Iodide",
+      "synonyms": [
+        "Iodide",
+        "I-",
+        "Iodide ion"
+      ],
+      "formula": "I",
+      "mass_monoisotopic": 126.9045,
+      "mass_average": 126.9,
+      "pathways": [
+        "Thyroid hormone synthesis"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00708",
+        "pubchem_id": "3975",
+        "chebi_id": "16382"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00708",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00708",
+        "retrieved_at": "2026-03-07T03:21:21Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16382",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-07T03:21:20Z"
+      }
+    },
+    "hmdb": {
+      "status": "error",
+      "error_message": "hmdb_fetch_failed",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0012238",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0012238",
+        "retrieved_at": "2026-03-07T03:21:20Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:16382",
+        "retrieved_at": "2026-03-07T03:21:20Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0012238",
+        "retrieved_at": "2026-03-07T03:21:20Z",
+        "status": "error",
+        "error_if_any": "hmdb_fetch_failed"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00708",
+        "retrieved_at": "2026-03-07T03:21:21Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:hydrogen peroxide|HMDB0003125": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Hydrogen peroxide",
+    "synonyms": [
+      "Hydrogen peroxide",
+      "H2O2",
+      "Oxydol"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "H2O2",
+    "charge": 0,
+    "mass_monoisotopic": 34.0055,
+    "mass_average": 34.01,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00008)]",
+      "A ALIMENTARY TRACT AND METABOLISM",
+      "A01 STOMATOLOGICAL PREPARATIONS",
+      "A01A STOMATOLOGICAL PREPARATIONS",
+      "A01AB Antiinfectives and antiseptics for local oral treatment",
+      "A01AB02 Hydrogen peroxide",
+      "D00008 Hydrogen peroxide (USP) &lt;JP&gt;",
+      "D DERMATOLOGICALS",
+      "D08 ANTISEPTICS AND DISINFECTANTS",
+      "D08A ANTISEPTICS AND DISINFECTANTS",
+      "D08AX Other antiseptics and disinfectants",
+      "D08AX01 Hydrogen peroxide",
+      "D11 OTHER DERMATOLOGICAL PREPARATIONS",
+      "D11A OTHER DERMATOLOGICAL PREPARATIONS",
+      "D11AX Other dermatologicals",
+      "D11AX25 Hydrogen peroxide",
+      "S SENSORY ORGANS",
+      "S02 OTOLOGICALS",
+      "S02A ANTIINFECTIVES",
+      "S02AA Antiinfectives",
+      "S02AA06 Hydrogen peroxide",
+      "Therapeutic category of drugs in Japan [BR:br08301(D00008)]",
+      "2 Agents affecting individual organs",
+      "26 Epidermides",
+      "261 Antimicrobial agents",
+      "2614 Peroxides",
+      "D00008 Hydrogen peroxide (USP); Oxydol (JP18)",
+      "Classification of Japanese OTC drugs [BR:br08313(D00008)]",
+      "Agents for integumentary system",
+      "54 Disinfectants (incl. special bandages)",
+      "D00008 Hydrogen peroxide (USP)",
+      "Risk category of Japanese OTC drugs [BR:br08312(D00008)]",
+      "Third-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Oxydol",
+      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00008)]",
+      "Chemicals",
+      "D00008 Oxydol"
+    ],
+    "pathways": [
+      "Glyoxylate and dicarboxylate metabolism",
+      "Biosynthesis of secondary metabolites",
+      "cGMP-PKG signaling pathway",
+      "Apoptosis",
+      "Ferroptosis",
+      "Necroptosis",
+      "Cellular senescence",
+      "Osteoclast differentiation",
+      "Neutrophil extracellular trap formation",
+      "Toll and Imd signaling pathway",
+      "C-type lectin receptor signaling pathway",
+      "Plant-pathogen interaction",
+      "Leukocyte transendothelial migration",
+      "Thyroid hormone synthesis",
+      "Type I diabetes mellitus",
+      "Alzheimer disease",
+      "Parkinson disease",
+      "Amyotrophic lateral sclerosis",
+      "Prion disease",
+      "Pathways of neurodegeneration - multiple diseases",
+      "Cocaine addiction",
+      "Amphetamine addiction",
+      "Alcoholism",
+      "Amoebiasis",
+      "Influenza A",
+      "Human T-cell leukemia virus 1 infection",
+      "Coronavirus disease - COVID-19",
+      "Pathways in cancer",
+      "Chemical carcinogenesis - DNA adducts",
+      "Chemical carcinogenesis - reactive oxygen species",
+      "Hepatocellular carcinoma",
+      "Systemic lupus erythematosus",
+      "Diabetic cardiomyopathy",
+      "Lipid and atherosclerosis"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0003125",
+      "kegg_id": "C00027",
+      "chebi_id": "16240",
+      "pubchem_id": "784",
+      "cas": "7722-84-1",
+      "biocyc": "HYDROGEN-PEROXIDE",
+      "chemspider": "763"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00027",
+      "primary_name": "Hydrogen peroxide",
+      "synonyms": [
+        "Hydrogen peroxide",
+        "H2O2",
+        "Oxydol"
+      ],
+      "formula": "H2O2",
+      "mass_monoisotopic": 34.0055,
+      "mass_average": 34.01,
+      "pathways": [
+        "Glyoxylate and dicarboxylate metabolism",
+        "Biosynthesis of secondary metabolites",
+        "cGMP-PKG signaling pathway",
+        "Apoptosis",
+        "Ferroptosis",
+        "Necroptosis",
+        "Cellular senescence",
+        "Osteoclast differentiation",
+        "Neutrophil extracellular trap formation",
+        "Toll and Imd signaling pathway",
+        "C-type lectin receptor signaling pathway",
+        "Plant-pathogen interaction",
+        "Leukocyte transendothelial migration",
+        "Thyroid hormone synthesis",
+        "Type I diabetes mellitus",
+        "Alzheimer disease",
+        "Parkinson disease",
+        "Amyotrophic lateral sclerosis",
+        "Prion disease",
+        "Pathways of neurodegeneration - multiple diseases",
+        "Cocaine addiction",
+        "Amphetamine addiction",
+        "Alcoholism",
+        "Amoebiasis",
+        "Influenza A",
+        "Human T-cell leukemia virus 1 infection",
+        "Coronavirus disease - COVID-19",
+        "Pathways in cancer",
+        "Chemical carcinogenesis - DNA adducts",
+        "Chemical carcinogenesis - reactive oxygen species",
+        "Hepatocellular carcinoma",
+        "Systemic lupus erythematosus",
+        "Diabetic cardiomyopathy",
+        "Lipid and atherosclerosis"
+      ],
+      "kegg_class": [
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00008)]",
+        "A ALIMENTARY TRACT AND METABOLISM",
+        "A01 STOMATOLOGICAL PREPARATIONS",
+        "A01A STOMATOLOGICAL PREPARATIONS",
+        "A01AB Antiinfectives and antiseptics for local oral treatment",
+        "A01AB02 Hydrogen peroxide",
+        "D00008 Hydrogen peroxide (USP) &lt;JP&gt;",
+        "D DERMATOLOGICALS",
+        "D08 ANTISEPTICS AND DISINFECTANTS",
+        "D08A ANTISEPTICS AND DISINFECTANTS",
+        "D08AX Other antiseptics and disinfectants",
+        "D08AX01 Hydrogen peroxide",
+        "D11 OTHER DERMATOLOGICAL PREPARATIONS",
+        "D11A OTHER DERMATOLOGICAL PREPARATIONS",
+        "D11AX Other dermatologicals",
+        "D11AX25 Hydrogen peroxide",
+        "S SENSORY ORGANS",
+        "S02 OTOLOGICALS",
+        "S02A ANTIINFECTIVES",
+        "S02AA Antiinfectives",
+        "S02AA06 Hydrogen peroxide",
+        "Therapeutic category of drugs in Japan [BR:br08301(D00008)]",
+        "2 Agents affecting individual organs",
+        "26 Epidermides",
+        "261 Antimicrobial agents",
+        "2614 Peroxides",
+        "D00008 Hydrogen peroxide (USP); Oxydol (JP18)",
+        "Classification of Japanese OTC drugs [BR:br08313(D00008)]",
+        "Agents for integumentary system",
+        "54 Disinfectants (incl. special bandages)",
+        "D00008 Hydrogen peroxide (USP)",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00008)]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Oxydol",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00008)]",
+        "Chemicals",
+        "D00008 Oxydol"
+      ],
+      "cross_references": {
+        "kegg_id": "C00027",
+        "pubchem_id": "3329",
+        "chebi_id": "16240"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00027",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00027",
+        "retrieved_at": "2026-03-07T03:21:26Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16240",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-07T03:21:25Z"
+      }
+    },
+    "hmdb": {
+      "status": "error",
+      "error_message": "hmdb_fetch_failed",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0003125",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0003125",
+        "retrieved_at": "2026-03-07T03:21:26Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:16240",
+        "retrieved_at": "2026-03-07T03:21:25Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0003125",
+        "retrieved_at": "2026-03-07T03:21:26Z",
+        "status": "error",
+        "error_if_any": "hmdb_fetch_failed"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00027",
+        "retrieved_at": "2026-03-07T03:21:26Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:2-aminoacrylic acid|HMDB0003609": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Dehydroalanine",
+    "synonyms": [
+      "Dehydroalanine",
+      "2-Aminoacrylate",
+      "2-Aminoprop-2-enoate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H5NO2",
+    "charge": 0,
+    "mass_monoisotopic": 87.032,
+    "mass_average": 87.08,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Cysteine and methionine metabolism",
+      "Metabolic pathways"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0003609",
+      "kegg_id": "C02218",
+      "chebi_id": "17123",
+      "pubchem_id": "123991",
+      "cas": "1948-56-7",
+      "chemspider": "110510",
+      "drugbank_id": "DB02688"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C02218",
+      "primary_name": "Dehydroalanine",
+      "synonyms": [
+        "Dehydroalanine",
+        "2-Aminoacrylate",
+        "2-Aminoprop-2-enoate"
+      ],
+      "formula": "C3H5NO2",
+      "mass_monoisotopic": 87.032,
+      "mass_average": 87.08,
+      "pathways": [
+        "Cysteine and methionine metabolism",
+        "Metabolic pathways"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C02218",
+        "pubchem_id": "5284",
+        "chebi_id": "17123"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C02218",
+        "source_url": "https://rest.kegg.jp/get/cpd:C02218",
+        "retrieved_at": "2026-03-07T03:21:31Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17123",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-07T03:21:30Z"
+      }
+    },
+    "hmdb": {
+      "status": "error",
+      "error_message": "hmdb_fetch_failed",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0003609",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0003609",
+        "retrieved_at": "2026-03-07T03:21:30Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17123",
+        "retrieved_at": "2026-03-07T03:21:30Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0003609",
+        "retrieved_at": "2026-03-07T03:21:30Z",
+        "status": "error",
+        "error_if_any": "hmdb_fetch_failed"
+      },
+      {
+        "source": "KEGG",
+        "id": "C02218",
+        "retrieved_at": "2026-03-07T03:21:31Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:liothyronine|HMDB0000265": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Triiodothyronine",
+    "synonyms": [
+      "Triiodothyronine",
+      "3,3',5-Triiodo-L-thyronine",
+      "L-3,5,3'-Triiodothyronine",
+      "3,5,3'-Triiodothyronine",
+      "Liothyronine",
+      "3,5,3'-Triiodo-L-thyronine",
+      "T3"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C15H12I3NO4",
+    "charge": 0,
+    "mass_monoisotopic": 650.79,
+    "mass_average": 650.97,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Peptides",
+      "Amino acids",
+      "Other amino acids",
+      "C02465 Triiodothyronine",
+      "Hormones and transmitters",
+      "Other hormones",
+      "Thyroid hormones",
+      "Drug groups [BR:br08330(D08128)]",
+      "Hormonal agent",
+      "DG01953 Thyroid preparation",
+      "DG01608 Thyroid hormone replenisher",
+      "DG01372 Liothyronine",
+      "D08128 Liothyronine",
+      "Target-based classification of drugs [BR:br08310(D08128)]",
+      "Nuclear receptors",
+      "Thyroid hormone like receptors",
+      "Thyroid hormone receptor (THR)",
+      "NR1A (THR)",
+      "D08128 Liothyronine (INN)"
+    ],
+    "pathways": [
+      "Tyrosine metabolism",
+      "Metabolic pathways",
+      "Neuroactive ligand-receptor interaction",
+      "Hormone signaling",
+      "Thermogenesis",
+      "Thyroid hormone synthesis",
+      "Thyroid hormone signaling pathway",
+      "Bile secretion",
+      "Autoimmune thyroid disease"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000265",
+      "kegg_id": "C02465",
+      "chebi_id": "18258",
+      "pubchem_id": "5920",
+      "cas": "6893-02-3",
+      "biocyc": "LIOTHYRONINE",
+      "chemspider": "5707",
+      "drugbank_id": "DB00279"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C02465",
+      "primary_name": "Triiodothyronine",
+      "synonyms": [
+        "Triiodothyronine",
+        "3,3',5-Triiodo-L-thyronine",
+        "L-3,5,3'-Triiodothyronine",
+        "3,5,3'-Triiodothyronine",
+        "Liothyronine",
+        "3,5,3'-Triiodo-L-thyronine",
+        "T3"
+      ],
+      "formula": "C15H12I3NO4",
+      "mass_monoisotopic": 650.79,
+      "mass_average": 650.97,
+      "pathways": [
+        "Tyrosine metabolism",
+        "Metabolic pathways",
+        "Neuroactive ligand-receptor interaction",
+        "Hormone signaling",
+        "Thermogenesis",
+        "Thyroid hormone synthesis",
+        "Thyroid hormone signaling pathway",
+        "Bile secretion",
+        "Autoimmune thyroid disease"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Peptides",
+        "Amino acids",
+        "Other amino acids",
+        "C02465 Triiodothyronine",
+        "Hormones and transmitters",
+        "Other hormones",
+        "Thyroid hormones",
+        "Drug groups [BR:br08330(D08128)]",
+        "Hormonal agent",
+        "DG01953 Thyroid preparation",
+        "DG01608 Thyroid hormone replenisher",
+        "DG01372 Liothyronine",
+        "D08128 Liothyronine",
+        "Target-based classification of drugs [BR:br08310(D08128)]",
+        "Nuclear receptors",
+        "Thyroid hormone like receptors",
+        "Thyroid hormone receptor (THR)",
+        "NR1A (THR)",
+        "D08128 Liothyronine (INN)"
+      ],
+      "cross_references": {
+        "kegg_id": "C02465",
+        "pubchem_id": "5481",
+        "chebi_id": "18258"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C02465",
+        "source_url": "https://rest.kegg.jp/get/cpd:C02465",
+        "retrieved_at": "2026-03-07T03:21:36Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:18258",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-07T03:21:35Z"
+      }
+    },
+    "hmdb": {
+      "status": "error",
+      "error_message": "hmdb_fetch_failed",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000265",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000265",
+        "retrieved_at": "2026-03-07T03:21:35Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:18258",
+        "retrieved_at": "2026-03-07T03:21:35Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000265",
+        "retrieved_at": "2026-03-07T03:21:35Z",
+        "status": "error",
+        "error_if_any": "hmdb_fetch_failed"
+      },
+      {
+        "source": "KEGG",
+        "id": "C02465",
+        "retrieved_at": "2026-03-07T03:21:36Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "protein:pendrin|O43511": {
+    "status": "ok",
+    "uniprot_id": "O43511",
+    "recommended_name": "Pendrin",
+    "alternative_names": [
+      "Sodium-independent chloride/iodide transporter",
+      "Solute carrier family 26 member 4"
+    ],
+    "gene_names": [
+      "SLC26A4",
+      "PDS"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Sodium-independent transporter of chloride and iodide (PubMed:10192399, PubMed:11932316, PubMed:12107249, PubMed:16684826, PubMed:24051746). Mediates electroneutral chloride-bicarbonate, chloride-iodide and chloride-formate exchange with 1:1 stoichiometry (PubMed:10644529, PubMed:15155570, PubMed:24051746, PubMed:35601831). Mediates electroneutral iodide-bicarbonate exchange (By similarity)",
+    "catalytic_activity": [
+      "chloride(in) = chloride(out)",
+      "iodide(out) = iodide(in)",
+      "hydrogencarbonate(in) + chloride(out) = hydrogencarbonate(out) + chloride(in)",
+      "iodide(in) + hydrogencarbonate(out) = iodide(out) + hydrogencarbonate(in)",
+      "iodide(in) + chloride(out) = iodide(out) + chloride(in)",
+      "formate(in) + chloride(out) = formate(out) + chloride(in)"
+    ],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "Alternative splicing",
+      "Cell membrane",
+      "Chloride",
+      "Deafness",
+      "Disease variant",
+      "Membrane",
+      "Non-syndromic deafness",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transmembrane",
+      "Transmembrane helix",
+      "Transport"
+    ],
+    "subcellular_locations": [
+      "Cell membrane",
+      "Apical cell membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0015108",
+      "GO:0140900",
+      "GO:0015111",
+      "GO:0019531",
+      "GO:0008271",
+      "GO:0015116"
+    ],
+    "go_bp_ids": [
+      "GO:1902476",
+      "GO:0015698",
+      "GO:0015705",
+      "GO:0006811",
+      "GO:0006885",
+      "GO:0032880",
+      "GO:0007605",
+      "GO:1902358"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0016324",
+      "GO:0031526",
+      "GO:0070062",
+      "GO:0016020",
+      "GO:0005886"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 780,
+    "transmembrane_regions_count": 12,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [
+      "R-HSA-427601",
+      "R-HSA-5619046"
+    ],
+    "string_id": "9606.ENSP00000494017",
+    "provenance": {
+      "source": "UniProt",
+      "query": "O43511",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O43511.json",
+      "retrieved_at": "2026-03-07T03:21:15Z"
+    }
+  },
+  "protein:thyroid peroxidase|P07202": {
+    "status": "ok",
+    "uniprot_id": "P07202",
+    "recommended_name": "Thyroid peroxidase",
+    "alternative_names": [],
+    "gene_names": [
+      "TPO"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Iodination and coupling of the hormonogenic tyrosines in thyroglobulin to yield the thyroid hormones T(3) and T(4)",
+    "catalytic_activity": [
+      "2 iodide + H2O2 + 2 H(+) = diiodine + 2 H2O",
+      "[thyroglobulin]-L-tyrosine + iodide + H2O2 + H(+) = [thyroglobulin]-3-iodo-L-tyrosine + 2 H2O",
+      "[thyroglobulin]-3-iodo-L-tyrosine + iodide + H2O2 + H(+) = [thyroglobulin]-3,5-diiodo-L-tyrosine + 2 H2O",
+      "2 [thyroglobulin]-3,5-diiodo-L-tyrosine + H2O2 = [thyroglobulin]-L-thyroxine + [thyroglobulin]-dehydroalanine + 2 H2O",
+      "[thyroglobulin]-3-iodo-L-tyrosine + [thyroglobulin]-3,5-diiodo-L-tyrosine + H2O2 = [thyroglobulin]-3,3',5-triiodo-L-thyronine + [thyroglobulin]-dehydroalanine + 2 H2O"
+    ],
+    "enzyme_commission": [
+      "1.11.1.8"
+    ],
+    "pathways": [
+      "Hormone biosynthesis; thyroid hormone biosynthesis"
+    ],
+    "keywords": [
+      "Alternative splicing",
+      "Calcium",
+      "Congenital hypothyroidism",
+      "Disease variant",
+      "Disulfide bond",
+      "EGF-like domain",
+      "Glycoprotein",
+      "Heme",
+      "Hydrogen peroxide",
+      "Iron",
+      "Membrane",
+      "Metal-binding",
+      "Oxidoreductase",
+      "Peroxidase",
+      "Proteomics identification",
+      "Reference proteome",
+      "Signal",
+      "Sushi",
+      "Thyroid hormones biosynthesis",
+      "Transmembrane",
+      "Transmembrane helix"
+    ],
+    "subcellular_locations": [
+      "Membrane",
+      "Cell surface"
+    ],
+    "go_mf_ids": [
+      "GO:0005509",
+      "GO:0020037",
+      "GO:0004447",
+      "GO:0004601"
+    ],
+    "go_bp_ids": [
+      "GO:0035162",
+      "GO:0042446",
+      "GO:0042744",
+      "GO:0006979",
+      "GO:0006590"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009986",
+      "GO:0005615",
+      "GO:0005886"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 933,
+    "transmembrane_regions_count": 1,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [
+      "R-HSA-209968"
+    ],
+    "string_id": "9606.ENSP00000329869",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P07202",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P07202.json",
+      "retrieved_at": "2026-03-07T03:21:15Z"
+    }
+  },
+  "protein:thyroglobulin|P01266": {
+    "status": "ok",
+    "uniprot_id": "P01266",
+    "recommended_name": "Thyroglobulin",
+    "alternative_names": [],
+    "gene_names": [
+      "TG"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Acts as a substrate for the production of iodinated thyroid hormones thyroxine (T4) and triiodothyronine (T3) (PubMed:17532758, PubMed:32025030). The synthesis of T3 and T4 involves iodination of selected tyrosine residues of TG/thyroglobulin followed by their oxidative coupling in the thyroid follicle lumen (PubMed:32025030). Following TG re-internalization and lysosomal-mediated proteolysis, T3 and T4 are released from the polypeptide backbone leading to their secretion into the bloodstream (PubMed:32025030). One dimer produces 7 thyroid hormone molecules (PubMed:32025030)",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Alternative splicing",
+      "Congenital hypothyroidism",
+      "Direct protein sequencing",
+      "Disease variant",
+      "Disulfide bond",
+      "Glycoprotein",
+      "Hormone",
+      "Iodination",
+      "Proteoglycan",
+      "Proteomics identification",
+      "Reference proteome",
+      "Repeat",
+      "Secreted",
+      "Signal",
+      "Sulfation",
+      "Thyroid hormone",
+      "Thyroid hormones biosynthesis"
+    ],
+    "subcellular_locations": [
+      "Secreted"
+    ],
+    "go_mf_ids": [
+      "GO:0005179",
+      "GO:0042802"
+    ],
+    "go_bp_ids": [
+      "GO:0042446",
+      "GO:0015705",
+      "GO:0031641",
+      "GO:0007165",
+      "GO:0030878",
+      "GO:0006590"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005576",
+      "GO:0005615"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 2768,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "6SCJ",
+      "7B75"
+    ],
+    "reactome_ids": [],
+    "string_id": "9606.ENSP00000220616",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P01266",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P01266.json",
+      "retrieved_at": "2026-03-07T03:21:15Z"
+    }
+  }
+}

@@ -48,6 +48,16 @@ def _clean_list_of_strings(values: Any) -> List[str]:
     return _dedupe_preserve([_canonical(v) for v in _safe_list(values)])
 
 
+def _split_text_list(value: Any) -> List[str]:
+    if isinstance(value, list):
+        return _clean_list_of_strings(value)
+    text = _canonical(value)
+    if not text:
+        return []
+    chunks = re.split(r"[;,|]", text)
+    return _dedupe_preserve([_canonical(chunk) for chunk in chunks if _canonical(chunk)])
+
+
 def _to_int(value: Any) -> Optional[int]:
     try:
         if value is None or str(value).strip() == "":
@@ -396,8 +406,9 @@ def _fetch_chebi_enrichment(client: HttpClient, chebi_id: str) -> Dict[str, Any]
             "provenance": {"source": "ChEBI", "id": cid, "source_url": url, "retrieved_at": _utc_now_iso()},
         }
     if resp.status_code != 200:
+        status = "not_found" if resp.status_code in {400, 404} else "error"
         return {
-            "status": "error",
+            "status": status,
             "error_message": f"HTTP {resp.status_code}",
             "provenance": {"source": "ChEBI", "id": cid, "source_url": url, "retrieved_at": _utc_now_iso()},
         }
@@ -573,8 +584,9 @@ def _fetch_kegg_enrichment(client: HttpClient, kegg_id: str) -> Dict[str, Any]:
             "provenance": {"source": "KEGG", "id": kid, "source_url": url, "retrieved_at": _utc_now_iso()},
         }
     if resp.status_code != 200 or not _canonical(resp.text):
+        status = "not_found" if resp.status_code in {400, 404} else "error"
         return {
-            "status": "error",
+            "status": status,
             "error_message": f"HTTP {resp.status_code}",
             "provenance": {"source": "KEGG", "id": kid, "source_url": url, "retrieved_at": _utc_now_iso()},
         }
@@ -681,10 +693,33 @@ def _fetch_hmdb_enrichment(client: HttpClient, hmdb_id: str) -> Dict[str, Any]:
     row = _fetch_hmdb_json_if_configured(client, hid)
     if isinstance(row, dict):
         name = _first_non_empty(row.get("name"), row.get("metabolite_name"))
-        synonyms = _clean_list_of_strings(row.get("synonyms"))
-        pathways = _clean_list_of_strings(row.get("pathways"))
-        tissue_locations = _clean_list_of_strings(row.get("tissue_locations"))
-        biofluid_locations = _clean_list_of_strings(row.get("biofluid_locations"))
+        synonyms = _split_text_list(row.get("synonyms"))
+        pathways: List[str] = []
+        for pathway in _safe_list(row.get("pathways")):
+            if isinstance(pathway, dict):
+                pathways.append(_first_non_empty(pathway.get("name"), pathway.get("pathway_name")))
+            else:
+                pathways.append(_canonical(pathway))
+        pathways = _dedupe_preserve([p for p in pathways if p])
+        tissue_locations = _split_text_list(row.get("tissue_locations"))
+        biofluid_locations = _split_text_list(row.get("biofluid_locations"))
+        cellular_locations = _split_text_list(
+            _first_non_empty(row.get("cellular_locations"), row.get("cellular_location"), row.get("subcellular_locations"))
+        )
+        description = _first_non_empty(row.get("description"), row.get("summary"), row.get("desc"))
+        taxonomy_raw = row.get("taxonomy")
+        taxonomy: Dict[str, Any] = {}
+        if isinstance(taxonomy_raw, dict):
+            taxonomy = {k: v for k, v in taxonomy_raw.items() if _canonical(v)}
+        else:
+            taxonomy = {
+                "kingdom": _first_non_empty(row.get("kingdom")),
+                "super_class": _first_non_empty(row.get("super_class")),
+                "class": _first_non_empty(row.get("class")),
+                "sub_class": _first_non_empty(row.get("sub_class")),
+                "direct_parent": _first_non_empty(row.get("direct_parent")),
+            }
+            taxonomy = {k: v for k, v in taxonomy.items() if _canonical(v)}
         cross_refs = {
             "hmdb_id": hid,
             "kegg_id": _first_non_empty(row.get("kegg_id")),
@@ -692,13 +727,49 @@ def _fetch_hmdb_enrichment(client: HttpClient, hmdb_id: str) -> Dict[str, Any]:
             "pubchem_id": _first_non_empty(row.get("pubchem_id")),
             "drugbank_id": _first_non_empty(row.get("drugbank_id")),
         }
+        for key in ["xrefs", "cross_references", "external_links"]:
+            links = row.get(key)
+            if isinstance(links, dict):
+                for lk, lv in links.items():
+                    normalized_key = _canonical(lk).casefold()
+                    text = _canonical(lv)
+                    if not text:
+                        continue
+                    if "kegg" in normalized_key:
+                        cross_refs.setdefault("kegg_id", text)
+                    elif "chebi" in normalized_key:
+                        cross_refs.setdefault("chebi_id", text)
+                    elif "pubchem" in normalized_key:
+                        cross_refs.setdefault("pubchem_id", text)
+                    elif "drugbank" in normalized_key:
+                        cross_refs.setdefault("drugbank_id", text)
+            elif isinstance(links, list):
+                for item in links:
+                    if not isinstance(item, dict):
+                        continue
+                    db_name = _canonical(item.get("database")).casefold()
+                    db_value = _first_non_empty(item.get("id"), item.get("accession"), item.get("value"))
+                    if not db_name or not db_value:
+                        continue
+                    if "kegg" in db_name:
+                        cross_refs.setdefault("kegg_id", db_value)
+                    elif "chebi" in db_name:
+                        cross_refs.setdefault("chebi_id", db_value)
+                    elif "pubchem" in db_name:
+                        cross_refs.setdefault("pubchem_id", db_value)
+                    elif "drugbank" in db_name:
+                        cross_refs.setdefault("drugbank_id", db_value)
         cross_refs = {k: v for k, v in cross_refs.items() if v}
         return {
             "status": "ok",
             "source": "HMDB",
             "id": hid,
+            "accession": hid,
             "primary_name": name,
             "synonyms": synonyms,
+            "description": description,
+            "taxonomy": taxonomy,
+            "ontology_classification": taxonomy,
             "inchi": _first_non_empty(row.get("inchi")),
             "inchikey": _first_non_empty(row.get("inchikey")),
             "smiles": _first_non_empty(row.get("smiles")),
@@ -711,9 +782,11 @@ def _fetch_hmdb_enrichment(client: HttpClient, hmdb_id: str) -> Dict[str, Any]:
             "mass_average": _to_float(_first_non_empty(row.get("average_molecular_weight"), row.get("molecular_weight")))
             or 0.0,
             "pathways": pathways,
+            "cellular_locations": cellular_locations,
             "tissue_locations": tissue_locations,
             "biofluid_locations": biofluid_locations,
             "cross_references": cross_refs,
+            "external_links": _safe_dict(row.get("external_links")),
             "provenance": {
                 "source": "HMDB",
                 "id": hid,
@@ -723,27 +796,57 @@ def _fetch_hmdb_enrichment(client: HttpClient, hmdb_id: str) -> Dict[str, Any]:
             },
         }
 
-    html = _fetch_hmdb_html(client, hid)
-    if not html:
+    url = f"https://hmdb.ca/metabolites/{hid}"
+    try:
+        resp = client.get(url)
+    except Exception as exc:  # noqa: BLE001
         return {
             "status": "error",
-            "error_message": "hmdb_fetch_failed",
+            "error_message": f"hmdb_request_failed:{exc}",
             "provenance": {
                 "source": "HMDB",
                 "id": hid,
-                "source_url": f"https://hmdb.ca/metabolites/{hid}",
+                "source_url": url,
+                "retrieved_at": _utc_now_iso(),
+            },
+        }
+    if resp.status_code == 404:
+        return {
+            "status": "not_found",
+            "error_message": "hmdb_not_found",
+            "provenance": {
+                "source": "HMDB",
+                "id": hid,
+                "source_url": url,
+                "retrieved_at": _utc_now_iso(),
+            },
+        }
+    if resp.status_code != 200:
+        status = "not_found" if 400 <= int(resp.status_code) < 500 else "error"
+        return {
+            "status": status,
+            "error_message": f"HTTP {resp.status_code}",
+            "provenance": {
+                "source": "HMDB",
+                "id": hid,
+                "source_url": url,
                 "retrieved_at": _utc_now_iso(),
             },
         }
 
+    html = resp.text
     title_match = re.search(r"<title>(.*?)</title>", html, flags=re.IGNORECASE | re.DOTALL)
     title = _canonical(re.sub(r"\s*-\s*HMDB.*$", "", title_match.group(1))) if title_match else ""
     return {
         "status": "ok",
         "source": "HMDB",
         "id": hid,
+        "accession": hid,
         "primary_name": title,
-        "synonyms": [],
+        "synonyms": _split_text_list(_extract_html_field(html, "Synonyms")),
+        "description": _extract_html_field(html, "Description"),
+        "taxonomy": {},
+        "ontology_classification": {},
         "inchi": _extract_html_field(html, "InChI Identifier"),
         "inchikey": _extract_html_field(html, "InChI Key"),
         "smiles": _extract_html_field(html, "SMILES"),
@@ -751,14 +854,16 @@ def _fetch_hmdb_enrichment(client: HttpClient, hmdb_id: str) -> Dict[str, Any]:
         "charge": _to_int(_extract_html_field(html, "Formal Charge")) or 0,
         "mass_monoisotopic": _to_float(_extract_html_field(html, "Monoisotopic Molecular Weight")) or 0.0,
         "mass_average": _to_float(_extract_html_field(html, "Average Molecular Weight")) or 0.0,
-        "pathways": [],
-        "tissue_locations": [],
-        "biofluid_locations": [],
+        "pathways": _split_text_list(_extract_html_field(html, "Pathways")),
+        "cellular_locations": _split_text_list(_extract_html_field(html, "Cellular Locations")),
+        "tissue_locations": _split_text_list(_extract_html_field(html, "Tissue Locations")),
+        "biofluid_locations": _split_text_list(_extract_html_field(html, "Biofluid Locations")),
         "cross_references": {"hmdb_id": hid},
+        "external_links": {},
         "provenance": {
             "source": "HMDB",
             "id": hid,
-            "source_url": f"https://hmdb.ca/metabolites/{hid}",
+            "source_url": url,
             "retrieved_at": _utc_now_iso(),
             "status": "ok",
         },
@@ -780,6 +885,9 @@ def _init_compound_enrichment(mapped_ids: Dict[str, Any]) -> Dict[str, Any]:
         "enrichment_status": "ok",
         "primary_name": "",
         "synonyms": [],
+        "description": "",
+        "taxonomy": {},
+        "ontology_classification": {},
         "inchi": "",
         "inchikey": "",
         "smiles": "",
@@ -791,28 +899,41 @@ def _init_compound_enrichment(mapped_ids: Dict[str, Any]) -> Dict[str, Any]:
         "ontology_parents": [],
         "kegg_class": [],
         "pathways": [],
+        "cellular_locations": [],
         "tissue_locations": [],
         "biofluid_locations": [],
         "cross_references": cross_refs,
+        "kegg": {},
+        "chebi": {},
+        "hmdb": {},
+        "is_generic_class": False,
         "sources": [],
     }
 
 
-def _merge_scalar_if_empty(target: Dict[str, Any], source: Dict[str, Any], key: str) -> None:
-    if _canonical(target.get(key)):
-        return
-    value = source.get(key)
-    if isinstance(value, str) and _canonical(value):
-        target[key] = _canonical(value)
-    elif isinstance(value, (int, float)) and value:
-        target[key] = value
+def _is_generic_class_compound(name: str) -> bool:
+    norm = _canonical(name).casefold()
+    generic_markers = [
+        "triacylglycerol",
+        "diacylglycerol",
+        "monoglyceride",
+    ]
+    return any(marker in norm for marker in generic_markers)
 
 
 def _merge_compound_source(target: Dict[str, Any], source: Dict[str, Any]) -> None:
     status = _canonical(source.get("status")).lower() or "error"
+    if status not in {"ok", "not_found", "error"}:
+        status = "error"
     provenance = _safe_dict(source.get("provenance"))
     source_name = _canonical(source.get("source")) or _canonical(provenance.get("source")) or "unknown"
     source_id = _canonical(source.get("id")) or _canonical(provenance.get("id"))
+    source_key = source_name.strip().lower()
+
+    source_payload = deepcopy(source)
+    source_payload["status"] = status
+    target[source_key] = source_payload
+
     source_entry = {
         "source": source_name,
         "id": source_id,
@@ -822,41 +943,118 @@ def _merge_compound_source(target: Dict[str, Any], source: Dict[str, Any]) -> No
     }
     target["sources"].append(source_entry)
 
-    if status != "ok":
-        if target["enrichment_status"] == "ok":
-            target["enrichment_status"] = "partial_error"
-        return
-
-    _merge_scalar_if_empty(target, source, "primary_name")
-    _merge_scalar_if_empty(target, source, "inchi")
-    _merge_scalar_if_empty(target, source, "inchikey")
-    _merge_scalar_if_empty(target, source, "smiles")
-    _merge_scalar_if_empty(target, source, "formula")
-    if not target.get("charge") and isinstance(source.get("charge"), int):
-        target["charge"] = int(source.get("charge") or 0)
-    if not target.get("mass_monoisotopic") and isinstance(source.get("mass_monoisotopic"), (int, float)):
-        target["mass_monoisotopic"] = float(source.get("mass_monoisotopic") or 0.0)
-    if not target.get("mass_average") and isinstance(source.get("mass_average"), (int, float)):
-        target["mass_average"] = float(source.get("mass_average") or 0.0)
-
-    for key in [
-        "synonyms",
-        "chebi_roles",
-        "ontology_parents",
-        "kegg_class",
-        "pathways",
-        "tissue_locations",
-        "biofluid_locations",
-    ]:
-        merged = _dedupe_preserve(_clean_list_of_strings(target.get(key)) + _clean_list_of_strings(source.get(key)))
-        target[key] = merged
-
     cross_refs = _safe_dict(target.get("cross_references"))
     for key, value in _safe_dict(source.get("cross_references")).items():
         text = _canonical(value)
         if text and key not in cross_refs:
             cross_refs[key] = text
     target["cross_references"] = cross_refs
+
+
+def _source_block(target: Dict[str, Any], source_name: str) -> Dict[str, Any]:
+    block = _safe_dict(target.get(source_name))
+    if _canonical(block.get("status")).lower() != "ok":
+        return {}
+    return block
+
+
+def _pick_scalar_from_sources(target: Dict[str, Any], key: str, *, numeric: bool = False) -> Any:
+    order = ["chebi", "pubchem", "hmdb", "kegg"]
+    for src in order:
+        block = _source_block(target, src)
+        if not block:
+            continue
+        value = block.get(key)
+        if numeric:
+            if isinstance(value, (int, float)) and float(value) != 0.0:
+                return value
+        else:
+            text = _canonical(value)
+            if text:
+                return text
+    return 0.0 if numeric else ""
+
+
+def _recompute_compound_merged(target: Dict[str, Any]) -> None:
+    target["primary_name"] = _pick_scalar_from_sources(target, "primary_name")
+    target["description"] = _pick_scalar_from_sources(target, "description")
+    target["inchi"] = _pick_scalar_from_sources(target, "inchi")
+    target["inchikey"] = _pick_scalar_from_sources(target, "inchikey")
+    target["smiles"] = _pick_scalar_from_sources(target, "smiles")
+    target["formula"] = _pick_scalar_from_sources(target, "formula")
+    target["charge"] = int(_pick_scalar_from_sources(target, "charge", numeric=True) or 0)
+    target["mass_monoisotopic"] = float(_pick_scalar_from_sources(target, "mass_monoisotopic", numeric=True) or 0.0)
+    target["mass_average"] = float(_pick_scalar_from_sources(target, "mass_average", numeric=True) or 0.0)
+
+    all_synonyms: List[str] = []
+    for src in ["chebi", "hmdb", "kegg"]:
+        all_synonyms.extend(_clean_list_of_strings(_safe_dict(target.get(src)).get("synonyms")))
+    target["synonyms"] = _dedupe_preserve(all_synonyms)
+
+    chebi = _source_block(target, "chebi")
+    hmdb = _source_block(target, "hmdb")
+    kegg = _source_block(target, "kegg")
+
+    target["chebi_roles"] = _clean_list_of_strings(chebi.get("chebi_roles"))
+    target["ontology_parents"] = _clean_list_of_strings(chebi.get("ontology_parents"))
+    target["kegg_class"] = _clean_list_of_strings(kegg.get("kegg_class"))
+    target["pathways"] = _dedupe_preserve(
+        _clean_list_of_strings(kegg.get("pathways")) + _clean_list_of_strings(hmdb.get("pathways"))
+    )
+    target["cellular_locations"] = _clean_list_of_strings(hmdb.get("cellular_locations"))
+    target["tissue_locations"] = _clean_list_of_strings(hmdb.get("tissue_locations"))
+    target["biofluid_locations"] = _clean_list_of_strings(hmdb.get("biofluid_locations"))
+    target["taxonomy"] = _safe_dict(hmdb.get("taxonomy"))
+    target["ontology_classification"] = _safe_dict(hmdb.get("ontology_classification"))
+
+    statuses = [_canonical(row.get("status")).lower() for row in _safe_list(target.get("sources")) if isinstance(row, dict)]
+    ok_count = sum(1 for status in statuses if status == "ok")
+    non_ok_count = sum(1 for status in statuses if status in {"not_found", "error"})
+
+    if ok_count == 0:
+        target["enrichment_status"] = "error"
+    elif non_ok_count > 0:
+        target["enrichment_status"] = "ok_with_warnings"
+    else:
+        target["enrichment_status"] = "ok"
+
+
+def _best_id_for_compound_dump(enrichment: Dict[str, Any]) -> str:
+    refs = _safe_dict(enrichment.get("cross_references"))
+    for key in ["hmdb_id", "chebi_id", "kegg_id", "pubchem_id", "drugbank_id"]:
+        value = _canonical(refs.get(key))
+        if value:
+            return value
+    return "unmapped"
+
+
+def _build_enrichment_dump(payload: Dict[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    entities = _safe_dict(payload.get("entities"))
+
+    for row in _safe_list(entities.get("compounds")):
+        if not isinstance(row, dict):
+            continue
+        name = _canonical(row.get("name"))
+        enrichment = _safe_dict(_safe_dict(row.get("enrichment")).get("compound"))
+        if not name or not enrichment:
+            continue
+        best_id = _best_id_for_compound_dump(enrichment)
+        key = f"compound:{name}|{best_id}"
+        out[key] = enrichment
+
+    for row in _safe_list(entities.get("proteins")):
+        if not isinstance(row, dict):
+            continue
+        name = _canonical(row.get("name"))
+        uniprot = _safe_dict(_safe_dict(_safe_dict(row.get("enrichment")).get("protein")).get("uniprot"))
+        if not name or not uniprot:
+            continue
+        uid = _canonical(uniprot.get("uniprot_id")) or "unmapped"
+        key = f"protein:{name}|{uid}"
+        out[key] = uniprot
+
+    return out
 
 
 def enrich_payload(
@@ -877,6 +1075,7 @@ def enrich_payload(
             "compounds_total": 0,
             "compounds_with_ids": 0,
             "compounds_enriched_ok": 0,
+            "compounds_enriched_ok_with_warnings": 0,
             "compounds_enriched_error": 0,
             "cache_hits": 0,
             "api_calls": 0,
@@ -968,6 +1167,7 @@ def enrich_payload(
             continue
         report["summary"]["compounds_with_ids"] += 1
         enrichment = _init_compound_enrichment(mapped_ids)
+        enrichment["is_generic_class"] = _is_generic_class_compound(name)
 
         for source_name in ["chebi", "hmdb", "kegg"]:
             source_id = candidate_ids.get(source_name, "")
@@ -991,7 +1191,6 @@ def enrich_payload(
             _merge_compound_source(enrichment, source_obj)
 
         if not enrichment.get("sources"):
-            enrichment["enrichment_status"] = "error"
             enrichment["sources"] = [
                 {
                     "source": "none",
@@ -1001,12 +1200,9 @@ def enrich_payload(
                     "error_if_any": "no_supported_compound_ids",
                 }
             ]
-        elif all(_canonical(row.get("status")).lower() != "ok" for row in _safe_list(enrichment.get("sources"))):
             enrichment["enrichment_status"] = "error"
-        elif any(_canonical(row.get("status")).lower() != "ok" for row in _safe_list(enrichment.get("sources"))):
-            enrichment["enrichment_status"] = "partial_error"
         else:
-            enrichment["enrichment_status"] = "ok"
+            _recompute_compound_merged(enrichment)
 
         compound.setdefault("enrichment", {})
         compound["enrichment"]["compound"] = enrichment
@@ -1015,6 +1211,8 @@ def enrich_payload(
             report["summary"]["compounds_enriched_error"] += 1
         else:
             report["summary"]["compounds_enriched_ok"] += 1
+            if enrichment["enrichment_status"] == "ok_with_warnings":
+                report["summary"]["compounds_enriched_ok_with_warnings"] += 1
 
         report["entities"].append(
             {
@@ -1036,6 +1234,7 @@ def run_enrichment(
     report_path: Path,
     *,
     cache_path: Path,
+    dump_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -1045,6 +1244,14 @@ def run_enrichment(
     enriched_payload = _safe_dict(result.get("payload"))
     report = _safe_dict(result.get("report"))
     output_path.write_text(json.dumps(enriched_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    resolved_dump_path = dump_path or Path("out") / "enrichment_dump.json"
+    resolved_dump_path.parent.mkdir(parents=True, exist_ok=True)
+    enrichment_dump = _build_enrichment_dump(enriched_payload)
+    resolved_dump_path.write_text(json.dumps(enrichment_dump, indent=2, ensure_ascii=False), encoding="utf-8")
+    report["artifacts"] = {
+        **_safe_dict(report.get("artifacts")),
+        "enrichment_dump_path": str(resolved_dump_path),
+    }
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     return report
 
@@ -1065,12 +1272,19 @@ def main() -> None:
         default="enrichment_cache.json",
         help="Enrichment cache JSON path",
     )
+    parser.add_argument(
+        "--dump",
+        dest="dump_path",
+        default="out/enrichment_dump.json",
+        help="Consolidated enrichment dump JSON path",
+    )
     args = parser.parse_args()
     run_enrichment(
         Path(args.input_path),
         Path(args.output_path),
         Path(args.report_path),
         cache_path=Path(args.cache_path),
+        dump_path=Path(args.dump_path),
     )
 
 

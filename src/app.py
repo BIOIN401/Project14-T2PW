@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Tuple
 import streamlit as st
 from lxml import etree
 
+import llm_client as llm_client_module
 from apply_audit_patch import run_apply
 from audit_json_llm import run_audit
 from enrich_entities import run_enrichment
@@ -22,6 +23,7 @@ from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
+from tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
 from process_normalizer import (
     GateValidationError,
     attach_transporters_from_evidence,
@@ -440,6 +442,7 @@ def run_post_pipeline_sbml_artifacts(
                 "sbml_build_report": {},
                 "mapping_cache_path": str(cache_path),
                 "enrichment_cache_path": str(cache_path.with_name("enrichment_cache.json")),
+                "enrichment_dump_path": str(project_root / "out" / "enrichment_dump.json"),
                 "mapping_id_source": id_source,
                 "mapping_db_host": db_host,
                 "mapping_db_schema": db_schema,
@@ -809,6 +812,7 @@ def run_post_pipeline_sbml_artifacts(
             **mapping_kwargs,
         )
         enrichment_cache_path = cache_path.with_name("enrichment_cache.json")
+        enrichment_dump_path = project_root / "out" / "enrichment_dump.json"
         enrichment_report: Dict[str, Any] = {}
         sbml_input_path = mapped_json
         try:
@@ -817,6 +821,7 @@ def run_post_pipeline_sbml_artifacts(
                 enriched_json,
                 enrichment_report_path,
                 cache_path=enrichment_cache_path,
+                dump_path=enrichment_dump_path,
             )
             sbml_input_path = enriched_json
         except Exception as exc:
@@ -867,6 +872,7 @@ def run_post_pipeline_sbml_artifacts(
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
             "enrichment_cache_path": str(enrichment_cache_path),
+            "enrichment_dump_path": str(enrichment_dump_path),
             "mapping_id_source": id_source,
             "mapping_db_host": db_host,
             "mapping_db_schema": db_schema,
@@ -1293,6 +1299,7 @@ if st.session_state.get("pipeline_ready"):
                 "sbml_overwatch": sbml_overwatch_summary,
                 "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
                 "enrichment_cache_path": post_artifacts.get("enrichment_cache_path"),
+                "enrichment_dump_path": post_artifacts.get("enrichment_dump_path"),
                 "mapping_id_source": post_artifacts.get("mapping_id_source"),
                 "mapping_db_host": post_artifacts.get("mapping_db_host"),
                 "mapping_db_schema": post_artifacts.get("mapping_db_schema"),
@@ -1432,6 +1439,17 @@ if st.session_state.get("pipeline_ready"):
             mime="application/json",
             key="dl_enrichment_report",
         )
+        dump_path_value = str(post_artifacts.get("enrichment_dump_path", "") or "").strip()
+        if dump_path_value:
+            dump_path = Path(dump_path_value)
+            if dump_path.exists():
+                st.download_button(
+                    "Download enrichment_dump.json",
+                    dump_path.read_text(encoding="utf-8"),
+                    file_name="enrichment_dump.json",
+                    mime="application/json",
+                    key="dl_enrichment_dump",
+                )
         if post_artifacts.get("sbml_xml_bytes"):
             st.download_button(
                 "Download pathway.sbml",
@@ -1480,6 +1498,8 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/json",
                 key="dl_libsbml_checker",
             )
+
+    render_pathwhiz_converter_section(llm_client_module)
 
     st.subheader("PWML export")
     pwml_col_a, pwml_col_b = st.columns(2)
