@@ -47,6 +47,50 @@ def _mapped_entity_id(item: Dict[str, Any], preferred_keys: Sequence[str]) -> st
     return ""
 
 
+def sbml_species_id(entity: Dict[str, Any], compartment: str) -> str:
+    kind = str(entity.get("kind") or "").strip().lower()
+    name = str(entity.get("name") or "").strip()
+    mapped = _safe_dict(entity.get("mapped_ids"))
+    cpt = sanitize_sbml_id(compartment)
+
+    is_protein_like = kind in {"protein", "protein_complex", "complex"}
+    prefix = "p_" if is_protein_like else "m_"
+    preferred_keys = ["uniprot"] if is_protein_like else ["chebi", "hmdb", "kegg", "pubchem", "drugbank"]
+
+    primary = ""
+    for key in preferred_keys:
+        value = mapped.get(key)
+        if isinstance(value, str) and value.strip():
+            primary = sanitize_sbml_id(value.strip())
+            break
+    if primary:
+        return sanitize_sbml_id(f"{prefix}{primary}__{cpt}")
+
+    name_hash = _short_hash(_normalize(name) or name)
+    return sanitize_sbml_id(f"{prefix}unmapped_{name_hash}__{cpt}")
+
+
+def _dedupe_entity_rows(rows: Sequence[Any]) -> Dict[str, Dict[str, Any]]:
+    out: Dict[str, Dict[str, Any]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        name = (row.get("name") or "").strip() if isinstance(row.get("name"), str) else ""
+        if not name:
+            continue
+        norm = _normalize(name)
+        if norm not in out:
+            out[norm] = deepcopy(row)
+            out[norm]["name"] = name
+            continue
+        existing_mapped = _safe_dict(out[norm].get("mapped_ids"))
+        incoming_mapped = _safe_dict(row.get("mapped_ids"))
+        merged = dict(incoming_mapped)
+        merged.update(existing_mapped)
+        out[norm]["mapped_ids"] = merged
+    return out
+
+
 def _extract_state_compartments(payload: Dict[str, Any]) -> Dict[str, str]:
     states: Dict[str, str] = {}
     for state in _safe_list(payload.get("biological_states")):
@@ -106,6 +150,13 @@ def _known_entity_names(payload: Dict[str, Any]) -> Tuple[Set[str], Set[str]]:
         for item in _safe_list(entities.get("proteins"))
         if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip()
     }
+    proteins.update(
+        {
+            (item.get("name") or "").strip()
+            for item in _safe_list(entities.get("protein_complexes"))
+            if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip()
+        }
+    )
     return compounds, proteins
 
 
@@ -130,7 +181,12 @@ def _usage_profile(processes: Dict[str, Any]) -> Dict[str, Set[str]]:
     for transport in _safe_list(processes.get("transports")):
         if not isinstance(transport, dict):
             continue
-        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        cargo = (
+            transport.get("cargo_complex")
+            if isinstance(transport.get("cargo_complex"), str)
+            else transport.get("cargo")
+        )
+        cargo = (cargo or "").strip() if isinstance(cargo, str) else ""
         if cargo:
             io_names.add(cargo)
         for transporter in _safe_list(transport.get("transporters")):
@@ -147,7 +203,7 @@ def _split_composite_name(value: str) -> List[str]:
     text = (value or "").strip()
     if not text:
         return []
-    parts = re.split(r"\s*\+\s*|\s+and\s+", text, flags=re.IGNORECASE)
+    parts = re.split(r"\s*\+\s*", text)
     out = [p.strip() for p in parts if p and p.strip()]
     return out
 
@@ -156,7 +212,7 @@ def _is_composite_name(value: str) -> bool:
     text = (value or "").strip()
     if not text:
         return False
-    return bool(re.search(r"\s\+\s|\sand\s", text, flags=re.IGNORECASE))
+    return "+" in text
 
 
 def _resolve_cross_type_name_conflicts(
@@ -249,7 +305,12 @@ def _augment_entity_sets_from_processes(
     for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
         if not isinstance(transport, dict):
             continue
-        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        cargo = (
+            transport.get("cargo_complex")
+            if isinstance(transport.get("cargo_complex"), str)
+            else transport.get("cargo")
+        )
+        cargo = (cargo or "").strip() if isinstance(cargo, str) else ""
         if cargo:
             if _is_composite_name(cargo):
                 report["warnings"].append(
@@ -328,9 +389,10 @@ def _pick_reaction_compartment(
         for name in _safe_list(reaction.get(side)):
             if not isinstance(name, str) or not name.strip():
                 continue
-            options = sorted(entity_compartments.get(("compound", name.strip()), []))
-            if options:
-                return options[0]
+            for kind in ["compound", "protein"]:
+                options = sorted(entity_compartments.get((kind, name.strip()), []))
+                if options:
+                    return options[0]
 
     report["defaults_applied"].append(
         {
@@ -462,47 +524,43 @@ def build_sbml(
     species_registry: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
     species_id_to_meta: Dict[str, Dict[str, Any]] = {}
 
-    for item in _safe_list(entities.get("compounds")):
-        if not isinstance(item, dict):
+    def _register_species(
+        *,
+        kind: str,
+        name: str,
+        compartment_id: str,
+        mapped_ids: Dict[str, Any],
+    ) -> None:
+        key = (kind, name, compartment_id)
+        entity_meta = {"kind": kind, "name": name, "mapped_ids": mapped_ids}
+        sid = sbml_species_id(entity_meta, compartment_id)
+        sid_meta = {"kind": kind, "name": name, "compartment_id": compartment_id}
+        if sid in species_id_to_meta and species_id_to_meta[sid] != sid_meta:
+            sid = sanitize_sbml_id(f"{sid}_{_short_hash(name + compartment_id, 6)}")
+        species_registry[key] = {"id": sid, "name": name, "kind": kind, "compartment_id": compartment_id}
+        species_id_to_meta[sid] = sid_meta
+
+    compound_rows = _dedupe_entity_rows(_safe_list(entities.get("compounds")))
+    for row in compound_rows.values():
+        name = (row.get("name") or "").strip() if isinstance(row.get("name"), str) else ""
+        if not name or name not in known_compounds:
             continue
-        name = (item.get("name") or "").strip() if isinstance(item.get("name"), str) else ""
-        if not name:
-            continue
-        if name not in known_compounds:
-            continue
-        preferred = _mapped_entity_id(item, ["chebi", "hmdb", "kegg"])
+        mapped_ids = _safe_dict(row.get("mapped_ids"))
         for loc in sorted(entity_compartments.get(("compound", name), {default_compartment_name})):
             cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
-            if preferred:
-                sid = sanitize_sbml_id(f"m_{preferred}__{cid}")
-            else:
-                sid = sanitize_sbml_id(f"m_unmapped_{_short_hash(name + '|' + loc)}__{cid}")
-            key = ("compound", name, cid)
-            if sid in species_id_to_meta and species_id_to_meta[sid] != {"kind": "compound", "name": name, "compartment_id": cid}:
-                sid = sanitize_sbml_id(f"{sid}_{_short_hash(name + cid, 6)}")
-            species_registry[key] = {"id": sid, "name": name, "kind": "compound", "compartment_id": cid}
-            species_id_to_meta[sid] = {"kind": "compound", "name": name, "compartment_id": cid}
+            _register_species(kind="compound", name=name, compartment_id=cid, mapped_ids=mapped_ids)
 
-    for item in _safe_list(entities.get("proteins")):
-        if not isinstance(item, dict):
+    protein_rows = _dedupe_entity_rows(
+        list(_safe_list(entities.get("proteins"))) + list(_safe_list(entities.get("protein_complexes")))
+    )
+    for row in protein_rows.values():
+        name = (row.get("name") or "").strip() if isinstance(row.get("name"), str) else ""
+        if not name or name not in known_proteins:
             continue
-        name = (item.get("name") or "").strip() if isinstance(item.get("name"), str) else ""
-        if not name:
-            continue
-        if name not in known_proteins:
-            continue
-        preferred = _mapped_entity_id(item, ["uniprot"])
+        mapped_ids = _safe_dict(row.get("mapped_ids"))
         for loc in sorted(entity_compartments.get(("protein", name), {default_compartment_name})):
             cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
-            if preferred:
-                sid = sanitize_sbml_id(f"p_{preferred}__{cid}")
-            else:
-                sid = sanitize_sbml_id(f"p_unmapped_{_short_hash(name + '|' + loc)}__{cid}")
-            key = ("protein", name, cid)
-            if sid in species_id_to_meta and species_id_to_meta[sid] != {"kind": "protein", "name": name, "compartment_id": cid}:
-                sid = sanitize_sbml_id(f"{sid}_{_short_hash(name + cid, 6)}")
-            species_registry[key] = {"id": sid, "name": name, "kind": "protein", "compartment_id": cid}
-            species_id_to_meta[sid] = {"kind": "protein", "name": name, "compartment_id": cid}
+            _register_species(kind="protein", name=name, compartment_id=cid, mapped_ids=mapped_ids)
 
     # Build reaction plans first, then write sorted by reaction ID.
     reaction_plans: List[Dict[str, Any]] = []
@@ -547,42 +605,51 @@ def build_sbml(
                 expanded_outputs.append(name)
 
         for name in expanded_inputs:
-            if name not in known_compounds:
+            kind = ""
+            if name in known_compounds:
+                kind = "compound"
+            elif name in known_proteins:
+                kind = "protein"
+            if not kind:
                 report["hard_errors"].append(
-                    {"path": f"{pointer}/inputs", "reason": f"Unknown input compound '{name}'."}
+                    {"path": f"{pointer}/inputs", "reason": f"Unknown input entity '{name}'."}
                 )
                 unresolved = True
                 continue
-            key = ("compound", name, compartment_id)
+            key = (kind, name, compartment_id)
             if key not in species_registry:
-                # Deterministic best effort: create missing per-compartment species instance.
-                sid = sanitize_sbml_id(f"m_unmapped_{_short_hash(name + '|' + compartment_id)}__{compartment_id}")
-                species_registry[key] = {"id": sid, "name": name, "kind": "compound", "compartment_id": compartment_id}
-                species_id_to_meta[sid] = {"kind": "compound", "name": name, "compartment_id": compartment_id}
+                lookup = compound_rows if kind == "compound" else protein_rows
+                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(name), {})).get("mapped_ids"))
+                _register_species(kind=kind, name=name, compartment_id=compartment_id, mapped_ids=mapped_ids)
                 report["warnings"].append(
                     {
                         "path": f"{pointer}/inputs",
-                        "reason": f"Created missing species instance for input '{name}' in compartment '{compartment_id}'.",
+                        "reason": f"Created missing species instance for input '{name}' ({kind}) in compartment '{compartment_id}'.",
                     }
                 )
             reactant_ids.append(species_registry[key]["id"])
 
         for name in expanded_outputs:
-            if name not in known_compounds:
+            kind = ""
+            if name in known_compounds:
+                kind = "compound"
+            elif name in known_proteins:
+                kind = "protein"
+            if not kind:
                 report["hard_errors"].append(
-                    {"path": f"{pointer}/outputs", "reason": f"Unknown output compound '{name}'."}
+                    {"path": f"{pointer}/outputs", "reason": f"Unknown output entity '{name}'."}
                 )
                 unresolved = True
                 continue
-            key = ("compound", name, compartment_id)
+            key = (kind, name, compartment_id)
             if key not in species_registry:
-                sid = sanitize_sbml_id(f"m_unmapped_{_short_hash(name + '|' + compartment_id)}__{compartment_id}")
-                species_registry[key] = {"id": sid, "name": name, "kind": "compound", "compartment_id": compartment_id}
-                species_id_to_meta[sid] = {"kind": "compound", "name": name, "compartment_id": compartment_id}
+                lookup = compound_rows if kind == "compound" else protein_rows
+                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(name), {})).get("mapped_ids"))
+                _register_species(kind=kind, name=name, compartment_id=compartment_id, mapped_ids=mapped_ids)
                 report["warnings"].append(
                     {
                         "path": f"{pointer}/outputs",
-                        "reason": f"Created missing species instance for output '{name}' in compartment '{compartment_id}'.",
+                        "reason": f"Created missing species instance for output '{name}' ({kind}) in compartment '{compartment_id}'.",
                     }
                 )
             product_ids.append(species_registry[key]["id"])
@@ -631,7 +698,12 @@ def build_sbml(
         if not isinstance(transport, dict):
             report["hard_errors"].append({"path": pointer, "reason": "Transport item is not an object."})
             continue
-        cargo = (transport.get("cargo") or "").strip() if isinstance(transport.get("cargo"), str) else ""
+        cargo = (
+            transport.get("cargo_complex")
+            if isinstance(transport.get("cargo_complex"), str)
+            else transport.get("cargo")
+        )
+        cargo = (cargo or "").strip() if isinstance(cargo, str) else ""
         if not cargo:
             # try side-based fallback
             left = ""
@@ -694,9 +766,15 @@ def build_sbml(
                 continue
             pname = _first_string([transporter.get("protein"), transporter.get("protein_complex"), transporter.get("name")])
             if pname and pname in known_proteins:
-                key = ("protein", pname, source_cid)
-                if key in species_registry:
-                    modifiers.append(species_registry[key]["id"])
+                source_key = ("protein", pname, source_cid)
+                dest_key = ("protein", pname, dest_cid)
+                chosen_key = source_key if source_key in species_registry else dest_key
+                if chosen_key not in species_registry:
+                    mapped_ids = _safe_dict(_safe_dict(protein_rows.get(_normalize(pname), {})).get("mapped_ids"))
+                    _register_species(kind="protein", name=pname, compartment_id=source_cid, mapped_ids=mapped_ids)
+                    chosen_key = ("protein", pname, source_cid)
+                if chosen_key in species_registry:
+                    modifiers.append(species_registry[chosen_key]["id"])
 
         for cargo_item in cargo_items:
             if cargo_item not in known_compounds and cargo_item not in known_proteins:
@@ -710,15 +788,13 @@ def build_sbml(
             dest_key = (kind, cargo_item, dest_cid)
 
             if source_key not in species_registry:
-                prefix = "m" if kind == "compound" else "p"
-                sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(cargo_item + '|' + source_cid)}__{source_cid}")
-                species_registry[source_key] = {"id": sid, "name": cargo_item, "kind": kind, "compartment_id": source_cid}
-                species_id_to_meta[sid] = {"kind": kind, "name": cargo_item, "compartment_id": source_cid}
+                lookup = compound_rows if kind == "compound" else protein_rows
+                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(cargo_item), {})).get("mapped_ids"))
+                _register_species(kind=kind, name=cargo_item, compartment_id=source_cid, mapped_ids=mapped_ids)
             if dest_key not in species_registry:
-                prefix = "m" if kind == "compound" else "p"
-                sid = sanitize_sbml_id(f"{prefix}_unmapped_{_short_hash(cargo_item + '|' + dest_cid)}__{dest_cid}")
-                species_registry[dest_key] = {"id": sid, "name": cargo_item, "kind": kind, "compartment_id": dest_cid}
-                species_id_to_meta[sid] = {"kind": kind, "name": cargo_item, "compartment_id": dest_cid}
+                lookup = compound_rows if kind == "compound" else protein_rows
+                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(cargo_item), {})).get("mapped_ids"))
+                _register_species(kind=kind, name=cargo_item, compartment_id=dest_cid, mapped_ids=mapped_ids)
 
             if source_key == dest_key:
                 report["warnings"].append(
@@ -813,6 +889,8 @@ def build_sbml(
         if plan.get("compartment_id"):
             rxn.setCompartment(plan["compartment_id"])
         rxn.setReversible(False)
+        # SBML Level 3 Version 1 requires an explicit 'fast' attribute on reactions.
+        rxn.setFast(False)
         reactant_counts = Counter(plan["reactants"])
         for sid, stoich in sorted(reactant_counts.items()):
             ref = rxn.createReactant()

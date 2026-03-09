@@ -7,7 +7,7 @@ import re
 import time
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import quote_plus
 from xml.etree import ElementTree
 
@@ -138,11 +138,17 @@ class HttpClient:
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": "Project14-T2PW-IDMapper/1.0"})
 
-    def get(self, url: str, *, params: Optional[Dict[str, Any]] = None) -> requests.Response:
+    def get(
+        self,
+        url: str,
+        *,
+        params: Optional[Dict[str, Any]] = None,
+        headers: Optional[Dict[str, str]] = None,
+    ) -> requests.Response:
         last_exc: Optional[Exception] = None
         for attempt in range(1, self.max_retries + 1):
             try:
-                resp = self.session.get(url, params=params, timeout=self.timeout)
+                resp = self.session.get(url, params=params, headers=headers, timeout=self.timeout)
                 if resp.status_code >= 500:
                     raise requests.HTTPError(f"Server error {resp.status_code}")
                 return resp
@@ -811,7 +817,72 @@ def _query_kegg(client: HttpClient, name: str) -> List[Dict[str, Any]]:
 
 
 def _query_hmdb(client: HttpClient, name: str) -> List[Dict[str, Any]]:
-    # HMDB has no stable public JSON search API; this is best-effort HTML extraction.
+    # HMDB has no guaranteed public search API; prefer configured API endpoint, fallback to HTML extraction.
+    api_url = str(os.getenv("HMDB_API_URL", "")).strip()
+    api_key = str(os.getenv("HMDB_API_KEY", "")).strip()
+    if api_url:
+        api_params = {
+            "query": name,
+            "q": name,
+            "term": name,
+            "search": name,
+            "limit": int(os.getenv("HMDB_API_LIMIT", "12") or "12"),
+        }
+        api_headers: Dict[str, str] = {"Accept": "application/json"}
+        if api_key:
+            auth_header = str(os.getenv("HMDB_API_AUTH_HEADER", "X-API-Key") or "X-API-Key").strip()
+            if auth_header:
+                api_headers[auth_header] = api_key
+        try:
+            api_resp = client.get(api_url, params=api_params, headers=api_headers)
+            if api_resp.status_code == 200:
+                payload = api_resp.json()
+                rows: List[Dict[str, Any]] = []
+                if isinstance(payload, dict):
+                    for key in ["results", "data", "items", "metabolites"]:
+                        value = payload.get(key)
+                        if isinstance(value, list):
+                            rows = [item for item in value if isinstance(item, dict)]
+                            break
+                    if not rows:
+                        rows = [payload]
+                elif isinstance(payload, list):
+                    rows = [item for item in payload if isinstance(item, dict)]
+
+                out_api: List[Dict[str, Any]] = []
+                seen_api: set = set()
+                for row in rows:
+                    hid = _canonical_name(
+                        str(
+                            row.get("hmdb_id")
+                            or row.get("accession")
+                            or row.get("id")
+                            or row.get("identifier")
+                            or ""
+                        )
+                    ).upper()
+                    if not hid.startswith("HMDB"):
+                        continue
+                    if hid in seen_api:
+                        continue
+                    seen_api.add(hid)
+                    cname = _canonical_name(str(row.get("name") or row.get("metabolite_name") or ""))
+                    out_api.append(
+                        {
+                            "database": "hmdb",
+                            "id": hid,
+                            "name": cname,
+                            "score": _score_compound_candidate(name, cname or hid),
+                        }
+                    )
+                    if len(out_api) >= 12:
+                        break
+                if out_api:
+                    out_api.sort(key=lambda item: float(item.get("score", 0.0)), reverse=True)
+                    return out_api[:10]
+        except Exception:  # noqa: BLE001
+            pass
+
     url = "https://hmdb.ca/unearth/q"
     params = {"query": name, "searcher": "metabolites"}
     try:
@@ -833,6 +904,99 @@ def _query_hmdb(client: HttpClient, name: str) -> List[Dict[str, Any]]:
         if len(out) >= 10:
             break
     return out
+
+
+def lookup_hmdb_background(client: HttpClient, name: str, *, max_results: int = 6) -> Dict[str, Any]:
+    rows = _query_hmdb(client, name)
+    limit = max(1, min(20, int(max_results)))
+    candidates: List[Dict[str, Any]] = []
+    for row in rows[:limit]:
+        hid = _canonical_name(str(row.get("id", ""))).upper()
+        if not hid:
+            continue
+        candidates.append(
+            {
+                "hmdb_id": hid,
+                "name": _canonical_name(str(row.get("name", ""))),
+                "score": float(row.get("score", 0.0)),
+            }
+        )
+    return {
+        "query": _canonical_name(name),
+        "provider": "hmdb",
+        "candidate_count": len(candidates),
+        "candidates": candidates,
+    }
+
+
+def lookup_compound_api_background(client: HttpClient, name: str, *, max_results: int = 8) -> Dict[str, Any]:
+    result = map_compound_all(client, name)
+    limit = max(1, min(20, int(max_results)))
+    rows = _safe_list(result.get("candidates"))[:limit]
+    candidates: List[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        db = _canonical_name(str(row.get("database", ""))).lower()
+        cid = _canonical_name(str(row.get("id", "")))
+        if not db or not cid:
+            continue
+        candidates.append(
+            {
+                "database": db,
+                "id": cid,
+                "name": _canonical_name(str(row.get("name", ""))),
+                "score": float(row.get("score", 0.0) or 0.0),
+            }
+        )
+    return {
+        "query": _canonical_name(name),
+        "provider": "compound_api_bundle",
+        "status": str(result.get("status", "")).strip().lower(),
+        "reason": str(result.get("reason", "")).strip(),
+        "candidate_count": len(candidates),
+        "mapped_ids": _safe_dict(result.get("mapped_ids")),
+        "candidates": candidates,
+    }
+
+
+def lookup_protein_api_background(
+    client: HttpClient,
+    name: str,
+    organism: str,
+    *,
+    max_results: int = 8,
+) -> Dict[str, Any]:
+    result = map_protein_uniprot(client, name, organism)
+    limit = max(1, min(20, int(max_results)))
+    rows = _safe_list(result.get("candidates"))[:limit]
+    candidates: List[Dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        accession = _canonical_name(str(row.get("accession", "")))
+        if not accession:
+            continue
+        candidates.append(
+            {
+                "accession": accession,
+                "protein_name": _canonical_name(str(row.get("protein_name", ""))),
+                "organism": _canonical_name(str(row.get("organism", ""))),
+                "reviewed": bool(row.get("reviewed", False)),
+                "score": float(row.get("score", 0.0) or 0.0),
+            }
+        )
+    return {
+        "query": _canonical_name(name),
+        "organism": _canonical_name(organism),
+        "provider": "uniprot",
+        "status": str(result.get("status", "")).strip().lower(),
+        "reason": str(result.get("reason", "")).strip(),
+        "candidate_count": len(candidates),
+        "mapped_ids": _safe_dict(result.get("mapped_ids")),
+        "queries_tried": _safe_list(result.get("queries_tried")),
+        "candidates": candidates,
+    }
 
 
 def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:
@@ -890,6 +1054,87 @@ def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:
         "confidence": best["score"],
         "candidates": all_candidates[:12],
     }
+
+
+def _looks_protein_like_name(name: str) -> bool:
+    norm = _normalize_name(name)
+    if not norm:
+        return False
+    return bool(
+        re.search(
+            r"(protein|globulin|peroxidase|deiodinase|kinase|phosphatase|atpase|receptor|transporter|enzyme)",
+            norm,
+            flags=re.IGNORECASE,
+        )
+    )
+
+
+def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
+    entities = _safe_dict(payload.get("entities"))
+    processes = _safe_dict(payload.get("processes"))
+    element_locations = _safe_dict(payload.get("element_locations"))
+
+    out: Set[str] = set()
+    for row in _safe_list(entities.get("proteins")):
+        if isinstance(row, dict) and isinstance(row.get("name"), str) and row.get("name").strip():
+            out.add(_normalize_name(row["name"]))
+    for row in _safe_list(entities.get("protein_complexes")):
+        if not isinstance(row, dict):
+            continue
+        name = str(row.get("name") or "").strip()
+        if name:
+            out.add(_normalize_name(name))
+        for component in _safe_list(row.get("components")):
+            if isinstance(component, str) and component.strip():
+                out.add(_normalize_name(component))
+    for row in _safe_list(element_locations.get("protein_locations")):
+        if isinstance(row, dict) and isinstance(row.get("protein"), str) and row.get("protein").strip():
+            out.add(_normalize_name(row["protein"]))
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for enzyme in _safe_list(reaction.get("enzymes")):
+            if not isinstance(enzyme, dict):
+                continue
+            for key in ["protein", "protein_complex", "name"]:
+                value = str(enzyme.get(key) or "").strip()
+                if value:
+                    out.add(_normalize_name(value))
+                    break
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        for transporter in _safe_list(transport.get("transporters")):
+            if not isinstance(transporter, dict):
+                continue
+            for key in ["protein", "protein_complex", "name"]:
+                value = str(transporter.get(key) or "").strip()
+                if value:
+                    out.add(_normalize_name(value))
+                    break
+    return {value for value in out if value}
+
+
+def route_entity_for_mapping(
+    entity_name: str,
+    entity_type_hint: str,
+    *,
+    protein_like_names: Optional[Set[str]] = None,
+) -> Dict[str, str]:
+    name = _canonical_name(entity_name)
+    hint = _canonical_name(entity_type_hint).lower()
+    norm = _normalize_name(name)
+    protein_like_set = {v for v in (protein_like_names or set()) if v}
+
+    if ":" in name or hint in {"complex", "protein_complex"}:
+        return {"route": "complex", "reason": "complex_entity"}
+    if hint in {"protein", "enzyme", "modifier"}:
+        return {"route": "protein", "reason": "type_hint"}
+    if norm in protein_like_set:
+        return {"route": "protein", "reason": "known_protein_like"}
+    if _looks_protein_like_name(name):
+        return {"route": "protein", "reason": "name_pattern"}
+    return {"route": "compound", "reason": "default_compound_route"}
 
 
 def _map_protein_with_strategy(
@@ -1013,6 +1258,8 @@ def run_mapping(
     entities = _safe_dict(mapped.get("entities"))
     proteins = _safe_list(entities.get("proteins"))
     compounds = _safe_list(entities.get("compounds"))
+    protein_complexes = _safe_list(entities.get("protein_complexes"))
+    protein_like_names = _collect_protein_like_names(mapped)
 
     global_organism = _extract_global_organism(mapped)
     protein_locations = _entity_locations(mapped, "protein_locations", "protein")
@@ -1027,6 +1274,9 @@ def run_mapping(
     proteins_mapped_by_api = 0
     compounds_mapped_by_db = 0
     compounds_mapped_by_api = 0
+    compounds_rerouted_to_protein = 0
+    compounds_skipped_as_complex = 0
+    protein_complexes_skipped = 0
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -1099,6 +1349,34 @@ def run_mapping(
             }
         )
 
+    for idx, complex_row in enumerate(protein_complexes):
+        if not isinstance(complex_row, dict):
+            continue
+        name = (complex_row.get("name") or "").strip() if isinstance(complex_row.get("name"), str) else ""
+        if not name:
+            continue
+        complex_row.setdefault("mapping_meta", {})
+        complex_row["mapping_meta"]["route"] = "complex"
+        complex_row["mapping_meta"]["provider"] = "none"
+        complex_row["mapping_meta"]["source"] = "none"
+        complex_row["mapping_meta"]["chosen_rule"] = "skip_external_mapping_for_complex"
+        complex_row["mapping_meta"]["confidence"] = 0.0
+        complex_row["mapping_meta"]["candidates"] = []
+        protein_complexes_skipped += 1
+        logs.append(
+            {
+                "entity_type": "protein_complex",
+                "name": name,
+                "json_pointer": f"/entities/protein_complexes/{idx}",
+                "status": "unmapped",
+                "reason": "complex_external_mapping_skipped",
+                "location": ", ".join(protein_locations.get(name, [])),
+                "candidate_count": 0,
+                "source": "none",
+                "provider": "none",
+            }
+        )
+
     for idx, compound in enumerate(compounds):
         if not isinstance(compound, dict):
             continue
@@ -1116,18 +1394,46 @@ def run_mapping(
             )
             continue
 
-        result = _map_compound_with_strategy(
-            id_source=source_mode,
-            db=db,
-            client=client,
-            cache=cache,
-            name=name,
-        )
-        provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "ChEBI/KEGG/HMDB"))
-        source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
+        route = route_entity_for_mapping(name, "compound", protein_like_names=protein_like_names)
+        result: Dict[str, Any]
+        provider = "none"
+        source = "none"
+        if route["route"] == "compound":
+            result = _map_compound_with_strategy(
+                id_source=source_mode,
+                db=db,
+                client=client,
+                cache=cache,
+                name=name,
+            )
+            provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "ChEBI/KEGG/HMDB"))
+            source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
+        elif route["route"] == "protein":
+            compounds_rerouted_to_protein += 1
+            result = _map_protein_with_strategy(
+                id_source=source_mode,
+                db=db,
+                client=client,
+                cache=cache,
+                name=name,
+                organism=global_organism,
+            )
+            provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "UniProt"))
+            source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
+        else:
+            compounds_skipped_as_complex += 1
+            result = {
+                "status": "unmapped",
+                "reason": "complex_external_mapping_skipped",
+                "provider": "none",
+                "source": "none",
+                "candidates": [],
+            }
 
         compound.setdefault("mapping_meta", {})
         compound["mapping_meta"]["query"] = {"name": name}
+        compound["mapping_meta"]["route"] = route["route"]
+        compound["mapping_meta"]["route_reason"] = route["reason"]
         compound["mapping_meta"]["providers"] = [provider]
         compound["mapping_meta"]["source"] = source
         compound["mapping_meta"]["candidates"] = result.get("candidates", [])
@@ -1135,18 +1441,19 @@ def run_mapping(
         compound["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
 
         if result.get("status") == "mapped":
-            compounds_mapped += 1
-            if source == "db":
-                compounds_mapped_by_db += 1
-            else:
-                compounds_mapped_by_api += 1
+            if route["route"] == "compound":
+                compounds_mapped += 1
+                if source == "db":
+                    compounds_mapped_by_db += 1
+                else:
+                    compounds_mapped_by_api += 1
             compound["mapped_ids"] = _merge_mapped_ids(_safe_dict(compound.get("mapped_ids")), _safe_dict(result.get("mapped_ids")))
             status = "mapped"
             reason = ""
         else:
             status = "unmapped"
             reason = str(result.get("reason", "unknown"))
-            if reason == "ambiguous":
+            if route["route"] == "compound" and reason == "ambiguous":
                 compound_ambiguous += 1
 
         logs.append(
@@ -1156,6 +1463,8 @@ def run_mapping(
                 "json_pointer": f"/entities/compounds/{idx}",
                 "status": status,
                 "reason": reason,
+                "route": route["route"],
+                "route_reason": route["reason"],
                 "location": ", ".join(compound_locations.get(name, [])),
                 "candidate_count": len(_safe_list(result.get("candidates"))),
                 "source": source,
@@ -1170,6 +1479,9 @@ def run_mapping(
 
     proteins_total = len([p for p in proteins if isinstance(p, dict) and isinstance(p.get("name"), str) and p.get("name").strip()])
     compounds_total = len([c for c in compounds if isinstance(c, dict) and isinstance(c.get("name"), str) and c.get("name").strip()])
+    protein_complexes_total = len(
+        [c for c in protein_complexes if isinstance(c, dict) and isinstance(c.get("name"), str) and c.get("name").strip()]
+    )
     summary = {
         "proteins_total": proteins_total,
         "proteins_mapped": proteins_mapped,
@@ -1186,6 +1498,11 @@ def run_mapping(
         "proteins_mapped_by_api": proteins_mapped_by_api,
         "compounds_mapped_by_db": compounds_mapped_by_db,
         "compounds_mapped_by_api": compounds_mapped_by_api,
+        "compounds_rerouted_to_protein": compounds_rerouted_to_protein,
+        "compounds_skipped_as_complex": compounds_skipped_as_complex,
+        "protein_complexes_total": protein_complexes_total,
+        "protein_complexes_skipped": protein_complexes_skipped,
+        "complexes_skipped": compounds_skipped_as_complex + protein_complexes_skipped,
     }
 
     report = {"summary": summary, "entities": logs}

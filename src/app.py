@@ -5,6 +5,7 @@ import hashlib
 import tempfile
 import time
 import shutil
+from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Tuple
@@ -14,14 +15,30 @@ from pathlib import Path
 import streamlit as st
 from lxml import etree
 
+import llm_client as llm_client_module
 from apply_audit_patch import run_apply
 from audit_json_llm import run_audit
+from enrich_entities import run_enrichment
 from grounding import apply_grounding
 from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
+from tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
+from process_normalizer import (
+    GateValidationError,
+    attach_transporters_from_evidence,
+    cleanup_disallowed_complexes,
+    compute_normalization_stats,
+    dedupe_processes,
+    ensure_autostates,
+    normalize_composites,
+    normalize_process_actor_schema,
+    promote_catalysts,
+    rewrite_reactions_to_complex_states,
+    run_strict_post_normalization_gates,
+)
 from pipeline import (
     PipelineFailure,
     build_qa_feedback,
@@ -31,7 +48,7 @@ from pipeline import (
 )
 from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree
 from pwml_writer import DeterministicPwmlBuilder
-from qa_graph import build_graph, connected_components
+from qa_graph import build_graph, connected_components, degrees, get_entities, node
 
 st.set_page_config(page_title="PWML Multi-Stage Pipeline", layout="wide")
 st.title("PWML Extraction -> Inference Pipeline (LM Studio)")
@@ -54,11 +71,26 @@ def render_attempts(label: str, attempts: List[Dict[str, Any]]) -> None:
 def graph_summary(payload: Dict[str, Any]) -> Dict[str, Any]:
     adj, meta = build_graph(payload)
     comps = connected_components(adj)
+    deg = degrees(adj)
+    n_edges = sum(len(v) for v in adj.values()) // 2
+    main_size = max((len(c) for c in comps), default=0)
+    n_nodes = len(adj)
+    entities = get_entities(payload)
+    protein_nodes = [node("protein", name) for name in sorted(entities.get("proteins", set()))]
+    proteins_degree0 = sum(1 for n in protein_nodes if deg.get(n, 0) == 0)
+    proteins_total = len(protein_nodes)
+    proteins_attached = max(0, proteins_total - proteins_degree0)
+    isolated_nodes = sum(1 for _, d in deg.items() if d == 0)
     return {
         **meta,
-        "n_nodes": len(adj),
+        "n_nodes": n_nodes,
+        "n_edges": n_edges,
         "n_components": len(comps),
-        "main_component_size": max((len(c) for c in comps), default=0),
+        "main_component_size": main_size,
+        "largest_component_pct": round((100.0 * main_size / n_nodes), 2) if n_nodes else 0.0,
+        "n_isolated_nodes": isolated_nodes,
+        "proteins_degree0": proteins_degree0,
+        "proteins_attached_pct": round((100.0 * proteins_attached / proteins_total), 2) if proteins_total else 100.0,
     }
 
 
@@ -115,6 +147,89 @@ def _audit_objective_score(
     )
 
 
+def run_libsbml_checker(sbml_bytes: bytes) -> Dict[str, Any]:
+    try:
+        import libsbml  # type: ignore
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "error": f"python-libsbml unavailable: {exc}",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": False,
+                "messages": [],
+            },
+        }
+
+    text = ""
+    try:
+        text = sbml_bytes.decode("utf-8")
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "error": f"Invalid UTF-8 SBML payload: {exc}",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": True,
+                "messages": [],
+            },
+        }
+
+    try:
+        doc = libsbml.readSBMLFromString(text)
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "ok": False,
+            "error": f"libSBML parse failure: {exc}",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": True,
+                "messages": [],
+            },
+        }
+
+    if doc is None:
+        return {
+            "ok": False,
+            "error": "libSBML returned no document.",
+            "validation": {
+                "check_count": 0,
+                "error_count": 0,
+                "has_errors": True,
+                "messages": [],
+            },
+        }
+
+    check_count = int(doc.checkConsistency())
+    messages: List[Dict[str, Any]] = []
+    has_errors = False
+    for idx in range(doc.getNumErrors()):
+        err = doc.getError(idx)
+        entry = {
+            "severity": int(err.getSeverity()),
+            "category": int(err.getCategory()),
+            "message": err.getMessage(),
+            "line": int(err.getLine()),
+        }
+        messages.append(entry)
+        if entry["severity"] >= 2:
+            has_errors = True
+
+    return {
+        "ok": True,
+        "error": "",
+        "validation": {
+            "check_count": check_count,
+            "error_count": len(messages),
+            "has_errors": has_errors,
+            "messages": messages,
+        },
+    }
+
+
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
@@ -152,14 +267,203 @@ def run_post_pipeline_sbml_artifacts(
         apply_report_path = tmp / "audit_apply_report.json"
         audited_json = tmp / "final.audited.json"
         mapped_json = tmp / "final.mapped.json"
+        enriched_json = tmp / "final.enriched.json"
         mapping_report_path = tmp / "mapping_report.json"
+        enrichment_report_path = tmp / "enrichment_report.json"
         sbml_path = tmp / "pathway.sbml"
         sbml_report_json_path = tmp / "sbml_validation_report.json"
         sbml_report_txt_path = tmp / "sbml_validation_report.txt"
         sbml_overwatch_path = tmp / "sbml_overwatch_report.json"
         gap_resolution_report_path = tmp / "gap_resolution_report.json"
+        post_normalization_probe_path = tmp / "post_normalization_probe.json"
+        post_transport_attachment_probe_path = tmp / "post_transport_attachment_probe.json"
+        post_dedupe_probe_path = tmp / "post_dedupe_probe.json"
+        gate_fail_report_path = tmp / "gate_fail_report.json"
 
-        input_json.write_text(json.dumps(final_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+        pre_normalization_input = deepcopy(final_payload)
+        normalized_input = deepcopy(final_payload)
+        normalization_report: Dict[str, Any] = {
+            "summary": {
+                "complexes_created": 0,
+                "composites_rewritten": 0,
+                "reactions_rewritten": 0,
+                "scaffold_split_reactions": 0,
+                "entities_moved_out_of_compounds": 0,
+                "entities_added_as_compounds": 0,
+                "entities_added_as_proteins": 0,
+                "catalysts_promoted_to_enzymes": 0,
+                "scaffold_inputs_added": 0,
+                "scaffold_in_modifiers_count": 0,
+                "n_plus_tokens_remaining": 0,
+                "complexes_list": [],
+                "n_autostate_created": 0,
+                "n_entities_assigned_to_autostate": 0,
+                "transporters_attached": 0,
+                "modifier_refs_canonicalized": 0,
+                "modifier_refs_dropped": 0,
+                "forbidden_complexes_removed": 0,
+                "dedupe_removed_reactions": 0,
+                "dedupe_removed_transports": 0,
+                "dedupe_removed": 0,
+                "dedupe_removed_total": 0,
+                "no_op_removed_count": 0,
+            },
+            "rewrite_map": {},
+            "actions": [],
+        }
+        gate_fail_report: Dict[str, Any] = {}
+        post_normalization_probe: Dict[str, Any] = {}
+        post_transport_attachment_probe: Dict[str, Any] = {}
+        post_dedupe_probe: Dict[str, Any] = {}
+        gate_connectivity_summary: Dict[str, Any] = {}
+        try:
+            normalize_composites(normalized_input, report=normalization_report)
+            rewrite_reactions_to_complex_states(normalized_input, report=normalization_report)
+            cleanup_disallowed_complexes(normalized_input, report=normalization_report)
+            compute_normalization_stats(normalized_input, normalization_report)
+            post_normalization_probe = {
+                "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                "graph_summary": graph_summary(normalized_input),
+                "payload": deepcopy(normalized_input),
+            }
+            post_normalization_probe_path.write_text(
+                json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            ensure_autostates(normalized_input, report=normalization_report)
+            attach_transporters_from_evidence(normalized_input, report=normalization_report)
+            post_transport_attachment_probe = {
+                "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                "graph_summary": graph_summary(normalized_input),
+                "payload": deepcopy(normalized_input),
+            }
+            post_transport_attachment_probe_path.write_text(
+                json.dumps(post_transport_attachment_probe, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            promote_catalysts(normalized_input, report=normalization_report)
+            normalize_process_actor_schema(normalized_input, report=normalization_report)
+            dedupe_processes(normalized_input, report=normalization_report)
+            gate_snapshot = run_strict_post_normalization_gates(
+                normalized_input,
+                report=normalization_report,
+                forbidden_complexes=["thyroglobulin:2-aminoacrylic acid"],
+                enforce_all_proteins_connected=True,
+            )
+            gate_connectivity_summary = _safe_dict(gate_snapshot.get("connectivity"))
+            post_dedupe_probe = {
+                "normalization_stats": _safe_dict(gate_snapshot.get("normalization_stats")),
+                "graph_summary": gate_connectivity_summary,
+                "payload": deepcopy(normalized_input),
+            }
+            post_dedupe_probe_path.write_text(
+                json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+        except GateValidationError as exc:
+            gate_details = _safe_dict(getattr(exc, "details", {}))
+            gate_connectivity_summary = _safe_dict(gate_details.get("connectivity"))
+            gate_fail_report = {
+                "status": "failed",
+                "stage": "post_normalization_hard_gates",
+                "error": str(exc),
+                "errors": _safe_list(gate_details.get("errors")),
+                "normalization_stats": _safe_dict(gate_details.get("normalization_stats")),
+                "connectivity": gate_connectivity_summary,
+            }
+            if not post_dedupe_probe:
+                post_dedupe_probe = {
+                    "normalization_stats": _safe_dict(gate_details.get("normalization_stats"))
+                    or _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": gate_connectivity_summary or graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_dedupe_probe_path.write_text(
+                    json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+        except Exception as exc:
+            gate_fail_report = {
+                "status": "failed",
+                "stage": "post_normalization_hard_gates",
+                "error": str(exc),
+            }
+            if not post_normalization_probe:
+                post_normalization_probe = {
+                    "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_normalization_probe_path.write_text(
+                    json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            if not post_transport_attachment_probe:
+                post_transport_attachment_probe = {
+                    "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_transport_attachment_probe_path.write_text(
+                    json.dumps(post_transport_attachment_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            if not post_dedupe_probe:
+                post_dedupe_probe = {
+                    "normalization_stats": _safe_dict(normalization_report.get("summary")),
+                    "graph_summary": graph_summary(normalized_input),
+                    "payload": deepcopy(normalized_input),
+                }
+                post_dedupe_probe_path.write_text(
+                    json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+        if gate_fail_report:
+            gate_fail_report_path.write_text(json.dumps(gate_fail_report, indent=2, ensure_ascii=False), encoding="utf-8")
+            return {
+                "gate_failed": True,
+                "gate_fail_report": gate_fail_report,
+                "pre_normalization_input": pre_normalization_input,
+                "pre_normalized_input": normalized_input,
+                "pre_normalization_report": normalization_report,
+                "post_normalization_probe": post_normalization_probe,
+                "post_transport_attachment_probe": post_transport_attachment_probe,
+                "post_dedupe_probe": post_dedupe_probe,
+                "connectivity_summary": _safe_dict(post_dedupe_probe.get("graph_summary")),
+                "audit_report": {"summary": {"error_count": 0, "warning_count": 0, "patch_count": 0}},
+                "audit_patch": {},
+                "audit_apply_report": {"summary": {"accepted_count": 0, "rejected_count": 0}},
+                "final_audited": normalized_input,
+                "final_mapped": normalized_input,
+                "mapping_report": {"summary": {}},
+                "enrichment_report": {"summary": {}},
+                "sbml_report_json": {"counts": {}, "validation": {"has_errors": True}},
+                "sbml_report_txt": "",
+                "sbml_overwatch_report": {},
+                "sbml_xml_bytes": b"",
+                "sbml_build_report": {},
+                "mapping_cache_path": str(cache_path),
+                "enrichment_cache_path": str(cache_path.with_name("enrichment_cache.json")),
+                "enrichment_dump_path": str(project_root / "out" / "enrichment_dump.json"),
+                "mapping_id_source": id_source,
+                "mapping_db_host": db_host,
+                "mapping_db_schema": db_schema,
+                "example_retrieval_enabled": False,
+                "example_retrieval_requested": bool(use_example_retrieval),
+                "example_index_path": "",
+                "example_index_error": "",
+                "example_index_entry_count": 0,
+                "audit_iterations": [],
+                "gap_resolution_iterations": [],
+                "audit_loop_summary": {
+                    "rounds_executed": 0,
+                    "max_rounds": 0,
+                    "timeout_seconds": 0,
+                    "stop_reason": "gate_failed",
+                    "duration_seconds": 0,
+                },
+            }
+        input_json.write_text(json.dumps(normalized_input, indent=2, ensure_ascii=False), encoding="utf-8")
 
         audit_iterations: List[Dict[str, Any]] = []
         gap_iterations: List[Dict[str, Any]] = []
@@ -395,6 +699,7 @@ def run_post_pipeline_sbml_artifacts(
                     llm_temperature=gap_temp,
                     llm_max_tokens=gap_tokens,
                     max_items=max(10, int(gap_resolver_max_items)),
+                    enable_id_resolution=False,
                 )
                 current_after_round = round_resolved
             else:
@@ -458,6 +763,7 @@ def run_post_pipeline_sbml_artifacts(
                         "round": round_idx,
                         "summary": gap_summary,
                         "db": _safe_dict(gap_report_round.get("db")),
+                        "stage3": _safe_dict(gap_report_round.get("stage3")),
                     }
                 )
 
@@ -507,8 +813,27 @@ def run_post_pipeline_sbml_artifacts(
             mapping_report_path,
             **mapping_kwargs,
         )
+        enrichment_cache_path = cache_path.with_name("enrichment_cache.json")
+        enrichment_dump_path = project_root / "out" / "enrichment_dump.json"
+        enrichment_report: Dict[str, Any] = {}
+        sbml_input_path = mapped_json
+        try:
+            enrichment_report = run_enrichment(
+                mapped_json,
+                enriched_json,
+                enrichment_report_path,
+                cache_path=enrichment_cache_path,
+                dump_path=enrichment_dump_path,
+            )
+            sbml_input_path = enriched_json
+        except Exception as exc:
+            enrichment_report = {
+                "summary": {"enrichment_failed": True},
+                "error": str(exc),
+            }
+            sbml_input_path = mapped_json
         sbml_build_report = build_sbml(
-            mapped_json,
+            sbml_input_path,
             sbml_path,
             sbml_report_json_path,
             sbml_report_txt_path,
@@ -517,7 +842,7 @@ def run_post_pipeline_sbml_artifacts(
         sbml_overwatch_report: Dict[str, Any] = {}
         if use_sbml_overwatch:
             sbml_overwatch_report = run_sbml_overwatch(
-                mapped_json,
+                sbml_input_path,
                 sbml_path,
                 sbml_report_json_path,
                 sbml_overwatch_path,
@@ -526,18 +851,30 @@ def run_post_pipeline_sbml_artifacts(
             )
 
         return {
+            "gate_failed": False,
+            "gate_fail_report": {},
+            "pre_normalization_input": pre_normalization_input,
+            "pre_normalized_input": normalized_input,
+            "pre_normalization_report": normalization_report,
+            "post_normalization_probe": post_normalization_probe,
+            "post_transport_attachment_probe": post_transport_attachment_probe,
+            "post_dedupe_probe": post_dedupe_probe,
+            "connectivity_summary": gate_connectivity_summary or _safe_dict(post_dedupe_probe.get("graph_summary")),
             "audit_report": json.loads(audit_report_path.read_text(encoding="utf-8")),
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
             "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
-            "final_mapped": json.loads(mapped_json.read_text(encoding="utf-8")),
+            "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
             "mapping_report": mapping_report,
+            "enrichment_report": enrichment_report,
             "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")),
             "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
             "sbml_overwatch_report": sbml_overwatch_report,
             "sbml_xml_bytes": sbml_path.read_bytes(),
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
+            "enrichment_cache_path": str(enrichment_cache_path),
+            "enrichment_dump_path": str(enrichment_dump_path),
             "mapping_id_source": id_source,
             "mapping_db_host": db_host,
             "mapping_db_schema": db_schema,
@@ -857,16 +1194,16 @@ if st.session_state.get("pipeline_ready"):
     )
     gap_cols = st.columns(2)
     use_gap_resolver = gap_cols[0].checkbox(
-        "Use Gap Resolver (DB/API/LLM retrieval)",
+        "Use Stage 3 Targeted Resolution (LLM-planned, code-executed)",
         value=True,
         key="post_use_gap_resolver",
-        help="Fills missing IDs/organisms/locations before next audit round.",
+        help="Plans DB/API calls with LLM, executes deterministically, then applies selected patches.",
     )
     use_llm_gap_resolver = gap_cols[0].checkbox(
-        "Use LLM in gap resolver decisions",
+        "Use LLM in Stage 3 planner/selection",
         value=True,
         key="post_use_llm_gap_resolver",
-        help="LLM chooses among retrieved candidates; deterministic fallback always applies.",
+        help="LLM plans query strategy and selects among deterministic DB/API results.",
     )
     gap_resolver_max_items = gap_cols[1].number_input(
         "Gap resolver max entities",
@@ -932,26 +1269,39 @@ if st.session_state.get("pipeline_ready"):
                     gap_resolver_max_items=int(gap_resolver_max_items),
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
-            st.success("Post-pipeline conversion completed.")
+            if bool(_safe_dict(artifacts).get("gate_failed", False)):
+                st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
+            else:
+                st.success("Post-pipeline conversion completed.")
         except Exception as exc:
             st.error(f"Post-pipeline conversion failed: {exc}")
 
     post_artifacts = st.session_state.get("post_pipeline_artifacts")
     if isinstance(post_artifacts, dict):
+        gate_failed = bool(post_artifacts.get("gate_failed", False))
         audit_summary = post_artifacts.get("audit_report", {}).get("summary", {})
         mapping_summary = post_artifacts.get("mapping_report", {}).get("summary", {})
+        enrichment_summary = post_artifacts.get("enrichment_report", {}).get("summary", {})
         sbml_summary = post_artifacts.get("sbml_report_json", {}).get("counts", {})
         sbml_validation = post_artifacts.get("sbml_report_json", {}).get("validation", {})
         sbml_overwatch_summary = post_artifacts.get("sbml_overwatch_report", {}).get("summary", {})
 
         st.write(
             {
+                "normalization_stats": _safe_dict(post_artifacts.get("pre_normalization_report")).get("summary", {}),
+                "connectivity": _safe_dict(post_artifacts.get("connectivity_summary"))
+                or _safe_dict(post_artifacts.get("post_dedupe_probe") or post_artifacts.get("post_normalization_probe")).get("graph_summary", {}),
+                "gate_failed": gate_failed,
+                "gate_fail_report": post_artifacts.get("gate_fail_report", {}),
                 "audit": audit_summary,
                 "mapping": mapping_summary,
+                "enrichment": enrichment_summary,
                 "sbml_counts": sbml_summary,
                 "sbml_validation_has_errors": sbml_validation.get("has_errors"),
                 "sbml_overwatch": sbml_overwatch_summary,
                 "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
+                "enrichment_cache_path": post_artifacts.get("enrichment_cache_path"),
+                "enrichment_dump_path": post_artifacts.get("enrichment_dump_path"),
                 "mapping_id_source": post_artifacts.get("mapping_id_source"),
                 "mapping_db_host": post_artifacts.get("mapping_db_host"),
                 "mapping_db_schema": post_artifacts.get("mapping_db_schema"),
@@ -962,15 +1312,70 @@ if st.session_state.get("pipeline_ready"):
                 "audit_loop": post_artifacts.get("audit_loop_summary"),
             }
         )
+        if gate_failed:
+            st.error(
+                f"Hard-gate failure before audit/mapping/SBML: "
+                f"{_safe_dict(post_artifacts.get('gate_fail_report')).get('error', 'unknown error')}"
+            )
         if str(post_artifacts.get("example_index_error", "")).strip():
             st.warning(f"SBML motif retrieval issue: {post_artifacts.get('example_index_error')}")
         if post_artifacts.get("audit_iterations"):
             with st.expander("Audit repair iterations", expanded=False):
                 st.write(post_artifacts.get("audit_iterations"))
         if post_artifacts.get("gap_resolution_iterations"):
-            with st.expander("Gap resolution iterations", expanded=False):
+            with st.expander("Stage 3 resolution iterations", expanded=False):
                 st.write(post_artifacts.get("gap_resolution_iterations"))
 
+        st.download_button(
+            "Download pre_normalization_input.json",
+            json.dumps(post_artifacts.get("pre_normalization_input", {}), indent=2),
+            file_name="pre_normalization_input.json",
+            mime="application/json",
+            key="dl_pre_normalization_input",
+        )
+        st.download_button(
+            "Download pre_normalized_input.json",
+            json.dumps(post_artifacts.get("pre_normalized_input", {}), indent=2),
+            file_name="pre_normalized_input.json",
+            mime="application/json",
+            key="dl_pre_normalized_input",
+        )
+        st.download_button(
+            "Download pre_normalization_report.json",
+            json.dumps(post_artifacts.get("pre_normalization_report", {}), indent=2),
+            file_name="pre_normalization_report.json",
+            mime="application/json",
+            key="dl_pre_normalization_report",
+        )
+        st.download_button(
+            "Download post_normalization_probe.json",
+            json.dumps(post_artifacts.get("post_normalization_probe", {}), indent=2),
+            file_name="post_normalization_probe.json",
+            mime="application/json",
+            key="dl_post_normalization_probe",
+        )
+        st.download_button(
+            "Download post_transport_attachment_probe.json",
+            json.dumps(post_artifacts.get("post_transport_attachment_probe", {}), indent=2),
+            file_name="post_transport_attachment_probe.json",
+            mime="application/json",
+            key="dl_post_transport_attachment_probe",
+        )
+        st.download_button(
+            "Download post_dedupe_probe.json",
+            json.dumps(post_artifacts.get("post_dedupe_probe", {}), indent=2),
+            file_name="post_dedupe_probe.json",
+            mime="application/json",
+            key="dl_post_dedupe_probe",
+        )
+        if gate_failed:
+            st.download_button(
+                "Download gate_fail_report.json",
+                json.dumps(post_artifacts.get("gate_fail_report", {}), indent=2),
+                file_name="gate_fail_report.json",
+                mime="application/json",
+                key="dl_gate_fail_report",
+            )
         st.download_button(
             "Download audit_report.json",
             json.dumps(post_artifacts["audit_report"], indent=2),
@@ -1002,9 +1407,9 @@ if st.session_state.get("pipeline_ready"):
             )
         if post_artifacts.get("gap_resolution_iterations"):
             st.download_button(
-                "Download gap_resolution_iterations.json",
+                "Download stage3_resolution_iterations.json",
                 json.dumps(post_artifacts["gap_resolution_iterations"], indent=2),
-                file_name="gap_resolution_iterations.json",
+                file_name="stage3_resolution_iterations.json",
                 mime="application/json",
                 key="dl_gap_resolution_iterations",
             )
@@ -1030,12 +1435,31 @@ if st.session_state.get("pipeline_ready"):
             key="dl_mapping_report",
         )
         st.download_button(
-            "Download pathway.sbml",
-            post_artifacts["sbml_xml_bytes"],
-            file_name="pathway.sbml",
-            mime="application/xml",
-            key="dl_pathway_sbml",
+            "Download enrichment_report.json",
+            json.dumps(post_artifacts.get("enrichment_report", {}), indent=2),
+            file_name="enrichment_report.json",
+            mime="application/json",
+            key="dl_enrichment_report",
         )
+        dump_path_value = str(post_artifacts.get("enrichment_dump_path", "") or "").strip()
+        if dump_path_value:
+            dump_path = Path(dump_path_value)
+            if dump_path.exists():
+                st.download_button(
+                    "Download enrichment_dump.json",
+                    dump_path.read_text(encoding="utf-8"),
+                    file_name="enrichment_dump.json",
+                    mime="application/json",
+                    key="dl_enrichment_dump",
+                )
+        if post_artifacts.get("sbml_xml_bytes"):
+            st.download_button(
+                "Download pathway.sbml",
+                post_artifacts["sbml_xml_bytes"],
+                file_name="pathway.sbml",
+                mime="application/xml",
+                key="dl_pathway_sbml",
+            )
         st.download_button(
             "Download sbml_validation_report.json",
             json.dumps(post_artifacts["sbml_report_json"], indent=2),
@@ -1058,6 +1482,26 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/json",
                 key="dl_sbml_overwatch",
             )
+
+        checker_key = "post_pipeline_libsbml_check"
+        if post_artifacts.get("sbml_xml_bytes") and st.button("Run libSBML checker on generated SBML", key="run_libsbml_checker_btn"):
+            with st.spinner("Running libSBML checker..."):
+                st.session_state[checker_key] = run_libsbml_checker(post_artifacts["sbml_xml_bytes"])
+
+        checker_report = st.session_state.get(checker_key)
+        if isinstance(checker_report, dict):
+            st.write("libSBML checker summary", checker_report.get("validation", {}))
+            if str(checker_report.get("error", "")).strip():
+                st.error(str(checker_report.get("error", "")))
+            st.download_button(
+                "Download libsbml_checker_report.json",
+                json.dumps(checker_report, indent=2),
+                file_name="libsbml_checker_report.json",
+                mime="application/json",
+                key="dl_libsbml_checker",
+            )
+
+    render_pathwhiz_converter_section(llm_client_module)
 
     st.subheader("PWML export")
     pwml_col_a, pwml_col_b = st.columns(2)
