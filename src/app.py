@@ -8,6 +8,8 @@ import shutil
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Tuple
+from dotenv import load_dotenv
+from pathlib import Path
 
 import streamlit as st
 from lxml import etree
@@ -170,7 +172,7 @@ def run_post_pipeline_sbml_artifacts(
         motif_index_data: Dict[str, Any] = {}
         motif_index_error = ""
         resolved_example_index_path = ""
-        example_path = Path(example_index_path.strip() or "tmp/sbml_motif_index.json")
+        example_path = Path(example_index_path.strip() or "src/tmp/sbml_motif_index.json")
         if not example_path.is_absolute():
             example_path = project_root / example_path
         resolved_example_index_path = str(example_path)
@@ -840,7 +842,7 @@ if st.session_state.get("pipeline_ready"):
     )
     example_index_path = retrieval_cols[1].text_input(
         "SBML motif index path",
-        value="tmp/sbml_motif_index.json",
+        value="src/tmp/sbml_motif_index.json",
         key="post_example_index_path",
         help="JSON index built from trusted SBML files.",
     )

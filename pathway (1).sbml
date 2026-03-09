@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model id="PathwayModel" name="Pathway model generated from mapped JSON" substanceUnits="Unit1" volumeUnits="UnitVol" extentUnits="Unit1">
+    <listOfUnitDefinitions>
+      <unitDefinition id="Unit1" name="Mole">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="UnitVol" name="Litre">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_mitochondrial_inner_membrane" name="mitochondrial inner membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_oil_body_membrane" name="oil body membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="m_C02112_c_cell" name="2-acylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_307f56fca5d8_c_cell" name="1-monoglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_b017a05447ea_c_cell" name="1,2-diglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_15978_c_cell" name="glycerol 3-phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_16108_c_cell" name="glycerone phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_17522_c_cell" name="glycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_75848_c_cell" name="triacylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_O49523_c_cell" name="acylhydrolase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_P32189_c_cell" name="glycerol kinase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_Q00055_c_cell" name="glycerol-3-phosphate dehydrogenase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_Q9LZA6_c_cell" name="triacylglycerol lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_Z0Z000_c_cell" name="diglyceride lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="r_232dca2e7fa2" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_x_17522_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_x_15978_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_39070da1da70" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_x_15978_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_x_16108_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_6c90cd7c2fe1" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_307f56fca5d8_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_a34a8c01ca41" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_x_75848_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_b017a05447ea_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_b83d5cdcd2f0" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_b017a05447ea_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_fb47ac32bae5" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_307f56fca5d8_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_x_17522_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

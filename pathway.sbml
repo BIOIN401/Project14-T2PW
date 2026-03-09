@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model id="PathwayModel" name="Pathway model generated from mapped JSON" substanceUnits="Unit1" volumeUnits="UnitVol" extentUnits="Unit1">
+    <listOfUnitDefinitions>
+      <unitDefinition id="Unit1" name="Mole">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="UnitVol" name="Litre">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_mitochondrial_inner_membrane" name="mitochondrial inner membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_oil_body" name="oil body" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_storage_vacuole" name="storage vacuole" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="m_C02112_c_cell" name="2-acylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_217b11bf10a6_c_oil_body" name="triacylglycerol" compartment="c_oil_body" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_307f56fca5d8_c_cell" name="1-monoglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_3e35c6e86377_c_mitochondrial_inner_membrane" name="glycerone phosphate" compartment="c_mitochondrial_inner_membrane" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_43a27560801a_c_oil_body" name="1,2-diglyceride" compartment="c_oil_body" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_62f931b50a6e_c_mitochondrial_inner_membrane" name="glycerol 3-phosphate" compartment="c_mitochondrial_inner_membrane" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_b017a05447ea_c_cell" name="1,2-diglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_15978_c_cell" name="glycerol 3-phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_16108_c_cell" name="glycerone phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_17522_c_cell" name="glycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_75848_c_cell" name="triacylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_x_75848_c_cell_ac62c9" name="triglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_O49523_c_cell" name="acylhydrolase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_P32189_c_cell" name="glycerol kinase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_Q00055_c_mitochondrial_inner_membrane" name="glycerol-3-phosphate dehydrogenase" compartment="c_mitochondrial_inner_membrane" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_Q9LZA6_c_oil_body" name="triacylglycerol lipase" compartment="c_oil_body" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_Z0Z000_c_cell" name="diglyceride lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="r_364150c8f168" name="triacylglycerol to 1,2-diglyceride" reversible="false" compartment="c_oil_body">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_217b11bf10a6_c_oil_body" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_43a27560801a_c_oil_body" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_Q9LZA6_c_oil_body"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_5934f0fbb97c" name="1-monoglyceride to glycerol" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_307f56fca5d8_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_x_17522_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_O49523_c_cell"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_598ab18a195a" name="glycerol to glycerol 3-phosphate" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_x_17522_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_x_15978_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_P32189_c_cell"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_6c90cd7c2fe1" name="2-acylglycerol to 1-monoglyceride" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_307f56fca5d8_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_b6a501fe63b3" name="1,2-diglyceride to 2-acylglycerol" reversible="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_b017a05447ea_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_Z0Z000_c_cell"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_fc7db5292933" name="glycerol 3-phosphate to glycerone phosphate" reversible="false" compartment="c_mitochondrial_inner_membrane">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_62f931b50a6e_c_mitochondrial_inner_membrane" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_3e35c6e86377_c_mitochondrial_inner_membrane" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_Q00055_c_mitochondrial_inner_membrane"/>
+        </listOfModifiers>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
