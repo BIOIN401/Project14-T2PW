@@ -1,11 +1,10 @@
 {
-  "compound:iodide|HMDB0012238": {
+  "compound:triglyceride|HMDB0005357": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Iodide",
+    "primary_name": "Triacylglycerol",
     "synonyms": [
-      "Iodide",
-      "I-",
-      "Iodide ion"
+      "Triacylglycerol",
+      "Triglyceride"
     ],
     "description": "",
     "taxonomy": {},
@@ -13,310 +12,94 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "I",
+    "formula": "C6H5O6R3",
     "charge": 0,
-    "mass_monoisotopic": 126.9045,
-    "mass_average": 126.9,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "Thyroid hormone synthesis"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0012238",
-      "kegg_id": "C00708",
-      "chebi_id": "16382",
-      "pubchem_id": "30165",
-      "cas": "20461-54-5",
-      "biocyc": "CPD-387",
-      "chemspider": "28015"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00708",
-      "primary_name": "Iodide",
-      "synonyms": [
-        "Iodide",
-        "I-",
-        "Iodide ion"
-      ],
-      "formula": "I",
-      "mass_monoisotopic": 126.9045,
-      "mass_average": 126.9,
-      "pathways": [
-        "Thyroid hormone synthesis"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00708",
-        "pubchem_id": "3975",
-        "chebi_id": "16382"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00708",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00708",
-        "retrieved_at": "2026-03-07T03:21:21Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:16382",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-07T03:21:20Z"
-      }
-    },
-    "hmdb": {
-      "status": "error",
-      "error_message": "hmdb_fetch_failed",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0012238",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0012238",
-        "retrieved_at": "2026-03-07T03:21:20Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:16382",
-        "retrieved_at": "2026-03-07T03:21:20Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0012238",
-        "retrieved_at": "2026-03-07T03:21:20Z",
-        "status": "error",
-        "error_if_any": "hmdb_fetch_failed"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00708",
-        "retrieved_at": "2026-03-07T03:21:21Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:hydrogen peroxide|HMDB0003125": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Hydrogen peroxide",
-    "synonyms": [
-      "Hydrogen peroxide",
-      "H2O2",
-      "Oxydol"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "H2O2",
-    "charge": 0,
-    "mass_monoisotopic": 34.0055,
-    "mass_average": 34.01,
+    "mass_monoisotopic": 0.0,
+    "mass_average": 0.0,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
-      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00008)]",
-      "A ALIMENTARY TRACT AND METABOLISM",
-      "A01 STOMATOLOGICAL PREPARATIONS",
-      "A01A STOMATOLOGICAL PREPARATIONS",
-      "A01AB Antiinfectives and antiseptics for local oral treatment",
-      "A01AB02 Hydrogen peroxide",
-      "D00008 Hydrogen peroxide (USP) &lt;JP&gt;",
-      "D DERMATOLOGICALS",
-      "D08 ANTISEPTICS AND DISINFECTANTS",
-      "D08A ANTISEPTICS AND DISINFECTANTS",
-      "D08AX Other antiseptics and disinfectants",
-      "D08AX01 Hydrogen peroxide",
-      "D11 OTHER DERMATOLOGICAL PREPARATIONS",
-      "D11A OTHER DERMATOLOGICAL PREPARATIONS",
-      "D11AX Other dermatologicals",
-      "D11AX25 Hydrogen peroxide",
-      "S SENSORY ORGANS",
-      "S02 OTOLOGICALS",
-      "S02A ANTIINFECTIVES",
-      "S02AA Antiinfectives",
-      "S02AA06 Hydrogen peroxide",
-      "Therapeutic category of drugs in Japan [BR:br08301(D00008)]",
-      "2 Agents affecting individual organs",
-      "26 Epidermides",
-      "261 Antimicrobial agents",
-      "2614 Peroxides",
-      "D00008 Hydrogen peroxide (USP); Oxydol (JP18)",
-      "Classification of Japanese OTC drugs [BR:br08313(D00008)]",
-      "Agents for integumentary system",
-      "54 Disinfectants (incl. special bandages)",
-      "D00008 Hydrogen peroxide (USP)",
-      "Risk category of Japanese OTC drugs [BR:br08312(D00008)]",
-      "Third-class OTC drugs",
-      "Inorganic and organic chemicals",
-      "Oxydol",
-      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00008)]",
-      "Chemicals",
-      "D00008 Oxydol"
+      "Compounds with biological roles [BR:br08001]",
+      "Lipids",
+      "Fats",
+      "Acylglycerols",
+      "C00422 Triacylglycerol",
+      "Lipids [BR:br08002]",
+      "GL Glycerolipids",
+      "GL03 Triradylglycerols",
+      "GL0301 Triacylglycerols",
+      "C00422 Triacyl-sn-glycerol"
     ],
     "pathways": [
-      "Glyoxylate and dicarboxylate metabolism",
+      "Glycerolipid metabolism",
+      "Metabolic pathways",
       "Biosynthesis of secondary metabolites",
-      "cGMP-PKG signaling pathway",
-      "Apoptosis",
-      "Ferroptosis",
-      "Necroptosis",
-      "Cellular senescence",
-      "Osteoclast differentiation",
-      "Neutrophil extracellular trap formation",
-      "Toll and Imd signaling pathway",
-      "C-type lectin receptor signaling pathway",
-      "Plant-pathogen interaction",
-      "Leukocyte transendothelial migration",
-      "Thyroid hormone synthesis",
-      "Type I diabetes mellitus",
-      "Alzheimer disease",
-      "Parkinson disease",
-      "Amyotrophic lateral sclerosis",
-      "Prion disease",
-      "Pathways of neurodegeneration - multiple diseases",
-      "Cocaine addiction",
-      "Amphetamine addiction",
-      "Alcoholism",
-      "Amoebiasis",
-      "Influenza A",
-      "Human T-cell leukemia virus 1 infection",
-      "Coronavirus disease - COVID-19",
-      "Pathways in cancer",
-      "Chemical carcinogenesis - DNA adducts",
-      "Chemical carcinogenesis - reactive oxygen species",
-      "Hepatocellular carcinoma",
-      "Systemic lupus erythematosus",
-      "Diabetic cardiomyopathy",
+      "Thermogenesis",
+      "Regulation of lipolysis in adipocytes",
+      "Insulin resistance",
+      "Fat digestion and absorption",
+      "Vitamin digestion and absorption",
+      "Cholesterol metabolism",
       "Lipid and atherosclerosis"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0003125",
-      "kegg_id": "C00027",
-      "chebi_id": "16240",
-      "pubchem_id": "784",
-      "cas": "7722-84-1",
-      "biocyc": "HYDROGEN-PEROXIDE",
-      "chemspider": "763"
+      "hmdb_id": "HMDB0005357",
+      "kegg_id": "C00422",
+      "pubchem_id": "3246953",
+      "biocyc": "Triacylglycerols",
+      "chemspider": "2497485",
+      "chebi_id": "75848",
+      "cas": "27071-84-7"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00027",
-      "primary_name": "Hydrogen peroxide",
+      "id": "C00422",
+      "primary_name": "Triacylglycerol",
       "synonyms": [
-        "Hydrogen peroxide",
-        "H2O2",
-        "Oxydol"
+        "Triacylglycerol",
+        "Triglyceride"
       ],
-      "formula": "H2O2",
-      "mass_monoisotopic": 34.0055,
-      "mass_average": 34.01,
+      "formula": "C6H5O6R3",
+      "mass_monoisotopic": 0.0,
+      "mass_average": 0.0,
       "pathways": [
-        "Glyoxylate and dicarboxylate metabolism",
+        "Glycerolipid metabolism",
+        "Metabolic pathways",
         "Biosynthesis of secondary metabolites",
-        "cGMP-PKG signaling pathway",
-        "Apoptosis",
-        "Ferroptosis",
-        "Necroptosis",
-        "Cellular senescence",
-        "Osteoclast differentiation",
-        "Neutrophil extracellular trap formation",
-        "Toll and Imd signaling pathway",
-        "C-type lectin receptor signaling pathway",
-        "Plant-pathogen interaction",
-        "Leukocyte transendothelial migration",
-        "Thyroid hormone synthesis",
-        "Type I diabetes mellitus",
-        "Alzheimer disease",
-        "Parkinson disease",
-        "Amyotrophic lateral sclerosis",
-        "Prion disease",
-        "Pathways of neurodegeneration - multiple diseases",
-        "Cocaine addiction",
-        "Amphetamine addiction",
-        "Alcoholism",
-        "Amoebiasis",
-        "Influenza A",
-        "Human T-cell leukemia virus 1 infection",
-        "Coronavirus disease - COVID-19",
-        "Pathways in cancer",
-        "Chemical carcinogenesis - DNA adducts",
-        "Chemical carcinogenesis - reactive oxygen species",
-        "Hepatocellular carcinoma",
-        "Systemic lupus erythematosus",
-        "Diabetic cardiomyopathy",
+        "Thermogenesis",
+        "Regulation of lipolysis in adipocytes",
+        "Insulin resistance",
+        "Fat digestion and absorption",
+        "Vitamin digestion and absorption",
+        "Cholesterol metabolism",
         "Lipid and atherosclerosis"
       ],
       "kegg_class": [
-        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00008)]",
-        "A ALIMENTARY TRACT AND METABOLISM",
-        "A01 STOMATOLOGICAL PREPARATIONS",
-        "A01A STOMATOLOGICAL PREPARATIONS",
-        "A01AB Antiinfectives and antiseptics for local oral treatment",
-        "A01AB02 Hydrogen peroxide",
-        "D00008 Hydrogen peroxide (USP) &lt;JP&gt;",
-        "D DERMATOLOGICALS",
-        "D08 ANTISEPTICS AND DISINFECTANTS",
-        "D08A ANTISEPTICS AND DISINFECTANTS",
-        "D08AX Other antiseptics and disinfectants",
-        "D08AX01 Hydrogen peroxide",
-        "D11 OTHER DERMATOLOGICAL PREPARATIONS",
-        "D11A OTHER DERMATOLOGICAL PREPARATIONS",
-        "D11AX Other dermatologicals",
-        "D11AX25 Hydrogen peroxide",
-        "S SENSORY ORGANS",
-        "S02 OTOLOGICALS",
-        "S02A ANTIINFECTIVES",
-        "S02AA Antiinfectives",
-        "S02AA06 Hydrogen peroxide",
-        "Therapeutic category of drugs in Japan [BR:br08301(D00008)]",
-        "2 Agents affecting individual organs",
-        "26 Epidermides",
-        "261 Antimicrobial agents",
-        "2614 Peroxides",
-        "D00008 Hydrogen peroxide (USP); Oxydol (JP18)",
-        "Classification of Japanese OTC drugs [BR:br08313(D00008)]",
-        "Agents for integumentary system",
-        "54 Disinfectants (incl. special bandages)",
-        "D00008 Hydrogen peroxide (USP)",
-        "Risk category of Japanese OTC drugs [BR:br08312(D00008)]",
-        "Third-class OTC drugs",
-        "Inorganic and organic chemicals",
-        "Oxydol",
-        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00008)]",
-        "Chemicals",
-        "D00008 Oxydol"
+        "Compounds with biological roles [BR:br08001]",
+        "Lipids",
+        "Fats",
+        "Acylglycerols",
+        "C00422 Triacylglycerol",
+        "Lipids [BR:br08002]",
+        "GL Glycerolipids",
+        "GL03 Triradylglycerols",
+        "GL0301 Triacylglycerols",
+        "C00422 Triacyl-sn-glycerol"
       ],
       "cross_references": {
-        "kegg_id": "C00027",
-        "pubchem_id": "3329",
-        "chebi_id": "16240"
+        "kegg_id": "C00422",
+        "pubchem_id": "3712",
+        "chebi_id": "17855"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00027",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00027",
-        "retrieved_at": "2026-03-07T03:21:26Z",
+        "id": "C00422",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00422",
+        "retrieved_at": "2026-03-07T21:34:42Z",
         "status": "ok"
       }
     },
@@ -325,53 +108,53 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:16240",
+        "id": "CHEBI:75848",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-07T03:21:25Z"
+        "retrieved_at": "2026-03-10T15:48:49Z"
       }
     },
     "hmdb": {
-      "status": "error",
-      "error_message": "hmdb_fetch_failed",
+      "status": "not_found",
+      "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0003125",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0003125",
-        "retrieved_at": "2026-03-07T03:21:26Z"
+        "id": "HMDB0005357",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0005357",
+        "retrieved_at": "2026-03-10T15:48:50Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:16240",
-        "retrieved_at": "2026-03-07T03:21:25Z",
+        "id": "CHEBI:75848",
+        "retrieved_at": "2026-03-10T15:48:49Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0003125",
-        "retrieved_at": "2026-03-07T03:21:26Z",
-        "status": "error",
-        "error_if_any": "hmdb_fetch_failed"
+        "id": "HMDB0005357",
+        "retrieved_at": "2026-03-10T15:48:50Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00027",
-        "retrieved_at": "2026-03-07T03:21:26Z",
+        "id": "C00422",
+        "retrieved_at": "2026-03-07T21:34:42Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:2-aminoacrylic acid|HMDB0003609": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Dehydroalanine",
+  "compound:2-acylglycerol|17389": {
+    "enrichment_status": "ok",
+    "primary_name": "2-Acylglycerol",
     "synonyms": [
-      "Dehydroalanine",
-      "2-Aminoacrylate",
-      "2-Aminoprop-2-enoate"
+      "2-Acylglycerol",
+      "2-Glyceride",
+      "2-Monoacylglycerol"
     ],
     "description": "",
     "taxonomy": {},
@@ -379,235 +162,257 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C3H5NO2",
+    "formula": "C4H7O4R",
     "charge": 0,
-    "mass_monoisotopic": 87.032,
-    "mass_average": 87.08,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "Cysteine and methionine metabolism",
-      "Metabolic pathways"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0003609",
-      "kegg_id": "C02218",
-      "chebi_id": "17123",
-      "pubchem_id": "123991",
-      "cas": "1948-56-7",
-      "chemspider": "110510",
-      "drugbank_id": "DB02688"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C02218",
-      "primary_name": "Dehydroalanine",
-      "synonyms": [
-        "Dehydroalanine",
-        "2-Aminoacrylate",
-        "2-Aminoprop-2-enoate"
-      ],
-      "formula": "C3H5NO2",
-      "mass_monoisotopic": 87.032,
-      "mass_average": 87.08,
-      "pathways": [
-        "Cysteine and methionine metabolism",
-        "Metabolic pathways"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C02218",
-        "pubchem_id": "5284",
-        "chebi_id": "17123"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C02218",
-        "source_url": "https://rest.kegg.jp/get/cpd:C02218",
-        "retrieved_at": "2026-03-07T03:21:31Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:17123",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-07T03:21:30Z"
-      }
-    },
-    "hmdb": {
-      "status": "error",
-      "error_message": "hmdb_fetch_failed",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0003609",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0003609",
-        "retrieved_at": "2026-03-07T03:21:30Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:17123",
-        "retrieved_at": "2026-03-07T03:21:30Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0003609",
-        "retrieved_at": "2026-03-07T03:21:30Z",
-        "status": "error",
-        "error_if_any": "hmdb_fetch_failed"
-      },
-      {
-        "source": "KEGG",
-        "id": "C02218",
-        "retrieved_at": "2026-03-07T03:21:31Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:liothyronine|HMDB0000265": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Triiodothyronine",
-    "synonyms": [
-      "Triiodothyronine",
-      "3,3',5-Triiodo-L-thyronine",
-      "L-3,5,3'-Triiodothyronine",
-      "3,5,3'-Triiodothyronine",
-      "Liothyronine",
-      "3,5,3'-Triiodo-L-thyronine",
-      "T3"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C15H12I3NO4",
-    "charge": 0,
-    "mass_monoisotopic": 650.79,
-    "mass_average": 650.97,
+    "mass_monoisotopic": 0.0,
+    "mass_average": 0.0,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
       "Compounds with biological roles [BR:br08001]",
-      "Peptides",
-      "Amino acids",
-      "Other amino acids",
-      "C02465 Triiodothyronine",
-      "Hormones and transmitters",
-      "Other hormones",
-      "Thyroid hormones",
-      "Drug groups [BR:br08330(D08128)]",
-      "Hormonal agent",
-      "DG01953 Thyroid preparation",
-      "DG01608 Thyroid hormone replenisher",
-      "DG01372 Liothyronine",
-      "D08128 Liothyronine",
-      "Target-based classification of drugs [BR:br08310(D08128)]",
-      "Nuclear receptors",
-      "Thyroid hormone like receptors",
-      "Thyroid hormone receptor (THR)",
-      "NR1A (THR)",
-      "D08128 Liothyronine (INN)"
+      "Lipids",
+      "Fats",
+      "Acylglycerols",
+      "C02112 2-Monoacylglycerol",
+      "Lipids [BR:br08002]",
+      "GL Glycerolipids",
+      "GL01 Monoradylglycerols",
+      "GL0101 Monoacylglycerols",
+      "C02112 2-acyl-sn-glycerol"
     ],
     "pathways": [
-      "Tyrosine metabolism",
-      "Metabolic pathways",
-      "Neuroactive ligand-receptor interaction",
-      "Hormone signaling",
-      "Thermogenesis",
-      "Thyroid hormone synthesis",
-      "Thyroid hormone signaling pathway",
-      "Bile secretion",
-      "Autoimmune thyroid disease"
+      "Phototransduction - fly",
+      "Fat digestion and absorption",
+      "Vitamin digestion and absorption"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000265",
-      "kegg_id": "C02465",
-      "chebi_id": "18258",
-      "pubchem_id": "5920",
-      "cas": "6893-02-3",
-      "biocyc": "LIOTHYRONINE",
-      "chemspider": "5707",
-      "drugbank_id": "DB00279"
+      "kegg_id": "C02112",
+      "pubchem_id": "5194",
+      "chebi_id": "17389"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C02465",
-      "primary_name": "Triiodothyronine",
+      "id": "C02112",
+      "primary_name": "2-Acylglycerol",
       "synonyms": [
-        "Triiodothyronine",
-        "3,3',5-Triiodo-L-thyronine",
-        "L-3,5,3'-Triiodothyronine",
-        "3,5,3'-Triiodothyronine",
-        "Liothyronine",
-        "3,5,3'-Triiodo-L-thyronine",
-        "T3"
+        "2-Acylglycerol",
+        "2-Glyceride",
+        "2-Monoacylglycerol"
       ],
-      "formula": "C15H12I3NO4",
-      "mass_monoisotopic": 650.79,
-      "mass_average": 650.97,
+      "formula": "C4H7O4R",
+      "mass_monoisotopic": 0.0,
+      "mass_average": 0.0,
       "pathways": [
-        "Tyrosine metabolism",
-        "Metabolic pathways",
-        "Neuroactive ligand-receptor interaction",
-        "Hormone signaling",
-        "Thermogenesis",
-        "Thyroid hormone synthesis",
-        "Thyroid hormone signaling pathway",
-        "Bile secretion",
-        "Autoimmune thyroid disease"
+        "Phototransduction - fly",
+        "Fat digestion and absorption",
+        "Vitamin digestion and absorption"
       ],
       "kegg_class": [
         "Compounds with biological roles [BR:br08001]",
-        "Peptides",
-        "Amino acids",
-        "Other amino acids",
-        "C02465 Triiodothyronine",
-        "Hormones and transmitters",
-        "Other hormones",
-        "Thyroid hormones",
-        "Drug groups [BR:br08330(D08128)]",
-        "Hormonal agent",
-        "DG01953 Thyroid preparation",
-        "DG01608 Thyroid hormone replenisher",
-        "DG01372 Liothyronine",
-        "D08128 Liothyronine",
-        "Target-based classification of drugs [BR:br08310(D08128)]",
-        "Nuclear receptors",
-        "Thyroid hormone like receptors",
-        "Thyroid hormone receptor (THR)",
-        "NR1A (THR)",
-        "D08128 Liothyronine (INN)"
+        "Lipids",
+        "Fats",
+        "Acylglycerols",
+        "C02112 2-Monoacylglycerol",
+        "Lipids [BR:br08002]",
+        "GL Glycerolipids",
+        "GL01 Monoradylglycerols",
+        "GL0101 Monoacylglycerols",
+        "C02112 2-acyl-sn-glycerol"
       ],
       "cross_references": {
-        "kegg_id": "C02465",
-        "pubchem_id": "5481",
-        "chebi_id": "18258"
+        "kegg_id": "C02112",
+        "pubchem_id": "5194",
+        "chebi_id": "17389"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C02465",
-        "source_url": "https://rest.kegg.jp/get/cpd:C02465",
-        "retrieved_at": "2026-03-07T03:21:36Z",
+        "id": "C02112",
+        "source_url": "https://rest.kegg.jp/get/cpd:C02112",
+        "retrieved_at": "2026-03-07T21:34:42Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {},
+    "hmdb": {},
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "KEGG",
+        "id": "C02112",
+        "retrieved_at": "2026-03-07T21:34:42Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:glycerol|HMDB0000131": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Glycerol",
+    "synonyms": [
+      "Glycerol",
+      "Glycerin",
+      "1,2,3-Trihydroxypropane",
+      "1,2,3-Propanetriol"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H8O3",
+    "charge": 0,
+    "mass_monoisotopic": 92.0473,
+    "mass_average": 92.09,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Carbohydrates",
+      "Monosaccharides",
+      "Sugar alcohols",
+      "C00116 Glycerol",
+      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00028)]",
+      "A ALIMENTARY TRACT AND METABOLISM",
+      "A06 DRUGS FOR CONSTIPATION",
+      "A06A DRUGS FOR CONSTIPATION",
+      "A06AG Enemas",
+      "A06AG04 Glycerol",
+      "D00028 Glycerin (JP18/USP) &lt;JP&gt;",
+      "A06AX Other drugs for constipation",
+      "A06AX01 Glycerol",
+      "Therapeutic category of drugs in Japan [BR:br08301(D00028)]",
+      "2 Agents affecting individual organs",
+      "23 Digestive organ agents",
+      "235 Purgatives, clysters",
+      "2357 Glycerins",
+      "D00028 Glycerin (JP18/USP); Concentrated glycerin (JP18); Glycerol (INN)",
+      "Classification of Japanese OTC drugs [BR:br08313(D00028)]",
+      "Agents for digestive organs",
+      "18 Enema",
+      "D00028 Glycerin (JP18/USP)",
+      "Agents for integumentary system",
+      "55 Chilblain and chap remedies",
+      "Risk category of Japanese OTC drugs [BR:br08312(D00028)]",
+      "Second-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Glycerin",
+      "Third-class OTC drugs",
+      "Drug groups [BR:br08330(D00028)]",
+      "Gastrointestinal agent",
+      "DG01770 Laxative",
+      "D00028 Glycerin",
+      "Drug classes [BR:br08332(D00028)]",
+      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00028)]",
+      "Chemicals",
+      "D00028 Concentrated glycerin"
+    ],
+    "pathways": [
+      "Pentose and glucuronate interconversions",
+      "Galactose metabolism",
+      "Glycerolipid metabolism",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "ABC transporters",
+      "Thermogenesis",
+      "Retrograde endocannabinoid signaling",
+      "Regulation of lipolysis in adipocytes"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000131",
+      "kegg_id": "C00116",
+      "chebi_id": "17522",
+      "pubchem_id": "753",
+      "cas": "56-81-5",
+      "biocyc": "GLYCEROL",
+      "chemspider": "733",
+      "drugbank_id": "DB04077"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00116",
+      "primary_name": "Glycerol",
+      "synonyms": [
+        "Glycerol",
+        "Glycerin",
+        "1,2,3-Trihydroxypropane",
+        "1,2,3-Propanetriol"
+      ],
+      "formula": "C3H8O3",
+      "mass_monoisotopic": 92.0473,
+      "mass_average": 92.09,
+      "pathways": [
+        "Pentose and glucuronate interconversions",
+        "Galactose metabolism",
+        "Glycerolipid metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "ABC transporters",
+        "Thermogenesis",
+        "Retrograde endocannabinoid signaling",
+        "Regulation of lipolysis in adipocytes"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Carbohydrates",
+        "Monosaccharides",
+        "Sugar alcohols",
+        "C00116 Glycerol",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00028)]",
+        "A ALIMENTARY TRACT AND METABOLISM",
+        "A06 DRUGS FOR CONSTIPATION",
+        "A06A DRUGS FOR CONSTIPATION",
+        "A06AG Enemas",
+        "A06AG04 Glycerol",
+        "D00028 Glycerin (JP18/USP) &lt;JP&gt;",
+        "A06AX Other drugs for constipation",
+        "A06AX01 Glycerol",
+        "Therapeutic category of drugs in Japan [BR:br08301(D00028)]",
+        "2 Agents affecting individual organs",
+        "23 Digestive organ agents",
+        "235 Purgatives, clysters",
+        "2357 Glycerins",
+        "D00028 Glycerin (JP18/USP); Concentrated glycerin (JP18); Glycerol (INN)",
+        "Classification of Japanese OTC drugs [BR:br08313(D00028)]",
+        "Agents for digestive organs",
+        "18 Enema",
+        "D00028 Glycerin (JP18/USP)",
+        "Agents for integumentary system",
+        "55 Chilblain and chap remedies",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00028)]",
+        "Second-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Glycerin",
+        "Third-class OTC drugs",
+        "Drug groups [BR:br08330(D00028)]",
+        "Gastrointestinal agent",
+        "DG01770 Laxative",
+        "D00028 Glycerin",
+        "Drug classes [BR:br08332(D00028)]",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00028)]",
+        "Chemicals",
+        "D00028 Concentrated glycerin"
+      ],
+      "cross_references": {
+        "kegg_id": "C00116",
+        "pubchem_id": "3416",
+        "chebi_id": "17754"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00116",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00116",
+        "retrieved_at": "2026-03-07T21:34:42Z",
         "status": "ok"
       }
     },
@@ -616,205 +421,554 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:18258",
+        "id": "CHEBI:17522",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-07T03:21:35Z"
+        "retrieved_at": "2026-03-10T15:48:56Z"
       }
     },
     "hmdb": {
-      "status": "error",
-      "error_message": "hmdb_fetch_failed",
+      "status": "not_found",
+      "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000265",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000265",
-        "retrieved_at": "2026-03-07T03:21:35Z"
+        "id": "HMDB0000131",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000131",
+        "retrieved_at": "2026-03-10T15:48:57Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:18258",
-        "retrieved_at": "2026-03-07T03:21:35Z",
+        "id": "CHEBI:17522",
+        "retrieved_at": "2026-03-10T15:48:56Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000265",
-        "retrieved_at": "2026-03-07T03:21:35Z",
-        "status": "error",
-        "error_if_any": "hmdb_fetch_failed"
+        "id": "HMDB0000131",
+        "retrieved_at": "2026-03-10T15:48:57Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C02465",
-        "retrieved_at": "2026-03-07T03:21:36Z",
+        "id": "C00116",
+        "retrieved_at": "2026-03-07T21:34:42Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "protein:pendrin|O43511": {
+  "compound:glycerol 3-phosphate|HMDB0000126": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "sn-Glycerol 3-phosphate",
+    "synonyms": [
+      "sn-Glycerol 3-phosphate",
+      "Glycerophosphoric acid",
+      "D-Glycerol 1-phosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H9O6P",
+    "charge": 0,
+    "mass_monoisotopic": 172.0137,
+    "mass_average": 172.07,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Risk category of Japanese OTC drugs [BR:br08312]",
+      "Third-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Calcium glycerophosphate",
+      "C00093 sn-Glycerol 3-phosphate"
+    ],
+    "pathways": [
+      "Glycerolipid metabolism",
+      "Glycerophospholipid metabolism",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "ABC transporters",
+      "Choline metabolism in cancer"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000126",
+      "kegg_id": "C00093",
+      "chebi_id": "15978",
+      "pubchem_id": "439162",
+      "cas": "17989-41-2",
+      "biocyc": "GLYCEROL-3P",
+      "chemspider": "388308",
+      "drugbank_id": "DB02515"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00093",
+      "primary_name": "sn-Glycerol 3-phosphate",
+      "synonyms": [
+        "sn-Glycerol 3-phosphate",
+        "Glycerophosphoric acid",
+        "D-Glycerol 1-phosphate"
+      ],
+      "formula": "C3H9O6P",
+      "mass_monoisotopic": 172.0137,
+      "mass_average": 172.07,
+      "pathways": [
+        "Glycerolipid metabolism",
+        "Glycerophospholipid metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "ABC transporters",
+        "Choline metabolism in cancer"
+      ],
+      "kegg_class": [
+        "Risk category of Japanese OTC drugs [BR:br08312]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Calcium glycerophosphate",
+        "C00093 sn-Glycerol 3-phosphate"
+      ],
+      "cross_references": {
+        "kegg_id": "C00093",
+        "pubchem_id": "3393",
+        "chebi_id": "15978"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00093",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00093",
+        "retrieved_at": "2026-03-10T15:49:04Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15978",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-10T15:49:02Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000126",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000126",
+        "retrieved_at": "2026-03-10T15:49:03Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:15978",
+        "retrieved_at": "2026-03-10T15:49:02Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000126",
+        "retrieved_at": "2026-03-10T15:49:03Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00093",
+        "retrieved_at": "2026-03-10T15:49:04Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:glycerone phosphate|HMDB0001473": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Glycerone phosphate",
+    "synonyms": [
+      "Glycerone phosphate",
+      "Dihydroxyacetone phosphate",
+      "3-Hydroxy-2-oxopropyl phosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H7O6P",
+    "charge": 0,
+    "mass_monoisotopic": 169.998,
+    "mass_average": 170.06,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Glycolysis / Gluconeogenesis",
+      "Pentose and glucuronate interconversions",
+      "Fructose and mannose metabolism",
+      "Galactose metabolism",
+      "Glycerolipid metabolism",
+      "Inositol phosphate metabolism",
+      "Glycerophospholipid metabolism",
+      "Glyoxylate and dicarboxylate metabolism",
+      "Propanoate metabolism",
+      "Methane metabolism",
+      "Carbon fixation by Calvin cycle",
+      "Nicotinate and nicotinamide metabolism",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "Biosynthesis of amino acids"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0001473",
+      "kegg_id": "C00111",
+      "chebi_id": "16108",
+      "pubchem_id": "668",
+      "cas": "57-04-5",
+      "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
+      "chemspider": "648",
+      "drugbank_id": "DB04326"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00111",
+      "primary_name": "Glycerone phosphate",
+      "synonyms": [
+        "Glycerone phosphate",
+        "Dihydroxyacetone phosphate",
+        "3-Hydroxy-2-oxopropyl phosphate"
+      ],
+      "formula": "C3H7O6P",
+      "mass_monoisotopic": 169.998,
+      "mass_average": 170.06,
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Pentose and glucuronate interconversions",
+        "Fructose and mannose metabolism",
+        "Galactose metabolism",
+        "Glycerolipid metabolism",
+        "Inositol phosphate metabolism",
+        "Glycerophospholipid metabolism",
+        "Glyoxylate and dicarboxylate metabolism",
+        "Propanoate metabolism",
+        "Methane metabolism",
+        "Carbon fixation by Calvin cycle",
+        "Nicotinate and nicotinamide metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Biosynthesis of amino acids"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00111",
+        "pubchem_id": "3411",
+        "chebi_id": "16108"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00111",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00111",
+        "retrieved_at": "2026-03-07T21:34:42Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16108",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-10T15:49:10Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001473",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001473",
+        "retrieved_at": "2026-03-10T15:49:10Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:16108",
+        "retrieved_at": "2026-03-10T15:49:10Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001473",
+        "retrieved_at": "2026-03-10T15:49:10Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00111",
+        "retrieved_at": "2026-03-07T21:34:42Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "protein:triacylglycerol lipase|Q9LZA6": {
     "status": "ok",
-    "uniprot_id": "O43511",
-    "recommended_name": "Pendrin",
+    "uniprot_id": "Q9LZA6",
+    "recommended_name": "Triacylglycerol lipase SDP1",
     "alternative_names": [
-      "Sodium-independent chloride/iodide transporter",
-      "Solute carrier family 26 member 4"
+      "Protein SUGAR-DEPENDENT 1"
     ],
     "gene_names": [
-      "SLC26A4",
-      "PDS"
+      "SDP1"
     ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Sodium-independent transporter of chloride and iodide (PubMed:10192399, PubMed:11932316, PubMed:12107249, PubMed:16684826, PubMed:24051746). Mediates electroneutral chloride-bicarbonate, chloride-iodide and chloride-formate exchange with 1:1 stoichiometry (PubMed:10644529, PubMed:15155570, PubMed:24051746, PubMed:35601831). Mediates electroneutral iodide-bicarbonate exchange (By similarity)",
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Involved in the release of fatty acids from the oil body in germinating seedlings (PubMed:16473965, PubMed:19136267, PubMed:27466365). Can hydrolyze triacylglycerols and diacylglycerols but not monoacylglycerols, phospholipids, galactolipids or cholesterol esters (PubMed:16473965, PubMed:19136267). SDP1 lipase activity is required to limit triacylglycerol accumulation in roots, leaves and stems, which are vegetative tissues (PubMed:23686420). Functions synergistically with PDAT1 in regulating fatty acid flow from membrane lipid synthesis toward peroxisomal beta-oxidation through a transient triacylglycerol pool (PubMed:25293755)",
     "catalytic_activity": [
-      "chloride(in) = chloride(out)",
-      "iodide(out) = iodide(in)",
-      "hydrogencarbonate(in) + chloride(out) = hydrogencarbonate(out) + chloride(in)",
-      "iodide(in) + hydrogencarbonate(out) = iodide(out) + hydrogencarbonate(in)",
-      "iodide(in) + chloride(out) = iodide(out) + chloride(in)",
-      "formate(in) + chloride(out) = formate(out) + chloride(in)"
+      "a triacylglycerol + H2O = a diacylglycerol + a fatty acid + H(+)",
+      "1,2,3-tri-(9Z-octadecenoyl)-glycerol + H2O = di-(9Z)-octadecenoylglycerol + (9Z)-octadecenoate + H(+)"
     ],
-    "enzyme_commission": [],
+    "enzyme_commission": [
+      "3.1.1.3"
+    ],
     "pathways": [],
     "keywords": [
-      "Alternative splicing",
-      "Cell membrane",
-      "Chloride",
-      "Deafness",
-      "Disease variant",
+      "Glycerol metabolism",
+      "Glycoprotein",
+      "Hydrolase",
+      "Lipid degradation",
+      "Lipid droplet",
+      "Lipid metabolism",
       "Membrane",
-      "Non-syndromic deafness",
-      "Proteomics identification",
-      "Reference proteome",
-      "Transmembrane",
-      "Transmembrane helix",
-      "Transport"
+      "Peroxisome",
+      "Reference proteome"
     ],
     "subcellular_locations": [
-      "Cell membrane",
-      "Apical cell membrane"
+      "Lipid droplet",
+      "Membrane",
+      "Peroxisome"
     ],
     "go_mf_ids": [
-      "GO:0015108",
-      "GO:0140900",
-      "GO:0015111",
-      "GO:0019531",
-      "GO:0008271",
-      "GO:0015116"
+      "GO:0004806"
     ],
     "go_bp_ids": [
-      "GO:1902476",
-      "GO:0015698",
-      "GO:0015705",
-      "GO:0006811",
-      "GO:0006885",
-      "GO:0032880",
-      "GO:0007605",
-      "GO:1902358"
+      "GO:0006071",
+      "GO:0019433",
+      "GO:0006641"
     ],
     "go_cellular_component_ids": [
-      "GO:0016324",
-      "GO:0031526",
-      "GO:0070062",
       "GO:0016020",
-      "GO:0005886"
+      "GO:0012511",
+      "GO:0005777"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 780,
-    "transmembrane_regions_count": 12,
+    "sequence_length": 825,
+    "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [],
-    "reactome_ids": [
-      "R-HSA-427601",
-      "R-HSA-5619046"
-    ],
-    "string_id": "9606.ENSP00000494017",
+    "reactome_ids": [],
+    "string_id": "3702.Q9LZA6",
     "provenance": {
       "source": "UniProt",
-      "query": "O43511",
-      "source_url": "https://rest.uniprot.org/uniprotkb/O43511.json",
-      "retrieved_at": "2026-03-07T03:21:15Z"
+      "query": "Q9LZA6",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q9LZA6.json",
+      "retrieved_at": "2026-03-10T15:48:43Z"
     }
   },
-  "protein:thyroid peroxidase|P07202": {
+  "protein:diglyceride lipase|Z0Z000": {
     "status": "ok",
-    "uniprot_id": "P07202",
-    "recommended_name": "Thyroid peroxidase",
+    "uniprot_id": "Z0Z000",
+    "recommended_name": "",
     "alternative_names": [],
+    "gene_names": [],
+    "organism": "",
+    "taxonomy_id": "",
+    "function_text": "",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [],
+    "subcellular_locations": [],
+    "go_mf_ids": [],
+    "go_bp_ids": [],
+    "go_cellular_component_ids": [],
+    "protein_existence": "",
+    "sequence_length": 0,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Z0Z000",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Z0Z000.json",
+      "retrieved_at": "2026-03-10T15:48:43Z"
+    }
+  },
+  "protein:acylhydrolase|O49523": {
+    "status": "ok",
+    "uniprot_id": "O49523",
+    "recommended_name": "Phospholipase A1-IIgamma",
+    "alternative_names": [
+      "DAD1-like seedling establishment-related lipase"
+    ],
     "gene_names": [
-      "TPO"
+      "DSEL"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Acylhydrolase that catalyzes the hydrolysis of 1,3-diacylglycerol (1,3-DAG) and 1-monoacylglycerol (1-MAG) at the sn-1 position. High activity toward 1,3-DAG and 1-MAG, but low activity toward 1,2-diacylglycerol (1,2-DAG) and 1-lysophosphatidylcholine (1-LPC), and no activity toward phosphatidylcholine (PC), monogalactosyldiacylglycerol (MGDG), digalactosyldiacylglycerol (DGDG), triacylglycerol (TAG) and 2-monoacylglycerol (2-MAG). May be involved in the negative regulation of seedling establishment by inhibiting the breakdown, beta-oxidation and mobilization of seed storage oils",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Coiled coil",
+      "Cytoplasm",
+      "Hydrolase",
+      "Lipid degradation",
+      "Lipid metabolism",
+      "Reference proteome"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm"
+    ],
+    "go_mf_ids": [
+      "GO:0047372",
+      "GO:0008970"
+    ],
+    "go_bp_ids": [
+      "GO:0046340",
+      "GO:0019915",
+      "GO:0052651",
+      "GO:0010187"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005737"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 419,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "2YIJ",
+      "7X0C"
+    ],
+    "reactome_ids": [],
+    "string_id": "3702.O49523",
+    "provenance": {
+      "source": "UniProt",
+      "query": "O49523",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O49523.json",
+      "retrieved_at": "2026-03-10T15:48:43Z"
+    }
+  },
+  "protein:glycerol kinase|P32189": {
+    "status": "ok",
+    "uniprot_id": "P32189",
+    "recommended_name": "Glycerol kinase",
+    "alternative_names": [
+      "ATP:glycerol 3-phosphotransferase"
+    ],
+    "gene_names": [
+      "GK"
     ],
     "organism": "Homo sapiens",
     "taxonomy_id": "9606",
-    "function_text": "Iodination and coupling of the hormonogenic tyrosines in thyroglobulin to yield the thyroid hormones T(3) and T(4)",
+    "function_text": "Kinase that plays a key role in glycerol metabolism, catalyzing its phosphorylation to produce sn-glycerol 3-phosphate. Sn-glycerol 3-phosphate is a crucial intermediate in various metabolic pathways, such as the synthesis of glycerolipids and triglycerides, glycogenesis, glycolysis and gluconeogenesis",
     "catalytic_activity": [
-      "2 iodide + H2O2 + 2 H(+) = diiodine + 2 H2O",
-      "[thyroglobulin]-L-tyrosine + iodide + H2O2 + H(+) = [thyroglobulin]-3-iodo-L-tyrosine + 2 H2O",
-      "[thyroglobulin]-3-iodo-L-tyrosine + iodide + H2O2 + H(+) = [thyroglobulin]-3,5-diiodo-L-tyrosine + 2 H2O",
-      "2 [thyroglobulin]-3,5-diiodo-L-tyrosine + H2O2 = [thyroglobulin]-L-thyroxine + [thyroglobulin]-dehydroalanine + 2 H2O",
-      "[thyroglobulin]-3-iodo-L-tyrosine + [thyroglobulin]-3,5-diiodo-L-tyrosine + H2O2 = [thyroglobulin]-3,3',5-triiodo-L-thyronine + [thyroglobulin]-dehydroalanine + 2 H2O"
+      "glycerol + ATP = sn-glycerol 3-phosphate + ADP + H(+)"
     ],
     "enzyme_commission": [
-      "1.11.1.8"
+      "2.7.1.30"
     ],
     "pathways": [
-      "Hormone biosynthesis; thyroid hormone biosynthesis"
+      "Polyol metabolism; glycerol degradation via glycerol kinase pathway; sn-glycerol 3-phosphate from glycerol: step 1/1"
     ],
     "keywords": [
       "Alternative splicing",
-      "Calcium",
-      "Congenital hypothyroidism",
+      "ATP-binding",
+      "Cytoplasm",
       "Disease variant",
-      "Disulfide bond",
-      "EGF-like domain",
-      "Glycoprotein",
-      "Heme",
-      "Hydrogen peroxide",
-      "Iron",
+      "Glycerol metabolism",
+      "Kinase",
       "Membrane",
       "Metal-binding",
-      "Oxidoreductase",
-      "Peroxidase",
+      "Mitochondrion",
+      "Mitochondrion outer membrane",
+      "Nucleotide-binding",
+      "Nucleus",
       "Proteomics identification",
       "Reference proteome",
-      "Signal",
-      "Sushi",
-      "Thyroid hormones biosynthesis",
+      "Transferase",
       "Transmembrane",
-      "Transmembrane helix"
+      "Transmembrane helix",
+      "Zinc"
     ],
     "subcellular_locations": [
-      "Membrane",
-      "Cell surface"
+      "Mitochondrion outer membrane",
+      "Nucleus",
+      "Cytoplasm, cytosol"
     ],
     "go_mf_ids": [
-      "GO:0005509",
-      "GO:0020037",
-      "GO:0004447",
-      "GO:0004601"
+      "GO:0005524",
+      "GO:0004370",
+      "GO:0046872"
     ],
     "go_bp_ids": [
-      "GO:0035162",
-      "GO:0042446",
-      "GO:0042744",
-      "GO:0006979",
-      "GO:0006590"
+      "GO:0019563",
+      "GO:0006071",
+      "GO:0046167",
+      "GO:0019432",
+      "GO:0006641"
     ],
     "go_cellular_component_ids": [
-      "GO:0009986",
-      "GO:0005615",
-      "GO:0005886"
+      "GO:0005829",
+      "GO:0070062",
+      "GO:0005741",
+      "GO:0005739",
+      "GO:0005634"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 933,
+    "sequence_length": 559,
     "transmembrane_regions_count": 1,
     "signal_peptide": {
       "present": false,
@@ -822,87 +976,91 @@
     },
     "pdb_ids": [],
     "reactome_ids": [
-      "R-HSA-209968"
+      "R-HSA-75109"
     ],
-    "string_id": "9606.ENSP00000329869",
+    "string_id": "9606.ENSP00000401720",
     "provenance": {
       "source": "UniProt",
-      "query": "P07202",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P07202.json",
-      "retrieved_at": "2026-03-07T03:21:15Z"
+      "query": "P32189",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P32189.json",
+      "retrieved_at": "2026-03-10T15:48:43Z"
     }
   },
-  "protein:thyroglobulin|P01266": {
+  "protein:glycerol-3-phosphate dehydrogenase|Q00055": {
     "status": "ok",
-    "uniprot_id": "P01266",
-    "recommended_name": "Thyroglobulin",
+    "uniprot_id": "Q00055",
+    "recommended_name": "Glycerol-3-phosphate dehydrogenase [NAD(+)] 1",
     "alternative_names": [],
     "gene_names": [
-      "TG"
+      "GPD1",
+      "DAR1",
+      "HOR1",
+      "OSG1"
     ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Acts as a substrate for the production of iodinated thyroid hormones thyroxine (T4) and triiodothyronine (T3) (PubMed:17532758, PubMed:32025030). The synthesis of T3 and T4 involves iodination of selected tyrosine residues of TG/thyroglobulin followed by their oxidative coupling in the thyroid follicle lumen (PubMed:32025030). Following TG re-internalization and lysosomal-mediated proteolysis, T3 and T4 are released from the polypeptide backbone leading to their secretion into the bloodstream (PubMed:32025030). One dimer produces 7 thyroid hormone molecules (PubMed:32025030)",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
+    "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+    "taxonomy_id": "559292",
+    "function_text": "Catalyzes the production and accumulation of glycerol during hyperosmotic stress conditions. Glycerol acts as an osmoregulator that prevents loss of water and turgor of the cells",
+    "catalytic_activity": [
+      "sn-glycerol 3-phosphate + NAD(+) = dihydroxyacetone phosphate + NADH + H(+)"
+    ],
+    "enzyme_commission": [
+      "1.1.1.8"
+    ],
     "pathways": [],
     "keywords": [
       "3D-structure",
-      "Alternative splicing",
-      "Congenital hypothyroidism",
+      "Acetylation",
+      "Cytoplasm",
       "Direct protein sequencing",
-      "Disease variant",
-      "Disulfide bond",
-      "Glycoprotein",
-      "Hormone",
-      "Iodination",
-      "Proteoglycan",
-      "Proteomics identification",
+      "NAD",
+      "Oxidoreductase",
+      "Peroxisome",
+      "Phosphoprotein",
       "Reference proteome",
-      "Repeat",
-      "Secreted",
-      "Signal",
-      "Sulfation",
-      "Thyroid hormone",
-      "Thyroid hormones biosynthesis"
+      "Stress response"
     ],
     "subcellular_locations": [
-      "Secreted"
+      "Cytoplasm",
+      "Peroxisome"
     ],
     "go_mf_ids": [
-      "GO:0005179",
-      "GO:0042802"
+      "GO:0141152",
+      "GO:0047952",
+      "GO:0051287",
+      "GO:0042803"
     ],
     "go_bp_ids": [
-      "GO:0042446",
-      "GO:0015705",
-      "GO:0031641",
-      "GO:0007165",
-      "GO:0030878",
-      "GO:0006590"
+      "GO:0005975",
+      "GO:0046168",
+      "GO:0006072",
+      "GO:0006973",
+      "GO:0016558"
     ],
     "go_cellular_component_ids": [
-      "GO:0005576",
-      "GO:0005615"
+      "GO:0005829",
+      "GO:0005739",
+      "GO:0005634",
+      "GO:0005777"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 2768,
+    "sequence_length": 391,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "6SCJ",
-      "7B75"
+      "4FGW"
     ],
-    "reactome_ids": [],
-    "string_id": "9606.ENSP00000220616",
+    "reactome_ids": [
+      "R-SCE-1483166"
+    ],
+    "string_id": "4932.YDL022W",
     "provenance": {
       "source": "UniProt",
-      "query": "P01266",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P01266.json",
-      "retrieved_at": "2026-03-07T03:21:15Z"
+      "query": "Q00055",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q00055.json",
+      "retrieved_at": "2026-03-10T15:48:44Z"
     }
   }
 }

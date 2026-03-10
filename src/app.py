@@ -1,6 +1,7 @@
 import json
 import inspect
 import os
+import re
 import hashlib
 import tempfile
 import time
@@ -230,6 +231,57 @@ def run_libsbml_checker(sbml_bytes: bytes) -> Dict[str, Any]:
         },
     }
 
+def _norm_text(value: str) -> str:
+    text = (value or "").strip().lower()
+    text = re.sub(r"[^a-z0-9\-\s]", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    return text
+
+
+def attach_enzymes_from_reaction_evidence(payload, report=None):
+    """
+    Attach proteins as enzymes if their name appears in the reaction evidence.
+    """
+    entities = payload.get("entities", {})
+    processes = payload.get("processes", {})
+
+    proteins = entities.get("proteins", [])
+    reactions = processes.get("reactions", [])
+
+    protein_names = []
+    for p in proteins:
+        if isinstance(p, dict):
+            name = p.get("name")
+            if name:
+                protein_names.append(name)
+
+    attached = 0
+
+    for rxn in reactions:
+
+        rxn.setdefault("enzymes", [])
+        rxn.setdefault("modifiers", [])
+
+        if rxn["enzymes"]:
+            continue
+
+        evidence_text = _norm_text(
+            (rxn.get("name", "") + " " + rxn.get("evidence", ""))
+        )
+
+        matches = []
+
+        for protein in protein_names:
+            if _norm_text(protein) in evidence_text:
+                matches.append(protein)
+
+        if len(matches) == 1:
+            rxn["enzymes"].append(matches[0])
+            attached += 1
+
+    if report is not None:
+        summary = report.setdefault("summary", {})
+        summary["enzymes_attached_from_reaction_evidence"] = attached
 
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
@@ -338,6 +390,7 @@ def run_post_pipeline_sbml_artifacts(
             )
             ensure_autostates(normalized_input, report=normalization_report)
             attach_transporters_from_evidence(normalized_input, report=normalization_report)
+            attach_enzymes_from_reaction_evidence(normalized_input, report=normalization_report)
             post_transport_attachment_probe = {
                 "normalization_stats": _safe_dict(normalization_report.get("summary")),
                 "graph_summary": graph_summary(normalized_input),
