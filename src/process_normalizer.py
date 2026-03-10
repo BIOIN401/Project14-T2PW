@@ -123,6 +123,11 @@ def _new_report() -> Dict[str, Any]:
             "dedupe_removed": 0,
             "dedupe_removed_total": 0,
             "no_op_removed_count": 0,
+            "n_same_as_groups": 0,
+            "n_aliases_rewritten": 0,
+            "n_entities_deduped": 0,
+            "n_single_protein_complexes_removed": 0,
+            "alias_example_mappings": [],
         },
         "rewrite_map": {},
         "actions": [],
@@ -163,6 +168,17 @@ def _remove_entity(rows: List[Dict[str, Any]], name: str) -> bool:
 
 
 def _merge_dicts_keep_existing(primary: Dict[str, Any], extra: Dict[str, Any]) -> Dict[str, Any]:
+    def _is_blank(value: Any) -> bool:
+        if value is None:
+            return True
+        if isinstance(value, str):
+            return not value.strip()
+        if isinstance(value, list):
+            return len(value) == 0
+        if isinstance(value, dict):
+            return len(value) == 0
+        return False
+
     out = deepcopy(primary)
     for key, value in extra.items():
         if key == "name":
@@ -170,10 +186,26 @@ def _merge_dicts_keep_existing(primary: Dict[str, Any], extra: Dict[str, Any]) -
         if key not in out:
             out[key] = deepcopy(value)
             continue
+        if key == "evidence":
+            current = out.get(key)
+            if _is_blank(current) and not _is_blank(value):
+                out[key] = deepcopy(value)
+            elif isinstance(current, str) and isinstance(value, str) and len(value.strip()) > len(current.strip()):
+                out[key] = value
+            continue
         if key == "mapped_ids" and isinstance(out.get(key), dict) and isinstance(value, dict):
             merged = dict(value)
             merged.update(out[key])
             out[key] = merged
+            continue
+        if isinstance(out.get(key), list) and isinstance(value, list):
+            if all(isinstance(v, str) for v in out.get(key, [])) and all(isinstance(v, str) for v in value):
+                out[key] = _dedupe_preserve([str(v) for v in out.get(key, [])] + [str(v) for v in value])
+            elif _is_blank(out.get(key)) and not _is_blank(value):
+                out[key] = deepcopy(value)
+            continue
+        if _is_blank(out.get(key)) and not _is_blank(value):
+            out[key] = deepcopy(value)
     return out
 
 
@@ -1095,6 +1127,534 @@ def cleanup_disallowed_complexes(
     return payload
 
 
+class _AliasUnionFind:
+    def __init__(self) -> None:
+        self.parent: Dict[str, str] = {}
+
+    def add(self, item: str) -> None:
+        key = _normalize(item)
+        if key and key not in self.parent:
+            self.parent[key] = key
+
+    def find(self, item: str) -> str:
+        key = _normalize(item)
+        if not key:
+            return ""
+        self.add(key)
+        root = self.parent[key]
+        while root != self.parent[root]:
+            root = self.parent[root]
+        current = key
+        while current != root:
+            nxt = self.parent[current]
+            self.parent[current] = root
+            current = nxt
+        return root
+
+    def union(self, left: str, right: str) -> None:
+        lnorm = _normalize(left)
+        rnorm = _normalize(right)
+        if not lnorm or not rnorm:
+            return
+        lroot = self.find(lnorm)
+        rroot = self.find(rnorm)
+        if not lroot or not rroot or lroot == rroot:
+            return
+        if lroot < rroot:
+            self.parent[rroot] = lroot
+        else:
+            self.parent[lroot] = rroot
+
+    def groups(self) -> Dict[str, Set[str]]:
+        out: Dict[str, Set[str]] = {}
+        for key in list(self.parent.keys()):
+            root = self.find(key)
+            if not root:
+                continue
+            out.setdefault(root, set()).add(key)
+        return out
+
+
+def _is_same_as_relationship(value: str) -> bool:
+    norm = _normalize(value).replace(" ", "")
+    return norm in {"sameas", "same_as"}
+
+
+def _actor_name_from_row(row: Any) -> str:
+    if isinstance(row, str):
+        return _canonical(row)
+    if not isinstance(row, dict):
+        return ""
+    for field in ["protein", "protein_name", "protein_complex", "enzyme", "modifier", "name"]:
+        value = _canonical(str(row.get(field, "")))
+        if value:
+            return value
+    return ""
+
+
+def _token_parts_for_aliasing(token: str) -> List[str]:
+    text = _canonical(token)
+    if not text:
+        return []
+    parts: List[str] = [text]
+    if ":" in text:
+        parts.extend(_complex_components(text))
+    elif "+" in text:
+        parts.extend(_split_composite(text))
+    return _dedupe_preserve(parts)
+
+
+def _dedupe_location_rows(rows: List[Any], *, key_name: str) -> List[Dict[str, Any]]:
+    kept: List[Dict[str, Any]] = []
+    seen: Set[Tuple[str, str]] = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        name = _canonical(str(row.get(key_name, "")))
+        state = _canonical(str(row.get("biological_state", "")))
+        if not name:
+            continue
+        key = (_normalize(name), _normalize(state))
+        if key in seen:
+            continue
+        seen.add(key)
+        kept.append(row)
+    return kept
+
+
+def canonicalize_same_as_aliases(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("n_same_as_groups", 0)
+    summary.setdefault("n_aliases_rewritten", 0)
+    summary.setdefault("n_entities_deduped", 0)
+    summary.setdefault("n_single_protein_complexes_removed", 0)
+    summary.setdefault("alias_example_mappings", [])
+
+    compounds, proteins, complexes = _entity_lists(payload)
+    processes = _safe_dict(payload.setdefault("processes", {}))
+    reactions = _safe_list(processes.get("reactions"))
+    transports = _safe_list(processes.get("transports"))
+    if not isinstance(processes.get("interactions"), list):
+        processes["interactions"] = []
+    interactions = _safe_list(processes.get("interactions"))
+    element_locations = _safe_dict(payload.setdefault("element_locations", {}))
+    if not isinstance(element_locations.get("compound_locations"), list):
+        element_locations["compound_locations"] = []
+    if not isinstance(element_locations.get("protein_locations"), list):
+        element_locations["protein_locations"] = []
+
+    alias_display: Dict[str, str] = {}
+    enzyme_ref_freq: Dict[str, int] = {}
+    io_ref_freq: Dict[str, int] = {}
+    entity_registry_norms: Set[str] = set()
+    single_complex_map: Dict[str, str] = {}
+
+    def _remember_display(name: str) -> None:
+        cname = _canonical(name)
+        norm = _normalize(cname)
+        if not norm:
+            return
+        if norm not in alias_display:
+            alias_display[norm] = cname
+
+    def _bump(counter: Dict[str, int], name: str) -> None:
+        cname = _canonical(name)
+        norm = _normalize(cname)
+        if not norm:
+            return
+        counter[norm] = counter.get(norm, 0) + 1
+        _remember_display(cname)
+
+    # Remove single-protein complexes up-front and rewrite references back to direct protein names.
+    kept_complexes: List[Dict[str, Any]] = []
+    removed_single_complexes = 0
+    for idx, row in enumerate(complexes):
+        if not isinstance(row, dict):
+            continue
+        complex_name = _canonical(str(row.get("name", "")))
+        components = _dedupe_preserve(
+            [_canonical(str(part)) for part in _safe_list(row.get("components")) if _canonical(str(part))]
+        )
+        if not components and complex_name and ":" not in complex_name:
+            components = [complex_name]
+        if len(components) == 1:
+            component = _canonical(components[0])
+            if component:
+                _ensure_protein(component, payload, rep)
+                if _normalize(complex_name) != _normalize(component):
+                    single_complex_map[_normalize(complex_name)] = component
+                    _remember_display(complex_name)
+                    _remember_display(component)
+            removed_single_complexes += 1
+            rep["actions"].append(
+                {
+                    "type": "single_protein_complex_removed",
+                    "json_pointer": f"/entities/protein_complexes/{idx}",
+                    "complex": complex_name,
+                    "protein": component,
+                }
+            )
+            continue
+        row["name"] = complex_name
+        if components:
+            row["components"] = components
+        kept_complexes.append(row)
+    complexes[:] = kept_complexes
+    summary["n_single_protein_complexes_removed"] = int(summary.get("n_single_protein_complexes_removed", 0)) + removed_single_complexes
+
+    # Gather registry names.
+    for rows in [proteins, compounds, complexes]:
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            norm = _normalize(name)
+            if not norm:
+                continue
+            entity_registry_norms.add(norm)
+            _remember_display(name)
+            if rows is complexes:
+                for comp in _safe_list(row.get("components")):
+                    comp_name = _canonical(str(comp))
+                    comp_norm = _normalize(comp_name)
+                    if comp_norm:
+                        entity_registry_norms.add(comp_norm)
+                        _remember_display(comp_name)
+
+    # Gather reaction references for canonical-selection priority.
+    for reaction in reactions:
+        if not isinstance(reaction, dict):
+            continue
+        for side in ["inputs", "outputs"]:
+            for token in _safe_list(reaction.get(side)):
+                if not isinstance(token, str):
+                    continue
+                for part in _token_parts_for_aliasing(token):
+                    _bump(io_ref_freq, part)
+        for key in ["enzymes", "modifiers"]:
+            for row in _safe_list(reaction.get(key)):
+                actor_name = _actor_name_from_row(row)
+                if actor_name:
+                    _bump(enzyme_ref_freq, actor_name)
+        for field in ["enzyme", "modifier", "protein", "protein_name", "protein_complex"]:
+            value = reaction.get(field)
+            if isinstance(value, str):
+                _bump(enzyme_ref_freq, value)
+
+    # Build SAME_AS equivalence classes from interactions.
+    uf = _AliasUnionFind()
+    for idx, row in enumerate(interactions):
+        if not isinstance(row, dict):
+            continue
+        if not _is_same_as_relationship(str(row.get("relationship", ""))):
+            continue
+        left = _canonical(str(row.get("entity_1", "")))
+        right = _canonical(str(row.get("entity_2", "")))
+        if not left or not right:
+            continue
+        uf.add(left)
+        uf.add(right)
+        uf.union(left, right)
+        _remember_display(left)
+        _remember_display(right)
+        rep["actions"].append(
+            {
+                "type": "same_as_edge_registered",
+                "json_pointer": f"/processes/interactions/{idx}",
+                "entity_1": left,
+                "entity_2": right,
+            }
+        )
+
+    groups = [group for group in uf.groups().values() if len(group) >= 2]
+    groups.sort(key=lambda group: tuple(sorted(group)))
+    summary["n_same_as_groups"] = int(summary.get("n_same_as_groups", 0)) + len(groups)
+
+    alias_map: Dict[str, str] = {}
+    example_mappings: List[Dict[str, str]] = []
+
+    def _candidate_rank(norm: str) -> Tuple[int, int, str, str]:
+        display = alias_display.get(norm, norm)
+        if norm in enzyme_ref_freq:
+            return (0, -int(enzyme_ref_freq.get(norm, 0)), _normalize(display), display)
+        if norm in io_ref_freq:
+            return (1, -int(io_ref_freq.get(norm, 0)), _normalize(display), display)
+        if norm in entity_registry_norms:
+            return (2, 0, _normalize(display), display)
+        return (3, 0, _normalize(display), display)
+
+    for group in groups:
+        candidates = sorted(group)
+        canonical_norm = sorted(candidates, key=_candidate_rank)[0]
+        canonical_name = alias_display.get(canonical_norm, canonical_norm)
+        for norm in candidates:
+            alias_map[norm] = canonical_name
+            alias_name = alias_display.get(norm, norm)
+            if _normalize(alias_name) != _normalize(canonical_name) and len(example_mappings) < 10:
+                example_mappings.append({"alias": alias_name, "canonical": canonical_name})
+
+    for norm, target in single_complex_map.items():
+        alias_map[norm] = target
+        if len(example_mappings) < 10:
+            alias_name = alias_display.get(norm, norm)
+            if _normalize(alias_name) != _normalize(target):
+                example_mappings.append({"alias": alias_name, "canonical": target})
+
+    def _resolve_alias_target(norm: str) -> str:
+        current_norm = _normalize(norm)
+        if not current_norm:
+            return ""
+        seen: Set[str] = set()
+        current_name = alias_map.get(current_norm, alias_display.get(current_norm, current_norm))
+        while True:
+            next_norm = _normalize(current_name)
+            if not next_norm or next_norm in seen:
+                break
+            seen.add(next_norm)
+            next_name = alias_map.get(next_norm)
+            if not next_name:
+                break
+            current_name = next_name
+        return _canonical(current_name)
+
+    resolved_alias_map: Dict[str, str] = {}
+    for norm in sorted(alias_map.keys()):
+        target = _resolve_alias_target(norm)
+        if target:
+            resolved_alias_map[norm] = target
+
+    rewrite_count = 0
+
+    def _rewrite_name(name: str) -> str:
+        nonlocal rewrite_count
+        cname = _canonical(name)
+        norm = _normalize(cname)
+        if not norm:
+            return ""
+        target = resolved_alias_map.get(norm)
+        if not target:
+            return cname
+        if _canonical(target) != cname:
+            rewrite_count += 1
+            rep["actions"].append(
+                {
+                    "type": "alias_rewrite",
+                    "from": cname,
+                    "to": target,
+                }
+            )
+        return _canonical(target)
+
+    def _rewrite_token(token: str) -> str:
+        text = _canonical(token)
+        if not text:
+            return ""
+        if ":" in text:
+            parts = _complex_components(text)
+            rewritten = _dedupe_preserve(
+                [
+                    rewritten_part
+                    for rewritten_part in [_rewrite_name(part) for part in parts]
+                    if rewritten_part
+                ]
+            )
+            return ":".join(rewritten)
+        if "+" in text:
+            parts = _split_composite(text)
+            rewritten = _dedupe_preserve(
+                [
+                    rewritten_part
+                    for rewritten_part in [_rewrite_name(part) for part in parts]
+                    if rewritten_part
+                ]
+            )
+            return " + ".join(rewritten)
+        return _rewrite_name(text)
+
+    def _rewrite_actor_rows(rows: List[Any]) -> List[Any]:
+        out: List[Any] = []
+        for row in rows:
+            if isinstance(row, str):
+                out.append(_rewrite_name(row))
+                continue
+            if not isinstance(row, dict):
+                continue
+            updated = dict(row)
+            for field in ["protein", "protein_name", "protein_complex", "enzyme", "modifier", "name"]:
+                if isinstance(updated.get(field), str):
+                    updated[field] = _rewrite_token(str(updated.get(field)))
+            if isinstance(updated.get("protein_complex"), str) and ":" not in _canonical(str(updated.get("protein_complex"))):
+                complex_value = _canonical(str(updated.pop("protein_complex")))
+                if complex_value and not _canonical(str(updated.get("protein", ""))):
+                    updated["protein"] = complex_value
+            out.append(updated)
+        return out
+
+    # Rewrite entity lists.
+    for rows in [proteins, compounds]:
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            row["name"] = _rewrite_name(str(row.get("name", "")))
+    rewritten_complexes: List[Dict[str, Any]] = []
+    for row in complexes:
+        if not isinstance(row, dict):
+            continue
+        updated = dict(row)
+        updated["name"] = _rewrite_token(str(updated.get("name", "")))
+        comps = _safe_list(updated.get("components"))
+        updated["components"] = _dedupe_preserve(
+            [
+                rewritten_part
+                for rewritten_part in [_rewrite_name(str(part)) for part in comps]
+                if rewritten_part
+            ]
+        )
+        if len(updated["components"]) == 1:
+            component = _canonical(str(updated["components"][0]))
+            if component:
+                _ensure_protein(component, payload, rep)
+                removed_single_complexes += 1
+                summary["n_single_protein_complexes_removed"] = int(summary.get("n_single_protein_complexes_removed", 0)) + 1
+                rep["actions"].append(
+                    {
+                        "type": "single_protein_complex_removed_after_alias_rewrite",
+                        "complex": _canonical(str(updated.get("name", ""))),
+                        "protein": component,
+                    }
+                )
+            continue
+        rewritten_complexes.append(updated)
+    complexes[:] = rewritten_complexes
+
+    # Rewrite process references.
+    for ridx, reaction in enumerate(reactions):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ["inputs", "outputs"]:
+            rewritten = []
+            for token in _safe_list(reaction.get(side)):
+                if not isinstance(token, str):
+                    continue
+                value = _rewrite_token(token)
+                if value:
+                    rewritten.append(value)
+            reaction[side] = _dedupe_preserve(rewritten)
+        for key in ["enzymes", "modifiers"]:
+            rows = _safe_list(reaction.get(key))
+            if not isinstance(reaction.get(key), list):
+                reaction[key] = rows
+            reaction[key] = _rewrite_actor_rows(rows)
+        for field in ["enzyme", "modifier", "protein", "protein_name", "protein_complex"]:
+            if isinstance(reaction.get(field), str):
+                reaction[field] = _rewrite_token(str(reaction.get(field)))
+        for eidx, row in enumerate(_safe_list(reaction.get("elements_with_states"))):
+            if not isinstance(row, dict):
+                continue
+            if isinstance(row.get("element"), str):
+                row["element"] = _rewrite_token(str(row.get("element")))
+                rep["actions"].append(
+                    {
+                        "type": "elements_with_states_element_rewritten",
+                        "json_pointer": f"/processes/reactions/{ridx}/elements_with_states/{eidx}/element",
+                        "value": row["element"],
+                    }
+                )
+
+    for tidx, transport in enumerate(transports):
+        if not isinstance(transport, dict):
+            continue
+        if isinstance(transport.get("cargo"), str):
+            transport["cargo"] = _rewrite_token(str(transport.get("cargo")))
+        if isinstance(transport.get("cargo_complex"), str):
+            transport["cargo_complex"] = _rewrite_token(str(transport.get("cargo_complex")))
+        rows = _safe_list(transport.get("transporters"))
+        if not isinstance(transport.get("transporters"), list):
+            transport["transporters"] = rows
+        transport["transporters"] = _rewrite_actor_rows(rows)
+        for eidx, row in enumerate(_safe_list(transport.get("elements_with_states"))):
+            if not isinstance(row, dict):
+                continue
+            if isinstance(row.get("element"), str):
+                row["element"] = _rewrite_token(str(row.get("element")))
+                rep["actions"].append(
+                    {
+                        "type": "elements_with_states_element_rewritten",
+                        "json_pointer": f"/processes/transports/{tidx}/elements_with_states/{eidx}/element",
+                        "value": row["element"],
+                    }
+                )
+
+    # Rewrite interactions (including SAME_AS pointers).
+    rewritten_interactions: List[Dict[str, Any]] = []
+    seen_interaction_keys: Set[Tuple[str, str, str]] = set()
+    for idx, row in enumerate(interactions):
+        if not isinstance(row, dict):
+            continue
+        updated = dict(row)
+        if isinstance(updated.get("entity_1"), str):
+            updated["entity_1"] = _rewrite_token(str(updated.get("entity_1")))
+        if isinstance(updated.get("entity_2"), str):
+            updated["entity_2"] = _rewrite_token(str(updated.get("entity_2")))
+        key = (
+            _normalize(str(updated.get("relationship", ""))),
+            _normalize(str(updated.get("entity_1", ""))),
+            _normalize(str(updated.get("entity_2", ""))),
+        )
+        if key in seen_interaction_keys:
+            rep["actions"].append(
+                {
+                    "type": "interaction_deduped_after_alias_rewrite",
+                    "json_pointer": f"/processes/interactions/{idx}",
+                }
+            )
+            continue
+        seen_interaction_keys.add(key)
+        rewritten_interactions.append(updated)
+    processes["interactions"] = rewritten_interactions
+
+    # Rewrite element-location references.
+    compound_locations = _safe_list(element_locations.get("compound_locations"))
+    protein_locations = _safe_list(element_locations.get("protein_locations"))
+    for row in compound_locations:
+        if isinstance(row, dict) and isinstance(row.get("compound"), str):
+            row["compound"] = _rewrite_token(str(row.get("compound")))
+    for row in protein_locations:
+        if isinstance(row, dict) and isinstance(row.get("protein"), str):
+            row["protein"] = _rewrite_token(str(row.get("protein")))
+    element_locations["compound_locations"] = _dedupe_location_rows(compound_locations, key_name="compound")
+    element_locations["protein_locations"] = _dedupe_location_rows(protein_locations, key_name="protein")
+
+    # Ensure every enzyme actor has a concrete registry entry.
+    for reaction in reactions:
+        if not isinstance(reaction, dict):
+            continue
+        for key in ["enzymes", "modifiers"]:
+            for row in _safe_list(reaction.get(key)):
+                actor_name = _actor_name_from_row(row)
+                if not actor_name:
+                    continue
+                if ":" in actor_name:
+                    continue
+                _ensure_protein(actor_name, payload, rep)
+
+    # Final entity dedupe pass.
+    pre_dedupe_count = len(compounds) + len(proteins) + len(complexes)
+    _dedupe_named_rows(compounds)
+    _dedupe_named_rows(proteins)
+    _dedupe_named_rows(complexes)
+    post_dedupe_count = len(compounds) + len(proteins) + len(complexes)
+    summary["n_entities_deduped"] = int(summary.get("n_entities_deduped", 0)) + max(0, pre_dedupe_count - post_dedupe_count)
+    summary["n_aliases_rewritten"] = int(summary.get("n_aliases_rewritten", 0)) + rewrite_count
+    summary["alias_example_mappings"] = example_mappings[:10]
+    return payload
+
+
 def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     summary = _safe_dict(rep.setdefault("summary", {}))
@@ -1677,6 +2237,12 @@ def validate_no_scaffold_modifiers(payload: Dict[str, Any], *, report: Optional[
 
 def compute_normalization_stats(payload: Dict[str, Any], report: Dict[str, Any]) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("n_same_as_groups", 0)
+    summary.setdefault("n_aliases_rewritten", 0)
+    summary.setdefault("n_entities_deduped", 0)
+    summary.setdefault("n_single_protein_complexes_removed", 0)
+    summary.setdefault("alias_example_mappings", [])
     entities = _safe_dict(payload.get("entities"))
     processes = _safe_dict(payload.get("processes"))
     complexes = [
@@ -1708,6 +2274,13 @@ def compute_normalization_stats(payload: Dict[str, Any], report: Dict[str, Any])
 
     rep["summary"]["n_plus_tokens_remaining"] = plus_remaining
     rep["summary"]["complexes_list"] = sorted(set(complexes))
+    rep["summary"]["alias_canonicalization"] = {
+        "n_same_as_groups": int(rep["summary"].get("n_same_as_groups", 0)),
+        "n_aliases_rewritten": int(rep["summary"].get("n_aliases_rewritten", 0)),
+        "n_entities_deduped": int(rep["summary"].get("n_entities_deduped", 0)),
+        "n_single_protein_complexes_removed": int(rep["summary"].get("n_single_protein_complexes_removed", 0)),
+        "example_mappings": _safe_list(rep["summary"].get("alias_example_mappings"))[:10],
+    }
     return _safe_dict(rep.get("summary"))
 
 
@@ -1901,6 +2474,7 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
     promote_catalysts(data, report=report)
+    canonicalize_same_as_aliases(data, report=report)
     normalize_process_actor_schema(data, report=report)
     dedupe_processes(data, report=report)
     run_strict_post_normalization_gates(data, report=report, enforce_all_proteins_connected=True)

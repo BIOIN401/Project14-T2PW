@@ -29,6 +29,7 @@ from tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
 from process_normalizer import (
     GateValidationError,
     attach_transporters_from_evidence,
+    canonicalize_same_as_aliases,
     cleanup_disallowed_complexes,
     compute_normalization_stats,
     dedupe_processes,
@@ -307,6 +308,11 @@ def run_post_pipeline_sbml_artifacts(
                 "dedupe_removed": 0,
                 "dedupe_removed_total": 0,
                 "no_op_removed_count": 0,
+                "n_same_as_groups": 0,
+                "n_aliases_rewritten": 0,
+                "n_entities_deduped": 0,
+                "n_single_protein_complexes_removed": 0,
+                "alias_example_mappings": [],
             },
             "rewrite_map": {},
             "actions": [],
@@ -342,6 +348,7 @@ def run_post_pipeline_sbml_artifacts(
                 encoding="utf-8",
             )
             promote_catalysts(normalized_input, report=normalization_report)
+            canonicalize_same_as_aliases(normalized_input, report=normalization_report)
             normalize_process_actor_schema(normalized_input, report=normalization_report)
             dedupe_processes(normalized_input, report=normalization_report)
             gate_snapshot = run_strict_post_normalization_gates(

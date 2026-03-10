@@ -17,6 +17,7 @@ from map_ids import route_entity_for_mapping  # noqa: E402
 from qa_graph import build_graph, connected_components  # noqa: E402
 from process_normalizer import (  # noqa: E402
     attach_transporters_from_evidence,
+    canonicalize_same_as_aliases,
     cleanup_disallowed_complexes,
     compute_normalization_stats,
     dedupe_processes,
@@ -163,6 +164,11 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "dedupe_removed": 0,
             "dedupe_removed_total": 0,
             "no_op_removed_count": 0,
+            "n_same_as_groups": 0,
+            "n_aliases_rewritten": 0,
+            "n_entities_deduped": 0,
+            "n_single_protein_complexes_removed": 0,
+            "alias_example_mappings": [],
         },
         "actions": [],
         "rewrite_map": {},
@@ -173,6 +179,7 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
     promote_catalysts(data, report=report)
+    canonicalize_same_as_aliases(data, report=report)
     normalize_process_actor_schema(data, report=report)
     dedupe_processes(data, report=report)
     run_strict_post_normalization_gates(
@@ -323,6 +330,130 @@ def test_generic_explicit_composite_still_materializes_complex() -> None:
     assert int(report.get("summary", {}).get("n_plus_tokens_remaining", 1)) == 0
     adj, _ = build_graph(normalized)
     assert len(connected_components(adj)) <= 1
+
+
+def _alias_payload(
+    *,
+    proteins: list[str],
+    reaction_enzyme_row: dict,
+    same_as_pairs: list[tuple[str, str]],
+    protein_complexes: list[dict] | None = None,
+) -> dict:
+    return {
+        "entities": {
+            "compounds": [{"name": "substrate"}, {"name": "product"}],
+            "proteins": [{"name": name} for name in proteins],
+            "protein_complexes": protein_complexes or [],
+            "subcellular_locations": [{"name": "cytosol"}],
+        },
+        "biological_states": [{"name": "cyto_state", "subcellular_location": "cytosol"}],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "substrate", "biological_state": "cyto_state"},
+                {"compound": "product", "biological_state": "cyto_state"},
+            ],
+            "protein_locations": [{"protein": name, "biological_state": "cyto_state"} for name in proteins],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "R_alias",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "biological_state": "cyto_state",
+                    "enzymes": [reaction_enzyme_row],
+                }
+            ],
+            "transports": [],
+            "interactions": [
+                {"entity_1": left, "entity_2": right, "relationship": "SAME_AS"}
+                for left, right in same_as_pairs
+            ],
+        },
+    }
+
+
+def _proteins_degree0(payload: dict) -> int:
+    adj, _ = build_graph(payload)
+    protein_names = {
+        str(item.get("name") or "").strip()
+        for item in payload.get("entities", {}).get("proteins", [])
+        if isinstance(item, dict)
+    }
+    return sum(1 for pname in protein_names if len(adj.get(f"protein:{pname}", set())) == 0)
+
+
+def test_alias_enzyme_names_canonicalized_and_attached() -> None:
+    payload = _alias_payload(
+        proteins=["GSH synthetase", "glutathione synthetase"],
+        reaction_enzyme_row={"protein": "glutathione synthetase"},
+        same_as_pairs=[("GSH synthetase", "glutathione synthetase")],
+    )
+
+    normalized, report = _run_normalization(payload)
+    protein_names = [
+        str(item.get("name") or "").strip()
+        for item in normalized.get("entities", {}).get("proteins", [])
+        if isinstance(item, dict) and str(item.get("name") or "").strip()
+    ]
+    assert len(protein_names) == 1
+    assert protein_names[0] == "glutathione synthetase"
+    reaction_enzymes = normalized["processes"]["reactions"][0]["enzymes"]
+    assert reaction_enzymes
+    assert str(reaction_enzymes[0].get("protein") or "").strip() == "glutathione synthetase"
+    assert _proteins_degree0(normalized) == 0
+    alias_stats = report.get("summary", {}).get("alias_canonicalization", {})
+    assert int(alias_stats.get("n_same_as_groups", 0)) >= 1
+    assert int(alias_stats.get("n_aliases_rewritten", 0)) >= 1
+
+
+def test_reverse_alias_direction_still_attaches() -> None:
+    payload = _alias_payload(
+        proteins=["glutathione synthetase"],
+        reaction_enzyme_row={"protein": "GSH synthetase"},
+        same_as_pairs=[("GSH synthetase", "glutathione synthetase")],
+    )
+
+    normalized, _ = _run_normalization(payload)
+    protein_names = [
+        str(item.get("name") or "").strip()
+        for item in normalized.get("entities", {}).get("proteins", [])
+        if isinstance(item, dict) and str(item.get("name") or "").strip()
+    ]
+    assert len(protein_names) == 1
+    reaction_enzymes = normalized["processes"]["reactions"][0]["enzymes"]
+    assert reaction_enzymes
+    reaction_protein = str(reaction_enzymes[0].get("protein") or "").strip()
+    assert reaction_protein == protein_names[0]
+    assert _proteins_degree0(normalized) == 0
+
+
+def test_single_protein_complex_removed_and_rewritten() -> None:
+    payload = _alias_payload(
+        proteins=["pendrin"],
+        reaction_enzyme_row={"protein_complex": "pendrin_complex"},
+        same_as_pairs=[],
+        protein_complexes=[{"name": "pendrin_complex", "components": ["pendrin"]}],
+    )
+
+    normalized, report = _run_normalization(payload)
+    complexes = [
+        row
+        for row in normalized.get("entities", {}).get("protein_complexes", [])
+        if isinstance(row, dict)
+    ]
+    assert all(len([c for c in row.get("components", []) if str(c).strip()]) != 1 for row in complexes)
+    assert "pendrin_complex" not in {
+        str(row.get("name") or "").strip().casefold()
+        for row in complexes
+    }
+    reaction_enzymes = normalized["processes"]["reactions"][0]["enzymes"]
+    assert reaction_enzymes
+    assert str(reaction_enzymes[0].get("protein") or "").strip().casefold() == "pendrin"
+    assert "protein_complex" not in reaction_enzymes[0]
+    assert _proteins_degree0(normalized) == 0
+    alias_stats = report.get("summary", {}).get("alias_canonicalization", {})
+    assert int(alias_stats.get("n_single_protein_complexes_removed", 0)) >= 1
 
 
 def test_mapping_route_and_species_id_helpers() -> None:
