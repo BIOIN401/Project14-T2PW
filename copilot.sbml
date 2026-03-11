@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model id="lipid_metabolism_L3v1" name="Diacylglycerol and Triacylglycerol Biosynthesis (inferred)">
+    <!-- Compartments -->
+    <listOfCompartments>
+      <compartment id="cytosol" name="cytosol" size="1" constant="true"/>
+      <compartment id="vacuole" name="vacuole" size="1" constant="true"/>
+      <compartment id="mitochondrion" name="mitochondrion" size="1" constant="true"/>
+    </listOfCompartments>
+
+    <!-- Species -->
+    <listOfSpecies>
+      <species id="TG_18_0_18_1_20_1_c" name="TG(18:0/18:1(11Z)/20:1(11Z)) cytosol" compartment="cytosol" initialAmount="1.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DG_18_0_18_1_c" name="DG(18:0/18:1/0:0) cytosol" compartment="cytosol" initialAmount="0.5" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="MG_0_0_18_1_c" name="MG(0:0/18:1(11Z)/0:0) cytosol" compartment="cytosol" initialAmount="0.05" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="MG_18_1_0_0_c" name="MG(18:1(11Z)/0:0/0:0) cytosol" compartment="cytosol" initialAmount="0.05" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="glycerol_c" name="Glycerol cytosol" compartment="cytosol" initialAmount="0.2" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="glycerol3p_c" name="Glycerol-3-phosphate cytosol" compartment="cytosol" initialAmount="0.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="glyceronep_c" name="Glycerone phosphate cytosol" compartment="cytosol" initialAmount="0.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="eicosenoic_c" name="11Z-Eicosenoic acid cytosol" compartment="cytosol" initialAmount="0.5" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="stearic_c" name="Stearic acid cytosol" compartment="cytosol" initialAmount="0.5" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="cis_vaccenic_c" name="cis-Vaccenic acid cytosol" compartment="cytosol" initialAmount="0.5" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="quinol_m" name="electron-transfer quinol mitochondrion" compartment="mitochondrion" initialAmount="1.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="quinone_m" name="electron-transfer quinone mitochondrion" compartment="mitochondrion" initialAmount="0.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ATP_c" name="ATP cytosol" compartment="cytosol" initialAmount="2.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ADP_c" name="ADP cytosol" compartment="cytosol" initialAmount="0.5" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="H2O_c" name="H2O cytosol" compartment="cytosol" initialAmount="55.5" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true"/>
+      <species id="H_c" name="Hplus cytosol" compartment="cytosol" initialAmount="1.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="unknown1_c" name="Unknown1 cytosol" compartment="cytosol" initialAmount="0.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="unknown2_c" name="Unknown2 cytosol" compartment="cytosol" initialAmount="0.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+
+      <!-- Transported copies -->
+      <species id="TG_18_0_18_1_20_1_v" name="TG vacuole" compartment="vacuole" initialAmount="0.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="glycerol_m" name="Glycerol mitochondrion" compartment="mitochondrion" initialAmount="0.0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+
+      <!-- Enzymes as non-consumed species (modifiers) -->
+      <species id="SDP1_protein" name="SDP1 enzyme" compartment="cytosol" initialAmount="0.01" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DSEL_protein" name="DSEL enzyme" compartment="cytosol" initialAmount="0.01" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="GLPK_protein" name="GLPK enzyme" compartment="cytosol" initialAmount="0.01" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="SDP6_protein" name="SDP6 enzyme" compartment="cytosol" initialAmount="0.01" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+
+    <!-- Parameters (placeholder rate constants) -->
+    <listOfParameters>
+      <parameter id="k_TG_hydrolysis" value="0.1" constant="true"/>
+      <parameter id="k_DG_to_MG" value="0.05" constant="true"/>
+      <parameter id="k_MG_to_glycerol" value="0.05" constant="true"/>
+      <parameter id="k_gly_to_gly3p" value="0.2" constant="true"/>
+      <parameter id="k_gly3p_to_glyonep" value="0.05" constant="true"/>
+      <parameter id="k_DG_acylation" value="0.08" constant="true"/>
+      <parameter id="k_quinol_oxidation" value="0.1" constant="true"/>
+      <parameter id="k_transport_TG_vacuole" value="0.01" constant="true"/>
+      <parameter id="k_transport_glycerol_mito" value="0.01" constant="true"/>
+    </listOfParameters>
+
+    <!-- Reactions -->
+    <listOfReactions>
+      <!-- 1. TG -> DG + 11Z-Eicosenoic (SDP1) -->
+      <reaction id="TG_hydrolysis_by_SDP1" name="TG hydrolysis by SDP1" reversible="false">
+        <listOfReactants>
+          <speciesReference species="TG_18_0_18_1_20_1_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="DG_18_0_18_1_c" stoichiometry="1"/>
+          <speciesReference species="eicosenoic_c" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="SDP1_protein"/>
+          <modifierSpeciesReference species="unknown1_c"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_TG_hydrolysis</ci>
+              <ci>TG_18_0_18_1_20_1_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">Inferred from diagram: TG hydrolysis to DG + 11Z-Eicosenoic; SDP1 shown as catalyst.</body>
+        </notes>
+      </reaction>
+
+      <!-- 2. DG -> MG + Stearic (DSEL) -->
+      <reaction id="DG_to_MG" name="DG to MG" reversible="false">
+        <listOfReactants>
+          <speciesReference species="DG_18_0_18_1_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="MG_0_0_18_1_c" stoichiometry="1"/>
+          <speciesReference species="stearic_c" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="DSEL_protein"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_DG_to_MG</ci>
+              <ci>DG_18_0_18_1_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+        <notes>
+          <body xmlns="http://www.w3.org/1999/xhtml">Inferred DG lipase activity producing MG and a free fatty acid; DSEL indicated in diagram.</body>
+        </notes>
+      </reaction>
+
+      <!-- 3. MG -> Glycerol + cis-Vaccenic (SDP1) -->
+      <reaction id="MG_to_glycerol" name="MG to glycerol" reversible="false">
+        <listOfReactants>
+          <speciesReference species="MG_0_0_18_1_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="glycerol_c" stoichiometry="1"/>
+          <speciesReference species="cis_vaccenic_c" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="SDP1_protein"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_MG_to_glycerol</ci>
+              <ci>MG_0_0_18_1_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+
+      <!-- 4. Glycerol + ATP -> Glycerol-3-phosphate + ADP + H+ (GLPK) -->
+      <reaction id="glycerol_phosphorylation_by_GLPK" name="Glycerol phosphorylation by GLPK" reversible="false">
+        <listOfReactants>
+          <speciesReference species="glycerol_c" stoichiometry="1"/>
+          <speciesReference species="ATP_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="glycerol3p_c" stoichiometry="1"/>
+          <speciesReference species="ADP_c" stoichiometry="1"/>
+          <speciesReference species="H_c" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="GLPK_protein"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_gly_to_gly3p</ci>
+              <ci>glycerol_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+
+      <!-- 5. Glycerol-3-phosphate -> Glycerone phosphate (SDP6) -->
+      <reaction id="glycerol3p_to_glyceronep_by_SDP6" name="Glycerol-3P to glyceroneP by SDP6" reversible="false">
+        <listOfReactants>
+          <speciesReference species="glycerol3p_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="glyceronep_c" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="SDP6_protein"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_gly3p_to_glyonep</ci>
+              <ci>glycerol3p_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+
+      <!-- 6. DG + 11Z-Eicosenoic -> TG (DSEL acylation) -->
+      <reaction id="DG_acylation_to_TG_by_DSEL" name="DG acylation to TG by DSEL" reversible="false">
+        <listOfReactants>
+          <speciesReference species="DG_18_0_18_1_c" stoichiometry="1"/>
+          <speciesReference species="eicosenoic_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="TG_18_0_18_1_20_1_c" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="DSEL_protein"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_DG_acylation</ci>
+              <ci>DG_18_0_18_1_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+
+      <!-- 7. Quinol -> Quinone (mitochondrion electron transfer) -->
+      <reaction id="quinol_oxidation" name="Quinol oxidation" reversible="false">
+        <listOfReactants>
+          <speciesReference species="quinol_m" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="quinone_m" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_quinol_oxidation</ci>
+              <ci>quinol_m</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+
+      <!-- 8. Transport TG cytosol -> vacuole -->
+      <reaction id="transport_TG_to_vacuole" name="Transport TG to vacuole" reversible="false">
+        <listOfReactants>
+          <speciesReference species="TG_18_0_18_1_20_1_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="TG_18_0_18_1_20_1_v" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_transport_TG_vacuole</ci>
+              <ci>TG_18_0_18_1_20_1_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+
+      <!-- 9. Transport glycerol cytosol -> mitochondrion -->
+      <reaction id="transport_glycerol_to_mito" name="Transport glycerol to mitochondrion" reversible="false">
+        <listOfReactants>
+          <speciesReference species="glycerol_c" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="glycerol_m" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply><times/>
+              <ci>k_transport_glycerol_mito</ci>
+              <ci>glycerol_c</ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+
+    <!-- Model-level notes -->
+    <notes>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+        This SBML Level 3 Version 1 model was generated from the provided lipid metabolism drawing. Reaction directions, stoichiometries, and kinetic rate constants are inferred and serve as placeholders. Enzymes are included as modifier species. Replace kinetics and parameter values with experimental data as required.
+      </body>
+    </notes>
+  </model>
+</sbml>
