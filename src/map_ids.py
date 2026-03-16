@@ -397,7 +397,7 @@ class PathBankDbResolver:
                     mapped_ids = {
                         "hmdb": str(row.get("hmdb_id") or "").strip(),
                         "kegg": str(row.get("kegg_id") or "").strip(),
-                        "chebi": str(row.get("chebi_id") or "").strip(),
+                        "chebi": (lambda v: f"CHEBI:{v}" if v and not v.upper().startswith("CHEBI:") else v)(str(row.get("chebi_id") or "").strip()),
                         "pubchem": str(row.get("pubchem_cid") or "").strip(),
                         "cas": str(row.get("cas") or "").strip(),
                         "biocyc": str(row.get("biocyc_id") or "").strip(),

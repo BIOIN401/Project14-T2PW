@@ -124,7 +124,10 @@ def sbml_species_id(entity: Dict[str, Any], compartment: str) -> str:
     for key in preferred_keys:
         value = mapped.get(key)
         if isinstance(value, str) and value.strip():
-            primary = sanitize_sbml_id(value.strip())
+            v = value.strip()
+            if key == "chebi" and v and not v.upper().startswith("CHEBI:"):
+                v = f"CHEBI:{v}"
+            primary = sanitize_sbml_id(v)
             break
     if primary:
         return sanitize_sbml_id(f"{prefix}{primary}__{cpt}")
