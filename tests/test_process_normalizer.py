@@ -12,7 +12,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from json_to_sbml import build_sbml, sbml_species_id  # noqa: E402
+from json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species_id  # noqa: E402
 from map_ids import route_entity_for_mapping  # noqa: E402
 from qa_graph import build_graph, connected_components  # noqa: E402
 from process_normalizer import (  # noqa: E402
@@ -520,3 +520,127 @@ def test_sbml_single_species_per_entity_and_compartment(tmp_path: Path) -> None:
             break
     assert found_pendrin_transport_modifier
     assert model.getNumReactions() <= 7
+
+
+@pytest.mark.skipif(libsbml is None, reason="python-libsbml not installed")
+def test_sbml_propagates_deduped_mapped_ids_across_compartments(tmp_path: Path) -> None:
+    payload = {
+        "entities": {
+            "compounds": [
+                {"name": "glycerol 3-phosphate"},
+                {"name": "glycerol 3-phosphate", "mapped_ids": {"chebi": "CHEBI:1234"}},
+            ],
+            "proteins": [],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cell"}, {"name": "mitochondrial inner membrane"}],
+        },
+        "biological_states": [
+            {"name": "cell_state", "subcellular_location": "cell"},
+            {"name": "mim_state", "subcellular_location": "mitochondrial inner membrane"},
+        ],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "glycerol 3-phosphate", "biological_state": "cell_state"},
+                {"compound": "glycerol 3-phosphate", "biological_state": "mim_state"},
+            ],
+            "protein_locations": [],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+
+    in_path = tmp_path / "in.json"
+    sbml_path = tmp_path / "model.sbml"
+    report_json = tmp_path / "report.json"
+    report_txt = tmp_path / "report.txt"
+    in_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    build_sbml(in_path, sbml_path, report_json, report_txt, default_compartment_name="cell")
+
+    import libsbml  # type: ignore
+
+    doc = libsbml.readSBMLFromFile(str(sbml_path))
+    model = doc.getModel()
+    glycerol_species = [
+        (model.getSpecies(i).getCompartment(), model.getSpecies(i).getId())
+        for i in range(model.getNumSpecies())
+        if model.getSpecies(i).getName().strip().casefold() == "glycerol 3-phosphate"
+    ]
+
+    assert len(glycerol_species) == 2
+    assert {compartment for compartment, _ in glycerol_species} == {
+        "c_cell",
+        "c_mitochondrial_inner_membrane",
+    }
+    assert all("CHEBI_1234" in sid for _, sid in glycerol_species)
+    assert all("unmapped_" not in sid for _, sid in glycerol_species)
+
+
+def test_dedupe_entity_rows_merges_synonyms_by_identical_mapped_ids() -> None:
+    rows = _dedupe_entity_rows(
+        [
+            {"name": "triacylglycerol", "mapped_ids": {"chebi": "CHEBI:75848"}},
+            {"name": "triglyceride", "mapped_ids": {"chebi": "CHEBI:75848", "hmdb": "HMDB0000001"}},
+        ],
+        preferred_mapped_keys=["chebi", "hmdb", "kegg", "pubchem", "drugbank"],
+    )
+
+    triacylglycerol = rows["triacylglycerol"]
+    triglyceride = rows["triglyceride"]
+
+    assert triacylglycerol is triglyceride
+    assert triacylglycerol["name"] == "triacylglycerol"
+    assert triacylglycerol["mapped_ids"] == {"chebi": "CHEBI:75848", "hmdb": "HMDB0000001"}
+    assert triacylglycerol["_dedupe_aliases"] == ["triacylglycerol", "triglyceride"]
+
+
+@pytest.mark.skipif(libsbml is None, reason="python-libsbml not installed")
+def test_sbml_merges_synonyms_sharing_mapped_ids(tmp_path: Path) -> None:
+    payload = {
+        "entities": {
+            "compounds": [
+                {"name": "triacylglycerol", "mapped_ids": {"chebi": "CHEBI:75848"}},
+                {"name": "triglyceride", "mapped_ids": {"chebi": "CHEBI:75848"}},
+            ],
+            "proteins": [],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cell"}, {"name": "mitochondrial inner membrane"}],
+        },
+        "biological_states": [
+            {"name": "cell_state", "subcellular_location": "cell"},
+            {"name": "mim_state", "subcellular_location": "mitochondrial inner membrane"},
+        ],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "triacylglycerol", "biological_state": "cell_state"},
+                {"compound": "triglyceride", "biological_state": "mim_state"},
+            ],
+            "protein_locations": [],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+
+    in_path = tmp_path / "in.json"
+    sbml_path = tmp_path / "model.sbml"
+    report_json = tmp_path / "report.json"
+    report_txt = tmp_path / "report.txt"
+    in_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    build_sbml(in_path, sbml_path, report_json, report_txt, default_compartment_name="cell")
+
+    import libsbml  # type: ignore
+
+    doc = libsbml.readSBMLFromFile(str(sbml_path))
+    model = doc.getModel()
+    triacylglycerol_species = [
+        (model.getSpecies(i).getCompartment(), model.getSpecies(i).getName().strip(), model.getSpecies(i).getId())
+        for i in range(model.getNumSpecies())
+    ]
+
+    assert len(triacylglycerol_species) == 2
+    assert {compartment for compartment, _, _ in triacylglycerol_species} == {
+        "c_cell",
+        "c_mitochondrial_inner_membrane",
+    }
+    assert {name.casefold() for _, name, _ in triacylglycerol_species} == {"triacylglycerol"}
+    assert all("CHEBI_75848" in sid for _, _, sid in triacylglycerol_species)
+    assert all("unmapped_" not in sid for _, _, sid in triacylglycerol_species)

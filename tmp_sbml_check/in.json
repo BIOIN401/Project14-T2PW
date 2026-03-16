@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "compounds": [
+      {
+        "name": "glycerol 3-phosphate"
+      },
+      {
+        "name": "glycerol 3-phosphate",
+        "mapped_ids": {
+          "chebi": "CHEBI:1234"
+        }
+      }
+    ],
+    "proteins": [],
+    "protein_complexes": [],
+    "subcellular_locations": [
+      {
+        "name": "cell"
+      },
+      {
+        "name": "mitochondrial inner membrane"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "cell_state",
+      "subcellular_location": "cell"
+    },
+    {
+      "name": "mim_state",
+      "subcellular_location": "mitochondrial inner membrane"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "glycerol 3-phosphate",
+        "biological_state": "cell_state"
+      },
+      {
+        "compound": "glycerol 3-phosphate",
+        "biological_state": "mim_state"
+      }
+    ],
+    "protein_locations": []
+  },
+  "processes": {
+    "reactions": [],
+    "transports": []
+  }
+}

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model id="PathwayModel" name="Pathway model generated from mapped JSON" substanceUnits="Unit1" volumeUnits="UnitVol" extentUnits="Unit1">
+    <listOfUnitDefinitions>
+      <unitDefinition id="Unit1" name="Mole">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="UnitVol" name="Litre">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_mitochondrial_inner_membrane" name="mitochondrial inner membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_oil_body_storage_vacuole_membrane" name="oil body (storage vacuole) membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="m_C00111_c_cell" name="glycerone phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_C00116_c_cell" name="glycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_C00422_c_cell" name="triacylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_C02112_c_cell" name="2-acylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_89d0d5ea8841_c_cell" name="1,2-diglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_95313111b8c5_c_cell" name="1-monoglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_bc5407073e09_c_cell" name="glycerol 3-phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_444f99e34f23_c_cell" name="glycerol-3-phosphate dehydrogenase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_880bdebe3daf_c_cell" name="glycerol kinase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_b56d45aec256_c_cell" name="triacylglycerol lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_de07605a20ba_c_cell" name="acylhydrolase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_f48fa519555d_c_cell" name="diglyceride lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction id="r_0e4afc4b0a31" name="conversion of glycerone phosphate into glycerol" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_C00111_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_2ced616de7e9" name="conversion of a 1-monoglyceride into glycerol" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_95313111b8c5_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_3a726c5ab0dc" name="conversion of a triglyceride into a 1,2-diglyceride" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_C00422_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_89d0d5ea8841_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_886c9a8ef589" name="conversion of a 1,2-diglyceride into a 2-acylglycerol" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_89d0d5ea8841_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_d9e1acfb749e" name="conversion of glycerol into glycerol 3-phosphate" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_bc5407073e09_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_dd0406aa02c6" name="conversion of a 2-acylglycerol into a 1-monoglyceride" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_95313111b8c5_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_ea0ee39608f7" name="conversion of glycerol into glycerone phosphate" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_C00111_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+      <reaction id="r_f9de5a4480ff" name="conversion of glycerol 3-phosphate into glycerone phosphate" reversible="false" fast="false" compartment="c_cell">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_bc5407073e09_c_cell" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_C00111_c_cell" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

@@ -38,6 +38,69 @@ def _short_hash(value: str, length: int = 12) -> str:
     return hashlib.sha1(value.encode("utf-8")).hexdigest()[:length]
 
 
+def _dedupe_preserve_strings(values: Sequence[Any]) -> List[str]:
+    out: List[str] = []
+    seen: Set[str] = set()
+    for value in values:
+        if not isinstance(value, str):
+            continue
+        text = value.strip()
+        if not text:
+            continue
+        if text in seen:
+            continue
+        seen.add(text)
+        out.append(text)
+    return out
+
+
+def _mapped_ids_signature(mapped_ids: Dict[str, Any]) -> Tuple[Tuple[str, str], ...]:
+    pairs: List[Tuple[str, str]] = []
+    for key, value in sorted(_safe_dict(mapped_ids).items()):
+        key_text = str(key).strip().casefold()
+        value_text = str(value).strip()
+        if not key_text or not value_text:
+            continue
+        pairs.append((key_text, value_text))
+    return tuple(pairs)
+
+
+def _mapped_ids_group_key(row: Dict[str, Any], preferred_keys: Sequence[str]) -> Tuple[str, Any]:
+    primary = _mapped_entity_id(row, preferred_keys)
+    if primary:
+        return ("primary", primary)
+    signature = _mapped_ids_signature(_safe_dict(row.get("mapped_ids")))
+    if signature:
+        return ("full", signature)
+    return ("", "")
+
+
+def _merge_deduped_entity_rows(target: Dict[str, Any], source: Dict[str, Any]) -> None:
+    target_aliases = _dedupe_preserve_strings(
+        _safe_list(target.get("_dedupe_aliases")) + _safe_list(source.get("_dedupe_aliases"))
+    )
+    if target_aliases:
+        target["_dedupe_aliases"] = target_aliases
+
+    target_mapped = _safe_dict(target.get("mapped_ids"))
+    source_mapped = _safe_dict(source.get("mapped_ids"))
+    merged_mapped = dict(source_mapped)
+    merged_mapped.update(target_mapped)
+    target["mapped_ids"] = merged_mapped
+
+
+def _unique_entity_rows(rows_by_name: Dict[str, Dict[str, Any]]) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    seen_ids: Set[int] = set()
+    for row in rows_by_name.values():
+        marker = id(row)
+        if marker in seen_ids:
+            continue
+        seen_ids.add(marker)
+        out.append(row)
+    return out
+
+
 def _mapped_entity_id(item: Dict[str, Any], preferred_keys: Sequence[str]) -> str:
     mapped = _safe_dict(item.get("mapped_ids"))
     for key in preferred_keys:
@@ -70,8 +133,12 @@ def sbml_species_id(entity: Dict[str, Any], compartment: str) -> str:
     return sanitize_sbml_id(f"{prefix}unmapped_{name_hash}__{cpt}")
 
 
-def _dedupe_entity_rows(rows: Sequence[Any]) -> Dict[str, Dict[str, Any]]:
-    out: Dict[str, Dict[str, Any]] = {}
+def _dedupe_entity_rows(
+    rows: Sequence[Any],
+    *,
+    preferred_mapped_keys: Sequence[str] = (),
+) -> Dict[str, Dict[str, Any]]:
+    by_name: Dict[str, Dict[str, Any]] = {}
     for row in rows:
         if not isinstance(row, dict):
             continue
@@ -79,15 +146,29 @@ def _dedupe_entity_rows(rows: Sequence[Any]) -> Dict[str, Dict[str, Any]]:
         if not name:
             continue
         norm = _normalize(name)
-        if norm not in out:
-            out[norm] = deepcopy(row)
-            out[norm]["name"] = name
+        if norm not in by_name:
+            by_name[norm] = deepcopy(row)
+            by_name[norm]["name"] = name
+            by_name[norm]["_dedupe_aliases"] = [name]
             continue
-        existing_mapped = _safe_dict(out[norm].get("mapped_ids"))
-        incoming_mapped = _safe_dict(row.get("mapped_ids"))
-        merged = dict(incoming_mapped)
-        merged.update(existing_mapped)
-        out[norm]["mapped_ids"] = merged
+        incoming = deepcopy(row)
+        incoming["name"] = name
+        incoming["_dedupe_aliases"] = [name]
+        _merge_deduped_entity_rows(by_name[norm], incoming)
+    out: Dict[str, Dict[str, Any]] = {}
+    by_mapped_ids: Dict[Tuple[str, Any], Dict[str, Any]] = {}
+    for norm, row in by_name.items():
+        group_key = _mapped_ids_group_key(row, preferred_mapped_keys)
+        if group_key == ("", ""):
+            out[norm] = row
+            continue
+        canonical = by_mapped_ids.get(group_key)
+        if canonical is None:
+            by_mapped_ids[group_key] = row
+            out[norm] = row
+            continue
+        _merge_deduped_entity_rows(canonical, row)
+        out[norm] = canonical
     return out
 
 
@@ -521,6 +602,19 @@ def build_sbml(
                 }
             )
 
+    compound_rows = _dedupe_entity_rows(
+        _safe_list(entities.get("compounds")),
+        preferred_mapped_keys=["chebi", "hmdb", "kegg", "pubchem", "drugbank"],
+    )
+    protein_rows = _dedupe_entity_rows(
+        list(_safe_list(entities.get("proteins"))) + list(_safe_list(entities.get("protein_complexes"))),
+        preferred_mapped_keys=["uniprot"],
+    )
+    entity_row_lookups: Dict[str, Dict[str, Dict[str, Any]]] = {
+        "compound": compound_rows,
+        "protein": protein_rows,
+    }
+
     species_registry: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
     species_id_to_meta: Dict[str, Dict[str, Any]] = {}
 
@@ -529,38 +623,53 @@ def build_sbml(
         kind: str,
         name: str,
         compartment_id: str,
-        mapped_ids: Dict[str, Any],
+        mapped_ids: Optional[Dict[str, Any]] = None,
     ) -> None:
+        deduped_row = _safe_dict(_safe_dict(entity_row_lookups.get(kind)).get(_normalize(name)))
+        canonical_name = (
+            deduped_row.get("name").strip()
+            if isinstance(deduped_row.get("name"), str) and deduped_row.get("name").strip()
+            else name
+        )
+        canonical_mapped_ids = _safe_dict(deduped_row.get("mapped_ids")) or _safe_dict(mapped_ids)
         key = (kind, name, compartment_id)
-        entity_meta = {"kind": kind, "name": name, "mapped_ids": mapped_ids}
+        canonical_key = (kind, canonical_name, compartment_id)
+        if canonical_key in species_registry:
+            species_registry[key] = species_registry[canonical_key]
+            return
+        entity_meta = {"kind": kind, "name": canonical_name, "mapped_ids": canonical_mapped_ids}
         sid = sbml_species_id(entity_meta, compartment_id)
-        sid_meta = {"kind": kind, "name": name, "compartment_id": compartment_id}
+        sid_meta = {"kind": kind, "name": canonical_name, "compartment_id": compartment_id}
         if sid in species_id_to_meta and species_id_to_meta[sid] != sid_meta:
-            sid = sanitize_sbml_id(f"{sid}_{_short_hash(name + compartment_id, 6)}")
-        species_registry[key] = {"id": sid, "name": name, "kind": kind, "compartment_id": compartment_id}
+            sid = sanitize_sbml_id(f"{sid}_{_short_hash(canonical_name + compartment_id, 6)}")
+        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id}
+        species_registry[canonical_key] = record
+        species_registry[key] = record
         species_id_to_meta[sid] = sid_meta
 
-    compound_rows = _dedupe_entity_rows(_safe_list(entities.get("compounds")))
-    for row in compound_rows.values():
+    for row in _unique_entity_rows(compound_rows):
         name = (row.get("name") or "").strip() if isinstance(row.get("name"), str) else ""
-        if not name or name not in known_compounds:
+        if not name:
             continue
-        mapped_ids = _safe_dict(row.get("mapped_ids"))
-        for loc in sorted(entity_compartments.get(("compound", name), {default_compartment_name})):
+        aliases = _dedupe_preserve_strings(_safe_list(row.get("_dedupe_aliases")) + [name])
+        locations: Set[str] = set()
+        for alias in aliases:
+            locations.update(entity_compartments.get(("compound", alias), set()))
+        for loc in sorted(locations or {default_compartment_name}):
             cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
-            _register_species(kind="compound", name=name, compartment_id=cid, mapped_ids=mapped_ids)
+            _register_species(kind="compound", name=name, compartment_id=cid)
 
-    protein_rows = _dedupe_entity_rows(
-        list(_safe_list(entities.get("proteins"))) + list(_safe_list(entities.get("protein_complexes")))
-    )
-    for row in protein_rows.values():
+    for row in _unique_entity_rows(protein_rows):
         name = (row.get("name") or "").strip() if isinstance(row.get("name"), str) else ""
-        if not name or name not in known_proteins:
+        if not name:
             continue
-        mapped_ids = _safe_dict(row.get("mapped_ids"))
-        for loc in sorted(entity_compartments.get(("protein", name), {default_compartment_name})):
+        aliases = _dedupe_preserve_strings(_safe_list(row.get("_dedupe_aliases")) + [name])
+        locations: Set[str] = set()
+        for alias in aliases:
+            locations.update(entity_compartments.get(("protein", alias), set()))
+        for loc in sorted(locations or {default_compartment_name}):
             cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
-            _register_species(kind="protein", name=name, compartment_id=cid, mapped_ids=mapped_ids)
+            _register_species(kind="protein", name=name, compartment_id=cid)
 
     # Build reaction plans first, then write sorted by reaction ID.
     reaction_plans: List[Dict[str, Any]] = []
@@ -618,9 +727,7 @@ def build_sbml(
                 continue
             key = (kind, name, compartment_id)
             if key not in species_registry:
-                lookup = compound_rows if kind == "compound" else protein_rows
-                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(name), {})).get("mapped_ids"))
-                _register_species(kind=kind, name=name, compartment_id=compartment_id, mapped_ids=mapped_ids)
+                _register_species(kind=kind, name=name, compartment_id=compartment_id)
                 report["warnings"].append(
                     {
                         "path": f"{pointer}/inputs",
@@ -643,9 +750,7 @@ def build_sbml(
                 continue
             key = (kind, name, compartment_id)
             if key not in species_registry:
-                lookup = compound_rows if kind == "compound" else protein_rows
-                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(name), {})).get("mapped_ids"))
-                _register_species(kind=kind, name=name, compartment_id=compartment_id, mapped_ids=mapped_ids)
+                _register_species(kind=kind, name=name, compartment_id=compartment_id)
                 report["warnings"].append(
                     {
                         "path": f"{pointer}/outputs",
@@ -770,8 +875,7 @@ def build_sbml(
                 dest_key = ("protein", pname, dest_cid)
                 chosen_key = source_key if source_key in species_registry else dest_key
                 if chosen_key not in species_registry:
-                    mapped_ids = _safe_dict(_safe_dict(protein_rows.get(_normalize(pname), {})).get("mapped_ids"))
-                    _register_species(kind="protein", name=pname, compartment_id=source_cid, mapped_ids=mapped_ids)
+                    _register_species(kind="protein", name=pname, compartment_id=source_cid)
                     chosen_key = ("protein", pname, source_cid)
                 if chosen_key in species_registry:
                     modifiers.append(species_registry[chosen_key]["id"])
@@ -788,13 +892,9 @@ def build_sbml(
             dest_key = (kind, cargo_item, dest_cid)
 
             if source_key not in species_registry:
-                lookup = compound_rows if kind == "compound" else protein_rows
-                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(cargo_item), {})).get("mapped_ids"))
-                _register_species(kind=kind, name=cargo_item, compartment_id=source_cid, mapped_ids=mapped_ids)
+                _register_species(kind=kind, name=cargo_item, compartment_id=source_cid)
             if dest_key not in species_registry:
-                lookup = compound_rows if kind == "compound" else protein_rows
-                mapped_ids = _safe_dict(_safe_dict(lookup.get(_normalize(cargo_item), {})).get("mapped_ids"))
-                _register_species(kind=kind, name=cargo_item, compartment_id=dest_cid, mapped_ids=mapped_ids)
+                _register_species(kind=kind, name=cargo_item, compartment_id=dest_cid)
 
             if source_key == dest_key:
                 report["warnings"].append(
@@ -869,7 +969,10 @@ def build_sbml(
         comp.setSpatialDimensions(3)
         comp.setUnits("UnitVol")
 
-    species_items = sorted(species_registry.values(), key=lambda item: item["id"])
+    species_items_by_id: Dict[str, Dict[str, Any]] = {}
+    for item in species_registry.values():
+        species_items_by_id.setdefault(item["id"], item)
+    species_items = sorted(species_items_by_id.values(), key=lambda item: item["id"])
     for item in species_items:
         sp = model.createSpecies()
         sp.setId(item["id"])
