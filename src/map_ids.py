@@ -777,7 +777,7 @@ def _query_chebi(client: HttpClient, name: str) -> List[Dict[str, Any]]:
                 tag = child.tag.split("}")[-1]
                 text = (child.text or "").strip()
                 if tag == "chebiId":
-                    chebi_id = text
+                    chebi_id = f"CHEBI:{text}"
                 elif tag == "chebiAsciiName":
                     chebi_name = text
             if chebi_id:

@@ -1,160 +1,10 @@
 {
-  "compound:triglyceride|HMDB0005357": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Triacylglycerol",
-    "synonyms": [
-      "Triacylglycerol",
-      "Triglyceride"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C6H5O6R3",
-    "charge": 0,
-    "mass_monoisotopic": 0.0,
-    "mass_average": 0.0,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Lipids",
-      "Fats",
-      "Acylglycerols",
-      "C00422 Triacylglycerol",
-      "Lipids [BR:br08002]",
-      "GL Glycerolipids",
-      "GL03 Triradylglycerols",
-      "GL0301 Triacylglycerols",
-      "C00422 Triacyl-sn-glycerol"
-    ],
-    "pathways": [
-      "Glycerolipid metabolism",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Thermogenesis",
-      "Regulation of lipolysis in adipocytes",
-      "Insulin resistance",
-      "Fat digestion and absorption",
-      "Vitamin digestion and absorption",
-      "Cholesterol metabolism",
-      "Lipid and atherosclerosis"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0005357",
-      "kegg_id": "C00422",
-      "pubchem_id": "3246953",
-      "biocyc": "Triacylglycerols",
-      "chemspider": "2497485",
-      "chebi_id": "75848",
-      "cas": "27071-84-7"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00422",
-      "primary_name": "Triacylglycerol",
-      "synonyms": [
-        "Triacylglycerol",
-        "Triglyceride"
-      ],
-      "formula": "C6H5O6R3",
-      "mass_monoisotopic": 0.0,
-      "mass_average": 0.0,
-      "pathways": [
-        "Glycerolipid metabolism",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Thermogenesis",
-        "Regulation of lipolysis in adipocytes",
-        "Insulin resistance",
-        "Fat digestion and absorption",
-        "Vitamin digestion and absorption",
-        "Cholesterol metabolism",
-        "Lipid and atherosclerosis"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Lipids",
-        "Fats",
-        "Acylglycerols",
-        "C00422 Triacylglycerol",
-        "Lipids [BR:br08002]",
-        "GL Glycerolipids",
-        "GL03 Triradylglycerols",
-        "GL0301 Triacylglycerols",
-        "C00422 Triacyl-sn-glycerol"
-      ],
-      "cross_references": {
-        "kegg_id": "C00422",
-        "pubchem_id": "3712",
-        "chebi_id": "17855"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00422",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00422",
-        "retrieved_at": "2026-03-07T21:34:42Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:75848",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-10T15:48:49Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0005357",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0005357",
-        "retrieved_at": "2026-03-10T15:48:50Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:75848",
-        "retrieved_at": "2026-03-10T15:48:49Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0005357",
-        "retrieved_at": "2026-03-10T15:48:50Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00422",
-        "retrieved_at": "2026-03-07T21:34:42Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:2-acylglycerol|17389": {
+  "compound:ester|33308": {
     "enrichment_status": "ok",
-    "primary_name": "2-Acylglycerol",
+    "primary_name": "Ester",
     "synonyms": [
-      "2-Acylglycerol",
-      "2-Glyceride",
-      "2-Monoacylglycerol"
+      "Ester",
+      "Carboxylic ester"
     ],
     "description": "",
     "taxonomy": {},
@@ -162,77 +12,46 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C4H7O4R",
+    "formula": "CO2R2",
     "charge": 0,
     "mass_monoisotopic": 0.0,
     "mass_average": 0.0,
     "chebi_roles": [],
     "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Lipids",
-      "Fats",
-      "Acylglycerols",
-      "C02112 2-Monoacylglycerol",
-      "Lipids [BR:br08002]",
-      "GL Glycerolipids",
-      "GL01 Monoradylglycerols",
-      "GL0101 Monoacylglycerols",
-      "C02112 2-acyl-sn-glycerol"
-    ],
-    "pathways": [
-      "Phototransduction - fly",
-      "Fat digestion and absorption",
-      "Vitamin digestion and absorption"
-    ],
+    "kegg_class": [],
+    "pathways": [],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C02112",
-      "pubchem_id": "5194",
-      "chebi_id": "17389"
+      "kegg_id": "C02391",
+      "pubchem_id": "5427",
+      "chebi_id": "33308"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C02112",
-      "primary_name": "2-Acylglycerol",
+      "id": "C02391",
+      "primary_name": "Ester",
       "synonyms": [
-        "2-Acylglycerol",
-        "2-Glyceride",
-        "2-Monoacylglycerol"
+        "Ester",
+        "Carboxylic ester"
       ],
-      "formula": "C4H7O4R",
+      "formula": "CO2R2",
       "mass_monoisotopic": 0.0,
       "mass_average": 0.0,
-      "pathways": [
-        "Phototransduction - fly",
-        "Fat digestion and absorption",
-        "Vitamin digestion and absorption"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Lipids",
-        "Fats",
-        "Acylglycerols",
-        "C02112 2-Monoacylglycerol",
-        "Lipids [BR:br08002]",
-        "GL Glycerolipids",
-        "GL01 Monoradylglycerols",
-        "GL0101 Monoacylglycerols",
-        "C02112 2-acyl-sn-glycerol"
-      ],
+      "pathways": [],
+      "kegg_class": [],
       "cross_references": {
-        "kegg_id": "C02112",
-        "pubchem_id": "5194",
-        "chebi_id": "17389"
+        "kegg_id": "C02391",
+        "pubchem_id": "5427",
+        "chebi_id": "33308"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C02112",
-        "source_url": "https://rest.kegg.jp/get/cpd:C02112",
-        "retrieved_at": "2026-03-07T21:34:42Z",
+        "id": "C02391",
+        "source_url": "https://rest.kegg.jp/get/cpd:C02391",
+        "retrieved_at": "2026-03-14T01:12:35Z",
         "status": "ok"
       }
     },
@@ -242,21 +61,19 @@
     "sources": [
       {
         "source": "KEGG",
-        "id": "C02112",
-        "retrieved_at": "2026-03-07T21:34:42Z",
+        "id": "C02391",
+        "retrieved_at": "2026-03-14T01:12:35Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:glycerol|HMDB0000131": {
+  "compound:water|HMDB0002111": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Glycerol",
+    "primary_name": "H2O",
     "synonyms": [
-      "Glycerol",
-      "Glycerin",
-      "1,2,3-Trihydroxypropane",
-      "1,2,3-Propanetriol"
+      "H2O",
+      "Water"
     ],
     "description": "",
     "taxonomy": {},
@@ -264,155 +81,430 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C3H8O3",
+    "formula": "H2O",
     "charge": 0,
-    "mass_monoisotopic": 92.0473,
-    "mass_average": 92.09,
+    "mass_monoisotopic": 18.0106,
+    "mass_average": 18.02,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Carbohydrates",
-      "Monosaccharides",
-      "Sugar alcohols",
-      "C00116 Glycerol",
-      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00028)]",
-      "A ALIMENTARY TRACT AND METABOLISM",
-      "A06 DRUGS FOR CONSTIPATION",
-      "A06A DRUGS FOR CONSTIPATION",
-      "A06AG Enemas",
-      "A06AG04 Glycerol",
-      "D00028 Glycerin (JP18/USP) &lt;JP&gt;",
-      "A06AX Other drugs for constipation",
-      "A06AX01 Glycerol",
-      "Therapeutic category of drugs in Japan [BR:br08301(D00028)]",
-      "2 Agents affecting individual organs",
-      "23 Digestive organ agents",
-      "235 Purgatives, clysters",
-      "2357 Glycerins",
-      "D00028 Glycerin (JP18/USP); Concentrated glycerin (JP18); Glycerol (INN)",
-      "Classification of Japanese OTC drugs [BR:br08313(D00028)]",
-      "Agents for digestive organs",
-      "18 Enema",
-      "D00028 Glycerin (JP18/USP)",
-      "Agents for integumentary system",
-      "55 Chilblain and chap remedies",
-      "Risk category of Japanese OTC drugs [BR:br08312(D00028)]",
-      "Second-class OTC drugs",
-      "Inorganic and organic chemicals",
-      "Glycerin",
+      "Therapeutic category of drugs in Japan [BR:br08301(D00001)]",
+      "7 Agents not mainly for therapeutic purpose",
+      "71 Dispensing medicines",
+      "713 Solvents",
+      "7131 Purified water",
+      "D00001 Water (JP18/USP); Purified water (JP18); Purified water in containers (JP18); Water, purified (USP); Sterile purified water in containers (JP18); Water for injection (JP18); Water for injection in containers (JP18)",
+      "Risk category of Japanese OTC drugs [BR:br08312(D00001)]",
       "Third-class OTC drugs",
-      "Drug groups [BR:br08330(D00028)]",
-      "Gastrointestinal agent",
-      "DG01770 Laxative",
-      "D00028 Glycerin",
-      "Drug classes [BR:br08332(D00028)]",
-      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00028)]",
+      "Inorganic and organic chemicals",
+      "Water",
+      "D00001 Water (JP18/USP)",
+      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00001)]",
       "Chemicals",
-      "D00028 Concentrated glycerin"
+      "D00001 Water",
+      "D00001 Purified water",
+      "D00001 Purified water in containers",
+      "D00001 Sterile purified Water in containers",
+      "D00001 Water for injection",
+      "D00001 Sterile water for injection in containers"
     ],
     "pathways": [
-      "Pentose and glucuronate interconversions",
-      "Galactose metabolism",
-      "Glycerolipid metabolism",
+      "Oxidative phosphorylation",
+      "Photosynthesis",
+      "Carbon fixation by Calvin cycle",
+      "Metabolic pathways",
+      "Thyroid hormone synthesis",
+      "Renin secretion",
+      "Vasopressin-regulated water reabsorption",
+      "Proximal tubule bicarbonate reclamation",
+      "Collecting duct acid secretion",
+      "Salivary secretion",
+      "Gastric acid secretion",
+      "Pancreatic secretion",
+      "Bile secretion",
+      "Amyotrophic lateral sclerosis",
+      "Pathways of neurodegeneration - multiple diseases",
+      "Chemical carcinogenesis - reactive oxygen species",
+      "Diabetic cardiomyopathy"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0002111",
+      "kegg_id": "C00001",
+      "chebi_id": "15377",
+      "pubchem_id": "962",
+      "cas": "7732-18-5",
+      "chemspider": "937"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00001",
+      "primary_name": "H2O",
+      "synonyms": [
+        "H2O",
+        "Water"
+      ],
+      "formula": "H2O",
+      "mass_monoisotopic": 18.0106,
+      "mass_average": 18.02,
+      "pathways": [
+        "Oxidative phosphorylation",
+        "Photosynthesis",
+        "Carbon fixation by Calvin cycle",
+        "Metabolic pathways",
+        "Thyroid hormone synthesis",
+        "Renin secretion",
+        "Vasopressin-regulated water reabsorption",
+        "Proximal tubule bicarbonate reclamation",
+        "Collecting duct acid secretion",
+        "Salivary secretion",
+        "Gastric acid secretion",
+        "Pancreatic secretion",
+        "Bile secretion",
+        "Amyotrophic lateral sclerosis",
+        "Pathways of neurodegeneration - multiple diseases",
+        "Chemical carcinogenesis - reactive oxygen species",
+        "Diabetic cardiomyopathy"
+      ],
+      "kegg_class": [
+        "Therapeutic category of drugs in Japan [BR:br08301(D00001)]",
+        "7 Agents not mainly for therapeutic purpose",
+        "71 Dispensing medicines",
+        "713 Solvents",
+        "7131 Purified water",
+        "D00001 Water (JP18/USP); Purified water (JP18); Purified water in containers (JP18); Water, purified (USP); Sterile purified water in containers (JP18); Water for injection (JP18); Water for injection in containers (JP18)",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00001)]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Water",
+        "D00001 Water (JP18/USP)",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00001)]",
+        "Chemicals",
+        "D00001 Water",
+        "D00001 Purified water",
+        "D00001 Purified water in containers",
+        "D00001 Sterile purified Water in containers",
+        "D00001 Water for injection",
+        "D00001 Sterile water for injection in containers"
+      ],
+      "cross_references": {
+        "kegg_id": "C00001",
+        "pubchem_id": "3303",
+        "chebi_id": "15377"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00001",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00001",
+        "retrieved_at": "2026-03-14T01:12:40Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15377",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-14T01:12:39Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0002111",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0002111",
+        "retrieved_at": "2026-03-14T01:12:40Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:15377",
+        "retrieved_at": "2026-03-14T01:12:39Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0002111",
+        "retrieved_at": "2026-03-14T01:12:40Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00001",
+        "retrieved_at": "2026-03-14T01:12:40Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:carboxylic acid|HMDB0003320": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Indole-3-carboxylate",
+    "synonyms": [
+      "Indole-3-carboxylate",
+      "Indole-3-carboxylic acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C9H7NO2",
+    "charge": 0,
+    "mass_monoisotopic": 161.0477,
+    "mass_average": 161.16,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0003320",
+      "kegg_id": "C19837",
+      "chebi_id": "24809",
+      "pubchem_id": "69867",
+      "cas": "771-50-6",
+      "chemspider": "63063"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C19837",
+      "primary_name": "Indole-3-carboxylate",
+      "synonyms": [
+        "Indole-3-carboxylate",
+        "Indole-3-carboxylic acid"
+      ],
+      "formula": "C9H7NO2",
+      "mass_monoisotopic": 161.0477,
+      "mass_average": 161.16,
+      "pathways": [],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C19837",
+        "pubchem_id": "135626304"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C19837",
+        "source_url": "https://rest.kegg.jp/get/cpd:C19837",
+        "retrieved_at": "2026-03-14T01:12:45Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:24809",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-14T01:12:45Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0003320",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0003320",
+        "retrieved_at": "2026-03-14T01:12:45Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:24809",
+        "retrieved_at": "2026-03-14T01:12:45Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0003320",
+        "retrieved_at": "2026-03-14T01:12:45Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C19837",
+        "retrieved_at": "2026-03-14T01:12:45Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:alcohol|HMDB0000108": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Ethanol",
+    "synonyms": [
+      "Ethanol",
+      "Ethyl alcohol",
+      "Methylcarbinol"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C2H6O",
+    "charge": 0,
+    "mass_monoisotopic": 46.0419,
+    "mass_average": 46.07,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00068)]",
+      "D DERMATOLOGICALS",
+      "D08 ANTISEPTICS AND DISINFECTANTS",
+      "D08A ANTISEPTICS AND DISINFECTANTS",
+      "D08AX Other antiseptics and disinfectants",
+      "D08AX08 Ethanol",
+      "D00068 Alcohol (USP) &lt;JP/US&gt;",
+      "V VARIOUS",
+      "V03 ALL OTHER THERAPEUTIC PRODUCTS",
+      "V03A ALL OTHER THERAPEUTIC PRODUCTS",
+      "V03AB Antidotes",
+      "V03AB16 Ethanol",
+      "V03AZ Nerve depressants",
+      "V03AZ01 Ethanol",
+      "Therapeutic category of drugs in Japan [BR:br08301(D00068)]",
+      "2 Agents affecting individual organs",
+      "26 Epidermides",
+      "261 Antimicrobial agents",
+      "2615 Alcohols",
+      "D00068 Alcohol (USP); Anhydrous ethanol (JP18)",
+      "4 Agents affecting cellular function",
+      "42 Antineoplastics",
+      "429 Miscellaneous",
+      "4291 Other Antitumors",
+      "Classification of Japanese OTC drugs [BR:br08313(D00068)]",
+      "Agents for integumentary system",
+      "54 Disinfectants (incl. special bandages)",
+      "D00068 Alcohol (USP)",
+      "Risk category of Japanese OTC drugs [BR:br08312(D00068)]",
+      "Second-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Ethanol",
+      "Third-class OTC drugs",
+      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00068)]",
+      "Chemicals",
+      "D00068 Anhydrous ethanol"
+    ],
+    "pathways": [
+      "Glycolysis / Gluconeogenesis",
+      "Pyruvate metabolism",
       "Metabolic pathways",
       "Biosynthesis of secondary metabolites",
       "Microbial metabolism in diverse environments",
-      "ABC transporters",
-      "Thermogenesis",
-      "Retrograde endocannabinoid signaling",
-      "Regulation of lipolysis in adipocytes"
+      "Inflammatory mediator regulation of TRP channels",
+      "Alcoholic liver disease",
+      "Alcoholism",
+      "Chemical carcinogenesis - reactive oxygen species"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000131",
-      "kegg_id": "C00116",
-      "chebi_id": "17522",
-      "pubchem_id": "753",
-      "cas": "56-81-5",
-      "biocyc": "GLYCEROL",
-      "chemspider": "733",
-      "drugbank_id": "DB04077"
+      "hmdb_id": "HMDB0000108",
+      "kegg_id": "C00469",
+      "chebi_id": "16236",
+      "pubchem_id": "702",
+      "cas": "64-17-5",
+      "biocyc": "ETOH",
+      "chemspider": "682",
+      "drugbank_id": "DB00898"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00116",
-      "primary_name": "Glycerol",
+      "id": "C00469",
+      "primary_name": "Ethanol",
       "synonyms": [
-        "Glycerol",
-        "Glycerin",
-        "1,2,3-Trihydroxypropane",
-        "1,2,3-Propanetriol"
+        "Ethanol",
+        "Ethyl alcohol",
+        "Methylcarbinol"
       ],
-      "formula": "C3H8O3",
-      "mass_monoisotopic": 92.0473,
-      "mass_average": 92.09,
+      "formula": "C2H6O",
+      "mass_monoisotopic": 46.0419,
+      "mass_average": 46.07,
       "pathways": [
-        "Pentose and glucuronate interconversions",
-        "Galactose metabolism",
-        "Glycerolipid metabolism",
+        "Glycolysis / Gluconeogenesis",
+        "Pyruvate metabolism",
         "Metabolic pathways",
         "Biosynthesis of secondary metabolites",
         "Microbial metabolism in diverse environments",
-        "ABC transporters",
-        "Thermogenesis",
-        "Retrograde endocannabinoid signaling",
-        "Regulation of lipolysis in adipocytes"
+        "Inflammatory mediator regulation of TRP channels",
+        "Alcoholic liver disease",
+        "Alcoholism",
+        "Chemical carcinogenesis - reactive oxygen species"
       ],
       "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Carbohydrates",
-        "Monosaccharides",
-        "Sugar alcohols",
-        "C00116 Glycerol",
-        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00028)]",
-        "A ALIMENTARY TRACT AND METABOLISM",
-        "A06 DRUGS FOR CONSTIPATION",
-        "A06A DRUGS FOR CONSTIPATION",
-        "A06AG Enemas",
-        "A06AG04 Glycerol",
-        "D00028 Glycerin (JP18/USP) &lt;JP&gt;",
-        "A06AX Other drugs for constipation",
-        "A06AX01 Glycerol",
-        "Therapeutic category of drugs in Japan [BR:br08301(D00028)]",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00068)]",
+        "D DERMATOLOGICALS",
+        "D08 ANTISEPTICS AND DISINFECTANTS",
+        "D08A ANTISEPTICS AND DISINFECTANTS",
+        "D08AX Other antiseptics and disinfectants",
+        "D08AX08 Ethanol",
+        "D00068 Alcohol (USP) &lt;JP/US&gt;",
+        "V VARIOUS",
+        "V03 ALL OTHER THERAPEUTIC PRODUCTS",
+        "V03A ALL OTHER THERAPEUTIC PRODUCTS",
+        "V03AB Antidotes",
+        "V03AB16 Ethanol",
+        "V03AZ Nerve depressants",
+        "V03AZ01 Ethanol",
+        "Therapeutic category of drugs in Japan [BR:br08301(D00068)]",
         "2 Agents affecting individual organs",
-        "23 Digestive organ agents",
-        "235 Purgatives, clysters",
-        "2357 Glycerins",
-        "D00028 Glycerin (JP18/USP); Concentrated glycerin (JP18); Glycerol (INN)",
-        "Classification of Japanese OTC drugs [BR:br08313(D00028)]",
-        "Agents for digestive organs",
-        "18 Enema",
-        "D00028 Glycerin (JP18/USP)",
+        "26 Epidermides",
+        "261 Antimicrobial agents",
+        "2615 Alcohols",
+        "D00068 Alcohol (USP); Anhydrous ethanol (JP18)",
+        "4 Agents affecting cellular function",
+        "42 Antineoplastics",
+        "429 Miscellaneous",
+        "4291 Other Antitumors",
+        "Classification of Japanese OTC drugs [BR:br08313(D00068)]",
         "Agents for integumentary system",
-        "55 Chilblain and chap remedies",
-        "Risk category of Japanese OTC drugs [BR:br08312(D00028)]",
+        "54 Disinfectants (incl. special bandages)",
+        "D00068 Alcohol (USP)",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00068)]",
         "Second-class OTC drugs",
         "Inorganic and organic chemicals",
-        "Glycerin",
+        "Ethanol",
         "Third-class OTC drugs",
-        "Drug groups [BR:br08330(D00028)]",
-        "Gastrointestinal agent",
-        "DG01770 Laxative",
-        "D00028 Glycerin",
-        "Drug classes [BR:br08332(D00028)]",
-        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00028)]",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00068)]",
         "Chemicals",
-        "D00028 Concentrated glycerin"
+        "D00068 Anhydrous ethanol"
       ],
       "cross_references": {
-        "kegg_id": "C00116",
-        "pubchem_id": "3416",
-        "chebi_id": "17754"
+        "kegg_id": "C00469",
+        "pubchem_id": "3752",
+        "chebi_id": "16236"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00116",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00116",
-        "retrieved_at": "2026-03-07T21:34:42Z",
+        "id": "C00469",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00469",
+        "retrieved_at": "2026-03-14T01:12:50Z",
         "status": "ok"
       }
     },
@@ -421,9 +513,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:17522",
+        "id": "CHEBI:16236",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-10T15:48:56Z"
+        "retrieved_at": "2026-03-14T01:12:49Z"
       }
     },
     "hmdb": {
@@ -431,43 +523,43 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000131",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000131",
-        "retrieved_at": "2026-03-10T15:48:57Z"
+        "id": "HMDB0000108",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000108",
+        "retrieved_at": "2026-03-14T01:12:50Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:17522",
-        "retrieved_at": "2026-03-10T15:48:56Z",
+        "id": "CHEBI:16236",
+        "retrieved_at": "2026-03-14T01:12:49Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000131",
-        "retrieved_at": "2026-03-10T15:48:57Z",
+        "id": "HMDB0000108",
+        "retrieved_at": "2026-03-14T01:12:50Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00116",
-        "retrieved_at": "2026-03-07T21:34:42Z",
+        "id": "C00469",
+        "retrieved_at": "2026-03-14T01:12:50Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:glycerol 3-phosphate|HMDB0000126": {
+  "compound:methyl acetate|HMDB0031523": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "sn-Glycerol 3-phosphate",
+    "primary_name": "Methyl acetate",
     "synonyms": [
-      "sn-Glycerol 3-phosphate",
-      "Glycerophosphoric acid",
-      "D-Glycerol 1-phosphate"
+      "Methyl acetate",
+      "Devoton",
+      "Tereton"
     ],
     "description": "",
     "taxonomy": {},
@@ -475,222 +567,56 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C3H9O6P",
+    "formula": "C3H6O2",
     "charge": 0,
-    "mass_monoisotopic": 172.0137,
-    "mass_average": 172.07,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Risk category of Japanese OTC drugs [BR:br08312]",
-      "Third-class OTC drugs",
-      "Inorganic and organic chemicals",
-      "Calcium glycerophosphate",
-      "C00093 sn-Glycerol 3-phosphate"
-    ],
-    "pathways": [
-      "Glycerolipid metabolism",
-      "Glycerophospholipid metabolism",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "ABC transporters",
-      "Choline metabolism in cancer"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0000126",
-      "kegg_id": "C00093",
-      "chebi_id": "15978",
-      "pubchem_id": "439162",
-      "cas": "17989-41-2",
-      "biocyc": "GLYCEROL-3P",
-      "chemspider": "388308",
-      "drugbank_id": "DB02515"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00093",
-      "primary_name": "sn-Glycerol 3-phosphate",
-      "synonyms": [
-        "sn-Glycerol 3-phosphate",
-        "Glycerophosphoric acid",
-        "D-Glycerol 1-phosphate"
-      ],
-      "formula": "C3H9O6P",
-      "mass_monoisotopic": 172.0137,
-      "mass_average": 172.07,
-      "pathways": [
-        "Glycerolipid metabolism",
-        "Glycerophospholipid metabolism",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "ABC transporters",
-        "Choline metabolism in cancer"
-      ],
-      "kegg_class": [
-        "Risk category of Japanese OTC drugs [BR:br08312]",
-        "Third-class OTC drugs",
-        "Inorganic and organic chemicals",
-        "Calcium glycerophosphate",
-        "C00093 sn-Glycerol 3-phosphate"
-      ],
-      "cross_references": {
-        "kegg_id": "C00093",
-        "pubchem_id": "3393",
-        "chebi_id": "15978"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00093",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00093",
-        "retrieved_at": "2026-03-10T15:49:04Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:15978",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-10T15:49:02Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000126",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000126",
-        "retrieved_at": "2026-03-10T15:49:03Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:15978",
-        "retrieved_at": "2026-03-10T15:49:02Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0000126",
-        "retrieved_at": "2026-03-10T15:49:03Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00093",
-        "retrieved_at": "2026-03-10T15:49:04Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:glycerone phosphate|HMDB0001473": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Glycerone phosphate",
-    "synonyms": [
-      "Glycerone phosphate",
-      "Dihydroxyacetone phosphate",
-      "3-Hydroxy-2-oxopropyl phosphate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C3H7O6P",
-    "charge": 0,
-    "mass_monoisotopic": 169.998,
-    "mass_average": 170.06,
+    "mass_monoisotopic": 74.0368,
+    "mass_average": 74.08,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [],
     "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Pentose and glucuronate interconversions",
-      "Fructose and mannose metabolism",
-      "Galactose metabolism",
-      "Glycerolipid metabolism",
-      "Inositol phosphate metabolism",
-      "Glycerophospholipid metabolism",
-      "Glyoxylate and dicarboxylate metabolism",
-      "Propanoate metabolism",
-      "Methane metabolism",
-      "Carbon fixation by Calvin cycle",
-      "Nicotinate and nicotinamide metabolism",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Microbial metabolism in diverse environments",
-      "Carbon metabolism",
-      "Biosynthesis of amino acids"
+      "Butanoate metabolism",
+      "Metabolic pathways"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0001473",
-      "kegg_id": "C00111",
-      "chebi_id": "16108",
-      "pubchem_id": "668",
-      "cas": "57-04-5",
-      "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
-      "chemspider": "648",
-      "drugbank_id": "DB04326"
+      "hmdb_id": "HMDB0031523",
+      "kegg_id": "C17530",
+      "chebi_id": "77700",
+      "pubchem_id": "6584",
+      "cas": "79-20-9",
+      "chemspider": "6335"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00111",
-      "primary_name": "Glycerone phosphate",
+      "id": "C17530",
+      "primary_name": "Methyl acetate",
       "synonyms": [
-        "Glycerone phosphate",
-        "Dihydroxyacetone phosphate",
-        "3-Hydroxy-2-oxopropyl phosphate"
+        "Methyl acetate",
+        "Devoton",
+        "Tereton"
       ],
-      "formula": "C3H7O6P",
-      "mass_monoisotopic": 169.998,
-      "mass_average": 170.06,
+      "formula": "C3H6O2",
+      "mass_monoisotopic": 74.0368,
+      "mass_average": 74.08,
       "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Pentose and glucuronate interconversions",
-        "Fructose and mannose metabolism",
-        "Galactose metabolism",
-        "Glycerolipid metabolism",
-        "Inositol phosphate metabolism",
-        "Glycerophospholipid metabolism",
-        "Glyoxylate and dicarboxylate metabolism",
-        "Propanoate metabolism",
-        "Methane metabolism",
-        "Carbon fixation by Calvin cycle",
-        "Nicotinate and nicotinamide metabolism",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Microbial metabolism in diverse environments",
-        "Carbon metabolism",
-        "Biosynthesis of amino acids"
+        "Butanoate metabolism",
+        "Metabolic pathways"
       ],
       "kegg_class": [],
       "cross_references": {
-        "kegg_id": "C00111",
-        "pubchem_id": "3411",
-        "chebi_id": "16108"
+        "kegg_id": "C17530",
+        "pubchem_id": "96023875",
+        "chebi_id": "77700"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00111",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00111",
-        "retrieved_at": "2026-03-07T21:34:42Z",
+        "id": "C17530",
+        "source_url": "https://rest.kegg.jp/get/cpd:C17530",
+        "retrieved_at": "2026-03-14T01:12:55Z",
         "status": "ok"
       }
     },
@@ -699,9 +625,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:16108",
+        "id": "CHEBI:77700",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-10T15:49:10Z"
+        "retrieved_at": "2026-03-14T01:12:54Z"
       }
     },
     "hmdb": {
@@ -709,358 +635,568 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0001473",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001473",
-        "retrieved_at": "2026-03-10T15:49:10Z"
+        "id": "HMDB0031523",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0031523",
+        "retrieved_at": "2026-03-14T01:12:54Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:16108",
-        "retrieved_at": "2026-03-10T15:49:10Z",
+        "id": "CHEBI:77700",
+        "retrieved_at": "2026-03-14T01:12:54Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0001473",
-        "retrieved_at": "2026-03-10T15:49:10Z",
+        "id": "HMDB0031523",
+        "retrieved_at": "2026-03-14T01:12:54Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00111",
-        "retrieved_at": "2026-03-07T21:34:42Z",
+        "id": "C17530",
+        "retrieved_at": "2026-03-14T01:12:55Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "protein:triacylglycerol lipase|Q9LZA6": {
-    "status": "ok",
-    "uniprot_id": "Q9LZA6",
-    "recommended_name": "Triacylglycerol lipase SDP1",
-    "alternative_names": [
-      "Protein SUGAR-DEPENDENT 1"
+  "compound:acetic acid|HMDB0000042": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Acetate",
+    "synonyms": [
+      "Acetate",
+      "Acetic acid",
+      "Ethanoic acid"
     ],
-    "gene_names": [
-      "SDP1"
-    ],
-    "organism": "Arabidopsis thaliana",
-    "taxonomy_id": "3702",
-    "function_text": "Involved in the release of fatty acids from the oil body in germinating seedlings (PubMed:16473965, PubMed:19136267, PubMed:27466365). Can hydrolyze triacylglycerols and diacylglycerols but not monoacylglycerols, phospholipids, galactolipids or cholesterol esters (PubMed:16473965, PubMed:19136267). SDP1 lipase activity is required to limit triacylglycerol accumulation in roots, leaves and stems, which are vegetative tissues (PubMed:23686420). Functions synergistically with PDAT1 in regulating fatty acid flow from membrane lipid synthesis toward peroxisomal beta-oxidation through a transient triacylglycerol pool (PubMed:25293755)",
-    "catalytic_activity": [
-      "a triacylglycerol + H2O = a diacylglycerol + a fatty acid + H(+)",
-      "1,2,3-tri-(9Z-octadecenoyl)-glycerol + H2O = di-(9Z)-octadecenoylglycerol + (9Z)-octadecenoate + H(+)"
-    ],
-    "enzyme_commission": [
-      "3.1.1.3"
-    ],
-    "pathways": [],
-    "keywords": [
-      "Glycerol metabolism",
-      "Glycoprotein",
-      "Hydrolase",
-      "Lipid degradation",
-      "Lipid droplet",
-      "Lipid metabolism",
-      "Membrane",
-      "Peroxisome",
-      "Reference proteome"
-    ],
-    "subcellular_locations": [
-      "Lipid droplet",
-      "Membrane",
-      "Peroxisome"
-    ],
-    "go_mf_ids": [
-      "GO:0004806"
-    ],
-    "go_bp_ids": [
-      "GO:0006071",
-      "GO:0019433",
-      "GO:0006641"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0016020",
-      "GO:0012511",
-      "GO:0005777"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 825,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "3702.Q9LZA6",
-    "provenance": {
-      "source": "UniProt",
-      "query": "Q9LZA6",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q9LZA6.json",
-      "retrieved_at": "2026-03-10T15:48:43Z"
-    }
-  },
-  "protein:diglyceride lipase|Z0Z000": {
-    "status": "ok",
-    "uniprot_id": "Z0Z000",
-    "recommended_name": "",
-    "alternative_names": [],
-    "gene_names": [],
-    "organism": "",
-    "taxonomy_id": "",
-    "function_text": "",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
-    "pathways": [],
-    "keywords": [],
-    "subcellular_locations": [],
-    "go_mf_ids": [],
-    "go_bp_ids": [],
-    "go_cellular_component_ids": [],
-    "protein_existence": "",
-    "sequence_length": 0,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "",
-    "provenance": {
-      "source": "UniProt",
-      "query": "Z0Z000",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Z0Z000.json",
-      "retrieved_at": "2026-03-10T15:48:43Z"
-    }
-  },
-  "protein:acylhydrolase|O49523": {
-    "status": "ok",
-    "uniprot_id": "O49523",
-    "recommended_name": "Phospholipase A1-IIgamma",
-    "alternative_names": [
-      "DAD1-like seedling establishment-related lipase"
-    ],
-    "gene_names": [
-      "DSEL"
-    ],
-    "organism": "Arabidopsis thaliana",
-    "taxonomy_id": "3702",
-    "function_text": "Acylhydrolase that catalyzes the hydrolysis of 1,3-diacylglycerol (1,3-DAG) and 1-monoacylglycerol (1-MAG) at the sn-1 position. High activity toward 1,3-DAG and 1-MAG, but low activity toward 1,2-diacylglycerol (1,2-DAG) and 1-lysophosphatidylcholine (1-LPC), and no activity toward phosphatidylcholine (PC), monogalactosyldiacylglycerol (MGDG), digalactosyldiacylglycerol (DGDG), triacylglycerol (TAG) and 2-monoacylglycerol (2-MAG). May be involved in the negative regulation of seedling establishment by inhibiting the breakdown, beta-oxidation and mobilization of seed storage oils",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
-    "pathways": [],
-    "keywords": [
-      "3D-structure",
-      "Coiled coil",
-      "Cytoplasm",
-      "Hydrolase",
-      "Lipid degradation",
-      "Lipid metabolism",
-      "Reference proteome"
-    ],
-    "subcellular_locations": [
-      "Cytoplasm"
-    ],
-    "go_mf_ids": [
-      "GO:0047372",
-      "GO:0008970"
-    ],
-    "go_bp_ids": [
-      "GO:0046340",
-      "GO:0019915",
-      "GO:0052651",
-      "GO:0010187"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005737"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 419,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [
-      "2YIJ",
-      "7X0C"
-    ],
-    "reactome_ids": [],
-    "string_id": "3702.O49523",
-    "provenance": {
-      "source": "UniProt",
-      "query": "O49523",
-      "source_url": "https://rest.uniprot.org/uniprotkb/O49523.json",
-      "retrieved_at": "2026-03-10T15:48:43Z"
-    }
-  },
-  "protein:glycerol kinase|P32189": {
-    "status": "ok",
-    "uniprot_id": "P32189",
-    "recommended_name": "Glycerol kinase",
-    "alternative_names": [
-      "ATP:glycerol 3-phosphotransferase"
-    ],
-    "gene_names": [
-      "GK"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Kinase that plays a key role in glycerol metabolism, catalyzing its phosphorylation to produce sn-glycerol 3-phosphate. Sn-glycerol 3-phosphate is a crucial intermediate in various metabolic pathways, such as the synthesis of glycerolipids and triglycerides, glycogenesis, glycolysis and gluconeogenesis",
-    "catalytic_activity": [
-      "glycerol + ATP = sn-glycerol 3-phosphate + ADP + H(+)"
-    ],
-    "enzyme_commission": [
-      "2.7.1.30"
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C2H4O2",
+    "charge": 0,
+    "mass_monoisotopic": 60.0211,
+    "mass_average": 60.05,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Organic acids",
+      "Carboxylic acids",
+      "Monocarboxylic acids",
+      "C00033 Acetate; Ethanoate",
+      "Lipids [BR:br08002]",
+      "FA Fatty acyls",
+      "FA01 Fatty Acids and Conjugates",
+      "FA0101 Straight chain fatty acids",
+      "C00033 Acetic acid",
+      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00010)]",
+      "G GENITO URINARY SYSTEM AND SEX HORMONES",
+      "G01 GYNECOLOGICAL ANTIINFECTIVES AND ANTISEPTICS",
+      "G01A ANTIINFECTIVES AND ANTISEPTICS, EXCL. COMBINATIONS WITH CORTICOSTEROIDS",
+      "G01AD Organic acids",
+      "G01AD02 Acetic acid",
+      "D00010 Acetic acid, glacial (USP) &lt;JP/US&gt;",
+      "S SENSORY ORGANS",
+      "S02 OTOLOGICALS",
+      "S02A ANTIINFECTIVES",
+      "S02AA Antiinfectives",
+      "S02AA10 Acetic acid",
+      "USP drug classification [BR:br08302(D00010)]",
+      "Antibacterials",
+      "Antibacterials, Other",
+      "Acetic Acid",
+      "D00010 Acetic acid, glacial (USP)",
+      "Dermatological Agents",
+      "Topical Anti-infectives",
+      "Antibacterials, Dermatological",
+      "Otic Agents",
+      "Otic Anti-Infectives",
+      "Therapeutic category of drugs in Japan [BR:br08301(D00010)]",
+      "2 Agents affecting individual organs",
+      "26 Epidermides",
+      "264 Analgesics, anti-itchings, astringents, anti-inflammatory agents",
+      "2649 Others",
+      "D00010 Acetic acid, glacial (USP); Acetic acid (JP18/NF); Glacial acetic acid (JP18)",
+      "266 Emollients",
+      "2661 Organic acids",
+      "7 Agents not mainly for therapeutic purpose",
+      "71 Dispensing medicines",
+      "719 Miscellaneous",
+      "7190 Miscellaneous",
+      "Risk category of Japanese OTC drugs [BR:br08312(D00010)]",
+      "Third-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00010)]",
+      "Chemicals",
+      "D00010 Acetic acid",
+      "D00010 Glacial acetic acid"
     ],
     "pathways": [
-      "Polyol metabolism; glycerol degradation via glycerol kinase pathway; sn-glycerol 3-phosphate from glycerol: step 1/1"
+      "Glycolysis / Gluconeogenesis",
+      "Taurine and hypotaurine metabolism",
+      "Phosphonate and phosphinate metabolism",
+      "Glycosaminoglycan biosynthesis - heparan sulfate / heparin",
+      "Pyruvate metabolism",
+      "Glyoxylate and dicarboxylate metabolism",
+      "C5-Branched dibasic acid metabolism",
+      "Methane metabolism",
+      "Other carbon fixation pathways",
+      "Zeatin biosynthesis",
+      "Sulfur metabolism",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "Degradation of aromatic compounds",
+      "Cholinergic synapse",
+      "Alcoholic liver disease",
+      "Carbohydrate digestion and absorption",
+      "Protein digestion and absorption"
     ],
-    "keywords": [
-      "Alternative splicing",
-      "ATP-binding",
-      "Cytoplasm",
-      "Disease variant",
-      "Glycerol metabolism",
-      "Kinase",
-      "Membrane",
-      "Metal-binding",
-      "Mitochondrion",
-      "Mitochondrion outer membrane",
-      "Nucleotide-binding",
-      "Nucleus",
-      "Proteomics identification",
-      "Reference proteome",
-      "Transferase",
-      "Transmembrane",
-      "Transmembrane helix",
-      "Zinc"
-    ],
-    "subcellular_locations": [
-      "Mitochondrion outer membrane",
-      "Nucleus",
-      "Cytoplasm, cytosol"
-    ],
-    "go_mf_ids": [
-      "GO:0005524",
-      "GO:0004370",
-      "GO:0046872"
-    ],
-    "go_bp_ids": [
-      "GO:0019563",
-      "GO:0006071",
-      "GO:0046167",
-      "GO:0019432",
-      "GO:0006641"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005829",
-      "GO:0070062",
-      "GO:0005741",
-      "GO:0005739",
-      "GO:0005634"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 559,
-    "transmembrane_regions_count": 1,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000042",
+      "kegg_id": "C00033",
+      "chebi_id": "15366",
+      "pubchem_id": "176",
+      "cas": "64-19-7",
+      "biocyc": "ACET",
+      "chemspider": "171",
+      "drugbank_id": "DB03166"
     },
-    "pdb_ids": [],
-    "reactome_ids": [
-      "R-HSA-75109"
-    ],
-    "string_id": "9606.ENSP00000401720",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P32189",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P32189.json",
-      "retrieved_at": "2026-03-10T15:48:43Z"
-    }
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00033",
+      "primary_name": "Acetate",
+      "synonyms": [
+        "Acetate",
+        "Acetic acid",
+        "Ethanoic acid"
+      ],
+      "formula": "C2H4O2",
+      "mass_monoisotopic": 60.0211,
+      "mass_average": 60.05,
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Taurine and hypotaurine metabolism",
+        "Phosphonate and phosphinate metabolism",
+        "Glycosaminoglycan biosynthesis - heparan sulfate / heparin",
+        "Pyruvate metabolism",
+        "Glyoxylate and dicarboxylate metabolism",
+        "C5-Branched dibasic acid metabolism",
+        "Methane metabolism",
+        "Other carbon fixation pathways",
+        "Zeatin biosynthesis",
+        "Sulfur metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Degradation of aromatic compounds",
+        "Cholinergic synapse",
+        "Alcoholic liver disease",
+        "Carbohydrate digestion and absorption",
+        "Protein digestion and absorption"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Organic acids",
+        "Carboxylic acids",
+        "Monocarboxylic acids",
+        "C00033 Acetate; Ethanoate",
+        "Lipids [BR:br08002]",
+        "FA Fatty acyls",
+        "FA01 Fatty Acids and Conjugates",
+        "FA0101 Straight chain fatty acids",
+        "C00033 Acetic acid",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00010)]",
+        "G GENITO URINARY SYSTEM AND SEX HORMONES",
+        "G01 GYNECOLOGICAL ANTIINFECTIVES AND ANTISEPTICS",
+        "G01A ANTIINFECTIVES AND ANTISEPTICS, EXCL. COMBINATIONS WITH CORTICOSTEROIDS",
+        "G01AD Organic acids",
+        "G01AD02 Acetic acid",
+        "D00010 Acetic acid, glacial (USP) &lt;JP/US&gt;",
+        "S SENSORY ORGANS",
+        "S02 OTOLOGICALS",
+        "S02A ANTIINFECTIVES",
+        "S02AA Antiinfectives",
+        "S02AA10 Acetic acid",
+        "USP drug classification [BR:br08302(D00010)]",
+        "Antibacterials",
+        "Antibacterials, Other",
+        "Acetic Acid",
+        "D00010 Acetic acid, glacial (USP)",
+        "Dermatological Agents",
+        "Topical Anti-infectives",
+        "Antibacterials, Dermatological",
+        "Otic Agents",
+        "Otic Anti-Infectives",
+        "Therapeutic category of drugs in Japan [BR:br08301(D00010)]",
+        "2 Agents affecting individual organs",
+        "26 Epidermides",
+        "264 Analgesics, anti-itchings, astringents, anti-inflammatory agents",
+        "2649 Others",
+        "D00010 Acetic acid, glacial (USP); Acetic acid (JP18/NF); Glacial acetic acid (JP18)",
+        "266 Emollients",
+        "2661 Organic acids",
+        "7 Agents not mainly for therapeutic purpose",
+        "71 Dispensing medicines",
+        "719 Miscellaneous",
+        "7190 Miscellaneous",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00010)]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00010)]",
+        "Chemicals",
+        "D00010 Acetic acid",
+        "D00010 Glacial acetic acid"
+      ],
+      "cross_references": {
+        "kegg_id": "C00033",
+        "pubchem_id": "3335",
+        "chebi_id": "15366"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00033",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00033",
+        "retrieved_at": "2026-03-14T01:13:00Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15366",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-14T01:12:59Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000042",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000042",
+        "retrieved_at": "2026-03-14T01:12:59Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:15366",
+        "retrieved_at": "2026-03-14T01:12:59Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000042",
+        "retrieved_at": "2026-03-14T01:12:59Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00033",
+        "retrieved_at": "2026-03-14T01:13:00Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
   },
-  "protein:glycerol-3-phosphate dehydrogenase|Q00055": {
-    "status": "ok",
-    "uniprot_id": "Q00055",
-    "recommended_name": "Glycerol-3-phosphate dehydrogenase [NAD(+)] 1",
-    "alternative_names": [],
-    "gene_names": [
-      "GPD1",
-      "DAR1",
-      "HOR1",
-      "OSG1"
+  "compound:methanol|HMDB0001875": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Methanol",
+    "synonyms": [
+      "Methanol",
+      "Methyl alcohol",
+      "CH3OH"
     ],
-    "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
-    "taxonomy_id": "559292",
-    "function_text": "Catalyzes the production and accumulation of glycerol during hyperosmotic stress conditions. Glycerol acts as an osmoregulator that prevents loss of water and turgor of the cells",
-    "catalytic_activity": [
-      "sn-glycerol 3-phosphate + NAD(+) = dihydroxyacetone phosphate + NADH + H(+)"
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "CH4O",
+    "charge": 0,
+    "mass_monoisotopic": 32.0262,
+    "mass_average": 32.04,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Butanoate metabolism",
+      "Methane metabolism",
+      "Metabolic pathways",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "Degradation of aromatic compounds"
     ],
-    "enzyme_commission": [
-      "1.1.1.8"
-    ],
-    "pathways": [],
-    "keywords": [
-      "3D-structure",
-      "Acetylation",
-      "Cytoplasm",
-      "Direct protein sequencing",
-      "NAD",
-      "Oxidoreductase",
-      "Peroxisome",
-      "Phosphoprotein",
-      "Reference proteome",
-      "Stress response"
-    ],
-    "subcellular_locations": [
-      "Cytoplasm",
-      "Peroxisome"
-    ],
-    "go_mf_ids": [
-      "GO:0141152",
-      "GO:0047952",
-      "GO:0051287",
-      "GO:0042803"
-    ],
-    "go_bp_ids": [
-      "GO:0005975",
-      "GO:0046168",
-      "GO:0006072",
-      "GO:0006973",
-      "GO:0016558"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005829",
-      "GO:0005739",
-      "GO:0005634",
-      "GO:0005777"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 391,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0001875",
+      "kegg_id": "C00132",
+      "chebi_id": "17790",
+      "pubchem_id": "887",
+      "cas": "67-56-1",
+      "biocyc": "3-OH-BENZYL-ALCOHOL",
+      "chemspider": "864"
     },
-    "pdb_ids": [
-      "4FGW"
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00132",
+      "primary_name": "Methanol",
+      "synonyms": [
+        "Methanol",
+        "Methyl alcohol",
+        "CH3OH"
+      ],
+      "formula": "CH4O",
+      "mass_monoisotopic": 32.0262,
+      "mass_average": 32.04,
+      "pathways": [
+        "Butanoate metabolism",
+        "Methane metabolism",
+        "Metabolic pathways",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Degradation of aromatic compounds"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00132",
+        "pubchem_id": "3432",
+        "chebi_id": "17790"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00132",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00132",
+        "retrieved_at": "2026-03-14T01:13:04Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17790",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-14T01:13:04Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001875",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001875",
+        "retrieved_at": "2026-03-14T01:13:04Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17790",
+        "retrieved_at": "2026-03-14T01:13:04Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001875",
+        "retrieved_at": "2026-03-14T01:13:04Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00132",
+        "retrieved_at": "2026-03-14T01:13:04Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:H⁺|HMDB0059597": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "H+",
+    "synonyms": [
+      "H+",
+      "Hydron"
     ],
-    "reactome_ids": [
-      "R-SCE-1483166"
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "H",
+    "charge": 0,
+    "mass_monoisotopic": 1.0078,
+    "mass_average": 1.01,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Oxidative phosphorylation",
+      "Photosynthesis",
+      "Metabolic pathways",
+      "cAMP signaling pathway",
+      "Plant hormone signal transduction",
+      "Cardiac muscle contraction",
+      "Adrenergic signaling in cardiomyocytes",
+      "Apelin signaling pathway",
+      "Thermogenesis",
+      "Synaptic vesicle cycle",
+      "Taste transduction",
+      "Inflammatory mediator regulation of TRP channels",
+      "Thyroid hormone signaling pathway",
+      "Proximal tubule bicarbonate reclamation",
+      "Collecting duct acid secretion",
+      "Salivary secretion",
+      "Gastric acid secretion",
+      "Pancreatic secretion",
+      "Protein digestion and absorption",
+      "Bile secretion",
+      "Vitamin digestion and absorption",
+      "Mineral absorption",
+      "Folate transport and metabolism",
+      "Vibrio cholerae infection",
+      "Epithelial cell signaling in Helicobacter pylori infection",
+      "Influenza A",
+      "Rheumatoid arthritis"
     ],
-    "string_id": "4932.YDL022W",
-    "provenance": {
-      "source": "UniProt",
-      "query": "Q00055",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q00055.json",
-      "retrieved_at": "2026-03-10T15:48:44Z"
-    }
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0059597",
+      "kegg_id": "C00080",
+      "chebi_id": "15378",
+      "pubchem_id": "1038",
+      "chemspider": "1010"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00080",
+      "primary_name": "H+",
+      "synonyms": [
+        "H+",
+        "Hydron"
+      ],
+      "formula": "H",
+      "mass_monoisotopic": 1.0078,
+      "mass_average": 1.01,
+      "pathways": [
+        "Oxidative phosphorylation",
+        "Photosynthesis",
+        "Metabolic pathways",
+        "cAMP signaling pathway",
+        "Plant hormone signal transduction",
+        "Cardiac muscle contraction",
+        "Adrenergic signaling in cardiomyocytes",
+        "Apelin signaling pathway",
+        "Thermogenesis",
+        "Synaptic vesicle cycle",
+        "Taste transduction",
+        "Inflammatory mediator regulation of TRP channels",
+        "Thyroid hormone signaling pathway",
+        "Proximal tubule bicarbonate reclamation",
+        "Collecting duct acid secretion",
+        "Salivary secretion",
+        "Gastric acid secretion",
+        "Pancreatic secretion",
+        "Protein digestion and absorption",
+        "Bile secretion",
+        "Vitamin digestion and absorption",
+        "Mineral absorption",
+        "Folate transport and metabolism",
+        "Vibrio cholerae infection",
+        "Epithelial cell signaling in Helicobacter pylori infection",
+        "Influenza A",
+        "Rheumatoid arthritis"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00080",
+        "pubchem_id": "3380",
+        "chebi_id": "15378"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00080",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00080",
+        "retrieved_at": "2026-03-14T01:13:09Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15378",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-14T01:13:09Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0059597",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0059597",
+        "retrieved_at": "2026-03-14T01:13:09Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:15378",
+        "retrieved_at": "2026-03-14T01:13:09Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0059597",
+        "retrieved_at": "2026-03-14T01:13:09Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00080",
+        "retrieved_at": "2026-03-14T01:13:09Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
   }
 }

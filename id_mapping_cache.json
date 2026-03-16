@@ -2901,6 +2901,1269 @@
           }
         }
       ]
+    },
+    "db::ester": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.625,
+      "candidates": [
+        {
+          "pathbank_compound_id": 79,
+          "name": "Fructose 6-phosphate",
+          "short_name": "Fru6P",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000124",
+            "kegg": "C00085",
+            "chebi": "15946",
+            "pubchem": "69507",
+            "cas": "643-13-0",
+            "biocyc": "FRUCTOSE-6P",
+            "chemspider": "62713"
+          }
+        },
+        {
+          "pathbank_compound_id": 676,
+          "name": "Rhamnose",
+          "short_name": "L-Rha",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000849",
+            "kegg": "C00507",
+            "chebi": "62346",
+            "pubchem": "25310",
+            "cas": "3615-41-6",
+            "chemspider": "23642",
+            "drugbank": "DB01869"
+          }
+        },
+        {
+          "pathbank_compound_id": 805,
+          "name": "UDP-D-Xylose",
+          "short_name": "UDP-α",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001018",
+            "kegg": "C00190",
+            "chebi": "16082",
+            "pubchem": "439179",
+            "cas": "3616-06-6",
+            "biocyc": "UDP-D-XYLOSE",
+            "chemspider": "388324"
+          }
+        },
+        {
+          "pathbank_compound_id": 833,
+          "name": "Fructose 1,6-bisphosphate",
+          "short_name": "Fru1,6P",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001058",
+            "kegg": "C00354",
+            "chebi": "16905",
+            "pubchem": "445557",
+            "cas": "488-69-7",
+            "biocyc": "FRUCTOSE-16-DIPHOSPHATE",
+            "chemspider": "393165"
+          }
+        },
+        {
+          "pathbank_compound_id": 861,
+          "name": "GDP-L-fucose",
+          "short_name": "GDP-Fuc",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001095",
+            "kegg": "C00325",
+            "chebi": "17009",
+            "pubchem": "439211",
+            "cas": "15839-70-0",
+            "biocyc": "GUANOSINE_DIPHOSPHATE_FUCOSE",
+            "chemspider": "388350"
+          }
+        },
+        {
+          "pathbank_compound_id": 998,
+          "name": "2,3-Diphosphoglyceric acid",
+          "short_name": "23-DpGA",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001294",
+            "kegg": "C01159",
+            "chebi": "17720",
+            "pubchem": "186004",
+            "cas": "138-81-8",
+            "biocyc": "23-DIPHOSPHOGLYCERATE",
+            "chemspider": "161681"
+          }
+        },
+        {
+          "pathbank_compound_id": 1024,
+          "name": "dTDP-D-glucose",
+          "short_name": "dTDPDG",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001328",
+            "kegg": "C00842",
+            "chebi": "35248",
+            "pubchem": "439324",
+            "cas": "2196-62-5",
+            "biocyc": "DTDP-D-GLUCOSE",
+            "chemspider": "388455"
+          }
+        },
+        {
+          "pathbank_compound_id": 1083,
+          "name": "Glucose 6-phosphate",
+          "short_name": "Gluc-6P",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001401",
+            "kegg": "C00092",
+            "chebi": "4170",
+            "pubchem": "5958",
+            "cas": "56-73-5",
+            "biocyc": "GLC-6-P",
+            "chemspider": "5743"
+          }
+        },
+        {
+          "pathbank_compound_id": 1207,
+          "name": "Glucose 1-phosphate",
+          "short_name": "Gluc1P",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001586",
+            "kegg": "C00103",
+            "chebi": "16077",
+            "pubchem": "439165",
+            "cas": "59-56-3",
+            "biocyc": "GLC-1-P",
+            "chemspider": "388311"
+          }
+        },
+        {
+          "pathbank_compound_id": 1484,
+          "name": "Desaminotyrosine",
+          "short_name": "Phloret",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0002199",
+            "kegg": "C01744",
+            "chebi": "32980",
+            "pubchem": "10394",
+            "cas": "501-97-3",
+            "biocyc": "2-3-DIHYDROXYPHENYL-PROPIONATE",
+            "chemspider": "9965",
+            "drugbank": "DB03897"
+          }
+        }
+      ]
+    },
+    "api::ester": {
+      "status": "mapped",
+      "mapped_ids": {
+        "kegg": "C02391"
+      },
+      "confidence": 0.95,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C02391",
+          "name": "Ester",
+          "score": 0.95
+        },
+        {
+          "database": "kegg",
+          "id": "C00085",
+          "name": "D-Fructose 6-phosphate",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C00092",
+          "name": "D-Glucose 6-phosphate",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C00103",
+          "name": "D-Glucose 1-phosphate",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C01159",
+          "name": "2,3-Bisphospho-D-glycerate",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C01629",
+          "name": "Wax ester",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C01777",
+          "name": "Acylcholine",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C01883",
+          "name": "Acetic ester",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C01958",
+          "name": "Steryl ester",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C02075",
+          "name": "Retinyl ester",
+          "score": 0.65
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
+    },
+    "db::water": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002111",
+        "kegg": "C00001",
+        "chebi": "15377",
+        "pubchem": "962",
+        "cas": "7732-18-5",
+        "chemspider": "937"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1420,
+          "name": "Water",
+          "short_name": "H2O",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002111",
+            "kegg": "C00001",
+            "chebi": "15377",
+            "pubchem": "962",
+            "cas": "7732-18-5",
+            "chemspider": "937"
+          }
+        },
+        {
+          "pathbank_compound_id": 35,
+          "name": "Ammonia",
+          "short_name": "NH3",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000051",
+            "kegg": "C00014",
+            "chebi": "16134",
+            "pubchem": "222",
+            "cas": "7664-41-7",
+            "biocyc": "AMMONIA",
+            "chemspider": "217"
+          }
+        },
+        {
+          "pathbank_compound_id": 153,
+          "name": "Phenol",
+          "short_name": "Phenol",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000228",
+            "kegg": "C00146",
+            "chebi": "15882",
+            "pubchem": "20488062",
+            "cas": "108-95-2",
+            "biocyc": "24-DICHLOROPHENOL",
+            "chemspider": "971",
+            "drugbank": "DB03255"
+          }
+        },
+        {
+          "pathbank_compound_id": 819,
+          "name": "Hydroxide",
+          "short_name": "OH",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001039",
+            "kegg": "C01328",
+            "chebi": "16234",
+            "pubchem": "961",
+            "cas": "14280-30-9",
+            "biocyc": "NH4OH",
+            "chemspider": "936"
+          }
+        },
+        {
+          "pathbank_compound_id": 42998,
+          "name": "Ammonium hydroxide",
+          "short_name": "NH4OH",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0034832",
+            "chebi": "18219",
+            "pubchem": "14923"
+          }
+        },
+        {
+          "pathbank_compound_id": 14463,
+          "name": "C.I. Acid Violet 49",
+          "short_name": "VIOLET2",
+          "score": 0.4875,
+          "mapped_ids": {
+            "hmdb": "HMDB0033385",
+            "pubchem": "4648096",
+            "cas": "1694-09-3",
+            "chemspider": "3837707"
+          }
+        },
+        {
+          "pathbank_compound_id": 1247,
+          "name": "Methanol",
+          "short_name": "MeOH",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0001875",
+            "kegg": "C00132",
+            "chebi": "17790",
+            "pubchem": "887",
+            "cas": "67-56-1",
+            "biocyc": "3-OH-BENZYL-ALCOHOL",
+            "chemspider": "864"
+          }
+        },
+        {
+          "pathbank_compound_id": 1689,
+          "name": "Methane",
+          "short_name": "Methane",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0002714",
+            "kegg": "C01438",
+            "chebi": "16183",
+            "pubchem": "297",
+            "cas": "74-82-8",
+            "biocyc": "CH4",
+            "chemspider": "291"
+          }
+        },
+        {
+          "pathbank_compound_id": 1827,
+          "name": "Hydrogen sulfide",
+          "short_name": "H2SO",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0003276",
+            "kegg": "C00283",
+            "chebi": "16136",
+            "pubchem": "18779926",
+            "cas": "7783-06-4",
+            "biocyc": "HS",
+            "chemspider": "391"
+          }
+        },
+        {
+          "pathbank_compound_id": 8767,
+          "name": "Gadodiamide",
+          "short_name": "Omnisca",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0014370",
+            "kegg": "C13106",
+            "chebi": "31642",
+            "pubchem": "24838310",
+            "cas": "122795-43-1",
+            "chemspider": "54756",
+            "drugbank": "DB00225"
+          }
+        }
+      ]
+    },
+    "db::carboxylic acid": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0003320",
+        "kegg": "C19837",
+        "chebi": "24809",
+        "pubchem": "69867",
+        "cas": "771-50-6",
+        "chemspider": "63063"
+      },
+      "confidence": 0.7967,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1835,
+          "name": "Indole-3-carboxylic acid",
+          "short_name": "3I",
+          "score": 0.7967,
+          "mapped_ids": {
+            "hmdb": "HMDB0003320",
+            "kegg": "C19837",
+            "chebi": "24809",
+            "pubchem": "69867",
+            "cas": "771-50-6",
+            "chemspider": "63063"
+          }
+        },
+        {
+          "pathbank_compound_id": 92,
+          "name": "Formic acid",
+          "short_name": "Formate",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0000142",
+            "kegg": "C00058",
+            "chebi": "30751",
+            "pubchem": "18971002",
+            "cas": "64-18-6",
+            "biocyc": "FORMATE",
+            "chemspider": "278",
+            "drugbank": "DB01942"
+          }
+        },
+        {
+          "pathbank_compound_id": 128,
+          "name": "Indoleacetic acid",
+          "short_name": "Indolaa",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0000197",
+            "kegg": "C00954",
+            "chebi": "16411",
+            "pubchem": "802",
+            "cas": "87-51-4",
+            "chemspider": "780",
+            "drugbank": "DB07950"
+          }
+        },
+        {
+          "pathbank_compound_id": 1243,
+          "name": "Benzoic acid",
+          "short_name": "e210",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0001870",
+            "kegg": "C00180",
+            "chebi": "30746",
+            "pubchem": "20144841",
+            "cas": "65-85-0",
+            "biocyc": "1-O6-O-DIGALLOYL-BETA-D-GLUCOSE",
+            "chemspider": "238",
+            "drugbank": "DB03793"
+          }
+        },
+        {
+          "pathbank_compound_id": 8238,
+          "name": "3-Indole carboxylic acid glucuronide",
+          "short_name": "3IG",
+          "score": 0.675,
+          "mapped_ids": {
+            "hmdb": "HMDB0013189",
+            "chebi": "68486",
+            "pubchem": "53481645",
+            "chemspider": "28533205"
+          }
+        },
+        {
+          "pathbank_compound_id": 765,
+          "name": "trans-Aconitic acid",
+          "short_name": "Aconiti",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000958",
+            "kegg": "C02341",
+            "chebi": "32806",
+            "pubchem": "444212",
+            "cas": "4023-65-8",
+            "biocyc": "CPD-225",
+            "chemspider": "392201"
+          }
+        },
+        {
+          "pathbank_compound_id": 620,
+          "name": "Porphinehexacarboxylic acid",
+          "short_name": "Porphin",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0000780",
+            "cas": "28100-67-6",
+            "chemspider": "13628144"
+          }
+        },
+        {
+          "pathbank_compound_id": 642,
+          "name": "Pyrrolidonecarboxylic acid",
+          "short_name": "Glp",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0000805",
+            "kegg": "C02237",
+            "chebi": "16010",
+            "pubchem": "499",
+            "cas": "149-87-1",
+            "biocyc": "CPD-656",
+            "chemspider": "485"
+          }
+        },
+        {
+          "pathbank_compound_id": 852,
+          "name": "D-1-Piperideine-2-carboxylic acid",
+          "short_name": "1P2C",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0001084",
+            "kegg": "C04092",
+            "chebi": "30912",
+            "pubchem": "1194",
+            "cas": "2756-89-0",
+            "biocyc": "delta(1)-piperideine-2-carboxylate",
+            "chemspider": "1157"
+          }
+        },
+        {
+          "pathbank_compound_id": 968,
+          "name": "5,6-Dihydroxyindole-2-carboxylic acid",
+          "short_name": "DHD-2CA",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0001253",
+            "kegg": "C04185",
+            "chebi": "2003",
+            "pubchem": "119405",
+            "cas": "4790-08-3",
+            "biocyc": "56-DIHYDROXYINDOLE-2-CARBOXYLATE",
+            "chemspider": "106648"
+          }
+        }
+      ]
+    },
+    "db::alcohol": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000108",
+        "kegg": "C00469",
+        "chebi": "16236",
+        "pubchem": "702",
+        "cas": "64-17-5",
+        "biocyc": "ETOH",
+        "chemspider": "682",
+        "drugbank": "DB00898"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 70,
+          "name": "Ethanol",
+          "short_name": "Ethanol",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000108",
+            "kegg": "C00469",
+            "chebi": "16236",
+            "pubchem": "702",
+            "cas": "64-17-5",
+            "biocyc": "ETOH",
+            "chemspider": "682",
+            "drugbank": "DB00898"
+          }
+        },
+        {
+          "pathbank_compound_id": 655,
+          "name": "Propyl alcohol",
+          "short_name": "Propyol",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0000820",
+            "kegg": "C05979",
+            "chebi": "28831",
+            "pubchem": "1031",
+            "cas": "71-23-8",
+            "biocyc": "PROPANOL",
+            "chemspider": "1004",
+            "drugbank": "DB03175"
+          }
+        },
+        {
+          "pathbank_compound_id": 687,
+          "name": "Isopropyl alcohol",
+          "short_name": "Lavaco",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0000863",
+            "kegg": "C01845",
+            "chebi": "17824",
+            "pubchem": "3776",
+            "cas": "67-63-0",
+            "chemspider": "3644",
+            "drugbank": "DB02325"
+          }
+        },
+        {
+          "pathbank_compound_id": 948,
+          "name": "Chlordecone alcohol",
+          "short_name": "Kepol",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0001219",
+            "kegg": "C02817",
+            "chebi": "17184",
+            "pubchem": "13946",
+            "cas": "1034-41-9",
+            "biocyc": "CHLORDECONE-ALCOHOL",
+            "chemspider": "13344"
+          }
+        },
+        {
+          "pathbank_compound_id": 1782,
+          "name": "Benzyl alcohol",
+          "short_name": "Bnzylol",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0003119",
+            "kegg": "C00556",
+            "chebi": "17987",
+            "pubchem": "244",
+            "cas": "100-51-6",
+            "biocyc": "34-DIMETHYLBENZYL-ALCOHOL",
+            "chemspider": "13860335",
+            "drugbank": "DB06770"
+          }
+        },
+        {
+          "pathbank_compound_id": 1942,
+          "name": "Perillyl alcohol",
+          "short_name": "Perillo",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0003634",
+            "kegg": "C02452",
+            "chebi": "15420",
+            "pubchem": "10819",
+            "cas": "536-59-4",
+            "biocyc": "CPD-261",
+            "chemspider": "10362"
+          }
+        },
+        {
+          "pathbank_compound_id": 1949,
+          "name": "4-Coumaryl alcohol",
+          "short_name": "3-OHPP",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0003654",
+            "kegg": "C02646",
+            "chebi": "64555",
+            "pubchem": "5280535",
+            "cas": "3690-05-9",
+            "chemspider": "4444166",
+            "drugbank": "DB03410"
+          }
+        },
+        {
+          "pathbank_compound_id": 7208,
+          "name": "Arachidyl alcohol",
+          "short_name": "Eicosan",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0011619",
+            "chebi": "75627",
+            "pubchem": "12404",
+            "cas": "629-96-9",
+            "biocyc": "CPD-7869",
+            "chemspider": "11898"
+          }
+        },
+        {
+          "pathbank_compound_id": 7213,
+          "name": "Decyl alcohol ",
+          "short_name": "Antak",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0011624",
+            "kegg": "C01633",
+            "chebi": "28903",
+            "pubchem": "8174",
+            "cas": "112-30-1",
+            "biocyc": "CPD-7867",
+            "chemspider": "7882"
+          }
+        },
+        {
+          "pathbank_compound_id": 7299,
+          "name": "4-Hydroxybenzyl alcohol",
+          "short_name": "Gastrod",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0011724",
+            "kegg": "C17467",
+            "chebi": "437856",
+            "pubchem": "125",
+            "cas": "623-05-2",
+            "biocyc": "4-HYDROXY-BENZYL-ALCOHOL",
+            "chemspider": "122"
+          }
+        }
+      ]
+    },
+    "db::methyl acetate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0031523",
+        "kegg": "C17530",
+        "chebi": "77700",
+        "pubchem": "6584",
+        "cas": "79-20-9",
+        "chemspider": "6335"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 12705,
+          "name": "Methyl acetate",
+          "short_name": "Acome",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0031523",
+            "kegg": "C17530",
+            "chebi": "77700",
+            "pubchem": "6584",
+            "cas": "79-20-9",
+            "chemspider": "6335"
+          }
+        },
+        {
+          "pathbank_compound_id": 10966,
+          "name": "Indole-3-methyl acetate",
+          "short_name": "Meiaa",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0029738",
+            "chebi": "72782",
+            "pubchem": "74706",
+            "cas": "1912-33-0",
+            "chemspider": "67279"
+          }
+        },
+        {
+          "pathbank_compound_id": 22265,
+          "name": "(3-Methylphenyl)methyl acetate",
+          "short_name": "3MA",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0041473",
+            "kegg": "C07216",
+            "pubchem": "87083",
+            "cas": "17369-57-2",
+            "chemspider": "78550"
+          }
+        },
+        {
+          "pathbank_compound_id": 12371,
+          "name": "Tetrahydrofurfuryl acetate",
+          "short_name": "Fema",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0031176",
+            "pubchem": "12506",
+            "cas": "637-64-9",
+            "chemspider": "21105997"
+          }
+        },
+        {
+          "pathbank_compound_id": 12504,
+          "name": "Benzyl acetate",
+          "short_name": "Fema",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0031310",
+            "kegg": "C15513",
+            "chebi": "52051",
+            "pubchem": "8785",
+            "cas": "140-11-4",
+            "chemspider": "13850405"
+          }
+        },
+        {
+          "pathbank_compound_id": 13711,
+          "name": "Piperonyl acetate",
+          "short_name": "Fema",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0032614",
+            "pubchem": "9473",
+            "cas": "326-61-4",
+            "chemspider": "9101"
+          }
+        },
+        {
+          "pathbank_compound_id": 14822,
+          "name": "4-Methoxybenzyl acetate",
+          "short_name": "Fema",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0033761",
+            "pubchem": "7695",
+            "cas": "104-21-2",
+            "chemspider": "7410"
+          }
+        },
+        {
+          "pathbank_compound_id": 15299,
+          "name": "Furfuryl acetate",
+          "short_name": "Fema",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0034246",
+            "pubchem": "12170",
+            "cas": "623-17-6",
+            "chemspider": "21105906"
+          }
+        },
+        {
+          "pathbank_compound_id": 15512,
+          "name": "Acetoxyacetone",
+          "short_name": "Acetoxy",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0034466",
+            "pubchem": "11593",
+            "cas": "592-20-1",
+            "chemspider": "11105"
+          }
+        },
+        {
+          "pathbank_compound_id": 18111,
+          "name": "Perillyl acetate",
+          "short_name": "Fema",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0037231",
+            "pubchem": "61780",
+            "cas": "15111-96-3",
+            "chemspider": "55667"
+          }
+        }
+      ]
+    },
+    "db::acetic acid": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000042",
+        "kegg": "C00033",
+        "chebi": "15366",
+        "pubchem": "176",
+        "cas": "64-19-7",
+        "biocyc": "ACET",
+        "chemspider": "171",
+        "drugbank": "DB03166"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 29,
+          "name": "Acetic acid",
+          "short_name": "Acoh",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000042",
+            "kegg": "C00033",
+            "chebi": "15366",
+            "pubchem": "176",
+            "cas": "64-19-7",
+            "biocyc": "ACET",
+            "chemspider": "171",
+            "drugbank": "DB03166"
+          }
+        },
+        {
+          "pathbank_compound_id": 1029,
+          "name": "3,4-Dihydroxybenzeneacetic acid",
+          "short_name": "34DHBzA",
+          "score": 0.7967,
+          "mapped_ids": {
+            "hmdb": "HMDB0001336",
+            "kegg": "C01161",
+            "chebi": "41941",
+            "pubchem": "547",
+            "cas": "102-32-9",
+            "biocyc": "CPD-782",
+            "chemspider": "532",
+            "drugbank": "DB01702"
+          }
+        },
+        {
+          "pathbank_compound_id": 1569,
+          "name": "Imidazoleacetic acid riboside",
+          "short_name": "Ribosyl",
+          "score": 0.7967,
+          "mapped_ids": {
+            "hmdb": "HMDB0002331",
+            "kegg": "C05131",
+            "pubchem": "440569",
+            "cas": "29605-99-0",
+            "chemspider": "389469"
+          }
+        },
+        {
+          "pathbank_compound_id": 1571,
+          "name": "Benzoquinoneacetic acid",
+          "short_name": "BQA",
+          "score": 0.7967,
+          "mapped_ids": {
+            "hmdb": "HMDB0002334",
+            "pubchem": "21252288",
+            "cas": "10275-07-7",
+            "chemspider": "13628337"
+          }
+        },
+        {
+          "pathbank_compound_id": 30,
+          "name": "βine",
+          "short_name": "βine",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0000043",
+            "kegg": "C00719",
+            "chebi": "17750",
+            "pubchem": "247",
+            "cas": "107-43-7",
+            "biocyc": "BETAINE",
+            "chemspider": "242"
+          }
+        },
+        {
+          "pathbank_compound_id": 46,
+          "name": "Creatine",
+          "short_name": "Creatin",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0000064",
+            "kegg": "C00300",
+            "chebi": "16919",
+            "pubchem": "586",
+            "cas": "57-00-1",
+            "biocyc": "CREATINE",
+            "chemspider": "566",
+            "drugbank": "DB00148"
+          }
+        },
+        {
+          "pathbank_compound_id": 965,
+          "name": "N-Acetylarylamine",
+          "short_name": "Acetani",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0001250",
+            "kegg": "C07565",
+            "chebi": "28884",
+            "pubchem": "904",
+            "cas": "103-84-4",
+            "biocyc": "N-ACETYLARYLAMINE",
+            "chemspider": "880"
+          }
+        },
+        {
+          "pathbank_compound_id": 1219,
+          "name": "N-Acryloylglycine",
+          "short_name": "NA",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0001843",
+            "pubchem": "100321",
+            "cas": "24599-25-5",
+            "chemspider": "90657"
+          }
+        },
+        {
+          "pathbank_compound_id": 2747,
+          "name": "L-2-Amino-3-oxobutanoic acid",
+          "short_name": "L2AAA",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0006454",
+            "kegg": "C03508",
+            "chebi": "40673",
+            "pubchem": "440033",
+            "biocyc": "AMINO-OXOBUT",
+            "chemspider": "389046",
+            "drugbank": "DB03915"
+          }
+        },
+        {
+          "pathbank_compound_id": 6753,
+          "name": "Malonic semialdehyde",
+          "short_name": "MalSah",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0011111",
+            "kegg": "C00222",
+            "chebi": "17960",
+            "pubchem": "868",
+            "cas": "926-61-4",
+            "chemspider": "845"
+          }
+        }
+      ]
+    },
+    "db::methanol": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001875",
+        "kegg": "C00132",
+        "chebi": "17790",
+        "pubchem": "887",
+        "cas": "67-56-1",
+        "biocyc": "3-OH-BENZYL-ALCOHOL",
+        "chemspider": "864"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1247,
+          "name": "Methanol",
+          "short_name": "MeOH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001875",
+            "kegg": "C00132",
+            "chebi": "17790",
+            "pubchem": "887",
+            "cas": "67-56-1",
+            "biocyc": "3-OH-BENZYL-ALCOHOL",
+            "chemspider": "864"
+          }
+        },
+        {
+          "pathbank_compound_id": 13185,
+          "name": "4-Hydroxy-3-methoxybenzenemethanol",
+          "short_name": "Vanillo",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0032012",
+            "kegg": "C06317",
+            "chebi": "18353",
+            "pubchem": "62348",
+            "cas": "498-00-0",
+            "chemspider": "56139"
+          }
+        },
+        {
+          "pathbank_compound_id": 1782,
+          "name": "Benzyl alcohol",
+          "short_name": "Bnzylol",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0003119",
+            "kegg": "C00556",
+            "chebi": "17987",
+            "pubchem": "244",
+            "cas": "100-51-6",
+            "biocyc": "34-DIMETHYLBENZYL-ALCOHOL",
+            "chemspider": "13860335",
+            "drugbank": "DB06770"
+          }
+        },
+        {
+          "pathbank_compound_id": 12644,
+          "name": "2-Methylpropan-2-ol",
+          "short_name": "TB",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0031456",
+            "chebi": "45895",
+            "pubchem": "6386",
+            "cas": "75-65-0",
+            "chemspider": "6146",
+            "drugbank": "DB03900"
+          }
+        },
+        {
+          "pathbank_compound_id": 12990,
+          "name": "Cuminyl alcohol",
+          "short_name": "Cuminol",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0031817",
+            "kegg": "C06576",
+            "pubchem": "325",
+            "cas": "536-60-7",
+            "chemspider": "21105932"
+          }
+        },
+        {
+          "pathbank_compound_id": 13716,
+          "name": "1-Phenylethanol",
+          "short_name": "α",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0032619",
+            "kegg": "C07112",
+            "chebi": "669",
+            "pubchem": "7409",
+            "cas": "98-85-1",
+            "chemspider": "7131"
+          }
+        },
+        {
+          "pathbank_compound_id": 8576,
+          "name": "2-Furanmethanol",
+          "short_name": "Furfuro",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0013742",
+            "kegg": "C20441",
+            "chebi": "207496",
+            "pubchem": "7361",
+            "cas": "98-00-0",
+            "chemspider": "7083"
+          }
+        },
+        {
+          "pathbank_compound_id": 12370,
+          "name": "Tetrahydro-2-furanmethanol",
+          "short_name": "Thfa",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0031175",
+            "pubchem": "7360",
+            "cas": "97-99-4",
+            "chemspider": "7082"
+          }
+        },
+        {
+          "pathbank_compound_id": 12435,
+          "name": "2-Phenyl-1,3-dioxolane-4-methanol",
+          "short_name": "BG",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0031240",
+            "pubchem": "15572",
+            "chemspider": "14815"
+          }
+        },
+        {
+          "pathbank_compound_id": 14005,
+          "name": "3-Furanmethanol glucoside",
+          "short_name": "βFβG",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0032924",
+            "pubchem": "78302646",
+            "cas": "86425-28-7"
+          }
+        }
+      ]
+    },
+    "db::h": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0059597",
+        "kegg": "C00080",
+        "chebi": "15378",
+        "pubchem": "1038",
+        "chemspider": "1010"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 40034,
+          "name": "Hydrogen Ion",
+          "short_name": "H+",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0059597",
+            "kegg": "C00080",
+            "chebi": "15378",
+            "pubchem": "1038",
+            "chemspider": "1010"
+          }
+        },
+        {
+          "pathbank_compound_id": 108635,
+          "name": "H+",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "chebi": "15378 24636",
+            "pubchem": "3380"
+          }
+        },
+        {
+          "pathbank_compound_id": 109267,
+          "name": "Ion de Hidrógeno",
+          "short_name": "H+",
+          "score": 1.0,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 96968,
+          "name": "NAD  H+",
+          "short_name": "NAD  H+",
+          "score": 0.705,
+          "mapped_ids": {}
+        }
+      ]
+    },
+    "db::protonated ester": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::protonated ester": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "candidates": [],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
+    },
+    "db::tetrahedral intermediate": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::tetrahedral intermediate": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "candidates": [],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
     }
   }
 }
