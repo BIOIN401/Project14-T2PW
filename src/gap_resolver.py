@@ -238,7 +238,6 @@ def _llm_choose_location(
             temperature=float(temperature),
             max_tokens=int(max_tokens),
             response_json=True,
-            use_cache=False,
         )
         parsed = _extract_json_object(raw) or {}
         choice = _canonical(str(parsed.get("choice", "")))
@@ -378,7 +377,6 @@ def _llm_plan_stage3(
             temperature=float(temperature),
             max_tokens=int(max_tokens),
             response_json=True,
-            use_cache=False,
         )
         parsed = _extract_json_object(raw) or {}
         operations_raw = _safe_list(parsed.get("operations"))
@@ -496,7 +494,6 @@ def _llm_choose_id_candidate(
             temperature=float(temperature),
             max_tokens=int(max_tokens),
             response_json=True,
-            use_cache=False,
         )
         parsed = _extract_json_object(raw) or {}
         selected_index = int(parsed.get("selected_index", -1))

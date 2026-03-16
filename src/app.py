@@ -759,7 +759,7 @@ def run_post_pipeline_sbml_artifacts(
                     llm_temperature=gap_temp,
                     llm_max_tokens=gap_tokens,
                     max_items=max(10, int(gap_resolver_max_items)),
-                    enable_id_resolution=False,
+                    enable_id_resolution=True,
                 )
                 current_after_round = round_resolved
             else:

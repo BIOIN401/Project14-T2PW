@@ -4164,6 +4164,53 @@
       "candidates": [],
       "provider": "ChEBI/KEGG/HMDB",
       "source": "api"
+    },
+    "db::hydroxide ion": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001039",
+        "kegg": "C01328",
+        "chebi": "16234",
+        "pubchem": "961",
+        "cas": "14280-30-9",
+        "biocyc": "NH4OH",
+        "chemspider": "936"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 819,
+          "name": "Hydroxide",
+          "short_name": "OH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001039",
+            "kegg": "C01328",
+            "chebi": "16234",
+            "pubchem": "961",
+            "cas": "14280-30-9",
+            "biocyc": "NH4OH",
+            "chemspider": "936"
+          }
+        }
+      ]
+    },
+    "db::carboxylate ion": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::carboxylate ion": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "candidates": [],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
     }
   }
 }

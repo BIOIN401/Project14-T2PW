@@ -43270,6 +43270,54 @@
         "retrieved_at": "2026-03-14T01:13:09Z",
         "status": "ok"
       }
+    },
+    "chebi:CHEBI:16234": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16234",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-16T04:30:02Z"
+      }
+    },
+    "hmdb:HMDB0001039": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001039",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001039",
+        "retrieved_at": "2026-03-16T04:30:02Z"
+      }
+    },
+    "kegg:C01328": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C01328",
+      "primary_name": "HO-",
+      "synonyms": [
+        "HO-",
+        "OH-",
+        "Hydroxide ion"
+      ],
+      "formula": "OH",
+      "mass_monoisotopic": 17.0027,
+      "mass_average": 17.01,
+      "pathways": [],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C01328",
+        "pubchem_id": "4539",
+        "chebi_id": "16234"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C01328",
+        "source_url": "https://rest.kegg.jp/get/cpd:C01328",
+        "retrieved_at": "2026-03-16T04:30:03Z",
+        "status": "ok"
+      }
     }
   }
 }

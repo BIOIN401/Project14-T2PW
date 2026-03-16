@@ -1198,5 +1198,112 @@
         "error_if_any": ""
       }
     ]
+  },
+  "compound:hydroxide ion|HMDB0001039": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "HO-",
+    "synonyms": [
+      "HO-",
+      "OH-",
+      "Hydroxide ion"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "OH",
+    "charge": 0,
+    "mass_monoisotopic": 17.0027,
+    "mass_average": 17.01,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0001039",
+      "kegg_id": "C01328",
+      "chebi_id": "16234",
+      "pubchem_id": "961",
+      "cas": "14280-30-9",
+      "biocyc": "NH4OH",
+      "chemspider": "936"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C01328",
+      "primary_name": "HO-",
+      "synonyms": [
+        "HO-",
+        "OH-",
+        "Hydroxide ion"
+      ],
+      "formula": "OH",
+      "mass_monoisotopic": 17.0027,
+      "mass_average": 17.01,
+      "pathways": [],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C01328",
+        "pubchem_id": "4539",
+        "chebi_id": "16234"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C01328",
+        "source_url": "https://rest.kegg.jp/get/cpd:C01328",
+        "retrieved_at": "2026-03-16T04:30:03Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16234",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-16T04:30:02Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001039",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001039",
+        "retrieved_at": "2026-03-16T04:30:02Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:16234",
+        "retrieved_at": "2026-03-16T04:30:02Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001039",
+        "retrieved_at": "2026-03-16T04:30:02Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C01328",
+        "retrieved_at": "2026-03-16T04:30:03Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
   }
 }
