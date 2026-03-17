@@ -13,7 +13,8 @@ What it adds:
     * reaction edges (edge) with SVG `M ... L ...` paths
 
 Layout strategy:
-- Uses Graphviz `dot` to compute a tidy directed layout from reactions.
+- Uses Graphviz `dot` to compute a tidy directed layout from reactions when available.
+- Falls back to a deterministic compartment-grouped grid when Graphviz is unavailable.
 - Separates nodes by compartment into rounded boxes.
 
 This is not an exact clone of PathWhiz's editor layout, but it produces a clean,
@@ -27,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import shutil
 import subprocess
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
@@ -72,6 +74,67 @@ def _run_dot(dot_src: str) -> str:
         check=True,
     )
     return proc.stdout.decode("utf-8", errors="replace")
+
+
+def _build_fallback_layout(
+    species_nodes: Dict[str, Species],
+    comp_names: Dict[str, str],
+    edge_pairs: List[Tuple[str, str]],
+) -> Tuple[Dict[str, Tuple[float, float]], List[Tuple[str, str, List[Tuple[float, float]]]]]:
+    """Return a deterministic compartment-grouped layout when Graphviz is unavailable."""
+    pos: Dict[str, Tuple[float, float]] = {}
+    edges: List[Tuple[str, str, List[Tuple[float, float]]]] = []
+
+    # Use dot-like coordinate units so the existing scale/flip path can remain unchanged.
+    box_pad_x = 0.9
+    box_pad_y = 0.9
+    col_gap = 1.8
+    row_gap = 1.3
+    comp_gap = 1.8
+
+    species_by_compartment: Dict[str, List[Species]] = {}
+    for sid in sorted(species_nodes):
+        species = species_nodes[sid]
+        species_by_compartment.setdefault(species.compartment, []).append(species)
+        comp_names.setdefault(species.compartment, species.compartment)
+
+    current_y = 0.0
+    for cid in sorted(species_by_compartment):
+        members = sorted(
+            species_by_compartment[cid],
+            key=lambda item: (item.stype != "protein", item.name.lower(), item.sid),
+        )
+        if not members:
+            continue
+
+        cols = max(1, min(4, math.ceil(math.sqrt(len(members)))))
+        rows = max(1, math.ceil(len(members) / cols))
+
+        for idx, species in enumerate(members):
+            row = idx // cols
+            col = idx % cols
+            x = box_pad_x + (col * col_gap)
+            y = current_y + box_pad_y + (row * row_gap)
+            pos[species.sid] = (x, y)
+
+        box_height = ((rows - 1) * row_gap) + (2 * box_pad_y)
+        current_y += box_height + comp_gap
+
+    for tail, head in edge_pairs:
+        tail_pos = pos.get(tail)
+        head_pos = pos.get(head)
+        if tail_pos is None or head_pos is None:
+            continue
+        x1, y1 = tail_pos
+        x2, y2 = head_pos
+        if abs(y1 - y2) < 0.01:
+            coords = [(x1, y1), (x2, y2)]
+        else:
+            mid_x = round((x1 + x2) / 2.0, 4)
+            coords = [(x1, y1), (mid_x, y1), (mid_x, y2), (x2, y2)]
+        edges.append((tail, head, coords))
+
+    return pos, edges
 
 
 def _parse_dot_plain(plain: str) -> Tuple[Dict[str, Tuple[float, float]], List[Tuple[str, str, List[Tuple[float, float]]]]]:
@@ -184,8 +247,14 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
     dot_lines.append("}")
     dot_src = "\n".join(dot_lines)
 
-    plain = _run_dot(dot_src)
-    pos, edges = _parse_dot_plain(plain)
+    if shutil.which("dot"):
+        try:
+            plain = _run_dot(dot_src)
+            pos, edges = _parse_dot_plain(plain)
+        except subprocess.CalledProcessError:
+            pos, edges = _build_fallback_layout(species_nodes, comp_names, edge_pairs)
+    else:
+        pos, edges = _build_fallback_layout(species_nodes, comp_names, edge_pairs)
 
     if not pos:
         raise RuntimeError("Graphviz produced no node positions")

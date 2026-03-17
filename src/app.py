@@ -3,13 +3,13 @@ import inspect
 import os
 import re
 import hashlib
-import tempfile
 import time
 import shutil
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Tuple
+from uuid import uuid4
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -24,6 +24,7 @@ from grounding import apply_grounding
 from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
+from sbml_render_pathwhiz_like import render_to_png_bytes
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
@@ -312,8 +313,11 @@ def run_post_pipeline_sbml_artifacts(
         cache_path = project_root / mapping_cache_path
     cache_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp = Path(tmp_dir)
+    temp_root = project_root / "tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
+    tmp = temp_root / f"post_pipeline_{uuid4().hex}"
+    tmp.mkdir(parents=True, exist_ok=False)
+    try:
         input_json = tmp / "final.json"
         audit_report_path = tmp / "audit_report.json"
         audit_patch_path = tmp / "audit_patch.json"
@@ -501,6 +505,8 @@ def run_post_pipeline_sbml_artifacts(
                 "sbml_report_txt": "",
                 "sbml_overwatch_report": {},
                 "sbml_xml_bytes": b"",
+                "sbml_diagram_png_bytes": b"",
+                "sbml_diagram_error": "",
                 "sbml_build_report": {},
                 "mapping_cache_path": str(cache_path),
                 "enrichment_cache_path": str(cache_path.with_name("enrichment_cache.json")),
@@ -909,6 +915,12 @@ def run_post_pipeline_sbml_artifacts(
                 use_llm=True,
                 llm_max_tokens=3000,
             )
+        sbml_diagram_png_bytes = b""
+        sbml_diagram_error = ""
+        try:
+            sbml_diagram_png_bytes = render_to_png_bytes(str(sbml_path))
+        except Exception as exc:  # noqa: BLE001
+            sbml_diagram_error = str(exc)
 
         return {
             "gate_failed": False,
@@ -931,6 +943,8 @@ def run_post_pipeline_sbml_artifacts(
             "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
             "sbml_overwatch_report": sbml_overwatch_report,
             "sbml_xml_bytes": sbml_path.read_bytes(),
+            "sbml_diagram_png_bytes": sbml_diagram_png_bytes,
+            "sbml_diagram_error": sbml_diagram_error,
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
             "enrichment_cache_path": str(enrichment_cache_path),
@@ -953,6 +967,8 @@ def run_post_pipeline_sbml_artifacts(
                 "duration_seconds": loop_duration,
             },
         }
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 with st.form("pwml_pipeline"):
@@ -1359,6 +1375,8 @@ if st.session_state.get("pipeline_ready"):
                 "sbml_counts": sbml_summary,
                 "sbml_validation_has_errors": sbml_validation.get("has_errors"),
                 "sbml_overwatch": sbml_overwatch_summary,
+                "sbml_diagram_generated": bool(post_artifacts.get("sbml_diagram_png_bytes")),
+                "sbml_diagram_error": post_artifacts.get("sbml_diagram_error", ""),
                 "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
                 "enrichment_cache_path": post_artifacts.get("enrichment_cache_path"),
                 "enrichment_dump_path": post_artifacts.get("enrichment_dump_path"),
@@ -1520,6 +1538,17 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/xml",
                 key="dl_pathway_sbml",
             )
+        if post_artifacts.get("sbml_diagram_png_bytes"):
+            st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
+            st.download_button(
+                "Download sbml_diagram.png",
+                post_artifacts["sbml_diagram_png_bytes"],
+                file_name="sbml_diagram.png",
+                mime="image/png",
+                key="dl_sbml_diagram_png",
+            )
+        elif str(post_artifacts.get("sbml_diagram_error", "")).strip():
+            st.warning(f"SBML diagram render issue: {post_artifacts.get('sbml_diagram_error')}")
         st.download_button(
             "Download sbml_validation_report.json",
             json.dumps(post_artifacts["sbml_report_json"], indent=2),

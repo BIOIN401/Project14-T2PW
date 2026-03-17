@@ -947,6 +947,284 @@
           "score": 1.0
         }
       ]
+    },
+    "db::pendrin::humans": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O43511"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 2198,
+          "name": "Pendrin",
+          "gene_name": "SLC26A4",
+          "uniprot": "O43511",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 5799,
+          "name": "Pendrin",
+          "gene_name": "SLC26A4 ",
+          "uniprot": "F5H104",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::thyroid peroxidase::humans": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P07202"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 270,
+          "name": "Thyroid peroxidase",
+          "gene_name": "TPO",
+          "uniprot": "P07202",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 14018,
+          "name": "Thyroid peroxidase",
+          "gene_name": "Tpo",
+          "uniprot": "P35419",
+          "species_id": 12,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17633,
+          "name": "Thyroid peroxidase",
+          "gene_name": "Tpo",
+          "uniprot": "P14650",
+          "species_id": 17,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17634,
+          "name": "Thyroid peroxidase",
+          "gene_name": "Tpo",
+          "uniprot": "Q8C8B1",
+          "species_id": 12,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::thyroglobulin::humans": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P01266"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 5798,
+          "name": "Thyroglobulin",
+          "gene_name": "TG",
+          "uniprot": "P01266",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 13995,
+          "name": "Thyroglobulin",
+          "gene_name": "Tg",
+          "uniprot": "O08710",
+          "species_id": 12,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17630,
+          "name": "Thyroglobulin",
+          "gene_name": "TG",
+          "uniprot": "Q95478",
+          "species_id": 5,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17631,
+          "name": "Thyroglobulin",
+          "gene_name": "Tg",
+          "uniprot": "Q9QWY7",
+          "species_id": 12,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 17632,
+          "name": "Thyroglobulin",
+          "gene_name": "Tg",
+          "uniprot": "Q9JM94",
+          "species_id": 17,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::iodotyrosine::humans": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q6PHW0"
+      },
+      "confidence": 0.6833,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 3515,
+          "name": "Iodotyrosine dehalogenase 1",
+          "gene_name": "IYD",
+          "uniprot": "Q6PHW0",
+          "species_id": 1,
+          "score": 0.6833
+        }
+      ]
+    },
+    "db::35diiodoltyrosine::humans": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::35diiodoltyrosine::humans": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"3,5-diiodo-L-tyrosine\" OR gene:\"3,5-diiodo-L-tyrosine\") AND organism_name:\"humans\" | (protein_name:\"3 5 diiodo L tyrosine\" OR gene:\"3 5 diiodo L tyrosine\") AND organism_name:\"humans\" | (protein_name:\"3,5-diiodo-L-tyrosine\" OR gene:\"3,5-diiodo-L-tyrosine\") | (protein_name:\"3 5 diiodo L tyrosine\" OR gene:\"3 5 diiodo L tyrosine\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::thyroxine::humans": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "pathbank_protein_id": 2138,
+          "name": "Thyroxine-binding globulin",
+          "gene_name": "SERPINA7",
+          "uniprot": "P05543",
+          "species_id": 1,
+          "score": 0.51
+        }
+      ]
+    },
+    "api::thyroxine::humans": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"thyroxine\" OR gene:\"thyroxine\") AND organism_name:\"humans\" | (protein_name:\"thyroxine\" OR gene:\"thyroxine\")",
+      "confidence": 0.185,
+      "candidates": [
+        {
+          "accession": "P55073",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "DIO3",
+            "ITDI3",
+            "TXDI3"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "Q6U6H1",
+          "protein_name": "Thyroxine 5'-deiodinase",
+          "gene_names": [],
+          "organism": "Halocynthia roretzi",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "Q5I3B1",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "DIO3"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "P49897",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "Dio3",
+            "Itdi3",
+            "Txdi3"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "Q91ZI8",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "Dio3"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "Q9NYB5",
+          "protein_name": "Solute carrier organic anion transporter family member 1C1",
+          "gene_names": [
+            "OATP14",
+            "OATP1C1",
+            "OATPF",
+            "SLC21A14",
+            "SLCO1C1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "Q6IMI4",
+          "protein_name": "Sulfotransferase 6B1",
+          "gene_names": [
+            "SULT6B1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185
+        },
+        {
+          "accession": "P49898",
+          "protein_name": "Thyroxine 5-deiodinase",
+          "gene_names": [
+            "dio3",
+            "itdi3",
+            "txdi3"
+          ],
+          "organism": "Aquarana catesbeiana",
+          "reviewed": true,
+          "score": 0.185
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"thyroxine\" OR gene:\"thyroxine\") AND organism_name:\"humans\"",
+        "(protein_name:\"thyroxine\" OR gene:\"thyroxine\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
     }
   },
   "compounds": {
@@ -4211,6 +4489,39 @@
       "candidates": [],
       "provider": "ChEBI/KEGG/HMDB",
       "source": "api"
+    },
+    "db::2aminoacrylic acid": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0003609",
+        "kegg": "C02218",
+        "chebi": "CHEBI:17123",
+        "pubchem": "123991",
+        "cas": "1948-56-7",
+        "chemspider": "110510",
+        "drugbank": "DB02688"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1938,
+          "name": "2-Aminoacrylic acid",
+          "short_name": "2Amnaa",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0003609",
+            "kegg": "C02218",
+            "chebi": "CHEBI:17123",
+            "pubchem": "123991",
+            "cas": "1948-56-7",
+            "chemspider": "110510",
+            "drugbank": "DB02688"
+          }
+        }
+      ]
     }
   }
 }
