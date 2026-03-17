@@ -211,6 +211,46 @@ def _has_pathwhiz_layout(sbml_file: str) -> bool:
     return root.find(".//pathwhiz:location_element", NS) is not None
 
 
+def summarize_layout_geometry(sbml_file: str) -> Dict[str, Any]:
+    tree = ET.parse(sbml_file)
+    root = tree.getroot()
+
+    location_elements = root.findall(".//pathwhiz:location_element", NS)
+    visible_elements = [
+        elem
+        for elem in location_elements
+        if elem.get(f"{{{PW_NS}}}hidden", "false").strip().lower() != "true"
+    ]
+
+    edge_count = 0
+    node_count = 0
+    compartment_count = 0
+    for elem in visible_elements:
+        element_type = (elem.get(f"{{{PW_NS}}}element_type", "") or "").strip()
+        if element_type == "edge":
+            edge_count += 1
+        elif element_type in {"element_collection_location", "sub_pathway"}:
+            compartment_count += 1
+        elif element_type:
+            node_count += 1
+
+    species_annotation_count = 0
+    for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
+        if sp.find("sbml:annotation/pathwhiz:species", NS) is not None:
+            species_annotation_count += 1
+
+    return {
+        "has_pathwhiz_layout": bool(location_elements),
+        "location_element_count": len(location_elements),
+        "visible_location_element_count": len(visible_elements),
+        "edge_count": edge_count,
+        "node_count": node_count,
+        "compartment_count": compartment_count,
+        "species_annotation_count": species_annotation_count,
+        "has_drawable_geometry": bool(visible_elements) and (edge_count > 0 or node_count > 0),
+    }
+
+
 def _make_local_temp_dir() -> Path:
     temp_root = Path(__file__).resolve().parent.parent / "tmp"
     temp_root.mkdir(parents=True, exist_ok=True)
@@ -252,168 +292,192 @@ def _bounds_from_elements(elems: List[LocationElement], path_cls: Any) -> Tuple[
     return (min(xs) - pad, min(ys) - pad, max(xs) + pad, max(ys) + pad)
 
 
-def render(sbml_file: str, out_png: str, dpi: int = 180, show: bool = False) -> None:
+def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show: bool = False) -> None:
     plt, FancyBboxPatch, Circle, PathPatch, Rectangle, MplPath = _load_matplotlib(show=show)
-    render_input, tmp_dir = _prepare_render_input(sbml_file)
-    try:
-        species, compartments, elems = parse_sbml(render_input)
+    species, compartments, elems = parse_sbml(render_input)
 
-        # Sort by z-index so boxes draw before nodes and edges can go on top
-        elems_sorted = sorted(elems, key=lambda e: e.z)
+    # Sort by z-index so boxes draw before nodes and edges can go on top
+    elems_sorted = sorted(elems, key=lambda e: e.z)
 
-        xmin, ymin, xmax, ymax = _bounds_from_elements(elems_sorted, MplPath)
-        width, height = (xmax - xmin), (ymax - ymin)
+    xmin, ymin, xmax, ymax = _bounds_from_elements(elems_sorted, MplPath)
+    width, height = (xmax - xmin), (ymax - ymin)
 
-        fig_w = max(6.0, width / 120.0)
-        fig_h = max(4.0, height / 120.0)
+    fig_w = max(6.0, width / 120.0)
+    fig_h = max(4.0, height / 120.0)
 
-        fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=dpi)
-        ax.set_xlim(xmin, xmax)
-        ax.set_ylim(ymax, ymin)  # invert Y to match PathWhiz screen coordinates
-        ax.set_aspect("equal")
-        ax.axis("off")
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=dpi)
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymax, ymin)  # invert Y to match PathWhiz screen coordinates
+    ax.set_aspect("equal")
+    ax.axis("off")
 
-        # First draw non-edge shapes (compartments and nodes)
-        for e in elems_sorted:
-            if e.element_type == "edge":
-                continue
+    # First draw non-edge shapes (compartments and nodes)
+    for e in elems_sorted:
+        if e.element_type == "edge":
+            continue
 
-            label = compartments.get(e.element_id) or species.get(
-                e.element_id,
-                SpeciesInfo(e.element_id, e.element_id, "unknown"),
-            ).name
-            stype = species.get(e.element_id, SpeciesInfo(e.element_id, "", "unknown")).species_type
+        label = compartments.get(e.element_id) or species.get(
+            e.element_id,
+            SpeciesInfo(e.element_id, e.element_id, "unknown"),
+        ).name
+        stype = species.get(e.element_id, SpeciesInfo(e.element_id, "", "unknown")).species_type
 
-            # Compartment-like boxes / collections
-            if e.element_type in ("element_collection_location", "sub_pathway"):
-                box = FancyBboxPatch(
-                    (e.x, e.y),
-                    e.w,
-                    e.h,
-                    boxstyle="round,pad=0.02,rounding_size=18",
-                    linewidth=2.4,
-                    facecolor="none",
-                    edgecolor="black",
-                    zorder=e.z,
-                )
-                ax.add_patch(box)
-                ax.text(
-                    e.x + 10,
-                    e.y + 22,
-                    label,
-                    fontsize=9,
-                    ha="left",
-                    va="bottom",
-                    zorder=e.z + 1,
-                )
-                continue
-
-            if e.element_type in ("protein_location", "protein_complex_visualization") or stype in ("protein", "protein_complex"):
-                rect = FancyBboxPatch(
-                    (e.x, e.y),
-                    e.w,
-                    e.h,
-                    boxstyle="round,pad=0.02,rounding_size=10",
-                    linewidth=2.0,
-                    facecolor="white",
-                    edgecolor="black",
-                    zorder=e.z,
-                )
-                ax.add_patch(rect)
-                ax.text(
-                    e.x + e.w / 2,
-                    e.y + e.h + 12,
-                    label,
-                    fontsize=8,
-                    ha="center",
-                    va="bottom",
-                    zorder=e.z + 1,
-                )
-                continue
-
-            if e.element_type == "compound_location" or stype == "compound":
-                r = min(e.w, e.h) / 2
-                circ = Circle(
-                    (e.x + e.w / 2, e.y + e.h / 2),
-                    radius=r,
-                    linewidth=2.0,
-                    edgecolor="black",
-                    facecolor="white",
-                    zorder=e.z,
-                )
-                ax.add_patch(circ)
-                ax.text(
-                    e.x + e.w / 2,
-                    e.y + e.h + 12,
-                    label,
-                    fontsize=8,
-                    ha="center",
-                    va="bottom",
-                    zorder=e.z + 1,
-                )
-                continue
-
-            rect = Rectangle((e.x, e.y), e.w, e.h, fill=False, linewidth=1.8, edgecolor="black", zorder=e.z)
-            ax.add_patch(rect)
-            ax.text(e.x + e.w / 2, e.y + e.h + 12, label, fontsize=8, ha="center", va="bottom", zorder=e.z + 1)
-
-        for e in elems_sorted:
-            if e.element_type != "edge" or not e.path:
-                continue
-
-            try:
-                path = _parse_svg_path(e.path, MplPath)
-            except Exception:
-                continue
-
-            is_dotted = e.template_id == "83"
-            patch = PathPatch(
-                path,
-                fill=False,
-                linewidth=2.0,
+        # Compartment-like boxes / collections
+        if e.element_type in ("element_collection_location", "sub_pathway"):
+            box = FancyBboxPatch(
+                (e.x, e.y),
+                e.w,
+                e.h,
+                boxstyle="round,pad=0.02,rounding_size=18",
+                linewidth=2.4,
+                facecolor="none",
                 edgecolor="black",
-                linestyle=(0, (2.5, 6.0)) if is_dotted else "solid",
                 zorder=e.z,
             )
-            ax.add_patch(patch)
+            ax.add_patch(box)
+            ax.text(
+                e.x + 10,
+                e.y + 22,
+                label,
+                fontsize=9,
+                ha="left",
+                va="bottom",
+                zorder=e.z + 1,
+            )
+            continue
 
-            if e.options:
-                for key in ("end_arrow_path", "start_arrow_path", "end_flat_arrow_path", "start_flat_arrow_path"):
-                    ap = e.options.get(key)
-                    if not ap:
-                        continue
-                    try:
-                        arrow_path = _parse_svg_path(ap, MplPath)
-                        arrow_patch = PathPatch(
-                            arrow_path,
-                            fill=True,
-                            linewidth=1.0,
-                            edgecolor="black",
-                            facecolor="black",
-                            zorder=e.z + 1,
-                        )
-                        ax.add_patch(arrow_patch)
-                    except Exception:
-                        pass
+        if e.element_type in ("protein_location", "protein_complex_visualization") or stype in ("protein", "protein_complex"):
+            rect = FancyBboxPatch(
+                (e.x, e.y),
+                e.w,
+                e.h,
+                boxstyle="round,pad=0.02,rounding_size=10",
+                linewidth=2.0,
+                facecolor="white",
+                edgecolor="black",
+                zorder=e.z,
+            )
+            ax.add_patch(rect)
+            ax.text(
+                e.x + e.w / 2,
+                e.y + e.h + 12,
+                label,
+                fontsize=8,
+                ha="center",
+                va="bottom",
+                zorder=e.z + 1,
+            )
+            continue
 
-        fig.tight_layout(pad=0)
-        fig.savefig(out_png, bbox_inches="tight", pad_inches=0.02)
-        if show:
-            plt.show()
-        plt.close(fig)
+        if e.element_type == "compound_location" or stype == "compound":
+            r = min(e.w, e.h) / 2
+            circ = Circle(
+                (e.x + e.w / 2, e.y + e.h / 2),
+                radius=r,
+                linewidth=2.0,
+                edgecolor="black",
+                facecolor="white",
+                zorder=e.z,
+            )
+            ax.add_patch(circ)
+            ax.text(
+                e.x + e.w / 2,
+                e.y + e.h + 12,
+                label,
+                fontsize=8,
+                ha="center",
+                va="bottom",
+                zorder=e.z + 1,
+            )
+            continue
+
+        rect = Rectangle((e.x, e.y), e.w, e.h, fill=False, linewidth=1.8, edgecolor="black", zorder=e.z)
+        ax.add_patch(rect)
+        ax.text(e.x + e.w / 2, e.y + e.h + 12, label, fontsize=8, ha="center", va="bottom", zorder=e.z + 1)
+
+    for e in elems_sorted:
+        if e.element_type != "edge" or not e.path:
+            continue
+
+        try:
+            path = _parse_svg_path(e.path, MplPath)
+        except Exception:
+            continue
+
+        is_dotted = e.template_id == "83"
+        patch = PathPatch(
+            path,
+            fill=False,
+            linewidth=2.0,
+            edgecolor="black",
+            linestyle=(0, (2.5, 6.0)) if is_dotted else "solid",
+            zorder=e.z,
+        )
+        ax.add_patch(patch)
+
+        if e.options:
+            for key in ("end_arrow_path", "start_arrow_path", "end_flat_arrow_path", "start_flat_arrow_path"):
+                ap = e.options.get(key)
+                if not ap:
+                    continue
+                try:
+                    arrow_path = _parse_svg_path(ap, MplPath)
+                    arrow_patch = PathPatch(
+                        arrow_path,
+                        fill=True,
+                        linewidth=1.0,
+                        edgecolor="black",
+                        facecolor="black",
+                        zorder=e.z + 1,
+                    )
+                    ax.add_patch(arrow_patch)
+                except Exception:
+                    pass
+
+    fig.tight_layout(pad=0)
+    fig.savefig(out_png, bbox_inches="tight", pad_inches=0.02)
+    if show:
+        plt.show()
+    plt.close(fig)
+
+
+def build_render_artifacts(sbml_file: str, dpi: int = 180) -> Dict[str, Any]:
+    render_input, layout_tmp_dir = _prepare_render_input(sbml_file)
+    output_tmp_dir = _make_local_temp_dir()
+    try:
+        layout_summary = summarize_layout_geometry(render_input)
+        layout_summary.update(
+            {
+                "geometry_source": "embedded" if Path(render_input).resolve() == Path(sbml_file).resolve() else "synthesized",
+                "original_has_pathwhiz_layout": _has_pathwhiz_layout(sbml_file),
+                "render_input_has_pathwhiz_layout": _has_pathwhiz_layout(render_input),
+            }
+        )
+
+        out_path = output_tmp_dir / "sbml_diagram.png"
+        _render_prepared_input(render_input, str(out_path), dpi=dpi, show=False)
+        return {
+            "png_bytes": out_path.read_bytes(),
+            "render_ready_sbml_bytes": Path(render_input).read_bytes(),
+            "layout_summary": layout_summary,
+        }
+    finally:
+        shutil.rmtree(output_tmp_dir, ignore_errors=True)
+        if layout_tmp_dir is not None:
+            shutil.rmtree(layout_tmp_dir, ignore_errors=True)
+
+
+def render(sbml_file: str, out_png: str, dpi: int = 180, show: bool = False) -> None:
+    render_input, tmp_dir = _prepare_render_input(sbml_file)
+    try:
+        _render_prepared_input(render_input, out_png, dpi=dpi, show=show)
     finally:
         if tmp_dir is not None:
             shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def render_to_png_bytes(sbml_file: str, dpi: int = 180) -> bytes:
-    tmp_dir = _make_local_temp_dir()
-    try:
-        out_path = tmp_dir / "sbml_diagram.png"
-        render(sbml_file, str(out_path), dpi=dpi, show=False)
-        return out_path.read_bytes()
-    finally:
-        shutil.rmtree(tmp_dir, ignore_errors=True)
+    return build_render_artifacts(sbml_file, dpi=dpi)["png_bytes"]
 
 
 def main() -> None:

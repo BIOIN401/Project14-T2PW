@@ -16,6 +16,7 @@ if str(SRC) not in sys.path:
 
 from sbml_add_pathwhiz_layout import NS as PW_NS_MAP  # noqa: E402
 from sbml_add_pathwhiz_layout import add_pathwhiz_layout  # noqa: E402
+from sbml_render_pathwhiz_like import build_render_artifacts  # noqa: E402
 from sbml_render_pathwhiz_like import render_to_png_bytes  # noqa: E402
 
 
@@ -76,6 +77,29 @@ def test_render_to_png_bytes_renders_core_sbml_without_preexisting_layout() -> N
 
         assert png_bytes.startswith(b"\x89PNG\r\n\x1a\n")
         assert len(png_bytes) > 1000
+    finally:
+        shutil.rmtree(case_dir, ignore_errors=True)
+
+
+def test_build_render_artifacts_reports_synthesized_geometry() -> None:
+    pytest.importorskip("matplotlib")
+    case_dir = _make_case_dir()
+    try:
+        in_path = case_dir / "core.sbml"
+        in_path.write_text(CORE_SBML, encoding="utf-8")
+
+        artifacts = build_render_artifacts(str(in_path), dpi=120)
+        summary = artifacts["layout_summary"]
+
+        assert artifacts["png_bytes"].startswith(b"\x89PNG\r\n\x1a\n")
+        assert b"location_element" in artifacts["render_ready_sbml_bytes"]
+        assert summary["geometry_source"] == "synthesized"
+        assert summary["original_has_pathwhiz_layout"] is False
+        assert summary["render_input_has_pathwhiz_layout"] is True
+        assert summary["has_drawable_geometry"] is True
+        assert summary["visible_location_element_count"] > 0
+        assert summary["edge_count"] > 0
+        assert summary["node_count"] > 0
     finally:
         shutil.rmtree(case_dir, ignore_errors=True)
 

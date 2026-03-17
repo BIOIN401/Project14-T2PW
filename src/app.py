@@ -24,7 +24,7 @@ from grounding import apply_grounding
 from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
-from sbml_render_pathwhiz_like import render_to_png_bytes
+from sbml_render_pathwhiz_like import build_render_artifacts
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
@@ -507,6 +507,8 @@ def run_post_pipeline_sbml_artifacts(
                 "sbml_xml_bytes": b"",
                 "sbml_diagram_png_bytes": b"",
                 "sbml_diagram_error": "",
+                "sbml_render_layout_summary": {},
+                "sbml_render_ready_sbml_bytes": b"",
                 "sbml_build_report": {},
                 "mapping_cache_path": str(cache_path),
                 "enrichment_cache_path": str(cache_path.with_name("enrichment_cache.json")),
@@ -917,8 +919,13 @@ def run_post_pipeline_sbml_artifacts(
             )
         sbml_diagram_png_bytes = b""
         sbml_diagram_error = ""
+        sbml_render_layout_summary: Dict[str, Any] = {}
+        sbml_render_ready_sbml_bytes = b""
         try:
-            sbml_diagram_png_bytes = render_to_png_bytes(str(sbml_path))
+            render_artifacts = build_render_artifacts(str(sbml_path))
+            sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
+            sbml_render_layout_summary = _safe_dict(render_artifacts.get("layout_summary"))
+            sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
         except Exception as exc:  # noqa: BLE001
             sbml_diagram_error = str(exc)
 
@@ -945,6 +952,8 @@ def run_post_pipeline_sbml_artifacts(
             "sbml_xml_bytes": sbml_path.read_bytes(),
             "sbml_diagram_png_bytes": sbml_diagram_png_bytes,
             "sbml_diagram_error": sbml_diagram_error,
+            "sbml_render_layout_summary": sbml_render_layout_summary,
+            "sbml_render_ready_sbml_bytes": sbml_render_ready_sbml_bytes,
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
             "enrichment_cache_path": str(enrichment_cache_path),
@@ -1361,6 +1370,7 @@ if st.session_state.get("pipeline_ready"):
         sbml_summary = post_artifacts.get("sbml_report_json", {}).get("counts", {})
         sbml_validation = post_artifacts.get("sbml_report_json", {}).get("validation", {})
         sbml_overwatch_summary = post_artifacts.get("sbml_overwatch_report", {}).get("summary", {})
+        sbml_layout_summary = _safe_dict(post_artifacts.get("sbml_render_layout_summary"))
 
         st.write(
             {
@@ -1377,6 +1387,10 @@ if st.session_state.get("pipeline_ready"):
                 "sbml_overwatch": sbml_overwatch_summary,
                 "sbml_diagram_generated": bool(post_artifacts.get("sbml_diagram_png_bytes")),
                 "sbml_diagram_error": post_artifacts.get("sbml_diagram_error", ""),
+                "sbml_geometry_source": sbml_layout_summary.get("geometry_source", ""),
+                "sbml_has_drawable_geometry": sbml_layout_summary.get("has_drawable_geometry", False),
+                "sbml_location_elements": sbml_layout_summary.get("visible_location_element_count", 0),
+                "sbml_edge_count": sbml_layout_summary.get("edge_count", 0),
                 "mapping_cache_path": post_artifacts.get("mapping_cache_path"),
                 "enrichment_cache_path": post_artifacts.get("enrichment_cache_path"),
                 "enrichment_dump_path": post_artifacts.get("enrichment_dump_path"),
@@ -1403,6 +1417,16 @@ if st.session_state.get("pipeline_ready"):
         if post_artifacts.get("gap_resolution_iterations"):
             with st.expander("Stage 3 resolution iterations", expanded=False):
                 st.write(post_artifacts.get("gap_resolution_iterations"))
+        if sbml_layout_summary:
+            st.write("SBML render geometry", sbml_layout_summary)
+            if sbml_layout_summary.get("has_drawable_geometry"):
+                st.info(
+                    "SBML render geometry confirmed: "
+                    f"{sbml_layout_summary.get('visible_location_element_count', 0)} visible layout elements "
+                    f"({sbml_layout_summary.get('edge_count', 0)} edges, source={sbml_layout_summary.get('geometry_source', 'unknown')})."
+                )
+            else:
+                st.warning("SBML render geometry could not be confirmed from the render-ready SBML.")
 
         st.download_button(
             "Download pre_normalization_input.json",
@@ -1537,6 +1561,14 @@ if st.session_state.get("pipeline_ready"):
                 file_name="pathway.sbml",
                 mime="application/xml",
                 key="dl_pathway_sbml",
+            )
+        if post_artifacts.get("sbml_render_ready_sbml_bytes"):
+            st.download_button(
+                "Download pathway.render_ready.sbml",
+                post_artifacts["sbml_render_ready_sbml_bytes"],
+                file_name="pathway.render_ready.sbml",
+                mime="application/xml",
+                key="dl_pathway_render_ready_sbml",
             )
         if post_artifacts.get("sbml_diagram_png_bytes"):
             st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
