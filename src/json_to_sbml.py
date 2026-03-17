@@ -525,15 +525,30 @@ def _first_string(values: Sequence[Any]) -> str:
     return ""
 
 
+def _inject_root_namespaces(sbml_path: Path) -> None:
+    """Post-process the written SBML to add xmlns declarations PathWhiz expects on <sbml>."""
+    EXTRA_NS = (
+        ' xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+        ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/"'
+        ' xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
+    )
+    text = sbml_path.read_text(encoding="utf-8")
+    # Only inject if not already present
+    if 'xmlns:pathwhiz=' not in text:
+        text = text.replace("<sbml ", f"<sbml{EXTRA_NS} ", 1)
+        sbml_path.write_text(text, encoding="utf-8")
+
+
 def _build_species_rdf_annotation(sid: str, mapped_ids: Dict[str, Any]) -> str:
     """Return an annotation XML string with bqbiol:is cross-references, or '' if none."""
+    # Use urn:miriam: format — matches PathWhiz's own SBML exports
     DB_PREFIX: Dict[str, str] = {
-        "hmdb": "https://identifiers.org/hmdb/",
-        "kegg": "https://identifiers.org/kegg.compound/",
-        "chebi": "https://identifiers.org/chebi/CHEBI:",
-        "pubchem": "https://identifiers.org/pubchem.compound/",
-        "drugbank": "https://identifiers.org/drugbank/",
-        "uniprot": "https://identifiers.org/uniprot/",
+        "hmdb": "urn:miriam:hmdb:",
+        "kegg": "urn:miriam:kegg.compound:",
+        "chebi": "urn:miriam:chebi:CHEBI:",
+        "pubchem": "urn:miriam:pubchem.compound:",
+        "drugbank": "urn:miriam:drugbank:",
+        "uniprot": "urn:miriam:uniprot:",
     }
     lis: List[str] = []
     for db, val in sorted(mapped_ids.items()):
@@ -1063,8 +1078,9 @@ def build_sbml(
         comp.setSize(1.0)
         comp.setSpatialDimensions(3)
         comp.setUnits("UnitVol")
+        comp.setSBOTerm(240)  # SBO:0000240 — physical compartment
         comp.setAnnotation(
-            '<annotation><pathwhiz:pathwhiz xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+            '<annotation><pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
             ' pathwhiz:compartment_type="biological_state"/></annotation>'
         )
 
@@ -1082,6 +1098,8 @@ def build_sbml(
         sp.setConstant(False)
         sp.setInitialAmount(1.0)
         sp.setSubstanceUnits("Unit1")
+        # SBO:0000247 simple chemical, SBO:0000245 macromolecule (protein/EC)
+        sp.setSBOTerm(247 if item.get("kind") == "compound" else 245)
         # Cross-database RDF annotation
         rdf_ann = _build_species_rdf_annotation(item["id"], item.get("mapped_ids") or {})
         if rdf_ann:
@@ -1101,21 +1119,21 @@ def build_sbml(
         rxn_kind = plan.get("kind", "reaction")
         rxn.setSBOTerm(176 if rxn_kind == "reaction" else 185)
         rxn.setAnnotation(
-            f'<annotation><pathwhiz:pathwhiz xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+            f'<annotation><pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
             f' pathwhiz:reaction_type="{rxn_kind}"/></annotation>'
         )
         reactant_counts = Counter(plan["reactants"])
         for sid, stoich in sorted(reactant_counts.items()):
             ref = rxn.createReactant()
             ref.setSpecies(sid)
-            ref.setConstant(True)
+            ref.setConstant(False)
             ref.setStoichiometry(float(stoich))
             ref.setSBOTerm(15)  # SBO:0000015 substrate
         product_counts = Counter(plan["products"])
         for sid, stoich in sorted(product_counts.items()):
             ref = rxn.createProduct()
             ref.setSpecies(sid)
-            ref.setConstant(True)
+            ref.setConstant(False)
             ref.setStoichiometry(float(stoich))
             ref.setSBOTerm(11)  # SBO:0000011 product
         for sid in plan["modifiers"]:
@@ -1128,6 +1146,10 @@ def build_sbml(
     report["counts"]["reactions"] = model.getNumReactions()
 
     libsbml.writeSBMLToFile(doc, str(sbml_path))
+
+    # Inject root-level namespace declarations that PathWhiz expects on <sbml>
+    _inject_root_namespaces(sbml_path)
+
     n_errors = doc.checkConsistency()
     validation_errors: List[Dict[str, Any]] = []
     has_validation_errors = False
