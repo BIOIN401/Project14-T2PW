@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python.exe -m src.json_to_sbml --in tmp_sbml_real_check/grounded_output.mapped/in.json --out tmp_sbml_real_check/grounded_output.mapped/model.sbml --report-json tmp_sbml_real_check/grounded_output.mapped/report.json --report-txt tmp_sbml_real_check/grounded_output.mapped/report.txt)",
+      "Bash(echo \"EXIT_CODE: $?\")",
+      "Bash(.venv/Scripts/python.exe -m src.json_to_sbml --in tmp_sbml_check/in.json --out tmp_sbml_check/model.sbml --report-json tmp_sbml_check/report.json --report-txt tmp_sbml_check/report.txt)",
+      "Bash(.venv/Scripts/python.exe -m src.json_to_sbml --in tmp/post_pipeline_22ba7e997f1549fb971d8b6e34a900b4/final.json --out tmp_sbml_real_check/grounded_output.mapped/model.sbml --report-json tmp_sbml_real_check/grounded_output.mapped/report.json --report-txt tmp_sbml_real_check/grounded_output.mapped/report.txt)",
+      "Bash(.venv/Scripts/python.exe -m pytest tests/ -q)"
+    ]
+  }
+}

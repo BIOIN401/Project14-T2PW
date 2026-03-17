@@ -2,111 +2,48 @@
   "hard_errors": [],
   "warnings": [
     {
-      "path": "/processes/reactions/6",
-      "reason": "Duplicate reaction collapsed: r_3a726c5ab0dc"
+      "path": "/processes/reactions/0/inputs",
+      "reason": "Created missing species instance for input 'hydrogen peroxide' (compound) in compartment 'c_follicle_colloid'."
     },
     {
-      "path": "/processes/reactions/7",
-      "reason": "Duplicate reaction collapsed: r_886c9a8ef589"
+      "path": "/processes/reactions/0/outputs",
+      "reason": "Created missing species instance for output 'thyroglobulin:iodotyrosine' (protein) in compartment 'c_follicle_colloid'."
     },
     {
-      "path": "/processes/reactions/8",
-      "reason": "Duplicate reaction collapsed: r_dd0406aa02c6"
+      "path": "/processes/reactions/1/outputs",
+      "reason": "Created missing species instance for output 'thyroglobulin:3,5-diiodo-L-tyrosine' (protein) in compartment 'c_follicle_colloid'."
     },
     {
-      "path": "/processes/reactions/9",
-      "reason": "Duplicate reaction collapsed: r_2ced616de7e9"
-    },
-    {
-      "path": "/processes/reactions/10",
-      "reason": "Duplicate reaction collapsed: r_d9e1acfb749e"
-    },
-    {
-      "path": "/processes/reactions/11",
-      "reason": "Duplicate reaction collapsed: r_f9de5a4480ff"
-    },
-    {
-      "path": "/processes/reactions/14",
-      "reason": "Duplicate reaction collapsed: r_0e4afc4b0a31"
-    },
-    {
-      "path": "/processes/reactions/15",
-      "reason": "Duplicate reaction collapsed: r_0e4afc4b0a31"
+      "path": "/processes/reactions/3/outputs",
+      "reason": "Created missing species instance for output 'thyroglobulin:thyroxine' (protein) in compartment 'c_follicle_colloid'."
     }
   ],
   "defaults_applied": [
     {
-      "type": "missing_biological_state_location",
-      "json_pointer": "/element_locations/compound_locations/0",
-      "name": "triacylglycerol",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "missing_biological_state_location",
-      "json_pointer": "/element_locations/compound_locations/1",
-      "name": "1,2-diglyceride",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "missing_biological_state_location",
-      "json_pointer": "/element_locations/compound_locations/2",
-      "name": "2-acylglycerol",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "missing_biological_state_location",
-      "json_pointer": "/element_locations/compound_locations/3",
-      "name": "1-monoglyceride",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "missing_biological_state_location",
-      "json_pointer": "/element_locations/compound_locations/4",
-      "name": "glycerol",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "missing_biological_state_location",
-      "json_pointer": "/element_locations/compound_locations/5",
-      "name": "glycerol 3-phosphate",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "missing_biological_state_location",
-      "json_pointer": "/element_locations/compound_locations/6",
-      "name": "glycerone phosphate",
+      "type": "compound_missing_location",
+      "name": "hydrogen peroxide",
       "default_compartment": "cell"
     },
     {
       "type": "protein_missing_location",
-      "name": "glycerol-3-phosphate dehydrogenase",
+      "name": "thyroglobulin:iodotyrosine",
       "default_compartment": "cell"
     },
     {
       "type": "protein_missing_location",
-      "name": "acylhydrolase",
+      "name": "thyroglobulin:3,5-diiodo-L-tyrosine",
       "default_compartment": "cell"
     },
     {
       "type": "protein_missing_location",
-      "name": "diglyceride lipase",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "protein_missing_location",
-      "name": "triacylglycerol lipase",
-      "default_compartment": "cell"
-    },
-    {
-      "type": "protein_missing_location",
-      "name": "glycerol kinase",
+      "name": "thyroglobulin:thyroxine",
       "default_compartment": "cell"
     }
   ],
   "counts": {
-    "compartments": 3,
-    "species": 12,
-    "reactions": 8
+    "compartments": 7,
+    "species": 26,
+    "reactions": 11
   },
   "validation": {
     "check_count": 0,

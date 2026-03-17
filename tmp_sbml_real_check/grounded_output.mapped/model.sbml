@@ -14,88 +14,164 @@
       </unitDefinition>
     </listOfUnitDefinitions>
     <listOfCompartments>
+      <compartment id="c_blood" name="blood" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_bloodstream" name="bloodstream" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
       <compartment id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
-      <compartment id="c_mitochondrial_inner_membrane" name="mitochondrial inner membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
-      <compartment id="c_oil_body_storage_vacuole_membrane" name="oil body (storage vacuole) membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_endoplasmic_reticulum" name="endoplasmic reticulum" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_follicle_colloid" name="follicle colloid" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_intracellular_space" name="intracellular space" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment id="c_nucleus" name="nucleus" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="m_C00111_c_cell" name="glycerone phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_C00116_c_cell" name="glycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_C00422_c_cell" name="triacylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_C02112_c_cell" name="2-acylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_89d0d5ea8841_c_cell" name="1,2-diglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_95313111b8c5_c_cell" name="1-monoglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_bc5407073e09_c_cell" name="glycerol 3-phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_unmapped_444f99e34f23_c_cell" name="glycerol-3-phosphate dehydrogenase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_unmapped_880bdebe3daf_c_cell" name="glycerol kinase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_unmapped_b56d45aec256_c_cell" name="triacylglycerol lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_unmapped_de07605a20ba_c_cell" name="acylhydrolase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_unmapped_f48fa519555d_c_cell" name="diglyceride lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_4ade47cda406_c_follicle_colloid" name="2-aminoacrylic acid" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_4eb46f0e3643_c_cell" name="hydrogen peroxide" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_4eb46f0e3643_c_follicle_colloid" name="hydrogen peroxide" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_948b024d2aac_c_bloodstream" name="thyroxine" compartment="c_bloodstream" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_948b024d2aac_c_cell" name="thyroxine" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_948b024d2aac_c_follicle_colloid" name="thyroxine" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_b2ca0a88145f_c_bloodstream" name="liothyronine" compartment="c_bloodstream" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_b2ca0a88145f_c_cell" name="liothyronine" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_b2ca0a88145f_c_follicle_colloid" name="liothyronine" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_bb04b00f25e9_c_follicle_colloid" name="iodotyrosine" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_bdf93513afb1_c_blood" name="iodide" compartment="c_blood" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_bdf93513afb1_c_follicle_colloid" name="iodide" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="m_unmapped_ea21edd95f19_c_follicle_colloid" name="3,5-diiodo-L-tyrosine" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_0d56a9bc0b39_c_cell" name="thyroglobulin:3,5-diiodo-L-tyrosine" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_0d56a9bc0b39_c_follicle_colloid" name="thyroglobulin:3,5-diiodo-L-tyrosine" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_0ed3a1e38cf5_c_blood" name="pendrin" compartment="c_blood" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_0ed3a1e38cf5_c_cell" name="pendrin" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_358b2969c22b_c_endoplasmic_reticulum" name="thyroglobulin" compartment="c_endoplasmic_reticulum" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_358b2969c22b_c_follicle_colloid" name="thyroglobulin" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_358b2969c22b_c_intracellular_space" name="thyroglobulin" compartment="c_intracellular_space" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_358b2969c22b_c_nucleus" name="thyroglobulin" compartment="c_nucleus" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_6a195b4317d6_c_cell" name="thyroglobulin:thyroxine" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_6a195b4317d6_c_follicle_colloid" name="thyroglobulin:thyroxine" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_dc0823bc5306_c_cell" name="thyroglobulin:iodotyrosine" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_dc0823bc5306_c_follicle_colloid" name="thyroglobulin:iodotyrosine" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species id="p_unmapped_e96ef9bd4573_c_follicle_colloid" name="thyroid peroxidase" compartment="c_follicle_colloid" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfReactions>
-      <reaction id="r_0e4afc4b0a31" name="conversion of glycerone phosphate into glycerol" reversible="false" fast="false" compartment="c_cell">
+      <reaction id="r_19d17c279568" name="thyroxine transport into bloodstream" reversible="false" fast="false" compartment="c_cell">
         <listOfReactants>
-          <speciesReference species="m_C00111_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_948b024d2aac_c_cell" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_948b024d2aac_c_bloodstream" stoichiometry="1" constant="true"/>
         </listOfProducts>
       </reaction>
-      <reaction id="r_2ced616de7e9" name="conversion of a 1-monoglyceride into glycerol" reversible="false" fast="false" compartment="c_cell">
+      <reaction id="r_28ec8cb0be94" name="liothyronine transport into bloodstream" reversible="false" fast="false" compartment="c_cell">
         <listOfReactants>
-          <speciesReference species="m_unmapped_95313111b8c5_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_b2ca0a88145f_c_cell" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_b2ca0a88145f_c_bloodstream" stoichiometry="1" constant="true"/>
         </listOfProducts>
       </reaction>
-      <reaction id="r_3a726c5ab0dc" name="conversion of a triglyceride into a 1,2-diglyceride" reversible="false" fast="false" compartment="c_cell">
+      <reaction id="r_2b491a0e50c6" name="thyroglobulin iodination to iodotyrosine catalyzed by thyroid peroxidase" reversible="false" fast="false" compartment="c_follicle_colloid">
         <listOfReactants>
-          <speciesReference species="m_C00422_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_4eb46f0e3643_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_bdf93513afb1_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_unmapped_89d0d5ea8841_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_dc0823bc5306_c_follicle_colloid" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_unmapped_e96ef9bd4573_c_follicle_colloid"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_348855ff7bc5" name="liothyronine to thyroxine catalyzed by thyroid peroxidase" reversible="false" fast="false" compartment="c_follicle_colloid">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_b2ca0a88145f_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_948b024d2aac_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_unmapped_e96ef9bd4573_c_follicle_colloid"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_3c1288c15e67" name="iodide transport into follicle colloid" reversible="false" fast="false" compartment="c_blood">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_bdf93513afb1_c_blood" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="m_unmapped_bdf93513afb1_c_follicle_colloid" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_unmapped_0ed3a1e38cf5_c_blood"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_49b03d4cea00" name="iodotyrosine to 3,5-diiodo-L-tyrosine catalyzed by thyroid peroxidase" reversible="false" fast="false" compartment="c_follicle_colloid">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_4eb46f0e3643_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_bb04b00f25e9_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_bdf93513afb1_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="p_unmapped_0d56a9bc0b39_c_follicle_colloid" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_unmapped_e96ef9bd4573_c_follicle_colloid"/>
+        </listOfModifiers>
+      </reaction>
+      <reaction id="r_612fa43b90f3" name="liothyronine to thyroxine" reversible="false" fast="false" compartment="c_follicle_colloid">
+        <listOfReactants>
+          <speciesReference species="m_unmapped_b2ca0a88145f_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="p_unmapped_6a195b4317d6_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfProducts>
       </reaction>
-      <reaction id="r_886c9a8ef589" name="conversion of a 1,2-diglyceride into a 2-acylglycerol" reversible="false" fast="false" compartment="c_cell">
+      <reaction id="r_6600e51ec815" name="3,5-diiodo-L-tyrosine to 2-aminoacrylic acid and liothyronine" reversible="false" fast="false" compartment="c_follicle_colloid">
         <listOfReactants>
-          <speciesReference species="m_unmapped_89d0d5ea8841_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_4eb46f0e3643_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_ea21edd95f19_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_4ade47cda406_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_b2ca0a88145f_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfProducts>
       </reaction>
-      <reaction id="r_d9e1acfb749e" name="conversion of glycerol into glycerol 3-phosphate" reversible="false" fast="false" compartment="c_cell">
+      <reaction id="r_9c8046fcada0" name="thyroglobulin iodination to iodotyrosine" reversible="false" fast="false" compartment="c_follicle_colloid">
         <listOfReactants>
-          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_4eb46f0e3643_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_bdf93513afb1_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_unmapped_bc5407073e09_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_dc0823bc5306_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfProducts>
       </reaction>
-      <reaction id="r_dd0406aa02c6" name="conversion of a 2-acylglycerol into a 1-monoglyceride" reversible="false" fast="false" compartment="c_cell">
+      <reaction id="r_b2adb2b91b4d" name="iodotyrosine to 3,5-diiodo-L-tyrosine" reversible="false" fast="false" compartment="c_follicle_colloid">
         <listOfReactants>
-          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_4eb46f0e3643_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_bb04b00f25e9_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_bdf93513afb1_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_unmapped_95313111b8c5_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_0d56a9bc0b39_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfProducts>
       </reaction>
-      <reaction id="r_ea0ee39608f7" name="conversion of glycerol into glycerone phosphate" reversible="false" fast="false" compartment="c_cell">
+      <reaction id="r_d5ec41d5b5ef" name="3,5-diiodo-L-tyrosine coupling to 2-aminoacrylic acid and liothyronine catalyzed by thyroid peroxidase" reversible="false" fast="false" compartment="c_follicle_colloid">
         <listOfReactants>
-          <speciesReference species="m_C00116_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_4eb46f0e3643_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_ea21edd95f19_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="p_unmapped_358b2969c22b_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_C00111_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_4ade47cda406_c_follicle_colloid" stoichiometry="1" constant="true"/>
+          <speciesReference species="m_unmapped_b2ca0a88145f_c_follicle_colloid" stoichiometry="1" constant="true"/>
         </listOfProducts>
-      </reaction>
-      <reaction id="r_f9de5a4480ff" name="conversion of glycerol 3-phosphate into glycerone phosphate" reversible="false" fast="false" compartment="c_cell">
-        <listOfReactants>
-          <speciesReference species="m_unmapped_bc5407073e09_c_cell" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="m_C00111_c_cell" stoichiometry="1" constant="true"/>
-        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_unmapped_e96ef9bd4573_c_follicle_colloid"/>
+        </listOfModifiers>
       </reaction>
     </listOfReactions>
   </model>

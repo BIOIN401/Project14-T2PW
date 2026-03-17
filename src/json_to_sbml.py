@@ -117,8 +117,15 @@ def sbml_species_id(entity: Dict[str, Any], compartment: str) -> str:
     cpt = sanitize_sbml_id(compartment)
 
     is_protein_like = kind in {"protein", "protein_complex", "complex"}
-    prefix = "p_" if is_protein_like else "m_"
-    preferred_keys = ["uniprot"] if is_protein_like else ["chebi", "hmdb", "kegg", "pubchem", "drugbank"]
+    if kind == "element_collection":
+        prefix = "ec_"
+        preferred_keys: List[str] = []
+    elif is_protein_like:
+        prefix = "p_"
+        preferred_keys = ["uniprot"]
+    else:
+        prefix = "m_"
+        preferred_keys = ["chebi", "hmdb", "kegg", "pubchem", "drugbank"]
 
     primary = ""
     for key in preferred_keys:
@@ -199,6 +206,7 @@ def _entity_compartment_map(
     for list_key, name_key, kind in [
         ("compound_locations", "compound", "compound"),
         ("protein_locations", "protein", "protein"),
+        ("element_collection_locations", "element_collection", "element_collection"),
     ]:
         for idx, row in enumerate(_safe_list(element_locations.get(list_key))):
             if not isinstance(row, dict):
@@ -222,7 +230,7 @@ def _entity_compartment_map(
     return out
 
 
-def _known_entity_names(payload: Dict[str, Any]) -> Tuple[Set[str], Set[str]]:
+def _known_entity_names(payload: Dict[str, Any]) -> Tuple[Set[str], Set[str], Set[str]]:
     entities = _safe_dict(payload.get("entities"))
     compounds = {
         (item.get("name") or "").strip()
@@ -241,7 +249,12 @@ def _known_entity_names(payload: Dict[str, Any]) -> Tuple[Set[str], Set[str]]:
             if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip()
         }
     )
-    return compounds, proteins
+    element_collections = {
+        (item.get("name") or "").strip()
+        for item in _safe_list(entities.get("element_collections"))
+        if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip()
+    }
+    return compounds, proteins, element_collections
 
 
 def _usage_profile(processes: Dict[str, Any]) -> Dict[str, Set[str]]:
@@ -473,7 +486,7 @@ def _pick_reaction_compartment(
         for name in _safe_list(reaction.get(side)):
             if not isinstance(name, str) or not name.strip():
                 continue
-            for kind in ["compound", "protein"]:
+            for kind in ["compound", "protein", "element_collection"]:
                 options = sorted(entity_compartments.get((kind, name.strip()), []))
                 if options:
                     return options[0]
@@ -540,7 +553,7 @@ def build_sbml(
     processes = _safe_dict(data.get("processes"))
 
     states_to_loc = _extract_state_compartments(data)
-    raw_compounds, raw_proteins = _known_entity_names(data)
+    raw_compounds, raw_proteins, known_element_collections = _known_entity_names(data)
     known_compounds, known_proteins = _resolve_cross_type_name_conflicts(
         raw_compounds,
         raw_proteins,
@@ -604,6 +617,16 @@ def build_sbml(
                     "default_compartment": default_compartment_name,
                 }
             )
+    for ec in known_element_collections:
+        if not entity_compartments.get(("element_collection", ec)):
+            entity_compartments[("element_collection", ec)].add(default_compartment_name)
+            report["defaults_applied"].append(
+                {
+                    "type": "element_collection_missing_location",
+                    "name": ec,
+                    "default_compartment": default_compartment_name,
+                }
+            )
 
     compound_rows = _dedupe_entity_rows(
         _safe_list(entities.get("compounds")),
@@ -613,9 +636,14 @@ def build_sbml(
         list(_safe_list(entities.get("proteins"))) + list(_safe_list(entities.get("protein_complexes"))),
         preferred_mapped_keys=["uniprot"],
     )
+    element_collection_rows = _dedupe_entity_rows(
+        _safe_list(entities.get("element_collections")),
+        preferred_mapped_keys=[],
+    )
     entity_row_lookups: Dict[str, Dict[str, Dict[str, Any]]] = {
         "compound": compound_rows,
         "protein": protein_rows,
+        "element_collection": element_collection_rows,
     }
 
     species_registry: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
@@ -674,6 +702,18 @@ def build_sbml(
             cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
             _register_species(kind="protein", name=name, compartment_id=cid)
 
+    for row in _unique_entity_rows(element_collection_rows):
+        name = (row.get("name") or "").strip() if isinstance(row.get("name"), str) else ""
+        if not name:
+            continue
+        aliases = _dedupe_preserve_strings(_safe_list(row.get("_dedupe_aliases")) + [name])
+        locations_ec: Set[str] = set()
+        for alias in aliases:
+            locations_ec.update(entity_compartments.get(("element_collection", alias), set()))
+        for loc in sorted(locations_ec or {default_compartment_name}):
+            cid = compartment_by_name.get(loc, compartment_by_name[default_compartment_name])
+            _register_species(kind="element_collection", name=name, compartment_id=cid)
+
     # Build reaction plans first, then write sorted by reaction ID.
     reaction_plans: List[Dict[str, Any]] = []
     seen_rids: Set[str] = set()
@@ -722,6 +762,8 @@ def build_sbml(
                 kind = "compound"
             elif name in known_proteins:
                 kind = "protein"
+            elif name in known_element_collections:
+                kind = "element_collection"
             if not kind:
                 report["hard_errors"].append(
                     {"path": f"{pointer}/inputs", "reason": f"Unknown input entity '{name}'."}
@@ -745,6 +787,8 @@ def build_sbml(
                 kind = "compound"
             elif name in known_proteins:
                 kind = "protein"
+            elif name in known_element_collections:
+                kind = "element_collection"
             if not kind:
                 report["hard_errors"].append(
                     {"path": f"{pointer}/outputs", "reason": f"Unknown output entity '{name}'."}
@@ -884,13 +928,18 @@ def build_sbml(
                     modifiers.append(species_registry[chosen_key]["id"])
 
         for cargo_item in cargo_items:
-            if cargo_item not in known_compounds and cargo_item not in known_proteins:
+            if cargo_item not in known_compounds and cargo_item not in known_proteins and cargo_item not in known_element_collections:
                 report["hard_errors"].append(
                     {"path": f"{pointer}/cargo", "reason": f"Unknown cargo '{cargo_item}'."}
                 )
                 continue
 
-            kind = "compound" if cargo_item in known_compounds else "protein"
+            if cargo_item in known_compounds:
+                kind = "compound"
+            elif cargo_item in known_element_collections:
+                kind = "element_collection"
+            else:
+                kind = "protein"
             source_key = (kind, cargo_item, source_cid)
             dest_key = (kind, cargo_item, dest_cid)
 
@@ -933,6 +982,15 @@ def build_sbml(
                     "compartment_id": source_cid,
                 }
             )
+
+    # 2b: Suppress orphan compartments — remove any compartment with no species assigned
+    # (run after all reaction/transport building so on-the-fly species are counted).
+    used_cids: Set[str] = {item["compartment_id"] for item in species_registry.values()}
+    used_cids.add(compartment_by_name[default_compartment_name])
+    orphan_locs = [loc for loc, cid in compartment_by_name.items() if cid not in used_cids]
+    for loc in orphan_locs:
+        report["warnings"].append({"path": "/compartments", "reason": f"Removed orphan compartment '{loc}' (no species assigned)."})
+        del compartment_by_name[loc]
 
     # Build SBML document.
     # PathWhiz exports are commonly Level 3 Version 1; keep this for compatibility.
