@@ -525,6 +525,38 @@ def _first_string(values: Sequence[Any]) -> str:
     return ""
 
 
+def _build_species_rdf_annotation(sid: str, mapped_ids: Dict[str, Any]) -> str:
+    """Return an annotation XML string with bqbiol:is cross-references, or '' if none."""
+    DB_PREFIX: Dict[str, str] = {
+        "hmdb": "https://identifiers.org/hmdb/",
+        "kegg": "https://identifiers.org/kegg.compound/",
+        "chebi": "https://identifiers.org/chebi/CHEBI:",
+        "pubchem": "https://identifiers.org/pubchem.compound/",
+        "drugbank": "https://identifiers.org/drugbank/",
+        "uniprot": "https://identifiers.org/uniprot/",
+    }
+    lis: List[str] = []
+    for db, val in sorted(mapped_ids.items()):
+        if not isinstance(val, str) or not val.strip():
+            continue
+        prefix = DB_PREFIX.get(db.lower().strip())
+        if prefix:
+            lis.append(f'<rdf:li rdf:resource="{prefix}{val.strip()}"/>')
+    if not lis:
+        return ""
+    li_block = "\n            ".join(lis)
+    return (
+        "<annotation>"
+        '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
+        ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">'
+        f'<rdf:Description rdf:about="#{sid}">'
+        "<bqbiol:is><rdf:Bag>"
+        f"{li_block}"
+        "</rdf:Bag></bqbiol:is>"
+        "</rdf:Description></rdf:RDF></annotation>"
+    )
+
+
 def build_sbml(
     input_path: Path,
     sbml_path: Path,
@@ -673,7 +705,7 @@ def build_sbml(
         sid_meta = {"kind": kind, "name": canonical_name, "compartment_id": compartment_id}
         if sid in species_id_to_meta and species_id_to_meta[sid] != sid_meta:
             sid = sanitize_sbml_id(f"{sid}_{_short_hash(canonical_name + compartment_id, 6)}")
-        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id}
+        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id, "mapped_ids": canonical_mapped_ids}
         species_registry[canonical_key] = record
         species_registry[key] = record
         species_id_to_meta[sid] = sid_meta
@@ -841,6 +873,7 @@ def build_sbml(
                 "products": sorted(product_ids),
                 "modifiers": sorted(set(modifier_ids)),
                 "compartment_id": compartment_id,
+                "kind": "reaction",
             }
         )
 
@@ -980,6 +1013,7 @@ def build_sbml(
                     "products": [species_registry[dest_key]["id"]],
                     "modifiers": sorted(set(modifiers)),
                     "compartment_id": source_cid,
+                    "kind": "transport",
                 }
             )
 
@@ -1029,6 +1063,10 @@ def build_sbml(
         comp.setSize(1.0)
         comp.setSpatialDimensions(3)
         comp.setUnits("UnitVol")
+        comp.setAnnotation(
+            '<annotation><pathwhiz:pathwhiz xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+            ' pathwhiz:compartment_type="biological_state"/></annotation>'
+        )
 
     species_items_by_id: Dict[str, Dict[str, Any]] = {}
     for item in species_registry.values():
@@ -1042,8 +1080,12 @@ def build_sbml(
         sp.setBoundaryCondition(False)
         sp.setHasOnlySubstanceUnits(True)
         sp.setConstant(False)
-        sp.setInitialAmount(0.0)
+        sp.setInitialAmount(1.0)
         sp.setSubstanceUnits("Unit1")
+        # Cross-database RDF annotation
+        rdf_ann = _build_species_rdf_annotation(item["id"], item.get("mapped_ids") or {})
+        if rdf_ann:
+            sp.setAnnotation(rdf_ann)
 
     for plan in sorted(reaction_plans, key=lambda item: item["id"]):
         rxn = model.createReaction()
@@ -1055,21 +1097,31 @@ def build_sbml(
         rxn.setReversible(False)
         # SBML Level 3 Version 1 requires an explicit 'fast' attribute on reactions.
         rxn.setFast(False)
+        # SBO terms: SBO:0000176 biochemical reaction, SBO:0000185 transport
+        rxn_kind = plan.get("kind", "reaction")
+        rxn.setSBOTerm(176 if rxn_kind == "reaction" else 185)
+        rxn.setAnnotation(
+            f'<annotation><pathwhiz:pathwhiz xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+            f' pathwhiz:reaction_type="{rxn_kind}"/></annotation>'
+        )
         reactant_counts = Counter(plan["reactants"])
         for sid, stoich in sorted(reactant_counts.items()):
             ref = rxn.createReactant()
             ref.setSpecies(sid)
             ref.setConstant(True)
             ref.setStoichiometry(float(stoich))
+            ref.setSBOTerm(15)  # SBO:0000015 substrate
         product_counts = Counter(plan["products"])
         for sid, stoich in sorted(product_counts.items()):
             ref = rxn.createProduct()
             ref.setSpecies(sid)
             ref.setConstant(True)
             ref.setStoichiometry(float(stoich))
+            ref.setSBOTerm(11)  # SBO:0000011 product
         for sid in plan["modifiers"]:
             ref = rxn.createModifier()
             ref.setSpecies(sid)
+            ref.setSBOTerm(460)  # SBO:0000460 enzymatic catalyst
 
     report["counts"]["compartments"] = model.getNumCompartments()
     report["counts"]["species"] = model.getNumSpecies()

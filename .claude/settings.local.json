@@ -5,7 +5,12 @@
       "Bash(echo \"EXIT_CODE: $?\")",
       "Bash(.venv/Scripts/python.exe -m src.json_to_sbml --in tmp_sbml_check/in.json --out tmp_sbml_check/model.sbml --report-json tmp_sbml_check/report.json --report-txt tmp_sbml_check/report.txt)",
       "Bash(.venv/Scripts/python.exe -m src.json_to_sbml --in tmp/post_pipeline_22ba7e997f1549fb971d8b6e34a900b4/final.json --out tmp_sbml_real_check/grounded_output.mapped/model.sbml --report-json tmp_sbml_real_check/grounded_output.mapped/report.json --report-txt tmp_sbml_real_check/grounded_output.mapped/report.txt)",
-      "Bash(.venv/Scripts/python.exe -m pytest tests/ -q)"
+      "Bash(.venv/Scripts/python.exe -m pytest tests/ -q)",
+      "Bash(wc -l \"c:/Users/Angad/Desktop/Project14-T2PW/PW012926 \\(1\\).sbml\")",
+      "Bash(python -c \"import ast, sys; ast.parse\\(open\\(''/c/Users/Angad/Desktop/Project14-T2PW/src/sbml_add_pathwhiz_layout.py''\\).read\\(\\)\\); print\\(''sbml_add_pathwhiz_layout.py: OK''\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''src/sbml_add_pathwhiz_layout.py''\\).read\\(\\)\\); print\\(''layout OK''\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''src/json_to_sbml.py''\\).read\\(\\)\\); print\\(''json_to_sbml OK''\\)\")",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(''src/sbml_render_pathwhiz_like.py''\\).read\\(\\)\\); print\\(''renderer OK''\\)\")"
     ]
   }
 }

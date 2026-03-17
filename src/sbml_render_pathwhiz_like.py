@@ -208,7 +208,13 @@ def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], 
 def _has_pathwhiz_layout(sbml_file: str) -> bool:
     tree = ET.parse(sbml_file)
     root = tree.getroot()
-    return root.find(".//pathwhiz:location_element", NS) is not None
+    # Accept either the legacy model-level location_element blocks or the
+    # new per-speciesReference pathwhiz:pathwhiz annotations.
+    if root.find(".//pathwhiz:location_element", NS) is not None:
+        return True
+    if root.find(f".//{{{PW_NS}}}pathwhiz", NS) is not None:
+        return True
+    return False
 
 
 def summarize_layout_geometry(sbml_file: str) -> Dict[str, Any]:
