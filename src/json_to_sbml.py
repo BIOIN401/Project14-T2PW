@@ -525,6 +525,105 @@ def _first_string(values: Sequence[Any]) -> str:
     return ""
 
 
+def _load_pathwhiz_db(db_path: Optional[Path] = None) -> Dict[str, Any]:
+    """Load pathwhiz_id_db.json, searching upward from src/ if not given."""
+    candidates = []
+    if db_path:
+        candidates.append(db_path)
+    here = Path(__file__).parent
+    for d in [here, here.parent, Path.cwd(), Path.cwd().parent]:
+        candidates.append(d / "pathwhiz_id_db.json")
+    for p in candidates:
+        if p.exists():
+            return json.loads(p.read_text(encoding="utf-8"))
+    return {}
+
+
+def _lookup_compound_id(db: Dict[str, Any], mapped_ids: Dict[str, Any]) -> Optional[int]:
+    """Return PathWhiz compound/element_collection integer ID from a species' mapped_ids dict."""
+    compounds = db.get("compounds", {})
+    ecs = db.get("element_collections", {})
+    for field, index_key in [("hmdb", "hmdb"), ("kegg", "kegg"), ("chebi", "chebi"),
+                              ("pubchem", "pubchem"), ("drugbank", "drugbank")]:
+        val = mapped_ids.get(field, "")
+        if not isinstance(val, str) or not val.strip():
+            continue
+        v = val.strip()
+        # Check compounds first, then element_collections
+        hit = compounds.get(index_key, {}).get(v)
+        if hit:
+            return int(hit)
+        # Element collections use "kegg_compound" and "chebi" as index keys
+        ec_key = "kegg_compound" if index_key == "kegg" else index_key
+        hit = ecs.get(ec_key, {}).get(v)
+        if hit:
+            return int(hit)
+        if field == "chebi":
+            v2 = v.replace("CHEBI:", "").strip()
+            hit = compounds.get(index_key, {}).get(v2) or ecs.get(ec_key, {}).get(v2)
+            if hit:
+                return int(hit)
+    return None
+
+
+def _lookup_protein_id(db: Dict[str, Any], mapped_ids: Dict[str, Any]) -> Optional[int]:
+    """Return PathWhiz protein integer ID from a species' mapped_ids dict."""
+    uniprot = mapped_ids.get("uniprot", "")
+    if isinstance(uniprot, str) and uniprot.strip():
+        hit = db.get("proteins", {}).get("uniprot", {}).get(uniprot.strip())
+        if hit:
+            return int(hit)
+    return None
+
+
+def _lookup_bs_id(db: Dict[str, Any], compartment_name: str) -> Optional[int]:
+    """Return PathWhiz biological-state integer ID from a compartment name."""
+    hit = db.get("biological_states", {}).get("by_location_name", {}).get(
+        compartment_name.lower()
+    )
+    return int(hit) if hit else None
+
+
+def _lookup_reaction_id(
+    db: Dict[str, Any],
+    reactant_pw_ids: List[int],
+    product_pw_ids: List[int],
+) -> Optional[int]:
+    """Return PathWhiz reaction integer ID by matching left/right element IDs."""
+    left_key = ",".join(sorted(str(i) for i in reactant_pw_ids))
+    right_key = ",".join(sorted(str(i) for i in product_pw_ids))
+    key = f"{left_key}→{right_key}"
+    hit = db.get("reactions", {}).get("by_elements", {}).get(key)
+    return int(hit) if hit else None
+
+
+def _add_cv_terms(element: Any, mapped_ids: Dict[str, Any], libsbml: Any) -> None:
+    """Add bqbiol:is CVTerm entries for each known database xref."""
+    DB_URN: Dict[str, str] = {
+        "hmdb": "urn:miriam:hmdb:",
+        "kegg": "urn:miriam:kegg.compound:",
+        "chebi": "urn:miriam:chebi:CHEBI:",
+        "pubchem": "urn:miriam:pubchem.compound:",
+        "drugbank": "urn:miriam:drugbank:",
+        "uniprot": "urn:miriam:uniprot:",
+    }
+    resources = []
+    for db_key, val in sorted(mapped_ids.items()):
+        if not isinstance(val, str) or not val.strip():
+            continue
+        prefix = DB_URN.get(db_key.lower().strip())
+        if prefix:
+            resources.append(f"{prefix}{val.strip()}")
+    if not resources:
+        return
+    cv = libsbml.CVTerm()
+    cv.setQualifierType(libsbml.BIOLOGICAL_QUALIFIER)
+    cv.setBiologicalQualifierType(libsbml.BQB_IS)
+    for uri in resources:
+        cv.addResource(uri)
+    element.addCVTerm(cv)
+
+
 def _inject_root_namespaces(sbml_path: Path) -> None:
     """Post-process the written SBML to add xmlns declarations PathWhiz expects on <sbml>."""
     EXTRA_NS = (
@@ -533,43 +632,12 @@ def _inject_root_namespaces(sbml_path: Path) -> None:
         ' xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
     )
     text = sbml_path.read_text(encoding="utf-8")
-    # Only inject if not already present
-    if 'xmlns:pathwhiz=' not in text:
-        text = text.replace("<sbml ", f"<sbml{EXTRA_NS} ", 1)
+    # Only inject onto the <sbml> root tag if not already there
+    sbml_open = re.search(r'<sbml\b[^>]*>', text)
+    if sbml_open and 'xmlns:pathwhiz=' not in sbml_open.group():
+        text = text.replace(sbml_open.group(),
+                            sbml_open.group()[:-1] + EXTRA_NS + ">", 1)
         sbml_path.write_text(text, encoding="utf-8")
-
-
-def _build_species_rdf_annotation(sid: str, mapped_ids: Dict[str, Any]) -> str:
-    """Return an annotation XML string with bqbiol:is cross-references, or '' if none."""
-    # Use urn:miriam: format — matches PathWhiz's own SBML exports
-    DB_PREFIX: Dict[str, str] = {
-        "hmdb": "urn:miriam:hmdb:",
-        "kegg": "urn:miriam:kegg.compound:",
-        "chebi": "urn:miriam:chebi:CHEBI:",
-        "pubchem": "urn:miriam:pubchem.compound:",
-        "drugbank": "urn:miriam:drugbank:",
-        "uniprot": "urn:miriam:uniprot:",
-    }
-    lis: List[str] = []
-    for db, val in sorted(mapped_ids.items()):
-        if not isinstance(val, str) or not val.strip():
-            continue
-        prefix = DB_PREFIX.get(db.lower().strip())
-        if prefix:
-            lis.append(f'<rdf:li rdf:resource="{prefix}{val.strip()}"/>')
-    if not lis:
-        return ""
-    li_block = "\n            ".join(lis)
-    return (
-        "<annotation>"
-        '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
-        ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">'
-        f'<rdf:Description rdf:about="#{sid}">'
-        "<bqbiol:is><rdf:Bag>"
-        f"{li_block}"
-        "</rdf:Bag></bqbiol:is>"
-        "</rdf:Description></rdf:RDF></annotation>"
-    )
 
 
 def build_sbml(
@@ -584,6 +652,8 @@ def build_sbml(
         import libsbml  # type: ignore
     except Exception as exc:  # noqa: BLE001
         raise RuntimeError("python-libsbml is required. Install python-libsbml.") from exc
+
+    pw_db = _load_pathwhiz_db()
 
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -1079,18 +1149,31 @@ def build_sbml(
         comp.setSpatialDimensions(3)
         comp.setUnits("UnitVol")
         comp.setSBOTerm(240)  # SBO:0000240 — physical compartment
+        bs_id = _lookup_bs_id(pw_db, loc_name)
+        bs_id_attr = f' pathwhiz:compartment_id="{bs_id}"' if bs_id is not None else ""
         comp.setAnnotation(
             '<annotation><pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-            ' pathwhiz:compartment_type="biological_state"/></annotation>'
+            f'{bs_id_attr} pathwhiz:compartment_type="biological_state"/></annotation>'
         )
 
     species_items_by_id: Dict[str, Dict[str, Any]] = {}
     for item in species_registry.values():
         species_items_by_id.setdefault(item["id"], item)
     species_items = sorted(species_items_by_id.values(), key=lambda item: item["id"])
+    # Build sbml_species_id → PathWhiz entity ID map (used for reaction matching below)
+    pw_species_id_map: Dict[str, int] = {}
+    for item in species_items_by_id.values():
+        mapped = item.get("mapped_ids") or {}
+        is_compound = item.get("kind") == "compound"
+        pw_id = (_lookup_compound_id(pw_db, mapped) if is_compound
+                 else _lookup_protein_id(pw_db, mapped))
+        if pw_id is not None:
+            pw_species_id_map[item["id"]] = pw_id
+
     for item in species_items:
         sp = model.createSpecies()
-        sp.setId(item["id"])
+        sid = item["id"]
+        sp.setId(sid)
         sp.setName(item["name"])
         sp.setCompartment(item["compartment_id"])
         sp.setBoundaryCondition(False)
@@ -1098,12 +1181,23 @@ def build_sbml(
         sp.setConstant(False)
         sp.setInitialAmount(1.0)
         sp.setSubstanceUnits("Unit1")
+        # metaid required for RDF CVTerm annotations
+        sp.setMetaId(f"_meta_{sid}")
         # SBO:0000247 simple chemical, SBO:0000245 macromolecule (protein/EC)
-        sp.setSBOTerm(247 if item.get("kind") == "compound" else 245)
-        # Cross-database RDF annotation
-        rdf_ann = _build_species_rdf_annotation(item["id"], item.get("mapped_ids") or {})
-        if rdf_ann:
-            sp.setAnnotation(rdf_ann)
+        is_compound = item.get("kind") == "compound"
+        sp.setSBOTerm(247 if is_compound else 245)
+        mapped = item.get("mapped_ids") or {}
+        pw_sp_id = (_lookup_compound_id(pw_db, mapped) if is_compound
+                    else _lookup_protein_id(pw_db, mapped))
+        sp_type = "compound" if is_compound else "protein"
+        # Set pathwhiz:species annotation (pathwhiz block only — RDF added via CVTerm below)
+        pw_id_attr = f' pathwhiz:species_id="{pw_sp_id}"' if pw_sp_id is not None else ""
+        sp.setAnnotation(
+            f'<annotation><pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+            f'{pw_id_attr} pathwhiz:species_type="{sp_type}"/></annotation>'
+        )
+        # Add cross-database xrefs via CVTerm (requires metaid)
+        _add_cv_terms(sp, mapped, libsbml)
 
     for plan in sorted(reaction_plans, key=lambda item: item["id"]):
         rxn = model.createReaction()
@@ -1118,9 +1212,13 @@ def build_sbml(
         # SBO terms: SBO:0000176 biochemical reaction, SBO:0000185 transport
         rxn_kind = plan.get("kind", "reaction")
         rxn.setSBOTerm(176 if rxn_kind == "reaction" else 185)
+        r_pw_ids = [pw_species_id_map[s] for s in plan["reactants"] if s in pw_species_id_map]
+        p_pw_ids = [pw_species_id_map[s] for s in plan["products"] if s in pw_species_id_map]
+        pw_rxn_id = _lookup_reaction_id(pw_db, r_pw_ids, p_pw_ids)
+        rxn_id_attr = f' pathwhiz:reaction_id="{pw_rxn_id}"' if pw_rxn_id is not None else ""
         rxn.setAnnotation(
             f'<annotation><pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-            f' pathwhiz:reaction_type="{rxn_kind}"/></annotation>'
+            f'{rxn_id_attr} pathwhiz:reaction_type="{rxn_kind}"/></annotation>'
         )
         reactant_counts = Counter(plan["reactants"])
         for sid, stoich in sorted(reactant_counts.items()):

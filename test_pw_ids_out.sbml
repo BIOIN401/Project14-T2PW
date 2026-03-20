@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <model id="PathwayModel" name="Pathway model generated from mapped JSON" substanceUnits="Unit1" volumeUnits="UnitVol" extentUnits="Unit1">
+    <listOfUnitDefinitions>
+      <unitDefinition id="Unit1" name="Mole">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="UnitVol" name="Litre">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000240" id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false">
+        <annotation>
+          <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+      </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species metaid="_meta_ec_unmapped_70e0bae39dc9_c_cell" sboTerm="SBO:0000245" id="ec_unmapped_70e0bae39dc9_c_cell" name="oil body (storage vacuole)" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_C00111_c_cell" sboTerm="SBO:0000247" id="m_C00111_c_cell" name="glycerone phosphate" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_C00111_c_cell">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00111"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_C00116_c_cell" sboTerm="SBO:0000247" id="m_C00116_c_cell" name="glycerol" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="85" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_C00116_c_cell">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00116"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_C00422_c_cell" sboTerm="SBO:0000247" id="m_C00422_c_cell" name="triacylglycerol" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="309" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_C00422_c_cell">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00422"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_C02112_c_cell" sboTerm="SBO:0000247" id="m_C02112_c_cell" name="2-acylglycerol" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="311" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_C02112_c_cell">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C02112"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_unmapped_89d0d5ea8841_c_cell" sboTerm="SBO:0000247" id="m_unmapped_89d0d5ea8841_c_cell" name="1,2-diglyceride" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="compound"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_unmapped_95313111b8c5_c_cell" sboTerm="SBO:0000247" id="m_unmapped_95313111b8c5_c_cell" name="1-monoglyceride" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="compound"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_unmapped_bc5407073e09_c_cell" sboTerm="SBO:0000247" id="m_unmapped_bc5407073e09_c_cell" name="glycerol 3-phosphate" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="compound"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_444f99e34f23_c_cell" sboTerm="SBO:0000245" id="p_unmapped_444f99e34f23_c_cell" name="glycerol-3-phosphate dehydrogenase" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_880bdebe3daf_c_cell" sboTerm="SBO:0000245" id="p_unmapped_880bdebe3daf_c_cell" name="glycerol kinase" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_b56d45aec256_c_cell" sboTerm="SBO:0000245" id="p_unmapped_b56d45aec256_c_cell" name="triacylglycerol lipase" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_de07605a20ba_c_cell" sboTerm="SBO:0000245" id="p_unmapped_de07605a20ba_c_cell" name="acylhydrolase" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_f48fa519555d_c_cell" sboTerm="SBO:0000245" id="p_unmapped_f48fa519555d_c_cell" name="diglyceride lipase" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction sboTerm="SBO:0000176" id="r_0e4afc4b0a31" name="conversion of glycerone phosphate into glycerol" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_C00111_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_C00116_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_2ced616de7e9" name="conversion of a 1-monoglyceride into glycerol" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_unmapped_95313111b8c5_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_C00116_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_3a726c5ab0dc" name="conversion of a triglyceride into a 1,2-diglyceride" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_C00422_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_unmapped_89d0d5ea8841_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_886c9a8ef589" name="conversion of a 1,2-diglyceride into a 2-acylglycerol" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_unmapped_89d0d5ea8841_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_C02112_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_d9e1acfb749e" name="conversion of glycerol into glycerol 3-phosphate" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_C00116_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_unmapped_bc5407073e09_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_dd0406aa02c6" name="conversion of a 2-acylglycerol into a 1-monoglyceride" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_C02112_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_unmapped_95313111b8c5_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_ea0ee39608f7" name="conversion of glycerol into glycerone phosphate" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_C00116_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_C00111_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_f9de5a4480ff" name="conversion of glycerol 3-phosphate into glycerone phosphate" reversible="false" fast="false" compartment="c_cell">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_unmapped_bc5407073e09_c_cell" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_C00111_c_cell" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
