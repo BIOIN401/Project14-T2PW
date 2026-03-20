@@ -48,7 +48,11 @@ def _canonical(value: str) -> str:
 
 
 def _has_plus_token(value: str) -> bool:
-    return "+" in _canonical(value)
+    # Strip trailing charge notation (e.g. NAD+, H+, Ca2+) before checking
+    # for a composite "+" separator so chemical names aren't mis-parsed.
+    stripped = re.sub(r"\+$", "", _canonical(value).rstrip())
+    stripped = re.sub(r"\d+\+$", "", stripped.rstrip())
+    return "+" in stripped
 
 
 def _split_composite(value: str) -> List[str]:
