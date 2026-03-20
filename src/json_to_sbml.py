@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+import sys
 from collections import Counter
 from collections import defaultdict
 from copy import deepcopy
@@ -526,8 +528,108 @@ def _first_string(values: Sequence[Any]) -> str:
 
 
 def _load_pathwhiz_db(db_path: Optional[Path] = None) -> Dict[str, Any]:
-    """Load pathwhiz_id_db.json, searching upward from src/ if not given."""
-    candidates = []
+    """Load PathWhiz ID mappings from MySQL, falling back to pathwhiz_id_db.json."""
+    db: Dict[str, Any] = {
+        "compounds": {"hmdb": {}, "kegg": {}, "chebi": {}, "pubchem": {}, "drugbank": {}},
+        "proteins": {"uniprot": {}},
+        "biological_states": {"by_location_name": {}},
+        "reactions": {"by_elements": {}},
+        "element_collections": {},
+    }
+
+    host = os.environ.get("PATHBANK_DB_HOST", "")
+    user = os.environ.get("PATHBANK_DB_USER", "")
+    password = os.environ.get("PATHBANK_DB_PASSWORD", "")
+    schema = os.environ.get("PATHBANK_DB_SCHEMA", "pathbank")
+    port = int(os.environ.get("PATHBANK_DB_PORT", "3306"))
+
+    if host and user:
+        try:
+            import pymysql  # type: ignore[import-not-found]
+            conn = pymysql.connect(
+                host=host, port=port, user=user, password=password,
+                database=schema, charset="utf8mb4", connect_timeout=10,
+                cursorclass=pymysql.cursors.DictCursor, autocommit=True,
+            )
+            with conn:
+                with conn.cursor() as cur:
+                    # Compounds
+                    cur.execute(
+                        "SELECT id, hmdb_id, kegg_id, chebi_id, pubchem_cid, drugbank_id"
+                        " FROM compounds"
+                    )
+                    for row in cur.fetchall():
+                        cid = row["id"]
+                        if row.get("hmdb_id"):
+                            db["compounds"]["hmdb"][row["hmdb_id"]] = cid
+                        if row.get("kegg_id"):
+                            db["compounds"]["kegg"][row["kegg_id"]] = cid
+                        if row.get("chebi_id"):
+                            chebi = row["chebi_id"]
+                            bare = chebi.replace("CHEBI:", "").strip()
+                            db["compounds"]["chebi"][chebi] = cid
+                            db["compounds"]["chebi"][bare] = cid
+                            db["compounds"]["chebi"][f"CHEBI:{bare}"] = cid
+                        if row.get("pubchem_cid"):
+                            db["compounds"]["pubchem"][str(row["pubchem_cid"])] = cid
+                        if row.get("drugbank_id"):
+                            db["compounds"]["drugbank"][row["drugbank_id"]] = cid
+
+                    # Proteins
+                    cur.execute(
+                        "SELECT id, uniprot_id FROM proteins"
+                        " WHERE uniprot_id IS NOT NULL AND uniprot_id != ''"
+                    )
+                    for row in cur.fetchall():
+                        db["proteins"]["uniprot"][row["uniprot_id"]] = row["id"]
+
+                    # Biological states → subcellular location name
+                    try:
+                        cur.execute(
+                            "SELECT bs.id, sl.name"
+                            " FROM biological_states bs"
+                            " JOIN subcellular_locations sl"
+                            "   ON bs.subcellular_location_id = sl.id"
+                            " WHERE sl.name IS NOT NULL"
+                        )
+                        for row in cur.fetchall():
+                            db["biological_states"]["by_location_name"][
+                                row["name"].lower()
+                            ] = row["id"]
+                    except Exception:
+                        pass
+
+                    # Reactions — index by sorted left/right compound element IDs
+                    try:
+                        cur.execute(
+                            "SELECT reaction_id, element_id, type"
+                            " FROM reaction_elements"
+                            " WHERE element_type = 'Compound'"
+                        )
+                        rxn_sides: Dict[int, Dict[str, List[int]]] = {}
+                        LEFT_VALS = {"left", "substrate", "reactant"}
+                        for row in cur.fetchall():
+                            rid = row["reaction_id"]
+                            if rid not in rxn_sides:
+                                rxn_sides[rid] = {"left": [], "right": []}
+                            side = "left" if (row["type"] or "").lower() in LEFT_VALS else "right"
+                            rxn_sides[rid][side].append(row["element_id"])
+                        for rid, sides in rxn_sides.items():
+                            lk = ",".join(sorted(str(i) for i in sides["left"]))
+                            rk = ",".join(sorted(str(i) for i in sides["right"]))
+                            db["reactions"]["by_elements"][f"{lk}→{rk}"] = rid
+                    except Exception:
+                        pass
+
+            return db
+        except Exception as exc:
+            print(
+                f"  WARNING: MySQL PathWhiz DB unavailable ({exc}), falling back to JSON",
+                file=sys.stderr,
+            )
+
+    # Fallback: JSON file built from PWML dump
+    candidates: List[Path] = []
     if db_path:
         candidates.append(db_path)
     here = Path(__file__).parent
@@ -536,7 +638,7 @@ def _load_pathwhiz_db(db_path: Optional[Path] = None) -> Dict[str, Any]:
     for p in candidates:
         if p.exists():
             return json.loads(p.read_text(encoding="utf-8"))
-    return {}
+    return db
 
 
 def _lookup_compound_id(db: Dict[str, Any], mapped_ids: Dict[str, Any]) -> Optional[int]:
@@ -602,7 +704,7 @@ def _add_cv_terms(element: Any, mapped_ids: Dict[str, Any], libsbml: Any) -> Non
     DB_URN: Dict[str, str] = {
         "hmdb": "urn:miriam:hmdb:",
         "kegg": "urn:miriam:kegg.compound:",
-        "chebi": "urn:miriam:chebi:CHEBI:",
+        "chebi": "urn:miriam:chebi:",
         "pubchem": "urn:miriam:pubchem.compound:",
         "drugbank": "urn:miriam:drugbank:",
         "uniprot": "urn:miriam:uniprot:",
@@ -626,18 +728,34 @@ def _add_cv_terms(element: Any, mapped_ids: Dict[str, Any], libsbml: Any) -> Non
 
 def _inject_root_namespaces(sbml_path: Path) -> None:
     """Post-process the written SBML to add xmlns declarations PathWhiz expects on <sbml>."""
+    BQ_URI = "http://biomodels.net/biology-qualifiers/"
+    text = sbml_path.read_text(encoding="utf-8")
+
+    # libsbml may assign an auto-prefix (e.g. ns3) to the biology-qualifiers namespace.
+    # Find it and rename every occurrence to bqbiol so PathWhiz recognises bqbiol:is.
+    auto_prefix = re.search(
+        r'xmlns:([A-Za-z][A-Za-z0-9_]*)="' + re.escape(BQ_URI) + '"', text
+    )
+    if auto_prefix and auto_prefix.group(1) != "bqbiol":
+        pfx = auto_prefix.group(1)
+        # Replace namespace declaration and all element/attribute uses of that prefix
+        text = text.replace(f'xmlns:{pfx}="{BQ_URI}"', f'xmlns:bqbiol="{BQ_URI}"')
+        text = re.sub(rf'<{re.escape(pfx)}:', '<bqbiol:', text)
+        text = re.sub(rf'</{re.escape(pfx)}:', '</bqbiol:', text)
+
     EXTRA_NS = (
         ' xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
         ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/"'
         ' xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
     )
-    text = sbml_path.read_text(encoding="utf-8")
-    # Only inject onto the <sbml> root tag if not already there
     sbml_open = re.search(r'<sbml\b[^>]*>', text)
     if sbml_open and 'xmlns:pathwhiz=' not in sbml_open.group():
-        text = text.replace(sbml_open.group(),
-                            sbml_open.group()[:-1] + EXTRA_NS + ">", 1)
-        sbml_path.write_text(text, encoding="utf-8")
+        tag = sbml_open.group()
+        # Remove any bqbiol declaration already on root (will be re-added cleanly)
+        tag_clean = re.sub(r'\s*xmlns:bqbiol="[^"]*"', '', tag)
+        text = text.replace(sbml_open.group(), tag_clean[:-1] + EXTRA_NS + ">", 1)
+
+    sbml_path.write_text(text, encoding="utf-8")
 
 
 def build_sbml(

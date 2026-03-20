@@ -1225,6 +1225,962 @@
       ],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::hexokinase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "F5IXG6"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 55976,
+          "name": "Hexokinase",
+          "gene_name": "HMPREF9455_01783",
+          "uniprot": "F5IXG6",
+          "species_id": 457,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99225,
+          "name": "Hexokinase",
+          "gene_name": "C803_04112",
+          "uniprot": "S0GGD1",
+          "species_id": 495,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99427,
+          "name": "Hexokinase",
+          "gene_name": "HMPREF9007_04671",
+          "uniprot": "D7IJR4",
+          "species_id": 1632,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99431,
+          "name": "Hexokinase",
+          "gene_name": "BN890_23450",
+          "uniprot": "D4VLJ0",
+          "species_id": 1630,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99452,
+          "name": "Hexokinase",
+          "gene_name": "HMPREF0127_04429",
+          "uniprot": "F7MAE5",
+          "species_id": 1633,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99457,
+          "name": "Hexokinase",
+          "gene_name": "BSCG_00002",
+          "uniprot": "C3QM93",
+          "species_id": 1635,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10572,
+          "name": "Hexokinase I",
+          "gene_name": "HXK1",
+          "uniprot": "P04806",
+          "species_id": 29,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 10573,
+          "name": "Hexokinase 2",
+          "gene_name": "HXK2",
+          "uniprot": "P04807",
+          "species_id": 29,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 10666,
+          "name": "Hexokinase GLK1",
+          "gene_name": "GLK1",
+          "uniprot": "P17709",
+          "species_id": 29,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 5428,
+          "name": "Putative hexokinase HKDC1",
+          "gene_name": "HKDC1",
+          "uniprot": "Q2TB90",
+          "species_id": 1,
+          "score": 0.6833
+        }
+      ]
+    },
+    "db::phosphoglucose isomerase::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::phosphoglucose isomerase::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"phosphoglucose isomerase\" OR gene:\"phosphoglucose isomerase\")",
+      "confidence": 0.6,
+      "candidates": [
+        {
+          "accession": "P0A6T1",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgi"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "P34795",
+          "protein_name": "Glucose-6-phosphate isomerase, cytosolic",
+          "gene_names": [
+            "PGIC"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "P06744",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "GPI"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "P12709",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "PGI1"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "Q59000",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgi"
+          ],
+          "organism": "Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440)",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "P84140",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgiA"
+          ],
+          "organism": "Thermococcus litoralis",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "P9WN69",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgi"
+          ],
+          "organism": "Mycobacterium tuberculosis (strain ATCC 25618 / H37Rv)",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "Q9X1A5",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgi"
+          ],
+          "organism": "Thermotoga maritima (strain ATCC 43589 / DSM 3109 / JCM 10099 / NBRC 100826 / MSB8)",
+          "reviewed": true,
+          "score": 0.6
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"phosphoglucose isomerase\" OR gene:\"phosphoglucose isomerase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::phosphofructokinase1::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.4,
+      "candidates": [
+        {
+          "pathbank_protein_id": 11802,
+          "name": "6-phosphofructokinase 1",
+          "gene_name": "PFK1",
+          "uniprot": "Q9M0F9",
+          "species_id": 4,
+          "score": 0.4
+        },
+        {
+          "pathbank_protein_id": 15630,
+          "name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_name": "pfk-1.1",
+          "uniprot": "Q95X24",
+          "species_id": 6,
+          "score": 0.4
+        }
+      ]
+    },
+    "api::phosphofructokinase1::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"phosphofructokinase-1\" OR gene:\"phosphofructokinase-1\") | (protein_name:\"phosphofructokinase 1\" OR gene:\"phosphofructokinase 1\")",
+      "confidence": 0.1667,
+      "candidates": [
+        {
+          "accession": "P21777",
+          "protein_name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_names": [
+            "pfkA"
+          ],
+          "organism": "Thermus thermophilus (strain ATCC 27634 / DSM 579 / HB8)",
+          "reviewed": true,
+          "score": 0.1667
+        },
+        {
+          "accession": "O94201",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Candida albicans",
+          "reviewed": true,
+          "score": 0.1667
+        },
+        {
+          "accession": "Q8NJU8",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Komagataella pastoris",
+          "reviewed": true,
+          "score": 0.1667
+        },
+        {
+          "accession": "P0A796",
+          "protein_name": "ATP-dependent 6-phosphofructokinase isozyme 1",
+          "gene_names": [
+            "pfkA"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.1667
+        },
+        {
+          "accession": "Q92448",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "GSA1",
+            "PFK1"
+          ],
+          "organism": "Komagataella phaffii (strain GS115 / ATCC 20864)",
+          "reviewed": true,
+          "score": 0.1667
+        },
+        {
+          "accession": "Q03215",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Kluyveromyces lactis (strain ATCC 8585 / CBS 2359 / DSM 70799 / NBRC 1267 / NRRL Y-1140 / WM37)",
+          "reviewed": true,
+          "score": 0.1667
+        },
+        {
+          "accession": "Q9TZL8",
+          "protein_name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_names": [
+            "pfk-1.1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.1667
+        },
+        {
+          "accession": "Q9M0F9",
+          "protein_name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.1667
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"phosphofructokinase-1\" OR gene:\"phosphofructokinase-1\")",
+        "(protein_name:\"phosphofructokinase 1\" OR gene:\"phosphofructokinase 1\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::aldolase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "A0A2S5IIW3"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 18319,
+          "name": "Aldolase",
+          "gene_name": "HV87_25725",
+          "uniprot": "A0A2S5IIW3",
+          "species_id": 23,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4743,
+          "name": "Fructose-bisphosphate aldolase",
+          "gene_name": "",
+          "uniprot": "Q8NHT3",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 4744,
+          "name": "Fructose-bisphosphate aldolase",
+          "gene_name": "ALDOC",
+          "uniprot": "A8MVZ9",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 4745,
+          "name": "Fructose-bisphosphate aldolase",
+          "gene_name": "",
+          "uniprot": "A4UCT0",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 4746,
+          "name": "Fructose-bisphosphate aldolase",
+          "gene_name": "",
+          "uniprot": "A4UCS9",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 4747,
+          "name": "Fructose-bisphosphate aldolase",
+          "gene_name": "ALDOB",
+          "uniprot": "Q5T7D5",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 4748,
+          "name": "Fructose-bisphosphate aldolase",
+          "gene_name": "",
+          "uniprot": "A8K430",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 6001,
+          "name": "Deoxyribose-phosphate aldolase",
+          "gene_name": "deoC",
+          "uniprot": "P0A6L0",
+          "species_id": 3,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 6022,
+          "name": "2-dehydro-3-deoxyphosphooctonate aldolase",
+          "gene_name": "kdsA",
+          "uniprot": "P0A715",
+          "species_id": 3,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 6103,
+          "name": "KHG/KDPG aldolase",
+          "gene_name": "eda",
+          "uniprot": "P0A955",
+          "species_id": 3,
+          "score": 0.77
+        }
+      ]
+    },
+    "db::triosephosphate isomerase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P60174"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 1472,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "TPI1",
+          "uniprot": "P60174",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 6071,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "tpiA",
+          "uniprot": "P0A858",
+          "species_id": 3,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 9687,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "Solyc10g054870.1",
+          "uniprot": "K4D180",
+          "species_id": 24,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10058,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "tpiA",
+          "uniprot": "A0A0A5ND85",
+          "species_id": 3,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10562,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "TPI1",
+          "uniprot": "P00942",
+          "species_id": 29,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 11917,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "tpiA",
+          "uniprot": "A6VCK5",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12043,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "tpiA",
+          "uniprot": "A6VCK5",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12148,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "tpiA",
+          "uniprot": "A6VCK5",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12155,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "tpiA",
+          "uniprot": "A6VCK5",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12162,
+          "name": "Triosephosphate isomerase",
+          "gene_name": "tpiA",
+          "uniprot": "A6VCK5",
+          "species_id": 52,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::glyceraldehyde3phosphate dehydrogenase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P04406"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 659,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "GAPDH",
+          "uniprot": "P04406",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 9688,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "Solyc12g094640.1",
+          "uniprot": "K4DH36",
+          "species_id": 24,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10042,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "gapC",
+          "uniprot": "A0A024L2B0",
+          "species_id": 3,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 15676,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "GAPDH",
+          "uniprot": "Q3ZCB1",
+          "species_id": 5,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 15677,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "Gapdh",
+          "uniprot": "Q9QWU4",
+          "species_id": 17,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 15678,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "Gapdh",
+          "uniprot": "Q5U410",
+          "species_id": 12,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 18065,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "gapA",
+          "uniprot": "A0A0G5ZZ99",
+          "species_id": 23,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 24250,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "",
+          "uniprot": "O96369",
+          "species_id": 15,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 36552,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "gap",
+          "uniprot": "G9IME5",
+          "species_id": 1755,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 50962,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "gene_name": "B2904_orf988",
+          "uniprot": "J9UE83",
+          "species_id": 1997,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::phosphoglycerate kinase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P0A799"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 6040,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "pgk",
+          "uniprot": "P0A799",
+          "species_id": 3,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 9689,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "Solyc09g008130.2",
+          "uniprot": "K4CQK2",
+          "species_id": 24,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10043,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "pgk",
+          "uniprot": "B6I760",
+          "species_id": 33,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10052,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "pgk",
+          "uniprot": "B6I760",
+          "species_id": 33,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10061,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "pgk",
+          "uniprot": "B6I760",
+          "species_id": 33,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10075,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "pgk",
+          "uniprot": "B6I760",
+          "species_id": 33,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10084,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "pgk",
+          "uniprot": "B6I760",
+          "species_id": 33,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10093,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "pgk",
+          "uniprot": "B6I760",
+          "species_id": 33,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10569,
+          "name": "Phosphoglycerate kinase",
+          "gene_name": "PGK1",
+          "uniprot": "P00560",
+          "species_id": 29,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10570,
+          "name": "phosphoglycerate kinase",
+          "gene_name": "PGK1",
+          "uniprot": "P00560",
+          "species_id": 29,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::phosphoglycerate mutase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "A4D2J6"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4356,
+          "name": "Phosphoglycerate mutase",
+          "gene_name": "PGAM2",
+          "uniprot": "A4D2J6",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4357,
+          "name": "Phosphoglycerate mutase",
+          "gene_name": "PGAM1",
+          "uniprot": "Q0D2Q6",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4358,
+          "name": "Phosphoglycerate mutase",
+          "gene_name": "",
+          "uniprot": "Q53G35",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4359,
+          "name": "Phosphoglycerate mutase",
+          "gene_name": "PGAM1",
+          "uniprot": "Q6FHU2",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4360,
+          "name": "Phosphoglycerate mutase",
+          "gene_name": "PGAM1",
+          "uniprot": "Q6P6D7",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 16140,
+          "name": "Phosphoglycerate mutase",
+          "gene_name": "Pglym87",
+          "uniprot": "Q9VGB6",
+          "species_id": 10,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 16144,
+          "name": "Phosphoglycerate mutase",
+          "gene_name": "Pglym78",
+          "uniprot": "Q961P1",
+          "species_id": 10,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 261,
+          "name": "Phosphoglycerate mutase 2",
+          "gene_name": "PGAM2",
+          "uniprot": "P15259",
+          "species_id": 1,
+          "score": 0.8567
+        },
+        {
+          "pathbank_protein_id": 263,
+          "name": "Phosphoglycerate mutase 1",
+          "gene_name": "PGAM1",
+          "uniprot": "P18669",
+          "species_id": 1,
+          "score": 0.8567
+        },
+        {
+          "pathbank_protein_id": 6585,
+          "name": "2,3-bisphosphoglycerate-independent phosphoglycerate mutase",
+          "gene_name": "gpmI",
+          "uniprot": "P37689",
+          "species_id": 3,
+          "score": 0.8567
+        }
+      ]
+    },
+    "db::enolase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P0A6P9"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 6006,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "P0A6P9",
+          "species_id": 3,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 11915,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 11962,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12040,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12145,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12153,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12160,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12167,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12174,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 12181,
+          "name": "Enolase",
+          "gene_name": "eno",
+          "uniprot": "A6V1F3",
+          "species_id": 52,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::pyruvate kinase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q16715"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4176,
+          "name": "Pyruvate kinase",
+          "gene_name": "",
+          "uniprot": "Q16715",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4177,
+          "name": "Pyruvate kinase",
+          "gene_name": "",
+          "uniprot": "Q16716",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4178,
+          "name": "Pyruvate kinase",
+          "gene_name": "PKM2",
+          "uniprot": "Q504U3",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4179,
+          "name": "Pyruvate kinase",
+          "gene_name": "PKM2",
+          "uniprot": "Q8WUW7",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10048,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykA",
+          "uniprot": "Q1RAT0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10049,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykF",
+          "uniprot": "Q1RBC0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10055,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykA",
+          "uniprot": "Q1RAT0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10056,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykF",
+          "uniprot": "Q1RBC0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10064,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykA",
+          "uniprot": "Q1RAT0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10065,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykF",
+          "uniprot": "Q1RBC0",
+          "species_id": 28,
+          "score": 1.0
+        }
+      ]
     }
   },
   "compounds": {
@@ -4519,6 +5475,1175 @@
             "cas": "1948-56-7",
             "chemspider": "110510",
             "drugbank": "DB02688"
+          }
+        }
+      ]
+    },
+    "db::glucose": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000122",
+        "kegg": "C00031",
+        "chebi": "CHEBI:4167",
+        "pubchem": "5793",
+        "cas": "2280-44-6",
+        "biocyc": "GLC",
+        "chemspider": "5589"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 77,
+          "name": "D-Glucose",
+          "short_name": "D-Glc",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000122",
+            "kegg": "C00031",
+            "chebi": "CHEBI:4167",
+            "pubchem": "5793",
+            "cas": "2280-44-6",
+            "biocyc": "GLC",
+            "chemspider": "5589"
+          }
+        },
+        {
+          "pathbank_compound_id": 395,
+          "name": "β-D-Glucose",
+          "short_name": "Glu",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000516",
+            "kegg": "C00221",
+            "chebi": "CHEBI:15903",
+            "pubchem": "64689",
+            "cas": "492-61-5",
+            "chemspider": "58238"
+          }
+        },
+        {
+          "pathbank_compound_id": 193,
+          "name": "Uridine diphosphate glucose",
+          "short_name": "UDPG",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0000286",
+            "kegg": "C00029",
+            "pubchem": "53477679",
+            "cas": "133-89-1",
+            "biocyc": "UDP-GLUCOSE",
+            "drugbank": "DB01861"
+          }
+        },
+        {
+          "pathbank_compound_id": 1083,
+          "name": "Glucose 6-phosphate",
+          "short_name": "Gluc-6P",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0001401",
+            "kegg": "C00092",
+            "chebi": "CHEBI:4170",
+            "pubchem": "5958",
+            "cas": "56-73-5",
+            "biocyc": "GLC-6-P",
+            "chemspider": "5743"
+          }
+        },
+        {
+          "pathbank_compound_id": 1207,
+          "name": "Glucose 1-phosphate",
+          "short_name": "Gluc1P",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0001586",
+            "kegg": "C00103",
+            "chebi": "CHEBI:16077",
+            "pubchem": "439165",
+            "cas": "59-56-3",
+            "biocyc": "GLC-1-P",
+            "chemspider": "388311"
+          }
+        },
+        {
+          "pathbank_compound_id": 1910,
+          "name": "α-D-Glucose 1,6-bisphosphate",
+          "short_name": "ADGluBP",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0003514",
+            "kegg": "C00660",
+            "chebi": "CHEBI:18148",
+            "pubchem": "82400",
+            "cas": "10139-18-1",
+            "biocyc": "ALPHA-GLUCOSE-16-BISPHOSPHATE",
+            "chemspider": "74362"
+          }
+        },
+        {
+          "pathbank_compound_id": 2844,
+          "name": "3-b-Galactopyranosyl glucose",
+          "short_name": "3BGG",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0006603",
+            "pubchem": "53477867",
+            "cas": "28447-38-3",
+            "chemspider": "30776583"
+          }
+        },
+        {
+          "pathbank_compound_id": 15278,
+          "name": "2,3,4,5,6-Penta-O-acetyl-D-glucose",
+          "short_name": "FEMA",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0034223",
+            "pubchem": "92972",
+            "cas": "3891-59-6",
+            "chemspider": "83925"
+          }
+        },
+        {
+          "pathbank_compound_id": 830,
+          "name": "Dolichyl b-D-glucosyl phosphate",
+          "short_name": "DolGlcP",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001054",
+            "kegg": "C01246",
+            "chebi": "CHEBI:15812",
+            "pubchem": "22833557",
+            "cas": "220496-27-5",
+            "chemspider": "17216044"
+          }
+        },
+        {
+          "pathbank_compound_id": 1853,
+          "name": "GDP-glucose",
+          "short_name": "GDPG",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0003351",
+            "kegg": "C00394",
+            "chebi": "CHEBI:62254",
+            "pubchem": "644106",
+            "cas": "5750-57-2",
+            "biocyc": "GDP-D-GLUCOSE",
+            "chemspider": "559146"
+          }
+        }
+      ]
+    },
+    "db::glucose6phosphate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001401",
+        "kegg": "C00092",
+        "chebi": "CHEBI:4170",
+        "pubchem": "5958",
+        "cas": "56-73-5",
+        "biocyc": "GLC-6-P",
+        "chemspider": "5743"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1083,
+          "name": "Glucose 6-phosphate",
+          "short_name": "Gluc-6P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001401",
+            "kegg": "C00092",
+            "chebi": "CHEBI:4170",
+            "pubchem": "5958",
+            "cas": "56-73-5",
+            "biocyc": "GLC-6-P",
+            "chemspider": "5743"
+          }
+        },
+        {
+          "pathbank_compound_id": 276990,
+          "name": "3-dehydro-D-glucose-6-phosphate",
+          "short_name": "",
+          "score": 0.43,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 969,
+          "name": "Glucosamine 6-phosphate",
+          "short_name": "G6P",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0001254",
+            "kegg": "C00352",
+            "chebi": "CHEBI:15873",
+            "pubchem": "439217",
+            "cas": "3616-42-0",
+            "biocyc": "D-GLUCOSAMINE-6-P",
+            "chemspider": "388356"
+          }
+        },
+        {
+          "pathbank_compound_id": 1906,
+          "name": "β-D-Glucose 6-phosphate",
+          "short_name": "BDGlu6P",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0003498",
+            "kegg": "C01172",
+            "chebi": "CHEBI:17719",
+            "pubchem": "439427",
+            "chemspider": "388538"
+          }
+        }
+      ]
+    },
+    "db::atp": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000538",
+        "kegg": "C00002",
+        "chebi": "CHEBI:15422",
+        "pubchem": "5957",
+        "cas": "56-65-5",
+        "biocyc": "ATP",
+        "chemspider": "5742",
+        "drugbank": "DB00171"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 414,
+          "name": "Adenosine triphosphate",
+          "short_name": "ATP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000538",
+            "kegg": "C00002",
+            "chebi": "CHEBI:15422",
+            "pubchem": "5957",
+            "cas": "56-65-5",
+            "biocyc": "ATP",
+            "chemspider": "5742",
+            "drugbank": "DB00171"
+          }
+        },
+        {
+          "pathbank_compound_id": 1177,
+          "name": "Deoxyadenosine triphosphate",
+          "short_name": "doATP",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0001532",
+            "kegg": "C00131",
+            "chebi": "CHEBI:16284",
+            "pubchem": "15993",
+            "cas": "1927-31-7",
+            "biocyc": "DATP",
+            "chemspider": "15194"
+          }
+        },
+        {
+          "pathbank_compound_id": 1952,
+          "name": "Phosphoribosyl-ATP",
+          "short_name": "P-ATP",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0003665",
+            "kegg": "C02739",
+            "chebi": "CHEBI:18263",
+            "pubchem": "1009",
+            "chemspider": "984"
+          }
+        },
+        {
+          "pathbank_compound_id": 40030,
+          "name": "2-hydroxy-dATP",
+          "short_name": "2HODATP",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0059593",
+            "kegg": "C19969",
+            "chebi": "CHEBI:63208",
+            "pubchem": "10368940",
+            "chemspider": "8544388"
+          }
+        },
+        {
+          "pathbank_compound_id": 40732,
+          "name": "Dideoxyadenosine Triphosphate",
+          "short_name": "Ddatp",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0061724",
+            "pubchem": "65304",
+            "chemspider": "58792",
+            "drugbank": "DB02189"
+          }
+        },
+        {
+          "pathbank_compound_id": 42659,
+          "name": "1-(5-phospho-D-ribosyl)-ATP",
+          "short_name": "15PDRA",
+          "score": 0.43,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 42660,
+          "name": "1-(5-phosphoribosyl)-ATP",
+          "short_name": "15PA",
+          "score": 0.43,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 42678,
+          "name": "3-(all-trans-diprenyl)benzene-1,2-diol",
+          "short_name": "3ATPC",
+          "score": 0.43,
+          "mapped_ids": {
+            "chebi": "CHEBI:62729",
+            "pubchem": "23318480"
+          }
+        },
+        {
+          "pathbank_compound_id": 42756,
+          "name": "3-(all-trans-pentaprenyl)benzene-1,2-diol",
+          "short_name": "3ATPB12",
+          "score": 0.43,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 42916,
+          "name": "dATP",
+          "short_name": "dATP",
+          "score": 0.43,
+          "mapped_ids": {
+            "chebi": "CHEBI:61404",
+            "pubchem": "25320183"
+          }
+        }
+      ]
+    },
+    "db::fructose6phosphate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000124",
+        "kegg": "C00085",
+        "chebi": "CHEBI:15946",
+        "pubchem": "69507",
+        "cas": "643-13-0",
+        "biocyc": "FRUCTOSE-6P",
+        "chemspider": "62713"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 79,
+          "name": "Fructose 6-phosphate",
+          "short_name": "Fru6P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000124",
+            "kegg": "C00085",
+            "chebi": "CHEBI:15946",
+            "pubchem": "69507",
+            "cas": "643-13-0",
+            "biocyc": "FRUCTOSE-6P",
+            "chemspider": "62713"
+          }
+        },
+        {
+          "pathbank_compound_id": 2021,
+          "name": "β-D-Fructose 6-phosphate",
+          "short_name": "BD-F6P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0003971",
+            "kegg": "C05345",
+            "chebi": "CHEBI:16084",
+            "pubchem": "440641",
+            "biocyc": "FRUCTOSE-6P",
+            "chemspider": "389526"
+          }
+        },
+        {
+          "pathbank_compound_id": 40941,
+          "name": "β-D-fructofuranose 6-phosphate",
+          "short_name": "βDF6P",
+          "score": 0.4,
+          "mapped_ids": {
+            "chebi": "CHEBI:57634"
+          }
+        }
+      ]
+    },
+    "db::fructose16bisphosphate": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.35,
+      "candidates": [
+        {
+          "pathbank_compound_id": 833,
+          "name": "Fructose 1,6-bisphosphate",
+          "short_name": "Fru1,6P",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0001058",
+            "kegg": "C00354",
+            "chebi": "CHEBI:16905",
+            "pubchem": "445557",
+            "cas": "488-69-7",
+            "biocyc": "FRUCTOSE-16-DIPHOSPHATE",
+            "chemspider": "393165"
+          }
+        }
+      ]
+    },
+    "api::fructose16bisphosphate": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.322,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C00354",
+          "name": "D-Fructose 1,6-bisphosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C05378",
+          "name": "beta-D-Fructose 1,6-bisphosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C21364",
+          "name": "[Fructose-bisphosphate aldolase]-L-lysine",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C21365",
+          "name": "[Fructose-bisphosphate aldolase]-N6,N6,N6-trimethyl-L-lysine",
+          "score": 0.322
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
+    },
+    "db::glyceraldehyde3phosphate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001112",
+        "kegg": "C00661",
+        "chebi": "CHEBI:17138",
+        "pubchem": "729",
+        "cas": "591-59-3",
+        "biocyc": "GAP",
+        "chemspider": "709",
+        "drugbank": "DB02263"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 869,
+          "name": "D-Glyceraldehyde 3-phosphate",
+          "short_name": "Glyc3P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001112",
+            "kegg": "C00661",
+            "chebi": "CHEBI:17138",
+            "pubchem": "729",
+            "cas": "591-59-3",
+            "biocyc": "GAP",
+            "chemspider": "709",
+            "drugbank": "DB02263"
+          }
+        },
+        {
+          "pathbank_compound_id": 41470,
+          "name": "L-Glyceraldehyde 3-phosphate",
+          "short_name": "L-Gap",
+          "score": 0.35,
+          "mapped_ids": {
+            "chebi": "CHEBI:48932",
+            "pubchem": "25201921"
+          }
+        }
+      ]
+    },
+    "db::dihydroxyacetone phosphate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001473",
+        "kegg": "C00111",
+        "chebi": "CHEBI:16108",
+        "pubchem": "668",
+        "cas": "57-04-5",
+        "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
+        "chemspider": "648",
+        "drugbank": "DB04326"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1134,
+          "name": "Dihydroxyacetone phosphate",
+          "short_name": "Dhapp",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001473",
+            "kegg": "C00111",
+            "chebi": "CHEBI:16108",
+            "pubchem": "668",
+            "cas": "57-04-5",
+            "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
+            "chemspider": "648",
+            "drugbank": "DB04326"
+          }
+        },
+        {
+          "pathbank_compound_id": 6772,
+          "name": "DHAP(18:0)",
+          "short_name": "DP18:0",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0011133",
+            "kegg": "C03805",
+            "chebi": "CHEBI:36476",
+            "pubchem": "440127",
+            "chemspider": "389126"
+          }
+        },
+        {
+          "pathbank_compound_id": 7254,
+          "name": "DHAP(10:0)",
+          "short_name": "DECANOY",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0011675",
+            "pubchem": "53481023",
+            "chemspider": "30776594"
+          }
+        },
+        {
+          "pathbank_compound_id": 7258,
+          "name": "DHAP(6:0)",
+          "short_name": "HEXANOY",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0011679",
+            "pubchem": "53481026",
+            "chemspider": "30776597"
+          }
+        },
+        {
+          "pathbank_compound_id": 7263,
+          "name": "DHAP(8:0)",
+          "short_name": "OCTANOY",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0011685",
+            "pubchem": "53481029",
+            "chemspider": "30776598"
+          }
+        },
+        {
+          "pathbank_compound_id": 44599,
+          "name": "1-palmitoylglycerone 3-phosphate",
+          "short_name": "1PalG3P",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0062190",
+            "chebi": "CHEBI:17868"
+          }
+        },
+        {
+          "pathbank_compound_id": 7319,
+          "name": "Dihydroxyacetone Phosphate Acyl Ester",
+          "short_name": "AP",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0011750",
+            "kegg": "C03372",
+            "chebi": "CHEBI:15835",
+            "pubchem": "6857386",
+            "biocyc": "1-ACYL-GLYCERONE-3-PHOSPHATE",
+            "chemspider": "5256726"
+          }
+        },
+        {
+          "pathbank_compound_id": 44555,
+          "name": "1-oleoyl-2-lyso-glycerone phosphate",
+          "short_name": "19OD2",
+          "score": 0.5333,
+          "mapped_ids": {
+            "pubchem": "86289257"
+          }
+        }
+      ]
+    },
+    "db::nad": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000902",
+        "kegg": "C00003",
+        "chebi": "CHEBI:15846",
+        "pubchem": "5893",
+        "cas": "53-84-9",
+        "biocyc": "NAD",
+        "chemspider": "5682"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 721,
+          "name": "NAD",
+          "short_name": "NAD",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000902",
+            "kegg": "C00003",
+            "chebi": "CHEBI:15846",
+            "pubchem": "5893",
+            "cas": "53-84-9",
+            "biocyc": "NAD",
+            "chemspider": "5682"
+          }
+        },
+        {
+          "pathbank_compound_id": 915,
+          "name": "Nicotinic acid adenine dinucleotide",
+          "short_name": "NctAADn",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0001179",
+            "kegg": "C00857",
+            "chebi": "CHEBI:18304",
+            "pubchem": "165491",
+            "cas": "6450-77-7",
+            "biocyc": "DEAMIDO-NAD",
+            "chemspider": "145043"
+          }
+        }
+      ]
+    },
+    "db::nadh": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001487",
+        "kegg": "C00004",
+        "chebi": "CHEBI:16908",
+        "pubchem": "439153",
+        "cas": "58-68-4",
+        "biocyc": "NADH",
+        "chemspider": "388299",
+        "drugbank": "DB00157"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1144,
+          "name": "NADH",
+          "short_name": "NADH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001487",
+            "kegg": "C00004",
+            "chebi": "CHEBI:16908",
+            "pubchem": "439153",
+            "cas": "58-68-4",
+            "biocyc": "NADH",
+            "chemspider": "388299",
+            "drugbank": "DB00157"
+          }
+        }
+      ]
+    },
+    "db::13bisphosphoglycerate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001270",
+        "kegg": "C00236",
+        "pubchem": "683",
+        "cas": "1981-49-3",
+        "biocyc": "DPG",
+        "chemspider": "663"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 983,
+          "name": "Glyceric acid 1,3-biphosphate",
+          "short_name": "GlyABp",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001270",
+            "kegg": "C00236",
+            "pubchem": "683",
+            "cas": "1981-49-3",
+            "biocyc": "DPG",
+            "chemspider": "663"
+          }
+        },
+        {
+          "pathbank_compound_id": 96969,
+          "name": "1,3-bisphosphoglycerate",
+          "short_name": "13B",
+          "score": 1.0,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 108844,
+          "name": "1,3-Bisphosphoglycerate",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C00236"
+          }
+        }
+      ]
+    },
+    "db::adp": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001341",
+        "kegg": "C00008",
+        "chebi": "CHEBI:16761",
+        "pubchem": "6022",
+        "cas": "58-64-0",
+        "biocyc": "ADP",
+        "chemspider": "5800"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1034,
+          "name": "Adenosine diphosphate",
+          "short_name": "ADP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001341",
+            "kegg": "C00008",
+            "chebi": "CHEBI:16761",
+            "pubchem": "6022",
+            "cas": "58-64-0",
+            "biocyc": "ADP",
+            "chemspider": "5800"
+          }
+        },
+        {
+          "pathbank_compound_id": 914,
+          "name": "Adenosine diphosphate ribose",
+          "short_name": "ADP-Rib",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0001178",
+            "kegg": "C00301",
+            "chebi": "CHEBI:16960",
+            "pubchem": "192",
+            "cas": "20762-30-5",
+            "biocyc": "ADENOSINE_DIPHOSPHATE_RIBOSE",
+            "chemspider": "187"
+          }
+        },
+        {
+          "pathbank_compound_id": 102446,
+          "name": "ADP Ribose",
+          "short_name": "ADPrib",
+          "score": 0.705,
+          "mapped_ids": {
+            "pubchem": "30243"
+          }
+        },
+        {
+          "pathbank_compound_id": 7251,
+          "name": "ADP-ribose 1\"-2\" cyclic phosphate ",
+          "short_name": "AR12P",
+          "score": 0.6133,
+          "mapped_ids": {
+            "hmdb": "HMDB0011671",
+            "pubchem": "53481021"
+          }
+        },
+        {
+          "pathbank_compound_id": 101931,
+          "name": "Cyclic ADP ribose",
+          "short_name": "CADPr",
+          "score": 0.6133,
+          "mapped_ids": {
+            "pubchem": "123847"
+          }
+        },
+        {
+          "pathbank_compound_id": 143,
+          "name": "NADP",
+          "short_name": "NADP",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0000217",
+            "kegg": "C00006",
+            "chebi": "CHEBI:18009",
+            "pubchem": "5886",
+            "cas": "53-59-8",
+            "biocyc": "NAD(P)",
+            "chemspider": "5675"
+          }
+        },
+        {
+          "pathbank_compound_id": 146,
+          "name": "NADPH",
+          "short_name": "NADPH",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0000221",
+            "kegg": "C00005",
+            "chebi": "CHEBI:16474",
+            "pubchem": "22833512",
+            "cas": "53-57-6",
+            "biocyc": "NADPH",
+            "chemspider": "17215925"
+          }
+        },
+        {
+          "pathbank_compound_id": 973,
+          "name": "ADP-Ribosyl-L-arginine",
+          "short_name": "ARLA",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0001260",
+            "pubchem": "493",
+            "cas": "103960-56-1",
+            "biocyc": "CPD-557",
+            "chemspider": "479"
+          }
+        },
+        {
+          "pathbank_compound_id": 1161,
+          "name": "dADP",
+          "short_name": "dADP",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0001508",
+            "kegg": "C00206",
+            "chebi": "CHEBI:16174",
+            "pubchem": "53477733",
+            "cas": "2793-06-8",
+            "biocyc": "DADP"
+          }
+        },
+        {
+          "pathbank_compound_id": 2726,
+          "name": "ADP-ribose 2'-phosphate",
+          "short_name": "A2P",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0006336",
+            "kegg": "C03246",
+            "chebi": "CHEBI:37463",
+            "pubchem": "439957",
+            "cas": "26303-90-2",
+            "biocyc": "CPD-861",
+            "chemspider": "388983"
+          }
+        }
+      ]
+    },
+    "db::3phosphoglycerate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000807",
+        "kegg": "C00597",
+        "chebi": "CHEBI:17050",
+        "pubchem": "724",
+        "cas": "820-11-1",
+        "biocyc": "G3P",
+        "chemspider": "704"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 644,
+          "name": "3-Phosphoglyceric acid",
+          "short_name": "G3P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000807",
+            "kegg": "C00597",
+            "chebi": "CHEBI:17050",
+            "pubchem": "724",
+            "cas": "820-11-1",
+            "biocyc": "G3P",
+            "chemspider": "704"
+          }
+        },
+        {
+          "pathbank_compound_id": 41161,
+          "name": "2-(α-D-Mannosyl)-3-phosphoglycerate",
+          "short_name": "2-(&α",
+          "score": 0.43,
+          "mapped_ids": {
+            "chebi": "CHEBI:16351",
+            "pubchem": "443242"
+          }
+        },
+        {
+          "pathbank_compound_id": 42553,
+          "name": "2(α-D-mannosyl)-3-phosphoglycerate",
+          "short_name": "2αDM3P",
+          "score": 0.43,
+          "mapped_ids": {}
+        }
+      ]
+    },
+    "db::2phosphoglycerate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000362",
+        "chebi": "CHEBI:24344",
+        "pubchem": "59",
+        "cas": "2553-59-5",
+        "biocyc": "2-PG",
+        "chemspider": "58"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 262,
+          "name": "2-Phosphoglyceric acid",
+          "short_name": "2-PPGA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000362",
+            "chebi": "CHEBI:24344",
+            "pubchem": "59",
+            "cas": "2553-59-5",
+            "biocyc": "2-PG",
+            "chemspider": "58"
+          }
+        }
+      ]
+    },
+    "db::phosphoenolpyruvate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000263",
+        "kegg": "C00074",
+        "chebi": "CHEBI:44897",
+        "pubchem": "1005",
+        "cas": "138-08-9",
+        "biocyc": "PHOSPHO-ENOL-PYRUVATE",
+        "chemspider": "980",
+        "drugbank": "DB01819"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 180,
+          "name": "Phosphoenolpyruvic acid",
+          "short_name": "Pep",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000263",
+            "kegg": "C00074",
+            "chebi": "CHEBI:44897",
+            "pubchem": "1005",
+            "cas": "138-08-9",
+            "biocyc": "PHOSPHO-ENOL-PYRUVATE",
+            "chemspider": "980",
+            "drugbank": "DB01819"
+          }
+        },
+        {
+          "pathbank_compound_id": 108866,
+          "name": "Phosphoenolpyruvate",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {}
+        }
+      ]
+    },
+    "db::pyruvate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000243",
+        "kegg": "C00022",
+        "chebi": "CHEBI:32816",
+        "pubchem": "1060",
+        "cas": "127-17-3",
+        "biocyc": "PYRUVATE",
+        "chemspider": "1031",
+        "drugbank": "DB00119"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 164,
+          "name": "Pyruvic acid",
+          "short_name": "Pyr",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000243",
+            "kegg": "C00022",
+            "chebi": "CHEBI:32816",
+            "pubchem": "1060",
+            "cas": "127-17-3",
+            "biocyc": "PYRUVATE",
+            "chemspider": "1031",
+            "drugbank": "DB00119"
+          }
+        },
+        {
+          "pathbank_compound_id": 108870,
+          "name": "Pyruvate",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 1570,
+          "name": "B-Sulfinyl pyruvate",
+          "short_name": "3S",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0002332",
+            "kegg": "C05527",
+            "chebi": "CHEBI:1665",
+            "pubchem": "110",
+            "cas": "88947-38-0",
+            "chemspider": "108"
+          }
+        },
+        {
+          "pathbank_compound_id": 12823,
+          "name": "Ethyl pyruvate",
+          "short_name": "FEMA",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0031643",
+            "pubchem": "12041",
+            "cas": "617-35-6",
+            "chemspider": "11544",
+            "drugbank": "DB05869"
+          }
+        },
+        {
+          "pathbank_compound_id": 19123,
+          "name": "cis-3-Hexenyl pyruvate",
+          "short_name": "Fema",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0038276",
+            "pubchem": "5363291",
+            "cas": "68133-76-6",
+            "chemspider": "4515658"
+          }
+        },
+        {
+          "pathbank_compound_id": 41681,
+          "name": "Imidazole pyruvate",
+          "short_name": "IPA",
+          "score": 0.705,
+          "mapped_ids": {
+            "chebi": "CHEBI:17406",
+            "pubchem": "794"
+          }
+        },
+        {
+          "pathbank_compound_id": 104604,
+          "name": "Phosphoenol pyruvate",
+          "short_name": "PP",
+          "score": 0.705,
+          "mapped_ids": {
+            "kegg": "C00074"
+          }
+        },
+        {
+          "pathbank_compound_id": 104683,
+          "name": "Isoniazid pyruvate",
+          "short_name": "IP",
+          "score": 0.705,
+          "mapped_ids": {
+            "kegg": "C16624",
+            "chebi": "CHEBI:80618",
+            "pubchem": "51090950"
+          }
+        },
+        {
+          "pathbank_compound_id": 3,
+          "name": "2-Ketobutyric acid",
+          "short_name": "2KBA",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000005",
+            "kegg": "C00109",
+            "chebi": "CHEBI:30831",
+            "pubchem": "58",
+            "cas": "600-18-0",
+            "biocyc": "2-OXOBUTANOATE",
+            "chemspider": "57",
+            "drugbank": "DB04553"
+          }
+        },
+        {
+          "pathbank_compound_id": 1636,
+          "name": "Pyruvatoxime",
+          "short_name": "Pyruvat",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0002455",
+            "pubchem": "6419427",
+            "cas": "2211-14-5",
+            "biocyc": "CPD-3344",
+            "chemspider": "4925178"
           }
         }
       ]
