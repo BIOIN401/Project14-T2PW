@@ -743,32 +743,39 @@ def _add_cv_terms(element: Any, mapped_ids: Dict[str, Any], libsbml: Any) -> Non
 def _inject_root_namespaces(sbml_path: Path) -> None:
     """Post-process the written SBML to add xmlns declarations PathWhiz expects on <sbml>."""
     BQ_URI = "http://biomodels.net/biology-qualifiers/"
+    PW_URI = "http://www.spmdb.ca/pathwhiz"
+    RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+
     text = sbml_path.read_text(encoding="utf-8")
 
     # libsbml may assign an auto-prefix (e.g. ns3) to the biology-qualifiers namespace.
     # Find it and rename every occurrence to bqbiol so PathWhiz recognises bqbiol:is.
     auto_prefix = re.search(
-        r'xmlns:([A-Za-z][A-Za-z0-9_]*)="' + re.escape(BQ_URI) + '"', text
+        r'xmlns:([A-Za-z][A-Za-z0-9_]*)\s*=\s*["\']' + re.escape(BQ_URI) + r'["\']', text
     )
     if auto_prefix and auto_prefix.group(1) != "bqbiol":
-        pfx = auto_prefix.group(1)
-        # Replace namespace declaration and all element/attribute uses of that prefix
-        text = text.replace(f'xmlns:{pfx}="{BQ_URI}"', f'xmlns:bqbiol="{BQ_URI}"')
-        text = re.sub(rf'<{re.escape(pfx)}:', '<bqbiol:', text)
-        text = re.sub(rf'</{re.escape(pfx)}:', '</bqbiol:', text)
+        pfx = re.escape(auto_prefix.group(1))
+        text = re.sub(
+            rf'xmlns:{pfx}\s*=\s*(["\'])' + re.escape(BQ_URI) + r'\1',
+            f'xmlns:bqbiol="{BQ_URI}"',
+            text,
+        )
+        text = re.sub(rf'<{pfx}:', '<bqbiol:', text)
+        text = re.sub(rf'</{pfx}:', '</bqbiol:', text)
 
-    EXTRA_NS = (
-        ' xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-        ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/"'
-        ' xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
-    )
-    sbml_open = re.search(r'<sbml\b[^>]*>', text)
-    if sbml_open and 'xmlns:pathwhiz=' not in sbml_open.group():
-        tag = sbml_open.group()
-        # Remove any bqbiol declaration already on root (will be re-added cleanly)
-        tag_clean = re.sub(r'\s*xmlns:bqbiol="[^"]*"', '', tag)
-        text = text.replace(sbml_open.group(), tag_clean[:-1] + EXTRA_NS + ">", 1)
+    # Add any missing namespace declarations directly onto the <sbml> root tag.
+    def _patch_sbml_tag(m: re.Match) -> str:
+        tag = m.group(0)
+        additions = ""
+        if 'xmlns:pathwhiz=' not in tag:
+            additions += f' xmlns:pathwhiz="{PW_URI}"'
+        if 'xmlns:bqbiol=' not in tag:
+            additions += f' xmlns:bqbiol="{BQ_URI}"'
+        if 'xmlns:rdf=' not in tag:
+            additions += f' xmlns:rdf="{RDF_URI}"'
+        return tag[:-1] + additions + ">" if additions else tag
 
+    text = re.sub(r'<sbml\b[^>]*>', _patch_sbml_tag, text, count=1)
     sbml_path.write_text(text, encoding="utf-8")
 
 
@@ -779,11 +786,25 @@ def build_sbml(
     report_txt_path: Path,
     *,
     default_compartment_name: str = "cell",
+    db_config: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     try:
         import libsbml  # type: ignore
     except Exception as exc:  # noqa: BLE001
         raise RuntimeError("python-libsbml is required. Install python-libsbml.") from exc
+
+    # Push DB credentials into env so _load_pathwhiz_db can pick them up
+    if db_config:
+        for env_key, cfg_key in [
+            ("PATHBANK_DB_HOST", "host"),
+            ("PATHBANK_DB_PORT", "port"),
+            ("PATHBANK_DB_USER", "user"),
+            ("PATHBANK_DB_PASSWORD", "password"),
+            ("PATHBANK_DB_SCHEMA", "schema"),
+        ]:
+            val = db_config.get(cfg_key)
+            if val is not None and not os.environ.get(env_key):
+                os.environ[env_key] = str(val)
 
     pw_db = _load_pathwhiz_db()
 

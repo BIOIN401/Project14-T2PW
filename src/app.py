@@ -906,6 +906,13 @@ def run_post_pipeline_sbml_artifacts(
             sbml_report_json_path,
             sbml_report_txt_path,
             default_compartment_name=default_compartment,
+            db_config={
+                "host": db_host,
+                "port": db_port,
+                "user": db_user,
+                "password": db_password,
+                "schema": db_schema,
+            },
         )
         sbml_overwatch_report: Dict[str, Any] = {}
         if use_sbml_overwatch:
