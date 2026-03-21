@@ -13,7 +13,14 @@
       "Bash(python -c \"import ast; ast.parse\\(open\\(''src/sbml_render_pathwhiz_like.py''\\).read\\(\\)\\); print\\(''renderer OK''\\)\")",
       "Bash(python -c \"import ast; ast.parse\\(open\\(''src/json_to_sbml.py''\\).read\\(\\)\\); print\\(''OK''\\)\")",
       "Bash(python -c \"import ast; ast.parse\\(open\\(''src/sbml_add_pathwhiz_layout.py''\\).read\\(\\)\\); print\\(''OK''\\)\")",
-      "Bash(python -c \":*)"
+      "Bash(python -c \":*)",
+      "Bash(sort find:*)",
+      "Bash(mv \"PW000001.pwml\" \"PW012926.pwml\" \"PW1.pwml\" \"PW176888.pwml\" \"PW687775.pwml\" \"PW741182.pwml\" reference/)",
+      "Bash(mv \"PW000004 \\(1\\).sbml\" \"PW012926 \\(1\\).sbml\" \"PW144250.sbml\" reference/)",
+      "Bash(mv \"PW012926 \\(1\\).sbml.png\" reference/)",
+      "Bash(mv tmp_sbml_check tmp_sbml_real_check tmp/)",
+      "Bash(mv out/enrichment_dump.json outputs/)",
+      "Bash(rmdir out:*)"
     ]
   }
 }

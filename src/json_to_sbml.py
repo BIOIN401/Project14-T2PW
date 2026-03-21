@@ -649,6 +649,7 @@ def _load_pathwhiz_db(db_path: Optional[Path] = None) -> Dict[str, Any]:
     here = Path(__file__).parent
     for d in [here, here.parent, Path.cwd(), Path.cwd().parent]:
         candidates.append(d / "pathwhiz_id_db.json")
+        candidates.append(d / "data" / "pathwhiz_id_db.json")
     for p in candidates:
         if p.exists():
             return json.loads(p.read_text(encoding="utf-8"))

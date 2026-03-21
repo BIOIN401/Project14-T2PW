@@ -44,7 +44,7 @@ def main() -> None:
     parser.add_argument("--default-compartment", default="cell", help="Default compartment name if missing")
     parser.add_argument(
         "--mapping-cache",
-        default="id_mapping_cache.json",
+        default="data/id_mapping_cache.json",
         help="Path to mapping cache JSON (relative to out-dir if not absolute)",
     )
     parser.add_argument("--no-sbml-overwatch", action="store_true", help="Disable semantic SBML overwatch stage")

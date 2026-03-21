@@ -123,12 +123,14 @@ def _safe_dict(value: Any) -> Dict[str, Any]:
 
 
 def _save_pipeline_outputs(project_root: Path, sbml_bytes: bytes, render_ready_bytes: bytes) -> str:
-    """Write pathway.sbml and pathway.render_ready.sbml to the project root after each pipeline run."""
+    """Write pathway.sbml and pathway.render_ready.sbml to outputs/ after each pipeline run."""
+    out_dir = project_root / "outputs"
+    out_dir.mkdir(exist_ok=True)
     if sbml_bytes:
-        (project_root / "pathway.sbml").write_bytes(sbml_bytes)
+        (out_dir / "pathway.sbml").write_bytes(sbml_bytes)
     if render_ready_bytes:
-        (project_root / "pathway.render_ready.sbml").write_bytes(render_ready_bytes)
-    return str(project_root / "pathway.render_ready.sbml")
+        (out_dir / "pathway.render_ready.sbml").write_bytes(render_ready_bytes)
+    return str(out_dir / "pathway.render_ready.sbml")
 
 
 def _safe_list(value: Any) -> List[Any]:
@@ -1244,7 +1246,7 @@ if st.session_state.get("pipeline_ready"):
     )
     mapping_cache_text = st.text_input(
         "ID mapping cache path",
-        value="id_mapping_cache.json",
+        value="data/id_mapping_cache.json",
         key="post_mapping_cache",
         help="Cache file for UniProt/compound mapping lookups.",
     )
@@ -1647,12 +1649,12 @@ if st.session_state.get("pipeline_ready"):
 
     st.subheader("PWML export")
     pwml_col_a, pwml_col_b = st.columns(2)
-    ref_path_text = pwml_col_a.text_input("Reference PWML path", value="PW012926.pwml")
+    ref_path_text = pwml_col_a.text_input("Reference PWML path", value="reference/PW012926.pwml")
     grounding_enabled = pwml_col_b.checkbox("Apply deterministic grounding before PWML export", value=False)
 
     grounding_path_text = ""
     if grounding_enabled:
-        grounding_path_text = st.text_input("Grounding dictionary path", value="grounding_dictionary.example.json")
+        grounding_path_text = st.text_input("Grounding dictionary path", value="data/grounding_dictionary.example.json")
 
     meta_col_1, meta_col_2, meta_col_3 = st.columns(3)
     pw_id = meta_col_1.text_input("pw-id", value="PW000XYZ")
