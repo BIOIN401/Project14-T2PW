@@ -122,6 +122,15 @@ def _safe_dict(value: Any) -> Dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _save_pipeline_outputs(project_root: Path, sbml_bytes: bytes, render_ready_bytes: bytes) -> str:
+    """Write pathway.sbml and pathway.render_ready.sbml to the project root after each pipeline run."""
+    if sbml_bytes:
+        (project_root / "pathway.sbml").write_bytes(sbml_bytes)
+    if render_ready_bytes:
+        (project_root / "pathway.render_ready.sbml").write_bytes(render_ready_bytes)
+    return str(project_root / "pathway.render_ready.sbml")
+
+
 def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
 
@@ -963,6 +972,11 @@ def run_post_pipeline_sbml_artifacts(
             "sbml_render_ready_sbml_bytes": sbml_render_ready_sbml_bytes,
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
+            "saved_pathway_sbml_path": _save_pipeline_outputs(
+                project_root,
+                sbml_path.read_bytes() if sbml_path.exists() else b"",
+                sbml_render_ready_sbml_bytes,
+            ),
             "enrichment_cache_path": str(enrichment_cache_path),
             "enrichment_dump_path": str(enrichment_dump_path),
             "mapping_id_source": id_source,
