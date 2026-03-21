@@ -915,8 +915,10 @@
   },
   "compound:glyceraldehyde-3-phosphate|HMDB0001112": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Glyceraldehyde 3-phosphate",
+    "primary_name": "D-Glyceraldehyde 3-phosphate",
     "synonyms": [
+      "D-Glyceraldehyde 3-phosphate",
+      "(2R)-2-Hydroxy-3-(phosphonooxy)-propanal",
       "Glyceraldehyde 3-phosphate"
     ],
     "description": "",
@@ -932,12 +934,39 @@
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [],
-    "pathways": [],
+    "pathways": [
+      "Glycolysis / Gluconeogenesis",
+      "Pentose phosphate pathway",
+      "Fructose and mannose metabolism",
+      "Galactose metabolism",
+      "Clavulanic acid biosynthesis",
+      "Inositol phosphate metabolism",
+      "Methane metabolism",
+      "Carbon fixation by Calvin cycle",
+      "Thiamine metabolism",
+      "Vitamin B6 metabolism",
+      "Terpenoid backbone biosynthesis",
+      "Biosynthesis of plant secondary metabolites",
+      "Biosynthesis of phenylpropanoids",
+      "Biosynthesis of terpenoids and steroids",
+      "Biosynthesis of alkaloids derived from shikimate pathway",
+      "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+      "Biosynthesis of alkaloids derived from histidine and purine",
+      "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+      "Biosynthesis of plant hormones",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "Biosynthesis of amino acids",
+      "Biosynthesis of cofactors",
+      "Diabetic cardiomyopathy"
+    ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00661",
+      "kegg_id": "C00118",
       "hmdb_id": "HMDB0001112",
       "chebi_id": "CHEBI:17138",
       "pubchem_id": "729",
@@ -949,26 +978,55 @@
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00661",
-      "primary_name": "Glyceraldehyde 3-phosphate",
+      "id": "C00118",
+      "primary_name": "D-Glyceraldehyde 3-phosphate",
       "synonyms": [
+        "D-Glyceraldehyde 3-phosphate",
+        "(2R)-2-Hydroxy-3-(phosphonooxy)-propanal",
         "Glyceraldehyde 3-phosphate"
       ],
       "formula": "C3H7O6P",
       "mass_monoisotopic": 169.998,
       "mass_average": 170.06,
-      "pathways": [],
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Pentose phosphate pathway",
+        "Fructose and mannose metabolism",
+        "Galactose metabolism",
+        "Clavulanic acid biosynthesis",
+        "Inositol phosphate metabolism",
+        "Methane metabolism",
+        "Carbon fixation by Calvin cycle",
+        "Thiamine metabolism",
+        "Vitamin B6 metabolism",
+        "Terpenoid backbone biosynthesis",
+        "Biosynthesis of plant secondary metabolites",
+        "Biosynthesis of phenylpropanoids",
+        "Biosynthesis of terpenoids and steroids",
+        "Biosynthesis of alkaloids derived from shikimate pathway",
+        "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+        "Biosynthesis of alkaloids derived from histidine and purine",
+        "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+        "Biosynthesis of plant hormones",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Biosynthesis of amino acids",
+        "Biosynthesis of cofactors",
+        "Diabetic cardiomyopathy"
+      ],
       "kegg_class": [],
       "cross_references": {
-        "kegg_id": "C00661",
-        "pubchem_id": "3930",
-        "chebi_id": "17138"
+        "kegg_id": "C00118",
+        "pubchem_id": "3418",
+        "chebi_id": "29052"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00661",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00661",
-        "retrieved_at": "2026-03-20T19:31:41Z",
+        "id": "C00118",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00118",
+        "retrieved_at": "2026-03-21T01:12:09Z",
         "status": "ok"
       }
     },
@@ -1010,8 +1068,8 @@
       },
       {
         "source": "KEGG",
-        "id": "C00661",
-        "retrieved_at": "2026-03-20T19:31:41Z",
+        "id": "C00118",
+        "retrieved_at": "2026-03-21T01:12:09Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -1156,99 +1214,6 @@
         "source": "KEGG",
         "id": "C00111",
         "retrieved_at": "2026-03-07T21:34:42Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:1,3-bisphosphoglycerate|HMDB0001270": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Cyclic 2,3-bisphospho-D-glycerate",
-    "synonyms": [
-      "Cyclic 2,3-bisphospho-D-glycerate",
-      "Cyclic 2,3-diphospho-D-glycerate",
-      "Cyclic glycerate-2,3P2",
-      "cDPG",
-      "Cyclic 2,3-bisphosphoglycerate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C3H6O9P2",
-    "charge": 0,
-    "mass_monoisotopic": 247.9487,
-    "mass_average": 248.02,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C06189",
-      "hmdb_id": "HMDB0001270",
-      "pubchem_id": "683",
-      "cas": "1981-49-3",
-      "biocyc": "DPG",
-      "chemspider": "663"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C06189",
-      "primary_name": "Cyclic 2,3-bisphospho-D-glycerate",
-      "synonyms": [
-        "Cyclic 2,3-bisphospho-D-glycerate",
-        "Cyclic 2,3-diphospho-D-glycerate",
-        "Cyclic glycerate-2,3P2",
-        "cDPG",
-        "Cyclic 2,3-bisphosphoglycerate"
-      ],
-      "formula": "C3H6O9P2",
-      "mass_monoisotopic": 247.9487,
-      "mass_average": 248.02,
-      "pathways": [],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C06189",
-        "pubchem_id": "8440"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C06189",
-        "source_url": "https://rest.kegg.jp/get/cpd:C06189",
-        "retrieved_at": "2026-03-21T01:12:09Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {},
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001270",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001270",
-        "retrieved_at": "2026-03-20T19:31:51Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "HMDB",
-        "id": "HMDB0001270",
-        "retrieved_at": "2026-03-20T19:31:51Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C06189",
-        "retrieved_at": "2026-03-21T01:12:09Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -1540,6 +1505,99 @@
         "source": "KEGG",
         "id": "C00004",
         "retrieved_at": "2026-03-20T19:31:51Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:1,3-bisphosphoglycerate|HMDB0001270": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Cyclic 2,3-bisphospho-D-glycerate",
+    "synonyms": [
+      "Cyclic 2,3-bisphospho-D-glycerate",
+      "Cyclic 2,3-diphospho-D-glycerate",
+      "Cyclic glycerate-2,3P2",
+      "cDPG",
+      "Cyclic 2,3-bisphosphoglycerate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H6O9P2",
+    "charge": 0,
+    "mass_monoisotopic": 247.9487,
+    "mass_average": 248.02,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C06189",
+      "hmdb_id": "HMDB0001270",
+      "pubchem_id": "683",
+      "cas": "1981-49-3",
+      "biocyc": "DPG",
+      "chemspider": "663"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C06189",
+      "primary_name": "Cyclic 2,3-bisphospho-D-glycerate",
+      "synonyms": [
+        "Cyclic 2,3-bisphospho-D-glycerate",
+        "Cyclic 2,3-diphospho-D-glycerate",
+        "Cyclic glycerate-2,3P2",
+        "cDPG",
+        "Cyclic 2,3-bisphosphoglycerate"
+      ],
+      "formula": "C3H6O9P2",
+      "mass_monoisotopic": 247.9487,
+      "mass_average": 248.02,
+      "pathways": [],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C06189",
+        "pubchem_id": "8440"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C06189",
+        "source_url": "https://rest.kegg.jp/get/cpd:C06189",
+        "retrieved_at": "2026-03-21T01:12:09Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {},
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001270",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001270",
+        "retrieved_at": "2026-03-20T19:31:51Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "HMDB",
+        "id": "HMDB0001270",
+        "retrieved_at": "2026-03-20T19:31:51Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C06189",
+        "retrieved_at": "2026-03-21T01:12:09Z",
         "status": "ok",
         "error_if_any": ""
       }
