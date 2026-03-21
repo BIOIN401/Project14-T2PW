@@ -222,9 +222,9 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
         e1 = (inter or {}).get("entity_1", "")
         e2 = (inter or {}).get("entity_2", "")
         if isinstance(e1, str) and e1.strip():
-            add_edge(adj, node("entity", e1.strip()), iid)
+            add_edge(adj, node(resolve_kind(e1.strip()), e1.strip()), iid)
         if isinstance(e2, str) and e2.strip():
-            add_edge(adj, node("entity", e2.strip()), iid)
+            add_edge(adj, node(resolve_kind(e2.strip()), e2.strip()), iid)
 
     meta = {
         "n_reactions": len(reactions),

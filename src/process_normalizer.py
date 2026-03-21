@@ -112,6 +112,7 @@ def _new_report() -> Dict[str, Any]:
             "entities_added_as_compounds": 0,
             "entities_added_as_proteins": 0,
             "catalysts_promoted_to_enzymes": 0,
+            "interaction_enzymes_promoted": 0,
             "scaffold_inputs_added": 0,
             "scaffold_in_modifiers_count": 0,
             "n_plus_tokens_remaining": 0,
@@ -1929,6 +1930,121 @@ def attach_transporters_from_evidence(payload: Dict[str, Any], *, report: Option
     return payload
 
 
+_CATALYTIC_REL_RE = re.compile(
+    r"(catalyz|catalys|enzyme|activat|catalytic|promotes|facilitate)",
+    flags=re.IGNORECASE,
+)
+
+
+def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Move protein-catalysis interactions into reaction enzymes lists.
+
+    The LLM sometimes generates enzyme-reaction relationships as
+    processes/interactions entries (entity_1=protein, entity_2=reaction name,
+    relationship="catalyzes") rather than putting the protein in
+    reactions[].enzymes.  This step finds those interactions, adds the protein
+    to the matching reaction's enzymes list, and removes the interaction so it
+    doesn't interfere with later validation.
+    """
+    rep = report if isinstance(report, dict) else _new_report()
+    _, proteins, complexes = _entity_lists(payload)
+    protein_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+
+    processes = _safe_dict(payload.setdefault("processes", {}))
+    reactions = _safe_list(processes.get("reactions", []))
+    interactions = _safe_list(processes.get("interactions", []))
+
+    # Build normalised-name → reaction index map
+    rxn_norm_to_idx: Dict[str, int] = {}
+    for ridx, rxn in enumerate(reactions):
+        if not isinstance(rxn, dict):
+            continue
+        rname = _canonical(str(rxn.get("name", "")))
+        if rname:
+            rxn_norm_to_idx[_normalize(rname)] = ridx
+
+    kept_interactions: List[Dict[str, Any]] = []
+    promoted = 0
+    for iidx, inter in enumerate(interactions):
+        if not isinstance(inter, dict):
+            kept_interactions.append(inter)
+            continue
+
+        relationship = str(inter.get("relationship", ""))
+        e1 = _canonical(str(inter.get("entity_1", "")))
+        e2 = _canonical(str(inter.get("entity_2", "")))
+
+        if not _CATALYTIC_REL_RE.search(relationship):
+            kept_interactions.append(inter)
+            continue
+
+        # Determine which entity is the protein and which is the reaction
+        protein_name: Optional[str] = None
+        rxn_idx: Optional[int] = None
+
+        e1_norm = _normalize(e1)
+        e2_norm = _normalize(e2)
+
+        if e1_norm in protein_norms and e2_norm in rxn_norm_to_idx:
+            protein_name = e1
+            rxn_idx = rxn_norm_to_idx[e2_norm]
+        elif e2_norm in protein_norms and e1_norm in rxn_norm_to_idx:
+            protein_name = e2
+            rxn_idx = rxn_norm_to_idx[e1_norm]
+        elif e1_norm in protein_norms:
+            # Protein is clear but reaction name doesn't match exactly —
+            # try fuzzy: does any reaction name appear as substring of e2?
+            for rnorm, ridx in rxn_norm_to_idx.items():
+                if rnorm and (rnorm in e2_norm or e2_norm in rnorm):
+                    protein_name = e1
+                    rxn_idx = ridx
+                    break
+        elif e2_norm in protein_norms:
+            for rnorm, ridx in rxn_norm_to_idx.items():
+                if rnorm and (rnorm in e1_norm or e1_norm in rnorm):
+                    protein_name = e2
+                    rxn_idx = ridx
+                    break
+
+        if protein_name is None or rxn_idx is None:
+            kept_interactions.append(inter)
+            continue
+
+        rxn = reactions[rxn_idx]
+        if not isinstance(rxn.get("enzymes"), list):
+            rxn["enzymes"] = []
+        enzymes = rxn["enzymes"]
+        enzyme_norms = set()
+        for enz in enzymes:
+            if isinstance(enz, dict):
+                for k in ["protein", "protein_complex", "name"]:
+                    v = _canonical(str(enz.get(k, "")))
+                    if v:
+                        enzyme_norms.add(_normalize(v))
+                        break
+
+        pnorm = _normalize(protein_name)
+        if pnorm not in enzyme_norms:
+            enzyme_key = "protein_complex" if ":" in protein_name else "protein"
+            enzymes.append({enzyme_key: protein_name})
+            promoted += 1
+            if isinstance(rep.get("actions"), list):
+                rep["actions"].append({
+                    "type": "interaction_enzyme_promoted",
+                    "json_pointer": f"/processes/interactions/{iidx}",
+                    "protein": protein_name,
+                    "reaction_idx": rxn_idx,
+                })
+        # Drop the interaction — it is now encoded in the reaction enzymes list
+
+    if promoted:
+        processes["interactions"] = kept_interactions
+        if isinstance(rep.get("summary"), dict):
+            rep["summary"]["interaction_enzymes_promoted"] += promoted
+
+    return payload
+
+
 def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     reactions, _ = _process_lists(payload)
@@ -2477,6 +2593,7 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     cleanup_disallowed_complexes(data, report=report)
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
+    promote_interaction_enzymes(data, report=report)
     promote_catalysts(data, report=report)
     canonicalize_same_as_aliases(data, report=report)
     normalize_process_actor_schema(data, report=report)
