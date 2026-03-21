@@ -1,0 +1,1138 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" level="3" version="1">
+  <model metaid="_5734e505-270d-4b45-a2bb-8a6e4f818ac5" id="Pathway144250">
+    <annotation>
+  <pathwhiz:dimensions xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:width="3954" pathwhiz:height="3132"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_5734e505-270d-4b45-a2bb-8a6e4f818ac5">
+          <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:smpdb:SMP0142582"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz:PW144250"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+      <listOfUnitDefinitions>
+      <unitDefinition name="Mole" id="Unit1">
+        <listOfUnits>
+          <unit scale="0" kind="mole" multiplier="1" exponent="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment name="Homo sapiens, Cell, Mitochondrial Matrix" constant="false" id="BiologicalState4" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="4" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="Homo sapiens, Cell, Cytoplasm" constant="false" id="BiologicalState8" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="8" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="Homo sapiens" constant="false" id="BiologicalState1" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="1" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="Homo sapiens, Cell, Mitochondrion" constant="false" id="BiologicalState3" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="3" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="Homo sapiens, Blood Vessel" constant="false" id="BiologicalState51" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="51" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="Homo sapiens, Liver, Cell" constant="false" id="BiologicalState29" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="29" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="Homo sapiens, Cell Membrane" constant="false" id="BiologicalState14" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="14" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="dd630f18-66f1-4a60-9829-61b4022b4cd9" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Adenosine triphosphate" id="Compound414">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="414" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#dd630f18-66f1-4a60-9829-61b4022b4cd9">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000414"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000538"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00002"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:ATP"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:5957"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15422"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:5742"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C10H16N5O13P3/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(26-10)1-25-30(21,22)28-31(23,24)27-29(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H,23,24)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:ZKHQWZAMYRWXGA-KQYNXXCUSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:56-65-5"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="ac4b6308-60a7-4f0c-9325-ac615734f021" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Ammonia" id="Compound35">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="35" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#ac4b6308-60a7-4f0c-9325-ac615734f021">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000035"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000051"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00014"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:AMMONIA"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:222"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16134"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:217"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/H3N/h1H3"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:QGZKDVFQNNGYKY-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:7664-41-7"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_10d5a6a9-6ff4-4088-a668-2da9fb047e9d" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Carbon dioxide" id="Compound1316">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1316" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_10d5a6a9-6ff4-4088-a668-2da9fb047e9d">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C001316"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001967"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00011"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:280"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16526"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:274"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/CO2/c2-1-3"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:CURLTUGMZLYLDI-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:124-38-9"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="fdcfcc69-2e46-448e-aec5-fafb1f11d3af" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Water" id="Compound1420">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1420" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#fdcfcc69-2e46-448e-aec5-fafb1f11d3af">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C001420"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0002111"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00001"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:962"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15377"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:937"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/H2O/h1H2"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:XLYOFNOQVPJJNP-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:7732-18-5"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="bb2a6c20-3107-44aa-aa78-30ddd18edf35" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Adenosine diphosphate" id="Compound1034">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1034" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#bb2a6c20-3107-44aa-aa78-30ddd18edf35">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C001034"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001341"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00008"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:ADP"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:6022"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16761"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:5800"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C10H15N5O10P2/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(24-10)1-23-27(21,22)25-26(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:XTWYTFMLZFPYCI-KQYNXXCUSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:58-64-0"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c909310d-e9a4-480b-8ca4-31a74d80f9de" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Phosphoric acid" id="Compound1441">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1441" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#c909310d-e9a4-480b-8ca4-31a74d80f9de">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C001441"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0002142"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00009"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:1004"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:26078"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:979"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/H3O4P/c1-5(2,3)4/h(H3,1,2,3,4)"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:NBIIXXVUZAFLBC-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:7664-38-2"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_1877ffe4-4fcb-4c1b-b21e-6537aad92656" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Carbamoyl phosphate" id="Compound862">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="862" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_1877ffe4-4fcb-4c1b-b21e-6537aad92656">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000862"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001096"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00169"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:CARBAMOYL-P"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:278"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17672"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:272"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/CH4NO5P/c2-1(3)7-8(4,5)6/h(H2,2,3)(H2,4,5,6)"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:FFQKYPRQEYGKAF-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:590-55-6"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_5c23ae8f-129b-46be-a385-01867f0b41ce" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState4" name="Carbamoyl-phosphate synthase [ammonia], mitochondrial" id="ProteinComplex112">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="112" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein352</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_5c23ae8f-129b-46be-a385-01867f0b41ce">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P31327"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e57d8bdd-5412-4c31-aa09-80e05ee19371" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState4" name="Carbamoyl-phosphate synthase [ammonia], mitochondrial" id="Protein352">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="352" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#e57d8bdd-5412-4c31-aa09-80e05ee19371">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P31327"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_6518b574-984f-4041-91b1-cf92e8c26400" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="L-Lysine" id="Compound118">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="118" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_6518b574-984f-4041-91b1-cf92e8c26400">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000118"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000182"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00047"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:LYS"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:5962"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:18019"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:5747"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C6H14N2O2/c7-4-2-1-3-5(8)6(9)10/h5H,1-4,7-8H2,(H,9,10)/t5-/m0/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:KDXKERNSBIXSRK-YFKPBYRVSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:56-87-1"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="d12f4d0a-1c29-4d80-8981-a75e6d4b1514" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Homocitrulline" id="Compound535">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="535" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#d12f4d0a-1c29-4d80-8981-a75e6d4b1514">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000535"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000679"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C02427"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:CPD-161"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:65072"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17443"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:58582"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C7H15N3O3/c8-5(6(11)12)3-1-2-4-10-7(9)13/h5H,1-4,8H2,(H,11,12)(H3,9,10,13)/t5-/m0/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:XIGSAGMEBXLVJJ-YFKPBYRVSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:1190-49-4"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_3223fe8e-7eff-40c6-85e5-fb69a4635b34" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState4" name="Phosphate" id="Compound1104">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1104" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_3223fe8e-7eff-40c6-85e5-fb69a4635b34">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C001104"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001429"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00009"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:CPD-8587"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:1061"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:18367"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:1032"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/H3O4P/c1-5(2,3)4/h(H3,1,2,3,4)"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:NBIIXXVUZAFLBC-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:14265-44-2"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_3a47bff0-e33e-4a88-828e-425c26cdc5b4" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState4" name="Ornithine carbamoyltransferase, mitochondrial" id="ProteinComplex117">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="117" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein870</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_3a47bff0-e33e-4a88-828e-425c26cdc5b4">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P00480"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_3b524aae-80c5-442f-9925-24a6062b8131" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState4" name="Ornithine carbamoyltransferase, mitochondrial" id="Protein870">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="870" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_3b524aae-80c5-442f-9925-24a6062b8131">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P00480"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_1a96bfd9-3af8-4ea3-b0f7-07391901d1c0" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="L-Aspartic acid" id="Compound123">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="123" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_1a96bfd9-3af8-4ea3-b0f7-07391901d1c0">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000123"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000191"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00049"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:L-ASPARTATE"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:44367445"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17053"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:5745"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C4H7NO4/c5-2(4(8)9)1-3(6)7/h2H,1,5H2,(H,6,7)(H,8,9)/t2-/m0/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:CKLJMWTZIZZHCS-REOHCLBHSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:56-84-8"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_56201bb0-50e2-4041-ac2f-2e45373ee667" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="Homoargininosuccinic acid" id="Compound118501">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="118501" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_56201bb0-50e2-4041-ac2f-2e45373ee667">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C118496"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:ZSUSCPKXKFRHMQ-BQBZGAKWSA-N"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_1e25c1e2-c9f7-4ac8-92f3-9850d2d2cead" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="Adenosine monophosphate" id="Compound32">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="32" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_1e25c1e2-c9f7-4ac8-92f3-9850d2d2cead">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000032"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000045"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00020"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:AMP"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:6083"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16027"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:5858"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C10H14N5O7P/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(22-10)1-21-23(18,19)20/h2-4,6-7,10,16-17H,1H2,(H2,11,12,13)(H2,18,19,20)/t4-,6-,7-,10-/m1/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:UDMBCSSLTHHNCD-KQYNXXCUSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:61-19-8"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_926bb8a0-e535-4a8e-a62c-839efebe2760" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="Pyrophosphate" id="Compound170">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="170" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_926bb8a0-e535-4a8e-a62c-839efebe2760">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000170"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000250"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00013"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:PPI"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:644102"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:18361"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:559142"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/H4O7P2/c1-8(2,3)7-9(4,5)6/h(H2,1,2,3)(H2,4,5,6)"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:XPPKVPWEQAFLFU-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:14000-31-8"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState8" name="ATP" id="ElementCollection629">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="629" pathwhiz:species_type="element_collection"/>
+        </annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_70c2e5f0-d30a-4966-bcb6-ac47ea6df3f2" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState8" name="Argininosuccinate synthase" id="ProteinComplex11">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="11" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein622</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_70c2e5f0-d30a-4966-bcb6-ac47ea6df3f2">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P00966"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_0801a191-200a-479e-9d81-9d3edb9f0d91" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState8" name="Argininosuccinate synthase" id="Protein622">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="622" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_0801a191-200a-479e-9d81-9d3edb9f0d91">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P00966"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="a5df86de-9a75-4995-96eb-7f3e145b2c60" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="Fumaric acid" id="Compound88">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="88" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#a5df86de-9a75-4995-96eb-7f3e145b2c60">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000088"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000134"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00122"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:FUM"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:21883788"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:18012"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:10197150"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C4H4O4/c5-3(6)1-2-4(7)8/h1-2H,(H,5,6)(H,7,8)/b2-1+"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:VZCYOOQTPOCHFL-OWOJBTEDSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:110-17-8"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_0a971a56-ad36-4f0d-ae3f-0a6064e247f9" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="Homo-L-arginine" id="Compound527">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="527" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_0a971a56-ad36-4f0d-ae3f-0a6064e247f9">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000527"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000670"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C01924"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:9085"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:27747"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:8732"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C7H16N4O2/c8-5(6(12)13)3-1-2-4-11-7(9)10/h5H,1-4,8H2,(H,12,13)(H4,9,10,11)/t5-/m0/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:QUOGESRFPZDMMT-YFKPBYRVSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:156-86-5"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_8bdb7a4b-5a24-4159-bdd4-215c6afaf76b" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState8" name="Argininosuccinate lyase" id="ProteinComplex17">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="17" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein661</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_8bdb7a4b-5a24-4159-bdd4-215c6afaf76b">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P04424"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="afb7355e-c3c5-4fa0-8f62-8cce44101c0f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState8" name="Argininosuccinate lyase" id="Protein661">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="661" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#afb7355e-c3c5-4fa0-8f62-8cce44101c0f">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P04424"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_68fdff81-be3f-420f-bf89-bc3dd9c7db22" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="Urea" id="Compound200">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="200" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_68fdff81-be3f-420f-bf89-bc3dd9c7db22">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000200"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000294"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00086"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:UREA"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:1176"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16199"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:1143"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/CH4N2O/c2-1(3)4/h(H4,2,3,4)"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:XSQUKJJJFZCRTK-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:57-13-6"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_4cc41f57-bec7-4f34-a514-f59dc3227a77" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState8" name="Arginase-1" id="ProteinComplex123">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="123" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein292</pathwhiz:protein></pathwhiz:protein_complex_proteins><pathwhiz:protein_complex_cofactors>
+                <pathwhiz:compound>Compound1027</pathwhiz:compound></pathwhiz:protein_complex_cofactors></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_4cc41f57-bec7-4f34-a514-f59dc3227a77">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P05089"/>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz:PW_C001027"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c3c5a7a7-a499-4c6e-8928-d4dddb8cba47" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState8" name="Arginase-1" id="Protein292">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="292" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#c3c5a7a7-a499-4c6e-8928-d4dddb8cba47">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P05089"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="aeaba0a6-0d36-42e3-b552-3ea9ef0327d8" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState8" name="Manganese" id="Compound1027">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1027" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#aeaba0a6-0d36-42e3-b552-3ea9ef0327d8">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C001027"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001333"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C19610"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:MN%2b3"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:27854"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:29035"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:25916"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/Mn/q+2"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:WAEMQWOKJMHJLA-UHFFFAOYSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:16397-91-4"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_03945cbd-ecb4-4d31-a8af-81e0ea4cb739" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState1" name="L-Arginine" id="Compound396">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="396" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_03945cbd-ecb4-4d31-a8af-81e0ea4cb739">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000396"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000517"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00062"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:ARG"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:28782"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16467"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:6082"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C6H14N4O2/c7-4(5(11)12)2-1-3-10-6(8)9/h4H,1-3,7H2,(H,11,12)(H4,8,9,10)/t4-/m0/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:ODKSFYDXXFIFQN-BYPYZUCNSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:74-79-3"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_00d32555-9f29-4d5d-98e7-a2dde7c4d711" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState1" name="Ornithine" id="Compound140">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="140" pathwhiz:species_type="compound"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_00d32555-9f29-4d5d-98e7-a2dde7c4d711">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:pathwhiz.compound:PW_C000140"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000214"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00077"/>
+	<rdf:li rdf:resource="urn:miriam:biocyc:L-ORNITHINE"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:6262"/>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15729"/>
+	<rdf:li rdf:resource="urn:miriam:chemspider:6026"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	
+	<bqbiol:isDescribedBy>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:inchi:InChI=1S/C5H12N2O2/c6-3-1-2-4(7)5(8)9/h4H,1-3,6-7H2,(H,8,9)/t4-/m0/s1"/>
+	<rdf:li rdf:resource="urn:miriam:inchikey:AHLPHDHHMVZTML-BYPYZUCNSA-N"/>
+	<rdf:li rdf:resource="urn:miriam:cas:70-26-8"/>
+	</rdf:Bag>
+	</bqbiol:isDescribedBy>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="_3178f3cf-2f4e-4fbf-81e8-cb5058fbc2bc" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState1" name="Glycine amidinotransferase, mitochondrial" id="ProteinComplex148">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="148" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein447</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#_3178f3cf-2f4e-4fbf-81e8-cb5058fbc2bc">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P50440"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="ce761855-f33b-4edc-bc71-5b5c6060260c" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState1" name="Glycine amidinotransferase, mitochondrial" id="Protein447">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="447" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#ce761855-f33b-4edc-bc71-5b5c6060260c">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P50440"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="ecaf8020-ede3-488f-9f98-57b8ee0d7dd9" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState14" name="OATP4C1" id="ProteinComplex19632">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="19632" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein3393</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#ecaf8020-ede3-488f-9f98-57b8ee0d7dd9">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q6ZQN7"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="bd5d8ed4-c8d7-484a-a7de-8bd7728ecb21" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState14" name="Solute carrier organic anion transporter family member 4C1" id="Protein3393">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="3393" pathwhiz:species_type="protein"/><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#bd5d8ed4-c8d7-484a-a7de-8bd7728ecb21">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Q6ZQN7"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState4" name="2 Adenosine triphosphate + Ammonia + Carbon dioxide + Water &amp;rarr; 2 Adenosine diphosphate + Carbamoyl phosphate + Phosphoric acid" id="Reaction1009113">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="208" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="2" constant="false" species="Compound414" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound414" pathwhiz:location_id="3454077" pathwhiz:x="1527.0" pathwhiz:y="549.0" pathwhiz:visualization_template_id="42" pathwhiz:width="50.0" pathwhiz:height="30.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1609 564 C1640 564 1657 576 1657 606 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound35" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound35" pathwhiz:location_id="3454078" pathwhiz:x="1616.0" pathwhiz:y="365.0" pathwhiz:visualization_template_id="63" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1655 443 C1655 473 1657 576 1657 606 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1316" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1316" pathwhiz:location_id="3454079" pathwhiz:x="1768.0" pathwhiz:y="425.0" pathwhiz:visualization_template_id="52" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1768 464 C1716 464 1658 510 1657 606 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1420" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="3454080" pathwhiz:x="1715.0" pathwhiz:y="519.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1715 558 C1679 558 1657 576 1657 606 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="2" constant="false" species="Compound1034" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1034" pathwhiz:location_id="3454081" pathwhiz:x="1530.0" pathwhiz:y="708.0" pathwhiz:visualization_template_id="43" pathwhiz:width="50.0" pathwhiz:height="30.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1612 723 C1641 723 1657 706 1657 676 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.946855044164835 13.26155629629604 L 11 12 L 17.380887721185843 25.575134323078345&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1441" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1441" pathwhiz:location_id="3454082" pathwhiz:x="1713.0" pathwhiz:y="701.0" pathwhiz:visualization_template_id="46" pathwhiz:width="44.0" pathwhiz:height="43.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1713 722.5 C1676 722.5 1657 706 1657 676 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.946855044164835 13.26155629629604 L 11 12 L 17.380887721185843 25.575134323078345&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound862" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound862" pathwhiz:location_id="3454083" pathwhiz:x="1503.0" pathwhiz:y="783.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1653 783 C1653 753 1657 706 1657 676 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.946855044164835 13.26155629629604 L 11 12 L 17.380887721185843 25.575134323078345&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex112" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex112">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein352" pathwhiz:location_id="1335638" pathwhiz:x="1582.0" pathwhiz:y="606.0" pathwhiz:visualization_template_id="2" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState4" name="Carbamoyl phosphate + L-Lysine &amp;rarr; Homocitrulline + Phosphate" id="Reaction1009114">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="219502" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound862" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound862" pathwhiz:location_id="3454083" pathwhiz:x="1503.0" pathwhiz:y="783.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1653 1103 C1652 1183 1743 1193 1773 1193 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound118" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound118" pathwhiz:location_id="3454084" pathwhiz:x="1133.0" pathwhiz:y="498.0" pathwhiz:visualization_template_id="81" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="true"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1383 1190.5 C1413 1190.5 1743 1193 1773 1193 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound535" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound535" pathwhiz:location_id="3454085" pathwhiz:x="2433.0" pathwhiz:y="499.0" pathwhiz:visualization_template_id="81" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="10" pathwhiz:hidden="true"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2378 1186.5 C2348 1186.5 1973 1188 1943 1188 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 381.7468428371336 2098.261556296296 L 366.79998779296875 2097 L 373.1808755141546 2110.575134323078&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1104" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1104" pathwhiz:location_id="3454086" pathwhiz:x="1991.0" pathwhiz:y="1059.0" pathwhiz:visualization_template_id="46" pathwhiz:width="44.0" pathwhiz:height="43.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2013 1102 C2010 1157 1986 1194 1943 1193 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 381.7468428371336 2098.261556296296 L 366.79998779296875 2097 L 373.1808755141546 2110.575134323078&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex117" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex117">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein870" pathwhiz:location_id="1335639" pathwhiz:x="1773.0" pathwhiz:y="1148.0" pathwhiz:visualization_template_id="16" pathwhiz:width="170.0" pathwhiz:height="90.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState8" name="ATP + Homocitrulline + L-Aspartic acid &amp;rarr; Adenosine monophosphate + Homoargininosuccinic acid + Pyrophosphate" id="Reaction1009115">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="220027" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound535" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound535" pathwhiz:location_id="3454087" pathwhiz:x="2378.0" pathwhiz:y="1039.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2528 1334 C2528 1364 2533 1501 2533 1531 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound123" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound123" pathwhiz:location_id="3454088" pathwhiz:x="2718.0" pathwhiz:y="1275.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2718 1422.5 C2613 1426.5 2531 1452 2533 1531 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="ElementCollection629" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="element_collection">
+                <pathwhiz:location_element pathwhiz:element_type="element_collection_location" pathwhiz:element_id="ElementCollection629" pathwhiz:location_id="30015" pathwhiz:x="2313.0" pathwhiz:y="1408.0" pathwhiz:visualization_template_id="145" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="12" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2468 1448 C2519 1448 2533 1501 2533 1531 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound118501" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound118501" pathwhiz:location_id="3454089" pathwhiz:x="2385.0" pathwhiz:y="1735.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2535 1735 C2535 1705 2533 1646 2533 1616 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 786.1468062160399 1798.2614342259835 L 771.199951171875 1796.9998779296875 L 777.5808388930608 1810.5750122527659&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound32" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound32" pathwhiz:location_id="3454090" pathwhiz:x="2390.0" pathwhiz:y="1678.0" pathwhiz:visualization_template_id="44" pathwhiz:width="50.0" pathwhiz:height="30.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2472 1693 C2517 1692 2533 1646 2533 1616 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 786.1468062160399 1798.2614342259835 L 771.199951171875 1796.9998779296875 L 777.5808388930608 1810.5750122527659&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound170" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound170" pathwhiz:location_id="3454091" pathwhiz:x="2608.0" pathwhiz:y="1671.0" pathwhiz:visualization_template_id="45" pathwhiz:width="63.0" pathwhiz:height="43.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2613 1687.5 C2561 1686.5 2533 1646 2533 1616 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 786.1468062160399 1798.2614342259835 L 771.199951171875 1796.9998779296875 L 777.5808388930608 1810.5750122527659&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex11" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex11">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein622" pathwhiz:location_id="1335640" pathwhiz:x="2463.0" pathwhiz:y="1531.0" pathwhiz:visualization_template_id="8" pathwhiz:width="140.0" pathwhiz:height="85.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState8" name="Homoargininosuccinic acid &amp;rarr; Fumaric acid + Homo-L-arginine" id="Reaction1009116">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="220086" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound118501" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound118501" pathwhiz:location_id="3454089" pathwhiz:x="2385.0" pathwhiz:y="1735.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2385 1895 C2355 1895 1968 1898 1938 1898 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound88" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound88" pathwhiz:location_id="3454092" pathwhiz:x="1463.0" pathwhiz:y="2003.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1613 2003 C1612 1924 1684 1902 1798 1898 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 351.7468428371336 2065.861409811921 L 336.79998779296875 2064.599853515625 L 343.1808755141546 2078.174987838703&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound527" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound527" pathwhiz:location_id="3454093" pathwhiz:x="1078.0" pathwhiz:y="1748.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1378 1895.5 C1408 1895.5 1768 1898 1798 1898 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 351.7468428371336 2065.861409811921 L 336.79998779296875 2064.599853515625 L 343.1808755141546 2078.174987838703&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex17" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex17">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein661" pathwhiz:location_id="1335641" pathwhiz:x="1798.0" pathwhiz:y="1858.0" pathwhiz:visualization_template_id="8" pathwhiz:width="140.0" pathwhiz:height="85.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState8" name="Homo-L-arginine + Water &amp;rarr; L-Lysine + Urea" id="Reaction1009117">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="220134" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound527" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound527" pathwhiz:location_id="3454093" pathwhiz:x="1078.0" pathwhiz:y="1748.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1228 1748 C1227 1661 1232 1585 1232 1615 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1420" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="3454094" pathwhiz:x="1018.0" pathwhiz:y="1643.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1096 1682 C1126 1688 1227 1667 1232 1615 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound200" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound200" pathwhiz:location_id="3454095" pathwhiz:x="1403.0" pathwhiz:y="1263.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1403 1410.5 C1295 1412.5 1234 1455 1232 1525 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 351.7468428371336 1915.861409811921 L 336.79998779296875 1914.599853515625 L 343.1808755141546 1928.1749878387034&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound118" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound118" pathwhiz:location_id="3454096" pathwhiz:x="1083.0" pathwhiz:y="1043.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1233 1338 C1235 1371 1232 1495 1232 1525 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:false,&quot;start_arrow_path&quot;:null,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex123" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex123">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein292" pathwhiz:location_id="1335642" pathwhiz:x="1147.0" pathwhiz:y="1525.0" pathwhiz:visualization_template_id="16" pathwhiz:width="170.0" pathwhiz:height="90.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1027" pathwhiz:location_id="3454097" pathwhiz:x="1162.0" pathwhiz:y="1520.0" pathwhiz:visualization_template_id="9" pathwhiz:width="100.0" pathwhiz:height="25.0" pathwhiz:zindex="19" pathwhiz:hidden="false" pathwhiz:compound_type="Cofactor">
+                    <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1257.5 1265 L1257.5 1315 L1307.5 1265 z" pathwhiz:visualization_template_id="10" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="true"/></pathwhiz:location_element></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState1" name="L-Arginine + L-Lysine &amp;rarr; Homo-L-arginine + Ornithine" id="Reaction1009118">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="220231" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound118" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound118" pathwhiz:location_id="3454096" pathwhiz:x="1083.0" pathwhiz:y="1043.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1233 1338 C1235 1442 786 1532 693 1523 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound396" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound396" pathwhiz:location_id="3454098" pathwhiz:x="543.0" pathwhiz:y="1053.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M693 1348 C692 1409 696 1460 693 1523 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound527" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound527" pathwhiz:location_id="3454093" pathwhiz:x="1078.0" pathwhiz:y="1748.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1078 1895.5 C1048 1895.5 722 1901 692 1901 C693 1827 693 1703 693 1603 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.946855044164835 1948.2614342259835 L 11 1946.9998779296875 L 17.380887721185843 1960.5750122527659&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound140" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound140" pathwhiz:location_id="3454099" pathwhiz:x="268.0" pathwhiz:y="1603.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M568 1750.5 C616 1751.5 694 1693 693 1603 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.946855044164835 1948.2614342259835 L 11 1946.9998779296875 L 17.380887721185843 1960.5750122527659&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex148" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex148">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein447" pathwhiz:location_id="1335643" pathwhiz:x="613.0" pathwhiz:y="1523.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState1" name="Ammonia (&amp;rarr;) Transport: Homo sapiens, Cell, Mitochondrion to Homo sapiens, Blood Vessel" id="Transport115601">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="14703" pathwhiz:reaction_type="transport"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound35" sboTerm="SBO:0000010">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound35" pathwhiz:location_id="3454078" pathwhiz:x="1616.0" pathwhiz:y="365.0" pathwhiz:visualization_template_id="63" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1655 365 C1655 302 1655 194 1653 158 " pathwhiz:visualization_template_id="83" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 1647.5 352.0096189432334 L 1655 365 L 1662.5 352.0096189432334&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound35" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound35" pathwhiz:location_id="3454110" pathwhiz:x="1614.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="63" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1614 119 C1584 119 1804 404 1774 404 " pathwhiz:visualization_template_id="83" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.946855044164835 13.26155629629604 L 11 12 L 17.380887721185843 25.575134323078345&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="true"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState1" name="Homo-L-arginine (&amp;rarr;) Transport: Homo sapiens, Liver, Cell to Homo sapiens, Blood Vessel" id="Transport115602">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="18594" pathwhiz:reaction_type="transport"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound527" sboTerm="SBO:0000010">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound527" pathwhiz:location_id="3454111" pathwhiz:x="1130.0" pathwhiz:y="1783.0" pathwhiz:visualization_template_id="81" pathwhiz:width="200.0" pathwhiz:height="190.0" pathwhiz:zindex="1" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1230 1983 C1230 2013 1230 2328 1230 2358 " pathwhiz:visualization_template_id="83" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound527" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound527" pathwhiz:location_id="3454112" pathwhiz:x="1080.0" pathwhiz:y="2568.0" pathwhiz:visualization_template_id="82" pathwhiz:width="300.0" pathwhiz:height="280.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1230 2568 C1230 2538 1230 2458 1230 2428 " pathwhiz:visualization_template_id="83" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.946855044164835 1436.261556296296 L 11 1435 L 17.380887721185843 1448.5751343230784&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="ProteinComplex19632" sboTerm="SBO:0000019">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="ProteinComplex19632">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein3393" pathwhiz:location_id="1335647" pathwhiz:x="1155.0" pathwhiz:y="2358.0" pathwhiz:visualization_template_id="76" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
