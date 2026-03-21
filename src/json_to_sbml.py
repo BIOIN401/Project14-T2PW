@@ -665,18 +665,22 @@ def _lookup_compound_id(db: Dict[str, Any], mapped_ids: Dict[str, Any]) -> Optio
         if not isinstance(val, str) or not val.strip():
             continue
         v = val.strip()
-        # Check compounds first, then element_collections
-        hit = compounds.get(index_key, {}).get(v)
-        if hit:
-            return int(hit)
-        # Element collections use "kegg_compound" and "chebi" as index keys
-        ec_key = "kegg_compound" if index_key == "kegg" else index_key
-        hit = ecs.get(ec_key, {}).get(v)
-        if hit:
-            return int(hit)
+        # Normalise variants to try
+        variants = [v]
         if field == "chebi":
-            v2 = v.replace("CHEBI:", "").strip()
-            hit = compounds.get(index_key, {}).get(v2) or ecs.get(ec_key, {}).get(v2)
+            bare = v.replace("CHEBI:", "").strip()
+            variants += [bare, f"CHEBI:{bare}"]
+        elif field == "hmdb":
+            # HMDB IDs can be stored as HMDB0001234 (7 digits) or HMDB00001234 (8 digits)
+            digits = re.sub(r"^HMDB0*", "", v)
+            variants += [f"HMDB{digits.zfill(7)}", f"HMDB{digits.zfill(8)}", f"HMDB0{digits.zfill(6)}"]
+        for candidate in dict.fromkeys(variants):  # dedup preserving order
+            hit = compounds.get(index_key, {}).get(candidate)
+            if hit:
+                return int(hit)
+            # Element collections use "kegg_compound" and "chebi" as index keys
+            ec_key = "kegg_compound" if index_key == "kegg" else index_key
+            hit = ecs.get(ec_key, {}).get(candidate)
             if hit:
                 return int(hit)
     return None
@@ -749,23 +753,22 @@ def _inject_root_namespaces(sbml_path: Path) -> None:
     text = sbml_path.read_text(encoding="utf-8")
 
     # libsbml may assign an auto-prefix (e.g. ns3) to the biology-qualifiers namespace.
-    # Find it and rename every occurrence to bqbiol so PathWhiz recognises bqbiol:is.
-    auto_prefix = re.search(
-        r'xmlns:([A-Za-z][A-Za-z0-9_]*)\s*=\s*["\']' + re.escape(BQ_URI) + r'["\']', text
-    )
-    if auto_prefix and auto_prefix.group(1) != "bqbiol":
-        pfx = re.escape(auto_prefix.group(1))
-        text = re.sub(
-            rf'xmlns:{pfx}\s*=\s*(["\'])' + re.escape(BQ_URI) + r'\1',
-            f'xmlns:bqbiol="{BQ_URI}"',
-            text,
-        )
-        text = re.sub(rf'<{pfx}:', '<bqbiol:', text)
-        text = re.sub(rf'</{pfx}:', '</bqbiol:', text)
+    # Detect the actual prefix and rename ALL occurrences to bqbiol using str.replace
+    # (more reliable than regex on libsbml's deterministic double-quoted output).
+    m = re.search(r'xmlns:([A-Za-z][A-Za-z0-9_]*)\s*=\s*["\']' + re.escape(BQ_URI) + r'["\']', text)
+    if m:
+        pfx = m.group(1)
+        if pfx != "bqbiol":
+            # libsbml always writes double-quoted, no spaces around '='
+            text = text.replace(f'xmlns:{pfx}="{BQ_URI}"', f'xmlns:bqbiol="{BQ_URI}"')
+            # also handle single-quoted variant just in case
+            text = text.replace(f"xmlns:{pfx}='{BQ_URI}'", f'xmlns:bqbiol="{BQ_URI}"')
+            text = text.replace(f'<{pfx}:', '<bqbiol:')
+            text = text.replace(f'</{pfx}:', '</bqbiol:')
 
     # Add any missing namespace declarations directly onto the <sbml> root tag.
-    def _patch_sbml_tag(m: re.Match) -> str:
-        tag = m.group(0)
+    def _patch_sbml_tag(m2: re.Match) -> str:
+        tag = m2.group(0)
         additions = ""
         if 'xmlns:pathwhiz=' not in tag:
             additions += f' xmlns:pathwhiz="{PW_URI}"'
@@ -773,7 +776,10 @@ def _inject_root_namespaces(sbml_path: Path) -> None:
             additions += f' xmlns:bqbiol="{BQ_URI}"'
         if 'xmlns:rdf=' not in tag:
             additions += f' xmlns:rdf="{RDF_URI}"'
-        return tag[:-1] + additions + ">" if additions else tag
+        if not additions:
+            return tag
+        # Insert before the closing '>' of the opening tag
+        return tag.rstrip(">").rstrip() + additions + ">"
 
     text = re.sub(r'<sbml\b[^>]*>', _patch_sbml_tag, text, count=1)
     sbml_path.write_text(text, encoding="utf-8")
@@ -817,6 +823,7 @@ def build_sbml(
         "warnings": [],
         "defaults_applied": [],
         "counts": {"compartments": 0, "species": 0, "reactions": 0},
+        "pathwhiz_id_stats": {"mysql_connected": bool(os.environ.get("PATHBANK_DB_HOST")), "compounds_matched": 0, "proteins_matched": 0, "species_no_id": 0},
     }
     data = deepcopy(payload)
     entities = _safe_dict(data.get("entities"))
@@ -1343,6 +1350,13 @@ def build_sbml(
         pw_sp_id = (_lookup_compound_id(pw_db, mapped) if is_compound
                     else _lookup_protein_id(pw_db, mapped))
         sp_type = "compound" if is_compound else "protein"
+        if pw_sp_id is not None:
+            if is_compound:
+                report["pathwhiz_id_stats"]["compounds_matched"] += 1
+            else:
+                report["pathwhiz_id_stats"]["proteins_matched"] += 1
+        else:
+            report["pathwhiz_id_stats"]["species_no_id"] += 1
         # Set pathwhiz:species annotation (pathwhiz block only — RDF added via CVTerm below)
         pw_id_attr = f' pathwhiz:species_id="{pw_sp_id}"' if pw_sp_id is not None else ""
         sp.setAnnotation(
