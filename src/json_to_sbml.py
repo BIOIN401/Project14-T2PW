@@ -543,9 +543,15 @@ def _load_pathwhiz_db(db_path: Optional[Path] = None) -> Dict[str, Any]:
     schema = os.environ.get("PATHBANK_DB_SCHEMA", "pathbank")
     port = int(os.environ.get("PATHBANK_DB_PORT", "3306"))
 
+    if not host or not user:
+        print(
+            "  INFO: PATHBANK_DB_HOST/PATHBANK_DB_USER not set — skipping MySQL PathWhiz lookup",
+            file=sys.stderr,
+        )
     if host and user:
         try:
             import pymysql  # type: ignore[import-not-found]
+            print(f"  INFO: Connecting to PathWhiz MySQL at {host}:{port} schema={schema}", file=sys.stderr)
             conn = pymysql.connect(
                 host=host, port=port, user=user, password=password,
                 database=schema, charset="utf8mb4", connect_timeout=10,
@@ -621,6 +627,14 @@ def _load_pathwhiz_db(db_path: Optional[Path] = None) -> Dict[str, Any]:
                     except Exception:
                         pass
 
+            print(
+                f"  INFO: PathWhiz MySQL loaded — "
+                f"compounds={len(db['compounds']['hmdb'])} "
+                f"proteins={len(db['proteins']['uniprot'])} "
+                f"bio_states={len(db['biological_states']['by_location_name'])} "
+                f"reactions={len(db['reactions']['by_elements'])}",
+                file=sys.stderr,
+            )
             return db
         except Exception as exc:
             print(
