@@ -1,3 +1,4 @@
+import json
 import os
 import time
 from pathlib import Path
@@ -130,6 +131,12 @@ def chat(
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
         except (APITimeoutError, APIError) as e:
+            last_err = e
+            time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+
+        except json.JSONDecodeError as e:
+            # OpenAI SDK fails to parse a malformed HTTP response (e.g. local server
+            # returned truncated or non-JSON body). Treat as transient and retry.
             last_err = e
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
