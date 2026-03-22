@@ -56,6 +56,8 @@ PW_NS = "http://www.spmdb.ca/pathwhiz"
 
 ET.register_namespace("", SBML_NS)
 ET.register_namespace("pathwhiz", PW_NS)
+ET.register_namespace("bqbiol", "http://biomodels.net/biology-qualifiers/")
+ET.register_namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
 NS = {"sbml": SBML_NS, "pathwhiz": PW_NS}
 

@@ -613,7 +613,7 @@ def _load_pathwhiz_db(db_path: Optional[Path] = None) -> Dict[str, Any]:
                             " WHERE element_type = 'Compound'"
                         )
                         rxn_sides: Dict[int, Dict[str, List[int]]] = {}
-                        LEFT_VALS = {"left", "substrate", "reactant"}
+                        LEFT_VALS = {"left", "substrate", "reactant", "reactionleftelement"}
                         for row in cur.fetchall():
                             rid = row["reaction_id"]
                             if rid not in rxn_sides:
