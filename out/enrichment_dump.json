@@ -806,6 +806,113 @@
       }
     ]
   },
+  "compound:fructose-1,6-bisphosphate|16905": {
+    "enrichment_status": "ok",
+    "primary_name": "D-Fructose 1,6-bisphosphate",
+    "synonyms": [
+      "D-Fructose 1,6-bisphosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C6H14O12P2",
+    "charge": 0,
+    "mass_monoisotopic": 339.9961,
+    "mass_average": 340.12,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Glycolysis / Gluconeogenesis",
+      "Pentose phosphate pathway",
+      "Fructose and mannose metabolism",
+      "Phenylalanine, tyrosine and tryptophan biosynthesis",
+      "Methane metabolism",
+      "Carbon fixation by Calvin cycle",
+      "Biosynthesis of plant secondary metabolites",
+      "Biosynthesis of phenylpropanoids",
+      "Biosynthesis of terpenoids and steroids",
+      "Biosynthesis of alkaloids derived from shikimate pathway",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "Biosynthesis of amino acids",
+      "Phosphotransferase system (PTS)",
+      "AMPK signaling pathway",
+      "Glucagon signaling pathway",
+      "Central carbon metabolism in cancer"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C00354",
+      "pubchem_id": "3647",
+      "chebi_id": "16905"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00354",
+      "primary_name": "D-Fructose 1,6-bisphosphate",
+      "synonyms": [
+        "D-Fructose 1,6-bisphosphate"
+      ],
+      "formula": "C6H14O12P2",
+      "mass_monoisotopic": 339.9961,
+      "mass_average": 340.12,
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Pentose phosphate pathway",
+        "Fructose and mannose metabolism",
+        "Phenylalanine, tyrosine and tryptophan biosynthesis",
+        "Methane metabolism",
+        "Carbon fixation by Calvin cycle",
+        "Biosynthesis of plant secondary metabolites",
+        "Biosynthesis of phenylpropanoids",
+        "Biosynthesis of terpenoids and steroids",
+        "Biosynthesis of alkaloids derived from shikimate pathway",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Biosynthesis of amino acids",
+        "Phosphotransferase system (PTS)",
+        "AMPK signaling pathway",
+        "Glucagon signaling pathway",
+        "Central carbon metabolism in cancer"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00354",
+        "pubchem_id": "3647",
+        "chebi_id": "16905"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00354",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00354",
+        "retrieved_at": "2026-03-21T01:12:09Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {},
+    "hmdb": {},
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "KEGG",
+        "id": "C00354",
+        "retrieved_at": "2026-03-21T01:12:09Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
   "compound:glyceraldehyde-3-phosphate|HMDB0001112": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "Glyceraldehyde 3-phosphate",
@@ -2279,6 +2386,213 @@
       "query": "F5IXG6",
       "source_url": "https://rest.uniprot.org/uniprotkb/F5IXG6.json",
       "retrieved_at": "2026-03-20T19:31:13Z"
+    }
+  },
+  "protein:phosphoglucose isomerase|P06744": {
+    "status": "ok",
+    "uniprot_id": "P06744",
+    "recommended_name": "Glucose-6-phosphate isomerase",
+    "alternative_names": [
+      "Autocrine motility factor",
+      "D-hexose-6-phosphate anomerase",
+      "Glucose-6-phosphate C2-epimerase",
+      "Neuroleukin",
+      "Phosphoglucose isomerase",
+      "Phosphohexose isomerase",
+      "Sperm antigen 36"
+    ],
+    "gene_names": [
+      "GPI"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Isomerase that catalyzes the conversion of alpha-D-glucose-6-phosphate to beta-D-fructose-6-phosphate, the second step in glycolysis, and the reverse reaction in gluconeogenesis, within the cytoplasm (PubMed:28803808). Also shows C2-epimerase activity, interconverting D-glucose-6-phosphate (G6P) and D-mannose-6-phosphate (M6P) (By similarity). Also displays anomerase activity, interconverting alpha and beta-anomeric forms of G6P, D-fructose-6-phosphate and M6P (By similarity). In addition to its metabolic role, this enzyme functions extracellularly as a cytokine: acts as autocrine motility factor (AMF), a secreted angiogenic factor that enhances endothelial cell motility (PubMed:11437381). Functions as neuroleukin, a neurotrophic factor supporting the survival of spinal and sensory neurons (PubMed:11004567, PubMed:3352745). Released by lectin-stimulated T-cells to induce immunoglobulin secretion (PubMed:11004567, PubMed:3352745)",
+    "catalytic_activity": [
+      "alpha-D-glucose 6-phosphate = beta-D-fructose 6-phosphate",
+      "alpha-D-glucose 6-phosphate = beta-D-glucose 6-phosphate",
+      "alpha-D-fructose 6-phosphate = beta-D-fructose 6-phosphate",
+      "alpha-D-mannose 6-phosphate = beta-D-mannose 6-phosphate",
+      "D-glucose 6-phosphate = D-mannose 6-phosphate"
+    ],
+    "enzyme_commission": [
+      "5.3.1.9"
+    ],
+    "pathways": [
+      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 2/4"
+    ],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Cytokine",
+      "Cytoplasm",
+      "Direct protein sequencing",
+      "Disease variant",
+      "Gluconeogenesis",
+      "Glycolysis",
+      "Growth factor",
+      "Hereditary hemolytic anemia",
+      "Hydroxylation",
+      "Isomerase",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
+      "Secreted",
+      "Ubl conjugation"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm",
+      "Secreted"
+    ],
+    "go_mf_ids": [
+      "GO:0097367",
+      "GO:0005125",
+      "GO:0004347",
+      "GO:0008083",
+      "GO:0048029",
+      "GO:0016857",
+      "GO:0031625"
+    ],
+    "go_bp_ids": [
+      "GO:0061621",
+      "GO:0005975",
+      "GO:0034101",
+      "GO:0006002",
+      "GO:0006094",
+      "GO:0051156",
+      "GO:0042593",
+      "GO:0006096",
+      "GO:0007599",
+      "GO:0006959",
+      "GO:0001701",
+      "GO:0007611",
+      "GO:0001707",
+      "GO:0043066",
+      "GO:1904539",
+      "GO:0010595",
+      "GO:0002639",
+      "GO:0046686",
+      "GO:0032355",
+      "GO:0035902",
+      "GO:0035994",
+      "GO:0032570",
+      "GO:0033574"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0060170",
+      "GO:0005829",
+      "GO:0070062",
+      "GO:0005576",
+      "GO:1904813",
+      "GO:0016020",
+      "GO:0034774"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 558,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "1IAT",
+      "1IRI",
+      "1JIQ",
+      "1JLH",
+      "1NUH",
+      "6XUH",
+      "6XUI",
+      "8BBH",
+      "8P2K",
+      "9FCW",
+      "9FHF",
+      "9FKC",
+      "9FKF"
+    ],
+    "reactome_ids": [
+      "R-HSA-5628897",
+      "R-HSA-6798695",
+      "R-HSA-70171",
+      "R-HSA-70263"
+    ],
+    "string_id": "9606.ENSP00000405573",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P06744",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P06744.json",
+      "retrieved_at": "2026-03-21T01:12:07Z"
+    }
+  },
+  "protein:phosphofructokinase-1|P21777": {
+    "status": "ok",
+    "uniprot_id": "P21777",
+    "recommended_name": "ATP-dependent 6-phosphofructokinase 1",
+    "alternative_names": [
+      "Phosphohexokinase 1"
+    ],
+    "gene_names": [
+      "pfkA"
+    ],
+    "organism": "Thermus thermophilus (strain ATCC 27634 / DSM 579 / HB8)",
+    "taxonomy_id": "300852",
+    "function_text": "Catalyzes the phosphorylation of D-fructose 6-phosphate to fructose 1,6-bisphosphate by ATP, the first committing step of glycolysis",
+    "catalytic_activity": [
+      "beta-D-fructose 6-phosphate + ATP = beta-D-fructose 1,6-bisphosphate + ADP + H(+)"
+    ],
+    "enzyme_commission": [
+      "2.7.1.11"
+    ],
+    "pathways": [
+      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 3/4"
+    ],
+    "keywords": [
+      "Allosteric enzyme",
+      "ATP-binding",
+      "Cytoplasm",
+      "Direct protein sequencing",
+      "Glycolysis",
+      "Kinase",
+      "Magnesium",
+      "Metal-binding",
+      "Nucleotide-binding",
+      "Reference proteome",
+      "Transferase"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm"
+    ],
+    "go_mf_ids": [
+      "GO:0003872",
+      "GO:0016208",
+      "GO:0005524",
+      "GO:0070095",
+      "GO:0042802",
+      "GO:0046872",
+      "GO:0048029"
+    ],
+    "go_bp_ids": [
+      "GO:0061621",
+      "GO:0030388",
+      "GO:0006002"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005945"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 322,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P21777",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P21777.json",
+      "retrieved_at": "2026-03-21T01:12:08Z"
     }
   },
   "protein:aldolase|A0A2S5IIW3": {

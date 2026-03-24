@@ -3394,8 +3394,8 @@
         },
         {
           "pathbank_compound_id": 1975,
-          "name": "\u00ce\u00b2-Tyrosine",
-          "short_name": "\u00ce\u00b2T",
+          "name": "Î²-Tyrosine",
+          "short_name": "Î²T",
           "score": 1.0,
           "mapped_ids": {
             "hmdb": "HMDB0003831",
@@ -4176,7 +4176,7 @@
         {
           "pathbank_compound_id": 805,
           "name": "UDP-D-Xylose",
-          "short_name": "UDP-\u00ce\u00b1",
+          "short_name": "UDP-Î±",
           "score": 0.625,
           "mapped_ids": {
             "hmdb": "HMDB0001018",
@@ -5079,8 +5079,8 @@
         },
         {
           "pathbank_compound_id": 30,
-          "name": "\u00ce\u00b2ine",
-          "short_name": "\u00ce\u00b2ine",
+          "name": "Î²ine",
+          "short_name": "Î²ine",
           "score": 0.7167,
           "mapped_ids": {
             "hmdb": "HMDB0000043",
@@ -5257,7 +5257,7 @@
         {
           "pathbank_compound_id": 13716,
           "name": "1-Phenylethanol",
-          "short_name": "\u00ce\u00b1",
+          "short_name": "Î±",
           "score": 0.5333,
           "mapped_ids": {
             "hmdb": "HMDB0032619",
@@ -5308,7 +5308,7 @@
         {
           "pathbank_compound_id": 14005,
           "name": "3-Furanmethanol glucoside",
-          "short_name": "\u00ce\u00b2F\u00ce\u00b2G",
+          "short_name": "Î²FÎ²G",
           "score": 0.43,
           "mapped_ids": {
             "hmdb": "HMDB0032924",
@@ -5357,7 +5357,7 @@
         },
         {
           "pathbank_compound_id": 109267,
-          "name": "Ion de Hidr\u00c3\u00b3geno",
+          "name": "Ion de HidrÃ³geno",
           "short_name": "H+",
           "score": 1.0,
           "mapped_ids": {}
@@ -5512,7 +5512,7 @@
         },
         {
           "pathbank_compound_id": 395,
-          "name": "\u00ce\u00b2-D-Glucose",
+          "name": "Î²-D-Glucose",
           "short_name": "Glu",
           "score": 1.0,
           "mapped_ids": {
@@ -5570,7 +5570,7 @@
         },
         {
           "pathbank_compound_id": 1910,
-          "name": "\u00ce\u00b1-D-Glucose 1,6-bisphosphate",
+          "name": "Î±-D-Glucose 1,6-bisphosphate",
           "short_name": "ADGluBP",
           "score": 0.705,
           "mapped_ids": {
@@ -5693,7 +5693,7 @@
         },
         {
           "pathbank_compound_id": 1906,
-          "name": "\u00ce\u00b2-D-Glucose 6-phosphate",
+          "name": "Î²-D-Glucose 6-phosphate",
           "short_name": "BDGlu6P",
           "score": 0.35,
           "mapped_ids": {
@@ -5868,7 +5868,7 @@
         },
         {
           "pathbank_compound_id": 2021,
-          "name": "\u00ce\u00b2-D-Fructose 6-phosphate",
+          "name": "Î²-D-Fructose 6-phosphate",
           "short_name": "BD-F6P",
           "score": 1.0,
           "mapped_ids": {
@@ -5882,8 +5882,8 @@
         },
         {
           "pathbank_compound_id": 40941,
-          "name": "\u00ce\u00b2-D-fructofuranose 6-phosphate",
-          "short_name": "\u00ce\u00b2DF6P",
+          "name": "Î²-D-fructofuranose 6-phosphate",
+          "short_name": "Î²DF6P",
           "score": 0.4,
           "mapped_ids": {
             "chebi": "CHEBI:57634"
@@ -6361,8 +6361,8 @@
         },
         {
           "pathbank_compound_id": 41161,
-          "name": "2-(\u00ce\u00b1-D-Mannosyl)-3-phosphoglycerate",
-          "short_name": "2-(&\u00ce\u00b1",
+          "name": "2-(Î±-D-Mannosyl)-3-phosphoglycerate",
+          "short_name": "2-(&Î±",
           "score": 0.43,
           "mapped_ids": {
             "chebi": "CHEBI:16351",
@@ -6371,8 +6371,8 @@
         },
         {
           "pathbank_compound_id": 42553,
-          "name": "2(\u00ce\u00b1-D-mannosyl)-3-phosphoglycerate",
-          "short_name": "2\u00ce\u00b1DM3P",
+          "name": "2(Î±-D-mannosyl)-3-phosphoglycerate",
+          "short_name": "2Î±DM3P",
           "score": 0.43,
           "mapped_ids": {}
         }
@@ -6590,6 +6590,63 @@
           }
         }
       ]
+    },
+    "db::fructose16bisphosphate": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.35,
+      "candidates": [
+        {
+          "pathbank_compound_id": 833,
+          "name": "Fructose 1,6-bisphosphate",
+          "short_name": "Fru1,6P",
+          "score": 0.35,
+          "mapped_ids": {
+            "hmdb": "HMDB0001058",
+            "kegg": "C00354",
+            "chebi": "CHEBI:16905",
+            "pubchem": "445557",
+            "cas": "488-69-7",
+            "biocyc": "FRUCTOSE-16-DIPHOSPHATE",
+            "chemspider": "393165"
+          }
+        }
+      ]
+    },
+    "api::fructose16bisphosphate": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.322,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C00354",
+          "name": "D-Fructose 1,6-bisphosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C05378",
+          "name": "beta-D-Fructose 1,6-bisphosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C21364",
+          "name": "[Fructose-bisphosphate aldolase]-L-lysine",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C21365",
+          "name": "[Fructose-bisphosphate aldolase]-N6,N6,N6-trimethyl-L-lysine",
+          "score": 0.322
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
     }
   }
 }

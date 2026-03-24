@@ -2404,6 +2404,46 @@ def compute_normalization_stats(payload: Dict[str, Any], report: Dict[str, Any])
     return _safe_dict(rep.get("summary"))
 
 
+def prune_disconnected_proteins(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> List[str]:
+    """Remove proteins with degree 0 from *payload* in-place.
+
+    Returns the list of pruned protein names.  These proteins were extracted by
+    the LLM but never referenced as an enzyme/modifier in any reaction, so they
+    contribute nothing to the pathway graph and would otherwise trip the
+    enforce_all_proteins_connected hard gate.
+    """
+    from qa_graph import build_graph, degrees, get_entities, node  # type: ignore
+
+    adj, _ = build_graph(payload)
+    deg = degrees(adj)
+    ents = get_entities(payload)
+
+    disconnected = {
+        name
+        for name in ents.get("proteins", set())
+        if deg.get(node("protein", name), 0) == 0
+    }
+    if not disconnected:
+        return []
+
+    proteins_list = _safe_list(_safe_dict(payload.get("entities")).get("proteins"))
+    kept = [
+        row for row in proteins_list
+        if isinstance(row, dict) and _canonical(str(row.get("name", ""))) not in disconnected
+    ]
+    payload.setdefault("entities", {})["proteins"] = kept  # type: ignore[index]
+
+    pruned = sorted(disconnected)
+    if report is not None:
+        rep = report if isinstance(report, dict) else {}
+        rep.setdefault("summary", {})["pruned_disconnected_proteins"] = pruned
+    return pruned
+
+
 def run_strict_post_normalization_gates(
     payload: Dict[str, Any],
     *,
