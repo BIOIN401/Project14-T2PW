@@ -56,6 +56,8 @@ PW_NS = "http://www.spmdb.ca/pathwhiz"
 
 ET.register_namespace("", SBML_NS)
 ET.register_namespace("pathwhiz", PW_NS)
+ET.register_namespace("bqbiol", "http://biomodels.net/biology-qualifiers/")
+ET.register_namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
 NS = {"sbml": SBML_NS, "pathwhiz": PW_NS}
 
@@ -317,12 +319,16 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         c_ann = c.find("sbml:annotation", NS)
         if c_ann is None:
             c_ann = ET.SubElement(c, _q("annotation"))
+        existing_comp_id = None
         for old in list(c_ann.findall(f"{{{PW_NS}}}compartment")):
+            existing_comp_id = old.get(f"{{{PW_NS}}}compartment_id")
             c_ann.remove(old)
         for old in list(c_ann.findall(f"{{{PW_NS}}}pathwhiz")):
             c_ann.remove(old)
         pw_comp = ET.SubElement(c_ann, _q("compartment", PW_NS))
         pw_comp.set(f"{{{PW_NS}}}compartment_type", "biological_state")
+        if existing_comp_id is not None:
+            pw_comp.set(f"{{{PW_NS}}}compartment_id", existing_comp_id)
 
     # ------------------------------------------------------------------
     # Collect reactions
@@ -385,12 +391,16 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         rxn_ann = rxn.find("sbml:annotation", NS)
         if rxn_ann is None:
             rxn_ann = ET.SubElement(rxn, _q("annotation"))
+        existing_rxn_id = None
         for old in list(rxn_ann.findall(f"{{{PW_NS}}}reaction")):
+            existing_rxn_id = old.get(f"{{{PW_NS}}}reaction_id")
             rxn_ann.remove(old)
         for old in list(rxn_ann.findall(f"{{{PW_NS}}}pathwhiz")):
             rxn_ann.remove(old)
         rxn_pw = ET.SubElement(rxn_ann, _q("reaction", PW_NS))
         rxn_pw.set(f"{{{PW_NS}}}reaction_type", rtype)
+        if existing_rxn_id is not None:
+            rxn_pw.set(f"{{{PW_NS}}}reaction_id", existing_rxn_id)
 
         # Reactants
         reactant_refs = rxn.findall("./sbml:listOfReactants/sbml:speciesReference", NS)
@@ -524,10 +534,14 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         sp_ann = sp.find("sbml:annotation", NS)
         if sp_ann is None:
             sp_ann = ET.SubElement(sp, _q("annotation"))
+        existing_sp_id = None
         for old in list(sp_ann.findall(f"{{{PW_NS}}}species")):
+            existing_sp_id = old.get(f"{{{PW_NS}}}species_id")
             sp_ann.remove(old)
         pw_sp = ET.SubElement(sp_ann, _q("species", PW_NS))
         pw_sp.set(f"{{{PW_NS}}}species_type", species_nodes[sid].stype)
+        if existing_sp_id is not None:
+            pw_sp.set(f"{{{PW_NS}}}species_id", existing_sp_id)
 
     for sid, s in species_nodes.items():
         if sid not in pos:

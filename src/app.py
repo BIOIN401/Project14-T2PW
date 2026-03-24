@@ -25,6 +25,7 @@ from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_render_pathwhiz_like import build_render_artifacts
+from sbml_strip_unmapped import strip_unmapped
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
@@ -39,6 +40,7 @@ from process_normalizer import (
     normalize_composites,
     normalize_process_actor_schema,
     promote_catalysts,
+    prune_disconnected_proteins,
     rewrite_reactions_to_complex_states,
     run_strict_post_normalization_gates,
 )
@@ -122,14 +124,21 @@ def _safe_dict(value: Any) -> Dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
-def _save_pipeline_outputs(project_root: Path, sbml_bytes: bytes, render_ready_bytes: bytes) -> str:
-    """Write pathway.sbml and pathway.render_ready.sbml to outputs/ after each pipeline run."""
+def _save_pipeline_outputs(
+    project_root: Path,
+    sbml_bytes: bytes,
+    render_ready_bytes: bytes,
+    clean_bytes: bytes,
+) -> str:
+    """Write pathway.sbml, pathway.render_ready.sbml, and pathway.render_ready.clean.sbml to outputs/."""
     out_dir = project_root / "outputs"
     out_dir.mkdir(exist_ok=True)
     if sbml_bytes:
         (out_dir / "pathway.sbml").write_bytes(sbml_bytes)
     if render_ready_bytes:
         (out_dir / "pathway.render_ready.sbml").write_bytes(render_ready_bytes)
+    if clean_bytes:
+        (out_dir / "pathway.render_ready.clean.sbml").write_bytes(clean_bytes)
     return str(out_dir / "pathway.render_ready.sbml")
 
 
@@ -419,6 +428,7 @@ def run_post_pipeline_sbml_artifacts(
             canonicalize_same_as_aliases(normalized_input, report=normalization_report)
             normalize_process_actor_schema(normalized_input, report=normalization_report)
             dedupe_processes(normalized_input, report=normalization_report)
+            prune_disconnected_proteins(normalized_input, report=normalization_report)
             gate_snapshot = run_strict_post_normalization_gates(
                 normalized_input,
                 report=normalization_report,
@@ -520,6 +530,8 @@ def run_post_pipeline_sbml_artifacts(
                 "sbml_diagram_error": "",
                 "sbml_render_layout_summary": {},
                 "sbml_render_ready_sbml_bytes": b"",
+                "sbml_clean_bytes": b"",
+                "sbml_clean_summary": {},
                 "sbml_build_report": {},
                 "mapping_cache_path": str(cache_path),
                 "enrichment_cache_path": str(cache_path.with_name("enrichment_cache.json")),
@@ -939,6 +951,8 @@ def run_post_pipeline_sbml_artifacts(
         sbml_diagram_error = ""
         sbml_render_layout_summary: Dict[str, Any] = {}
         sbml_render_ready_sbml_bytes = b""
+        sbml_clean_bytes = b""
+        sbml_clean_summary: Dict[str, Any] = {}
         try:
             render_artifacts = build_render_artifacts(str(sbml_path))
             sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
@@ -946,6 +960,12 @@ def run_post_pipeline_sbml_artifacts(
             sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
         except Exception as exc:  # noqa: BLE001
             sbml_diagram_error = str(exc)
+
+        if sbml_render_ready_sbml_bytes:
+            try:
+                sbml_clean_bytes, sbml_clean_summary = strip_unmapped(sbml_render_ready_sbml_bytes)
+            except Exception:  # noqa: BLE001
+                pass
 
         return {
             "gate_failed": False,
@@ -972,12 +992,15 @@ def run_post_pipeline_sbml_artifacts(
             "sbml_diagram_error": sbml_diagram_error,
             "sbml_render_layout_summary": sbml_render_layout_summary,
             "sbml_render_ready_sbml_bytes": sbml_render_ready_sbml_bytes,
+            "sbml_clean_bytes": sbml_clean_bytes,
+            "sbml_clean_summary": sbml_clean_summary,
             "sbml_build_report": sbml_build_report,
             "mapping_cache_path": str(cache_path),
             "saved_pathway_sbml_path": _save_pipeline_outputs(
                 project_root,
                 sbml_path.read_bytes() if sbml_path.exists() else b"",
                 sbml_render_ready_sbml_bytes,
+                sbml_clean_bytes,
             ),
             "enrichment_cache_path": str(enrichment_cache_path),
             "enrichment_dump_path": str(enrichment_dump_path),
@@ -1593,6 +1616,28 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/xml",
                 key="dl_pathway_render_ready_sbml",
             )
+        if post_artifacts.get("sbml_clean_bytes"):
+            st.download_button(
+                "Download pathway.render_ready.clean.sbml (unmapped entities removed)",
+                post_artifacts["sbml_clean_bytes"],
+                file_name="pathway.render_ready.clean.sbml",
+                mime="application/xml",
+                key="dl_pathway_render_ready_clean_sbml",
+            )
+            clean_summary = post_artifacts.get("sbml_clean_summary", {})
+            if clean_summary:
+                with st.expander("Clean SBML removal summary"):
+                    st.write(f"Compartments removed: {clean_summary.get('total_removed_compartments', 0)}")
+                    st.write(f"Species removed: {clean_summary.get('total_removed_species', 0)}")
+                    st.write(f"Reactions removed (no ID): {clean_summary.get('total_removed_reactions', 0)}")
+                    st.write(f"Reactions removed (cascade): {clean_summary.get('total_cascade_removed_reactions', 0)}")
+                    if clean_summary.get("removed_species"):
+                        st.json(clean_summary["removed_species"])
+                    if clean_summary.get("removed_reactions") or clean_summary.get("cascade_removed_reactions"):
+                        st.json(
+                            clean_summary.get("removed_reactions", [])
+                            + clean_summary.get("cascade_removed_reactions", [])
+                        )
         if post_artifacts.get("sbml_diagram_png_bytes"):
             st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
             st.download_button(

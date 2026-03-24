@@ -92,6 +92,24 @@ def _token_set(value: str) -> set:
     return {tok for tok in _normalize_name(value).split(" ") if tok}
 
 
+def _punct_token_set(value: str) -> set:
+    """Token set replacing all punctuation/hyphens with spaces before splitting.
+    Fixes cases like 'fructose-1,6-bisphosphate' vs 'Fructose 1,6-bisphosphate'
+    where _normalize_name produces different token counts."""
+    return {tok for tok in re.sub(r"[^a-z0-9]+", " ", value.strip().casefold()).split() if tok}
+
+
+def _punct_jaccard(a: str, b: str) -> float:
+    """Jaccard similarity using punctuation-replaced token sets."""
+    sa = _punct_token_set(a)
+    sb = _punct_token_set(b)
+    if not sa and not sb:
+        return 1.0
+    if not sa or not sb:
+        return 0.0
+    return len(sa & sb) / len(sa | sb)
+
+
 def _jaccard(a: str, b: str) -> float:
     sa = _token_set(a)
     sb = _token_set(b)
@@ -390,6 +408,8 @@ class PathBankDbResolver:
                     jaccard = max(
                         _jaccard(name, db_name),
                         _jaccard(name, short_name),
+                        _punct_jaccard(name, db_name),
+                        _punct_jaccard(name, short_name),
                         max((_jaccard(name, s) for s in synonyms), default=0.0),
                     )
                     score = (0.9 if exact else 0.0) + (0.84 if syn_exact else 0.0) + contains_bonus + (0.35 + 0.55 * jaccard)
@@ -500,6 +520,8 @@ class PathBankDbResolver:
                         jaccard = max(
                             _jaccard(name, db_name),
                             _jaccard(name, gene_name),
+                            _punct_jaccard(name, db_name),
+                            _punct_jaccard(name, gene_name),
                             max((_jaccard(name, s) for s in synonyms), default=0.0),
                         )
                         species_bonus = 0.14 if species_ids and row_species_id in species_ids else 0.0
