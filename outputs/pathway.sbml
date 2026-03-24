@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <model id="PathwayModel" name="Pathway model generated from mapped JSON" substanceUnits="Unit1" volumeUnits="UnitVol" extentUnits="Unit1">
     <listOfUnitDefinitions>
       <unitDefinition id="Unit1" name="Mole">
@@ -14,93 +14,437 @@
       </unitDefinition>
     </listOfUnitDefinitions>
     <listOfCompartments>
-      <compartment id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
-      <compartment id="c_mitochondrial_inner_membrane" name="mitochondrial inner membrane" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
-      <compartment id="c_oil_body" name="oil body" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
-      <compartment id="c_storage_vacuole" name="storage vacuole" spatialDimensions="3" size="1" units="UnitVol" constant="false"/>
+      <compartment sboTerm="SBO:0000240" id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false">
+        <annotation>
+          <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+      </compartment>
+      <compartment sboTerm="SBO:0000240" id="c_mitochondrial_matrix" name="mitochondrial matrix" spatialDimensions="3" size="1" units="UnitVol" constant="false">
+        <annotation>
+          <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="13746" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+      </compartment>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="m_C02112_c_cell" name="2-acylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_217b11bf10a6_c_oil_body" name="triacylglycerol" compartment="c_oil_body" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_307f56fca5d8_c_cell" name="1-monoglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_3e35c6e86377_c_mitochondrial_inner_membrane" name="glycerone phosphate" compartment="c_mitochondrial_inner_membrane" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_43a27560801a_c_oil_body" name="1,2-diglyceride" compartment="c_oil_body" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_62f931b50a6e_c_mitochondrial_inner_membrane" name="glycerol 3-phosphate" compartment="c_mitochondrial_inner_membrane" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_unmapped_b017a05447ea_c_cell" name="1,2-diglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_x_15978_c_cell" name="glycerol 3-phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_x_16108_c_cell" name="glycerone phosphate" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_x_17522_c_cell" name="glycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_x_75848_c_cell" name="triacylglycerol" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="m_x_75848_c_cell_ac62c9" name="triglyceride" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_O49523_c_cell" name="acylhydrolase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_P32189_c_cell" name="glycerol kinase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_Q00055_c_mitochondrial_inner_membrane" name="glycerol-3-phosphate dehydrogenase" compartment="c_mitochondrial_inner_membrane" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_Q9LZA6_c_oil_body" name="triacylglycerol lipase" compartment="c_oil_body" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
-      <species id="p_Z0Z000_c_cell" name="diglyceride lipase" compartment="c_cell" initialAmount="0" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false"/>
+      <species metaid="_meta_m_CHEBI_15351_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15351_c_mitochondrial_matrix" name="acetyl-CoA" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="940" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15351_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15351"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001206"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00024"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:444493"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15380_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15380_c_mitochondrial_matrix" name="succinyl-CoA" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="808" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15380_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15380"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001022"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00091"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:439161"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15422_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15422_c_mitochondrial_matrix" name="ATP" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="414" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15422_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15422"/>
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB00171"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000538"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00002"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:5957"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15741_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15741_c_mitochondrial_matrix" name="succinate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="174" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15741_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15741"/>
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB00139"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000254"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00042"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:1110"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15996_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15996_c_mitochondrial_matrix" name="GTP" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="986" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15996_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15996"/>
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB03896"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001273"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00044"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:6830"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_16908_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_16908_c_mitochondrial_matrix" name="NADH" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1144" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_16908_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16908"/>
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB00157"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001487"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00004"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:439153"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_17877_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_17877_c_mitochondrial_matrix" name="FADH₂" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="932" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_17877_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17877"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001197"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C01352"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:446013"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_18012_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_18012_c_mitochondrial_matrix" name="fumarate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="88" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_18012_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:18012"/>
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB04299"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000134"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00122"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:21883788"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30744_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30744_c_mitochondrial_matrix" name="oxaloacetate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="148" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30744_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30744"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000223"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00036"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:970"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30769_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30769_c_mitochondrial_matrix" name="citrate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="63" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30769_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30769"/>
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB04272"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000094"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00158"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:19782904"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30797_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30797_c_mitochondrial_matrix" name="malate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="101" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30797_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30797"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000156"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00149"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:222656"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30887_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30887_c_mitochondrial_matrix" name="isocitrate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="125" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30887_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30887"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000193"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00311"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:1198"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30915_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30915_c_mitochondrial_matrix" name="α-ketoglutarate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="134" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30915_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30915"/>
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB02926"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000208"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00026"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:51"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_48828_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_48828_c_mitochondrial_matrix" name="CO₂" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="472" pathwhiz:species_type="compound"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_48828_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:48828"/>
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000608"/>
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00175"/>
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:104729"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_A0AB38CIT9_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_A0AB38CIT9_c_mitochondrial_matrix" name="aconitase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="97021" pathwhiz:species_type="protein"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_p_A0AB38CIT9_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:A0AB38CIT9"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_P0ABH7_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_P0ABH7_c_mitochondrial_matrix" name="citrate synthase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="76116" pathwhiz:species_type="protein"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_p_P0ABH7_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:P0ABH7"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_P61889_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_P61889_c_mitochondrial_matrix" name="malate dehydrogenase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="6671" pathwhiz:species_type="protein"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_p_P61889_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:P61889"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_P69054_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_P69054_c_mitochondrial_matrix" name="succinate dehydrogenase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="28873" pathwhiz:species_type="protein"/>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:vCard4="http://www.w3.org/2006/vcard/ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
+            <rdf:Description rdf:about="#_meta_p_P69054_c_mitochondrial_matrix">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:P69054"/>
+                </rdf:Bag>
+              </bqbiol:is>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_226037e335ea_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_unmapped_226037e335ea_c_mitochondrial_matrix" name="succinyl-CoA synthetase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_6fdb7129595c_c_cell" sboTerm="SBO:0000245" id="p_unmapped_6fdb7129595c_c_cell" name="α-ketoglutarate dehydrogenase complex" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_b93fd8eab70f_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_unmapped_b93fd8eab70f_c_mitochondrial_matrix" name="isocitrate dehydrogenase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_ca2f4507c6f5_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_unmapped_ca2f4507c6f5_c_mitochondrial_matrix" name="fumarase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_type="protein"/>
+        </annotation>
+      </species>
     </listOfSpecies>
     <listOfReactions>
-      <reaction id="r_364150c8f168" name="triacylglycerol to 1,2-diglyceride" reversible="false" compartment="c_oil_body">
+      <reaction sboTerm="SBO:0000176" id="r_4ec3ebf4ac96" name="hydration of fumarate to malate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
         <listOfReactants>
-          <speciesReference species="m_unmapped_217b11bf10a6_c_oil_body" stoichiometry="1" constant="true"/>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_18012_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_unmapped_43a27560801a_c_oil_body" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="p_Q9LZA6_c_oil_body"/>
-        </listOfModifiers>
-      </reaction>
-      <reaction id="r_5934f0fbb97c" name="1-monoglyceride to glycerol" reversible="false" compartment="c_cell">
-        <listOfReactants>
-          <speciesReference species="m_unmapped_307f56fca5d8_c_cell" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="m_x_17522_c_cell" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="p_O49523_c_cell"/>
-        </listOfModifiers>
-      </reaction>
-      <reaction id="r_598ab18a195a" name="glycerol to glycerol 3-phosphate" reversible="false" compartment="c_cell">
-        <listOfReactants>
-          <speciesReference species="m_x_17522_c_cell" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="m_x_15978_c_cell" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="p_P32189_c_cell"/>
-        </listOfModifiers>
-      </reaction>
-      <reaction id="r_6c90cd7c2fe1" name="2-acylglycerol to 1-monoglyceride" reversible="false" compartment="c_cell">
-        <listOfReactants>
-          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="m_unmapped_307f56fca5d8_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30797_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
         </listOfProducts>
       </reaction>
-      <reaction id="r_b6a501fe63b3" name="1,2-diglyceride to 2-acylglycerol" reversible="false" compartment="c_cell">
+      <reaction sboTerm="SBO:0000176" id="r_569265b32ca8" name="conversion of succinyl-CoA to succinate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
         <listOfReactants>
-          <speciesReference species="m_unmapped_b017a05447ea_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15380_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_C02112_c_cell" stoichiometry="1" constant="true"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15422_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15741_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15996_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
         </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="p_Z0Z000_c_cell"/>
-        </listOfModifiers>
       </reaction>
-      <reaction id="r_fc7db5292933" name="glycerol 3-phosphate to glycerone phosphate" reversible="false" compartment="c_mitochondrial_inner_membrane">
+      <reaction sboTerm="SBO:0000176" id="r_5cc0687b44a6" name="oxidation of malate to oxaloacetate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
         <listOfReactants>
-          <speciesReference species="m_unmapped_62f931b50a6e_c_mitochondrial_inner_membrane" stoichiometry="1" constant="true"/>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30797_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="m_unmapped_3e35c6e86377_c_mitochondrial_inner_membrane" stoichiometry="1" constant="true"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16908_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30744_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
         </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="p_Q00055_c_mitochondrial_inner_membrane"/>
-        </listOfModifiers>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_96129ef14d3b" name="oxidation of succinate to fumarate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15741_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_17877_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_18012_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_b33ee25b5e2d" name="oxidative decarboxylation of α-ketoglutarate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30915_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15380_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16908_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_48828_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_bce26d144876" name="isomerization of citrate to isocitrate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30769_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30887_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_d4f10d79138b" name="oxidative decarboxylation of isocitrate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30887_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16908_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30915_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_48828_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_efe79369961b" name="condensation of acetyl-CoA and oxaloacetate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15351_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30744_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30769_c_mitochondrial_matrix" stoichiometry="1" constant="false"/>
+        </listOfProducts>
       </reaction>
     </listOfReactions>
   </model>

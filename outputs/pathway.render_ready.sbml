@@ -1,0 +1,419 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:ns3="http://biomodels.net/biology-qualifiers/" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" level="3" version="1">
+  <model id="PathwayModel" name="Pathway model generated from mapped JSON" substanceUnits="Unit1" volumeUnits="UnitVol" extentUnits="Unit1">
+    <listOfUnitDefinitions>
+      <unitDefinition id="Unit1" name="Mole">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1" />
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="UnitVol" name="Litre">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1" />
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment sboTerm="SBO:0000240" id="c_cell" name="cell" spatialDimensions="3" size="1" units="UnitVol" constant="false">
+        <annotation>
+          <pathwhiz:compartment pathwhiz:compartment_type="biological_state" /></annotation>
+      </compartment>
+      <compartment sboTerm="SBO:0000240" id="c_mitochondrial_matrix" name="mitochondrial matrix" spatialDimensions="3" size="1" units="UnitVol" constant="false">
+        <annotation>
+          <pathwhiz:compartment pathwhiz:compartment_type="biological_state" /></annotation>
+      </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species metaid="_meta_m_CHEBI_15351_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15351_c_mitochondrial_matrix" name="acetyl-CoA" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15351_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15351" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001206" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00024" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:444493" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15380_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15380_c_mitochondrial_matrix" name="succinyl-CoA" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15380_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15380" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001022" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00091" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:439161" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15422_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15422_c_mitochondrial_matrix" name="ATP" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15422_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15422" />
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB00171" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000538" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00002" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:5957" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15741_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15741_c_mitochondrial_matrix" name="succinate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15741_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15741" />
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB00139" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000254" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00042" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:1110" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_15996_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_15996_c_mitochondrial_matrix" name="GTP" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15996_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15996" />
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB03896" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001273" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00044" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:6830" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_16908_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_16908_c_mitochondrial_matrix" name="NADH" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_16908_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16908" />
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB00157" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001487" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00004" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:439153" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_17877_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_17877_c_mitochondrial_matrix" name="FADH₂" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_17877_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17877" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001197" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C01352" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:446013" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_18012_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_18012_c_mitochondrial_matrix" name="fumarate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_18012_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:18012" />
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB04299" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000134" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00122" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:21883788" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30744_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30744_c_mitochondrial_matrix" name="oxaloacetate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30744_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30744" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000223" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00036" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:970" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30769_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30769_c_mitochondrial_matrix" name="citrate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30769_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30769" />
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB04272" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000094" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00158" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:19782904" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30797_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30797_c_mitochondrial_matrix" name="malate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30797_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30797" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000156" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00149" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:222656" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30887_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30887_c_mitochondrial_matrix" name="isocitrate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30887_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30887" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000193" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00311" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:1198" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_30915_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_30915_c_mitochondrial_matrix" name="α-ketoglutarate" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_30915_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30915" />
+                  <rdf:li rdf:resource="urn:miriam:drugbank:DB02926" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000208" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00026" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:51" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_m_CHEBI_48828_c_mitochondrial_matrix" sboTerm="SBO:0000247" id="m_CHEBI_48828_c_mitochondrial_matrix" name="CO₂" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_m_CHEBI_48828_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:48828" />
+                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000608" />
+                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00175" />
+                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:104729" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="compound" /></annotation>
+      </species>
+      <species metaid="_meta_p_A0AB38CIT9_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_A0AB38CIT9_c_mitochondrial_matrix" name="aconitase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_p_A0AB38CIT9_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:A0AB38CIT9" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+      <species metaid="_meta_p_P0ABH7_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_P0ABH7_c_mitochondrial_matrix" name="citrate synthase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_p_P0ABH7_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:P0ABH7" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+      <species metaid="_meta_p_P61889_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_P61889_c_mitochondrial_matrix" name="malate dehydrogenase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_p_P61889_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:P61889" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+      <species metaid="_meta_p_P69054_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_P69054_c_mitochondrial_matrix" name="succinate dehydrogenase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <rdf:RDF>
+            <rdf:Description rdf:about="#_meta_p_P69054_c_mitochondrial_matrix">
+              <ns3:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="urn:miriam:uniprot:P69054" />
+                </rdf:Bag>
+              </ns3:is>
+            </rdf:Description>
+          </rdf:RDF>
+        <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_226037e335ea_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_unmapped_226037e335ea_c_mitochondrial_matrix" name="succinyl-CoA synthetase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_6fdb7129595c_c_cell" sboTerm="SBO:0000245" id="p_unmapped_6fdb7129595c_c_cell" name="α-ketoglutarate dehydrogenase complex" compartment="c_cell" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_b93fd8eab70f_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_unmapped_b93fd8eab70f_c_mitochondrial_matrix" name="isocitrate dehydrogenase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+      <species metaid="_meta_p_unmapped_ca2f4507c6f5_c_mitochondrial_matrix" sboTerm="SBO:0000245" id="p_unmapped_ca2f4507c6f5_c_mitochondrial_matrix" name="fumarase" compartment="c_mitochondrial_matrix" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+        <annotation>
+          <pathwhiz:species pathwhiz:species_type="protein" /></annotation>
+      </species>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction sboTerm="SBO:0000176" id="r_4ec3ebf4ac96" name="hydration of fumarate to malate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_18012_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_18012_c_mitochondrial_matrix" pathwhiz:location_id="1001" pathwhiz:x="61.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M139 300 L260 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30797_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30797_c_mitochondrial_matrix" pathwhiz:location_id="1003" pathwhiz:x="381.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M260 300 L381 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_569265b32ca8" name="conversion of succinyl-CoA to succinate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15380_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15380_c_mitochondrial_matrix" pathwhiz:location_id="1005" pathwhiz:x="481.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M559 300 L680 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15422_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_mitochondrial_matrix" pathwhiz:location_id="1007" pathwhiz:x="801.0" pathwhiz:y="176.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 300 L801 215" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15741_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15741_c_mitochondrial_matrix" pathwhiz:location_id="1009" pathwhiz:x="801.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 300 L801 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15996_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15996_c_mitochondrial_matrix" pathwhiz:location_id="1011" pathwhiz:x="801.0" pathwhiz:y="346.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 300 L801 385" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_5cc0687b44a6" name="oxidation of malate to oxaloacetate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30797_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30797_c_mitochondrial_matrix" pathwhiz:location_id="1013" pathwhiz:x="901.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M979 300 L1100 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16908_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16908_c_mitochondrial_matrix" pathwhiz:location_id="1015" pathwhiz:x="1221.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1100 300 L1221 258" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30744_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30744_c_mitochondrial_matrix" pathwhiz:location_id="1017" pathwhiz:x="1221.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1100 300 L1221 342" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_96129ef14d3b" name="oxidation of succinate to fumarate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15741_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15741_c_mitochondrial_matrix" pathwhiz:location_id="1019" pathwhiz:x="1321.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1399 300 L1520 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_17877_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_17877_c_mitochondrial_matrix" pathwhiz:location_id="1021" pathwhiz:x="1641.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1520 300 L1641 258" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_18012_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_18012_c_mitochondrial_matrix" pathwhiz:location_id="1023" pathwhiz:x="1641.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1520 300 L1641 342" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_b33ee25b5e2d" name="oxidative decarboxylation of α-ketoglutarate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30915_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30915_c_mitochondrial_matrix" pathwhiz:location_id="1025" pathwhiz:x="1741.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1819 300 L1940 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15380_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15380_c_mitochondrial_matrix" pathwhiz:location_id="1027" pathwhiz:x="2061.0" pathwhiz:y="176.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1940 300 L2061 215" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16908_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16908_c_mitochondrial_matrix" pathwhiz:location_id="1029" pathwhiz:x="2061.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1940 300 L2061 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_48828_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_48828_c_mitochondrial_matrix" pathwhiz:location_id="1031" pathwhiz:x="2061.0" pathwhiz:y="346.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1940 300 L2061 385" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_bce26d144876" name="isomerization of citrate to isocitrate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30769_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30769_c_mitochondrial_matrix" pathwhiz:location_id="1033" pathwhiz:x="2161.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2239 300 L2360 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30887_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30887_c_mitochondrial_matrix" pathwhiz:location_id="1035" pathwhiz:x="2481.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2360 300 L2481 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_d4f10d79138b" name="oxidative decarboxylation of isocitrate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30887_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30887_c_mitochondrial_matrix" pathwhiz:location_id="1037" pathwhiz:x="2581.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2659 300 L2780 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16908_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16908_c_mitochondrial_matrix" pathwhiz:location_id="1039" pathwhiz:x="2901.0" pathwhiz:y="176.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2780 300 L2901 215" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30915_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30915_c_mitochondrial_matrix" pathwhiz:location_id="1041" pathwhiz:x="2901.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2780 300 L2901 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_48828_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_48828_c_mitochondrial_matrix" pathwhiz:location_id="1043" pathwhiz:x="2901.0" pathwhiz:y="346.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M2780 300 L2901 385" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_efe79369961b" name="condensation of acetyl-CoA and oxaloacetate" reversible="false" fast="false" compartment="c_mitochondrial_matrix">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" /></annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15351_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15351_c_mitochondrial_matrix" pathwhiz:location_id="1045" pathwhiz:x="3001.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M3079 258 L3200 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_30744_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30744_c_mitochondrial_matrix" pathwhiz:location_id="1047" pathwhiz:x="3001.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M3079 342 L3200 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_30769_c_mitochondrial_matrix" stoichiometry="1" constant="false"><annotation><pathwhiz:location pathwhiz:location_type="compound"><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30769_c_mitochondrial_matrix" pathwhiz:location_id="1049" pathwhiz:x="3321.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M3200 300 L3321 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" /></pathwhiz:location></annotation></speciesReference>
+        </listOfProducts>
+      </reaction>
+    </listOfReactions>
+  <annotation><pathwhiz:dimensions pathwhiz:width="3460" pathwhiz:height="618" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15351_c_mitochondrial_matrix" pathwhiz:x="949.00" pathwhiz:y="795.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15380_c_mitochondrial_matrix" pathwhiz:x="949.00" pathwhiz:y="249.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_mitochondrial_matrix" pathwhiz:x="193.00" pathwhiz:y="613.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15741_c_mitochondrial_matrix" pathwhiz:x="697.00" pathwhiz:y="249.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15996_c_mitochondrial_matrix" pathwhiz:x="445.00" pathwhiz:y="431.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16908_c_mitochondrial_matrix" pathwhiz:x="193.00" pathwhiz:y="249.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_17877_c_mitochondrial_matrix" pathwhiz:x="949.00" pathwhiz:y="613.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_18012_c_mitochondrial_matrix" pathwhiz:x="193.00" pathwhiz:y="431.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30744_c_mitochondrial_matrix" pathwhiz:x="445.00" pathwhiz:y="249.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30769_c_mitochondrial_matrix" pathwhiz:x="445.00" pathwhiz:y="613.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30797_c_mitochondrial_matrix" pathwhiz:x="949.00" pathwhiz:y="431.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30887_c_mitochondrial_matrix" pathwhiz:x="697.00" pathwhiz:y="431.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_30915_c_mitochondrial_matrix" pathwhiz:x="193.00" pathwhiz:y="67.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_48828_c_mitochondrial_matrix" pathwhiz:x="697.00" pathwhiz:y="613.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_A0AB38CIT9_c_mitochondrial_matrix" pathwhiz:x="160.00" pathwhiz:y="975.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_P0ABH7_c_mitochondrial_matrix" pathwhiz:x="412.00" pathwhiz:y="975.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_P61889_c_mitochondrial_matrix" pathwhiz:x="160.00" pathwhiz:y="793.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_P69054_c_mitochondrial_matrix" pathwhiz:x="412.00" pathwhiz:y="793.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_unmapped_226037e335ea_c_mitochondrial_matrix" pathwhiz:x="664.00" pathwhiz:y="793.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_unmapped_6fdb7129595c_c_cell" pathwhiz:x="160.00" pathwhiz:y="1479.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_unmapped_b93fd8eab70f_c_mitochondrial_matrix" pathwhiz:x="916.00" pathwhiz:y="975.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_unmapped_ca2f4507c6f5_c_mitochondrial_matrix" pathwhiz:x="664.00" pathwhiz:y="975.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="element_collection_location" pathwhiz:element_id="c_cell" pathwhiz:x="146.00" pathwhiz:y="1434.00" pathwhiz:width="120.00" pathwhiz:height="120.00" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="element_collection_location" pathwhiz:element_id="c_mitochondrial_matrix" pathwhiz:x="146.00" pathwhiz:y="20.00" pathwhiz:width="876.00" pathwhiz:height="1030.00" pathwhiz:zindex="10" pathwhiz:hidden="false" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_18012_c_mitochondrial_matrix__to__m_CHEBI_30797_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 444.00 L 962.00 444.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15380_c_mitochondrial_matrix__to__m_CHEBI_15422_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 262.00 L 584.00 262.00 L 584.00 626.00 L 206.00 626.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15380_c_mitochondrial_matrix__to__m_CHEBI_15741_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 262.00 L 710.00 262.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15380_c_mitochondrial_matrix__to__m_CHEBI_15996_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 262.00 L 710.00 262.00 L 710.00 444.00 L 458.00 444.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30797_c_mitochondrial_matrix__to__m_CHEBI_16908_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 444.00 L 584.00 444.00 L 584.00 262.00 L 206.00 262.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30797_c_mitochondrial_matrix__to__m_CHEBI_30744_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 444.00 L 710.00 444.00 L 710.00 262.00 L 458.00 262.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15741_c_mitochondrial_matrix__to__m_CHEBI_17877_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 262.00 L 836.00 262.00 L 836.00 626.00 L 962.00 626.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15741_c_mitochondrial_matrix__to__m_CHEBI_18012_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 262.00 L 458.00 262.00 L 458.00 444.00 L 206.00 444.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30915_c_mitochondrial_matrix__to__m_CHEBI_15380_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 80.00 L 584.00 80.00 L 584.00 262.00 L 962.00 262.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30915_c_mitochondrial_matrix__to__m_CHEBI_16908_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 80.00 L 206.00 80.00 L 206.00 262.00 L 206.00 262.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30915_c_mitochondrial_matrix__to__m_CHEBI_48828_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 80.00 L 458.00 80.00 L 458.00 626.00 L 710.00 626.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30769_c_mitochondrial_matrix__to__m_CHEBI_30887_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 458.00 626.00 L 584.00 626.00 L 584.00 444.00 L 710.00 444.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30887_c_mitochondrial_matrix__to__m_CHEBI_16908_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 444.00 L 458.00 444.00 L 458.00 262.00 L 206.00 262.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30887_c_mitochondrial_matrix__to__m_CHEBI_30915_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 444.00 L 458.00 444.00 L 458.00 80.00 L 206.00 80.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30887_c_mitochondrial_matrix__to__m_CHEBI_48828_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 444.00 L 710.00 444.00 L 710.00 626.00 L 710.00 626.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15351_c_mitochondrial_matrix__to__m_CHEBI_30769_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 808.00 L 710.00 808.00 L 710.00 626.00 L 458.00 626.00" /><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_30744_c_mitochondrial_matrix__to__m_CHEBI_30769_c_mitochondrial_matrix" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 458.00 262.00 L 458.00 262.00 L 458.00 626.00 L 458.00 626.00" /></annotation></model>
+</sbml>
