@@ -3762,6 +3762,423 @@
       ],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::hexokinase::homo sapiens": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::hexokinase::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"hexokinase\" OR gene:\"hexokinase\") AND organism_name:\"Homo sapiens\" | (protein_name:\"hexokinase\" OR gene:\"hexokinase\")",
+      "confidence": 0.475,
+      "candidates": [
+        {
+          "accession": "Q2TB90",
+          "protein_name": "Hexokinase HKDC1",
+          "gene_names": [
+            "HKDC1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.475
+        },
+        {
+          "accession": "P19367",
+          "protein_name": "Hexokinase-1",
+          "gene_names": [
+            "HK1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "P52789",
+          "protein_name": "Hexokinase-2",
+          "gene_names": [
+            "HK2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "P52790",
+          "protein_name": "Hexokinase-3",
+          "gene_names": [
+            "HK3"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "P35557",
+          "protein_name": "Hexokinase-4",
+          "gene_names": [
+            "GCK"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "E9PB90",
+          "protein_name": "Hexokinase-2",
+          "gene_names": [
+            "HK2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "A8K2U2",
+          "protein_name": "Hexokinase-2",
+          "gene_names": [],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        },
+        {
+          "accession": "A0A994J432",
+          "protein_name": "Hexokinase-2",
+          "gene_names": [
+            "HK1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.4167
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"hexokinase\" OR gene:\"hexokinase\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"hexokinase\" OR gene:\"hexokinase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::phosphoglucose isomerase::homo sapiens": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::phosphoglucose isomerase::homo sapiens": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"phosphoglucose isomerase\" OR gene:\"phosphoglucose isomerase\") AND organism_name:\"Homo sapiens\" | (protein_name:\"phosphoglucose isomerase\" OR gene:\"phosphoglucose isomerase\")",
+      "confidence": 0.85,
+      "candidates": [
+        {
+          "accession": "P06744",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "GPI"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.85
+        },
+        {
+          "accession": "A0A2R8Y6C7",
+          "protein_name": "glucose-6-phosphate isomerase",
+          "gene_names": [
+            "GPI"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.85
+        },
+        {
+          "accession": "P0A6T1",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgi"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P34795",
+          "protein_name": "Glucose-6-phosphate isomerase, cytosolic",
+          "gene_names": [
+            "PGIC"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P12709",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "PGI1"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q59000",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgi"
+          ],
+          "organism": "Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P84140",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgiA"
+          ],
+          "organism": "Thermococcus litoralis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P9WN69",
+          "protein_name": "Glucose-6-phosphate isomerase",
+          "gene_names": [
+            "pgi"
+          ],
+          "organism": "Mycobacterium tuberculosis (strain ATCC 25618 / H37Rv)",
+          "reviewed": true,
+          "score": 0.56
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"phosphoglucose isomerase\" OR gene:\"phosphoglucose isomerase\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"phosphoglucose isomerase\" OR gene:\"phosphoglucose isomerase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::mitochondrial pyruvate carrier::": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::mitochondrial pyruvate carrier::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"mitochondrial pyruvate carrier\" OR gene:\"mitochondrial pyruvate carrier\")",
+      "confidence": 0.3125,
+      "candidates": [
+        {
+          "accession": "O95563",
+          "protein_name": "Mitochondrial pyruvate carrier 2",
+          "gene_names": [
+            "BRP44",
+            "MPC2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3125
+        },
+        {
+          "accession": "Q9Y5U8",
+          "protein_name": "Mitochondrial pyruvate carrier 1",
+          "gene_names": [
+            "BRP44L",
+            "MPC1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.3125
+        },
+        {
+          "accession": "P38857",
+          "protein_name": "Mitochondrial pyruvate carrier 2",
+          "gene_names": [
+            "MPC2"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.3125
+        },
+        {
+          "accession": "P53311",
+          "protein_name": "Mitochondrial pyruvate carrier 3",
+          "gene_names": [
+            "FMP43",
+            "MPC3"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.3125
+        },
+        {
+          "accession": "P53157",
+          "protein_name": "Mitochondrial pyruvate carrier 1",
+          "gene_names": [
+            "FMP37",
+            "MPC1"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.3125
+        },
+        {
+          "accession": "Q9D023",
+          "protein_name": "Mitochondrial pyruvate carrier 2",
+          "gene_names": [
+            "Brp44",
+            "Mpc2"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.3125
+        },
+        {
+          "accession": "Q3ZCG2",
+          "protein_name": "Mitochondrial pyruvate carrier 1",
+          "gene_names": [
+            "BRP44L",
+            "MPC1"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.3125
+        },
+        {
+          "accession": "P63030",
+          "protein_name": "Mitochondrial pyruvate carrier 1",
+          "gene_names": [
+            "Brp44l",
+            "Mpc1"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.3125
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"mitochondrial pyruvate carrier\" OR gene:\"mitochondrial pyruvate carrier\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::pyruvate dehydrogenase::": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::pyruvate dehydrogenase::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"pyruvate dehydrogenase\" OR gene:\"pyruvate dehydrogenase\")",
+      "confidence": 0.19,
+      "candidates": [
+        {
+          "accession": "Q15120",
+          "protein_name": "[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 3, mitochondrial",
+          "gene_names": [
+            "PDHK3",
+            "PDK3"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.19
+        },
+        {
+          "accession": "Q16654",
+          "protein_name": "[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 4, mitochondrial",
+          "gene_names": [
+            "PDHK4",
+            "PDK4"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.19
+        },
+        {
+          "accession": "Q15118",
+          "protein_name": "[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 1, mitochondrial",
+          "gene_names": [
+            "PDHK1",
+            "PDK1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.19
+        },
+        {
+          "accession": "Q15119",
+          "protein_name": "[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 2, mitochondrial",
+          "gene_names": [
+            "PDHK2",
+            "PDK2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.19
+        },
+        {
+          "accession": "Q9P0J1",
+          "protein_name": "[Pyruvate dehydrogenase [acetyl-transferring]]-phosphatase 1, mitochondrial",
+          "gene_names": [
+            "PDP",
+            "PDP1",
+            "PPM2C"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.19
+        },
+        {
+          "accession": "P10515",
+          "protein_name": "Dihydrolipoyllysine-residue acetyltransferase component of pyruvate dehydrogenase complex, mitochondrial",
+          "gene_names": [
+            "DLAT",
+            "DLTA"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.19
+        },
+        {
+          "accession": "Q9SBJ1",
+          "protein_name": "[Pyruvate dehydrogenase (acetyl-transferring)] kinase, mitochondrial",
+          "gene_names": [
+            "PDHK",
+            "PDK",
+            "YA5"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.19
+        },
+        {
+          "accession": "O00330",
+          "protein_name": "Pyruvate dehydrogenase protein X component, mitochondrial",
+          "gene_names": [
+            "PDHX",
+            "PDX1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.1667
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"pyruvate dehydrogenase\" OR gene:\"pyruvate dehydrogenase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
     }
   },
   "compounds": {
@@ -12989,6 +13406,28 @@
           }
         }
       ]
+    },
+    "db::alphaketoglutarate": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::alphaketoglutarate": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.35,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C23087",
+          "name": "Diaminobutyryl-citryl-ethanolamino-alpha-ketoglutarate",
+          "score": 0.35
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
     }
   }
 }

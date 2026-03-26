@@ -110,6 +110,52 @@ def _state_maps(payload: Dict[str, Any]) -> Tuple[Dict[str, Dict[str, Any]], Dic
     return by_name, by_loc_norm
 
 
+_CANONICAL_COMPARTMENT_VOCAB = {
+    "cytosol", "nucleus", "mitochondrion", "mitochondrial_matrix",
+    "endoplasmic_reticulum", "golgi", "lysosome", "peroxisome",
+    "plasma_membrane", "extracellular", "endosome",
+}
+
+# Maps common synonyms/aliases to canonical compartment names.
+_COMPARTMENT_ALIAS_MAP: Dict[str, str] = {
+    "cytoplasm": "cytosol",
+    "cytosolic": "cytosol",
+    "cytoplasmic": "cytosol",
+    "mitochondria": "mitochondrion",
+    "mitochondrial": "mitochondrion",
+    "mitochondrial matrix": "mitochondrial_matrix",
+    "er": "endoplasmic_reticulum",
+    "endoplasmic reticulum": "endoplasmic_reticulum",
+    "golgi apparatus": "golgi",
+    "golgi body": "golgi",
+    "cell membrane": "plasma_membrane",
+    "plasma membrane": "plasma_membrane",
+    "extracellular space": "extracellular",
+    "extracellular matrix": "extracellular",
+    "nuclear": "nucleus",
+    "peroxisomal": "peroxisome",
+    "lysosomal": "lysosome",
+    "endosomal": "endosome",
+}
+
+
+def _resolve_canonical_compartment(location: str) -> str:
+    """Return canonical compartment name for location, or empty string if no match."""
+    if not location:
+        return ""
+    norm = location.strip().lower()
+    if norm in _CANONICAL_COMPARTMENT_VOCAB:
+        return norm
+    alias = _COMPARTMENT_ALIAS_MAP.get(norm, "")
+    if alias:
+        return alias
+    # Try matching against vocab by checking if location contains a vocab term.
+    for term in _CANONICAL_COMPARTMENT_VOCAB:
+        if term in norm:
+            return term
+    return ""
+
+
 def _ensure_biological_state(payload: Dict[str, Any], location: str, species: str) -> str:
     states = payload.setdefault("biological_states", [])
     if not isinstance(states, list):
@@ -127,7 +173,10 @@ def _ensure_biological_state(payload: Dict[str, Any], location: str, species: st
         while f"{candidate_name}_{i}" in used:
             i += 1
         candidate_name = f"{candidate_name}_{i}"
-    state_obj = {"name": candidate_name, "subcellular_location": _canonical(location)}
+    canonical = _resolve_canonical_compartment(location)
+    state_obj: Dict[str, Any] = {"name": candidate_name, "subcellular_location": _canonical(location)}
+    if canonical:
+        state_obj["compartment_canonical"] = canonical
     if species:
         state_obj["species"] = species
     states.append(state_obj)

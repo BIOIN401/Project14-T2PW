@@ -56,6 +56,17 @@ F) Use graph QA feedback conservatively
 - Treat QA feedback as repair hints only.
 - Prioritize reconnecting disconnected entities using supported reactions, links, and state/location assignments.
 
+G) Compartment assignment inference
+- If the text clearly implies a compound is in a specific organelle (e.g., "mitochondrial pyruvate",
+  "cytosolic acetyl-CoA"), add a compound_location linking that compound to a biological_state whose
+  compartment_canonical matches the organelle (use canonical vocabulary: cytosol, nucleus, mitochondrion,
+  mitochondrial_matrix, endoplasmic_reticulum, golgi, lysosome, peroxisome, plasma_membrane,
+  extracellular, endosome).
+- If a transport reaction is present but from/to biological_states are missing, infer the source and
+  destination compartments from surrounding context and create the corresponding biological_states with
+  provenance: "inferred".
+- Never invent compartments unsupported by the text.
+
 NOT ALLOWED
 - No species/cell type/tissue/subcellular location unless explicitly stated.
 - No taxonomy/ontology IDs unless explicitly stated.

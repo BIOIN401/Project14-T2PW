@@ -42,11 +42,46 @@ OUTPUT RULES (MANDATORY)
 - confidence for extracted objects = 1.0; for inferred objects = LLM-judged value between 0.0 and 1.0.
 - provenance values: "extracted" (verbatim from text), "enriched" (from API lookup), "inferred" (LLM-reasoned).
 - source_refs is an array of strings — verbatim evidence quotes or external IDs when available.
+- When the same compound appears in two compartments, create TWO compound_locations entries pointing to
+  different biological_states — do NOT create two separate compound entities.
 
 
 BIOLOGICAL STATE RULE
 A biological_state is a context tuple (species/cell_type/tissue/subcellular_location) ONLY when the text explicitly states it.
 Do not infer missing context. A biological_state may include any subset of the four fields.
+Every biological_state that has a subcellular_location MUST also set compartment_canonical (see COMPARTMENT RULE below).
+
+
+COMPARTMENT RULE (MANDATORY — always apply when subcellular locations are present)
+Step 1 — populate top-level compartments[].
+  For every distinct organelle or cellular space mentioned in the text, add one entry to compartments[].
+  - name: the verbatim text phrase (e.g., "mitochondrial matrix", "cytosol")
+  - canonical_name: pick the single best match from this fixed vocabulary (leave "" if none fits):
+      cytosol | nucleus | mitochondrion | mitochondrial_matrix | endoplasmic_reticulum |
+      golgi | lysosome | peroxisome | plasma_membrane | extracellular | endosome
+  - go_id: leave "" unless the text provides it
+
+Step 2 — set compartment_canonical on every biological_state.
+  If the biological_state has a subcellular_location, set compartment_canonical to the matching
+  canonical_name from the compartments[] list. If no canonical match exists, set it to "".
+
+Step 3 — set subcellular_location on every biological_state.
+  Even if the state is only implied (e.g., "cytosolic pyruvate" implies a cytosolic state),
+  record the location verbatim in subcellular_location.
+
+COMPARTMENT EXAMPLE — for text "pyruvate in the cytosol is transported into the mitochondrial matrix":
+  compartments: [
+    { "name": "cytosol", "canonical_name": "cytosol", "go_id": "" },
+    { "name": "mitochondrial matrix", "canonical_name": "mitochondrial_matrix", "go_id": "" }
+  ]
+  biological_states: [
+    { "name": "cytosolic state", "subcellular_location": "cytosol", "compartment_canonical": "cytosol", "evidence": "in the cytosol" },
+    { "name": "mitochondrial state", "subcellular_location": "mitochondrial matrix", "compartment_canonical": "mitochondrial_matrix", "evidence": "into the mitochondrial matrix" }
+  ]
+  compound_locations for pyruvate — TWO entries (not two compounds):
+    { "compound": "pyruvate", "biological_state": "cytosolic state", "evidence": "pyruvate in the cytosol" }
+    { "compound": "pyruvate", "biological_state": "mitochondrial state", "evidence": "into the mitochondrial matrix" }
+
 
 PWML-CONSTRUCTIBLE OBJECTS
 You must produce:
@@ -73,11 +108,25 @@ KEY DEFINITIONS (verbatim-only)
 
 OUTPUT JSON SCHEMA (must match exactly)
 {
+  "compartments": [
+    {
+      "name": "",
+      "canonical_name": "",
+      "go_id": ""
+    }
+  ],
+
   "entities": {
     "cell_types": [ { "name": "", "ontology_id": "" } ],
     "species": [ { "name": "", "taxonomy_id": "" } ],
     "tissues": [ { "name": "" } ],
-    "subcellular_locations": [ { "name": "" } ],
+    "subcellular_locations": [
+      {
+        "name": "",
+        "canonical_id": "",
+        "evidence": ""
+      }
+    ],
 
     "compounds": [ { "name": "", "class": "compound", "confidence": 1.0, "provenance": "extracted" } ],
     "element_collections": [ { "name": "", "class": "element_collection", "confidence": 1.0, "provenance": "extracted" } ],
@@ -93,6 +142,7 @@ OUTPUT JSON SCHEMA (must match exactly)
       "cell_type": "",
       "tissue": "",
       "subcellular_location": "",
+      "compartment_canonical": "",
       "evidence": ""
     }
   ],

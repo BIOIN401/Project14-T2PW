@@ -190,7 +190,10 @@ def _extract_state_compartments(payload: Dict[str, Any]) -> Dict[str, str]:
         if not isinstance(state, dict):
             continue
         name = (state.get("name") or "").strip() if isinstance(state.get("name"), str) else ""
-        loc = (state.get("subcellular_location") or "").strip() if isinstance(state.get("subcellular_location"), str) else ""
+        # Prefer compartment_canonical (canonical vocabulary) over raw subcellular_location.
+        loc = (state.get("compartment_canonical") or "").strip() if isinstance(state.get("compartment_canonical"), str) else ""
+        if not loc:
+            loc = (state.get("subcellular_location") or "").strip() if isinstance(state.get("subcellular_location"), str) else ""
         if name and loc:
             states[name] = loc
     return states
@@ -850,8 +853,18 @@ def build_sbml(
         report,
     )
 
-    # Compartments from explicit location entities + biological states + default.
+    # Compartments from explicit location entities + biological states + top-level compartments[] + default.
     location_names: Set[str] = set()
+    # Top-level compartments[] list takes precedence — use canonical_name when present, else name.
+    for item in _safe_list(data.get("compartments")):
+        if not isinstance(item, dict):
+            continue
+        canonical = (item.get("canonical_name") or "").strip() if isinstance(item.get("canonical_name"), str) else ""
+        raw_name = (item.get("name") or "").strip() if isinstance(item.get("name"), str) else ""
+        if canonical:
+            location_names.add(canonical)
+        elif raw_name:
+            location_names.add(raw_name)
     for item in _safe_list(entities.get("subcellular_locations")):
         if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip():
             location_names.add(item["name"].strip())
