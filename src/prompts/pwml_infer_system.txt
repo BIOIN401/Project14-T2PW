@@ -13,7 +13,7 @@ CRITICAL RULES
 - You may infer missing links, but be conservative.
 - Every inferred object must include:
   (a) at least one supporting evidence quote (<=25 words, verbatim from the original text),
-  (b) an "inference" block: {"method":"inference","confidence":0-1,"notes":""}
+  (b) top-level fields: "confidence" (0.0–1.0), "provenance": "inferred", "source_refs": [array of notes/evidence strings]
 - Do not use the internet. Do not introduce unsupported facts.
 - Never overwrite Stage-1 objects. Only add objects/links.
 - If unsure, omit. Prefer missing data over hallucination.
@@ -75,7 +75,9 @@ Return only one JSON object in this shape:
           "cofactors": [""],
           "modifications": [""],
           "evidence": "",
-          "inference": { "method": "inference", "confidence": 0.0, "notes": "" }
+          "confidence": 0.0,
+          "provenance": "inferred",
+          "source_refs": [""]
         }
       ]
     },
@@ -87,21 +89,23 @@ Return only one JSON object in this shape:
         "tissue": "",
         "subcellular_location": "",
         "evidence": "",
-        "inference": { "method": "inference", "confidence": 0.0, "notes": "" }
+        "confidence": 0.0,
+        "provenance": "inferred",
+        "source_refs": [""]
       }
     ],
     "element_locations": {
       "compound_locations": [
-        { "compound": "", "biological_state": "", "evidence": "", "inference": { "method": "inference", "confidence": 0.0, "notes": "" } }
+        { "compound": "", "biological_state": "", "evidence": "", "confidence": 0.0, "provenance": "inferred", "source_refs": [""] }
       ],
       "element_collection_locations": [
-        { "element_collection": "", "biological_state": "", "evidence": "", "inference": { "method": "inference", "confidence": 0.0, "notes": "" } }
+        { "element_collection": "", "biological_state": "", "evidence": "", "confidence": 0.0, "provenance": "inferred", "source_refs": [""] }
       ],
       "nucleic_acid_locations": [
-        { "nucleic_acid": "", "biological_state": "", "evidence": "", "inference": { "method": "inference", "confidence": 0.0, "notes": "" } }
+        { "nucleic_acid": "", "biological_state": "", "evidence": "", "confidence": 0.0, "provenance": "inferred", "source_refs": [""] }
       ],
       "protein_locations": [
-        { "protein": "", "biological_state": "", "evidence": "", "inference": { "method": "inference", "confidence": 0.0, "notes": "" } }
+        { "protein": "", "biological_state": "", "evidence": "", "confidence": 0.0, "provenance": "inferred", "source_refs": [""] }
       ]
     },
     "processes": {
@@ -110,10 +114,13 @@ Return only one JSON object in this shape:
           "name": "",
           "inputs": [""],
           "outputs": [""],
-          "enzymes": [ { "protein_complex": "", "evidence": "", "inference": { "method": "inference", "confidence": 0.0, "notes": "" } } ],
+          "enzymes": [ { "protein_complex": "", "evidence": "", "confidence": 0.0, "provenance": "inferred", "source_refs": [""] } ],
           "biological_state": "",
           "evidence": "",
-          "inference": { "method": "inference", "confidence": 0.0, "notes": "" }
+          "class": "biochemical_reaction",
+          "confidence": 0.0,
+          "provenance": "inferred",
+          "source_refs": [""]
         }
       ],
       "transports": [],
@@ -126,7 +133,10 @@ Return only one JSON object in this shape:
           "entity_2": "",
           "biological_state": "",
           "evidence": "",
-          "inference": { "method": "inference", "confidence": 0.0, "notes": "" }
+          "class": "interaction",
+          "confidence": 0.0,
+          "provenance": "inferred",
+          "source_refs": [""]
         }
       ]
     }

@@ -34,6 +34,14 @@ OUTPUT RULES (MANDATORY)
 - Composite phrases are process expressions, not standalone entities. Split them into separate reaction inputs/outputs.
 - Transport "cargo" MUST be exactly one entity name, never a composite expression.
 - Do not create pseudo-species like "protein + metabolite" as entity records.
+- class must always be filled; if uncertain, use the parent type name (e.g., "compound" for a compound).
+  Valid class values — compound: compound | cofactor | ion | element_collection;
+  protein: protein | transporter; protein_complex: protein_complex; nucleic_acid: nucleic_acid.
+  Valid class values for processes — reactions: biochemical_reaction | transport_reaction | interaction | subpathway | activation | inhibition | binding;
+  interactions: activation | inhibition | binding | interaction.
+- confidence for extracted objects = 1.0; for inferred objects = LLM-judged value between 0.0 and 1.0.
+- provenance values: "extracted" (verbatim from text), "enriched" (from API lookup), "inferred" (LLM-reasoned).
+- source_refs is an array of strings — verbatim evidence quotes or external IDs when available.
 
 
 BIOLOGICAL STATE RULE
@@ -71,10 +79,10 @@ OUTPUT JSON SCHEMA (must match exactly)
     "tissues": [ { "name": "" } ],
     "subcellular_locations": [ { "name": "" } ],
 
-    "compounds": [ { "name": "" } ],
-    "element_collections": [ { "name": "" } ],
-    "nucleic_acids": [ { "name": "" } ],
-    "proteins": [ { "name": "" } ],
+    "compounds": [ { "name": "", "class": "compound", "confidence": 1.0, "provenance": "extracted" } ],
+    "element_collections": [ { "name": "", "class": "element_collection", "confidence": 1.0, "provenance": "extracted" } ],
+    "nucleic_acids": [ { "name": "", "class": "nucleic_acid", "confidence": 1.0, "provenance": "extracted" } ],
+    "proteins": [ { "name": "", "class": "protein", "confidence": 1.0, "provenance": "extracted" } ],
     "protein_complexes": [ { "name": "", "components": [""], "cofactors": [""], "modifications": [""] } ]
   },
 
@@ -112,7 +120,11 @@ OUTPUT JSON SCHEMA (must match exactly)
         "outputs": [""],
         "enzymes": [ { "protein_complex": "", "evidence": "" } ],
         "biological_state": "",
-        "evidence": ""
+        "evidence": "",
+        "class": "biochemical_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
       }
     ],
     "reaction_coupled_transports": [
@@ -122,7 +134,11 @@ OUTPUT JSON SCHEMA (must match exactly)
         "transport": "",
         "enzymes": [ { "protein_complex": "", "evidence": "" } ],
         "elements_with_states": [ { "element": "", "biological_state": "", "evidence": "" } ],
-        "evidence": ""
+        "evidence": "",
+        "class": "transport_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
       }
     ],
     "transports": [
@@ -136,7 +152,11 @@ OUTPUT JSON SCHEMA (must match exactly)
           { "side": "left", "element": "", "biological_state": "", "evidence": "" },
           { "side": "right", "element": "", "biological_state": "", "evidence": "" }
         ],
-        "evidence": ""
+        "evidence": "",
+        "class": "transport_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
       }
     ],
     "interactions": [
@@ -146,7 +166,11 @@ OUTPUT JSON SCHEMA (must match exactly)
         "relationship": "",
         "entity_2": "",
         "biological_state": "",
-        "evidence": ""
+        "evidence": "",
+        "class": "interaction",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": []
       }
     ]
   },

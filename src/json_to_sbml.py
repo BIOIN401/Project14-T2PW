@@ -951,7 +951,9 @@ def build_sbml(
         sid_meta = {"kind": kind, "name": canonical_name, "compartment_id": compartment_id}
         if sid in species_id_to_meta and species_id_to_meta[sid] != sid_meta:
             sid = sanitize_sbml_id(f"{sid}_{_short_hash(canonical_name + compartment_id, 6)}")
-        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id, "mapped_ids": canonical_mapped_ids}
+        entity_class = deduped_row.get("class") or ""
+        entity_provenance = deduped_row.get("provenance") or ""
+        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id, "mapped_ids": canonical_mapped_ids, "class": entity_class, "provenance": entity_provenance}
         species_registry[canonical_key] = record
         species_registry[key] = record
         species_id_to_meta[sid] = sid_meta
@@ -1120,6 +1122,8 @@ def build_sbml(
                 "modifiers": sorted(set(modifier_ids)),
                 "compartment_id": compartment_id,
                 "kind": "reaction",
+                "class": reaction.get("class") or "biochemical_reaction",
+                "provenance": reaction.get("provenance") or "",
             }
         )
 
@@ -1260,6 +1264,8 @@ def build_sbml(
                     "modifiers": sorted(set(modifiers)),
                     "compartment_id": source_cid,
                     "kind": "transport",
+                    "class": transport.get("class") or "transport_reaction",
+                    "provenance": transport.get("provenance") or "",
                 }
             )
 
@@ -1360,9 +1366,13 @@ def build_sbml(
             report["pathwhiz_id_stats"]["species_no_id"] += 1
         # Set pathwhiz:species annotation (pathwhiz block only — RDF added via CVTerm below)
         pw_id_attr = f' pathwhiz:species_id="{pw_sp_id}"' if pw_sp_id is not None else ""
+        sp_class = item.get("class") or sp_type
+        sp_provenance = item.get("provenance") or ""
+        sp_class_attr = f' pathwhiz:class="{sp_class}"'
+        sp_prov_attr = f' pathwhiz:provenance="{sp_provenance}"' if sp_provenance else ""
         sp.setAnnotation(
             f'<annotation><pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-            f'{pw_id_attr} pathwhiz:species_type="{sp_type}"/></annotation>'
+            f'{pw_id_attr} pathwhiz:species_type="{sp_type}"{sp_class_attr}{sp_prov_attr}/></annotation>'
         )
         # Add cross-database xrefs via CVTerm (requires metaid)
         _add_cv_terms(sp, mapped, libsbml)
@@ -1384,9 +1394,13 @@ def build_sbml(
         p_pw_ids = [pw_species_id_map[s] for s in plan["products"] if s in pw_species_id_map]
         pw_rxn_id = _lookup_reaction_id(pw_db, r_pw_ids, p_pw_ids)
         rxn_id_attr = f' pathwhiz:reaction_id="{pw_rxn_id}"' if pw_rxn_id is not None else ""
+        rxn_class = plan.get("class") or rxn_kind
+        rxn_provenance = plan.get("provenance") or ""
+        rxn_class_attr = f' pathwhiz:class="{rxn_class}"'
+        rxn_prov_attr = f' pathwhiz:provenance="{rxn_provenance}"' if rxn_provenance else ""
         rxn.setAnnotation(
             f'<annotation><pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-            f'{rxn_id_attr} pathwhiz:reaction_type="{rxn_kind}"/></annotation>'
+            f'{rxn_id_attr} pathwhiz:reaction_type="{rxn_kind}"{rxn_class_attr}{rxn_prov_attr}/></annotation>'
         )
         reactant_counts = Counter(plan["reactants"])
         for sid, stoich in sorted(reactant_counts.items()):

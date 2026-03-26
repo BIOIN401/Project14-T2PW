@@ -285,7 +285,13 @@ def _ensure_protein(name: str, payload: Dict[str, Any], report: Dict[str, Any]) 
         return ""
     compounds, proteins, _ = _entity_lists(payload)
     if _find_entity_row(proteins, c_name) is None:
-        proteins.append({"name": c_name})
+        # Carry class/confidence/provenance/source_refs from compound row if present
+        existing = _find_entity_row(compounds, c_name) or {}
+        new_row: Dict[str, Any] = {"name": c_name}
+        for key in ("class", "confidence", "provenance", "source_refs"):
+            if key in existing:
+                new_row[key] = deepcopy(existing[key])
+        proteins.append(new_row)
         report["summary"]["entities_added_as_proteins"] += 1
         report["actions"].append({"type": "entity_added_protein", "name": c_name})
     if _remove_entity(compounds, c_name):
@@ -303,7 +309,7 @@ def _ensure_compound(name: str, payload: Dict[str, Any], report: Dict[str, Any])
     if _find_entity_row(proteins, c_name) or _find_entity_row(complexes, c_name):
         return c_name
     if _find_entity_row(compounds, c_name) is None:
-        compounds.append({"name": c_name})
+        compounds.append({"name": c_name, "class": "compound", "confidence": 0.8, "provenance": "inferred"})
         report["summary"]["entities_added_as_compounds"] += 1
         report["actions"].append({"type": "entity_added_compound", "name": c_name})
     _dedupe_named_rows(compounds)
@@ -429,7 +435,7 @@ def materialize_complex(
         )
         return complex_name
 
-    complexes.append({"name": complex_name, "components": clean_parts})
+    complexes.append({"name": complex_name, "components": clean_parts, "class": "protein_complex", "confidence": 0.8, "provenance": "inferred"})
     _dedupe_named_rows(complexes)
     rep["summary"]["complexes_created"] += 1
     rep["actions"].append(
