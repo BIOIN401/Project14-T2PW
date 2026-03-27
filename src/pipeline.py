@@ -1202,11 +1202,11 @@ def run_stage_one_with_chunking(
 
 def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     """
-    Post-processing pass: for every protein in entities.proteins that has no
-    modifier entry on any reaction, check whether the protein name appears in a
-    reaction name or evidence string. If so, inject it as a catalyst modifier.
-    This catches cases where both Stage-1 and Stage-2 omit modifiers despite the
-    text naming the enzyme.
+    Post-processing pass: for every protein in entities.proteins, check whether
+    the protein name appears in a reaction name/evidence or a transport name/evidence.
+    - Reactions: inject as a catalyst modifier if missing.
+    - Transports: inject as a transporter entry (protein_complex field) if missing.
+    Catches cases where Stage-1 and Stage-2 omit these links.
     """
     def _sl(x: Any) -> list:
         return x if isinstance(x, list) else []
@@ -1215,20 +1215,22 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
         p for p in _sl((merged.get("entities") or {}).get("proteins", []))
         if isinstance(p, dict) and isinstance(p.get("name"), str) and p["name"].strip()
     ]
-    reactions = _sl((merged.get("processes") or {}).get("reactions", []))
+    processes = merged.get("processes") or {}
+    reactions = _sl(processes.get("reactions", []))
+    transports = _sl(processes.get("transports", []))
 
     for protein in proteins:
         pname = protein["name"].strip()
         pname_lower = pname.lower()
+
+        # --- Reactions: inject missing catalyst modifiers ---
         for reaction in reactions:
             if not isinstance(reaction, dict):
                 continue
-            # Check if protein name appears in reaction name or evidence (case-insensitive)
             rname = (reaction.get("name") or "").lower()
             revidence = (reaction.get("evidence") or "").lower()
             if pname_lower not in rname and pname_lower not in revidence:
                 continue
-            # Check if already a modifier on this reaction
             existing_modifiers = _sl(reaction.get("modifiers", []))
             already_present = any(
                 isinstance(m, dict) and (m.get("entity") or "").strip().lower() == pname_lower
@@ -1236,7 +1238,6 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
             )
             if already_present:
                 continue
-            # Inject catalyst modifier
             reaction.setdefault("modifiers", [])
             reaction["modifiers"].append({
                 "entity": pname,
@@ -1247,6 +1248,42 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
                 "provenance": "inferred",
                 "source_refs": [(reaction.get("evidence") or "")[:120]],
             })
+
+        # --- Transports: inject missing transporter protein_complex entries ---
+        for transport in transports:
+            if not isinstance(transport, dict):
+                continue
+            tname = (transport.get("name") or "").lower()
+            tevidence = (transport.get("evidence") or "").lower()
+            if pname_lower not in tname and pname_lower not in tevidence:
+                continue
+            existing_transporters = _sl(transport.get("transporters", []))
+            already_present = any(
+                isinstance(t, dict) and (
+                    (t.get("protein_complex") or "").strip().lower() == pname_lower
+                    or (t.get("protein") or "").strip().lower() == pname_lower
+                )
+                for t in existing_transporters
+            )
+            if already_present:
+                continue
+            # Patch the first transporter entry that is missing a protein_complex,
+            # or append a new one if all existing entries already have one.
+            patched = False
+            for t in existing_transporters:
+                if isinstance(t, dict) and not t.get("protein_complex") and not t.get("protein"):
+                    t["protein_complex"] = pname
+                    patched = True
+                    break
+            if not patched:
+                transport.setdefault("transporters", [])
+                transport["transporters"].append({
+                    "protein_complex": pname,
+                    "evidence": (transport.get("evidence") or "")[:120],
+                    "confidence": 0.9,
+                    "provenance": "inferred",
+                    "source_refs": [(transport.get("evidence") or "")[:120]],
+                })
 
 
 def _reaction_io_key(r: Any) -> frozenset:
