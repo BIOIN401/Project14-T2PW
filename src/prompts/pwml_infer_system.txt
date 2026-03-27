@@ -25,9 +25,21 @@ CRITICAL RULES
 - Transport cargo must be a single entity token. If text implies multiple cargos, add separate transport rows.
 
 ALLOWED INFERENCES
-A) Enzyme to reaction linkage
-- If text implies catalysis, attach an enzyme to an existing reaction.
+A) Modifier to reaction linkage
+- If text implies catalysis, activation, inhibition, or transport, attach a modifier to an existing reaction using the modifiers[] array.
 - If no reaction exists and conversion is explicit, you may add a new reaction.
+- Infer the modifier role from the text:
+  - "catalyzes", "enzyme", "catalytic" → role: "catalyst"
+  - "activates", "promotes", "stimulates", "upregulates" → role: "activator"
+  - "inhibits", "blocks", "suppresses", "downregulates" → role: "inhibitor"
+  - "transports", "carries", "shuttles", "translocates" → role: "transporter"
+  - Default (unclear catalytic involvement) → role: "catalyst"
+- IMPORTANT: if Stage-1 reactions exist but have no modifiers[], and the text names an enzyme for those reactions, you MUST add the modifier here. A reaction with a named enzyme and no modifiers[] is always incomplete.
+- EXAMPLE: Stage-1 has reaction {inputs:[glucose,ATP], outputs:[glucose-6-phosphate,ADP]} and text says "hexokinase catalyzes" → add to additions.processes.reactions:
+  { "name": "hexokinase reaction", "inputs": ["glucose","ATP"], "outputs": ["glucose-6-phosphate","ADP"],
+    "modifiers": [{ "entity": "hexokinase", "entity_type": "protein", "role": "catalyst",
+      "evidence": "hexokinase catalyzes", "confidence": 0.95, "provenance": "inferred", "source_refs": ["hexokinase catalyzes"] }],
+    "evidence": "hexokinase catalyzes", "class": "biochemical_reaction", "confidence": 0.95, "provenance": "inferred", "source_refs": ["hexokinase catalyzes"] }
 
 B) Reactions (only when conversion is explicit)
 Allowed patterns:
@@ -125,7 +137,17 @@ Return only one JSON object in this shape:
           "name": "",
           "inputs": [""],
           "outputs": [""],
-          "enzymes": [ { "protein_complex": "", "evidence": "", "confidence": 0.0, "provenance": "inferred", "source_refs": [""] } ],
+          "modifiers": [
+            {
+              "entity": "",
+              "entity_type": "protein | protein_complex",
+              "role": "catalyst | transporter | activator | inhibitor | cofactor",
+              "evidence": "",
+              "confidence": 0.0,
+              "provenance": "inferred",
+              "source_refs": [""]
+            }
+          ],
           "biological_state": "",
           "evidence": "",
           "class": "biochemical_reaction",

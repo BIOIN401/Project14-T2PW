@@ -34,6 +34,12 @@ OUTPUT RULES (MANDATORY)
 - Composite phrases are process expressions, not standalone entities. Split them into separate reaction inputs/outputs.
 - Transport "cargo" MUST be exactly one entity name, never a composite expression.
 - Do not create pseudo-species like "protein + metabolite" as entity records.
+- reactants/products = species that are consumed or produced (stoichiometric participants).
+- modifiers = anything that participates in a reaction without being consumed: enzymes, transporters, activators, inhibitors.
+  Assign role: "catalyst" for enzymes, "transporter" for carrier proteins, "activator" for positive regulators, "inhibitor" for negative regulators, "cofactor" for non-consumed small-molecule helpers.
+- An enzyme is NEVER an input or output of a reaction. If the text lists an enzyme as an input, place it in modifiers with role: "catalyst" and remove it from inputs.
+- Cofactors that are stoichiometrically consumed and regenerated (e.g., ATP → ADP) are reactants/products, NOT modifiers.
+- BACKWARD COMPATIBILITY: if you see legacy format { "protein_complex": "X" } in enzymes[], treat it as { "entity": "X", "entity_type": "protein_complex", "role": "catalyst" }. The field name enzymes is now modifiers.
 - class must always be filled; if uncertain, use the parent type name (e.g., "compound" for a compound).
   Valid class values — compound: compound | cofactor | ion | element_collection;
   protein: protein | transporter; protein_complex: protein_complex; nucleic_acid: nucleic_acid.
@@ -168,7 +174,16 @@ OUTPUT JSON SCHEMA (must match exactly)
         "name": "",
         "inputs": [""],
         "outputs": [""],
-        "enzymes": [ { "protein_complex": "", "evidence": "" } ],
+        "modifiers": [
+          {
+            "entity": "",
+            "entity_type": "protein | protein_complex",
+            "role": "catalyst | transporter | activator | inhibitor | cofactor",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
         "biological_state": "",
         "evidence": "",
         "class": "biochemical_reaction",
@@ -182,7 +197,16 @@ OUTPUT JSON SCHEMA (must match exactly)
         "name": "",
         "reaction": "",
         "transport": "",
-        "enzymes": [ { "protein_complex": "", "evidence": "" } ],
+        "modifiers": [
+          {
+            "entity": "",
+            "entity_type": "protein | protein_complex",
+            "role": "catalyst | transporter | activator | inhibitor | cofactor",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
         "elements_with_states": [ { "element": "", "biological_state": "", "evidence": "" } ],
         "evidence": "",
         "class": "transport_reaction",
@@ -252,5 +276,67 @@ IMPORTANT CONSTRUCTION NOTES
 - For reactions: only create if at least one input AND one output compound are explicitly mentioned.
 - For transports: only create if movement is explicit (e.g., "transported into", "exported from", "shuttle").
 - For visualizations/edges: keep empty unless the text explicitly mentions figure/diagram/layout metadata.
+
+MODIFIER EXAMPLES (follow these exactly)
+
+Example 1 — enzyme as catalyst:
+  Text: "hexokinase catalyzes the phosphorylation of glucose to glucose-6-phosphate, consuming ATP and producing ADP"
+  CORRECT output:
+    reactions: [
+      {
+        "name": "hexokinase reaction",
+        "inputs": ["glucose", "ATP"],
+        "outputs": ["glucose-6-phosphate", "ADP"],
+        "modifiers": [
+          { "entity": "hexokinase", "entity_type": "protein", "role": "catalyst",
+            "evidence": "hexokinase catalyzes the phosphorylation of glucose", "confidence": 1.0, "provenance": "extracted" }
+        ],
+        "evidence": "hexokinase catalyzes the phosphorylation of glucose to glucose-6-phosphate"
+      }
+    ]
+  KEY POINTS: hexokinase is in modifiers, NOT in inputs. ATP/ADP are stoichiometric so they stay in inputs/outputs.
+
+Example 2 — allosteric inhibitor and activator:
+  Text: "PFK-1 converts fructose-6-phosphate and ATP into fructose-1,6-bisphosphate and ADP; ATP allosterically inhibits PFK-1; AMP activates PFK-1"
+  CORRECT output:
+    reactions: [
+      {
+        "name": "PFK-1 reaction",
+        "inputs": ["fructose-6-phosphate", "ATP"],
+        "outputs": ["fructose-1,6-bisphosphate", "ADP"],
+        "modifiers": [
+          { "entity": "PFK-1", "entity_type": "protein", "role": "catalyst",
+            "evidence": "PFK-1 converts fructose-6-phosphate and ATP", "confidence": 1.0, "provenance": "extracted" }
+        ],
+        "evidence": "PFK-1 converts fructose-6-phosphate and ATP into fructose-1,6-bisphosphate and ADP"
+      }
+    ]
+    interactions: [
+      { "entity_1": "ATP", "relationship": "inhibits", "entity_2": "PFK-1",
+        "evidence": "ATP allosterically inhibits PFK-1", "class": "inhibition", "confidence": 1.0, "provenance": "extracted" },
+      { "entity_1": "AMP", "relationship": "activates", "entity_2": "PFK-1",
+        "evidence": "AMP activates PFK-1", "class": "activation", "confidence": 1.0, "provenance": "extracted" }
+    ]
+  KEY POINTS: PFK-1 (protein) is the catalyst modifier on the reaction. ATP/AMP are small molecules that regulate — they go in interactions, not modifiers.
+
+Example 3 — transporter protein:
+  Text: "GLUT2 shuttles glucose from the extracellular space into the cytosol"
+  CORRECT output:
+    transports: [
+      {
+        "name": "GLUT2-mediated glucose transport",
+        "cargo": "glucose",
+        "from_biological_state": "extracellular state",
+        "to_biological_state": "cytosolic state",
+        "transporters": [
+          { "protein": "GLUT2", "biological_state": "cytosolic state",
+            "evidence": "GLUT2 shuttles glucose from the extracellular space" }
+        ],
+        "evidence": "GLUT2 shuttles glucose from the extracellular space into the cytosol"
+      }
+    ]
+  KEY POINTS: GLUT2 goes in transporters[] on the transport object, NOT as a reactant/product.
+
+SUMMARY RULE: every named enzyme/catalyst in the text MUST appear in modifiers[] on its reaction with role "catalyst". Never leave a reaction without modifiers if the text names its enzyme.
 
 

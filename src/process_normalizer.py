@@ -1708,7 +1708,7 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             pointer = f"{pointer_prefix}/{idx}"
             source_field = ""
             raw_name = ""
-            for field in ["protein", "protein_complex", "name"]:
+            for field in ["entity", "protein", "protein_complex", "name"]:
                 candidate = _canonical(str(row.get(field, "")))
                 if candidate:
                     source_field = field
@@ -1763,6 +1763,68 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             if not isinstance(reaction.get(key), list):
                 reaction[key] = rows
             reaction[key] = _rewrite_actor_rows(rows, f"/processes/reactions/{ridx}/{key}")
+
+    # Post-process: normalise modifiers[] to entity/entity_type schema and migrate legacy enzymes[].
+    for reaction in reactions:
+        if not isinstance(reaction, dict):
+            continue
+        # 1. Ensure modifiers[] rows use entity/entity_type schema.
+        new_modifiers: List[Dict[str, Any]] = []
+        for mod in _safe_list(reaction.get("modifiers")):
+            if not isinstance(mod, dict):
+                continue
+            updated_mod = dict(mod)
+            if not updated_mod.get("entity"):
+                # Migrate from old protein/protein_complex/name key to entity/entity_type.
+                for old_key, old_type in [("protein_complex", "protein_complex"), ("protein", "protein"), ("name", "protein")]:
+                    val = _canonical(str(updated_mod.get(old_key, "")))
+                    if val:
+                        updated_mod["entity"] = val
+                        updated_mod.setdefault("entity_type", old_type)
+                        updated_mod.pop(old_key, None)
+                        break
+            if not updated_mod.get("entity_type") and updated_mod.get("entity"):
+                updated_mod["entity_type"] = "protein"
+            updated_mod.setdefault("role", "catalyst")
+            if updated_mod.get("entity"):
+                new_modifiers.append(updated_mod)
+        reaction["modifiers"] = new_modifiers
+
+        # 2. Migrate legacy enzymes[] → modifiers[] with role: "catalyst".
+        enzyme_rows = _safe_list(reaction.get("enzymes"))
+        if enzyme_rows:
+            existing_modifier_norms: Set[str] = {
+                _normalize(_canonical(str(m.get("entity", ""))))
+                for m in reaction["modifiers"]
+                if isinstance(m, dict) and _canonical(str(m.get("entity", "")))
+            }
+            for enz in enzyme_rows:
+                if not isinstance(enz, dict):
+                    continue
+                ename = ""
+                etype = "protein"
+                for k, t in [("entity", None), ("protein_complex", "protein_complex"), ("protein", "protein"), ("name", "protein")]:
+                    v = _canonical(str(enz.get(k, "")))
+                    if v:
+                        ename = v
+                        if k == "entity":
+                            etype = str(enz.get("entity_type") or "protein")
+                        elif t:
+                            etype = t
+                        break
+                if not ename or _normalize(ename) in existing_modifier_norms:
+                    continue
+                reaction["modifiers"].append({
+                    "entity": ename,
+                    "entity_type": etype,
+                    "role": str(enz.get("role") or "catalyst"),
+                    "evidence": _canonical(str(enz.get("evidence", ""))),
+                    "confidence": float(enz.get("confidence", 1.0)),
+                    "provenance": str(enz.get("provenance") or "extracted"),
+                })
+                existing_modifier_norms.add(_normalize(ename))
+                summary["modifier_refs_canonicalized"] += 1
+            reaction.pop("enzymes", None)
 
     for tidx, transport in enumerate(transports):
         if not isinstance(transport, dict):
@@ -1940,6 +2002,26 @@ _CATALYTIC_REL_RE = re.compile(
     r"(catalyz|catalys|enzyme|activat|catalytic|promotes|facilitate)",
     flags=re.IGNORECASE,
 )
+_INHIBITION_REL_RE = re.compile(
+    r"(inhibit|block|suppress|downregulat|repress)",
+    flags=re.IGNORECASE,
+)
+_TRANSPORT_REL_RE = re.compile(
+    r"(transport|carry|carri|shuttle|translocat)",
+    flags=re.IGNORECASE,
+)
+
+
+def _modifier_role_from_relationship(relationship: str) -> str:
+    """Determine modifier role from relationship text."""
+    if _INHIBITION_REL_RE.search(relationship):
+        return "inhibitor"
+    if _TRANSPORT_REL_RE.search(relationship):
+        return "transporter"
+    if _CATALYTIC_REL_RE.search(relationship):
+        if re.search(r"(activat|promot|stimulat)", relationship, re.IGNORECASE) and not re.search(r"(catalyz|catalys|enzyme)", relationship, re.IGNORECASE):
+            return "activator"
+    return "catalyst"
 
 
 def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -1980,7 +2062,12 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
         e1 = _canonical(str(inter.get("entity_1", "")))
         e2 = _canonical(str(inter.get("entity_2", "")))
 
-        if not _CATALYTIC_REL_RE.search(relationship):
+        _is_modifier_rel = (
+            _CATALYTIC_REL_RE.search(relationship)
+            or _INHIBITION_REL_RE.search(relationship)
+            or _TRANSPORT_REL_RE.search(relationship)
+        )
+        if not _is_modifier_rel:
             kept_interactions.append(inter)
             continue
 
@@ -2017,31 +2104,41 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
             continue
 
         rxn = reactions[rxn_idx]
-        if not isinstance(rxn.get("enzymes"), list):
-            rxn["enzymes"] = []
-        enzymes = rxn["enzymes"]
-        enzyme_norms = set()
-        for enz in enzymes:
-            if isinstance(enz, dict):
-                for k in ["protein", "protein_complex", "name"]:
-                    v = _canonical(str(enz.get(k, "")))
+        if not isinstance(rxn.get("modifiers"), list):
+            rxn["modifiers"] = []
+        modifiers_list = rxn["modifiers"]
+        modifier_entity_norms: set = set()
+        for mod in modifiers_list:
+            if isinstance(mod, dict):
+                for k in ["entity", "protein", "protein_complex", "name"]:
+                    v = _canonical(str(mod.get(k, "")))
                     if v:
-                        enzyme_norms.add(_normalize(v))
+                        modifier_entity_norms.add(_normalize(v))
                         break
 
         pnorm = _normalize(protein_name)
-        if pnorm not in enzyme_norms:
-            enzyme_key = "protein_complex" if ":" in protein_name else "protein"
-            enzymes.append({enzyme_key: protein_name})
+        if pnorm not in modifier_entity_norms:
+            role = _modifier_role_from_relationship(relationship)
+            entity_type = "protein_complex" if ":" in protein_name else "protein"
+            new_mod: Dict[str, Any] = {
+                "entity": protein_name,
+                "entity_type": entity_type,
+                "role": role,
+                "evidence": _canonical(str(inter.get("evidence", ""))),
+                "confidence": float(inter.get("confidence", 1.0)),
+                "provenance": "inferred",
+            }
+            modifiers_list.append(new_mod)
             promoted += 1
             if isinstance(rep.get("actions"), list):
                 rep["actions"].append({
-                    "type": "interaction_enzyme_promoted",
+                    "type": "interaction_modifier_promoted",
                     "json_pointer": f"/processes/interactions/{iidx}",
                     "protein": protein_name,
+                    "role": role,
                     "reaction_idx": rxn_idx,
                 })
-        # Drop the interaction — it is now encoded in the reaction enzymes list
+        # Drop the interaction — it is now encoded in the reaction modifiers list
 
     if promoted:
         processes["interactions"] = kept_interactions
@@ -2063,23 +2160,23 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
             continue
         inputs = _dedupe_preserve([str(v) for v in _safe_list(reaction.get("inputs")) if isinstance(v, str)])
         outputs = _dedupe_preserve([str(v) for v in _safe_list(reaction.get("outputs")) if isinstance(v, str)])
-        enzymes = _safe_list(reaction.get("enzymes"))
-        if not isinstance(reaction.get("enzymes"), list):
-            reaction["enzymes"] = enzymes
+        modifiers_list = _safe_list(reaction.get("modifiers"))
+        if not isinstance(reaction.get("modifiers"), list):
+            reaction["modifiers"] = modifiers_list
 
         output_complex_parts: Set[str] = set()
         for token in outputs:
             for part in _complex_components(token):
                 output_complex_parts.add(_normalize(part))
         output_norms = {_normalize(token) for token in outputs}
-        enzyme_norms: Set[str] = set()
-        for enzyme in enzymes:
-            if not isinstance(enzyme, dict):
+        modifier_entity_norms: Set[str] = set()
+        for mod in modifiers_list:
+            if not isinstance(mod, dict):
                 continue
-            for key in ["protein", "protein_complex", "name"]:
-                value = _canonical(str(enzyme.get(key, "")))
+            for key in ["entity", "protein", "protein_complex", "name"]:
+                value = _canonical(str(mod.get(key, "")))
                 if value:
-                    enzyme_norms.add(_normalize(value))
+                    modifier_entity_norms.add(_normalize(value))
                     break
 
         kept_inputs: List[str] = []
@@ -2095,10 +2192,17 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
             if norm in output_complex_parts:
                 kept_inputs.append(token)
                 continue
-            if norm not in enzyme_norms:
-                enzyme_key = "protein_complex" if ":" in token else "protein"
-                enzymes.append({enzyme_key: token})
-                enzyme_norms.add(norm)
+            if norm not in modifier_entity_norms:
+                entity_type = "protein_complex" if ":" in token else "protein"
+                modifiers_list.append({
+                    "entity": token,
+                    "entity_type": entity_type,
+                    "role": "catalyst",
+                    "evidence": "",
+                    "confidence": 1.0,
+                    "provenance": "extracted",
+                })
+                modifier_entity_norms.add(norm)
                 rep["summary"]["catalysts_promoted_to_enzymes"] += 1
                 rep["actions"].append({"type": "catalyst_promoted_to_modifier", "json_pointer": f"/processes/reactions/{ridx}/inputs", "name": token})
 
@@ -2118,16 +2222,16 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
 
         reaction["inputs"] = _dedupe_preserve(kept_inputs)
         reaction["outputs"] = _dedupe_preserve(outputs)
-        reaction["enzymes"] = enzymes
+        reaction["modifiers"] = modifiers_list
     return payload
 
 def _reaction_modifier_names(reaction: Dict[str, Any]) -> List[str]:
     names: List[str] = []
-    for key in ["enzymes", "modifiers"]:
+    for key in ["modifiers", "enzymes"]:
         for row in _safe_list(reaction.get(key)):
             if not isinstance(row, dict):
                 continue
-            for name_key in ["protein", "protein_complex", "name"]:
+            for name_key in ["entity", "protein", "protein_complex", "name"]:
                 value = _canonical(str(row.get(name_key, "")))
                 if value:
                     names.append(value)
@@ -2137,7 +2241,7 @@ def _reaction_modifier_names(reaction: Dict[str, Any]) -> List[str]:
 
 def _evidence_length(row: Dict[str, Any]) -> int:
     score = len(_canonical(str(row.get("evidence", ""))))
-    for key in ["enzymes", "transporters"]:
+    for key in ["modifiers", "enzymes", "transporters"]:
         for item in _safe_list(row.get(key)):
             if isinstance(item, dict):
                 score += len(_canonical(str(item.get("evidence", ""))))
@@ -2149,7 +2253,7 @@ def _is_inferred(row: Dict[str, Any]) -> bool:
         return True
     if bool(row.get("inferred", False)):
         return True
-    for key in ["enzymes", "transporters"]:
+    for key in ["modifiers", "enzymes", "transporters"]:
         for item in _safe_list(row.get(key)):
             if isinstance(item, dict) and isinstance(item.get("inference"), dict):
                 return True

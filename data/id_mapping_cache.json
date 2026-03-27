@@ -4179,6 +4179,328 @@
       ],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::hexokinase::human": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "F5IXG6"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 55976,
+          "name": "Hexokinase",
+          "gene_name": "HMPREF9455_01783",
+          "uniprot": "F5IXG6",
+          "species_id": 457,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99225,
+          "name": "Hexokinase",
+          "gene_name": "C803_04112",
+          "uniprot": "S0GGD1",
+          "species_id": 495,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99427,
+          "name": "Hexokinase",
+          "gene_name": "HMPREF9007_04671",
+          "uniprot": "D7IJR4",
+          "species_id": 1632,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99431,
+          "name": "Hexokinase",
+          "gene_name": "BN890_23450",
+          "uniprot": "D4VLJ0",
+          "species_id": 1630,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99452,
+          "name": "Hexokinase",
+          "gene_name": "HMPREF0127_04429",
+          "uniprot": "F7MAE5",
+          "species_id": 1633,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 99457,
+          "name": "Hexokinase",
+          "gene_name": "BSCG_00002",
+          "uniprot": "C3QM93",
+          "species_id": 1635,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 206,
+          "name": "Hexokinase-3",
+          "gene_name": "HK3",
+          "uniprot": "P52790",
+          "species_id": 1,
+          "score": 0.91
+        },
+        {
+          "pathbank_protein_id": 207,
+          "name": "Hexokinase-2",
+          "gene_name": "HK2",
+          "uniprot": "P52789",
+          "species_id": 1,
+          "score": 0.91
+        },
+        {
+          "pathbank_protein_id": 209,
+          "name": "Hexokinase-1",
+          "gene_name": "HK1",
+          "uniprot": "P19367",
+          "species_id": 1,
+          "score": 0.91
+        },
+        {
+          "pathbank_protein_id": 5428,
+          "name": "Putative hexokinase HKDC1",
+          "gene_name": "HKDC1",
+          "uniprot": "Q2TB90",
+          "species_id": 1,
+          "score": 0.8233
+        }
+      ]
+    },
+    "db::phosphofructokinase1::human": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9M0F9"
+      },
+      "confidence": 0.7267,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11802,
+          "name": "6-phosphofructokinase 1",
+          "gene_name": "PFK1",
+          "uniprot": "Q9M0F9",
+          "species_id": 4,
+          "score": 0.7267
+        },
+        {
+          "pathbank_protein_id": 15630,
+          "name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_name": "pfk-1.1",
+          "uniprot": "Q95X24",
+          "species_id": 6,
+          "score": 0.588
+        }
+      ]
+    },
+    "db::glut2::human": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::glut2::human": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"GLUT2\" OR gene:\"GLUT2\") AND organism_name:\"human\" | (protein_name:\"GLUT2\" OR gene:\"GLUT2\")",
+      "confidence": 0.6,
+      "candidates": [
+        {
+          "accession": "P11168",
+          "protein_name": "Solute carrier family 2, facilitated glucose transporter member 2",
+          "gene_names": [
+            "GLUT2",
+            "SLC2A2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "P12336",
+          "protein_name": "Solute carrier family 2, facilitated glucose transporter member 2",
+          "gene_names": [
+            "Glut2",
+            "Slc2a2"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P14246",
+          "protein_name": "Solute carrier family 2, facilitated glucose transporter member 2",
+          "gene_names": [
+            "Glut2",
+            "Slc2a2"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P58351",
+          "protein_name": "Solute carrier family 2, facilitated glucose transporter member 2",
+          "gene_names": [
+            "GLUT2",
+            "SLC2A2"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q90592",
+          "protein_name": "Solute carrier family 2, facilitated glucose transporter member 2",
+          "gene_names": [
+            "GLUT2",
+            "SLC2A2"
+          ],
+          "organism": "Gallus gallus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "O62786",
+          "protein_name": "Solute carrier family 2, facilitated glucose transporter member 2",
+          "gene_names": [
+            "GLUT2",
+            "SLC2A2"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A6G5ZVL3",
+          "protein_name": "",
+          "gene_names": [
+            "GLUT2",
+            "Glut2"
+          ],
+          "organism": "Trachinotus ovatus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q102R8",
+          "protein_name": "",
+          "gene_names": [
+            "glut2",
+            "slc2a2",
+            "wu:fb62h10"
+          ],
+          "organism": "Danio rerio",
+          "reviewed": true,
+          "score": 0.56
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"GLUT2\" OR gene:\"GLUT2\") AND organism_name:\"human\"",
+        "(protein_name:\"GLUT2\" OR gene:\"GLUT2\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::pyruvate kinase::human": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q16715"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4176,
+          "name": "Pyruvate kinase",
+          "gene_name": "",
+          "uniprot": "Q16715",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4177,
+          "name": "Pyruvate kinase",
+          "gene_name": "",
+          "uniprot": "Q16716",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4178,
+          "name": "Pyruvate kinase",
+          "gene_name": "PKM2",
+          "uniprot": "Q504U3",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 4179,
+          "name": "Pyruvate kinase",
+          "gene_name": "PKM2",
+          "uniprot": "Q8WUW7",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 23941,
+          "name": "Pyruvate kinase",
+          "gene_name": "PKM2",
+          "uniprot": "Q504U3",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10048,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykA",
+          "uniprot": "Q1RAT0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10049,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykF",
+          "uniprot": "Q1RBC0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10055,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykA",
+          "uniprot": "Q1RAT0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10056,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykF",
+          "uniprot": "Q1RBC0",
+          "species_id": 28,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10064,
+          "name": "Pyruvate kinase",
+          "gene_name": "pykA",
+          "uniprot": "Q1RAT0",
+          "species_id": 28,
+          "score": 1.0
+        }
+      ]
     }
   },
   "compounds": {
@@ -13428,6 +13750,159 @@
       ],
       "provider": "ChEBI/KEGG/HMDB",
       "source": "api"
+    },
+    "db::amp": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000045",
+        "kegg": "C00020",
+        "chebi": "CHEBI:16027",
+        "pubchem": "6083",
+        "cas": "61-19-8",
+        "biocyc": "AMP",
+        "chemspider": "5858",
+        "drugbank": "DB00131"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 32,
+          "name": "Adenosine monophosphate",
+          "short_name": "AMP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000045",
+            "kegg": "C00020",
+            "chebi": "CHEBI:16027",
+            "pubchem": "6083",
+            "cas": "61-19-8",
+            "biocyc": "AMP",
+            "chemspider": "5858",
+            "drugbank": "DB00131"
+          }
+        },
+        {
+          "pathbank_compound_id": 9177,
+          "name": "Amprenavir",
+          "short_name": "Amp",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0014839",
+            "kegg": "C08086",
+            "chebi": "CHEBI:40050",
+            "pubchem": "65016",
+            "cas": "161814-49-9",
+            "chemspider": "58532",
+            "drugbank": "DB00701"
+          }
+        },
+        {
+          "pathbank_compound_id": 13153,
+          "name": "Amino (methoxysulfinyl) pentasulfide",
+          "short_name": "AMP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0031980",
+            "pubchem": "85756567",
+            "cas": "198898-37-2"
+          }
+        },
+        {
+          "pathbank_compound_id": 17293,
+          "name": "Methyl 2-propenyl pentasulfide",
+          "short_name": "AMP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0036351",
+            "pubchem": "528713",
+            "cas": "118023-99-7",
+            "chemspider": "460802"
+          }
+        },
+        {
+          "pathbank_compound_id": 41,
+          "name": "cAMP",
+          "short_name": "cAMP",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0000058",
+            "kegg": "C00575",
+            "chebi": "CHEBI:17489",
+            "pubchem": "6076",
+            "cas": "60-92-4",
+            "biocyc": "CAMP",
+            "chemspider": "5851",
+            "drugbank": "DB02527"
+          }
+        },
+        {
+          "pathbank_compound_id": 1918,
+          "name": "3'-AMP",
+          "short_name": "3'-AMP",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0003540",
+            "kegg": "C01367",
+            "chebi": "CHEBI:28931",
+            "pubchem": "41211",
+            "cas": "84-21-9",
+            "chemspider": "37610"
+          }
+        },
+        {
+          "pathbank_compound_id": 7807,
+          "name": "Molybdopterin-AMP",
+          "short_name": "Molybdo",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0012262",
+            "pubchem": "25245677"
+          }
+        },
+        {
+          "pathbank_compound_id": 7817,
+          "name": "Phosphoribosyl-AMP",
+          "short_name": "P-AMP",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0012276",
+            "pubchem": "439795",
+            "biocyc": "PHOSPHORIBOSYL-AMP",
+            "chemspider": "30776608"
+          }
+        },
+        {
+          "pathbank_compound_id": 9501,
+          "name": "Fludarabine",
+          "short_name": "Famp",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0015206",
+            "chebi": "CHEBI:63599",
+            "pubchem": "30751",
+            "cas": "75607-67-9",
+            "chemspider": "28532",
+            "drugbank": "DB01073"
+          }
+        },
+        {
+          "pathbank_compound_id": 413,
+          "name": "Adenylsuccinic acid",
+          "short_name": "Asuca",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0000536",
+            "kegg": "C03794",
+            "chebi": "CHEBI:15919",
+            "pubchem": "440122",
+            "cas": "19046-78-7",
+            "chemspider": "389122"
+          }
+        }
+      ]
     }
   }
 }

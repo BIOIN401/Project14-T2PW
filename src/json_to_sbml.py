@@ -273,10 +273,10 @@ def _usage_profile(processes: Dict[str, Any]) -> Dict[str, Set[str]]:
             for name in _safe_list(reaction.get(side)):
                 if isinstance(name, str) and name.strip():
                     io_names.add(name.strip())
-        for enzyme in _safe_list(reaction.get("enzymes")):
+        for enzyme in _safe_list(reaction.get("modifiers")) + _safe_list(reaction.get("enzymes")):
             if not isinstance(enzyme, dict):
                 continue
-            pname = _first_string([enzyme.get("protein"), enzyme.get("protein_complex"), enzyme.get("name")])
+            pname = _first_string([enzyme.get("entity"), enzyme.get("protein"), enzyme.get("protein_complex"), enzyme.get("name")])
             if pname:
                 enzyme_names.add(pname)
 
@@ -1103,14 +1103,18 @@ def build_sbml(
             continue
 
         modifier_ids: List[str] = []
-        for enzyme in _safe_list(reaction.get("enzymes")):
+        modifier_roles: Dict[str, str] = {}
+        for enzyme in _safe_list(reaction.get("modifiers")) + _safe_list(reaction.get("enzymes")):
             if not isinstance(enzyme, dict):
                 continue
-            pname = _first_string([enzyme.get("protein"), enzyme.get("protein_complex"), enzyme.get("name")])
+            pname = _first_string([enzyme.get("entity"), enzyme.get("protein"), enzyme.get("protein_complex"), enzyme.get("name")])
             if pname and pname in known_proteins:
                 pkey = ("protein", pname, compartment_id)
                 if pkey in species_registry:
-                    modifier_ids.append(species_registry[pkey]["id"])
+                    sid = species_registry[pkey]["id"]
+                    modifier_ids.append(sid)
+                    if sid not in modifier_roles:
+                        modifier_roles[sid] = str(enzyme.get("role") or "catalyst")
 
         if _same_multiset(reactant_ids, product_ids):
             report["warnings"].append(
@@ -1133,6 +1137,7 @@ def build_sbml(
                 "reactants": sorted(reactant_ids),
                 "products": sorted(product_ids),
                 "modifiers": sorted(set(modifier_ids)),
+                "modifier_roles": modifier_roles,
                 "compartment_id": compartment_id,
                 "kind": "reaction",
                 "class": reaction.get("class") or "biochemical_reaction",
@@ -1429,10 +1434,24 @@ def build_sbml(
             ref.setConstant(False)
             ref.setStoichiometry(float(stoich))
             ref.setSBOTerm(11)  # SBO:0000011 product
+        modifier_roles_map = plan.get("modifier_roles", {})
         for sid in plan["modifiers"]:
             ref = rxn.createModifier()
             ref.setSpecies(sid)
-            ref.setSBOTerm(460)  # SBO:0000460 enzymatic catalyst
+            role = modifier_roles_map.get(sid, "catalyst")
+            # Map role to SBO term
+            _ROLE_SBO = {
+                "catalyst": 460,    # SBO:0000460 enzymatic catalyst
+                "activator": 461,   # SBO:0000461 essential activator
+                "inhibitor": 20,    # SBO:0000020 inhibitor
+                "transporter": 460, # use enzymatic catalyst for transporters
+                "cofactor": 460,    # use enzymatic catalyst for cofactors
+            }
+            ref.setSBOTerm(_ROLE_SBO.get(role, 460))
+            ref.setAnnotation(
+                f'<annotation><pathwhiz:modifier xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+                f' pathwhiz:role="{role}"/></annotation>'
+            )
 
     report["counts"]["compartments"] = model.getNumCompartments()
     report["counts"]["species"] = model.getNumSpecies()
