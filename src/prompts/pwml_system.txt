@@ -277,65 +277,65 @@ IMPORTANT CONSTRUCTION NOTES
 - For transports: only create if movement is explicit (e.g., "transported into", "exported from", "shuttle").
 - For visualizations/edges: keep empty unless the text explicitly mentions figure/diagram/layout metadata.
 
-MODIFIER EXAMPLES (follow these exactly)
+MODIFIER EXAMPLES (follow these exactly for any pathway)
 
-Example 1 — enzyme as catalyst:
-  Text: "hexokinase catalyzes the phosphorylation of glucose to glucose-6-phosphate, consuming ATP and producing ADP"
+Example 1 — enzyme as catalyst (generic pattern):
+  Text: "[EnzymeX] catalyzes the conversion of [SubstrateA] and [CofactorB] to [ProductC] and [CofactorB']"
   CORRECT output:
     reactions: [
       {
-        "name": "hexokinase reaction",
-        "inputs": ["glucose", "ATP"],
-        "outputs": ["glucose-6-phosphate", "ADP"],
+        "name": "[EnzymeX] reaction",
+        "inputs": ["[SubstrateA]", "[CofactorB]"],
+        "outputs": ["[ProductC]", "[CofactorB']"],
         "modifiers": [
-          { "entity": "hexokinase", "entity_type": "protein", "role": "catalyst",
-            "evidence": "hexokinase catalyzes the phosphorylation of glucose", "confidence": 1.0, "provenance": "extracted" }
+          { "entity": "[EnzymeX]", "entity_type": "protein", "role": "catalyst",
+            "evidence": "[EnzymeX] catalyzes the conversion of [SubstrateA]", "confidence": 1.0, "provenance": "extracted" }
         ],
-        "evidence": "hexokinase catalyzes the phosphorylation of glucose to glucose-6-phosphate"
+        "evidence": "[EnzymeX] catalyzes the conversion of [SubstrateA] and [CofactorB] to [ProductC]"
       }
     ]
-  KEY POINTS: hexokinase is in modifiers, NOT in inputs. ATP/ADP are stoichiometric so they stay in inputs/outputs.
+  KEY POINTS: [EnzymeX] is in modifiers[], NOT in inputs[]. [CofactorB]/[CofactorB'] are stoichiometrically consumed/produced so they stay in inputs/outputs. This applies to ANY enzyme in ANY pathway.
 
-Example 2 — allosteric inhibitor and activator:
-  Text: "PFK-1 converts fructose-6-phosphate and ATP into fructose-1,6-bisphosphate and ADP; ATP allosterically inhibits PFK-1; AMP activates PFK-1"
+Example 2 — small-molecule regulator vs. protein catalyst (generic pattern):
+  Text: "[EnzymeY] converts [A] and [B] into [C] and [D]; [SmallMolecule] allosterically inhibits [EnzymeY]; [OtherMolecule] activates [EnzymeY]"
   CORRECT output:
     reactions: [
       {
-        "name": "PFK-1 reaction",
-        "inputs": ["fructose-6-phosphate", "ATP"],
-        "outputs": ["fructose-1,6-bisphosphate", "ADP"],
+        "name": "[EnzymeY] reaction",
+        "inputs": ["[A]", "[B]"],
+        "outputs": ["[C]", "[D]"],
         "modifiers": [
-          { "entity": "PFK-1", "entity_type": "protein", "role": "catalyst",
-            "evidence": "PFK-1 converts fructose-6-phosphate and ATP", "confidence": 1.0, "provenance": "extracted" }
+          { "entity": "[EnzymeY]", "entity_type": "protein", "role": "catalyst",
+            "evidence": "[EnzymeY] converts [A] and [B]", "confidence": 1.0, "provenance": "extracted" }
         ],
-        "evidence": "PFK-1 converts fructose-6-phosphate and ATP into fructose-1,6-bisphosphate and ADP"
+        "evidence": "[EnzymeY] converts [A] and [B] into [C] and [D]"
       }
     ]
     interactions: [
-      { "entity_1": "ATP", "relationship": "inhibits", "entity_2": "PFK-1",
-        "evidence": "ATP allosterically inhibits PFK-1", "class": "inhibition", "confidence": 1.0, "provenance": "extracted" },
-      { "entity_1": "AMP", "relationship": "activates", "entity_2": "PFK-1",
-        "evidence": "AMP activates PFK-1", "class": "activation", "confidence": 1.0, "provenance": "extracted" }
+      { "entity_1": "[SmallMolecule]", "relationship": "inhibits", "entity_2": "[EnzymeY]",
+        "evidence": "[SmallMolecule] allosterically inhibits [EnzymeY]", "class": "inhibition", "confidence": 1.0, "provenance": "extracted" },
+      { "entity_1": "[OtherMolecule]", "relationship": "activates", "entity_2": "[EnzymeY]",
+        "evidence": "[OtherMolecule] activates [EnzymeY]", "class": "activation", "confidence": 1.0, "provenance": "extracted" }
     ]
-  KEY POINTS: PFK-1 (protein) is the catalyst modifier on the reaction. ATP/AMP are small molecules that regulate — they go in interactions, not modifiers.
+  KEY POINTS: the protein enzyme ([EnzymeY]) is the catalyst modifier. Small-molecule regulators (compounds) go in interactions[], not modifiers[]. This applies regardless of which pathway or molecules are involved.
 
-Example 3 — transporter protein:
-  Text: "GLUT2 shuttles glucose from the extracellular space into the cytosol"
+Example 3 — transporter protein (generic pattern):
+  Text: "[TransporterZ] shuttles [CargoMolecule] from [CompartmentA] into [CompartmentB]"
   CORRECT output:
     transports: [
       {
-        "name": "GLUT2-mediated glucose transport",
-        "cargo": "glucose",
-        "from_biological_state": "extracellular state",
-        "to_biological_state": "cytosolic state",
+        "name": "[TransporterZ]-mediated [CargoMolecule] transport",
+        "cargo": "[CargoMolecule]",
+        "from_biological_state": "[CompartmentA] state",
+        "to_biological_state": "[CompartmentB] state",
         "transporters": [
-          { "protein": "GLUT2", "biological_state": "cytosolic state",
-            "evidence": "GLUT2 shuttles glucose from the extracellular space" }
+          { "protein": "[TransporterZ]", "biological_state": "[CompartmentB] state",
+            "evidence": "[TransporterZ] shuttles [CargoMolecule] from [CompartmentA]" }
         ],
-        "evidence": "GLUT2 shuttles glucose from the extracellular space into the cytosol"
+        "evidence": "[TransporterZ] shuttles [CargoMolecule] from [CompartmentA] into [CompartmentB]"
       }
     ]
-  KEY POINTS: GLUT2 goes in transporters[] on the transport object, NOT as a reactant/product.
+  KEY POINTS: [TransporterZ] goes in transporters[] on the transport object, NOT as a reactant/product. Applies to any transporter in any pathway.
 
 SUMMARY RULE: every named enzyme/catalyst in the text MUST appear in modifiers[] on its reaction with role "catalyst". Never leave a reaction without modifiers if the text names its enzyme.
 

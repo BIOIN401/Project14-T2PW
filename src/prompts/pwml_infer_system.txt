@@ -25,21 +25,48 @@ CRITICAL RULES
 - Transport cargo must be a single entity token. If text implies multiple cargos, add separate transport rows.
 
 ALLOWED INFERENCES
-A) Modifier to reaction linkage
-- If text implies catalysis, activation, inhibition, or transport, attach a modifier to an existing reaction using the modifiers[] array.
-- If no reaction exists and conversion is explicit, you may add a new reaction.
-- Infer the modifier role from the text:
+A) Modifier to reaction linkage — including MANDATORY REPAIR PASS
+
+Step 1: Infer modifier role from text keywords:
   - "catalyzes", "enzyme", "catalytic" → role: "catalyst"
   - "activates", "promotes", "stimulates", "upregulates" → role: "activator"
   - "inhibits", "blocks", "suppresses", "downregulates" → role: "inhibitor"
   - "transports", "carries", "shuttles", "translocates" → role: "transporter"
-  - Default (unclear catalytic involvement) → role: "catalyst"
-- IMPORTANT: if Stage-1 reactions exist but have no modifiers[], and the text names an enzyme for those reactions, you MUST add the modifier here. A reaction with a named enzyme and no modifiers[] is always incomplete.
-- EXAMPLE: Stage-1 has reaction {inputs:[glucose,ATP], outputs:[glucose-6-phosphate,ADP]} and text says "hexokinase catalyzes" → add to additions.processes.reactions:
-  { "name": "hexokinase reaction", "inputs": ["glucose","ATP"], "outputs": ["glucose-6-phosphate","ADP"],
-    "modifiers": [{ "entity": "hexokinase", "entity_type": "protein", "role": "catalyst",
-      "evidence": "hexokinase catalyzes", "confidence": 0.95, "provenance": "inferred", "source_refs": ["hexokinase catalyzes"] }],
-    "evidence": "hexokinase catalyzes", "class": "biochemical_reaction", "confidence": 0.95, "provenance": "inferred", "source_refs": ["hexokinase catalyzes"] }
+  - Default (unclear involvement) → role: "catalyst"
+
+Step 2: MANDATORY REPAIR PASS — run this for every protein in Stage-1 entities.proteins[]:
+  For each protein P in Stage-1:
+    (a) Does the text say P catalyzes / converts / facilitates a reaction?
+        → Find the matching Stage-1 reaction by its inputs+outputs.
+        → If that reaction has no modifiers[] entry for P, add a new reaction to additions.processes.reactions
+          that duplicates the Stage-1 reaction's inputs/outputs/name AND adds P as a modifier with role "catalyst".
+    (b) Does the text say P inhibits a reaction or another protein?
+        → Add P as a modifier with role "inhibitor" on the matching reaction, OR as an interaction if the target is not a reaction.
+    (c) Does the text say P activates something?
+        → Add P as a modifier with role "activator" on the matching reaction.
+  Only skip a protein if the text gives absolutely no information about what process it participates in.
+
+Step 3: Generic example of the repair (applies to ANY pathway, ANY enzyme name):
+  Stage-1 has: reaction { "inputs": ["[A]", "[B]"], "outputs": ["[C]", "[D]"], "modifiers": [] }
+  Text says: "[EnzymeX] catalyzes the conversion of [A] and [B] to [C] and [D]"
+  → Add to additions.processes.reactions:
+  {
+    "name": "[EnzymeX] reaction",
+    "inputs": ["[A]", "[B]"],
+    "outputs": ["[C]", "[D]"],
+    "modifiers": [
+      { "entity": "[EnzymeX]", "entity_type": "protein", "role": "catalyst",
+        "evidence": "[EnzymeX] catalyzes the conversion of [A]",
+        "confidence": 0.95, "provenance": "inferred", "source_refs": ["[EnzymeX] catalyzes the conversion of [A]"] }
+    ],
+    "evidence": "[EnzymeX] catalyzes the conversion of [A] and [B] to [C] and [D]",
+    "class": "biochemical_reaction", "confidence": 0.95, "provenance": "inferred",
+    "source_refs": ["[EnzymeX] catalyzes the conversion of [A] and [B] to [C] and [D]"]
+  }
+  This pattern applies identically for lipid enzymes, kinases, oxidoreductases, synthases, or any other enzyme class.
+
+- If no reaction exists yet but conversion is explicit, you may also add the reaction with the modifier already attached.
+- Do NOT add a modifier if the text gives no indication of what reaction the protein participates in.
 
 B) Reactions (only when conversion is explicit)
 Allowed patterns:
