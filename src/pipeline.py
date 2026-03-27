@@ -409,7 +409,10 @@ def merge_additions(
             if not isinstance(items, list):
                 continue
             merged["processes"].setdefault(key, [])
-            _extend_unique(merged["processes"][key], items)
+            if key == "reactions":
+                _merge_reactions(merged["processes"][key], items)
+            else:
+                _extend_unique(merged["processes"][key], items)
 
     states_add = additions.get("biological_states", [])
     if isinstance(states_add, list):
@@ -424,6 +427,8 @@ def merge_additions(
                 continue
             merged["element_locations"].setdefault(key, [])
             _extend_unique(merged["element_locations"][key], items)
+
+    _inject_name_based_modifiers(merged)
 
     return merged
 
@@ -1193,6 +1198,96 @@ def run_stage_one_with_chunking(
     merged = merge_stage_one_outputs(outputs)
     merged = clean_stage_one(merged)
     return merged, chunk_results
+
+
+def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
+    """
+    Post-processing pass: for every protein in entities.proteins that has no
+    modifier entry on any reaction, check whether the protein name appears in a
+    reaction name or evidence string. If so, inject it as a catalyst modifier.
+    This catches cases where both Stage-1 and Stage-2 omit modifiers despite the
+    text naming the enzyme.
+    """
+    def _sl(x: Any) -> list:
+        return x if isinstance(x, list) else []
+
+    proteins = [
+        p for p in _sl((merged.get("entities") or {}).get("proteins", []))
+        if isinstance(p, dict) and isinstance(p.get("name"), str) and p["name"].strip()
+    ]
+    reactions = _sl((merged.get("processes") or {}).get("reactions", []))
+
+    for protein in proteins:
+        pname = protein["name"].strip()
+        pname_lower = pname.lower()
+        for reaction in reactions:
+            if not isinstance(reaction, dict):
+                continue
+            # Check if protein name appears in reaction name or evidence (case-insensitive)
+            rname = (reaction.get("name") or "").lower()
+            revidence = (reaction.get("evidence") or "").lower()
+            if pname_lower not in rname and pname_lower not in revidence:
+                continue
+            # Check if already a modifier on this reaction
+            existing_modifiers = _sl(reaction.get("modifiers", []))
+            already_present = any(
+                isinstance(m, dict) and (m.get("entity") or "").strip().lower() == pname_lower
+                for m in existing_modifiers
+            )
+            if already_present:
+                continue
+            # Inject catalyst modifier
+            reaction.setdefault("modifiers", [])
+            reaction["modifiers"].append({
+                "entity": pname,
+                "entity_type": "protein",
+                "role": "catalyst",
+                "evidence": (reaction.get("evidence") or "")[:120],
+                "confidence": 0.9,
+                "provenance": "inferred",
+                "source_refs": [(reaction.get("evidence") or "")[:120]],
+            })
+
+
+def _reaction_io_key(r: Any) -> frozenset:
+    """Fingerprint a reaction by its sorted inputs+outputs for deduplication."""
+    if not isinstance(r, dict):
+        return frozenset()
+    inputs = sorted(str(x).strip().lower() for x in (r.get("inputs") or []) if x)
+    outputs = sorted(str(x).strip().lower() for x in (r.get("outputs") or []) if x)
+    return frozenset([("inputs", tuple(inputs)), ("outputs", tuple(outputs))])
+
+
+def _merge_reactions(target: List[Any], new_items: List[Any]) -> None:
+    """
+    Merge Stage-2 reaction additions into target.
+    - If a new reaction's inputs+outputs match an existing reaction, patch its
+      modifiers[] with any new entries (avoiding duplicates) instead of appending
+      a duplicate reaction.
+    - If no matching reaction exists, append it normally.
+    """
+    target_keys = {_reaction_io_key(r): i for i, r in enumerate(target)}
+    seen_signatures = {json.dumps(r, sort_keys=True) for r in target}
+
+    for new_r in new_items:
+        if not isinstance(new_r, dict):
+            continue
+        key = _reaction_io_key(new_r)
+        if key and key in target_keys:
+            # Patch modifiers into the existing reaction
+            existing = target[target_keys[key]]
+            new_modifiers = new_r.get("modifiers")
+            if isinstance(new_modifiers, list) and new_modifiers:
+                existing.setdefault("modifiers", [])
+                _extend_unique(existing["modifiers"], new_modifiers)
+        else:
+            # Genuinely new reaction — append if not an exact duplicate
+            sig = json.dumps(new_r, sort_keys=True)
+            if sig not in seen_signatures:
+                target.append(new_r)
+                seen_signatures.add(sig)
+                if key:
+                    target_keys[key] = len(target) - 1
 
 
 def _extend_unique(target: List[Any], new_items: List[Any]) -> None:

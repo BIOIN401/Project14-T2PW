@@ -15,7 +15,7 @@ CRITICAL RULES
   (a) at least one supporting evidence quote (<=25 words, verbatim from the original text),
   (b) top-level fields: "confidence" (0.0–1.0), "provenance": "inferred", "source_refs": [array of notes/evidence strings]
 - Do not use the internet. Do not introduce unsupported facts.
-- Never overwrite Stage-1 objects. Only add objects/links.
+- To add a modifier to an existing Stage-1 reaction: output the reaction in additions.processes.reactions with the SAME inputs[] and outputs[] as the Stage-1 reaction, plus a populated modifiers[] array. The merger will patch the modifier into the existing reaction rather than creating a duplicate. Do NOT change the inputs/outputs — match them exactly.
 - If unsure, omit. Prefer missing data over hallucination.
 - Output only a single JSON object. No prose, no markdown.
 - Processes must be under additions.processes, not additions.entities.
@@ -161,30 +161,28 @@ Return only one JSON object in this shape:
     "processes": {
       "reactions": [
         {
-          "name": "",
-          "inputs": [""],
-          "outputs": [""],
+          "name": "REACTION_NAME",
+          "inputs": ["INPUT_ENTITY_NAME"],
+          "outputs": ["OUTPUT_ENTITY_NAME"],
           "modifiers": [
             {
-              "entity": "",
-              "entity_type": "protein | protein_complex",
-              "role": "catalyst | transporter | activator | inhibitor | cofactor",
-              "evidence": "",
-              "confidence": 0.0,
+              "entity": "PROTEIN_NAME",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "VERBATIM_QUOTE_FROM_TEXT",
+              "confidence": 0.95,
               "provenance": "inferred",
-              "source_refs": [""]
+              "source_refs": ["VERBATIM_QUOTE_FROM_TEXT"]
             }
           ],
-          "biological_state": "",
-          "evidence": "",
+          "biological_state": "BIOLOGICAL_STATE_NAME_OR_EMPTY_STRING",
+          "evidence": "VERBATIM_QUOTE_FROM_TEXT",
           "class": "biochemical_reaction",
-          "confidence": 0.0,
+          "confidence": 0.95,
           "provenance": "inferred",
-          "source_refs": [""]
+          "source_refs": ["VERBATIM_QUOTE_FROM_TEXT"]
         }
       ],
-      "transports": [],
-      "reaction_coupled_transports": [],
       "interactions": [
         {
           "name": "",
@@ -208,8 +206,8 @@ Return only one JSON object in this shape:
 }
 
 DEDUPE RULE
-Do not output duplicates:
-- reactions: same normalized inputs + outputs
+Do not output duplicates within your additions output:
+- reactions: do NOT output two reactions with the same inputs+outputs UNLESS they have different modifiers[] content. If you are outputting a reaction solely to add modifiers to an existing Stage-1 reaction, that is correct — output it once with the full modifiers[] populated.
 - protein_complexes: same normalized component set
 - interactions: same (entity_1, relationship, entity_2)
 - biological_states: same normalized context tuple

@@ -123,7 +123,7 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
             c_name = c.strip()
             add_edge(adj, node(resolve_kind(c_name), c_name), rid)
 
-        for enz in safe_list((r or {}).get("enzymes", [])):
+        for enz in safe_list((r or {}).get("enzymes", [])) + safe_list((r or {}).get("modifiers", [])):
             p_name = resolve_actor_name(enz)
             if p_name:
                 add_edge(adj, node(resolve_kind(p_name), p_name), rid)
