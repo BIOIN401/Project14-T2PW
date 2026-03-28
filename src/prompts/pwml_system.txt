@@ -38,6 +38,7 @@ OUTPUT RULES (MANDATORY)
 - modifiers = anything that participates in a reaction without being consumed: enzymes, transporters, activators, inhibitors.
   Assign role: "catalyst" for enzymes, "transporter" for carrier proteins, "activator" for positive regulators, "inhibitor" for negative regulators, "cofactor" for non-consumed small-molecule helpers.
 - An enzyme is NEVER an input or output of a reaction. If the text lists an enzyme as an input, place it in modifiers with role: "catalyst" and remove it from inputs.
+- A protein_complex that catalyzes a reaction MUST appear in that reaction's modifiers[] with entity_type: "protein_complex" and role: "catalyst". Use the exact complex name from protein_complexes[]. Do NOT use a subunit name as the modifier — subunits go in protein_complexes[].components only.
 - Cofactors that are stoichiometrically consumed and regenerated (e.g., ATP → ADP) are reactants/products, NOT modifiers.
 - BACKWARD COMPATIBILITY: if you see legacy format { "protein_complex": "X" } in enzymes[], treat it as { "entity": "X", "entity_type": "protein_complex", "role": "catalyst" }. The field name enzymes is now modifiers.
 - Create a protein_complex ONLY when the text explicitly says "complex", "heterodimer", "holoenzyme", or names a multi-subunit structure.

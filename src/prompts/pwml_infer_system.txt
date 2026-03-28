@@ -41,11 +41,14 @@ Step 2: MANDATORY REPAIR PASS — run this for every entry in BOTH Stage-1 entit
         → If that reaction has no modifiers[] entry for A, add a new reaction to additions.processes.reactions
           that duplicates the Stage-1 reaction's inputs/outputs/name AND adds A as a modifier with role "catalyst".
         → Use entity_type: "protein_complex" if A came from entities.protein_complexes[], otherwise entity_type: "protein".
+        → The entity field MUST be A's exact name from the Stage-1 entity list — not a subunit name, not a partial name.
+          If the text says "[ComplexName] complex catalyzes...", the modifier entity is "[ComplexName] complex", NOT any of its subunits.
     (b) Does the text say A inhibits a reaction or another entity?
         → Add A as a modifier with role "inhibitor" on the matching reaction, OR as an interaction if the target is not a reaction.
     (c) Does the text say A activates something?
         → Add A as a modifier with role "activator" on the matching reaction.
   Only skip an actor if the text gives absolutely no information about what process it participates in.
+  IMPORTANT: if both a complex and one of its subunits share a name prefix (e.g., "pyruvate dehydrogenase complex" and "pyruvate dehydrogenase"), always prefer the complex as the catalyst modifier when the text names the complex as the catalyst.
 
 Step 3: Generic examples of the repair:
 
