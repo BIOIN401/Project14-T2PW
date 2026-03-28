@@ -83,8 +83,12 @@ C) Alias/synonym bridging for connectivity
 - If explicit equivalence exists (example: "Glutathione (GSH)"), add an interaction:
   (entity_1, relationship=SAME_AS, entity_2)
 
-D) Minimal protein_complex wrapper
-- If needed for enzyme attachment, you may add a single-protein complex.
+D) Protein complex inference
+- If text names a multi-subunit complex without listing components, create the complex with confidence 0.7 and
+  provenance "inferred", listing what components are known.
+- If a modifier entity is likely a complex (text says "complex" but doesn't name components), classify it as
+  protein_complex with class "protein_complex" and empty components[].
+- Do NOT create single-protein complexes.
 
 E) Biological state and location linking
 - You may add biological_states and element_locations when explicitly supported.

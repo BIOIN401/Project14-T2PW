@@ -40,6 +40,9 @@ OUTPUT RULES (MANDATORY)
 - An enzyme is NEVER an input or output of a reaction. If the text lists an enzyme as an input, place it in modifiers with role: "catalyst" and remove it from inputs.
 - Cofactors that are stoichiometrically consumed and regenerated (e.g., ATP → ADP) are reactants/products, NOT modifiers.
 - BACKWARD COMPATIBILITY: if you see legacy format { "protein_complex": "X" } in enzymes[], treat it as { "entity": "X", "entity_type": "protein_complex", "role": "catalyst" }. The field name enzymes is now modifiers.
+- Create a protein_complex ONLY when the text explicitly says "complex", "heterodimer", "holoenzyme", or names a multi-subunit structure.
+- Single-protein entries should NEVER be wrapped in a complex unless the text forces it.
+- If exact subunit membership is unknown, still create the complex but mark confidence < 1.0 and provenance: "inferred" in the inference stage.
 - class must always be filled; if uncertain, use the parent type name (e.g., "compound" for a compound).
   Valid class values — compound: compound | cofactor | ion | element_collection;
   protein: protein | transporter; protein_complex: protein_complex; nucleic_acid: nucleic_acid.
@@ -138,7 +141,7 @@ OUTPUT JSON SCHEMA (must match exactly)
     "element_collections": [ { "name": "", "class": "element_collection", "confidence": 1.0, "provenance": "extracted" } ],
     "nucleic_acids": [ { "name": "", "class": "nucleic_acid", "confidence": 1.0, "provenance": "extracted" } ],
     "proteins": [ { "name": "", "class": "protein", "confidence": 1.0, "provenance": "extracted" } ],
-    "protein_complexes": [ { "name": "", "components": [""], "cofactors": [""], "modifications": [""] } ]
+    "protein_complexes": [ { "name": "", "class": "protein_complex", "components": [""], "cofactors": [""], "modifications": [""], "confidence": 1.0, "provenance": "extracted", "evidence": "" } ]
   },
 
   "biological_states": [

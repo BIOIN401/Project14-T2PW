@@ -1790,6 +1790,20 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 new_modifiers.append(updated_mod)
         reaction["modifiers"] = new_modifiers
 
+        # 1b. Correct entity_type when entity name matches a known protein_complex
+        #     (covers cases where the LLM used entity_type="protein" for a complex).
+        for mod in reaction["modifiers"]:
+            if not isinstance(mod, dict):
+                continue
+            entity = _canonical(str(mod.get("entity", "")))
+            if not entity or mod.get("entity_type") != "protein":
+                continue
+            norm = _normalize(_canonical_complex_name(entity))
+            if norm in complex_by_norm:
+                mod["entity_type"] = "protein_complex"
+                mod["entity"] = complex_by_norm[norm]
+                mod.pop("protein_complex", None)
+
         # 2. Migrate legacy enzymes[] → modifiers[] with role: "catalyst".
         enzyme_rows = _safe_list(reaction.get("enzymes"))
         if enzyme_rows:

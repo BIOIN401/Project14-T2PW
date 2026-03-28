@@ -966,7 +966,8 @@ def build_sbml(
             sid = sanitize_sbml_id(f"{sid}_{_short_hash(canonical_name + compartment_id, 6)}")
         entity_class = deduped_row.get("class") or ""
         entity_provenance = deduped_row.get("provenance") or ""
-        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id, "mapped_ids": canonical_mapped_ids, "class": entity_class, "provenance": entity_provenance}
+        entity_components = [c for c in _safe_list(deduped_row.get("components")) if isinstance(c, str) and c.strip()]
+        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id, "mapped_ids": canonical_mapped_ids, "class": entity_class, "provenance": entity_provenance, "components": entity_components}
         species_registry[canonical_key] = record
         species_registry[key] = record
         species_id_to_meta[sid] = sid_meta
@@ -1374,7 +1375,8 @@ def build_sbml(
         mapped = item.get("mapped_ids") or {}
         pw_sp_id = (_lookup_compound_id(pw_db, mapped) if is_compound
                     else _lookup_protein_id(pw_db, mapped))
-        sp_type = "compound" if is_compound else "protein"
+        is_protein_complex = not is_compound and item.get("class") == "protein_complex"
+        sp_type = "compound" if is_compound else ("protein_complex" if is_protein_complex else "protein")
         if pw_sp_id is not None:
             if is_compound:
                 report["pathwhiz_id_stats"]["compounds_matched"] += 1
@@ -1388,10 +1390,28 @@ def build_sbml(
         sp_provenance = item.get("provenance") or ""
         sp_class_attr = f' pathwhiz:class="{sp_class}"'
         sp_prov_attr = f' pathwhiz:provenance="{sp_provenance}"' if sp_provenance else ""
-        sp.setAnnotation(
-            f'<annotation><pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-            f'{pw_id_attr} pathwhiz:species_type="{sp_type}"{sp_class_attr}{sp_prov_attr}/></annotation>'
+        species_ann_elem = (
+            f'<pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+            f'{pw_id_attr} pathwhiz:species_type="{sp_type}"{sp_class_attr}{sp_prov_attr}/>'
         )
+        if is_protein_complex:
+            # Build component annotation from known subunits in the same compartment.
+            comp_parts = ""
+            for comp_name in (item.get("components") or []):
+                comp_rec = species_registry.get(("protein", comp_name, item["compartment_id"]))
+                if comp_rec:
+                    comp_parts += f'<pathwhiz:component species="{comp_rec["id"]}"/>'
+            if comp_parts:
+                complex_elem = (
+                    f'<pathwhiz:complex xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz">'
+                    f'{comp_parts}'
+                    f'</pathwhiz:complex>'
+                )
+                sp.setAnnotation(f'<annotation>{species_ann_elem}{complex_elem}</annotation>')
+            else:
+                sp.setAnnotation(f'<annotation>{species_ann_elem}</annotation>')
+        else:
+            sp.setAnnotation(f'<annotation>{species_ann_elem}</annotation>')
         # Add cross-database xrefs via CVTerm (requires metaid)
         _add_cv_terms(sp, mapped, libsbml)
 
