@@ -340,6 +340,30 @@ Example 3 — transporter protein (generic pattern):
     ]
   KEY POINTS: [TransporterZ] goes in transporters[] on the transport object, NOT as a reactant/product. Applies to any transporter in any pathway.
 
-SUMMARY RULE: every named enzyme/catalyst in the text MUST appear in modifiers[] on its reaction with role "catalyst". Never leave a reaction without modifiers if the text names its enzyme.
+Example 4 — protein complex as catalyst (MANDATORY pattern — applies whenever text names a complex as the catalyst):
+  Text: "The [ComplexName] complex catalyzes the conversion of [A] to [B]. The complex is composed of [Sub1], [Sub2], and [Sub3]."
+  CORRECT output:
+    protein_complexes: [
+      { "name": "[ComplexName] complex", "class": "protein_complex",
+        "components": ["[Sub1]", "[Sub2]", "[Sub3]"],
+        "cofactors": [], "modifications": [], "confidence": 1.0, "provenance": "extracted",
+        "evidence": "complex is composed of [Sub1], [Sub2], and [Sub3]" }
+    ]
+    reactions: [
+      {
+        "name": "[ComplexName] complex reaction",
+        "inputs": ["[A]"],
+        "outputs": ["[B]"],
+        "modifiers": [
+          { "entity": "[ComplexName] complex", "entity_type": "protein_complex", "role": "catalyst",
+            "evidence": "[ComplexName] complex catalyzes the conversion of [A] to [B]",
+            "confidence": 1.0, "provenance": "extracted" }
+        ],
+        "evidence": "[ComplexName] complex catalyzes the conversion of [A] to [B]"
+      }
+    ]
+  KEY POINTS: the complex goes in modifiers[] with entity_type: "protein_complex". Its subunits are listed in protein_complexes[].components — they are NOT separate modifiers on the reaction. This applies to any named complex (holoenzyme, heterodimer, multi-subunit structure) in any pathway.
+
+SUMMARY RULE: every named enzyme/catalyst in the text MUST appear in modifiers[] on its reaction with role "catalyst". This applies equally to single proteins (entity_type: "protein") AND protein complexes (entity_type: "protein_complex"). Never leave a reaction without modifiers if the text names its catalyst.
 
 

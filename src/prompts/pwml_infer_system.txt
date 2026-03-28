@@ -34,19 +34,22 @@ Step 1: Infer modifier role from text keywords:
   - "transports", "carries", "shuttles", "translocates" → role: "transporter"
   - Default (unclear involvement) → role: "catalyst"
 
-Step 2: MANDATORY REPAIR PASS — run this for every protein in Stage-1 entities.proteins[]:
-  For each protein P in Stage-1:
-    (a) Does the text say P catalyzes / converts / facilitates a reaction?
+Step 2: MANDATORY REPAIR PASS — run this for every entry in BOTH Stage-1 entities.proteins[] AND Stage-1 entities.protein_complexes[]:
+  For each actor A (protein or protein_complex) in Stage-1:
+    (a) Does the text say A catalyzes / converts / facilitates a reaction?
         → Find the matching Stage-1 reaction by its inputs+outputs.
-        → If that reaction has no modifiers[] entry for P, add a new reaction to additions.processes.reactions
-          that duplicates the Stage-1 reaction's inputs/outputs/name AND adds P as a modifier with role "catalyst".
-    (b) Does the text say P inhibits a reaction or another protein?
-        → Add P as a modifier with role "inhibitor" on the matching reaction, OR as an interaction if the target is not a reaction.
-    (c) Does the text say P activates something?
-        → Add P as a modifier with role "activator" on the matching reaction.
-  Only skip a protein if the text gives absolutely no information about what process it participates in.
+        → If that reaction has no modifiers[] entry for A, add a new reaction to additions.processes.reactions
+          that duplicates the Stage-1 reaction's inputs/outputs/name AND adds A as a modifier with role "catalyst".
+        → Use entity_type: "protein_complex" if A came from entities.protein_complexes[], otherwise entity_type: "protein".
+    (b) Does the text say A inhibits a reaction or another entity?
+        → Add A as a modifier with role "inhibitor" on the matching reaction, OR as an interaction if the target is not a reaction.
+    (c) Does the text say A activates something?
+        → Add A as a modifier with role "activator" on the matching reaction.
+  Only skip an actor if the text gives absolutely no information about what process it participates in.
 
-Step 3: Generic example of the repair (applies to ANY pathway, ANY enzyme name):
+Step 3: Generic examples of the repair:
+
+  Example — single protein catalyst:
   Stage-1 has: reaction { "inputs": ["[A]", "[B]"], "outputs": ["[C]", "[D]"], "modifiers": [] }
   Text says: "[EnzymeX] catalyzes the conversion of [A] and [B] to [C] and [D]"
   → Add to additions.processes.reactions:
@@ -63,7 +66,26 @@ Step 3: Generic example of the repair (applies to ANY pathway, ANY enzyme name):
     "class": "biochemical_reaction", "confidence": 0.95, "provenance": "inferred",
     "source_refs": ["[EnzymeX] catalyzes the conversion of [A] and [B] to [C] and [D]"]
   }
-  This pattern applies identically for lipid enzymes, kinases, oxidoreductases, synthases, or any other enzyme class.
+
+  Example — protein complex catalyst (IDENTICAL pattern, different entity_type):
+  Stage-1 has: reaction { "inputs": ["[A]", "[B]"], "outputs": ["[C]", "[D]"], "modifiers": [] }
+  Text says: "The [ComplexX] complex catalyzes the conversion of [A] and [B] to [C] and [D]"
+  → Add to additions.processes.reactions:
+  {
+    "name": "[ComplexX] complex reaction",
+    "inputs": ["[A]", "[B]"],
+    "outputs": ["[C]", "[D]"],
+    "modifiers": [
+      { "entity": "[ComplexX] complex", "entity_type": "protein_complex", "role": "catalyst",
+        "evidence": "[ComplexX] complex catalyzes the conversion of [A]",
+        "confidence": 0.95, "provenance": "inferred", "source_refs": ["[ComplexX] complex catalyzes the conversion of [A]"] }
+    ],
+    "evidence": "[ComplexX] complex catalyzes the conversion of [A] and [B] to [C] and [D]",
+    "class": "biochemical_reaction", "confidence": 0.95, "provenance": "inferred",
+    "source_refs": ["[ComplexX] complex catalyzes the conversion of [A] and [B] to [C] and [D]"]
+  }
+
+  These patterns apply identically for any enzyme class or complex type.
 
 - If no reaction exists yet but conversion is explicit, you may also add the reaction with the modifier already attached.
 - Do NOT add a modifier if the text gives no indication of what reaction the protein participates in.
@@ -170,8 +192,8 @@ Return only one JSON object in this shape:
           "outputs": ["OUTPUT_ENTITY_NAME"],
           "modifiers": [
             {
-              "entity": "PROTEIN_NAME",
-              "entity_type": "protein",
+              "entity": "PROTEIN_OR_COMPLEX_NAME",
+              "entity_type": "protein | protein_complex",
               "role": "catalyst",
               "evidence": "VERBATIM_QUOTE_FROM_TEXT",
               "confidence": 0.95,

@@ -10,8 +10,6 @@ from qa_graph import build_graph, connected_components, degrees, get_entities
 
 BASE_DIR = Path(__file__).resolve().parent
 PROMPTS_DIR = BASE_DIR / "prompts"
-EXTRACT_SYSTEM = (PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8")
-INFER_SYSTEM = (PROMPTS_DIR / "pwml_infer_system.txt").read_text(encoding="utf-8")
 logger = logging.getLogger(__name__)
 
 
@@ -40,7 +38,7 @@ def run_extraction_pipeline(
     """
     return _run_json_stage(
         stage_name="extraction",
-        system_prompt=EXTRACT_SYSTEM,
+        system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8"),
         build_user_prompt=lambda prev_output, last_error: _build_extraction_prompt(
             input_text, prev_output, last_error
         ),
@@ -65,7 +63,7 @@ def run_inference_pipeline(
     stage_one_str = json.dumps(stage_one, indent=2, ensure_ascii=False)
     return _run_json_stage(
         stage_name="inference",
-        system_prompt=INFER_SYSTEM,
+        system_prompt=(PROMPTS_DIR / "pwml_infer_system.txt").read_text(encoding="utf-8"),
         build_user_prompt=lambda prev_output, last_error: _build_inference_prompt(
             input_text,
             stage_one_str,
