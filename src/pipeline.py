@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from llm_client import chat
+from preprocessor import format_context_header
 from qa_graph import build_graph, connected_components, degrees, get_entities
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -29,6 +30,7 @@ AttemptLogs = List[AttemptLog]
 def run_extraction_pipeline(
     input_text: str,
     *,
+    pathway_context: Optional[Dict[str, Any]] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
     max_tokens: int = 12000,
@@ -40,7 +42,7 @@ def run_extraction_pipeline(
         stage_name="extraction",
         system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8"),
         build_user_prompt=lambda prev_output, last_error: _build_extraction_prompt(
-            input_text, prev_output, last_error
+            input_text, prev_output, last_error, pathway_context=pathway_context
         ),
         max_attempts=max_attempts,
         temperature=temperature,
@@ -52,7 +54,10 @@ def run_inference_pipeline(
     input_text: str,
     stage_one: Dict[str, Any],
     *,
+    pathway_context: Optional[Dict[str, Any]] = None,
     qa_feedback: Optional[Dict[str, Any]] = None,
+    chunk_section: Optional[str] = None,
+    chunk_relevance_score: Optional[float] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
     max_tokens: int = 10000,
@@ -70,6 +75,9 @@ def run_inference_pipeline(
             prev_output,
             last_error,
             qa_feedback,
+            pathway_context=pathway_context,
+            chunk_section=chunk_section,
+            chunk_relevance_score=chunk_relevance_score,
         ),
         max_attempts=max_attempts,
         temperature=temperature,
@@ -82,6 +90,7 @@ def run_stage_two_with_chunking(
     stage_one: Dict[str, Any],
     chunk_details: Optional[List[Dict[str, Any]]] = None,
     *,
+    pathway_context: Optional[Dict[str, Any]] = None,
     qa_feedback: Optional[Dict[str, Any]] = None,
     enable_chunking: bool,
     chunk_word_limit: int = 8000,
@@ -128,11 +137,17 @@ def run_stage_two_with_chunking(
         if compact_stage_one:
             chunk_stage_one = _compact_stage_one_for_inference(chunk_stage_one)
 
+        chunk_section = chunk.get("section")
+        chunk_relevance_score = chunk.get("relevance_score")
+
         try:
             parsed, attempts = run_inference_pipeline(
                 chunk["text"],
                 chunk_stage_one,
+                pathway_context=pathway_context,
                 qa_feedback=qa_feedback,
+                chunk_section=chunk_section,
+                chunk_relevance_score=chunk_relevance_score,
                 max_attempts=max_attempts,
                 temperature=temperature,
                 max_tokens=max_tokens,
@@ -161,7 +176,10 @@ def run_stage_two_with_chunking(
                     retry_parsed, retry_attempts = run_inference_pipeline(
                         chunk["text"],
                         compact_stage_one,
+                        pathway_context=pathway_context,
                         qa_feedback=qa_feedback,
+                        chunk_section=chunk_section,
+                        chunk_relevance_score=chunk_relevance_score,
                         max_attempts=max_attempts,
                         temperature=temperature,
                         max_tokens=retry_tokens,
@@ -301,6 +319,7 @@ def run_stage_two_with_feedback_loop(
     stage_one: Dict[str, Any],
     chunk_details: Optional[List[Dict[str, Any]]] = None,
     *,
+    pathway_context: Optional[Dict[str, Any]] = None,
     qa_rounds: int = 2,
     enable_chunking: bool,
     chunk_word_limit: int = 8000,
@@ -332,6 +351,7 @@ def run_stage_two_with_feedback_loop(
             input_text,
             working_stage_one,
             chunk_details=chunk_details if round_index == 1 else None,
+            pathway_context=pathway_context,
             qa_feedback=qa_feedback,
             enable_chunking=enable_chunking,
             chunk_word_limit=chunk_word_limit,
@@ -1137,6 +1157,7 @@ def merge_stage_one_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
 def run_stage_one_with_chunking(
     input_text: str,
     *,
+    pathway_context: Optional[Dict[str, Any]] = None,
     enable_chunking: bool,
     chunk_word_limit: int = 8000,
     chunk_overlap: int = 1200,
@@ -1154,6 +1175,7 @@ def run_stage_one_with_chunking(
     if not use_chunks:
         output, attempts = run_extraction_pipeline(
             input_text,
+            pathway_context=pathway_context,
             max_attempts=max_attempts,
             temperature=temperature,
             max_tokens=max_tokens,
@@ -1177,6 +1199,7 @@ def run_stage_one_with_chunking(
         try:
             parsed, attempts = run_extraction_pipeline(
                 chunk["text"],
+                pathway_context=pathway_context,
                 max_attempts=max_attempts,
                 temperature=temperature,
                 max_tokens=max_tokens,
@@ -1200,8 +1223,8 @@ def run_stage_one_with_chunking(
 
 def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     """
-    Post-processing pass: for every protein in entities.proteins, check whether
-    the protein name appears in a reaction name/evidence or a transport name/evidence.
+    Post-processing pass: for every protein and protein_complex in entities, check
+    whether the name appears in a reaction name/evidence or a transport name/evidence.
     - Reactions: inject as a catalyst modifier if missing.
     - Transports: inject as a transporter entry (protein_complex field) if missing.
     Catches cases where Stage-1 and Stage-2 omit these links.
@@ -1209,16 +1232,23 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     def _sl(x: Any) -> list:
         return x if isinstance(x, list) else []
 
-    proteins = [
-        p for p in _sl((merged.get("entities") or {}).get("proteins", []))
-        if isinstance(p, dict) and isinstance(p.get("name"), str) and p["name"].strip()
-    ]
+    entities = merged.get("entities") or {}
+
+    # Build actor list: (name, entity_type) for proteins and protein_complexes.
+    # Check complexes first so they take priority over subunits with overlapping names.
+    actors: List[tuple] = []
+    for row in _sl(entities.get("protein_complexes", [])):
+        if isinstance(row, dict) and isinstance(row.get("name"), str) and row["name"].strip():
+            actors.append((row["name"].strip(), "protein_complex"))
+    for row in _sl(entities.get("proteins", [])):
+        if isinstance(row, dict) and isinstance(row.get("name"), str) and row["name"].strip():
+            actors.append((row["name"].strip(), "protein"))
+
     processes = merged.get("processes") or {}
     reactions = _sl(processes.get("reactions", []))
     transports = _sl(processes.get("transports", []))
 
-    for protein in proteins:
-        pname = protein["name"].strip()
+    for pname, entity_type in actors:
         pname_lower = pname.lower()
 
         # --- Reactions: inject missing catalyst modifiers ---
@@ -1239,7 +1269,7 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
             reaction.setdefault("modifiers", [])
             reaction["modifiers"].append({
                 "entity": pname,
-                "entity_type": "protein",
+                "entity_type": entity_type,
                 "role": "catalyst",
                 "evidence": (reaction.get("evidence") or "")[:120],
                 "confidence": 0.9,
@@ -1342,39 +1372,234 @@ def _extend_unique(target: List[Any], new_items: List[Any]) -> None:
         seen.add(signature)
 
 
-def chunk_text(text: str, chunk_word_limit: int, overlap_words: int) -> List[Dict[str, Any]]:
+# ---------------------------------------------------------------------------
+# Section-aware chunking helpers
+# ---------------------------------------------------------------------------
+
+# Matches a line that is solely a recognised academic section header, with an
+# optional leading numeric prefix (e.g. "2.", "3.1 ").
+_SECTION_HEADER_RE = re.compile(
+    r'^[ \t]*(?:\d[\d.]*\.?\s+)?'
+    r'(abstract|introduction|background|'
+    r'materials?\s+and\s+methods?|methods?\s+and\s+materials?|'
+    r'experimental\s+procedures?|methods?|'
+    r'results?(?:\s+and\s+discussion)?|'
+    r'discussion(?:\s+and\s+conclusions?)?|'
+    r'conclusions?|summary|'
+    r'supplementary(?:\s+\w+)*|supplemental(?:\s+\w+)*|supporting\s+information|'
+    r'references?|bibliography|'
+    r'acknowledgements?|acknowledgments?)'
+    r'[ \t]*$',
+    re.IGNORECASE,
+)
+
+_SECTION_RELEVANCE_MAP: Dict[str, float] = {
+    "results": 0.9,
+    "results and discussion": 0.9,
+    "discussion": 0.85,
+    "discussion and conclusions": 0.85,
+    "conclusion": 0.75,
+    "summary": 0.75,
+    "methods": 0.7,
+    "abstract": 0.6,
+    "preamble": 0.5,
+    "supplementary": 0.5,
+    "supporting information": 0.5,
+    "introduction": 0.4,
+    "background": 0.4,
+    "references": 0.1,
+    "bibliography": 0.1,
+    "acknowledgements": 0.05,
+    "acknowledgments": 0.05,
+}
+
+
+def _get_section_relevance(section_label: str) -> float:
+    """Return a relevance score 0–1 for a normalised section label."""
+    name = section_label.strip().lower()
+    if name in _SECTION_RELEVANCE_MAP:
+        return _SECTION_RELEVANCE_MAP[name]
+    for key, score in _SECTION_RELEVANCE_MAP.items():
+        if key in name or name.startswith(key):
+            return score
+    return 0.5
+
+
+def _normalize_section_label(raw: str) -> str:
+    name = raw.strip().lower()
+    name = re.sub(r'\s+', ' ', name)
+    name = re.sub(r'^\d[\d.]*\.?\s+', '', name).strip()
+    return name
+
+
+def _split_into_sections(text: str) -> List[Tuple[str, str]]:
     """
-    Split text into overlapping chunks measured in approximate word counts.
+    Split *text* into (section_label, section_text) pairs.
+    Text that precedes the first recognised header is labelled 'preamble'.
+    Figure captions stay in their parent section naturally because only
+    section-header lines trigger a split.
     """
-    words = text.split()
-    if not words:
+    sections: List[Tuple[str, str]] = []
+    current_label = "preamble"
+    current_lines: List[str] = []
+
+    for line in text.split('\n'):
+        m = _SECTION_HEADER_RE.match(line)
+        if m:
+            body = '\n'.join(current_lines).strip()
+            if body:
+                sections.append((current_label, body))
+            current_label = _normalize_section_label(m.group(1))
+            current_lines = []
+        else:
+            current_lines.append(line)
+
+    body = '\n'.join(current_lines).strip()
+    if body:
+        sections.append((current_label, body))
+
+    return sections if sections else [("unknown", text.strip())]
+
+
+def _split_sentences(text: str) -> List[str]:
+    """Split text at sentence boundaries (.!? followed by whitespace + capital)."""
+    parts = re.split(r'(?<=[.!?])\s+(?=[A-Z"\(\[])', text)
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _chunk_section_text(
+    section_text: str,
+    section_label: str,
+    relevance_score: float,
+    chunk_word_limit: int,
+    overlap_words: int,
+    start_chunk_id: int,
+    start_word_offset: int,
+) -> List[Dict[str, Any]]:
+    """Chunk one section into sentence-boundary-respecting pieces."""
+    sentences = _split_sentences(section_text)
+    if not sentences:
         return []
 
-    chunk_size = max(int(chunk_word_limit), 1)
-    overlap = max(0, min(int(overlap_words), chunk_size - 1))
-
     chunks: List[Dict[str, Any]] = []
-    start = 0
-    chunk_id = 1
+    chunk_id = start_chunk_id
+    sent_idx = 0
+    word_offset = start_word_offset
 
-    while start < len(words):
-        end = min(start + chunk_size, len(words))
-        chunk_words = words[start:end]
-        chunk_text_value = " ".join(chunk_words)
+    while sent_idx < len(sentences):
+        accumulated_words = 0
+        chunk_sents: List[str] = []
+        idx = sent_idx
+
+        while idx < len(sentences):
+            sent_words = len(sentences[idx].split())
+            if accumulated_words + sent_words > chunk_word_limit and chunk_sents:
+                break
+            chunk_sents.append(sentences[idx])
+            accumulated_words += sent_words
+            idx += 1
+
+        if not chunk_sents:
+            # Single sentence exceeds the limit — include it whole.
+            chunk_sents = [sentences[sent_idx]]
+            accumulated_words = len(sentences[sent_idx].split())
+            idx = sent_idx + 1
+
+        chunk_str = " ".join(chunk_sents)
+        wc = len(chunk_str.split())
         chunks.append(
             {
                 "chunk_id": chunk_id,
-                "start_word": start,
-                "end_word": end,
-                "text": chunk_text_value,
+                "section": section_label,
+                "relevance_score": relevance_score,
+                "text": chunk_str,
+                "word_count": wc,
+                "start_word": word_offset,
+                "end_word": word_offset + wc,
             }
         )
-        if end >= len(words):
-            break
-        start = max(end - overlap, start + 1)
         chunk_id += 1
+        word_offset += wc
+
+        if idx >= len(sentences):
+            break
+
+        # Walk backwards from idx to cover ~overlap_words for the next chunk.
+        overlap_accumulated = 0
+        new_sent_idx = idx
+        for back in range(idx - 1, sent_idx - 1, -1):
+            w = len(sentences[back].split())
+            if overlap_accumulated + w > overlap_words:
+                break
+            overlap_accumulated += w
+            new_sent_idx = back
+
+        # Always advance by at least one sentence to avoid infinite loops.
+        sent_idx = max(new_sent_idx, sent_idx + 1)
 
     return chunks
+
+
+def chunk_text(text: str, chunk_word_limit: int, overlap_words: int) -> List[Dict[str, Any]]:
+    """
+    Split *text* into section-aware, sentence-boundary-respecting chunks.
+
+    Each chunk dict contains:
+      chunk_id        — processing order (high-relevance sections first)
+      section         — normalised section label ("results", "methods", …)
+      relevance_score — float 0–1; higher = more biologically relevant
+      text            — chunk text (never split mid-sentence)
+      word_count      — approximate word count
+      start_word      — approximate word offset in the original text
+      end_word        — approximate end word offset
+
+    Ordering: Results/Discussion chunks come first; References/
+    Acknowledgements chunks come last.  chunk_word_limit and overlap_words
+    are honoured within each section.
+    """
+    sections = _split_into_sections(text)
+
+    all_chunks: List[Dict[str, Any]] = []
+    word_offset = 0
+    tmp_id = 1
+
+    for section_label, section_text in sections:
+        relevance = _get_section_relevance(section_label)
+        sec_chunks = _chunk_section_text(
+            section_text,
+            section_label,
+            relevance,
+            max(int(chunk_word_limit), 1),
+            max(0, int(overlap_words)),
+            start_chunk_id=tmp_id,
+            start_word_offset=word_offset,
+        )
+        all_chunks.extend(sec_chunks)
+        tmp_id += len(sec_chunks)
+        word_offset += len(section_text.split())
+
+    if not all_chunks:
+        words = text.split()
+        return [
+            {
+                "chunk_id": 1,
+                "section": "unknown",
+                "relevance_score": 0.5,
+                "text": text,
+                "word_count": len(words),
+                "start_word": 0,
+                "end_word": len(words),
+            }
+        ]
+
+    # Sort: high-relevance first; within the same score, preserve original order.
+    all_chunks.sort(key=lambda c: (-c["relevance_score"], c["chunk_id"]))
+
+    # Re-number chunk_ids in processing order.
+    for new_id, chunk in enumerate(all_chunks, start=1):
+        chunk["chunk_id"] = new_id
+
+    return all_chunks
 
 
 def _merge_dict_in_place(target: Dict[str, Any], source: Dict[str, Any]) -> None:
@@ -1447,15 +1672,25 @@ def _build_extraction_prompt(
     input_text: str,
     prev_output: Optional[str],
     last_error: Optional[str],
+    *,
+    pathway_context: Optional[Dict[str, Any]] = None,
 ) -> str:
-    prompt = [
-        "Extract PWML-structured JSON strictly according to the schema.",
-        "Return ONLY the JSON object.",
-        "Pathway description:",
-        "<<<",
-        input_text.strip(),
-        ">>>",
-    ]
+    prompt = []
+
+    context_header = format_context_header(pathway_context)
+    if context_header:
+        prompt.extend([context_header, ""])
+
+    prompt.extend(
+        [
+            "Extract PWML-structured JSON strictly according to the schema.",
+            "Return ONLY the JSON object.",
+            "Pathway description:",
+            "<<<",
+            input_text.strip(),
+            ">>>",
+        ]
+    )
 
     if prev_output and last_error:
         prompt.extend(
@@ -1479,21 +1714,38 @@ def _build_inference_prompt(
     prev_output: Optional[str],
     last_error: Optional[str],
     qa_feedback: Optional[Dict[str, Any]],
+    *,
+    pathway_context: Optional[Dict[str, Any]] = None,
+    chunk_section: Optional[str] = None,
+    chunk_relevance_score: Optional[float] = None,
 ) -> str:
-    prompt = [
-        "Use the original description and Stage-1 strict JSON to propose conservative PWML additions.",
-        "Return ONLY the additions JSON per the inference schema.",
-        "",
-        "Original description:",
-        "<<<",
-        input_text.strip(),
-        ">>>",
-        "",
-        "Stage-1 JSON:",
-        "<<<",
-        stage_one_json,
-        ">>>",
-    ]
+    prompt = []
+
+    context_header = format_context_header(pathway_context)
+    if context_header:
+        prompt.extend([context_header, ""])
+
+    if chunk_section or chunk_relevance_score is not None:
+        section_str = chunk_section or "unknown"
+        score_str = f"{chunk_relevance_score:.2f}" if chunk_relevance_score is not None else "n/a"
+        prompt.extend([f"CHUNK CONTEXT: Section={section_str}, Relevance={score_str}", ""])
+
+    prompt.extend(
+        [
+            "Use the original description and Stage-1 strict JSON to propose conservative PWML additions.",
+            "Return ONLY the additions JSON per the inference schema.",
+            "",
+            "Original description:",
+            "<<<",
+            input_text.strip(),
+            ">>>",
+            "",
+            "Stage-1 JSON:",
+            "<<<",
+            stage_one_json,
+            ">>>",
+        ]
+    )
 
     if qa_feedback:
         qa_json = json.dumps(qa_feedback, indent=2, ensure_ascii=False)

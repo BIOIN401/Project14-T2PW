@@ -51,6 +51,7 @@ from pipeline import (
     run_stage_two_with_feedback_loop,
     run_stage_one_with_chunking,
 )
+from preprocessor import preprocess
 from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree
 from pwml_writer import DeterministicPwmlBuilder
 from qa_graph import build_graph, connected_components, degrees, get_entities, node
@@ -75,12 +76,26 @@ def render_attempts(label: str, attempts: List[Dict[str, Any]]) -> None:
 
 def graph_summary(payload: Dict[str, Any]) -> Dict[str, Any]:
     adj, meta = build_graph(payload)
+    entities = get_entities(payload)
+
+    # Add every declared entity as an isolated node if it has no process connections,
+    # so connected_components and degree counts include genuinely disconnected entities.
+    for _name in entities.get("compounds", set()):
+        adj.setdefault(node("compound", _name), set())
+    for _name in entities.get("proteins", set()):
+        adj.setdefault(node("protein", _name), set())
+    for _name in entities.get("nucleic_acids", set()):
+        adj.setdefault(node("nucleic_acid", _name), set())
+    for _name in entities.get("element_collections", set()):
+        adj.setdefault(node("element_collection", _name), set())
+    for _name in entities.get("protein_complexes", set()):
+        adj.setdefault(node("protein_complex", _name), set())
+
     comps = connected_components(adj)
     deg = degrees(adj)
     n_edges = sum(len(v) for v in adj.values()) // 2
     main_size = max((len(c) for c in comps), default=0)
     n_nodes = len(adj)
-    entities = get_entities(payload)
     protein_nodes = [node("protein", name) for name in sorted(entities.get("proteins", set()))]
     proteins_degree0 = sum(1 for n in protein_nodes if deg.get(n, 0) == 0)
     proteins_total = len(protein_nodes)
@@ -1067,9 +1082,9 @@ with st.form("pwml_pipeline"):
         "Stage 2 QA rounds",
         min_value=1,
         max_value=4,
-        value=1,
+        value=2,
         step=1,
-        help="Round 1 is normal inference. Additional rounds include graph QA feedback hints.",
+        help="Round 1 is normal inference. Additional rounds include graph QA feedback hints (disconnected entities, missing links).",
     )
 
     col_tokens_1, col_tokens_2 = st.columns(2)
@@ -1112,11 +1127,16 @@ if submit:
         st.warning("Paste some pathway text first.")
         st.stop()
 
+    # Preprocessing: lightweight context summary to guide extraction and inference
+    with st.spinner("Running preprocessor..."):
+        pathway_context = preprocess(text, temperature=temperature)
+
     # Stage 1: strict extraction with auto-repair
     try:
         with st.spinner("Running Stage 1 extraction..."):
             stage_one, chunk_details = run_stage_one_with_chunking(
                 text,
+                pathway_context=pathway_context,
                 enable_chunking=enable_chunking,
                 chunk_word_limit=int(chunk_size),
                 chunk_overlap=int(chunk_overlap),
@@ -1143,6 +1163,7 @@ if submit:
                     text,
                     stage_one,
                     chunk_details=chunk_details,
+                    pathway_context=pathway_context,
                     qa_rounds=int(infer_rounds),
                     enable_chunking=enable_chunking,
                     chunk_word_limit=int(chunk_size),
@@ -1162,6 +1183,7 @@ if submit:
 
     st.session_state["pipeline_ready"] = True
     st.session_state["run_inference_enabled"] = bool(run_inference)
+    st.session_state["pathway_context"] = pathway_context
     st.session_state["stage_one"] = stage_one
     st.session_state["chunk_details"] = chunk_details
     st.session_state["stage_two"] = stage_two

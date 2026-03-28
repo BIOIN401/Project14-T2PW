@@ -278,7 +278,8 @@ IMPORTANT CONSTRUCTION NOTES
 - proteins vs protein_complexes:
   If text only mentions "glycerol kinase" (single enzyme), put it under proteins and (optionally) create a protein_complex with that single component ONLY if the text explicitly implies a complex. Otherwise do not create a complex.
 - For reactions: only create if at least one input AND one output compound are explicitly mentioned.
-- For transports: only create if movement is explicit (e.g., "transported into", "exported from", "shuttle").
+- For transports: only create if movement is explicit. Movement keywords include: "transported into", "exported from", "imported into", "imported from", "translocated", "shuttle", "moves from", "transferred from", "supplied from ... and imported", or any phrasing that names a source compartment and a destination compartment for a cargo molecule.
+- transports[].transporters[] MAY be empty. If the text says the transporter is "unknown", unnamed, or simply does not name a carrier protein, still create the transport object with transporters: []. Do NOT skip a transport just because no transporter protein is named.
 - For visualizations/edges: keep empty unless the text explicitly mentions figure/diagram/layout metadata.
 
 MODIFIER EXAMPLES (follow these exactly for any pathway)
@@ -340,6 +341,24 @@ Example 3 — transporter protein (generic pattern):
       }
     ]
   KEY POINTS: [TransporterZ] goes in transporters[] on the transport object, NOT as a reactant/product. Applies to any transporter in any pathway.
+
+Example 3b — transport with unknown transporter (MANDATORY pattern — applies whenever movement is described but no carrier protein is named):
+  Text: "[CargoMolecule] is synthesized in [CompartmentA] and imported into [CompartmentB] via unknown transporters."
+  CORRECT output:
+    transports: [
+      {
+        "name": "[CargoMolecule] import into [CompartmentB]",
+        "cargo": "[CargoMolecule]",
+        "from_biological_state": "[CompartmentA] state",
+        "to_biological_state": "[CompartmentB] state",
+        "transporters": [],
+        "evidence": "synthesized in [CompartmentA] and imported into [CompartmentB] via unknown transporters",
+        "class": "transport_reaction",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  KEY POINTS: transporters[] is empty because no carrier is named — this is valid. Do NOT omit the transport object. The movement itself ("imported into") is sufficient justification to create the transport. Applies whenever text uses "unknown transporters", "uncharacterized transporter", "not yet identified", or simply names no carrier protein.
 
 Example 4 — protein complex as catalyst (MANDATORY pattern — applies whenever text names a complex as the catalyst):
   Text: "The [ComplexName] complex catalyzes the conversion of [A] to [B]. The complex is composed of [Sub1], [Sub2], and [Sub3]."
