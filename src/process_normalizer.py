@@ -2764,3 +2764,263 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     dedupe_processes(data, report=report)
     run_strict_post_normalization_gates(data, report=report, enforce_all_proteins_connected=True)
     return data, report
+
+
+# ---------------------------------------------------------------------------
+# Draft-graph normalizer
+# ---------------------------------------------------------------------------
+
+_PROCESS_KINDS = frozenset({
+    "reaction", "transport", "reaction_coupled_transport", "interaction",
+})
+_ENTITY_KINDS = frozenset({
+    "compound", "protein", "protein_complex", "nucleic_acid", "element_collection",
+})
+_COMPOUND_KINDS = frozenset({"compound", "nucleic_acid", "element_collection"})
+_PROTEIN_KINDS = frozenset({"protein", "protein_complex"})
+
+
+def _norm_label(label: str) -> str:
+    """Casefold + strip + collapse whitespace — used as merge key."""
+    return re.sub(r"\s+", " ", (label or "").strip().casefold())
+
+
+def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F821
+    """
+    Normalise a DraftGraph in-place and return it.
+
+    Checks performed
+    ----------------
+    1. Name normalisation  – casefold / strip / collapse whitespace on every node
+       label; nodes whose normalised labels collide are flagged as duplicates.
+    2. Synonym merging     – duplicate entity nodes (same normalised label) are
+       merged; a SAME_AS edge is added and the longer/more-specific display label
+       is kept.
+    3. ID deduplication    – nodes that share the same ``external_id`` field are
+       merged unconditionally.
+    4. Role conflict       – a node that appears as both ``compound`` and
+       ``protein`` kind is flagged in metadata.
+    5. Empty reaction      – reaction/transport/interaction process nodes that have
+       zero reactant *and* zero product edges are flagged for removal.
+    6. Modifier/reactant   – a species that is simultaneously a reactant and a
+       modifier on the same reaction node is flagged.
+
+    The ``draft_graph.metadata["normalization_warnings"]`` list is populated with
+    structured dicts for every issue found.  The graph is modified in-place so
+    that callers can inspect the merged state without an extra copy.
+
+    Returns
+    -------
+    DraftGraph
+        The same object (mutated), for chaining convenience.
+    """
+    # Lazy import to avoid circular dependency at module load time.
+    from draft_graph import DraftNode, DraftEdge, DraftGraph  # type: ignore
+
+    warnings: List[Dict[str, Any]] = []
+    graph = draft_graph
+
+    # ------------------------------------------------------------------
+    # Step 1 & 2: Name normalisation + synonym merge for entity nodes
+    # ------------------------------------------------------------------
+    # Map norm_label -> first DraftNode that owns that label.
+    canonical_entity: Dict[str, DraftNode] = {}
+    # Map old_node_id -> surviving_node_id (identity when no merge occurs).
+    id_remap: Dict[str, str] = {}
+
+    surviving_nodes: List[DraftNode] = []
+
+    for node in graph.nodes:
+        if node.kind in _PROCESS_KINDS:
+            # Process nodes are never merged by name — keep as-is.
+            surviving_nodes.append(node)
+            id_remap[node.id] = node.id
+            continue
+
+        norm = _norm_label(node.label)
+        if not norm:
+            surviving_nodes.append(node)
+            id_remap[node.id] = node.id
+            continue
+
+        existing = canonical_entity.get(norm)
+        if existing is None:
+            canonical_entity[norm] = node
+            surviving_nodes.append(node)
+            id_remap[node.id] = node.id
+        else:
+            # Merge: keep longer/more specific display label.
+            if len(node.label) > len(existing.label):
+                old_label = existing.label
+                existing.label = node.label
+                warnings.append({
+                    "type": "synonym_merge",
+                    "kept_label": node.label,
+                    "dropped_label": old_label,
+                    "surviving_id": existing.id,
+                })
+            else:
+                warnings.append({
+                    "type": "synonym_merge",
+                    "kept_label": existing.label,
+                    "dropped_label": node.label,
+                    "surviving_id": existing.id,
+                })
+            # Add SAME_AS edge (source = dropped id, target = surviving id).
+            graph.edges.append(DraftEdge(
+                source=node.id,
+                target=existing.id,
+                role="SAME_AS",
+                confidence=1.0,
+            ))
+            id_remap[node.id] = existing.id
+
+    graph.nodes = surviving_nodes
+
+    # ------------------------------------------------------------------
+    # Step 3: External-ID deduplication
+    # ------------------------------------------------------------------
+    # DraftNode has no external_id field in the base schema; check metadata
+    # dict on the node if present, or a top-level ``xref`` attribute.
+    # We look for an ``external_id`` attribute gracefully.
+    ext_id_to_node: Dict[str, DraftNode] = {}
+
+    for node in list(graph.nodes):
+        ext_id = getattr(node, "external_id", None)
+        if not ext_id:
+            continue
+        norm_ext = ext_id.strip().lower()
+        existing = ext_id_to_node.get(norm_ext)
+        if existing is None:
+            ext_id_to_node[norm_ext] = node
+        else:
+            warnings.append({
+                "type": "external_id_duplicate",
+                "external_id": ext_id,
+                "merged_id": node.id,
+                "surviving_id": existing.id,
+            })
+            graph.edges.append(DraftEdge(
+                source=node.id,
+                target=existing.id,
+                role="SAME_AS",
+                confidence=1.0,
+            ))
+            id_remap[node.id] = existing.id
+            graph.nodes = [n for n in graph.nodes if n.id != node.id]
+
+    # ------------------------------------------------------------------
+    # Rewrite all edge endpoints through the remap table
+    # ------------------------------------------------------------------
+    def _remap(nid: str) -> str:
+        seen: Set[str] = set()
+        while nid in id_remap and id_remap[nid] != nid:
+            if nid in seen:
+                break
+            seen.add(nid)
+            nid = id_remap[nid]
+        return nid
+
+    for edge in graph.edges:
+        edge.source = _remap(edge.source)
+        edge.target = _remap(edge.target)
+
+    # ------------------------------------------------------------------
+    # Step 4: Role-conflict detection (compound ↔ protein kind clash)
+    # ------------------------------------------------------------------
+    node_by_id: Dict[str, DraftNode] = {n.id: n for n in graph.nodes}
+    for node in graph.nodes:
+        if node.kind not in _ENTITY_KINDS:
+            continue
+        is_compound_kind = node.kind in _COMPOUND_KINDS
+        is_protein_kind = node.kind in _PROTEIN_KINDS
+        # Detect via edges: does the same entity appear in both a compound role
+        # and a protein role in different process contexts?  Easier heuristic:
+        # flag nodes whose kind contradicts how they are used (catalyst/modifier
+        # implies protein; reactant/product can be either, so skip those).
+        catalyst_roles = {"catalyst", "modifier", "transporter"}
+        node_roles: Set[str] = set()
+        for edge in graph.edges:
+            if edge.source == node.id or edge.target == node.id:
+                node_roles.add(edge.role)
+        has_protein_role = bool(node_roles & catalyst_roles)
+        if has_protein_role and is_compound_kind:
+            warnings.append({
+                "type": "role_conflict",
+                "node_id": node.id,
+                "node_label": node.label,
+                "node_kind": node.kind,
+                "conflict": "compound-kind node used in protein role (catalyst/modifier/transporter)",
+            })
+
+    # ------------------------------------------------------------------
+    # Step 5: Empty reaction detection
+    # ------------------------------------------------------------------
+    # Build per-process-node edge inventory.
+    process_reactants: Dict[str, int] = {}
+    process_products: Dict[str, int] = {}
+
+    for edge in graph.edges:
+        if edge.role == "reactant":
+            process_reactants[edge.target] = process_reactants.get(edge.target, 0) + 1
+        elif edge.role == "product":
+            process_products[edge.source] = process_products.get(edge.source, 0) + 1
+
+    for node in graph.nodes:
+        if node.kind not in _PROCESS_KINDS:
+            continue
+        if node.kind == "interaction":
+            continue  # interactions use participant role — different semantics
+        n_reactants = process_reactants.get(node.id, 0)
+        n_products = process_products.get(node.id, 0)
+        if n_reactants == 0 and n_products == 0:
+            warnings.append({
+                "type": "empty_reaction",
+                "node_id": node.id,
+                "node_label": node.label,
+                "node_kind": node.kind,
+                "message": "process node has no reactant or product edges — flagged for removal",
+            })
+
+    # ------------------------------------------------------------------
+    # Step 6: Modifier/reactant conflict on the same reaction
+    # ------------------------------------------------------------------
+    # For each process node, collect entity nodes by role.
+    reaction_entity_roles: Dict[str, Dict[str, Set[str]]] = {}
+    # structure: {process_id: {entity_id: {role1, role2, ...}}}
+
+    for edge in graph.edges:
+        if edge.role in ("reactant", "modifier", "catalyst"):
+            # reactant: entity → process (target is process)
+            # modifier/catalyst: entity → process (target is process)
+            proc_id = edge.target
+            ent_id = edge.source
+            if proc_id not in node_by_id or node_by_id[proc_id].kind not in _PROCESS_KINDS:
+                continue
+            proc_roles = reaction_entity_roles.setdefault(proc_id, {})
+            proc_roles.setdefault(ent_id, set()).add(edge.role)
+
+    for proc_id, entity_roles in reaction_entity_roles.items():
+        for ent_id, roles in entity_roles.items():
+            if "reactant" in roles and ("modifier" in roles or "catalyst" in roles):
+                proc_node = node_by_id.get(proc_id)
+                ent_node = node_by_id.get(ent_id)
+                warnings.append({
+                    "type": "modifier_reactant_conflict",
+                    "process_id": proc_id,
+                    "process_label": proc_node.label if proc_node else proc_id,
+                    "entity_id": ent_id,
+                    "entity_label": ent_node.label if ent_node else ent_id,
+                    "roles": sorted(roles),
+                    "message": "entity appears as both reactant and modifier/catalyst on the same process",
+                })
+
+    # ------------------------------------------------------------------
+    # Persist warnings + refresh counts
+    # ------------------------------------------------------------------
+    graph.metadata.setdefault("normalization_warnings", [])
+    graph.metadata["normalization_warnings"].extend(warnings)
+    graph.metadata["node_count"] = len(graph.nodes)
+    graph.metadata["edge_count"] = len(graph.edges)
+
+    return graph

@@ -47,6 +47,7 @@ from process_normalizer import (
 from pipeline import (
     PipelineFailure,
     build_qa_feedback,
+    build_and_save_draft_graph,
     merge_additions,
     run_stage_two_with_feedback_loop,
     run_stage_one_with_chunking,
@@ -1181,6 +1182,9 @@ if submit:
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
         final_payload = merge_additions(stage_one, stage_two if isinstance(stage_two, dict) else {})
 
+    draft_graph = build_and_save_draft_graph(final_payload)
+    st.session_state["draft_graph"] = draft_graph.to_dict()
+
     st.session_state["pipeline_ready"] = True
     st.session_state["run_inference_enabled"] = bool(run_inference)
     st.session_state["pathway_context"] = pathway_context
@@ -1268,6 +1272,36 @@ if st.session_state.get("pipeline_ready"):
         file_name="pwml_pipeline_output.json",
         mime="application/json",
     )
+
+    st.subheader("Draft Graph")
+    draft_graph_dict = st.session_state.get("draft_graph", {})
+    if draft_graph_dict:
+        dg_meta = draft_graph_dict.get("metadata", {})
+        dg_nodes = draft_graph_dict.get("nodes", [])
+        dg_edges = draft_graph_dict.get("edges", [])
+        orphan_ids = {n["id"] for n in dg_nodes} - {e["source"] for e in dg_edges} - {e["target"] for e in dg_edges}
+
+        dg_col1, dg_col2, dg_col3 = st.columns(3)
+        dg_col1.metric("Nodes", len(dg_nodes))
+        dg_col2.metric("Edges", len(dg_edges))
+        dg_col3.metric("Orphan nodes", len(orphan_ids))
+
+        if orphan_ids:
+            st.caption("Orphan nodes (no edges): " + ", ".join(sorted(orphan_ids)))
+
+        with st.expander("Nodes", expanded=False):
+            st.dataframe(dg_nodes)
+        with st.expander("Edges", expanded=False):
+            st.dataframe(dg_edges)
+        with st.expander("Raw draft_graph.json", expanded=False):
+            st.json(draft_graph_dict)
+
+        st.download_button(
+            "Download draft_graph.json",
+            json.dumps(draft_graph_dict, indent=2, ensure_ascii=False),
+            file_name="draft_graph.json",
+            mime="application/json",
+        )
 
     st.subheader("Post-pipeline SBML export")
     post_col_a, post_col_b = st.columns(2)

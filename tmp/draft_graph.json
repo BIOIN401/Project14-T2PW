@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "pathway_name": "",
+    "organism": "",
+    "node_count": 9,
+    "edge_count": 7
+  },
+  "nodes": [
+    {
+      "id": "compound:glucose",
+      "label": "glucose",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "extracellular state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:atp",
+      "label": "ATP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:glucose-6-phosphate",
+      "label": "glucose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:adp",
+      "label": "ADP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-6-phosphate",
+      "label": "fructose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:glut1",
+      "label": "GLUT1",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:hexokinase",
+      "label": "hexokinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:hexokinase reaction",
+      "label": "hexokinase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:glut1-mediated glucose transport",
+      "label": "GLUT1-mediated glucose transport",
+      "kind": "transport",
+      "cls": "",
+      "compartment": "extracellular state → cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    }
+  ],
+  "edges": [
+    {
+      "source": "compound:glucose",
+      "target": "reaction:hexokinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:atp",
+      "target": "reaction:hexokinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:glucose-6-phosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:adp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:hexokinase",
+      "target": "reaction:hexokinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:glucose",
+      "target": "transport:glut1-mediated glucose transport",
+      "role": "cargo",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:glut1",
+      "target": "transport:glut1-mediated glucose transport",
+      "role": "transporter",
+      "confidence": 1.0
+    }
+  ]
+}

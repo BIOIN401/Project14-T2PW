@@ -103,7 +103,7 @@ def build_graph(extracted: Dict[str, Any]) -> Tuple[Dict[str, Set[str]], Dict[st
     def resolve_actor_name(row: Any) -> str:
         if not isinstance(row, dict):
             return ""
-        for key in ["protein", "protein_complex", "name"]:
+        for key in ["protein", "protein_complex", "entity", "name"]:
             candidate = row.get(key, "")
             if isinstance(candidate, str) and candidate.strip():
                 return candidate.strip()

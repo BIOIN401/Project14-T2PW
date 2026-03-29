@@ -8,6 +8,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from llm_client import chat
 from preprocessor import format_context_header
 from qa_graph import build_graph, connected_components, degrees, get_entities
+from draft_graph import DraftGraph, build_draft_graph
 
 BASE_DIR = Path(__file__).resolve().parent
 PROMPTS_DIR = BASE_DIR / "prompts"
@@ -399,6 +400,63 @@ def run_stage_two_with_feedback_loop(
     return merge_inference_outputs(all_outputs), all_chunk_results, round_summaries
 
 
+def _dedup_element_locations(locations: Dict[str, Any]) -> None:
+    """
+    Deduplicate location entries in-place by (entity, biological_state) key.
+    When duplicates exist, keeps the entry with the longest evidence string.
+    """
+    for key, entity_field in [
+        ("compound_locations", "compound"),
+        ("element_collection_locations", "element_collection"),
+        ("nucleic_acid_locations", "nucleic_acid"),
+        ("protein_locations", "protein"),
+    ]:
+        items = locations.get(key)
+        if not isinstance(items, list):
+            continue
+        seen: Dict[tuple, int] = {}
+        deduped: List[Dict[str, Any]] = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            entity = (item.get(entity_field) or "").strip().lower()
+            state = (item.get("biological_state") or "").strip().lower()
+            dedup_key = (entity, state)
+            if dedup_key in seen:
+                existing_idx = seen[dedup_key]
+                if len(item.get("evidence") or "") > len(deduped[existing_idx].get("evidence") or ""):
+                    deduped[existing_idx] = item
+            else:
+                seen[dedup_key] = len(deduped)
+                deduped.append(item)
+        locations[key] = deduped
+
+
+def _normalize_reaction_actors(payload: Dict[str, Any]) -> None:
+    """
+    Post-merge normalisation: for every reaction, fold any remaining raw
+    'modifiers' list into the canonical 'enzymes' list, then drop 'modifiers'.
+    Also deduplicates enzymes by protein name so the same enzyme with different
+    evidence strings does not appear multiple times.
+    """
+    for reaction in _safe_list(
+        (payload.get("processes") or {}).get("reactions", [])
+    ):
+        if not isinstance(reaction, dict):
+            continue
+        mods = reaction.get("modifiers")
+        if isinstance(mods, list) and mods:
+            converted = _clean_enzymes(mods)
+            if converted:
+                reaction.setdefault("enzymes", [])
+                _extend_unique(reaction["enzymes"], converted)
+        reaction.pop("modifiers", None)
+        # Deduplicate enzymes by protein name (keeps first occurrence).
+        existing = reaction.get("enzymes")
+        if isinstance(existing, list) and len(existing) > 1:
+            reaction["enzymes"] = _clean_enzymes(existing)
+
+
 def merge_additions(
     base: Dict[str, Any],
     inference_additions: Dict[str, Any],
@@ -447,8 +505,43 @@ def merge_additions(
             _extend_unique(merged["element_locations"][key], items)
 
     _inject_name_based_modifiers(merged)
+    _normalize_reaction_actors(merged)
+    if isinstance(merged.get("element_locations"), dict):
+        _dedup_element_locations(merged["element_locations"])
 
     return merged
+
+
+def build_and_save_draft_graph(
+    merged_json: Dict[str, Any],
+    *,
+    output_path: Optional[Path] = None,
+) -> DraftGraph:
+    """
+    Build a DraftGraph from the merged Stage-1 + Stage-2 JSON and write it to
+    ``tmp/draft_graph.json`` (or *output_path* if provided).
+
+    Returns the DraftGraph so callers can inspect it without re-parsing.
+    """
+    graph = build_draft_graph(merged_json)
+
+    if output_path is None:
+        tmp_dir = BASE_DIR.parent / "tmp"
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        output_path = tmp_dir / "draft_graph.json"
+
+    output_path.write_text(
+        json.dumps(graph.to_dict(), indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    logger.info(
+        "Draft graph saved to %s (%d nodes, %d edges, %d orphans)",
+        output_path,
+        len(graph.nodes),
+        len(graph.edges),
+        len(graph.orphan_nodes()),
+    )
+    return graph
 
 
 def merge_inference_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -875,12 +968,22 @@ def _clean_element_locations(locations: Dict[str, Any]) -> Dict[str, Any]:
 
 def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
     cleaned: List[Dict[str, Any]] = []
+    seen_names: set = set()
     for item in _safe_list(enzymes):
         if not isinstance(item, dict):
             continue
         entry: Dict[str, Any] = {}
-        protein_complex = (item.get("protein_complex") or "").strip()
+        # Accept both old "protein_complex" key and new "entity" key from modifier schema.
+        protein_complex = (
+            item.get("protein_complex")
+            or item.get("entity")
+            or ""
+        ).strip()
         if protein_complex:
+            norm = _normalize_name(protein_complex)
+            if norm in seen_names:
+                continue
+            seen_names.add(norm)
             entry["protein_complex"] = protein_complex
         evidence = (item.get("evidence") or "").strip()
         if evidence:
@@ -944,7 +1047,9 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         name = (item.get("name") or "").strip()
         if name:
             entry["name"] = name
-        enzymes = _clean_enzymes(item.get("enzymes"))
+        # Merge old "enzymes" list and new "modifiers" list into a single enzymes list.
+        raw_enzymes = _safe_list(item.get("enzymes")) + _safe_list(item.get("modifiers"))
+        enzymes = _clean_enzymes(raw_enzymes)
         if enzymes:
             entry["enzymes"] = enzymes
         biological_state = (item.get("biological_state") or "").strip()
@@ -1339,12 +1444,23 @@ def _merge_reactions(target: List[Any], new_items: List[Any]) -> None:
             continue
         key = _reaction_io_key(new_r)
         if key and key in target_keys:
-            # Patch modifiers into the existing reaction
+            # Patch the existing reaction with new information from the addition.
             existing = target[target_keys[key]]
+            # Merge enzymes (canonical format).
+            new_enzymes = new_r.get("enzymes")
+            if isinstance(new_enzymes, list) and new_enzymes:
+                existing.setdefault("enzymes", [])
+                _extend_unique(existing["enzymes"], new_enzymes)
+            # Merge modifiers (raw LLM format — kept for completeness until normalised).
             new_modifiers = new_r.get("modifiers")
             if isinstance(new_modifiers, list) and new_modifiers:
                 existing.setdefault("modifiers", [])
                 _extend_unique(existing["modifiers"], new_modifiers)
+            # Fill in missing biological_state and evidence from the addition.
+            if not existing.get("biological_state") and new_r.get("biological_state"):
+                existing["biological_state"] = new_r["biological_state"]
+            if not existing.get("evidence") and new_r.get("evidence"):
+                existing["evidence"] = new_r["evidence"]
         else:
             # Genuinely new reaction — append if not an exact duplicate
             sig = json.dumps(new_r, sort_keys=True)

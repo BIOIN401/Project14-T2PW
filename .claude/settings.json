@@ -3,7 +3,9 @@
     "allow": [
       "Bash(python src/build_pathwhiz_id_db.py --pwml-dir . --out pathwhiz_id_db.json)",
       "Bash(python -c \":*)",
-      "Bash(python3 -c \":*)"
+      "Bash(python3 -c \":*)",
+      "Bash(python -c \"from src.process_normalizer import normalize_draft_graph; print\\(''import OK''\\)\")",
+      "Bash(python -:*)"
     ]
   }
 }
