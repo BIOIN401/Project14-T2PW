@@ -8,7 +8,7 @@ import shutil
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 from uuid import uuid4
 from dotenv import load_dotenv
 from pathlib import Path
@@ -342,6 +342,7 @@ def run_post_pipeline_sbml_artifacts(
     use_gap_resolver: bool,
     use_llm_gap_resolver: bool,
     gap_resolver_max_items: int,
+    qa_report: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     cache_path = Path(mapping_cache_path)
@@ -931,6 +932,7 @@ def run_post_pipeline_sbml_artifacts(
                 enrichment_report_path,
                 cache_path=enrichment_cache_path,
                 dump_path=enrichment_dump_path,
+                qa_report=qa_report,
             )
             sbml_input_path = enriched_json
         except Exception as exc:
@@ -1182,8 +1184,9 @@ if submit:
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
         final_payload = merge_additions(stage_one, stage_two if isinstance(stage_two, dict) else {})
 
-    draft_graph = build_and_save_draft_graph(final_payload)
+    draft_graph, qa_report = build_and_save_draft_graph(final_payload)
     st.session_state["draft_graph"] = draft_graph.to_dict()
+    st.session_state["qa_report"] = qa_report
 
     st.session_state["pipeline_ready"] = True
     st.session_state["run_inference_enabled"] = bool(run_inference)
@@ -1302,6 +1305,62 @@ if st.session_state.get("pipeline_ready"):
             file_name="draft_graph.json",
             mime="application/json",
         )
+
+    # ------------------------------------------------------------------ QA Report
+    st.subheader("QA Report")
+    qa_report_data = st.session_state.get("qa_report", {})
+    if qa_report_data:
+        qa_summary = qa_report_data.get("summary", {})
+        qa_flags = qa_report_data.get("flags", {})
+
+        qr_col1, qr_col2, qr_col3 = st.columns(3)
+        qr_col1.metric("Total species", qa_summary.get("total_species", 0))
+        qr_col2.metric("Total reactions", qa_summary.get("total_reactions", 0))
+        qr_col3.metric(
+            "Completeness score",
+            f"{qa_summary.get('completeness_score', 0.0):.3f}",
+            help="1.0 = no structural issues detected. Lower = more flags.",
+        )
+
+        FLAG_LABELS: List[Tuple[str, str]] = [
+            ("missing_compartments", "Missing compartments"),
+            ("missing_modifiers", "Missing modifiers / enzymes"),
+            ("possible_complexes", "Possible complexes"),
+            ("transport_like_reactions", "Transport-like reactions"),
+            ("orphan_nodes", "Orphan nodes (degree 0)"),
+            ("missing_ids", "Missing external IDs"),
+            ("empty_reactions", "Empty reactions"),
+            ("duplicate_species", "Duplicate species"),
+            ("inconsistent_class", "Inconsistent entity class"),
+        ]
+
+        import pandas as pd  # local import — pandas is already a streamlit dep
+
+        for flag_key, flag_label in FLAG_LABELS:
+            items = qa_flags.get(flag_key, [])
+            if not items:
+                continue
+            with st.expander(f"{flag_label} ({len(items)})", expanded=False):
+                try:
+                    st.dataframe(pd.DataFrame(items), use_container_width=True)
+                except Exception:
+                    st.json(items)
+
+        empty_flag_keys = [k for k in qa_flags if not qa_flags[k]]
+        if empty_flag_keys:
+            st.caption("No issues detected for: " + ", ".join(
+                lbl for k, lbl in FLAG_LABELS if k in empty_flag_keys
+            ))
+
+        st.download_button(
+            "Download qa_report.json",
+            json.dumps(qa_report_data, indent=2, ensure_ascii=False),
+            file_name="qa_report.json",
+            mime="application/json",
+            key="dl_qa_report",
+        )
+    else:
+        st.info("Run the pipeline to generate a QA report.")
 
     st.subheader("Post-pipeline SBML export")
     post_col_a, post_col_b = st.columns(2)
@@ -1454,6 +1513,7 @@ if st.session_state.get("pipeline_ready"):
                     use_gap_resolver=bool(use_gap_resolver),
                     use_llm_gap_resolver=bool(use_llm_gap_resolver),
                     gap_resolver_max_items=int(gap_resolver_max_items),
+                    qa_report=st.session_state.get("qa_report"),
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
             if bool(_safe_dict(artifacts).get("gate_failed", False)):

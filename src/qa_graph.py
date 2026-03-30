@@ -259,6 +259,272 @@ def connected_components(adj: Dict[str, Set[str]]) -> List[Set[str]]:
 def degrees(adj: Dict[str, Set[str]]) -> Dict[str, int]:
     return {k: len(v) for k, v in adj.items()}
 
+def generate_qa_report(draft_graph: Any, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Generate a machine-readable QA / missingness report from a DraftGraph and raw payload.
+
+    Parameters
+    ----------
+    draft_graph:
+        A DraftGraph object (from draft_graph.py). Duck-typed: expects .nodes, .edges,
+        and an .orphan_nodes() method.
+    payload:
+        The merged Stage-1 + Stage-2 JSON dict.
+
+    Returns
+    -------
+    dict with keys:
+        summary  — total_species, total_reactions, completeness_score
+        flags    — missing_compartments, missing_modifiers, possible_complexes,
+                   transport_like_reactions, orphan_nodes, missing_ids,
+                   empty_reactions, duplicate_species, inconsistent_class
+    """
+    ENTITY_KINDS = {"compound", "protein", "protein_complex", "nucleic_acid", "element_collection"}
+
+    MODIFIER_TRIGGERS = re.compile(
+        r"\b(catalysis|catalytic|enzyme[-\s]mediated|enzymatic|phosphorylation|kinase|ase)\b",
+        re.IGNORECASE,
+    )
+    TRANSPORT_RE = re.compile(
+        r"\b(import|export|transport|shuttle|translocation|trafficking)\b",
+        re.IGNORECASE,
+    )
+    COMPLEX_RE = re.compile(r"\b(complex|subunit|hetero|homo)\b|:", re.IGNORECASE)
+    KNOWN_COFACTORS = {
+        "atp", "adp", "amp", "nadh", "nadph", "nad+", "nadp+", "fadh2", "fad",
+        "coenzyme a", "coa", "acetyl-coa", "gtp", "gdp", "h2o", "water", "oxygen",
+    }
+
+    flags: Dict[str, List[Any]] = {
+        "missing_compartments": [],
+        "missing_modifiers": [],
+        "possible_complexes": [],
+        "transport_like_reactions": [],
+        "orphan_nodes": [],
+        "missing_ids": [],
+        "empty_reactions": [],
+        "duplicate_species": [],
+        "inconsistent_class": [],
+    }
+
+    # Build node_id -> (kind, label) lookup
+    node_kind_map: Dict[str, Tuple[str, str]] = {
+        n.id: (n.kind, n.label) for n in draft_graph.nodes
+    }
+
+    # --- missing_compartments ---
+    for n in draft_graph.nodes:
+        if n.kind in ENTITY_KINDS and not n.compartment:
+            flags["missing_compartments"].append({
+                "entity": n.label,
+                "reason": "no subcellular location recorded",
+            })
+
+    # --- Build edge indexes ---
+    reaction_modifier_targets: Set[str] = set()
+    rxn_inputs: Dict[str, Set[str]] = defaultdict(set)   # reaction_id -> entity_ids (reactants)
+    rxn_outputs: Dict[str, Set[str]] = defaultdict(set)  # reaction_id -> entity_ids (products)
+
+    for e in draft_graph.edges:
+        if e.role in ("catalyst", "modifier"):
+            reaction_modifier_targets.add(e.target)
+        if e.role == "reactant":
+            rxn_inputs[e.target].add(e.source)
+        if e.role == "product":
+            rxn_outputs[e.source].add(e.target)
+
+    # --- missing_modifiers ---
+    for n in draft_graph.nodes:
+        if n.kind == "reaction" and n.id not in reaction_modifier_targets:
+            name_triggers = bool(MODIFIER_TRIGGERS.search(n.label))
+            inputs_labels = {
+                node_kind_map.get(s, ("", s))[1].lower()
+                for s in rxn_inputs.get(n.id, set())
+            }
+            has_cofactor = bool(inputs_labels & KNOWN_COFACTORS)
+            if name_triggers or has_cofactor:
+                reasons: List[str] = []
+                if name_triggers:
+                    reasons.append("reaction name implies enzymatic catalysis")
+                if has_cofactor:
+                    reasons.append("reactant list includes known cofactors")
+                flags["missing_modifiers"].append({
+                    "reaction": n.label,
+                    "reason": "; ".join(reasons),
+                })
+
+    # --- possible_complexes ---
+    for n in draft_graph.nodes:
+        if n.kind in ENTITY_KINDS and COMPLEX_RE.search(n.label):
+            flags["possible_complexes"].append({
+                "entity": n.label,
+                "reason": "name suggests a complex or subunit",
+            })
+
+    # --- transport_like_reactions ---
+    for n in draft_graph.nodes:
+        if n.kind == "reaction":
+            overlap = rxn_inputs.get(n.id, set()) & rxn_outputs.get(n.id, set())
+            name_match = TRANSPORT_RE.search(n.label)
+            reasons = []
+            if overlap:
+                reasons.append("same species appear as both input and output")
+            if name_match:
+                reasons.append("reaction name implies transport")
+            if reasons:
+                flags["transport_like_reactions"].append({
+                    "reaction": n.label,
+                    "reason": "; ".join(reasons),
+                })
+
+    # --- orphan_nodes ---
+    for n in draft_graph.orphan_nodes():
+        flags["orphan_nodes"].append({"entity": n.label, "degree": 0})
+
+    # --- missing_ids ---
+    entities_raw = payload.get("entities") or {}
+    ENTITY_LISTS = [
+        ("compounds", "compound"),
+        ("proteins", "protein"),
+        ("protein_complexes", "protein_complex"),
+        ("nucleic_acids", "nucleic_acid"),
+    ]
+    for list_key, kind in ENTITY_LISTS:
+        for item in safe_list(entities_raw.get(list_key, [])):
+            if not isinstance(item, dict):
+                continue
+            name = (item.get("name") or "").strip()
+            if not name:
+                continue
+            mapped = item.get("mapped_ids")
+            if not mapped or not isinstance(mapped, dict):
+                flags["missing_ids"].append({"entity": name, "type": kind})
+            elif not any(v for v in mapped.values() if v):
+                flags["missing_ids"].append({"entity": name, "type": kind})
+
+    # --- empty_reactions ---
+    processes_raw = payload.get("processes") or {}
+    for r in safe_list(processes_raw.get("reactions", [])):
+        if not isinstance(r, dict):
+            continue
+        name = (r.get("name") or "").strip() or "unnamed"
+        inputs = [x for x in safe_list(r.get("inputs", [])) if isinstance(x, str) and x.strip()]
+        outputs = [x for x in safe_list(r.get("outputs", [])) if isinstance(x, str) and x.strip()]
+        if not inputs or not outputs:
+            flags["empty_reactions"].append({"reaction": name})
+
+    # --- duplicate_species ---
+    label_to_entries: Dict[str, List[str]] = defaultdict(list)
+    ext_id_to_names: Dict[str, List[str]] = defaultdict(list)
+    seen_dup_pairs: Set[Tuple[str, str]] = set()
+
+    for n in draft_graph.nodes:
+        if n.kind in ENTITY_KINDS:
+            norm = re.sub(r"[^a-z0-9]", "", n.label.lower())
+            if norm:
+                label_to_entries[norm].append(n.label)
+
+    for labels in label_to_entries.values():
+        if len(labels) > 1:
+            for i in range(len(labels)):
+                for j in range(i + 1, len(labels)):
+                    pair = (min(labels[i], labels[j]), max(labels[i], labels[j]))
+                    if pair not in seen_dup_pairs:
+                        seen_dup_pairs.add(pair)
+                        flags["duplicate_species"].append({
+                            "entity_a": labels[i],
+                            "entity_b": labels[j],
+                            "reason": "normalized label collision",
+                        })
+
+    for list_key, _ in ENTITY_LISTS:
+        for item in safe_list(entities_raw.get(list_key, [])):
+            if not isinstance(item, dict):
+                continue
+            name = (item.get("name") or "").strip()
+            if not name:
+                continue
+            mapped = item.get("mapped_ids") or {}
+            if isinstance(mapped, dict):
+                for id_type, id_val in mapped.items():
+                    if id_val and isinstance(id_val, str) and id_val.strip():
+                        ext_id_to_names[f"{id_type}:{id_val.strip()}"].append(name)
+
+    for key, names in ext_id_to_names.items():
+        unique_names = list(dict.fromkeys(names))
+        if len(unique_names) > 1:
+            for i in range(len(unique_names)):
+                for j in range(i + 1, len(unique_names)):
+                    pair = (min(unique_names[i], unique_names[j]), max(unique_names[i], unique_names[j]))
+                    if pair not in seen_dup_pairs:
+                        seen_dup_pairs.add(pair)
+                        flags["duplicate_species"].append({
+                            "entity_a": unique_names[i],
+                            "entity_b": unique_names[j],
+                            "reason": f"shared external ID: {key}",
+                        })
+
+    # --- inconsistent_class ---
+    seen_inconsistent: Set[Tuple[str, ...]] = set()
+    for e in draft_graph.edges:
+        src_kind, src_label = node_kind_map.get(e.source, ("", e.source))
+        tgt_kind, tgt_label = node_kind_map.get(e.target, ("", e.target))
+
+        if e.role in ("catalyst", "modifier") and src_kind == "compound":
+            key_ic = (src_label, e.role)
+            if key_ic not in seen_inconsistent:
+                seen_inconsistent.add(key_ic)
+                flags["inconsistent_class"].append({
+                    "entity": src_label,
+                    "assigned_class": "compound",
+                    "conflict": f"compound used as {e.role} in reaction '{tgt_label}'",
+                })
+
+        if e.role == "reactant" and src_kind == "protein":
+            key_ic = (src_label, tgt_label, "reactant")
+            if key_ic not in seen_inconsistent:
+                seen_inconsistent.add(key_ic)
+                flags["inconsistent_class"].append({
+                    "entity": src_label,
+                    "assigned_class": "protein",
+                    "conflict": f"protein listed as reactant in reaction '{tgt_label}'",
+                })
+
+        if e.role == "product" and tgt_kind == "protein":
+            key_ic = (tgt_label, src_label, "product")
+            if key_ic not in seen_inconsistent:
+                seen_inconsistent.add(key_ic)
+                flags["inconsistent_class"].append({
+                    "entity": tgt_label,
+                    "assigned_class": "protein",
+                    "conflict": f"protein listed as product in reaction '{src_label}'",
+                })
+
+    # --- Summary & completeness score ---
+    total_species = sum(1 for n in draft_graph.nodes if n.kind in ENTITY_KINDS)
+    total_reactions = sum(1 for n in draft_graph.nodes if n.kind == "reaction")
+
+    weighted_issues = (
+        len(flags["missing_compartments"])
+        + len(flags["missing_modifiers"])
+        + len(flags["orphan_nodes"])
+        + len(flags["missing_ids"])
+        + len(flags["empty_reactions"])
+        + len(flags["inconsistent_class"])
+    )
+    denominator = max(1, total_species + total_reactions)
+    completeness_score = round(max(0.0, 1.0 - weighted_issues / denominator), 3)
+
+    return {
+        "summary": {
+            "total_species": total_species,
+            "total_reactions": total_reactions,
+            "completeness_score": completeness_score,
+        },
+        "flags": flags,
+    }
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python qa_graph.py <extracted.json> [qa_report.json]")

@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from llm_client import chat
 from preprocessor import format_context_header
-from qa_graph import build_graph, connected_components, degrees, get_entities
+from qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from draft_graph import DraftGraph, build_draft_graph
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -516,12 +516,19 @@ def build_and_save_draft_graph(
     merged_json: Dict[str, Any],
     *,
     output_path: Optional[Path] = None,
-) -> DraftGraph:
+) -> Tuple[DraftGraph, Dict[str, Any]]:
     """
     Build a DraftGraph from the merged Stage-1 + Stage-2 JSON and write it to
     ``tmp/draft_graph.json`` (or *output_path* if provided).
 
-    Returns the DraftGraph so callers can inspect it without re-parsing.
+    Also generates a QA / missingness report and saves it to ``tmp/qa_report.json``
+    next to the draft graph.
+
+    Returns
+    -------
+    (graph, qa_report)
+        graph     — the DraftGraph object
+        qa_report — the dict produced by generate_qa_report()
     """
     graph = build_draft_graph(merged_json)
 
@@ -541,7 +548,21 @@ def build_and_save_draft_graph(
         len(graph.edges),
         len(graph.orphan_nodes()),
     )
-    return graph
+
+    qa_report = generate_qa_report(graph, merged_json)
+    qa_report_path = output_path.parent / "qa_report.json"
+    qa_report_path.write_text(
+        json.dumps(qa_report, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    logger.info(
+        "QA report saved to %s (completeness=%.3f, %d flag categories)",
+        qa_report_path,
+        qa_report["summary"]["completeness_score"],
+        len(qa_report["flags"]),
+    )
+
+    return graph, qa_report
 
 
 def merge_inference_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:

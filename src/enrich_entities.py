@@ -1235,6 +1235,7 @@ def run_enrichment(
     *,
     cache_path: Path,
     dump_path: Optional[Path] = None,
+    qa_report: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -1252,6 +1253,12 @@ def run_enrichment(
         **_safe_dict(report.get("artifacts")),
         "enrichment_dump_path": str(resolved_dump_path),
     }
+    if qa_report is not None:
+        report["qa_report_summary"] = _safe_dict(qa_report.get("summary"))
+        report["qa_flags_count"] = {
+            flag_name: len(flag_list)
+            for flag_name, flag_list in _safe_dict(qa_report.get("flags")).items()
+        }
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     return report
 
