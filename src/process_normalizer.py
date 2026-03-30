@@ -2880,16 +2880,17 @@ def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F
     # ------------------------------------------------------------------
     # Step 3: External-ID deduplication
     # ------------------------------------------------------------------
-    # DraftNode has no external_id field in the base schema; check metadata
-    # dict on the node if present, or a top-level ``xref`` attribute.
-    # We look for an ``external_id`` attribute gracefully.
+    # DraftNode.cls holds the entity class field (e.g. "CHEBI:15422") — the
+    # only per-node external identifier present in the current schema.  Nodes
+    # with an empty cls are skipped; those with identical non-empty cls values
+    # are merged unconditionally.
     ext_id_to_node: Dict[str, DraftNode] = {}
 
     for node in list(graph.nodes):
-        ext_id = getattr(node, "external_id", None)
+        ext_id = node.cls.strip() if node.cls else ""
         if not ext_id:
             continue
-        norm_ext = ext_id.strip().lower()
+        norm_ext = ext_id.lower()
         existing = ext_id_to_node.get(norm_ext)
         if existing is None:
             ext_id_to_node[norm_ext] = node
@@ -2922,6 +2923,8 @@ def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F
         return nid
 
     for edge in graph.edges:
+        if edge.role == "SAME_AS":
+            continue  # preserve original dropped→surviving IDs; remapping would create self-loops
         edge.source = _remap(edge.source)
         edge.target = _remap(edge.target)
 
@@ -2943,7 +2946,10 @@ def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F
         for edge in graph.edges:
             if edge.source == node.id or edge.target == node.id:
                 node_roles.add(edge.role)
+        compound_only_roles = {"reactant", "product", "cargo", "participant"}
         has_protein_role = bool(node_roles & catalyst_roles)
+        has_only_compound_roles = bool(node_roles) and node_roles.issubset(compound_only_roles)
+
         if has_protein_role and is_compound_kind:
             warnings.append({
                 "type": "role_conflict",
@@ -2952,34 +2958,59 @@ def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F
                 "node_kind": node.kind,
                 "conflict": "compound-kind node used in protein role (catalyst/modifier/transporter)",
             })
+        elif has_only_compound_roles and is_protein_kind:
+            warnings.append({
+                "type": "role_conflict",
+                "node_id": node.id,
+                "node_label": node.label,
+                "node_kind": node.kind,
+                "conflict": "protein-kind node appears only in compound roles (reactant/product) — possible kind mismatch",
+            })
 
     # ------------------------------------------------------------------
     # Step 5: Empty reaction detection
     # ------------------------------------------------------------------
-    # Build per-process-node edge inventory.
-    process_reactants: Dict[str, int] = {}
-    process_products: Dict[str, int] = {}
+    # Each process kind has different "meaningful" roles:
+    #   reaction                  → reactant / product
+    #   transport                 → cargo / transporter
+    #   reaction_coupled_transport→ participant / catalyst
+    #   interaction               → participant  (skipped — different semantics)
+    _meaningful_roles_by_kind: Dict[str, Set[str]] = {
+        "reaction": {"reactant", "product"},
+        "transport": {"cargo", "transporter"},
+        "reaction_coupled_transport": {"participant", "catalyst"},
+    }
 
+    # Count meaningful edges per process node.
+    process_edge_counts: Dict[str, int] = {}
     for edge in graph.edges:
-        if edge.role == "reactant":
-            process_reactants[edge.target] = process_reactants.get(edge.target, 0) + 1
-        elif edge.role == "product":
-            process_products[edge.source] = process_products.get(edge.source, 0) + 1
+        proc_id: Optional[str] = None
+        kind_hint: Optional[str] = None
+        # Determine which endpoint (if any) is a process node.
+        src_node = node_by_id.get(edge.source)
+        tgt_node = node_by_id.get(edge.target)
+        if src_node and src_node.kind in _meaningful_roles_by_kind:
+            proc_id = src_node.id
+            kind_hint = src_node.kind
+        elif tgt_node and tgt_node.kind in _meaningful_roles_by_kind:
+            proc_id = tgt_node.id
+            kind_hint = tgt_node.kind
+        if proc_id and kind_hint:
+            if edge.role in _meaningful_roles_by_kind[kind_hint]:
+                process_edge_counts[proc_id] = process_edge_counts.get(proc_id, 0) + 1
 
     for node in graph.nodes:
         if node.kind not in _PROCESS_KINDS:
             continue
         if node.kind == "interaction":
             continue  # interactions use participant role — different semantics
-        n_reactants = process_reactants.get(node.id, 0)
-        n_products = process_products.get(node.id, 0)
-        if n_reactants == 0 and n_products == 0:
+        if process_edge_counts.get(node.id, 0) == 0:
             warnings.append({
                 "type": "empty_reaction",
                 "node_id": node.id,
                 "node_label": node.label,
                 "node_kind": node.kind,
-                "message": "process node has no reactant or product edges — flagged for removal",
+                "message": "process node has no meaningful edges — flagged for removal",
             })
 
     # ------------------------------------------------------------------
