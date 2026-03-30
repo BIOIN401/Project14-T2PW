@@ -5,7 +5,7 @@ import json
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 
 def _decode_pointer(path: str) -> List[str]:
@@ -216,6 +216,37 @@ def _is_safe_core_remove(op: Dict[str, Any], source_payload: Dict[str, Any]) -> 
     return False
 
 
+def _normalize_patch_op(op: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalise enrichment-format patches to internal format.
+
+    Accepts:
+    - ``action`` as an alias for ``op``
+    - ``reason`` as an alias for ``evidence``
+    Returns a shallow copy with both aliases resolved.
+    """
+    if not isinstance(op, dict):
+        return op
+    normalized = dict(op)
+    if "action" in normalized and "op" not in normalized:
+        normalized["op"] = normalized.pop("action")
+    if "reason" in normalized and "evidence" not in normalized:
+        normalized["evidence"] = normalized.pop("reason")
+    return normalized
+
+
+def _entity_path_from_mapped_ids_patch(path: str) -> Optional[str]:
+    """Given a path like /entities/compounds/0/mapped_ids/chebi,
+    return the parent entity path /entities/compounds/0.
+
+    Returns None if the path does not match the expected pattern.
+    """
+    match = re.match(
+        r"^(/entities/(?:compounds|proteins|protein_complexes|nucleic_acids)/\d+)/mapped_ids/",
+        path,
+    )
+    return match.group(1) if match else None
+
+
 def _should_accept(op: Dict[str, Any], source_payload: Dict[str, Any]) -> Tuple[bool, str]:
     action = str(op.get("op", "")).lower()
     path = str(op.get("path", ""))
@@ -247,10 +278,12 @@ def apply_patch_with_policy(
     accepted: List[Dict[str, Any]] = []
     rejected: List[Dict[str, Any]] = []
 
-    for idx, op in enumerate(patch_ops):
-        if not isinstance(op, dict):
-            rejected.append({"index": idx, "reason": "Patch op is not an object.", "op": op})
+    for idx, raw_op in enumerate(patch_ops):
+        if not isinstance(raw_op, dict):
+            rejected.append({"index": idx, "reason": "Patch op is not an object.", "op": raw_op})
             continue
+        # Accept both the internal format (op/evidence) and the enrichment format (action/reason)
+        op = _normalize_patch_op(raw_op)
         allow, reason = _should_accept(op, source_payload)
         record = {"index": idx, "reason": reason, "op": op}
         if not allow:
@@ -264,6 +297,23 @@ def apply_patch_with_policy(
             else:
                 value = op.get("value")
                 _set_value(working, path, value, action)
+
+            # Propagate provenance/confidence to the parent entity's mapping_meta
+            # when an enrichment patch writes into mapped_ids/
+            enrichment_provenance = op.get("provenance")
+            if enrichment_provenance is not None:
+                entity_path = _entity_path_from_mapped_ids_patch(path)
+                if entity_path:
+                    try:
+                        entity_obj = _get_value_at_pointer(working, entity_path)
+                        if isinstance(entity_obj, dict):
+                            meta = entity_obj.setdefault("mapping_meta", {})
+                            meta["provenance"] = str(enrichment_provenance)
+                            if op.get("confidence") is not None:
+                                meta["confidence"] = _float_or_default(op.get("confidence"))
+                    except Exception:  # noqa: BLE001
+                        pass  # best-effort; don't fail the patch
+
             accepted.append(record)
         except Exception as exc:  # noqa: BLE001
             record["reason"] = f"Application failed: {exc}"

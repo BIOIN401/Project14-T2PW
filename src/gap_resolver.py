@@ -7,6 +7,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from apply_audit_patch import apply_patch_with_policy
 from llm_client import chat
 from map_ids import (
     HttpClient,
@@ -766,6 +767,331 @@ def _map_ids_for_entity(
     return {"status": "unmapped", "reason": "no_strategy"}
 
 
+# ---------------------------------------------------------------------------
+# Step 10 — Agentic enrichment helpers
+# ---------------------------------------------------------------------------
+
+_ENRICHMENT_SYSTEM_PROMPT: Optional[str] = None
+
+
+def _get_enrichment_system_prompt() -> str:
+    global _ENRICHMENT_SYSTEM_PROMPT  # noqa: PLW0603
+    if _ENRICHMENT_SYSTEM_PROMPT is None:
+        prompt_path = Path(__file__).resolve().parent / "prompts" / "enrichment_system.txt"
+        _ENRICHMENT_SYSTEM_PROMPT = (
+            prompt_path.read_text(encoding="utf-8")
+            if prompt_path.exists()
+            else "You are an enrichment agent. Return JSON patches only."
+        )
+    return _ENRICHMENT_SYSTEM_PROMPT
+
+
+def _build_entity_index(payload: Dict[str, Any]) -> Dict[str, Tuple[str, int]]:
+    """Return {normalized_name: (array_path_prefix, index)} for path construction.
+
+    E.g. "glucose 6 phosphate" -> ("/entities/compounds", 3)
+    so the entity's JSON pointer is /entities/compounds/3
+    """
+    out: Dict[str, Tuple[str, int]] = {}
+    entities = _safe_dict(payload.get("entities"))
+    for list_key, path_prefix in [
+        ("compounds", "/entities/compounds"),
+        ("proteins", "/entities/proteins"),
+        ("protein_complexes", "/entities/protein_complexes"),
+        ("nucleic_acids", "/entities/nucleic_acids"),
+    ]:
+        for idx, item in enumerate(_safe_list(entities.get(list_key))):
+            if not isinstance(item, dict):
+                continue
+            name = _canonical(str(item.get("name", "")))
+            if name:
+                out[_normalize(name)] = (path_prefix, idx)
+    return out
+
+
+def _pre_fetch_for_flag(
+    flag_type: str,
+    flag_entry: Dict[str, Any],
+    *,
+    db: Optional[PathBankDbResolver],
+    client: HttpClient,
+    global_organism: str,
+    max_candidates: int = 3,
+) -> Dict[str, Any]:
+    """Pre-fetch API/DB candidates for a single QA flag entry.
+
+    Returns a dict with pre-fetched data to include in the enrichment LLM context.
+    No LLM call is made here — this is pure deterministic API/DB retrieval.
+    """
+    entity_name = _canonical(str(flag_entry.get("entity", flag_entry.get("reaction", ""))))
+    entity_type = _canonical(str(flag_entry.get("type", ""))).lower()
+
+    result: Dict[str, Any] = {
+        "flag_type": flag_type,
+        "entity": entity_name,
+        "entity_type": entity_type,
+        "candidates": [],
+    }
+
+    if flag_type == "missing_ids":
+        if entity_type in {"protein", "protein_complex"}:
+            api_result = map_protein_uniprot(client, entity_name, global_organism)
+            if api_result.get("status") == "mapped":
+                result["candidates"].append(
+                    {
+                        "source": "UniProt",
+                        "mapped_ids": _safe_dict(api_result.get("mapped_ids")),
+                        "confidence": float(api_result.get("confidence", 0.8) or 0.8),
+                    }
+                )
+            bg = lookup_protein_api_background(client, entity_name, global_organism, max_results=max_candidates)
+            for cand in _safe_list(_safe_dict(bg).get("candidates", []))[:max_candidates]:
+                if not isinstance(cand, dict):
+                    continue
+                acc = _canonical(str(cand.get("accession", "")))
+                if acc:
+                    result["candidates"].append(
+                        {
+                            "source": "UniProt",
+                            "mapped_ids": {"uniprot": acc},
+                            "name": _canonical(str(cand.get("name", ""))),
+                            "confidence": float(cand.get("score", 0.7) or 0.7),
+                        }
+                    )
+        else:
+            # compound (default)
+            api_result = map_compound_all(client, entity_name)
+            if api_result.get("status") == "mapped":
+                result["candidates"].append(
+                    {
+                        "source": "ChEBI/KEGG/HMDB",
+                        "mapped_ids": _safe_dict(api_result.get("mapped_ids")),
+                        "confidence": float(api_result.get("confidence", 0.8) or 0.8),
+                    }
+                )
+            bg = lookup_compound_api_background(client, entity_name, max_results=max_candidates)
+            for cand in _safe_list(_safe_dict(bg).get("candidates", []))[:max_candidates]:
+                if not isinstance(cand, dict):
+                    continue
+                db_key = _canonical(str(cand.get("database", ""))).lower()
+                cid = _canonical(str(cand.get("id", "")))
+                if db_key and cid:
+                    result["candidates"].append(
+                        {
+                            "source": db_key,
+                            "mapped_ids": {db_key: cid},
+                            "name": _canonical(str(cand.get("name", ""))),
+                            "confidence": float(cand.get("score", 0.7) or 0.7),
+                        }
+                    )
+            hmdb_bg = lookup_hmdb_background(client, entity_name, max_results=max_candidates)
+            for cand in _safe_list(_safe_dict(hmdb_bg).get("candidates", []))[:max_candidates]:
+                if not isinstance(cand, dict):
+                    continue
+                hid = _canonical(str(cand.get("hmdb_id", ""))).upper()
+                if hid and hid.startswith("HMDB"):
+                    result["candidates"].append(
+                        {
+                            "source": "HMDB",
+                            "mapped_ids": {"hmdb": hid},
+                            "name": _canonical(str(cand.get("name", ""))),
+                            "confidence": float(cand.get("score", 0.7) or 0.7),
+                        }
+                    )
+
+    elif flag_type == "missing_compartments":
+        kind = entity_type if entity_type in {"compound", "protein"} else "compound"
+        result["location_candidates"] = _db_location_candidates(db, kind=kind, name=entity_name, max_items=max_candidates)
+
+    elif flag_type == "possible_complexes":
+        bg = lookup_protein_api_background(client, entity_name, global_organism, max_results=max_candidates)
+        result["uniprot_candidates"] = _safe_list(_safe_dict(bg).get("candidates", []))[:max_candidates]
+
+    elif flag_type == "transport_like_reactions":
+        result["note"] = "Reaction name or structure implies transport; consider whether a transport process is more appropriate."
+
+    return result
+
+
+def _format_enrichment_context(
+    pre_fetched_items: List[Dict[str, Any]],
+    entity_index: Dict[str, Tuple[str, int]],
+) -> str:
+    """Render pre-fetched candidates as a structured text block for the enrichment LLM."""
+    lines: List[str] = []
+
+    for entry in pre_fetched_items:
+        flag_type = entry.get("flag_type", "")
+        entity_name = entry.get("entity", "")
+        entity_type = entry.get("entity_type", "")
+
+        norm_name = _normalize(entity_name)
+        path_info = entity_index.get(norm_name)
+        json_path = f"{path_info[0]}/{path_info[1]}" if path_info else None
+
+        lines.append(f"\n---")
+        lines.append(f"ENTITY: {entity_name}")
+        lines.append(f"TYPE: {entity_type or 'unknown'}")
+        lines.append(f"FLAG: {flag_type}")
+        if json_path:
+            lines.append(f"JSON_PATH: {json_path}")
+
+        if flag_type == "missing_ids":
+            candidates = entry.get("candidates", [])
+            if candidates:
+                lines.append("API CANDIDATES:")
+                for cand in candidates[:3]:
+                    mids = cand.get("mapped_ids", {})
+                    ids_str = " | ".join(f"{k}={v}" for k, v in mids.items() if v)
+                    cand_name = cand.get("name", "")
+                    conf = float(cand.get("confidence", 0.0))
+                    name_part = f" | name: {cand_name}" if cand_name else ""
+                    lines.append(f"  - {ids_str}{name_part} | confidence={conf:.2f}")
+            else:
+                lines.append("API CANDIDATES: none found")
+            lines.append(
+                "INSTRUCTION: Assign the best matching ID(s). "
+                "If confidence < 0.60, emit a warning instead of a patch."
+            )
+
+        elif flag_type == "missing_compartments":
+            loc_candidates = entry.get("location_candidates", [])
+            if loc_candidates:
+                lines.append("LOCATION CANDIDATES (from PathBank DB):")
+                for lc in loc_candidates[:3]:
+                    lines.append(
+                        f"  - {lc.get('location', '')} | source={lc.get('source', '')} | score={lc.get('score', 0)}"
+                    )
+            else:
+                lines.append("LOCATION CANDIDATES: none from DB — infer from entity class.")
+            lines.append(
+                "INSTRUCTION: Assign the most supported compartment. "
+                "If uncertain, set provenance=inferred and confidence=0.70."
+            )
+
+        elif flag_type == "possible_complexes":
+            uniprot_cands = entry.get("uniprot_candidates", [])
+            if uniprot_cands:
+                lines.append("UNIPROT CANDIDATES:")
+                for uc in uniprot_cands[:3]:
+                    acc = uc.get("accession", "")
+                    cand_name = uc.get("name", "")
+                    lines.append(f"  - UniProt:{acc} | {cand_name}")
+            else:
+                lines.append("UNIPROT CANDIDATES: none found")
+            lines.append(
+                "INSTRUCTION: If this is a known complex subunit, add a warning. "
+                "Do not rename or reclassify the entity."
+            )
+
+        elif flag_type == "transport_like_reactions":
+            lines.append(f"NOTE: {entry.get('note', '')}")
+            lines.append(
+                "INSTRUCTION: Do not modify the reaction. "
+                "Add a warning entry if transport reclassification should be reviewed."
+            )
+
+    return "\n".join(lines)
+
+
+def _run_enrichment_agent(
+    payload: Dict[str, Any],
+    qa_report: Dict[str, Any],
+    *,
+    db: Optional[PathBankDbResolver],
+    client: HttpClient,
+    global_organism: str,
+    llm_temperature: float,
+    llm_max_tokens: int,
+    max_flags_per_type: int = 20,
+) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+    """Pre-fetch API candidates for each QA flag, build enrichment context, call LLM.
+
+    Returns (normalized_patches, enrichment_report).
+    The patches use the same format as apply_audit_patch (op/evidence) after normalization.
+    """
+    flags = _safe_dict(qa_report.get("flags"))
+    entity_index = _build_entity_index(payload)
+
+    actionable = ["missing_ids", "missing_compartments", "possible_complexes", "transport_like_reactions"]
+    pre_fetched_all: List[Dict[str, Any]] = []
+
+    for flag_type in actionable:
+        for entry in _safe_list(flags.get(flag_type, []))[:max_flags_per_type]:
+            if isinstance(entry, dict):
+                pre_fetched_all.append(
+                    _pre_fetch_for_flag(
+                        flag_type,
+                        entry,
+                        db=db,
+                        client=client,
+                        global_organism=global_organism,
+                    )
+                )
+
+    enrichment_report: Dict[str, Any] = {
+        "flags_processed": len(pre_fetched_all),
+        "pre_fetched_count": len(pre_fetched_all),
+    }
+
+    if not pre_fetched_all:
+        enrichment_report["patches_proposed"] = 0
+        return [], enrichment_report
+
+    context_block = _format_enrichment_context(pre_fetched_all, entity_index)
+    system_prompt = _get_enrichment_system_prompt()
+
+    user_content = json.dumps(
+        {
+            "task": "Generate patches to fix the flagged entities based on pre-fetched API data.",
+            "entity_count": sum(
+                len(_safe_list(_safe_dict(payload.get("entities")).get(k, [])))
+                for k in ["compounds", "proteins", "protein_complexes"]
+            ),
+            "qa_summary": _safe_dict(qa_report.get("summary")),
+            "enrichment_context": context_block,
+        },
+        ensure_ascii=False,
+    )
+
+    raw = ""
+    try:
+        raw = chat(
+            [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content},
+            ],
+            temperature=llm_temperature,
+            max_tokens=llm_max_tokens,
+            response_json=True,
+        )
+        parsed = _extract_json_object(raw) or {}
+        raw_patches = _safe_list(parsed.get("patches"))
+        enrichment_report["warnings"] = _safe_list(parsed.get("warnings"))
+        enrichment_report["raw"] = raw[:800]
+        enrichment_report["patches_proposed"] = len(raw_patches)
+
+        # Normalize enrichment patch format → apply_audit_patch format
+        # (action → op, reason → evidence)
+        normalized: List[Dict[str, Any]] = []
+        for patch in raw_patches:
+            if not isinstance(patch, dict):
+                continue
+            norm = dict(patch)
+            if "action" in norm and "op" not in norm:
+                norm["op"] = norm.pop("action")
+            if "reason" in norm and "evidence" not in norm:
+                norm["evidence"] = norm.pop("reason")
+            normalized.append(norm)
+
+        return normalized, enrichment_report
+    except Exception as exc:  # noqa: BLE001
+        enrichment_report["error"] = str(exc)
+        enrichment_report["raw"] = raw[:400]
+        enrichment_report["patches_proposed"] = 0
+        return [], enrichment_report
+
+
 def resolve_gaps(
     payload: Dict[str, Any],
     *,
@@ -776,6 +1102,7 @@ def resolve_gaps(
     llm_max_tokens: int = 900,
     max_items: int = 80,
     enable_id_resolution: bool = True,
+    qa_report: Optional[Dict[str, Any]] = None,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     working = deepcopy(payload)
     report: Dict[str, Any] = {
@@ -1049,6 +1376,34 @@ def resolve_gaps(
 
         report["stage3"]["executions"].append(op_exec)
 
+    # -----------------------------------------------------------------------
+    # Step 10: Enrichment agent — uses QA report flags to focus API fetches
+    # -----------------------------------------------------------------------
+    if qa_report is not None and use_llm:
+        enrichment_patches, enrichment_report = _run_enrichment_agent(
+            working,
+            qa_report,
+            db=db,
+            client=client,
+            global_organism=global_organism,
+            llm_temperature=llm_temperature,
+            llm_max_tokens=max(llm_max_tokens, 1200),
+            max_flags_per_type=max(1, max_items // 4),
+        )
+        report["enrichment"] = enrichment_report
+
+        if enrichment_patches:
+            working, patch_apply_report = apply_patch_with_policy(working, enrichment_patches)
+            report["enrichment"]["patch_application"] = patch_apply_report
+            report["summary"]["enrichment_patches_accepted"] = patch_apply_report.get("summary", {}).get("accepted_count", 0)
+            report["summary"]["enrichment_patches_rejected"] = patch_apply_report.get("summary", {}).get("rejected_count", 0)
+        else:
+            report["summary"]["enrichment_patches_accepted"] = 0
+            report["summary"]["enrichment_patches_rejected"] = 0
+    else:
+        report["summary"]["enrichment_patches_accepted"] = 0
+        report["summary"]["enrichment_patches_rejected"] = 0
+
     if db is not None:
         report["db"] = {"available": db.available(), "last_error": db.last_error}
         db.close()
@@ -1070,10 +1425,19 @@ def run_gap_resolution(
     llm_max_tokens: int = 900,
     max_items: int = 80,
     enable_id_resolution: bool = True,
+    qa_report: Optional[Dict[str, Any]] = None,
+    qa_report_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
+
+    # Load QA report from path if not passed directly
+    effective_qa_report = qa_report
+    if effective_qa_report is None and qa_report_path is not None and qa_report_path.exists():
+        raw_qa = json.loads(qa_report_path.read_text(encoding="utf-8"))
+        effective_qa_report = raw_qa if isinstance(raw_qa, dict) else None
+
     resolved, report = resolve_gaps(
         payload,
         id_source=id_source,
@@ -1083,6 +1447,7 @@ def run_gap_resolution(
         llm_max_tokens=llm_max_tokens,
         max_items=max_items,
         enable_id_resolution=enable_id_resolution,
+        qa_report=effective_qa_report,
     )
     output_path.write_text(json.dumps(resolved, indent=2, ensure_ascii=False), encoding="utf-8")
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
