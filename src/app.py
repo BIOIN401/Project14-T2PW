@@ -808,6 +808,7 @@ def run_post_pipeline_sbml_artifacts(
                     llm_max_tokens=gap_tokens,
                     max_items=max(10, int(gap_resolver_max_items)),
                     enable_id_resolution=True,
+                    reaction_summary=st.session_state.get("reaction_summary"),
                 )
                 current_after_round = round_resolved
             else:
@@ -1184,9 +1185,10 @@ if submit:
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
         final_payload = merge_additions(stage_one, stage_two if isinstance(stage_two, dict) else {})
 
-    draft_graph, qa_report = build_and_save_draft_graph(final_payload)
+    draft_graph, qa_report, reaction_summary = build_and_save_draft_graph(final_payload)
     st.session_state["draft_graph"] = draft_graph.to_dict()
     st.session_state["qa_report"] = qa_report
+    st.session_state["reaction_summary"] = reaction_summary
 
     st.session_state["pipeline_ready"] = True
     st.session_state["run_inference_enabled"] = bool(run_inference)
@@ -1361,6 +1363,27 @@ if st.session_state.get("pipeline_ready"):
         )
     else:
         st.info("Run the pipeline to generate a QA report.")
+
+    # ------------------------------------------------------------------ Pathway Summary
+    st.subheader("Pathway Summary")
+    reaction_summary_text = st.session_state.get("reaction_summary", "")
+    if reaction_summary_text:
+        st.text_area(
+            "Reaction & transport summary (plain text)",
+            value=reaction_summary_text,
+            height=420,
+            disabled=True,
+            key="pathway_summary_display",
+        )
+        st.download_button(
+            "Download reaction_summary.txt",
+            data=reaction_summary_text,
+            file_name="reaction_summary.txt",
+            mime="text/plain",
+            key="dl_reaction_summary",
+        )
+    else:
+        st.info("Run the pipeline to generate a pathway summary.")
 
     st.subheader("Post-pipeline SBML export")
     post_col_a, post_col_b = st.columns(2)

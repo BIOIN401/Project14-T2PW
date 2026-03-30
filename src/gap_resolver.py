@@ -1004,6 +1004,7 @@ def _run_enrichment_agent(
     llm_temperature: float,
     llm_max_tokens: int,
     max_flags_per_type: int = 20,
+    reaction_summary: Optional[str] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     """Pre-fetch API candidates for each QA flag, build enrichment context, call LLM.
 
@@ -1041,18 +1042,18 @@ def _run_enrichment_agent(
     context_block = _format_enrichment_context(pre_fetched_all, entity_index)
     system_prompt = _get_enrichment_system_prompt()
 
-    user_content = json.dumps(
-        {
-            "task": "Generate patches to fix the flagged entities based on pre-fetched API data.",
-            "entity_count": sum(
-                len(_safe_list(_safe_dict(payload.get("entities")).get(k, [])))
-                for k in ["compounds", "proteins", "protein_complexes"]
-            ),
-            "qa_summary": _safe_dict(qa_report.get("summary")),
-            "enrichment_context": context_block,
-        },
-        ensure_ascii=False,
-    )
+    user_content_dict: Dict[str, Any] = {
+        "task": "Generate patches to fix the flagged entities based on pre-fetched API data.",
+        "entity_count": sum(
+            len(_safe_list(_safe_dict(payload.get("entities")).get(k, [])))
+            for k in ["compounds", "proteins", "protein_complexes"]
+        ),
+        "qa_summary": _safe_dict(qa_report.get("summary")),
+        "enrichment_context": context_block,
+    }
+    if reaction_summary and isinstance(reaction_summary, str) and reaction_summary.strip():
+        user_content_dict["pathway_reaction_summary"] = reaction_summary.strip()
+    user_content = json.dumps(user_content_dict, ensure_ascii=False)
 
     raw = ""
     try:
@@ -1103,6 +1104,7 @@ def resolve_gaps(
     max_items: int = 80,
     enable_id_resolution: bool = True,
     qa_report: Optional[Dict[str, Any]] = None,
+    reaction_summary: Optional[str] = None,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     working = deepcopy(payload)
     report: Dict[str, Any] = {
@@ -1389,6 +1391,7 @@ def resolve_gaps(
             llm_temperature=llm_temperature,
             llm_max_tokens=max(llm_max_tokens, 1200),
             max_flags_per_type=max(1, max_items // 4),
+            reaction_summary=reaction_summary,
         )
         report["enrichment"] = enrichment_report
 
@@ -1427,6 +1430,7 @@ def run_gap_resolution(
     enable_id_resolution: bool = True,
     qa_report: Optional[Dict[str, Any]] = None,
     qa_report_path: Optional[Path] = None,
+    reaction_summary: Optional[str] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -1448,6 +1452,7 @@ def run_gap_resolution(
         max_items=max_items,
         enable_id_resolution=enable_id_resolution,
         qa_report=effective_qa_report,
+        reaction_summary=reaction_summary,
     )
     output_path.write_text(json.dumps(resolved, indent=2, ensure_ascii=False), encoding="utf-8")
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")

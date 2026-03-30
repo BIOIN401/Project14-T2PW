@@ -9,6 +9,7 @@ from llm_client import chat
 from preprocessor import format_context_header
 from qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from draft_graph import DraftGraph, build_draft_graph
+from reaction_summary import generate_reaction_summary
 
 BASE_DIR = Path(__file__).resolve().parent
 PROMPTS_DIR = BASE_DIR / "prompts"
@@ -516,19 +517,21 @@ def build_and_save_draft_graph(
     merged_json: Dict[str, Any],
     *,
     output_path: Optional[Path] = None,
-) -> Tuple[DraftGraph, Dict[str, Any]]:
+) -> Tuple[DraftGraph, Dict[str, Any], str]:
     """
     Build a DraftGraph from the merged Stage-1 + Stage-2 JSON and write it to
     ``tmp/draft_graph.json`` (or *output_path* if provided).
 
     Also generates a QA / missingness report and saves it to ``tmp/qa_report.json``
-    next to the draft graph.
+    next to the draft graph, and a human-readable reaction summary saved to
+    ``tmp/reaction_summary.txt``.
 
     Returns
     -------
-    (graph, qa_report)
-        graph     — the DraftGraph object
-        qa_report — the dict produced by generate_qa_report()
+    (graph, qa_report, reaction_summary)
+        graph            — the DraftGraph object
+        qa_report        — the dict produced by generate_qa_report()
+        reaction_summary — plain-text summary produced by generate_reaction_summary()
     """
     graph = build_draft_graph(merged_json)
 
@@ -562,7 +565,12 @@ def build_and_save_draft_graph(
         len(qa_report["flags"]),
     )
 
-    return graph, qa_report
+    reaction_summary = generate_reaction_summary(graph, qa_report)
+    summary_path = output_path.parent / "reaction_summary.txt"
+    summary_path.write_text(reaction_summary, encoding="utf-8")
+    logger.info("Reaction summary saved to %s", summary_path)
+
+    return graph, qa_report, reaction_summary
 
 
 def merge_inference_outputs(outputs: List[Dict[str, Any]]) -> Dict[str, Any]:
