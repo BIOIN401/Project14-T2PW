@@ -974,8 +974,10 @@ def build_sbml(
             sid = sanitize_sbml_id(f"{sid}_{_short_hash(canonical_name + compartment_id, 6)}")
         entity_class = deduped_row.get("class") or ""
         entity_provenance = deduped_row.get("provenance") or ""
+        _conf_raw = deduped_row.get("confidence")
+        entity_confidence = f"{float(_conf_raw):.3f}" if _conf_raw is not None else ""
         entity_components = [c for c in _safe_list(deduped_row.get("components")) if isinstance(c, str) and c.strip()]
-        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id, "mapped_ids": canonical_mapped_ids, "class": entity_class, "provenance": entity_provenance, "components": entity_components}
+        record = {"id": sid, "name": canonical_name, "kind": kind, "compartment_id": compartment_id, "mapped_ids": canonical_mapped_ids, "class": entity_class, "provenance": entity_provenance, "confidence": entity_confidence, "components": entity_components}
         species_registry[canonical_key] = record
         species_registry[key] = record
         species_id_to_meta[sid] = sid_meta
@@ -1396,11 +1398,13 @@ def build_sbml(
         pw_id_attr = f' pathwhiz:species_id="{pw_sp_id}"' if pw_sp_id is not None else ""
         sp_class = item.get("class") or sp_type
         sp_provenance = item.get("provenance") or ""
+        sp_confidence = item.get("confidence") or ""
         sp_class_attr = f' pathwhiz:class="{sp_class}"'
         sp_prov_attr = f' pathwhiz:provenance="{sp_provenance}"' if sp_provenance else ""
+        sp_conf_attr = f' pathwhiz:confidence="{sp_confidence}"' if sp_confidence else ""
         species_ann_elem = (
             f'<pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-            f'{pw_id_attr} pathwhiz:species_type="{sp_type}"{sp_class_attr}{sp_prov_attr}/>'
+            f'{pw_id_attr} pathwhiz:species_type="{sp_type}"{sp_class_attr}{sp_prov_attr}{sp_conf_attr}/>'
         )
         if is_protein_complex:
             # Build component annotation from known subunits in the same compartment.

@@ -35,6 +35,8 @@ class SpeciesInfo:
     sid: str
     name: str
     species_type: str  # compound / protein / element_collection / etc.
+    compartment: str = ""
+    provenance: str = ""  # "extracted" | "inferred" | ""
 
 
 @dataclass
@@ -159,14 +161,17 @@ def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], 
     for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
         sid = sp.get("id", "")
         name = sp.get("name", sid)
+        compartment = sp.get("compartment", "")
 
-        # PathWhiz species_type is stored under annotation: <pathwhiz:species ... pathwhiz:species_type="..."/>
+        # PathWhiz species_type/provenance stored under annotation: <pathwhiz:species .../>
         stype = "unknown"
+        provenance = ""
         ann = sp.find("sbml:annotation/pathwhiz:species", NS)
         if ann is not None:
             stype = ann.get(f"{{{PW_NS}}}species_type", "unknown")
+            provenance = ann.get(f"{{{PW_NS}}}provenance", "")
 
-        species[sid] = SpeciesInfo(sid=sid, name=name, species_type=stype)
+        species[sid] = SpeciesInfo(sid=sid, name=name, species_type=stype, compartment=compartment, provenance=provenance)
 
     loc_elems: List[LocationElement] = []
     for le in root.findall(".//pathwhiz:location_element", NS):
@@ -322,11 +327,11 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
         if e.element_type == "edge":
             continue
 
-        label = compartments.get(e.element_id) or species.get(
-            e.element_id,
-            SpeciesInfo(e.element_id, e.element_id, "unknown"),
-        ).name
-        stype = species.get(e.element_id, SpeciesInfo(e.element_id, "", "unknown")).species_type
+        sp_info = species.get(e.element_id, SpeciesInfo(e.element_id, e.element_id, "unknown"))
+        label = compartments.get(e.element_id) or sp_info.name
+        stype = sp_info.species_type
+        _inferred = sp_info.provenance == "inferred"
+        _border_ls = (0, (4.0, 3.0)) if _inferred else "solid"
 
         # Compartment-like boxes / collections
         if e.element_type in ("element_collection_location", "sub_pathway"):
@@ -361,6 +366,7 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
                 linewidth=2.0,
                 facecolor="white",
                 edgecolor="black",
+                linestyle=_border_ls,
                 zorder=e.z,
             )
             ax.add_patch(rect)
@@ -383,6 +389,7 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
                 linewidth=2.0,
                 edgecolor="black",
                 facecolor="white",
+                linestyle=_border_ls,
                 zorder=e.z,
             )
             ax.add_patch(circ)
@@ -410,13 +417,21 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
         except Exception:
             continue
 
+        is_modifier_edge = e.template_id == "84"
         is_dotted = e.template_id == "83"
+        _edge_color = "#777777" if is_modifier_edge else "black"
+        if is_modifier_edge:
+            _edge_ls: Any = (0, (3.0, 4.0))
+        elif is_dotted:
+            _edge_ls = (0, (2.5, 6.0))
+        else:
+            _edge_ls = "solid"
         patch = PathPatch(
             path,
             fill=False,
-            linewidth=2.0,
-            edgecolor="black",
-            linestyle=(0, (2.5, 6.0)) if is_dotted else "solid",
+            linewidth=1.8 if is_modifier_edge else 2.0,
+            edgecolor=_edge_color,
+            linestyle=_edge_ls,
             zorder=e.z,
         )
         ax.add_patch(patch)
