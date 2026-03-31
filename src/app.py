@@ -53,6 +53,7 @@ from pipeline import (
     run_stage_one_with_chunking,
 )
 from preprocessor import preprocess
+from pdf_parser import extract_text_from_pdf, get_pdf_info, parse_pdf, SKIP_SECTIONS
 from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree
 from pwml_writer import DeterministicPwmlBuilder
 from qa_graph import build_graph, connected_components, degrees, get_entities, node
@@ -1045,8 +1046,60 @@ def run_post_pipeline_sbml_artifacts(
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+# ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
+input_mode = st.radio(
+    "Input mode",
+    ["Paste text", "Upload PDF"],
+    horizontal=True,
+    key="input_mode_radio",
+)
+
+# ── PDF controls (OUTSIDE form — file_uploader is banned inside st.form) ───
+uploaded_pdf   = None
+pdf_page_range = ""
+pdf_skip_refs  = True
+pdf_ocr        = False
+
+if input_mode == "Upload PDF":
+    uploaded_pdf = st.file_uploader(
+        "Upload a scientific PDF (research paper, pathway description, etc.)",
+        type=["pdf"],
+        key="pdf_upload_widget",
+    )
+    _c1, _c2, _c3 = st.columns(3)
+    pdf_page_range = _c1.text_input(
+        "Page range (e.g. 1-20, blank = all)",
+        value="",
+        key="pdf_page_range",
+        help="Leave blank to extract all pages.",
+    )
+    pdf_skip_refs = _c2.checkbox(
+        "Skip References / Acknowledgements",
+        value=True,
+        key="pdf_skip_refs",
+    )
+    pdf_ocr = _c3.checkbox(
+        "Enable OCR fallback (scanned PDFs)",
+        value=False,
+        key="pdf_ocr",
+        help="Requires tesseract + pytesseract installed.",
+    )
+
+# ── Form — only the text area changes; everything else is UNCHANGED ─────────
 with st.form("pwml_pipeline"):
-    text = st.text_area("Paste pathway description:", height=220)
+    if input_mode == "Paste text":
+        text = st.text_area("Paste pathway description:", height=220)
+    else:
+        text = ""   # populated after submit from the PDF
+        if uploaded_pdf is not None:
+            st.info(
+                f"PDF ready: **{uploaded_pdf.name}**  "
+                f"— configure options above, then click **Run pipeline**."
+            )
+        else:
+            st.warning("Upload a PDF using the file uploader above, then click **Run pipeline**.")
+
+        
     run_inference = st.checkbox(
         "Run inference/enrichment stage",
         value=True,
@@ -1127,8 +1180,74 @@ with st.form("pwml_pipeline"):
     submit = st.form_submit_button("Run pipeline")
 
 if submit:
+    # PDF extraction runs here — outside the form, so uploaded_pdf is accessible
+    if input_mode == "Upload PDF":
+        if uploaded_pdf is None:
+            st.warning("Please upload a PDF using the file uploader above.")
+            st.stop()
+
+        import tempfile, os
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as _tmp:
+            _tmp.write(uploaded_pdf.read())
+            _tmp_path = _tmp.name
+
+        try:
+            # Parse page range
+            _ps, _pe = 1, None
+            _pr = (pdf_page_range or "").strip()
+            if _pr:
+                _parts = _pr.split("-")
+                try:
+                    _ps = int(_parts[0])
+                    _pe = int(_parts[1]) if len(_parts) > 1 else _ps
+                except ValueError:
+                    st.warning(f"Invalid page range '{_pr}'; extracting all pages.")
+
+            _skip = SKIP_SECTIONS if pdf_skip_refs else set()
+
+            with st.spinner(f"Extracting text from {uploaded_pdf.name}..."):
+                _pdf = parse_pdf(
+                    _tmp_path,
+                    page_start=_ps,
+                    page_end=_pe,
+                    skip_sections=_skip,
+                    enable_ocr_fallback=bool(pdf_ocr),
+                )
+        finally:
+            try:
+                os.unlink(_tmp_path)
+            except Exception:
+                pass
+
+        if _pdf["error"]:
+            st.error(f"PDF extraction failed: {_pdf['error']}")
+            st.stop()
+
+        text = _pdf["text"]
+
+        for _w in _pdf.get("warnings", []):
+            st.warning(f"PDF: {_w}")
+
+        st.success(
+            f"Extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
+            f"via **{_pdf['method']}**. "
+            f"Sections: {', '.join(_pdf['sections'].keys()) or 'none'}"
+        )
+        _meta = _pdf.get("metadata", {})
+        _mp = [p for p in [
+            f"Title: {_meta['title']}"     if _meta.get("title")  else "",
+            f"Author(s): {_meta['author']}" if _meta.get("author") else "",
+            f"DOI: {_meta['doi']}"          if _meta.get("doi")    else "",
+        ] if p]
+        if _mp:
+            st.caption(" | ".join(_mp))
+
+        with st.expander("Preview extracted text (first 1000 chars)", expanded=False):
+            st.text(text[:1000] + ("..." if len(text) > 1000 else ""))
+
     if not text.strip():
-        st.warning("Paste some pathway text first.")
+        st.warning("No text to process. Paste text or upload a PDF.")
         st.stop()
 
     # Preprocessing: lightweight context summary to guide extraction and inference
