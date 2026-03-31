@@ -34,3 +34,12 @@ matplotlib>=3.9.2
 
 # to get the output
 streamlit>=1.30
+
+# PDF parsing (pdf_parser.py)
+pdfplumber>=0.11.0
+pypdf>=4.0.0
+
+# PDF OCR fallback (optional — requires tesseract system package)
+# Install tesseract separately: apt-get install -y tesseract-ocr poppler-utils
+pytesseract>=0.3.13
+Pillow>=10.0.0
