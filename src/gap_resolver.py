@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from apply_audit_patch import apply_patch_with_policy
-from llm_client import chat
+from llm_client import chat, chat_with_tools
 from map_ids import (
     HttpClient,
     PathBankDbResolver,
@@ -786,6 +786,159 @@ def _get_enrichment_system_prompt() -> str:
     return _ENRICHMENT_SYSTEM_PROMPT
 
 
+# ---------------------------------------------------------------------------
+# Agentic tool definitions (OpenAI function-calling format)
+# ---------------------------------------------------------------------------
+
+_ENRICHMENT_TOOLS: List[Dict[str, Any]] = [
+    {
+        "type": "function",
+        "function": {
+            "name": "lookup_compound",
+            "description": (
+                "Look up a compound by name across ChEBI, KEGG, and HMDB. "
+                "Returns the best-matched IDs with confidence. "
+                "Use when pre-fetched candidates are absent or you need to verify an ID."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Common or IUPAC name of the compound (e.g. 'glucose-6-phosphate')"},
+                },
+                "required": ["name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "lookup_protein",
+            "description": (
+                "Look up a protein or enzyme by name in UniProt. "
+                "Returns UniProt accession, EC number, GO terms, and gene name. "
+                "Use when pre-fetched candidates are absent or ambiguous."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Protein or enzyme name (e.g. 'hexokinase')"},
+                    "organism": {"type": "string", "description": "Organism name for filtering (e.g. 'Homo sapiens'). Leave empty to search all."},
+                },
+                "required": ["name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_compound_candidates",
+            "description": (
+                "Search for multiple compound candidates by name — returns a ranked list from ChEBI, KEGG, and HMDB. "
+                "Use when you need to compare alternatives (e.g. common name matches multiple metabolites)."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Compound name to search"},
+                    "max_results": {"type": "integer", "description": "Maximum candidates to return (default 5)", "default": 5},
+                },
+                "required": ["name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_protein_candidates",
+            "description": (
+                "Search for multiple protein candidates by name — returns a ranked list from UniProt. "
+                "Use when you need to disambiguate between isoforms or similarly named proteins."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Protein name to search"},
+                    "organism": {"type": "string", "description": "Organism filter (optional)"},
+                    "max_results": {"type": "integer", "description": "Maximum candidates to return (default 5)", "default": 5},
+                },
+                "required": ["name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "lookup_compartment",
+            "description": (
+                "Query the PathBank local database for known subcellular locations of a compound or protein. "
+                "Returns location name, frequency, and source. "
+                "Use when a compartment is missing and you need DB evidence."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Entity name"},
+                    "entity_type": {"type": "string", "enum": ["compound", "protein"], "description": "Whether this is a compound or protein"},
+                },
+                "required": ["name", "entity_type"],
+            },
+        },
+    },
+]
+
+
+def _make_enrichment_tool_executor(
+    client: HttpClient,
+    db: Optional[PathBankDbResolver],
+    global_organism: str,
+) -> Any:
+    """Return a tool_executor callable for use with chat_with_tools().
+
+    Dispatches tool calls by name to the underlying map_ids / DB functions.
+    """
+
+    def _executor(tool_name: str, args: Dict[str, Any]) -> Any:
+        if tool_name == "lookup_compound":
+            name = str(args.get("name", ""))
+            result = map_compound_all(client, name)
+            return result
+
+        if tool_name == "lookup_protein":
+            name = str(args.get("name", ""))
+            organism = str(args.get("organism", global_organism) or global_organism)
+            result = map_protein_uniprot(client, name, organism)
+            return result
+
+        if tool_name == "search_compound_candidates":
+            name = str(args.get("name", ""))
+            max_r = int(args.get("max_results", 5))
+            chebi_results = lookup_compound_api_background(client, name, max_results=max_r)
+            hmdb_results = lookup_hmdb_background(client, name, max_results=max_r)
+            candidates = (
+                _safe_list(_safe_dict(chebi_results).get("candidates", []))
+                + _safe_list(_safe_dict(hmdb_results).get("candidates", []))
+            )
+            return {"candidates": candidates[:max_r * 2]}
+
+        if tool_name == "search_protein_candidates":
+            name = str(args.get("name", ""))
+            organism = str(args.get("organism", global_organism) or global_organism)
+            max_r = int(args.get("max_results", 5))
+            result = lookup_protein_api_background(client, name, organism, max_results=max_r)
+            return result
+
+        if tool_name == "lookup_compartment":
+            name = str(args.get("name", ""))
+            entity_type = str(args.get("entity_type", "compound"))
+            kind = entity_type if entity_type in {"compound", "protein"} else "compound"
+            locations = _db_location_candidates(db, kind=kind, name=name, max_items=6)
+            return {"locations": locations}
+
+        return {"error": f"Unknown tool: {tool_name}"}
+
+    return _executor
+
+
 def _build_entity_index(payload: Dict[str, Any]) -> Dict[str, Tuple[str, int]]:
     """Return {normalized_name: (array_path_prefix, index)} for path construction.
 
@@ -1055,16 +1208,20 @@ def _run_enrichment_agent(
         user_content_dict["pathway_reaction_summary"] = reaction_summary.strip()
     user_content = json.dumps(user_content_dict, ensure_ascii=False)
 
+    tool_executor = _make_enrichment_tool_executor(client, db, global_organism)
+
     raw = ""
     try:
-        raw = chat(
+        raw = chat_with_tools(
             [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
             ],
+            tools=_ENRICHMENT_TOOLS,
+            tool_executor=tool_executor,
             temperature=llm_temperature,
             max_tokens=llm_max_tokens,
-            response_json=True,
+            max_tool_rounds=10,
         )
         parsed = _extract_json_object(raw) or {}
         raw_patches = _safe_list(parsed.get("patches"))

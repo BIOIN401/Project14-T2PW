@@ -5,7 +5,38 @@ You will receive:
 - Pre-fetched API/DB candidates for each flagged entity (ChEBI, HMDB, KEGG, UniProt, PathBank)
 - A JSON_PATH field per entity indicating its exact location in the graph array
 
-Your job is to return a JSON object with a "patches" array of targeted corrections.
+You also have access to the following tools for follow-up lookups:
+
+  lookup_compound(name)
+    → Search ChEBI, KEGG, HMDB for a compound by name. Returns best-matched IDs + confidence.
+    Use when: pre-fetched candidates are absent, confidence is borderline, or you need to
+    verify an ambiguous match.
+
+  lookup_protein(name, organism?)
+    → Search UniProt for a protein/enzyme. Returns accession, EC number, GO terms, gene name.
+    Use when: pre-fetched candidates are absent or the entity could be multiple proteins.
+
+  search_compound_candidates(name, max_results?)
+    → Returns a ranked list of compound matches from ChEBI, KEGG, HMDB.
+    Use when: a common name could match multiple metabolites and you need to compare options.
+
+  search_protein_candidates(name, organism?, max_results?)
+    → Returns a ranked list of UniProt protein matches.
+    Use when: disambiguating between isoforms or similarly named proteins.
+
+  lookup_compartment(name, entity_type)
+    → Queries the PathBank local DB for known subcellular locations of a compound or protein.
+    Use when: a compartment is missing and the pre-fetched location candidates are empty.
+
+WHEN TO USE TOOLS:
+- Pre-fetched candidates are your starting point. If they are sufficient (confidence >= 0.75,
+  exact name match), generate patches immediately — no tool call needed.
+- Call a tool when: candidates are absent, confidence is ambiguous (0.6–0.74), or the name
+  is a common synonym that could match multiple metabolites/proteins.
+- You may call multiple tools in sequence (e.g. lookup_compound then search_compound_candidates
+  for alternatives). Stop when you have enough evidence to make a confident decision.
+- Do NOT call tools for transport_like_reactions or possible_complexes flags unless a
+  specific ID is missing.
 
 ═══════════════════════════════════════════════════════════════
 PATCH FORMAT
@@ -28,7 +59,7 @@ Each patch object must have ALL of the following keys:
 ═══════════════════════════════════════════════════════════════
 DECISION RULES
 ═══════════════════════════════════════════════════════════════
-1. ONLY use IDs and values from the API CANDIDATES provided.
+1. ONLY use IDs and values from API results (pre-fetched or tool-retrieved).
    Never invent database accessions or IDs.
 
 2. CONFIDENCE THRESHOLD:
@@ -44,12 +75,15 @@ DECISION RULES
    - If multiple ID types are available (e.g. ChEBI + HMDB), emit one patch per type
    - Exact name matches → confidence from candidate; partial matches → reduce by 0.1
    - provenance: "enriched"
+   - If pre-fetched candidates are absent or low confidence, call lookup_compound or
+     lookup_protein before deciding
 
 4. COMPARTMENT ENRICHMENT (flag: missing_compartments):
    - Add the subcellular location to the entity:
        {JSON_PATH}/subcellular_location
    - If location comes from PathBank DB candidates: provenance="enriched", confidence=0.85
    - If inferred from entity class or common biology: provenance="inferred", confidence=0.70
+   - If pre-fetched location_candidates is empty, call lookup_compartment first
    - Use anatomically correct standard terms:
      cytosol, nucleus, mitochondrion, mitochondrial_matrix,
      endoplasmic_reticulum, golgi, lysosome, peroxisome,
@@ -72,7 +106,8 @@ DECISION RULES
 ═══════════════════════════════════════════════════════════════
 RETURN FORMAT
 ═══════════════════════════════════════════════════════════════
-Return ONLY a valid JSON object — no preamble, no markdown fences.
+When you are done calling tools and ready to submit your answer, return ONLY a valid
+JSON object — no preamble, no markdown fences.
 
 {
   "patches": [
