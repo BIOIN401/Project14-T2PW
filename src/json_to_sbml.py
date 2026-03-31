@@ -12,6 +12,8 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
+from pre_export_validator import ValidationError, validate_graph
+
 
 def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
@@ -822,12 +824,18 @@ def build_sbml(
     if not isinstance(payload, dict):
         raise ValueError("Mapped input JSON must be an object.")
 
+    # Pre-export validation gate — runs before any SBML generation.
+    _validation_result = validate_graph(None, payload)
+    if not _validation_result.passed:
+        raise ValidationError(_validation_result.errors, _validation_result.warnings)
+
     report: Dict[str, Any] = {
         "hard_errors": [],
         "warnings": [],
         "defaults_applied": [],
         "counts": {"compartments": 0, "species": 0, "reactions": 0},
         "pathwhiz_id_stats": {"mysql_connected": bool(os.environ.get("PATHBANK_DB_HOST")), "compounds_matched": 0, "proteins_matched": 0, "species_no_id": 0},
+        "pre_export_warnings": _validation_result.warnings,
     }
     data = deepcopy(payload)
     entities = _safe_dict(data.get("entities"))

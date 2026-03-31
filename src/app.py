@@ -23,6 +23,7 @@ from enrich_entities import run_enrichment
 from grounding import apply_grounding
 from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
+from pre_export_validator import ValidationError
 from map_ids import run_mapping
 from sbml_render_pathwhiz_like import build_render_artifacts
 from sbml_strip_unmapped import strip_unmapped
@@ -943,30 +944,15 @@ def run_post_pipeline_sbml_artifacts(
                 "error": str(exc),
             }
             sbml_input_path = mapped_json
-        sbml_build_report = build_sbml(
-            sbml_input_path,
-            sbml_path,
-            sbml_report_json_path,
-            sbml_report_txt_path,
-            default_compartment_name=default_compartment,
-            db_config={
-                "host": db_host,
-                "port": db_port,
-                "user": db_user,
-                "password": db_password,
-                "schema": db_schema,
-            },
-        )
+        pre_export_validation: Dict[str, Any] = {"passed": True, "errors": [], "warnings": []}
+        sbml_build_report: Dict[str, Any] = {
+            "hard_errors": [],
+            "warnings": [],
+            "defaults_applied": [],
+            "counts": {},
+            "pathwhiz_id_stats": {},
+        }
         sbml_overwatch_report: Dict[str, Any] = {}
-        if use_sbml_overwatch:
-            sbml_overwatch_report = run_sbml_overwatch(
-                sbml_input_path,
-                sbml_path,
-                sbml_report_json_path,
-                sbml_overwatch_path,
-                use_llm=True,
-                llm_max_tokens=3000,
-            )
         sbml_diagram_png_bytes = b""
         sbml_diagram_error = ""
         sbml_render_layout_summary: Dict[str, Any] = {}
@@ -974,18 +960,48 @@ def run_post_pipeline_sbml_artifacts(
         sbml_clean_bytes = b""
         sbml_clean_summary: Dict[str, Any] = {}
         try:
-            render_artifacts = build_render_artifacts(str(sbml_path))
-            sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
-            sbml_render_layout_summary = _safe_dict(render_artifacts.get("layout_summary"))
-            sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
-        except Exception as exc:  # noqa: BLE001
-            sbml_diagram_error = str(exc)
-
-        if sbml_render_ready_sbml_bytes:
+            sbml_build_report = build_sbml(
+                sbml_input_path,
+                sbml_path,
+                sbml_report_json_path,
+                sbml_report_txt_path,
+                default_compartment_name=default_compartment,
+                db_config={
+                    "host": db_host,
+                    "port": db_port,
+                    "user": db_user,
+                    "password": db_password,
+                    "schema": db_schema,
+                },
+            )
+            pre_export_validation["warnings"] = sbml_build_report.pop("pre_export_warnings", [])
+            if use_sbml_overwatch:
+                sbml_overwatch_report = run_sbml_overwatch(
+                    sbml_input_path,
+                    sbml_path,
+                    sbml_report_json_path,
+                    sbml_overwatch_path,
+                    use_llm=True,
+                    llm_max_tokens=3000,
+                )
             try:
-                sbml_clean_bytes, sbml_clean_summary = strip_unmapped(sbml_render_ready_sbml_bytes)
-            except Exception:  # noqa: BLE001
-                pass
+                render_artifacts = build_render_artifacts(str(sbml_path))
+                sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
+                sbml_render_layout_summary = _safe_dict(render_artifacts.get("layout_summary"))
+                sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
+            except Exception as exc:  # noqa: BLE001
+                sbml_diagram_error = str(exc)
+            if sbml_render_ready_sbml_bytes:
+                try:
+                    sbml_clean_bytes, sbml_clean_summary = strip_unmapped(sbml_render_ready_sbml_bytes)
+                except Exception:  # noqa: BLE001
+                    pass
+        except ValidationError as exc:
+            pre_export_validation = {
+                "passed": False,
+                "errors": exc.errors,
+                "warnings": exc.warnings,
+            }
 
         return {
             "gate_failed": False,
@@ -1004,10 +1020,11 @@ def run_post_pipeline_sbml_artifacts(
             "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
             "mapping_report": mapping_report,
             "enrichment_report": enrichment_report,
-            "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")),
-            "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
+            "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")) if sbml_report_json_path.exists() else {},
+            "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8") if sbml_report_txt_path.exists() else "",
             "sbml_overwatch_report": sbml_overwatch_report,
-            "sbml_xml_bytes": sbml_path.read_bytes(),
+            "sbml_xml_bytes": sbml_path.read_bytes() if sbml_path.exists() else b"",
+            "pre_export_validation": pre_export_validation,
             "sbml_diagram_png_bytes": sbml_diagram_png_bytes,
             "sbml_diagram_error": sbml_diagram_error,
             "sbml_render_layout_summary": sbml_render_layout_summary,
@@ -1858,6 +1875,24 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
+        _val = post_artifacts.get("pre_export_validation", {})
+        if _val.get("errors"):
+            st.error(
+                f"**Pre-export validation failed** — SBML export was blocked "
+                f"({len(_val['errors'])} error(s)):"
+            )
+            for _err in _val["errors"]:
+                st.error(f"• {_err}")
+        elif _val:
+            st.success("Pre-export validation passed.")
+        if _val.get("warnings"):
+            with st.expander(
+                f"Pre-export validation warnings ({len(_val['warnings'])})",
+                expanded=False,
+            ):
+                for _warn in _val["warnings"]:
+                    st.warning(_warn)
+
         if post_artifacts.get("sbml_xml_bytes"):
             st.download_button(
                 "Download pathway.sbml",
