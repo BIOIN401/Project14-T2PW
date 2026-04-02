@@ -132,6 +132,17 @@ def run_stage_two_with_chunking(
     outputs: List[Dict[str, Any]] = []
 
     for chunk in chunks:
+        chunk_relevance = chunk.get("relevance_score", 1.0) if isinstance(chunk, dict) else 1.0
+        if chunk_relevance < _MIN_CHUNK_RELEVANCE:
+            logger.debug(
+                "Skipping chunk %s (section=%s, relevance=%.2f < %.2f threshold)",
+                chunk.get("chunk_id"),
+                chunk.get("section"),
+                chunk_relevance,
+                _MIN_CHUNK_RELEVANCE,
+            )
+            continue
+
         chunk_stage_one = chunk.get("output") if isinstance(chunk, dict) else None
         if not isinstance(chunk_stage_one, dict):
             chunk_stage_one = stage_one
@@ -1538,6 +1549,10 @@ _SECTION_HEADER_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Chunks with relevance below this threshold are skipped in Stage-2 inference.
+# References (0.1) and Acknowledgements (0.05) are the primary targets.
+_MIN_CHUNK_RELEVANCE: float = 0.3
+
 _SECTION_RELEVANCE_MAP: Dict[str, float] = {
     "results": 0.9,
     "results and discussion": 0.9,
@@ -1853,6 +1868,44 @@ def _build_extraction_prompt(
     return "\n".join(prompt)
 
 
+def _section_inference_hint(section_label: Optional[str]) -> str:
+    """Return a focused extraction instruction for the given section type."""
+    label = (section_label or "").strip().lower()
+    if label in ("results", "results and discussion"):
+        return (
+            "SECTION FOCUS — Results: prioritize extracting confirmed reactions, "
+            "measured entity changes, and observed pathway steps. Evidence here is "
+            "primary; confidence should be high (0.85–0.95)."
+        )
+    if label in ("discussion", "discussion and conclusions"):
+        return (
+            "SECTION FOCUS — Discussion: authors interpret results here. Be conservative "
+            "— only extract reactions explicitly re-stated as conclusions, not speculative "
+            "claims. Lower confidence (0.6–0.8) for inferences drawn from this section."
+        )
+    if label in ("methods", "materials and methods", "experimental procedures",
+                 "materials and methods", "methods and materials"):
+        return (
+            "SECTION FOCUS — Methods: focus on enzyme names used as catalysts, "
+            "reaction substrates/products, and explicit reaction steps described in "
+            "the protocol. Experimental conditions (temperature, pH) are context only "
+            "— do not extract them as entities."
+        )
+    if label == "abstract":
+        return (
+            "SECTION FOCUS — Abstract: this summarises the full paper. Extract only "
+            "reactions and entities explicitly stated here; avoid double-counting "
+            "detail that will appear more completely in Results/Methods sections."
+        )
+    if label in ("introduction", "background"):
+        return (
+            "SECTION FOCUS — Introduction/Background: authors survey prior work. "
+            "Be conservative — only extract reactions stated as established facts "
+            "directly relevant to this pathway, not general field context."
+        )
+    return ""
+
+
 def _build_inference_prompt(
     input_text: str,
     stage_one_json: str,
@@ -1874,6 +1927,9 @@ def _build_inference_prompt(
         section_str = chunk_section or "unknown"
         score_str = f"{chunk_relevance_score:.2f}" if chunk_relevance_score is not None else "n/a"
         prompt.extend([f"CHUNK CONTEXT: Section={section_str}, Relevance={score_str}", ""])
+        section_hint = _section_inference_hint(chunk_section)
+        if section_hint:
+            prompt.extend([section_hint, ""])
 
     prompt.extend(
         [
