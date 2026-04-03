@@ -336,15 +336,21 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
     # ------------------------------------------------------------------
     reactions = root.findall(".//sbml:listOfReactions/sbml:reaction", NS)
 
-    # Edge pairs for fallback layout
+    # Edge pairs routed through reaction center nodes (avoids reactant→product X-crossings)
+    rxn_center_ids: List[str] = []
     edge_pairs: List[Tuple[str, str]] = []
     for rxn in reactions:
+        rxn_id_str = rxn.get("id") or ""
+        if rxn_id_str:
+            rxn_center_ids.append(rxn_id_str)
         reactants = [r.get("species") for r in rxn.findall("./sbml:listOfReactants/sbml:speciesReference", NS) if r.get("species")]
         products = [p.get("species") for p in rxn.findall("./sbml:listOfProducts/sbml:speciesReference", NS) if p.get("species")]
         for r in reactants:
-            for p in products:
-                if r != p:
-                    edge_pairs.append((r, p))  # type: ignore[arg-type]
+            if r and rxn_id_str:
+                edge_pairs.append((r, rxn_id_str))  # type: ignore[arg-type]
+        for p in products:
+            if p and rxn_id_str:
+                edge_pairs.append((rxn_id_str, p))  # type: ignore[arg-type]
 
     # ------------------------------------------------------------------
     # Compute reaction-centered positions
@@ -502,6 +508,9 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         dot_lines.append("}")
     for sid in species_nodes:
         dot_lines.append(f'"{sid}";')
+    # Reaction center nodes (point-shaped so graphviz places them between reactants/products)
+    for rc_id in rxn_center_ids:
+        dot_lines.append(f'"{rc_id}" [shape=point,width=0.1];')
     for a, b in edge_pairs:
         dot_lines.append(f'"{a}" -> "{b}";')
     dot_lines.append("}")
@@ -519,6 +528,29 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
     if not pos:
         tree.write(out_path, encoding="utf-8", xml_declaration=True)
         return
+
+    # Ensure reaction center positions exist in pos.
+    # Graphviz places them natively; fallback only positions species nodes, so compute
+    # missing ones as the centroid of their reactant + product species positions.
+    for rxn, lay in zip(reactions, rxn_layouts):
+        rc_id = rxn.get("id") or ""
+        if not rc_id or rc_id in pos:
+            continue
+        r_pts = [pos[s] for s in lay["reactant_sids"] if s in pos]
+        p_pts = [pos[s] for s in lay["product_sids"] if s in pos]
+        all_pts = r_pts + p_pts
+        if not all_pts:
+            continue
+        pos[rc_id] = (
+            sum(p[0] for p in all_pts) / len(all_pts),
+            sum(p[1] for p in all_pts) / len(all_pts),
+        )
+
+    # Synthesize any edges that the fallback layout skipped (it ignores unknown nodes)
+    existing_edge_set = {(t, h) for t, h, _ in dot_edges}
+    for a, b in edge_pairs:
+        if (a, b) not in existing_edge_set and a in pos and b in pos:
+            dot_edges.append((a, b, [pos[a], pos[b]]))
 
     xs = [p[0] for p in pos.values()]
     ys = [p[1] for p in pos.values()]
@@ -589,13 +621,15 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         le.set(f"{{{PW_NS}}}hidden", "false")
 
     for tail, head, coords in dot_edges:
-        if tail not in species_nodes or head not in species_nodes or not coords:
+        if tail not in pos or head not in pos or not coords:
             continue
         pts_px = [_scale_and_flip(x, y, scale=scale, yflip_max=y_max, margin=margin) for (x, y) in coords]
         d = [f"M {pts_px[0][0]:.2f} {pts_px[0][1]:.2f}"]
         for x, y in pts_px[1:]:
             d.append(f"L {x:.2f} {y:.2f}")
-        dotted = species_nodes[tail].compartment != species_nodes[head].compartment
+        tail_comp = species_nodes[tail].compartment if tail in species_nodes else None
+        head_comp = species_nodes[head].compartment if head in species_nodes else None
+        dotted = tail_comp is not None and head_comp is not None and tail_comp != head_comp
         le = ET.SubElement(model_ann, _q("location_element", PW_NS))
         le.set(f"{{{PW_NS}}}element_type", "edge")
         le.set(f"{{{PW_NS}}}element_id", f"{tail}__to__{head}")
@@ -607,25 +641,14 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         if dotted:
             le.set(f"{{{PW_NS}}}visualization_template_id", "83")
 
-    # Reaction center nodes: small filled square at the midpoint between average
-    # reactant and average product positions in the Graphviz layout space.
+    # Reaction center nodes: small filled square at the layout position for each reaction.
+    # pos[rxn_id] is set by graphviz (natively) or computed as centroid above (fallback).
     rc = REACTION_CENTER_SIZE
-    for rxn, lay in zip(reactions, rxn_layouts):
+    for rxn in reactions:
         rxn_id = rxn.get("id") or ""
-        r_pts = [pos[s] for s in lay["reactant_sids"] if s in pos]
-        p_pts = [pos[s] for s in lay["product_sids"] if s in pos]
-        if not r_pts and not p_pts:
+        if not rxn_id or rxn_id not in pos:
             continue
-        if r_pts:
-            r_avg = (sum(p[0] for p in r_pts) / len(r_pts), sum(p[1] for p in r_pts) / len(r_pts))
-        else:
-            r_avg = p_pts[0]
-        if p_pts:
-            p_avg = (sum(p[0] for p in p_pts) / len(p_pts), sum(p[1] for p in p_pts) / len(p_pts))
-        else:
-            p_avg = r_pts[0]
-        mid_xd = (r_avg[0] + p_avg[0]) / 2.0
-        mid_yd = (r_avg[1] + p_avg[1]) / 2.0
+        mid_xd, mid_yd = pos[rxn_id]
         cx_px, cy_px = _scale_and_flip(mid_xd, mid_yd, scale=scale, yflip_max=y_max, margin=margin)
         le = ET.SubElement(model_ann, _q("location_element", PW_NS))
         le.set(f"{{{PW_NS}}}element_type", "reaction_center")
