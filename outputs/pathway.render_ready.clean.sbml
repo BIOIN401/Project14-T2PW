@@ -14,9 +14,9 @@
       </unitDefinition>
     </listOfUnitDefinitions>
     <listOfCompartments>
-      <compartment sboTerm="SBO:0000240" id="c_cytosol" name="cytosol" spatialDimensions="3" size="1" units="UnitVol" constant="false">
+      <compartment sboTerm="SBO:0000240" id="c_cytoplasm" name="cytoplasm" spatialDimensions="3" size="1" units="UnitVol" constant="false">
         <annotation>
-          <pathwhiz:compartment pathwhiz:compartment_type="biological_state" pathwhiz:compartment_id="13753" />
+          <pathwhiz:compartment pathwhiz:compartment_type="biological_state" pathwhiz:compartment_id="13728" />
         </annotation>
       </compartment>
       <compartment sboTerm="SBO:0000240" id="c_extracellular_space" name="extracellular space" spatialDimensions="3" size="1" units="UnitVol" constant="false">
@@ -26,24 +26,10 @@
       </compartment>
     </listOfCompartments>
     <listOfSpecies>
-      <species metaid="_meta_m_C00354_c_cytosol" sboTerm="SBO:0000247" id="m_C00354_c_cytosol" name="fructose-1,6-bisphosphate" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+      <species metaid="_meta_m_CHEBI_15422_c_cytoplasm" sboTerm="SBO:0000247" id="m_CHEBI_15422_c_cytoplasm" name="ATP" compartment="c_cytoplasm" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
         <annotation>
           <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_C00354_c_cytosol">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00354" />
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-          <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="833" />
-        </annotation>
-      </species>
-      <species metaid="_meta_m_CHEBI_15422_c_cytosol" sboTerm="SBO:0000247" id="m_CHEBI_15422_c_cytosol" name="ATP" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
-        <annotation>
-          <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_CHEBI_15422_c_cytosol">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15422_c_cytoplasm">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15422" />
@@ -58,10 +44,10 @@
           <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="414" />
         </annotation>
       </species>
-      <species metaid="_meta_m_CHEBI_15946_c_cytosol" sboTerm="SBO:0000247" id="m_CHEBI_15946_c_cytosol" name="fructose-6-phosphate" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+      <species metaid="_meta_m_CHEBI_15946_c_cytoplasm" sboTerm="SBO:0000247" id="m_CHEBI_15946_c_cytoplasm" name="fructose-6-phosphate" compartment="c_cytoplasm" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
         <annotation>
           <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_CHEBI_15946_c_cytosol">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_15946_c_cytoplasm">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15946" />
@@ -75,10 +61,10 @@
           <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="79" />
         </annotation>
       </species>
-      <species metaid="_meta_m_CHEBI_16761_c_cytosol" sboTerm="SBO:0000247" id="m_CHEBI_16761_c_cytosol" name="ADP" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+      <species metaid="_meta_m_CHEBI_16761_c_cytoplasm" sboTerm="SBO:0000247" id="m_CHEBI_16761_c_cytoplasm" name="ADP" compartment="c_cytoplasm" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
         <annotation>
           <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_CHEBI_16761_c_cytosol">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_16761_c_cytoplasm">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16761" />
@@ -92,28 +78,10 @@
           <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="1034" />
         </annotation>
       </species>
-      <species metaid="_meta_m_CHEBI_32816_c_cytosol" sboTerm="SBO:0000247" id="m_CHEBI_32816_c_cytosol" name="pyruvate" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+      <species metaid="_meta_m_CHEBI_4167_c_cytoplasm" sboTerm="SBO:0000247" id="m_CHEBI_4167_c_cytoplasm" name="glucose" compartment="c_cytoplasm" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
         <annotation>
           <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_CHEBI_32816_c_cytosol">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:32816" />
-                  <rdf:li rdf:resource="urn:miriam:drugbank:DB00119" />
-                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000243" />
-                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00022" />
-                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:1060" />
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-          <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="164" />
-        </annotation>
-      </species>
-      <species metaid="_meta_m_CHEBI_4167_c_cytosol" sboTerm="SBO:0000247" id="m_CHEBI_4167_c_cytosol" name="glucose" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
-        <annotation>
-          <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_CHEBI_4167_c_cytosol">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_4167_c_cytoplasm">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:4167" />
@@ -144,10 +112,10 @@
           <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="77" />
         </annotation>
       </species>
-      <species metaid="_meta_m_CHEBI_4170_c_cytosol" sboTerm="SBO:0000247" id="m_CHEBI_4170_c_cytosol" name="glucose-6-phosphate" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+      <species metaid="_meta_m_CHEBI_4170_c_cytoplasm" sboTerm="SBO:0000247" id="m_CHEBI_4170_c_cytoplasm" name="glucose-6-phosphate" compartment="c_cytoplasm" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
         <annotation>
           <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_CHEBI_4170_c_cytosol">
+            <rdf:Description rdf:about="#_meta_m_CHEBI_4170_c_cytoplasm">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:4170" />
@@ -161,28 +129,10 @@
           <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="1083" />
         </annotation>
       </species>
-      <species metaid="_meta_m_CHEBI_44897_c_cytosol" sboTerm="SBO:0000247" id="m_CHEBI_44897_c_cytosol" name="phosphoenolpyruvate" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+      <species metaid="_meta_p_F5IXG6_c_cytoplasm" sboTerm="SBO:0000245" id="p_F5IXG6_c_cytoplasm" name="hexokinase" compartment="c_cytoplasm" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
         <annotation>
           <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_m_CHEBI_44897_c_cytosol">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:44897" />
-                  <rdf:li rdf:resource="urn:miriam:drugbank:DB01819" />
-                  <rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000263" />
-                  <rdf:li rdf:resource="urn:miriam:kegg.compound:C00074" />
-                  <rdf:li rdf:resource="urn:miriam:pubchem.compound:1005" />
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-          <pathwhiz:species pathwhiz:species_type="compound" pathwhiz:species_id="180" />
-        </annotation>
-      </species>
-      <species metaid="_meta_p_F5IXG6_c_cytosol" sboTerm="SBO:0000245" id="p_F5IXG6_c_cytosol" name="hexokinase" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
-        <annotation>
-          <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_p_F5IXG6_c_cytosol">
+            <rdf:Description rdf:about="#_meta_p_F5IXG6_c_cytoplasm">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:uniprot:F5IXG6" />
@@ -193,174 +143,23 @@
           <pathwhiz:species pathwhiz:species_type="protein" pathwhiz:species_id="55976" />
         </annotation>
       </species>
-      <species metaid="_meta_p_P11168_c_cytosol" sboTerm="SBO:0000245" id="p_P11168_c_cytosol" name="GLUT2" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
+      <species metaid="_meta_p_Q9W0L2_c_cytoplasm" sboTerm="SBO:0000245" id="p_Q9W0L2_c_cytoplasm" name="GLUT1" compartment="c_cytoplasm" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
         <annotation>
           <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_p_P11168_c_cytosol">
+            <rdf:Description rdf:about="#_meta_p_Q9W0L2_c_cytoplasm">
               <bqbiol:is>
                 <rdf:Bag>
-                  <rdf:li rdf:resource="urn:miriam:uniprot:P11168" />
+                  <rdf:li rdf:resource="urn:miriam:uniprot:Q9W0L2" />
                 </rdf:Bag>
               </bqbiol:is>
             </rdf:Description>
           </rdf:RDF>
-          <pathwhiz:species pathwhiz:species_type="protein" pathwhiz:species_id="2449" />
-        </annotation>
-      </species>
-      <species metaid="_meta_p_Q16715_c_cytosol" sboTerm="SBO:0000245" id="p_Q16715_c_cytosol" name="pyruvate kinase" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
-        <annotation>
-          <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_p_Q16715_c_cytosol">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="urn:miriam:uniprot:Q16715" />
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-          <pathwhiz:species pathwhiz:species_type="protein" pathwhiz:species_id="4176" />
-        </annotation>
-      </species>
-      <species metaid="_meta_p_Q9M0F9_c_cytosol" sboTerm="SBO:0000245" id="p_Q9M0F9_c_cytosol" name="Phosphofructokinase-1" compartment="c_cytosol" initialAmount="1" substanceUnits="Unit1" hasOnlySubstanceUnits="true" boundaryCondition="false" constant="false">
-        <annotation>
-          <rdf:RDF>
-            <rdf:Description rdf:about="#_meta_p_Q9M0F9_c_cytosol">
-              <bqbiol:is>
-                <rdf:Bag>
-                  <rdf:li rdf:resource="urn:miriam:uniprot:Q9M0F9" />
-                </rdf:Bag>
-              </bqbiol:is>
-            </rdf:Description>
-          </rdf:RDF>
-          <pathwhiz:species pathwhiz:species_type="protein" pathwhiz:species_id="11802" />
+          <pathwhiz:species pathwhiz:species_type="protein" pathwhiz:species_id="16110" />
         </annotation>
       </species>
     </listOfSpecies>
     <listOfReactions>
-      <reaction sboTerm="SBO:0000176" id="r_1125edc0ba0d" name="phosphorylation of glucose to glucose-6-phosphate" reversible="false" fast="false" compartment="c_cytosol">
-        <annotation>
-          <pathwhiz:reaction pathwhiz:reaction_type="reaction" pathwhiz:reaction_id="385812" />
-        </annotation>
-        <listOfReactants>
-          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15422_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_cytosol" pathwhiz:location_id="1001" pathwhiz:x="61.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M139 258 L260 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_4167_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_cytosol" pathwhiz:location_id="1003" pathwhiz:x="61.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M139 342 L260 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16761_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16761_c_cytosol" pathwhiz:location_id="1005" pathwhiz:x="381.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M260 300 L381 258" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_4170_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4170_c_cytosol" pathwhiz:location_id="1007" pathwhiz:x="381.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M260 300 L381 342" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-        </listOfProducts>
-      </reaction>
-      <reaction sboTerm="SBO:0000176" id="r_36cc088c1a52" name="conversion of phosphoenolpyruvate and ADP to pyruvate and ATP" reversible="false" fast="false" compartment="c_cytosol">
-        <annotation>
-          <pathwhiz:reaction pathwhiz:reaction_type="reaction" pathwhiz:reaction_id="180263" />
-        </annotation>
-        <listOfReactants>
-          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_16761_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16761_c_cytosol" pathwhiz:location_id="1009" pathwhiz:x="481.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M559 258 L680 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_44897_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_44897_c_cytosol" pathwhiz:location_id="1011" pathwhiz:x="481.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M559 342 L680 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_15422_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_cytosol" pathwhiz:location_id="1013" pathwhiz:x="801.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 300 L801 258" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_32816_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_32816_c_cytosol" pathwhiz:location_id="1015" pathwhiz:x="801.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 300 L801 342" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-        </listOfProducts>
-      </reaction>
-      <reaction sboTerm="SBO:0000176" id="r_5e2e7514eefd" name="conversion of fructose-6-phosphate and ATP into fructose-1,6-bisphosphate and ADP" reversible="false" fast="false" compartment="c_cytosol">
-        <annotation>
-          <pathwhiz:reaction pathwhiz:reaction_type="reaction" pathwhiz:reaction_id="2028154" />
-        </annotation>
-        <listOfReactants>
-          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15422_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_cytosol" pathwhiz:location_id="1017" pathwhiz:x="901.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M979 258 L1100 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15946_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15946_c_cytosol" pathwhiz:location_id="1019" pathwhiz:x="901.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M979 342 L1100 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference sboTerm="SBO:0000011" species="m_C00354_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_C00354_c_cytosol" pathwhiz:location_id="1021" pathwhiz:x="1221.0" pathwhiz:y="218.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1100 300 L1221 258" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16761_c_cytosol" stoichiometry="1" constant="false">
-            <annotation>
-              <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16761_c_cytosol" pathwhiz:location_id="1023" pathwhiz:x="1221.0" pathwhiz:y="303.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1100 300 L1221 342" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
-              </pathwhiz:location>
-            </annotation>
-          </speciesReference>
-        </listOfProducts>
-      </reaction>
-      <reaction sboTerm="SBO:0000185" id="r_79345cf8c4a1" name="GLUT2-mediated glucose transport" reversible="false" fast="false" compartment="c_extracellular_space">
+      <reaction sboTerm="SBO:0000185" id="r_8e66699f5619" name="GLUT1-mediated glucose transport" reversible="false" fast="false" compartment="c_extracellular_space">
         <annotation>
           <pathwhiz:reaction pathwhiz:reaction_type="reaction" pathwhiz:reaction_id="179863" />
         </annotation>
@@ -368,63 +167,104 @@
           <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_4167_c_extracellular_space" stoichiometry="1" constant="false">
             <annotation>
               <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_extracellular_space" pathwhiz:location_id="1025" pathwhiz:x="1321.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1399 300 L1520 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_extracellular_space" pathwhiz:location_id="1001" pathwhiz:x="61.0" pathwhiz:y="316.0" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M139 355 L260 355" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
               </pathwhiz:location>
             </annotation>
           </speciesReference>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_4167_c_cytosol" stoichiometry="1" constant="false">
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_4167_c_cytoplasm" stoichiometry="1" constant="false">
             <annotation>
               <pathwhiz:location pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_cytosol" pathwhiz:location_id="1027" pathwhiz:x="1641.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1520 300 L1641 300" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_cytoplasm" pathwhiz:location_id="1003" pathwhiz:x="381.0" pathwhiz:y="316.0" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M260 355 L381 355" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
               </pathwhiz:location>
             </annotation>
           </speciesReference>
         </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference sboTerm="SBO:0000460" species="p_Q9W0L2_c_cytoplasm">
+            <annotation>
+              <pathwhiz:location pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_Q9W0L2_c_cytoplasm" pathwhiz:location_id="1005" pathwhiz:x="185.0" pathwhiz:y="210.0" pathwhiz:visualization_template_id="99" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M260 280 L260 355" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+              </pathwhiz:location>
+            </annotation>
+          </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="r_b987eb978810" name="hexokinase reaction" reversible="false" fast="false" compartment="c_cytoplasm">
+        <annotation>
+          <pathwhiz:reaction pathwhiz:reaction_type="reaction" pathwhiz:reaction_id="385812" />
+        </annotation>
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_15422_c_cytoplasm" stoichiometry="1" constant="false">
+            <annotation>
+              <pathwhiz:location pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_cytoplasm" pathwhiz:location_id="1007" pathwhiz:x="481.0" pathwhiz:y="273.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M559 312 L680 355" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+              </pathwhiz:location>
+            </annotation>
+          </speciesReference>
+          <speciesReference sboTerm="SBO:0000015" species="m_CHEBI_4167_c_cytoplasm" stoichiometry="1" constant="false">
+            <annotation>
+              <pathwhiz:location pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_cytoplasm" pathwhiz:location_id="1009" pathwhiz:x="481.0" pathwhiz:y="358.5" pathwhiz:visualization_template_id="49" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M559 398 L680 355" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+              </pathwhiz:location>
+            </annotation>
+          </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_16761_c_cytoplasm" stoichiometry="1" constant="false">
+            <annotation>
+              <pathwhiz:location pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16761_c_cytoplasm" pathwhiz:location_id="1011" pathwhiz:x="801.0" pathwhiz:y="273.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 355 L801 312" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+              </pathwhiz:location>
+            </annotation>
+          </speciesReference>
+          <speciesReference sboTerm="SBO:0000011" species="m_CHEBI_4170_c_cytoplasm" stoichiometry="1" constant="false">
+            <annotation>
+              <pathwhiz:location pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4170_c_cytoplasm" pathwhiz:location_id="1013" pathwhiz:x="801.0" pathwhiz:y="358.5" pathwhiz:visualization_template_id="55" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 355 L801 398" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+              </pathwhiz:location>
+            </annotation>
+          </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference sboTerm="SBO:0000460" species="p_F5IXG6_c_cytoplasm">
+            <annotation>
+              <pathwhiz:location pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_F5IXG6_c_cytoplasm" pathwhiz:location_id="1015" pathwhiz:x="605.0" pathwhiz:y="210.0" pathwhiz:visualization_template_id="99" pathwhiz:width="150.0" pathwhiz:height="70.0" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+                <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M680 280 L680 355" pathwhiz:visualization_template_id="5" pathwhiz:zindex="18" pathwhiz:hidden="false" />
+              </pathwhiz:location>
+            </annotation>
+          </modifierSpeciesReference>
+        </listOfModifiers>
       </reaction>
     </listOfReactions>
     <annotation>
-      <pathwhiz:dimensions pathwhiz:width="1780" pathwhiz:height="575" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_C00354_c_cell" pathwhiz:x="193.00" pathwhiz:y="1621.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_C00354_c_cytosol" pathwhiz:x="697.00" pathwhiz:y="753.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_cell" pathwhiz:x="697.00" pathwhiz:y="1803.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_cytosol" pathwhiz:x="445.00" pathwhiz:y="753.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15946_c_cell" pathwhiz:x="445.00" pathwhiz:y="1621.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15946_c_cytosol" pathwhiz:x="949.00" pathwhiz:y="753.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16027_c_cell" pathwhiz:x="445.00" pathwhiz:y="1803.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16761_c_cell" pathwhiz:x="193.00" pathwhiz:y="1803.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16761_c_cytosol" pathwhiz:x="193.00" pathwhiz:y="753.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_32816_c_cell" pathwhiz:x="445.00" pathwhiz:y="1439.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_32816_c_cytosol" pathwhiz:x="949.00" pathwhiz:y="571.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_cytosol" pathwhiz:x="193.00" pathwhiz:y="571.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
+      <pathwhiz:dimensions pathwhiz:width="940" pathwhiz:height="575" />
+      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15422_c_cytoplasm" pathwhiz:x="193.00" pathwhiz:y="753.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
+      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_15946_c_cytoplasm" pathwhiz:x="445.00" pathwhiz:y="753.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
+      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_16761_c_cytoplasm" pathwhiz:x="697.00" pathwhiz:y="935.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
+      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_cytoplasm" pathwhiz:x="697.00" pathwhiz:y="753.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
       <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4167_c_extracellular_space" pathwhiz:x="193.00" pathwhiz:y="67.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4170_c_cell" pathwhiz:x="697.00" pathwhiz:y="1621.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4170_c_cytosol" pathwhiz:x="445.00" pathwhiz:y="571.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_44897_c_cell" pathwhiz:x="193.00" pathwhiz:y="1439.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_44897_c_cytosol" pathwhiz:x="697.00" pathwhiz:y="571.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_F5IXG6_c_cytosol" pathwhiz:x="412.00" pathwhiz:y="933.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_P11168_c_cytosol" pathwhiz:x="160.00" pathwhiz:y="933.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_Q16715_c_cytosol" pathwhiz:x="916.00" pathwhiz:y="933.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_Q9M0F9_c_cytosol" pathwhiz:x="664.00" pathwhiz:y="933.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="element_collection_location" pathwhiz:element_id="c_cell" pathwhiz:x="146.00" pathwhiz:y="1392.00" pathwhiz:width="624.00" pathwhiz:height="484.00" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="element_collection_location" pathwhiz:element_id="c_cytosol" pathwhiz:x="146.00" pathwhiz:y="524.00" pathwhiz:width="876.00" pathwhiz:height="484.00" pathwhiz:zindex="10" pathwhiz:hidden="false" />
+      <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_CHEBI_4170_c_cytoplasm" pathwhiz:x="193.00" pathwhiz:y="571.00" pathwhiz:width="26.00" pathwhiz:height="26.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
+      <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_F5IXG6_c_cytoplasm" pathwhiz:x="412.00" pathwhiz:y="933.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
+      <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_Q9W0L2_c_cytoplasm" pathwhiz:x="160.00" pathwhiz:y="933.00" pathwhiz:width="92.00" pathwhiz:height="30.00" pathwhiz:zindex="50" pathwhiz:hidden="false" />
+      <pathwhiz:location_element pathwhiz:element_type="element_collection_location" pathwhiz:element_id="c_cytoplasm" pathwhiz:x="146.00" pathwhiz:y="524.00" pathwhiz:width="624.00" pathwhiz:height="484.00" pathwhiz:zindex="10" pathwhiz:hidden="false" />
       <pathwhiz:location_element pathwhiz:element_type="element_collection_location" pathwhiz:element_id="c_extracellular_space" pathwhiz:x="146.00" pathwhiz:y="20.00" pathwhiz:width="120.00" pathwhiz:height="120.00" pathwhiz:zindex="10" pathwhiz:hidden="false" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15422_c_cytosol__to__m_CHEBI_16761_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 458.00 766.00 L 206.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15422_c_cytosol__to__m_CHEBI_4170_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 458.00 766.00 L 458.00 766.00 L 458.00 584.00 L 458.00 584.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_4167_c_cytosol__to__m_CHEBI_16761_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 584.00 L 206.00 584.00 L 206.00 766.00 L 206.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_4167_c_cytosol__to__m_CHEBI_4170_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 584.00 L 458.00 584.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_16761_c_cytosol__to__m_CHEBI_15422_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 766.00 L 458.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_16761_c_cytosol__to__m_CHEBI_32816_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 766.00 L 584.00 766.00 L 584.00 584.00 L 962.00 584.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_44897_c_cytosol__to__m_CHEBI_15422_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 584.00 L 584.00 584.00 L 584.00 766.00 L 458.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_44897_c_cytosol__to__m_CHEBI_32816_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 584.00 L 962.00 584.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15422_c_cytosol__to__m_C00354_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 458.00 766.00 L 710.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15422_c_cytosol__to__m_CHEBI_16761_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 458.00 766.00 L 206.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15946_c_cytosol__to__m_C00354_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 766.00 L 710.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15946_c_cytosol__to__m_CHEBI_16761_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 962.00 766.00 L 206.00 766.00" />
-      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_4167_c_extracellular_space__to__m_CHEBI_4167_c_cytosol" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 80.00 L 206.00 80.00 L 206.00 584.00 L 206.00 584.00" pathwhiz:visualization_template_id="83" />
+      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_4167_c_extracellular_space__to__m_CHEBI_4167_c_cytoplasm" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 80.00 L 458.00 80.00 L 458.00 766.00 L 710.00 766.00" pathwhiz:visualization_template_id="83" />
+      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15422_c_cytoplasm__to__m_CHEBI_16761_c_cytoplasm" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 766.00 L 458.00 766.00 L 458.00 948.00 L 710.00 948.00" />
+      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_15422_c_cytoplasm__to__m_CHEBI_4170_c_cytoplasm" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 206.00 766.00 L 206.00 766.00 L 206.00 584.00 L 206.00 584.00" />
+      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_4167_c_cytoplasm__to__m_CHEBI_16761_c_cytoplasm" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 766.00 L 710.00 766.00 L 710.00 948.00 L 710.00 948.00" />
+      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="m_CHEBI_4167_c_cytoplasm__to__m_CHEBI_4170_c_cytoplasm" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="30" pathwhiz:hidden="false" pathwhiz:path="M 710.00 766.00 L 458.00 766.00 L 458.00 584.00 L 206.00 584.00" />
+      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="p_Q9W0L2_c_cytoplasm__mod__m_CHEBI_4167_c_cytoplasm" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="35" pathwhiz:hidden="false" pathwhiz:path="M 206.00 948.00 L 710.00 766.00" pathwhiz:visualization_template_id="84" />
+      <pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:element_id="p_F5IXG6_c_cytoplasm__mod__m_CHEBI_16761_c_cytoplasm" pathwhiz:x="0" pathwhiz:y="0" pathwhiz:width="0" pathwhiz:height="0" pathwhiz:zindex="35" pathwhiz:hidden="false" pathwhiz:path="M 458.00 948.00 L 710.00 948.00" pathwhiz:visualization_template_id="84" />
     </annotation>
   </model>
 </sbml>
