@@ -75,6 +75,7 @@ CENTER_Y_BASE = 300.0      # baseline vertical center for all reactions
 COMPOUND_W, COMPOUND_H = 78.0, 78.0
 PROTEIN_W, PROTEIN_H = 150.0, 70.0
 EC_W, EC_H = 150.0, 70.0  # element_collection
+REACTION_CENTER_SIZE = 8.0  # small filled square at each reaction center
 
 # PathWhiz visualization_template_id values
 TMPL_COMPOUND_REACTANT = "49"
@@ -605,6 +606,36 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         le.set(f"{{{PW_NS}}}path", " ".join(d))
         if dotted:
             le.set(f"{{{PW_NS}}}visualization_template_id", "83")
+
+    # Reaction center nodes: small filled square at the midpoint between average
+    # reactant and average product positions in the Graphviz layout space.
+    rc = REACTION_CENTER_SIZE
+    for rxn, lay in zip(reactions, rxn_layouts):
+        rxn_id = rxn.get("id") or ""
+        r_pts = [pos[s] for s in lay["reactant_sids"] if s in pos]
+        p_pts = [pos[s] for s in lay["product_sids"] if s in pos]
+        if not r_pts and not p_pts:
+            continue
+        if r_pts:
+            r_avg = (sum(p[0] for p in r_pts) / len(r_pts), sum(p[1] for p in r_pts) / len(r_pts))
+        else:
+            r_avg = p_pts[0]
+        if p_pts:
+            p_avg = (sum(p[0] for p in p_pts) / len(p_pts), sum(p[1] for p in p_pts) / len(p_pts))
+        else:
+            p_avg = r_pts[0]
+        mid_xd = (r_avg[0] + p_avg[0]) / 2.0
+        mid_yd = (r_avg[1] + p_avg[1]) / 2.0
+        cx_px, cy_px = _scale_and_flip(mid_xd, mid_yd, scale=scale, yflip_max=y_max, margin=margin)
+        le = ET.SubElement(model_ann, _q("location_element", PW_NS))
+        le.set(f"{{{PW_NS}}}element_type", "reaction_center")
+        le.set(f"{{{PW_NS}}}element_id", rxn_id)
+        le.set(f"{{{PW_NS}}}x", f"{cx_px - rc / 2:.2f}")
+        le.set(f"{{{PW_NS}}}y", f"{cy_px - rc / 2:.2f}")
+        le.set(f"{{{PW_NS}}}width", f"{rc:.2f}")
+        le.set(f"{{{PW_NS}}}height", f"{rc:.2f}")
+        le.set(f"{{{PW_NS}}}zindex", "35")
+        le.set(f"{{{PW_NS}}}hidden", "false")
 
     tree.write(out_path, encoding="utf-8", xml_declaration=True)
 
