@@ -56,15 +56,6 @@ OUTPUT RULES (MANDATORY)
   different biological_states — do NOT create two separate compound entities.
 
 
-EDUCATED GUESS POLICY
-If you cannot fully resolve an entity or relationship after examining available data:
-1. Choose the most likely class based on name patterns, context, and biological knowledge
-2. Set confidence to your honest estimate (0.0–1.0)
-3. Set provenance to "inferred"
-4. Add a brief note in source_refs explaining the basis (e.g., "name pattern suggests enzyme", "UniProt fuzzy match")
-This is better than omitting the entity entirely. The QA system will flag low-confidence items for review.
-
-
 BIOLOGICAL STATE RULE
 A biological_state is a context tuple (species/cell_type/tissue/subcellular_location) ONLY when the text explicitly states it.
 Do not infer missing context. A biological_state may include any subset of the four fields.

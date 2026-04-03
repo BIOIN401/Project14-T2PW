@@ -337,19 +337,13 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
 
     # Edge pairs for fallback layout
     edge_pairs: List[Tuple[str, str]] = []
-    modifier_edge_pairs: List[Tuple[str, str]] = []
     for rxn in reactions:
         reactants = [r.get("species") for r in rxn.findall("./sbml:listOfReactants/sbml:speciesReference", NS) if r.get("species")]
         products = [p.get("species") for p in rxn.findall("./sbml:listOfProducts/sbml:speciesReference", NS) if p.get("species")]
-        modifiers_rxn = [m.get("species") for m in rxn.findall("./sbml:listOfModifiers/sbml:modifierSpeciesReference", NS) if m.get("species")]
         for r in reactants:
             for p in products:
                 if r != p:
                     edge_pairs.append((r, p))  # type: ignore[arg-type]
-        targets = products or reactants
-        for mod in modifiers_rxn:
-            if targets and mod != targets[0]:
-                modifier_edge_pairs.append((mod, targets[0]))  # type: ignore[arg-type]
 
     # ------------------------------------------------------------------
     # Compute reaction-centered positions
@@ -611,23 +605,6 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
         le.set(f"{{{PW_NS}}}path", " ".join(d))
         if dotted:
             le.set(f"{{{PW_NS}}}visualization_template_id", "83")
-
-    for tail, head in modifier_edge_pairs:
-        if tail not in pos or head not in pos:
-            continue
-        tp = pos[tail]; hp = pos[head]
-        p1 = _scale_and_flip(tp[0], tp[1], scale=scale, yflip_max=y_max, margin=margin)
-        p2 = _scale_and_flip(hp[0], hp[1], scale=scale, yflip_max=y_max, margin=margin)
-        d_mod = [f"M {p1[0]:.2f} {p1[1]:.2f}", f"L {p2[0]:.2f} {p2[1]:.2f}"]
-        le_mod = ET.SubElement(model_ann, _q("location_element", PW_NS))
-        le_mod.set(f"{{{PW_NS}}}element_type", "edge")
-        le_mod.set(f"{{{PW_NS}}}element_id", f"{tail}__mod__{head}")
-        le_mod.set(f"{{{PW_NS}}}x", "0"); le_mod.set(f"{{{PW_NS}}}y", "0")
-        le_mod.set(f"{{{PW_NS}}}width", "0"); le_mod.set(f"{{{PW_NS}}}height", "0")
-        le_mod.set(f"{{{PW_NS}}}zindex", "35")
-        le_mod.set(f"{{{PW_NS}}}hidden", "false")
-        le_mod.set(f"{{{PW_NS}}}path", " ".join(d_mod))
-        le_mod.set(f"{{{PW_NS}}}visualization_template_id", "84")
 
     tree.write(out_path, encoding="utf-8", xml_declaration=True)
 

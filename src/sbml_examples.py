@@ -10,10 +10,18 @@ from typing import Any, Dict, Iterable, List, Sequence, Set, Tuple
 from lxml import etree
 
 
+_STOP_WORDS: Set[str] = {
+    "a", "an", "the", "and", "or", "of", "in", "to", "is", "are", "was",
+    "were", "be", "been", "being", "by", "for", "with", "as", "at", "from",
+    "on", "into", "that", "this", "it", "its", "also", "not", "no", "can",
+    "may", "has", "have", "had", "do", "does", "did", "via", "per",
+}
+
+
 def _tokenize(text: str) -> List[str]:
     if not isinstance(text, str):
         return []
-    return re.findall(r"[a-z0-9]+", text.casefold())
+    return [t for t in re.findall(r"[a-z0-9]+", text.casefold()) if t not in _STOP_WORDS]
 
 
 def _norm(text: str) -> str:
