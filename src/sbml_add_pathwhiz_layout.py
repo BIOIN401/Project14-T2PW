@@ -345,12 +345,16 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             rxn_center_ids.append(rxn_id_str)
         reactants = [r.get("species") for r in rxn.findall("./sbml:listOfReactants/sbml:speciesReference", NS) if r.get("species")]
         products = [p.get("species") for p in rxn.findall("./sbml:listOfProducts/sbml:speciesReference", NS) if p.get("species")]
+        modifiers = [m.get("species") for m in rxn.findall("./sbml:listOfModifiers/sbml:modifierSpeciesReference", NS) if m.get("species")]
         for r in reactants:
             if r and rxn_id_str:
                 edge_pairs.append((r, rxn_id_str))  # type: ignore[arg-type]
         for p in products:
             if p and rxn_id_str:
                 edge_pairs.append((rxn_id_str, p))  # type: ignore[arg-type]
+        for m in modifiers:
+            if m and rxn_id_str:
+                edge_pairs.append((m, rxn_id_str))  # modifier → reaction center
 
     # ------------------------------------------------------------------
     # Compute reaction-centered positions
