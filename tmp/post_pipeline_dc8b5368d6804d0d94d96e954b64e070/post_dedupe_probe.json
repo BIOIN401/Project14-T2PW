@@ -1,0 +1,234 @@
+{
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 0,
+    "entities_added_as_compounds": 0,
+    "entities_added_as_proteins": 0,
+    "catalysts_promoted_to_enzymes": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [],
+    "n_autostate_created": 1,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "modifier_refs_canonicalized": 1,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 0,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 0,
+    "dedupe_removed_total": 0,
+    "no_op_removed_count": 0,
+    "n_same_as_groups": 0,
+    "n_aliases_rewritten": 0,
+    "n_entities_deduped": 0,
+    "n_single_protein_complexes_removed": 0,
+    "alias_example_mappings": [],
+    "alias_canonicalization": {
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": []
+    },
+    "enzymes_attached_from_reaction_evidence": 0
+  },
+  "graph_summary": {
+    "n_reactions": 1,
+    "n_transports": 1,
+    "n_interactions": 0,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 12,
+    "n_edges": 16,
+    "n_components": 1,
+    "main_component_size": 12,
+    "largest_component_pct": 100.0,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 0,
+    "proteins_attached_pct": 100.0
+  },
+  "payload": {
+    "entities": {
+      "subcellular_locations": [
+        {
+          "name": "extracellular space",
+          "evidence": "from the extracellular space"
+        },
+        {
+          "name": "cytoplasm",
+          "evidence": "into the cytoplasm"
+        }
+      ],
+      "compounds": [
+        {
+          "name": "glucose",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "ATP",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "glucose-6-phosphate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "ADP",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "fructose-6-phosphate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        }
+      ],
+      "proteins": [
+        {
+          "name": "GLUT1",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "hexokinase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        }
+      ],
+      "protein_complexes": []
+    },
+    "biological_states": [
+      {
+        "name": "extracellular state",
+        "subcellular_location": "extracellular space",
+        "evidence": "from the extracellular space"
+      },
+      {
+        "name": "cytoplasmic state",
+        "subcellular_location": "cytoplasm",
+        "evidence": "into the cytoplasm"
+      },
+      {
+        "name": "__auto_state__",
+        "subcellular_location": "cell"
+      }
+    ],
+    "element_locations": {
+      "compound_locations": [
+        {
+          "compound": "glucose",
+          "biological_state": "extracellular state",
+          "evidence": "Glucose is transported from the extracellular space"
+        },
+        {
+          "compound": "glucose",
+          "biological_state": "cytoplasmic state",
+          "evidence": "Once inside the cell, hexokinase phosphorylates glucose"
+        },
+        {
+          "compound": "ATP",
+          "biological_state": "cytoplasmic state",
+          "evidence": "using ATP to produce glucose-6-phosphate"
+        },
+        {
+          "compound": "glucose-6-phosphate",
+          "biological_state": "cytoplasmic state",
+          "evidence": "produce glucose-6-phosphate and ADP"
+        },
+        {
+          "compound": "ADP",
+          "biological_state": "cytoplasmic state",
+          "evidence": "produce glucose-6-phosphate and ADP"
+        },
+        {
+          "compound": "fructose-6-phosphate",
+          "biological_state": "cytoplasmic state",
+          "evidence": "Fructose-6-phosphate is also present in the cell"
+        }
+      ],
+      "protein_locations": [
+        {
+          "protein": "GLUT1",
+          "biological_state": "cytoplasmic state",
+          "evidence": "glucose transporter GLUT1"
+        },
+        {
+          "protein": "hexokinase",
+          "biological_state": "cytoplasmic state",
+          "evidence": "hexokinase phosphorylates glucose"
+        }
+      ]
+    },
+    "processes": {
+      "reactions": [
+        {
+          "inputs": [
+            "glucose",
+            "ATP"
+          ],
+          "outputs": [
+            "glucose-6-phosphate",
+            "ADP"
+          ],
+          "name": "hexokinase reaction",
+          "biological_state": "cytoplasmic state",
+          "evidence": "hexokinase phosphorylates glucose using ATP to produce glucose-6-phosphate and ADP.",
+          "modifiers": [
+            {
+              "entity": "hexokinase",
+              "entity_type": "protein",
+              "role": "catalyst",
+              "evidence": "hexokinase phosphorylates glucose using ATP",
+              "confidence": 1.0,
+              "provenance": "extracted"
+            }
+          ]
+        }
+      ],
+      "transports": [
+        {
+          "name": "GLUT1-mediated glucose transport",
+          "cargo": "glucose",
+          "from_biological_state": "extracellular state",
+          "to_biological_state": "cytoplasmic state",
+          "transporters": [
+            {
+              "evidence": "transported from the extracellular space into the cytoplasm by the glucose transporter GLUT1",
+              "protein": "GLUT1"
+            }
+          ],
+          "elements_with_states": [
+            {
+              "element": "glucose",
+              "side": "left",
+              "biological_state": "extracellular state",
+              "evidence": "Glucose is transported from the extracellular space"
+            },
+            {
+              "element": "glucose",
+              "side": "right",
+              "biological_state": "cytoplasmic state",
+              "evidence": "into the cytoplasm"
+            }
+          ],
+          "evidence": "Glucose is transported from the extracellular space into the cytoplasm by the glucose transporter GLUT1."
+        }
+      ],
+      "interactions": []
+    }
+  }
+}

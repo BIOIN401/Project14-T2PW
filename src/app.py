@@ -25,6 +25,7 @@ from gap_resolver import run_gap_resolution
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_render_pathwhiz_like import build_render_artifacts
+from draft_graph_render import render_draft_graph_to_png_bytes
 from sbml_strip_unmapped import strip_unmapped
 from sbml_overwatch import run_sbml_overwatch
 from sbml_examples import build_retrieval_context, load_motif_index, payload_to_query_text
@@ -1306,6 +1307,11 @@ if submit:
 
     draft_graph, qa_report, reaction_summary = build_and_save_draft_graph(final_payload)
     st.session_state["draft_graph"] = draft_graph.to_dict()
+    try:
+        st.session_state["draft_graph_png_bytes"] = render_draft_graph_to_png_bytes(draft_graph.to_dict())
+    except Exception as _dg_exc:
+        st.session_state["draft_graph_png_bytes"] = b""
+        st.session_state["draft_graph_render_error"] = str(_dg_exc)
     st.session_state["qa_report"] = qa_report
     st.session_state["reaction_summary"] = reaction_summary
 
@@ -1426,6 +1432,20 @@ if st.session_state.get("pipeline_ready"):
             file_name="draft_graph.json",
             mime="application/json",
         )
+
+        dg_png = st.session_state.get("draft_graph_png_bytes", b"")
+        dg_render_err = st.session_state.get("draft_graph_render_error", "")
+        if dg_png:
+            st.image(dg_png, caption="Pathway graph (graphviz)")
+            st.download_button(
+                "Download graph diagram",
+                dg_png,
+                file_name="pathway_graph.png",
+                mime="image/png",
+                key="dl_draft_graph_png",
+            )
+        elif dg_render_err:
+            st.caption(f"Graph render unavailable: {dg_render_err}")
 
     # ------------------------------------------------------------------ QA Report
     st.subheader("QA Report")

@@ -1,0 +1,28 @@
+[
+  {
+    "op": "remove",
+    "path": "/biological_states/2",
+    "reason": "Remove unused auto-generated placeholder state to prevent invalid compartment references.",
+    "confidence": 0.95,
+    "evidence": "State '__auto_state__' is not referenced in element_locations or processes.",
+    "source": "llm"
+  },
+  {
+    "op": "add",
+    "path": "/entities/subcellular_locations/0/id",
+    "reason": "Add SBML-compatible compartment ID for reliable species mapping.",
+    "confidence": 0.9,
+    "evidence": "Location 'extracellular space' corresponds to standard SBML compartment 'extracellular'.",
+    "source": "llm",
+    "value": "extracellular"
+  },
+  {
+    "op": "add",
+    "path": "/entities/subcellular_locations/1/id",
+    "reason": "Add SBML-compatible compartment ID for reliable species mapping.",
+    "confidence": 0.9,
+    "evidence": "Location 'cytoplasm' corresponds to standard SBML compartment 'cytosol'.",
+    "source": "llm",
+    "value": "cytosol"
+  }
+]
