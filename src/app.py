@@ -1433,6 +1433,14 @@ if st.session_state.get("pipeline_ready"):
             mime="application/json",
         )
 
+        if st.button("Render pathway graph", key="btn_render_draft_graph"):
+            try:
+                st.session_state["draft_graph_png_bytes"] = render_draft_graph_to_png_bytes(draft_graph_dict)
+                st.session_state.pop("draft_graph_render_error", None)
+            except Exception as _dg_exc:
+                st.session_state["draft_graph_png_bytes"] = b""
+                st.session_state["draft_graph_render_error"] = str(_dg_exc)
+
         dg_png = st.session_state.get("draft_graph_png_bytes", b"")
         dg_render_err = st.session_state.get("draft_graph_render_error", "")
         if dg_png:
@@ -1445,7 +1453,7 @@ if st.session_state.get("pipeline_ready"):
                 key="dl_draft_graph_png",
             )
         elif dg_render_err:
-            st.caption(f"Graph render unavailable: {dg_render_err}")
+            st.warning(f"Graph render failed: {dg_render_err}")
 
     # ------------------------------------------------------------------ QA Report
     st.subheader("QA Report")

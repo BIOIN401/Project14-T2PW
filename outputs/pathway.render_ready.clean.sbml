@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" level="3" version="1">
-  <model metaid="a145708f-6bb4-4fbe-b5ea-312e55ffdacb" id="PathwayModel">
+  <model metaid="9d161a6f-bbc3-4ae7-87c3-4c8cfac9800a" id="PathwayModel">
     <annotation>
       <pathwhiz:dimensions pathwhiz:width="2400" pathwhiz:height="2400" />
     </annotation>
@@ -12,12 +12,12 @@
       </unitDefinition>
     </listOfUnitDefinitions>
     <listOfCompartments>
-      <compartment name="extracellular space state" constant="false" id="BiologicalState10000" sboTerm="SBO:0000240">
+      <compartment name="extracellular state" constant="false" id="BiologicalState10000" sboTerm="SBO:0000240">
         <annotation>
           <pathwhiz:compartment pathwhiz:compartment_id="10000" pathwhiz:compartment_type="biological_state" />
         </annotation>
       </compartment>
-      <compartment name="cytoplasm state" constant="false" id="BiologicalState10001" sboTerm="SBO:0000240">
+      <compartment name="cytoplasmic state" constant="false" id="BiologicalState10001" sboTerm="SBO:0000240">
         <annotation>
           <pathwhiz:compartment pathwhiz:compartment_id="10001" pathwhiz:compartment_type="biological_state" />
         </annotation>
@@ -34,11 +34,11 @@
       </compartment>
     </listOfCompartments>
     <listOfSpecies>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="ae4317d9-3aa3-4279-8ce1-31380ecdea44" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10001" name="GLUT1" id="Protein30000">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e91e3ac1-41f1-45e0-86a6-004f9183f049" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10001" name="GLUT1" id="Protein30000">
         <annotation>
           <pathwhiz:species pathwhiz:species_id="30000" pathwhiz:species_type="protein" />
           <rdf:RDF>
-            <rdf:Description rdf:about="#ae4317d9-3aa3-4279-8ce1-31380ecdea44">
+            <rdf:Description rdf:about="#e91e3ac1-41f1-45e0-86a6-004f9183f049">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:uniprot:Q9W0L2" />
@@ -48,11 +48,11 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="f5934787-8d05-4990-88c8-5aa226747d1f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10001" name="hexokinase" id="Protein30001">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="85cd4c64-fb07-4097-bdb0-a054e1876f76" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10001" name="hexokinase" id="Protein30001">
         <annotation>
           <pathwhiz:species pathwhiz:species_id="30001" pathwhiz:species_type="protein" />
           <rdf:RDF>
-            <rdf:Description rdf:about="#f5934787-8d05-4990-88c8-5aa226747d1f">
+            <rdf:Description rdf:about="#85cd4c64-fb07-4097-bdb0-a054e1876f76">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:uniprot:F5IXG6" />
@@ -62,11 +62,11 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="6eb30e74-e447-4d42-bcac-231b88047a3c" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="glucose" id="Compound20000">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c7c6bd9b-cce4-409b-bf24-35a29645d53c" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="glucose" id="Compound20000">
         <annotation>
           <pathwhiz:species pathwhiz:species_id="20000" pathwhiz:species_type="compound" />
           <rdf:RDF>
-            <rdf:Description rdf:about="#6eb30e74-e447-4d42-bcac-231b88047a3c">
+            <rdf:Description rdf:about="#c7c6bd9b-cce4-409b-bf24-35a29645d53c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:4167" />
@@ -79,11 +79,11 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="feef8503-598d-4832-8872-29bd4b4a4497" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="ATP" id="Compound20001">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="35b82f4c-7272-4aac-bef0-9b6354d3bff6" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="ATP" id="Compound20001">
         <annotation>
           <pathwhiz:species pathwhiz:species_id="20001" pathwhiz:species_type="compound" />
           <rdf:RDF>
-            <rdf:Description rdf:about="#feef8503-598d-4832-8872-29bd4b4a4497">
+            <rdf:Description rdf:about="#35b82f4c-7272-4aac-bef0-9b6354d3bff6">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15422" />
@@ -97,11 +97,11 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="9c29c241-0661-4e63-8443-048b24e3b35c" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="glucose-6-phosphate" id="Compound20002">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="af11eb9b-ad8b-44a3-9600-117aa60dd4b9" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="glucose-6-phosphate" id="Compound20002">
         <annotation>
           <pathwhiz:species pathwhiz:species_id="20002" pathwhiz:species_type="compound" />
           <rdf:RDF>
-            <rdf:Description rdf:about="#9c29c241-0661-4e63-8443-048b24e3b35c">
+            <rdf:Description rdf:about="#af11eb9b-ad8b-44a3-9600-117aa60dd4b9">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:4170" />
@@ -114,11 +114,11 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="372631bf-d49b-4be6-a397-211355816032" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="ADP" id="Compound20003">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="7557e68c-10f2-4a37-a27d-caebce60ee7a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="ADP" id="Compound20003">
         <annotation>
           <pathwhiz:species pathwhiz:species_id="20003" pathwhiz:species_type="compound" />
           <rdf:RDF>
-            <rdf:Description rdf:about="#372631bf-d49b-4be6-a397-211355816032">
+            <rdf:Description rdf:about="#7557e68c-10f2-4a37-a27d-caebce60ee7a">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16761" />
@@ -131,11 +131,11 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="14780c2c-f2cc-4785-80f9-3015c0cc5802" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="fructose-6-phosphate" id="Compound20004">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c8b304c8-70ed-4e7a-a392-20d720701a2a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="fructose-6-phosphate" id="Compound20004">
         <annotation>
           <pathwhiz:species pathwhiz:species_id="20004" pathwhiz:species_type="compound" />
           <rdf:RDF>
-            <rdf:Description rdf:about="#14780c2c-f2cc-4785-80f9-3015c0cc5802">
+            <rdf:Description rdf:about="#c8b304c8-70ed-4e7a-a392-20d720701a2a">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15946" />
@@ -200,7 +200,7 @@
           </modifierSpeciesReference>
         </listOfModifiers>
       </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState10000" name="glucose transport: extracellular space state → cytoplasm state" id="Reaction50001">
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState10000" name="glucose transport: extracellular state → cytoplasmic state" id="Reaction50001">
         <annotation>
           <pathwhiz:reaction pathwhiz:reaction_id="50001" pathwhiz:reaction_type="transport" />
         </annotation>
