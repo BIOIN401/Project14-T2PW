@@ -3,60 +3,73 @@ draft_graph_render.py
 
 Render a DraftGraph dict to a PNG via graphviz (dot).
 
-Layout: rankdir=LR — reactions ranked between their reactants (left) and
-products (right); catalysts/modifiers come in from above via constraint=false
-edges so they don't distort the main left-right flow.
-
-Compartments are visualised as labelled subgraph clusters.
+Layout: rankdir=LR with newrank=true so compartment clusters don't fight the
+left-right rank ordering. Reactions sit between their reactants and products.
+Catalysts/modifiers attach from above via constraint=false edges.
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from typing import Any, Dict, List, Set
 
 _RXN_KINDS = {"reaction", "transport", "reaction_coupled_transport", "interaction"}
 
-# ── Visual style ─────────────────────────────────────────────────────────────
+# ── Visual style ──────────────────────────────────────────────────────────────
+
+# Compound / entity nodes
+_COMPOUND_ATTRS  = 'shape=ellipse style="filled" fillcolor=white color="#444444" penwidth=2.0 width=1.1 height=1.1 fixedsize=true fontsize=11 fontname="Helvetica"'
+_NUCLEIC_ATTRS   = 'shape=ellipse style="filled" fillcolor="#fff9c4" color="#444444" penwidth=2.0 width=1.1 height=1.1 fixedsize=true fontsize=11 fontname="Helvetica"'
+_PROTEIN_ATTRS   = 'shape=box style="rounded,filled" fillcolor="#ddeeff" color="#1a5fa8" penwidth=2.0 fontsize=11 fontname="Helvetica" margin="0.18,0.12"'
+_COMPLEX_ATTRS   = 'shape=box style="rounded,filled" fillcolor="#e8eaf6" color="#283593" penwidth=2.0 fontsize=11 fontname="Helvetica" margin="0.18,0.12"'
+_ECOLL_ATTRS     = 'shape=box style="rounded,filled" fillcolor="#f3e5f5" color="#6a1b9a" penwidth=2.0 fontsize=11 fontname="Helvetica" margin="0.18,0.12"'
+
+# Reaction nodes: small filled square, label rendered outside via xlabel
+_RXN_ATTRS  = 'shape=square style="filled" fillcolor="#111111" color="#111111" width=0.28 height=0.28 fixedsize=true label="" fontsize=10 fontname="Helvetica Bold"'
+_TRAN_ATTRS = 'shape=square style="filled" fillcolor="#1a5fa8" color="#1a5fa8" width=0.28 height=0.28 fixedsize=true label="" fontsize=10 fontname="Helvetica Bold"'
+_RCT_ATTRS  = 'shape=square style="filled" fillcolor="#555555" color="#555555" width=0.28 height=0.28 fixedsize=true label="" fontsize=10 fontname="Helvetica Bold"'
+_INT_ATTRS  = 'shape=diamond style="filled" fillcolor="#111111" color="#111111" width=0.36 height=0.28 fixedsize=true label="" fontsize=10 fontname="Helvetica Bold"'
 
 _NODE_ATTRS: Dict[str, str] = {
-    "compound":      'shape=circle style="filled" fillcolor=white      color="#333333" penwidth=1.8 width=0.75 height=0.75 fixedsize=true fontsize=10',
-    "nucleic_acid":  'shape=circle style="filled" fillcolor="#fffde7"  color="#333333" penwidth=1.8 width=0.75 height=0.75 fixedsize=true fontsize=10',
-    "protein":       'shape=box   style="rounded,filled" fillcolor="#e3f2fd" color="#1565c0" penwidth=1.6 fontsize=10',
-    "protein_complex": 'shape=box style="rounded,filled" fillcolor="#e8eaf6" color="#283593" penwidth=1.6 fontsize=10',
-    "element_collection": 'shape=box style="rounded,filled" fillcolor="#f3e5f5" color="#6a1b9a" penwidth=1.6 fontsize=10',
-    # reaction-like nodes: tiny filled black square, no label shown on node itself
-    "reaction":                      'shape=square style="filled" fillcolor=black color=black width=0.22 height=0.22 fixedsize=true label=""',
-    "transport":                     'shape=square style="filled" fillcolor="#424242" color=black width=0.22 height=0.22 fixedsize=true label=""',
-    "reaction_coupled_transport":    'shape=square style="filled" fillcolor="#616161" color=black width=0.22 height=0.22 fixedsize=true label=""',
-    "interaction":                   'shape=diamond style="filled" fillcolor=black color=black width=0.30 height=0.22 fixedsize=true label=""',
+    "compound": _COMPOUND_ATTRS,
+    "nucleic_acid": _NUCLEIC_ATTRS,
+    "protein": _PROTEIN_ATTRS,
+    "protein_complex": _COMPLEX_ATTRS,
+    "element_collection": _ECOLL_ATTRS,
+    "reaction": _RXN_ATTRS,
+    "transport": _TRAN_ATTRS,
+    "reaction_coupled_transport": _RCT_ATTRS,
+    "interaction": _INT_ATTRS,
 }
 
-# Edge style per role.  "constraint" controls whether the edge contributes to
-# graphviz rank assignment (i.e. left-right ordering).
+# Edges — constraint=false on catalyst/modifier/participant so they don't
+# push reaction nodes off the main left-right flow axis.
 _EDGE_ATTRS: Dict[str, str] = {
-    "reactant":    'color="#1565c0" penwidth=2.0 arrowhead=normal',
-    "product":     'color="#2e7d32" penwidth=2.0 arrowhead=normal',
-    "catalyst":    'color="#e65100" penwidth=1.4 style=dashed arrowhead=open constraint=false',
-    "modifier":    'color="#6a1b9a" penwidth=1.4 style=dotted arrowhead=open constraint=false',
-    "transporter": 'color="#00695c" penwidth=1.8 arrowhead=normal',
-    "cargo":       'color="#558b2f" penwidth=1.8 arrowhead=normal',
-    "participant": 'color="#37474f" penwidth=1.2 style=dashed arrowhead=open constraint=false',
+    "reactant":    'color="#1a5fa8" penwidth=2.2 arrowhead=normal arrowsize=0.9',
+    "product":     'color="#2e7d32" penwidth=2.2 arrowhead=normal arrowsize=0.9',
+    "catalyst":    'color="#c84b00" penwidth=1.6 style=dashed arrowhead=open arrowsize=1.0 constraint=false',
+    "modifier":    'color="#7b1fa2" penwidth=1.4 style=dotted arrowhead=open arrowsize=1.0 constraint=false',
+    "transporter": 'color="#00695c" penwidth=2.2 arrowhead=normal arrowsize=0.9',
+    "cargo":       'color="#558b2f" penwidth=2.0 arrowhead=normal arrowsize=0.9',
+    "participant": 'color="#37474f" penwidth=1.2 style=dashed arrowhead=open arrowsize=0.8 constraint=false',
 }
-_DEFAULT_EDGE = 'color="#555555" penwidth=1.2'
+_DEFAULT_EDGE = 'color="#777777" penwidth=1.4'
+
+# Compartment cluster fill colours (cycle through these)
+_CLUSTER_FILLS  = ["#f0f7ff", "#fff8f0", "#f0fff4", "#fdf0ff", "#fffff0"]
+_CLUSTER_COLORS = ["#90b8d8", "#d8b890", "#90d8a8", "#c890d8", "#d8d890"]
 
 
 def _dot_id(node_id: str) -> str:
-    """Escape a node id for DOT."""
     return '"' + node_id.replace('"', '\\"') + '"'
 
 
-def _dot_label(text: str, max_chars: int = 20) -> str:
-    """Wrap long labels and escape for DOT."""
+def _dot_label(text: str, max_chars: int = 16) -> str:
+    """Word-wrap and escape for DOT string."""
     text = text.strip()
     if len(text) <= max_chars:
         return text.replace('"', '\\"')
-    # simple word-wrap
     words = text.split()
     lines, cur = [], ""
     for w in words:
@@ -73,71 +86,64 @@ def _dot_label(text: str, max_chars: int = 20) -> str:
 def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
     lines: List[str] = [
         "digraph pathway {",
+        "  newrank=true;",       # allow proper LR ranking inside clusters
         "  rankdir=LR;",
         "  splines=true;",
-        "  nodesep=0.55;",
-        "  ranksep=1.1;",
+        "  nodesep=0.65;",
+        "  ranksep=1.4;",
         "  bgcolor=white;",
-        '  node [fontname="Helvetica"];',
-        '  edge [fontname="Helvetica" fontsize=8];',
+        "  pad=0.4;",
     ]
 
     node_by_id = {n["id"]: n for n in nodes}
 
-    # Group entity nodes by compartment for cluster subgraphs
+    # ── Compartment clusters (entity nodes only) ──────────────────────────────
     compartment_members: Dict[str, List[str]] = {}
     for n in nodes:
         if n["kind"] in _RXN_KINDS:
-            continue  # reactions not clustered
+            continue
         comp = (n.get("compartment") or "").strip()
         compartment_members.setdefault(comp, []).append(n["id"])
 
-    # Emit compartment clusters (skip the empty-string "unknown" compartment)
     emitted_in_cluster: Set[str] = set()
-    cluster_idx = 0
-    for comp, members in compartment_members.items():
+    for ci, (comp, members) in enumerate(compartment_members.items()):
         if not comp:
             continue
-        lines.append(f'  subgraph cluster_{cluster_idx} {{')
+        fill  = _CLUSTER_FILLS[ci % len(_CLUSTER_FILLS)]
+        color = _CLUSTER_COLORS[ci % len(_CLUSTER_COLORS)]
+        lines.append(f'  subgraph cluster_{ci} {{')
         lines.append(f'    label="{comp}";')
-        lines.append('    style="rounded,filled";')
-        lines.append('    fillcolor="#f5f5f5";')
-        lines.append('    color="#aaaaaa";')
-        lines.append('    penwidth=1.2;')
+        lines.append(f'    style="rounded,filled";')
+        lines.append(f'    fillcolor="{fill}";')
+        lines.append(f'    color="{color}";')
+        lines.append(f'    penwidth=1.8;')
+        lines.append(f'    fontname="Helvetica Bold";')
+        lines.append(f'    fontsize=12;')
         for nid in members:
             n = node_by_id[nid]
             kind = n.get("kind", "compound")
-            attrs = _NODE_ATTRS.get(kind, _NODE_ATTRS["compound"])
+            attrs = _NODE_ATTRS.get(kind, _COMPOUND_ATTRS)
             label = _dot_label(n.get("label", nid))
             lines.append(f'    {_dot_id(nid)} [{attrs} label="{label}"];')
             emitted_in_cluster.add(nid)
         lines.append("  }")
-        cluster_idx += 1
 
-    # Emit nodes not in any cluster (no compartment, or reactions)
+    # ── Reaction nodes (outside clusters, use xlabel for label) ───────────────
     for n in nodes:
         nid = n["id"]
-        if nid in emitted_in_cluster:
-            continue
         kind = n.get("kind", "compound")
-        attrs = _NODE_ATTRS.get(kind, _NODE_ATTRS["compound"])
-        is_rxn = kind in _RXN_KINDS
-        if is_rxn:
-            # Reaction: node has no visible label; we add an external label via
-            # a separate invisible helper node or just rely on the tooltip.
-            # Simpler: emit the node, then add a label node linked by invisible edge.
-            rxn_dot_id = _dot_id(nid)
-            lines.append(f'  {rxn_dot_id} [{attrs}];')
-            # Floating label node
-            label_node_id = _dot_id(nid + "__lbl")
-            label = _dot_label(n.get("label", nid), max_chars=18)
-            lines.append(f'  {label_node_id} [shape=none label="{label}" fontsize=8 width=0 height=0];')
-            lines.append(f'  {rxn_dot_id} -> {label_node_id} [style=invis weight=0];')
-        else:
-            label = _dot_label(n.get("label", nid))
-            lines.append(f'  {_dot_id(nid)} [{attrs} label="{label}"];')
+        if kind not in _RXN_KINDS:
+            if nid not in emitted_in_cluster:
+                # entity with no compartment
+                attrs = _NODE_ATTRS.get(kind, _COMPOUND_ATTRS)
+                label = _dot_label(n.get("label", nid))
+                lines.append(f'  {_dot_id(nid)} [{attrs} label="{label}"];')
+            continue
+        attrs = _NODE_ATTRS.get(kind, _RXN_ATTRS)
+        xlabel = _dot_label(n.get("label", nid), max_chars=18)
+        lines.append(f'  {_dot_id(nid)} [{attrs} xlabel="{xlabel}"];')
 
-    # Emit edges
+    # ── Edges ─────────────────────────────────────────────────────────────────
     for e in edges:
         src, tgt, role = e["source"], e["target"], e.get("role", "")
         attrs = _EDGE_ATTRS.get(role, _DEFAULT_EDGE)
@@ -147,31 +153,44 @@ def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
     return "\n".join(lines)
 
 
-def render_draft_graph_to_png_bytes(draft_graph_dict: Dict[str, Any], dpi: int = 150) -> bytes:
-    """
-    Render a DraftGraph dict to PNG bytes using graphviz dot.
-    Raises RuntimeError if graphviz is not installed or graph is empty.
-    """
+# ── Graphviz discovery ────────────────────────────────────────────────────────
+
+_FALLBACK_DOT_PATHS = [
+    r"C:\Program Files\Graphviz\bin\dot.exe",
+    r"C:\Program Files (x86)\Graphviz\bin\dot.exe",
+    r"C:\Program Files\Graphviz2.38\bin\dot.exe",
+]
+
+
+def _find_dot() -> str:
+    found = shutil.which("dot")
+    if found:
+        return found
+    for p in _FALLBACK_DOT_PATHS:
+        if os.path.isfile(p):
+            return p
+    raise RuntimeError(
+        "graphviz 'dot' not found on PATH. Install graphviz to enable graph rendering."
+    )
+
+
+def render_draft_graph_to_png_bytes(draft_graph_dict: Dict[str, Any], dpi: int = 160) -> bytes:
     nodes: List[Dict] = draft_graph_dict.get("nodes", [])
     edges: List[Dict] = draft_graph_dict.get("edges", [])
 
     if not nodes:
         raise RuntimeError("DraftGraph has no nodes — nothing to render.")
 
-    if not shutil.which("dot"):
-        raise RuntimeError(
-            "graphviz 'dot' not found on PATH. Install graphviz to enable graph rendering."
-        )
-
+    dot_exe = _find_dot()
     dot_src = _build_dot(nodes, edges)
+
     result = subprocess.run(
-        ["dot", f"-Gdpi={dpi}", "-Tpng"],
+        [dot_exe, f"-Gdpi={dpi}", "-Tpng"],
         input=dot_src.encode("utf-8"),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     if result.returncode != 0:
-        stderr = result.stderr.decode("utf-8", errors="replace")
-        raise RuntimeError(f"graphviz dot failed: {stderr}")
+        raise RuntimeError(f"graphviz dot failed: {result.stderr.decode('utf-8', errors='replace')}")
 
     return result.stdout
