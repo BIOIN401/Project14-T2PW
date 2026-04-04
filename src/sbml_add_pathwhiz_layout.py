@@ -560,7 +560,7 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
     ys = [p[1] for p in pos.values()]
     y_max = max(ys)
     scale, margin = 140.0, 80.0
-    compound_r = 13.0
+    compound_r = 39.0
     protein_w_px, protein_h_px = 92.0, 30.0
 
     # <pathwhiz:species species_type="..."/> on each species annotation (renderer uses this)
