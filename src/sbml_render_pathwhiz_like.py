@@ -213,9 +213,7 @@ def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], 
         species[sid] = SpeciesInfo(sid=sid, name=name, species_type=stype)
 
     loc_elems: List[LocationElement] = []
-    for le in root.findall(
-        ".//sbml:model/sbml:annotation/pathwhiz:location_element", NS
-    ):
+    for le in root.findall(".//pathwhiz:location_element", NS):
         etype = le.get(f"{{{PW_NS}}}element_type", "")
         eid = le.get(f"{{{PW_NS}}}element_id", "")
         hidden = le.get(f"{{{PW_NS}}}hidden", "false").lower() == "true"
