@@ -1,0 +1,1000 @@
+{
+  "normalization_stats": {
+    "complexes_created": 1,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 1,
+    "scaffold_split_reactions": 1,
+    "entities_moved_out_of_compounds": 1,
+    "entities_added_as_compounds": 2,
+    "entities_added_as_proteins": 2,
+    "catalysts_promoted_to_enzymes": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "pyruvate dehydrogenase complex",
+      "succinate:CoA-SH",
+      "succinate:ubiquinone oxidoreductase complex",
+      "von Hippel Lindau E3 ubiquitin ligase complex"
+    ],
+    "n_autostate_created": 1,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "modifier_refs_canonicalized": 0,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 0,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 0,
+    "dedupe_removed_total": 0,
+    "no_op_removed_count": 0,
+    "n_same_as_groups": 0,
+    "n_aliases_rewritten": 0,
+    "n_entities_deduped": 0,
+    "n_single_protein_complexes_removed": 0,
+    "alias_example_mappings": [],
+    "alias_canonicalization": {
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": []
+    },
+    "enzymes_attached_from_reaction_evidence": 0
+  },
+  "graph_summary": {
+    "n_reactions": 13,
+    "n_transports": 3,
+    "n_interactions": 17,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 98,
+    "n_edges": 137,
+    "n_components": 9,
+    "main_component_size": 90,
+    "largest_component_pct": 91.84,
+    "n_isolated_nodes": 8,
+    "proteins_degree0": 0,
+    "proteins_attached_pct": 100.0
+  },
+  "payload": {
+    "entities": {
+      "species": [
+        {
+          "name": "Acetobacter aceti"
+        },
+        {
+          "name": "Helicobacter pylori"
+        }
+      ],
+      "tissues": [
+        {
+          "name": "pigeon breast muscle"
+        },
+        {
+          "name": "heart"
+        },
+        {
+          "name": "skeletal muscle"
+        },
+        {
+          "name": "liver"
+        }
+      ],
+      "subcellular_locations": [
+        {
+          "name": "mitochondrial matrix",
+          "canonical_id": "mitochondrial_matrix",
+          "evidence": "occurs in the mitochondrial matrix"
+        },
+        {
+          "name": "cytosol",
+          "canonical_id": "cytosol",
+          "evidence": "performed in the cytosol"
+        },
+        {
+          "name": "inner mitochondrial membrane",
+          "evidence": "across the inner mitochondrial membrane"
+        },
+        {
+          "name": "plasma membrane",
+          "canonical_id": "plasma_membrane",
+          "evidence": "across the cell's surface (plasma membrane)"
+        }
+      ],
+      "compounds": [
+        {
+          "name": "acetyl-CoA",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "oxaloacetate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "citrate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "NADH",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "FADH2",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "ATP",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "GTP",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "alpha-ketoglutarate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "succinyl-CoA",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "malate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "water",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "carbon dioxide",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "NAD+",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "FAD",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "GDP",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "Pi",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "CoA-SH",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "cis-Aconitate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "Isocitrate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "Oxalosuccinate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "H+",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "ubiquinone",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "ubiquinol",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "L-Malate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "pyruvate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "fumarate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "2-hydroxyglutarate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "NADPH",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "GSH",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "HSCoA",
+          "class": "compound",
+          "confidence": 0.8,
+          "provenance": "inferred"
+        },
+        {
+          "name": "ubiquinone oxidoreductase complex",
+          "class": "compound",
+          "confidence": 0.8,
+          "provenance": "inferred"
+        }
+      ],
+      "proteins": [
+        {
+          "name": "citrate synthase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "aconitase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "isocitrate dehydrogenase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "alpha-ketoglutarate dehydrogenase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "succinyl-CoA synthetase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "succinate dehydrogenase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "fumarase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "malate dehydrogenase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "pyruvate carboxylase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "ATP citrate lyase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "phosphofructokinase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "pyruvate dehydrogenase phosphatase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "prolyl 4-hydroxylases",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "hydroxyglutarate dehydrogenase enzymes",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "nucleoside-diphosphate kinase",
+          "class": "protein",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "succinate",
+          "class": "compound",
+          "confidence": 1.0,
+          "provenance": "extracted"
+        },
+        {
+          "name": "von Hippel Lindau E3 ubiquitin ligase complex"
+        }
+      ],
+      "protein_complexes": [
+        {
+          "name": "pyruvate dehydrogenase complex",
+          "class": "protein_complex",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "evidence": "pyruvate dehydrogenase complex generating acetyl-CoA"
+        },
+        {
+          "name": "succinate:ubiquinone oxidoreductase complex",
+          "class": "protein_complex",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "evidence": "succinate:ubiquinone oxidoreductase complex, also acting as an intermediate",
+          "components": [
+            "succinate",
+            "ubiquinone oxidoreductase complex"
+          ]
+        },
+        {
+          "name": "von Hippel Lindau E3 ubiquitin ligase complex",
+          "class": "protein_complex",
+          "confidence": 1.0,
+          "provenance": "extracted",
+          "evidence": "von Hippel Lindau E3 ubiquitin ligase complex, which targets them"
+        },
+        {
+          "name": "succinate:CoA-SH",
+          "components": [
+            "succinate",
+            "CoA-SH"
+          ],
+          "class": "protein_complex",
+          "confidence": 0.8,
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "biological_states": [
+      {
+        "name": "mitochondrial matrix state",
+        "subcellular_location": "mitochondrial matrix",
+        "evidence": "occurs in the mitochondrial matrix"
+      },
+      {
+        "name": "cytosolic state",
+        "subcellular_location": "cytosol",
+        "evidence": "performed in the cytosol"
+      },
+      {
+        "name": "inner mitochondrial membrane state",
+        "subcellular_location": "inner mitochondrial membrane",
+        "evidence": "across the inner mitochondrial membrane"
+      },
+      {
+        "name": "plasma membrane state",
+        "subcellular_location": "plasma membrane",
+        "evidence": "across the cell's surface (plasma membrane)"
+      },
+      {
+        "name": "__auto_state__",
+        "subcellular_location": "cell"
+      }
+    ],
+    "element_locations": {
+      "compound_locations": [
+        {
+          "compound": "pyruvate",
+          "biological_state": "cytosolic state",
+          "evidence": "pyruvate molecules produced by glycolysis"
+        },
+        {
+          "compound": "acetyl-CoA",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "acetyl-CoA present in the mitochondrial matrix"
+        },
+        {
+          "compound": "citrate",
+          "biological_state": "cytosolic state",
+          "evidence": "citrate is removed ... into the cytosol"
+        },
+        {
+          "compound": "malate",
+          "biological_state": "cytosolic state",
+          "evidence": "converted into cytosolic oxaloacetate"
+        },
+        {
+          "compound": "NAD+",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "reduces NAD+ to NADH, releasing carbon dioxide"
+        },
+        {
+          "compound": "FAD",
+          "biological_state": "inner mitochondrial membrane state",
+          "evidence": "electrons from the succinate oxidation step are transferred first to the FAD cofactor"
+        },
+        {
+          "compound": "FADH2",
+          "biological_state": "inner mitochondrial membrane state",
+          "evidence": "reducing it to FADH2, and eventually to ubiquinone"
+        },
+        {
+          "compound": "H+",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Oxalosuccinate + NADH + H +"
+        },
+        {
+          "compound": "NADPH",
+          "biological_state": "cytosolic state",
+          "evidence": "produced largely via the pentose phosphate pathway in the cytoplasm"
+        },
+        {
+          "compound": "GSH",
+          "biological_state": "cytosolic state",
+          "evidence": "required cofactor in the production of GSH"
+        }
+      ],
+      "protein_locations": [
+        {
+          "protein": "nucleoside-diphosphate kinase",
+          "biological_state": "cytosolic state",
+          "evidence": "GTP + ADP → GDP + ATP"
+        },
+        {
+          "protein": "succinate:ubiquinone oxidoreductase complex",
+          "biological_state": "inner mitochondrial membrane state",
+          "evidence": "succinate:ubiquinone oxidoreductase complex, also acting as an intermediate in the electron transport chain"
+        },
+        {
+          "protein": "von Hippel Lindau E3 ubiquitin ligase complex",
+          "biological_state": "cytosolic state",
+          "evidence": "interaction with the von Hippel Lindau E3 ubiquitin ligase complex, which targets them for rapid degradation"
+        }
+      ]
+    },
+    "processes": {
+      "reactions": [
+        {
+          "inputs": [
+            "pyruvate",
+            "HSCoA",
+            "NAD"
+          ],
+          "outputs": [
+            "acetyl-CoA",
+            "NADH",
+            "carbon dioxide"
+          ],
+          "name": "pyruvate dehydrogenase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "pyruvate dehydrogenase complex",
+              "evidence": "pyruvate dehydrogenase complex generating acetyl-CoA"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "pyruvate + HSCoA + NAD+ → acetyl-CoA + NADH + CO2",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "oxaloacetate",
+            "acetyl-CoA",
+            "water"
+          ],
+          "outputs": [
+            "citrate",
+            "CoA-SH"
+          ],
+          "name": "citrate synthase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "citrate synthase",
+              "evidence": "Citrate synthase catalyzes the condensation"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Oxaloacetate + Acetyl CoA + H2O ... Citrate + CoA-SH",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "Isocitrate",
+            "NAD"
+          ],
+          "outputs": [
+            "Oxalosuccinate",
+            "NADH",
+            "H"
+          ],
+          "name": "isocitrate dehydrogenase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "isocitrate dehydrogenase",
+              "evidence": "Isocitrate dehydrogenase catalyzes oxidation"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Isocitrate + NAD+ ... Oxalosuccinate + NADH + H +",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "alpha-ketoglutarate",
+            "NAD",
+            "CoA-SH"
+          ],
+          "outputs": [
+            "succinyl-CoA",
+            "NADH",
+            "H",
+            "carbon dioxide"
+          ],
+          "name": "alpha-ketoglutarate dehydrogenase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "alpha-ketoglutarate dehydrogenase",
+              "evidence": "α-Ketoglutarate dehydrogenase catalyzes conversion"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "α-Ketoglutarate + NAD+ + CoA-SH ... Succinyl-CoA + NADH + H + + CO2",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "succinyl-CoA",
+            "GDP",
+            "Pi"
+          ],
+          "outputs": [
+            "GTP",
+            "succinate:CoA-SH"
+          ],
+          "name": "succinyl-CoA synthetase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "succinyl-CoA synthetase",
+              "evidence": "Succinyl-CoA synthetase catalyzes phosphorylation"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Succinyl-CoA + GDP + Pi ... Succinate + CoA-SH + GTP",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "L-Malate",
+            "NAD"
+          ],
+          "outputs": [
+            "oxaloacetate",
+            "NADH",
+            "H"
+          ],
+          "name": "malate dehydrogenase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "malate dehydrogenase",
+              "evidence": "Malate dehydrogenase catalyzes oxidation"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "L-Malate + NAD+ ... Oxaloacetate + NADH + H+",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "succinate",
+            "ubiquinone"
+          ],
+          "outputs": [
+            "fumarate",
+            "ubiquinol"
+          ],
+          "name": "succinate dehydrogenase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "succinate dehydrogenase",
+              "evidence": "Succinate + ubiquinone (Q) | Succinate dehydrogenase | Fumarate + ubiquinol (QH2)"
+            }
+          ],
+          "biological_state": "inner mitochondrial membrane state",
+          "evidence": "Succinate + ubiquinone (Q) | Succinate dehydrogenase | Fumarate + ubiquinol (QH2)",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "fumarate",
+            "water"
+          ],
+          "outputs": [
+            "L-Malate"
+          ],
+          "name": "fumarase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "fumarase",
+              "evidence": "Fumarate + H2O | Fumarase | L-Malate"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Fumarate + H2O | Fumarase | L-Malate",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "citrate"
+          ],
+          "outputs": [
+            "cis-Aconitate",
+            "water"
+          ],
+          "name": "aconitase dehydration reaction",
+          "enzymes": [
+            {
+              "protein_complex": "aconitase",
+              "evidence": "Citrate | Aconitase | cis-Aconitate + H2O"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Citrate | Aconitase | cis-Aconitate + H2O",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "cis-Aconitate",
+            "water"
+          ],
+          "outputs": [
+            "Isocitrate"
+          ],
+          "name": "aconitase hydration reaction",
+          "enzymes": [
+            {
+              "protein_complex": "aconitase",
+              "evidence": "cis-Aconitate + H2O | Isocitrate"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "cis-Aconitate + H2O | Isocitrate",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "pyruvate"
+          ],
+          "outputs": [
+            "oxaloacetate"
+          ],
+          "name": "pyruvate carboxylase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "pyruvate carboxylase",
+              "evidence": "pyruvate to be carboxylated by pyruvate carboxylase to form oxaloacetate"
+            }
+          ],
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "pyruvate to be carboxylated by pyruvate carboxylase to form oxaloacetate",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "citrate"
+          ],
+          "outputs": [
+            "acetyl-CoA",
+            "oxaloacetate"
+          ],
+          "name": "ATP citrate lyase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "ATP citrate lyase",
+              "evidence": "cleaved by ATP citrate lyase into acetyl-CoA and oxaloacetate"
+            }
+          ],
+          "biological_state": "cytosolic state",
+          "evidence": "cleaved by ATP citrate lyase into acetyl-CoA and oxaloacetate",
+          "modifiers": []
+        },
+        {
+          "inputs": [
+            "2-hydroxyglutarate"
+          ],
+          "outputs": [
+            "alpha-ketoglutarate"
+          ],
+          "name": "hydroxyglutarate dehydrogenase reaction",
+          "enzymes": [
+            {
+              "protein_complex": "hydroxyglutarate dehydrogenase enzymes",
+              "evidence": "converted to alpha-ketoglutarate via hydroxyglutarate dehydrogenase enzymes"
+            }
+          ],
+          "evidence": "converted to alpha-ketoglutarate via hydroxyglutarate dehydrogenase enzymes",
+          "biological_state": "mitochondrial matrix state",
+          "modifiers": []
+        }
+      ],
+      "transports": [
+        {
+          "name": "pyruvate import",
+          "cargo": "pyruvate",
+          "from_biological_state": "cytosolic state",
+          "to_biological_state": "mitochondrial matrix state",
+          "elements_with_states": [
+            {
+              "element": "pyruvate",
+              "side": "left",
+              "biological_state": "cytosolic state",
+              "evidence": "pyruvate molecules produced by glycolysis"
+            },
+            {
+              "element": "pyruvate",
+              "side": "right",
+              "biological_state": "mitochondrial matrix state",
+              "evidence": "actively transported across the inner mitochondrial membrane"
+            }
+          ],
+          "evidence": "pyruvate molecules ... actively transported across the inner mitochondrial membrane, and into the matrix",
+          "transporters": []
+        },
+        {
+          "name": "citrate export",
+          "cargo": "citrate",
+          "from_biological_state": "mitochondrial matrix state",
+          "to_biological_state": "cytosolic state",
+          "elements_with_states": [
+            {
+              "element": "citrate",
+              "side": "left",
+              "biological_state": "mitochondrial matrix state",
+              "evidence": "citrate is removed from the citric acid cycle"
+            },
+            {
+              "element": "citrate",
+              "side": "right",
+              "biological_state": "cytosolic state",
+              "evidence": "carried across the inner mitochondrial membrane into the cytosol"
+            }
+          ],
+          "evidence": "citrate is removed from the citric acid cycle and carried across the inner mitochondrial membrane into the cytosol",
+          "transporters": []
+        },
+        {
+          "name": "malate export",
+          "cargo": "malate",
+          "from_biological_state": "mitochondrial matrix state",
+          "to_biological_state": "cytosolic state",
+          "elements_with_states": [
+            {
+              "element": "malate",
+              "side": "left",
+              "biological_state": "mitochondrial matrix state",
+              "evidence": "malate is immediately removed from the mitochondrion"
+            },
+            {
+              "element": "malate",
+              "side": "right",
+              "biological_state": "cytosolic state",
+              "evidence": "converted into cytosolic oxaloacetate"
+            }
+          ],
+          "evidence": "malate is immediately removed from the mitochondrion to be converted into cytosolic oxaloacetate",
+          "transporters": []
+        }
+      ],
+      "interactions": [
+        {
+          "entity_1": "NADH",
+          "entity_2": "pyruvate dehydrogenase complex",
+          "name": "NADH inhibition of pyruvate dehydrogenase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "NADH ... inhibits pyruvate dehydrogenase"
+        },
+        {
+          "entity_1": "NADH",
+          "entity_2": "isocitrate dehydrogenase",
+          "name": "NADH inhibition of isocitrate dehydrogenase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "NADH ... inhibits ... isocitrate dehydrogenase"
+        },
+        {
+          "entity_1": "NADH",
+          "entity_2": "alpha-ketoglutarate dehydrogenase",
+          "name": "NADH inhibition of alpha-ketoglutarate dehydrogenase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "NADH ... inhibits ... α-ketoglutarate dehydrogenase"
+        },
+        {
+          "entity_1": "NADH",
+          "entity_2": "citrate synthase",
+          "name": "NADH inhibition of citrate synthase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "NADH ... inhibits ... citrate synthase"
+        },
+        {
+          "entity_1": "acetyl-CoA",
+          "entity_2": "pyruvate dehydrogenase complex",
+          "name": "acetyl-CoA inhibition of pyruvate dehydrogenase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Acetyl-coA inhibits pyruvate dehydrogenase"
+        },
+        {
+          "entity_1": "succinyl-CoA",
+          "entity_2": "alpha-ketoglutarate dehydrogenase",
+          "name": "succinyl-CoA inhibition of alpha-ketoglutarate dehydrogenase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "succinyl-CoA inhibits alpha-ketoglutarate dehydrogenase"
+        },
+        {
+          "entity_1": "succinyl-CoA",
+          "entity_2": "citrate synthase",
+          "name": "succinyl-CoA inhibition of citrate synthase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "succinyl-CoA inhibits ... citrate synthase"
+        },
+        {
+          "entity_1": "ATP",
+          "entity_2": "citrate synthase",
+          "name": "ATP inhibition of citrate synthase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "ATP inhibits citrate synthase"
+        },
+        {
+          "entity_1": "ATP",
+          "entity_2": "alpha-ketoglutarate dehydrogenase",
+          "name": "ATP inhibition of alpha-ketoglutarate dehydrogenase",
+          "relationship": "inhibits",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "ATP inhibits ... α-ketoglutarate dehydrogenase"
+        },
+        {
+          "entity_1": "citrate",
+          "entity_2": "phosphofructokinase",
+          "name": "citrate inhibition of phosphofructokinase",
+          "relationship": "inhibits",
+          "biological_state": "cytosolic state",
+          "evidence": "Citrate ... inhibits phosphofructokinase"
+        },
+        {
+          "entity_1": "calcium",
+          "entity_2": "pyruvate dehydrogenase phosphatase",
+          "name": "calcium activation of pyruvate dehydrogenase phosphatase",
+          "relationship": "activates",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Calcium ... activates pyruvate dehydrogenase phosphatase"
+        },
+        {
+          "entity_1": "calcium",
+          "entity_2": "isocitrate dehydrogenase",
+          "name": "calcium activation of isocitrate dehydrogenase",
+          "relationship": "activates",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Calcium also activates isocitrate dehydrogenase"
+        },
+        {
+          "entity_1": "calcium",
+          "entity_2": "alpha-ketoglutarate dehydrogenase",
+          "name": "calcium activation of alpha-ketoglutarate dehydrogenase",
+          "relationship": "activates",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "Calcium also activates ... α-ketoglutarate dehydrogenase"
+        },
+        {
+          "entity_1": "fumarate",
+          "entity_2": "prolyl 4-hydroxylases",
+          "name": "fumarate inhibition of prolyl hydroxylases",
+          "relationship": "inhibits",
+          "biological_state": "cytosolic state",
+          "evidence": "Fumarate ... identified as potent inhibitors of prolyl hydroxylases"
+        },
+        {
+          "entity_1": "succinate",
+          "entity_2": "prolyl 4-hydroxylases",
+          "name": "succinate inhibition of prolyl hydroxylases",
+          "relationship": "inhibits",
+          "biological_state": "cytosolic state",
+          "evidence": "succinate have been identified as potent inhibitors of prolyl hydroxylases"
+        },
+        {
+          "entity_1": "2-hydroxyglutarate",
+          "entity_2": "alpha-ketoglutarate-dependent dioxygenases",
+          "name": "2-hydroxyglutarate inhibition of alpha-ketoglutarate-dependent dioxygenases",
+          "relationship": "inhibits",
+          "biological_state": "cytosolic state",
+          "evidence": "2-hydroxyglutarate serves as a competitive inhibitor for ... alpha-ketoglutarate-dependent dioxygenases"
+        },
+        {
+          "entity_1": "pyruvate dehydrogenase phosphatase",
+          "entity_2": "pyruvate dehydrogenase complex",
+          "name": "pyruvate dehydrogenase phosphatase activation of pyruvate dehydrogenase complex",
+          "relationship": "activates",
+          "biological_state": "mitochondrial matrix state",
+          "evidence": "activates pyruvate dehydrogenase phosphatase which in turn activates the pyruvate dehydrogenase complex"
+        }
+      ]
+    }
+  }
+}
