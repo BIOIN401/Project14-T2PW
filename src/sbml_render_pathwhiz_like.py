@@ -16,6 +16,7 @@ import html
 import json
 import re
 import shutil
+import textwrap
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
@@ -413,7 +414,7 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
             ax.text(
                 e.x + 10,
                 e.y + 22,
-                label,
+                "\n".join(textwrap.wrap(label, width=22)),
                 fontsize=9,
                 ha="left",
                 va="bottom",
@@ -436,11 +437,10 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
             ax.text(
                 e.x + e.w / 2,
                 e.y + e.h / 2,
-                label,
+                "\n".join(textwrap.wrap(label, width=18)),
                 fontsize=8,
                 ha="center",
                 va="center",
-                wrap=True,
                 zorder=e.z + 1,
             )
             continue
@@ -459,18 +459,17 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
             ax.text(
                 e.x + e.w / 2,
                 e.y + e.h / 2,
-                label,
+                "\n".join(textwrap.wrap(label, width=18)),
                 fontsize=8,
                 ha="center",
                 va="center",
-                wrap=True,
                 zorder=e.z + 1,
             )
             continue
 
         rect = Rectangle((e.x, e.y), e.w, e.h, fill=False, linewidth=1.8, edgecolor="black", zorder=e.z)
         ax.add_patch(rect)
-        ax.text(e.x + e.w / 2, e.y + e.h / 2, label, fontsize=8, ha="center", va="center", wrap=True, zorder=e.z + 1)
+        ax.text(e.x + e.w / 2, e.y + e.h / 2, "\n".join(textwrap.wrap(label, width=18)), fontsize=8, ha="center", va="center", zorder=e.z + 1)
 
     for e in elems_sorted:
         if e.element_type != "edge" or not e.path:
