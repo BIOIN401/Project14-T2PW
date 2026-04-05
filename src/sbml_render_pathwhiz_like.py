@@ -189,7 +189,7 @@ def _safe_json_from_options(opt_raw: Optional[str]) -> Optional[dict]:
 # ----------------------------
 # SBML + PathWhiz parsing
 # ----------------------------
-def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], List[LocationElement]]:
+def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], List[LocationElement], Dict[str, str]]:
     tree = ET.parse(sbml_file)
     root = tree.getroot()
 
@@ -198,6 +198,12 @@ def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], 
         cid = compartment.get("id", "")
         if cid:
             compartments[cid] = compartment.get("name", cid)
+
+    reactions: Dict[str, str] = {}
+    for rxn in root.findall(".//sbml:listOfReactions/sbml:reaction", NS):
+        rid = rxn.get("id", "")
+        if rid:
+            reactions[rid] = rxn.get("name", rid)
 
     species: Dict[str, SpeciesInfo] = {}
     for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
@@ -246,7 +252,7 @@ def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], 
             )
         )
 
-    return species, compartments, loc_elems
+    return species, compartments, loc_elems, reactions
 
 
 def _has_pathwhiz_layout(sbml_file: str) -> bool:
@@ -341,7 +347,7 @@ def _bounds_from_elements(elems: List[LocationElement], path_cls: Any) -> Tuple[
 
 def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show: bool = False) -> None:
     plt, FancyBboxPatch, Circle, PathPatch, Rectangle, MplPath = _load_matplotlib(show=show)
-    species, compartments, elems = parse_sbml(render_input)
+    species, compartments, elems, reactions = parse_sbml(render_input)
 
     # Sort by z-index so boxes draw before nodes and edges can go on top
     elems_sorted = sorted(elems, key=lambda e: e.z)
@@ -369,10 +375,26 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
         ).name
         stype = species.get(e.element_id, SpeciesInfo(e.element_id, "", "unknown")).species_type
 
-        # Reaction center: small filled black square
+        # Reaction center: filled circle with reaction name label
         if e.element_type == "reaction_center":
-            sq = Rectangle((e.x, e.y), e.w, e.h, linewidth=0, facecolor="black", edgecolor="none", zorder=e.z)
-            ax.add_patch(sq)
+            cx = e.x + e.w / 2
+            cy = e.y + e.h / 2
+            radius = 14
+            dot = Circle((cx, cy), radius, linewidth=1.5, facecolor="#2c2c2c", edgecolor="white", zorder=e.z)
+            ax.add_patch(dot)
+            rxn_label = reactions.get(e.element_id, e.element_id)
+            ax.text(
+                cx,
+                cy - radius - 4,
+                rxn_label,
+                fontsize=6,
+                ha="center",
+                va="bottom",
+                rotation=45,
+                rotation_mode="anchor",
+                color="#1a1a1a",
+                zorder=e.z + 1,
+            )
             continue
 
         # Compartment-like boxes / collections
