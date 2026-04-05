@@ -61,12 +61,122 @@ class _IdCounter:
 _CANVAS_W = 2400.0
 _CANVAS_H = 2400.0
 _MARGIN = 120.0
-_REACTION_COLS = 5
 _REACTION_GAP_X = 420.0
 _REACTION_GAP_Y = 380.0
 _NODE_OFFSET_X = 160.0
 _NODE_SPACING_Y = 90.0
 _MODIFIER_OFFSET_Y = 90.0
+
+# ---------------------------------------------------------------------------
+# Cofactor filtering — these metabolites connect every reaction and destroy
+# topological ordering if included in the dependency graph.
+# ---------------------------------------------------------------------------
+_COFACTOR_NORMS: "Set[str]" = {
+    "nad", "nad+", "nadh", "nadp", "nadp+", "nadph",
+    "fad", "fadh", "fadh2",
+    "atp", "adp", "amp", "gtp", "gdp", "gmp", "ctp", "utp",
+    "h2o", "water", "h+", "h", "proton", "oh",
+    "o2", "oxygen", "co2", "carbon dioxide",
+    "pi", "ppi", "pyrophosphate", "phosphate", "inorganic phosphate",
+    "coa", "coa sh", "coash", "coa-sh", "coenzyme a", "acetyl coa",
+    "hco3", "bicarbonate",
+    "ubiquinone", "ubiquinol", "ubiquinone q", "ubiquinol qh2",
+    "h2o2", "hydrogen peroxide",
+    "fe2+", "fe3+", "cu+", "cu2+", "zn2+", "mg2+", "mn2+", "ca2+",
+}
+
+
+def _is_cofactor(name: str) -> bool:
+    n = _normalize(name)
+    if not n or len(n) <= 1:
+        return True
+    return n in _COFACTOR_NORMS
+
+
+def _compute_reaction_ranks(reaction_plans: "List[Dict[str, Any]]") -> "List[int]":
+    """
+    Return a rank (column index) for each reaction plan using topological sort.
+    Cofactors are excluded so they don't collapse everything to rank 0.
+    Cycles (TCA etc.) are detected and broken by using document order.
+    """
+    from collections import deque
+    n = len(reaction_plans)
+    if n == 0:
+        return []
+
+    # Build dependency graph: reaction i → reaction j  iff  i produces something j consumes
+    # (excluding cofactors)
+    produces: "Dict[str, List[int]]" = defaultdict(list)
+    consumes: "Dict[str, List[int]]" = defaultdict(list)
+    for i, plan in enumerate(reaction_plans):
+        for name in plan.get("outputs", []):
+            if not _is_cofactor(name):
+                produces[_normalize(name)].append(i)
+        for name in plan.get("inputs", []):
+            if not _is_cofactor(name):
+                consumes[_normalize(name)].append(i)
+
+    successors: "Dict[int, Set[int]]" = defaultdict(set)
+    in_degree: "List[int]" = [0] * n
+    for met in produces:
+        for pi in produces[met]:
+            for ci in consumes.get(met, []):
+                if pi != ci and ci not in successors[pi]:
+                    successors[pi].add(ci)
+                    in_degree[ci] += 1
+
+    # Kahn's BFS topological sort
+    ranks = [0] * n
+    queue: "deque[int]" = deque(i for i in range(n) if in_degree[i] == 0)
+    visited: "Set[int]" = set()
+    rank = 0
+    while queue:
+        nq: "deque[int]" = deque()
+        for i in list(queue):
+            if i in visited:
+                continue
+            visited.add(i)
+            ranks[i] = rank
+            for j in successors[i]:
+                in_degree[j] -= 1
+                if in_degree[j] == 0:
+                    nq.append(j)
+        queue = nq
+        rank += 1
+
+    # Handle unvisited nodes (cycles) — assign sequential ranks by document order
+    unvisited = set(range(n)) - visited
+    if unvisited:
+        # Build undirected adjacency to find connected components
+        undirected: "Dict[int, Set[int]]" = defaultdict(set)
+        for i in range(n):
+            for j in successors.get(i, set()):
+                undirected[i].add(j)
+                undirected[j].add(i)
+
+        seen: "Set[int]" = set()
+        for start in sorted(unvisited):
+            if start in seen:
+                continue
+            # BFS to find component
+            comp: "List[int]" = []
+            stk = [start]
+            while stk:
+                node = stk.pop()
+                if node in seen:
+                    continue
+                seen.add(node)
+                comp.append(node)
+                for nb in undirected.get(node, set()):
+                    if nb not in seen:
+                        stk.append(nb)
+            # Sort by document order and assign sequential ranks
+            comp.sort()  # document order = list index
+            for idx, i in enumerate(comp):
+                ranks[i] = rank + idx
+            rank += len(comp)
+
+    return ranks
 
 # Compound box sizes  (width, height) — approximate PathWhiz defaults
 _COMPOUND_W = 78.0
@@ -82,11 +192,12 @@ _TMPL_EDGE = "5"
 _TMPL_PROTEIN = "6"
 
 
+# _reaction_center is now computed dynamically via _compute_reaction_ranks.
+# The function below is kept for compatibility but should not be called directly.
 def _reaction_center(rxn_idx: int) -> Tuple[float, float]:
-    col = rxn_idx % _REACTION_COLS
-    row = rxn_idx // _REACTION_COLS
-    cx = _MARGIN + _NODE_OFFSET_X + col * _REACTION_GAP_X
-    cy = _MARGIN + _MODIFIER_OFFSET_Y + row * _REACTION_GAP_Y
+    # Legacy grid fallback — not used when reaction_plans are available
+    cx = _MARGIN + _NODE_OFFSET_X + rxn_idx * _REACTION_GAP_X
+    cy = _MARGIN + _MODIFIER_OFFSET_Y
     return cx, cy
 
 
@@ -810,10 +921,23 @@ def build_sbml(
     # ------------------------------------------------------------------
     # Reactions
     # ------------------------------------------------------------------
+    # --- Compute topological layout ranks for all reactions ---
+    _rxn_ranks = _compute_reaction_ranks(reaction_plans)
+    _lane_counts: "Dict[int, int]" = defaultdict(int)
+    _rxn_lanes: "List[int]" = []
+    for _r in _rxn_ranks:
+        _rxn_lanes.append(_lane_counts[_r])
+        _lane_counts[_r] += 1
+    # ----------------------------------------------------------
+
     a('    <listOfReactions>')
 
     for rxn_idx, plan in enumerate(reaction_plans):
-        cx, cy = _reaction_center(rxn_idx)
+        # Topological rank → column; lane (parallel reactions at same rank) → row
+        _rxn_rank = _rxn_ranks[rxn_idx]
+        _rxn_lane = _rxn_lanes[rxn_idx]
+        cx = _MARGIN + _NODE_OFFSET_X + _rxn_rank * _REACTION_GAP_X
+        cy = _MARGIN + _MODIFIER_OFFSET_Y + _rxn_lane * _REACTION_GAP_Y
         sbml_rxn_id = plan["sbml_id"]
         pw_rxn_id = plan["pw_id"]
         compartment_sbml = plan["compartment_sbml"]
