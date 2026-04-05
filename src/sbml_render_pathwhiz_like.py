@@ -310,9 +310,6 @@ def _make_local_temp_dir() -> Path:
 
 
 def _prepare_render_input(sbml_file: str) -> Tuple[str, Optional[Path]]:
-    if _has_pathwhiz_layout(sbml_file):
-        return sbml_file, None
-
     tmp_dir = _make_local_temp_dir()
     source_path = Path(sbml_file)
     laid_out_path = tmp_dir / f"{source_path.stem}.with_layout.sbml"
