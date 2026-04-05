@@ -1575,6 +1575,119 @@
       }
     ]
   },
+  "compound:CO2|HMDB0000608": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Cobalt ion",
+    "synonyms": [
+      "Cobalt ion",
+      "Cobalt(2+)",
+      "Co2+",
+      "Co(II)"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "Co",
+    "charge": 0,
+    "mass_monoisotopic": 58.9332,
+    "mass_average": 58.93,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "ABC transporters"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000608",
+      "kegg_id": "C00175",
+      "chebi_id": "CHEBI:48828",
+      "pubchem_id": "104729",
+      "cas": "22541-53-3",
+      "biocyc": "COBALT-FACTOR-III",
+      "chemspider": "94546"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00175",
+      "primary_name": "Cobalt ion",
+      "synonyms": [
+        "Cobalt ion",
+        "Cobalt(2+)",
+        "Co2+",
+        "Co(II)"
+      ],
+      "formula": "Co",
+      "mass_monoisotopic": 58.9332,
+      "mass_average": 58.93,
+      "pathways": [
+        "ABC transporters"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00175",
+        "pubchem_id": "3475",
+        "chebi_id": "27638"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00175",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00175",
+        "retrieved_at": "2026-04-05T04:49:05Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:48828",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-24T06:16:05Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000608",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000608",
+        "retrieved_at": "2026-03-24T06:16:05Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:48828",
+        "retrieved_at": "2026-03-24T06:16:05Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000608",
+        "retrieved_at": "2026-03-24T06:16:05Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00175",
+        "retrieved_at": "2026-04-05T04:49:05Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
   "compound:H2O|HMDB0002111": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "H2O",
@@ -1751,119 +1864,6 @@
         "source": "KEGG",
         "id": "C00001",
         "retrieved_at": "2026-03-14T01:12:40Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:CO2|HMDB0000608": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Cobalt ion",
-    "synonyms": [
-      "Cobalt ion",
-      "Cobalt(2+)",
-      "Co2+",
-      "Co(II)"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "Co",
-    "charge": 0,
-    "mass_monoisotopic": 58.9332,
-    "mass_average": 58.93,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "ABC transporters"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0000608",
-      "kegg_id": "C00175",
-      "chebi_id": "CHEBI:48828",
-      "pubchem_id": "104729",
-      "cas": "22541-53-3",
-      "biocyc": "COBALT-FACTOR-III",
-      "chemspider": "94546"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00175",
-      "primary_name": "Cobalt ion",
-      "synonyms": [
-        "Cobalt ion",
-        "Cobalt(2+)",
-        "Co2+",
-        "Co(II)"
-      ],
-      "formula": "Co",
-      "mass_monoisotopic": 58.9332,
-      "mass_average": 58.93,
-      "pathways": [
-        "ABC transporters"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00175",
-        "pubchem_id": "3475",
-        "chebi_id": "27638"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00175",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00175",
-        "retrieved_at": "2026-04-05T04:49:05Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:48828",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-24T06:16:05Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000608",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000608",
-        "retrieved_at": "2026-03-24T06:16:05Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:48828",
-        "retrieved_at": "2026-03-24T06:16:05Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0000608",
-        "retrieved_at": "2026-03-24T06:16:05Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00175",
-        "retrieved_at": "2026-04-05T04:49:05Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -2295,6 +2295,208 @@
         "source": "KEGG",
         "id": "C05379",
         "retrieved_at": "2026-03-24T06:14:31Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:α-Ketoglutarate|HMDB0000208": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "2-Oxoglutarate",
+    "synonyms": [
+      "2-Oxoglutarate",
+      "Oxoglutaric acid",
+      "2-Ketoglutaric acid",
+      "alpha-Ketoglutaric acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C5H6O5",
+    "charge": 0,
+    "mass_monoisotopic": 146.0215,
+    "mass_average": 146.1,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Organic acids",
+      "Carboxylic acids",
+      "2-Oxocarboxylic acids",
+      "C00026 2-Oxoglutarate"
+    ],
+    "pathways": [
+      "Citrate cycle (TCA cycle)",
+      "Pentose and glucuronate interconversions",
+      "Ascorbate and aldarate metabolism",
+      "Arginine biosynthesis",
+      "Alanine, aspartate and glutamate metabolism",
+      "Lysine biosynthesis",
+      "Lysine degradation",
+      "Histidine metabolism",
+      "Furfural degradation",
+      "Taurine and hypotaurine metabolism",
+      "D-Amino acid metabolism",
+      "Glyoxylate and dicarboxylate metabolism",
+      "Butanoate metabolism",
+      "C5-Branched dibasic acid metabolism",
+      "Other carbon fixation pathways",
+      "Lipoic acid metabolism",
+      "Biosynthesis of various other secondary metabolites",
+      "Biosynthesis of various antibiotics",
+      "Biosynthesis of plant secondary metabolites",
+      "Biosynthesis of phenylpropanoids",
+      "Biosynthesis of terpenoids and steroids",
+      "Biosynthesis of alkaloids derived from shikimate pathway",
+      "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+      "Biosynthesis of alkaloids derived from histidine and purine",
+      "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+      "Biosynthesis of plant hormones",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "2-Oxocarboxylic acid metabolism",
+      "Biosynthesis of amino acids",
+      "Biosynthesis of cofactors",
+      "HIF-1 signaling pathway",
+      "GABAergic synapse",
+      "Glucagon signaling pathway",
+      "Proximal tubule bicarbonate reclamation",
+      "Bile secretion",
+      "Central carbon metabolism in cancer"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000208",
+      "kegg_id": "C00026",
+      "chebi_id": "CHEBI:30915",
+      "pubchem_id": "51",
+      "cas": "328-50-7",
+      "biocyc": "2-KETOGLUTARATE",
+      "chemspider": "50",
+      "drugbank_id": "DB02926"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00026",
+      "primary_name": "2-Oxoglutarate",
+      "synonyms": [
+        "2-Oxoglutarate",
+        "Oxoglutaric acid",
+        "2-Ketoglutaric acid",
+        "alpha-Ketoglutaric acid"
+      ],
+      "formula": "C5H6O5",
+      "mass_monoisotopic": 146.0215,
+      "mass_average": 146.1,
+      "pathways": [
+        "Citrate cycle (TCA cycle)",
+        "Pentose and glucuronate interconversions",
+        "Ascorbate and aldarate metabolism",
+        "Arginine biosynthesis",
+        "Alanine, aspartate and glutamate metabolism",
+        "Lysine biosynthesis",
+        "Lysine degradation",
+        "Histidine metabolism",
+        "Furfural degradation",
+        "Taurine and hypotaurine metabolism",
+        "D-Amino acid metabolism",
+        "Glyoxylate and dicarboxylate metabolism",
+        "Butanoate metabolism",
+        "C5-Branched dibasic acid metabolism",
+        "Other carbon fixation pathways",
+        "Lipoic acid metabolism",
+        "Biosynthesis of various other secondary metabolites",
+        "Biosynthesis of various antibiotics",
+        "Biosynthesis of plant secondary metabolites",
+        "Biosynthesis of phenylpropanoids",
+        "Biosynthesis of terpenoids and steroids",
+        "Biosynthesis of alkaloids derived from shikimate pathway",
+        "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+        "Biosynthesis of alkaloids derived from histidine and purine",
+        "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+        "Biosynthesis of plant hormones",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "2-Oxocarboxylic acid metabolism",
+        "Biosynthesis of amino acids",
+        "Biosynthesis of cofactors",
+        "HIF-1 signaling pathway",
+        "GABAergic synapse",
+        "Glucagon signaling pathway",
+        "Proximal tubule bicarbonate reclamation",
+        "Bile secretion",
+        "Central carbon metabolism in cancer"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Organic acids",
+        "Carboxylic acids",
+        "2-Oxocarboxylic acids",
+        "C00026 2-Oxoglutarate"
+      ],
+      "cross_references": {
+        "kegg_id": "C00026",
+        "pubchem_id": "3328",
+        "chebi_id": "16810"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00026",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00026",
+        "retrieved_at": "2026-03-24T06:14:36Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:30915",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-24T06:14:36Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000208",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000208",
+        "retrieved_at": "2026-03-24T06:14:36Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:30915",
+        "retrieved_at": "2026-03-24T06:14:36Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000208",
+        "retrieved_at": "2026-03-24T06:14:36Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00026",
+        "retrieved_at": "2026-03-24T06:14:36Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -2833,6 +3035,336 @@
       }
     ]
   },
+  "compound:CoA-SH|HMDB0001423": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "CoA",
+    "synonyms": [
+      "CoA",
+      "Coenzyme A",
+      "CoA-SH"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C21H36N7O16P3S",
+    "charge": 0,
+    "mass_monoisotopic": 767.1152,
+    "mass_average": 767.54,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Vitamins and cofactors",
+      "Cofactors",
+      "Coenzymes",
+      "C00010 CoA"
+    ],
+    "pathways": [
+      "Fatty acid degradation",
+      "Carbapenem biosynthesis",
+      "Pantothenate and CoA biosynthesis",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Biosynthesis of cofactors",
+      "Ferroptosis",
+      "Thermogenesis",
+      "Cholinergic synapse",
+      "Fat digestion and absorption",
+      "Vitamin digestion and absorption"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0001423",
+      "kegg_id": "C00010",
+      "chebi_id": "CHEBI:1146900",
+      "pubchem_id": "6816",
+      "cas": "85-61-0",
+      "biocyc": "CO-A",
+      "chemspider": "6557",
+      "pathbank_compound_id": "1099"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00010",
+      "primary_name": "CoA",
+      "synonyms": [
+        "CoA",
+        "Coenzyme A",
+        "CoA-SH"
+      ],
+      "formula": "C21H36N7O16P3S",
+      "mass_monoisotopic": 767.1152,
+      "mass_average": 767.54,
+      "pathways": [
+        "Fatty acid degradation",
+        "Carbapenem biosynthesis",
+        "Pantothenate and CoA biosynthesis",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Biosynthesis of cofactors",
+        "Ferroptosis",
+        "Thermogenesis",
+        "Cholinergic synapse",
+        "Fat digestion and absorption",
+        "Vitamin digestion and absorption"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Vitamins and cofactors",
+        "Cofactors",
+        "Coenzymes",
+        "C00010 CoA"
+      ],
+      "cross_references": {
+        "kegg_id": "C00010",
+        "pubchem_id": "3312",
+        "chebi_id": "15346"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00010",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00010",
+        "retrieved_at": "2026-03-24T06:14:51Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:1146900",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-04-05T04:49:09Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001423",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001423",
+        "retrieved_at": "2026-04-05T04:49:10Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:1146900",
+        "retrieved_at": "2026-04-05T04:49:09Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001423",
+        "retrieved_at": "2026-04-05T04:49:10Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00010",
+        "retrieved_at": "2026-03-24T06:14:51Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:GDP|HMDB0001201": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "GDP",
+    "synonyms": [
+      "GDP",
+      "Guanosine 5'-diphosphate",
+      "Guanosine diphosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C10H15N5O11P2",
+    "charge": 0,
+    "mass_monoisotopic": 443.0243,
+    "mass_average": 443.2,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Nucleic acids",
+      "Nucleotides",
+      "Ribonucleotides",
+      "C00035 GDP"
+    ],
+    "pathways": [
+      "Purine metabolism",
+      "Metabolic pathways",
+      "Nucleotide metabolism",
+      "Ras signaling pathway",
+      "Rap1 signaling pathway",
+      "Mitophagy - animal",
+      "Autophagy - animal",
+      "Endocytosis"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0001201",
+      "kegg_id": "C00035",
+      "chebi_id": "CHEBI:17552",
+      "pubchem_id": "8977",
+      "cas": "146-91-8",
+      "biocyc": "GDP-4-DEHYDRO-6-DEOXY-D-MANNOSE",
+      "chemspider": "8630"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00035",
+      "primary_name": "GDP",
+      "synonyms": [
+        "GDP",
+        "Guanosine 5'-diphosphate",
+        "Guanosine diphosphate"
+      ],
+      "formula": "C10H15N5O11P2",
+      "mass_monoisotopic": 443.0243,
+      "mass_average": 443.2,
+      "pathways": [
+        "Purine metabolism",
+        "Metabolic pathways",
+        "Nucleotide metabolism",
+        "Ras signaling pathway",
+        "Rap1 signaling pathway",
+        "Mitophagy - animal",
+        "Autophagy - animal",
+        "Endocytosis"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Nucleic acids",
+        "Nucleotides",
+        "Ribonucleotides",
+        "C00035 GDP"
+      ],
+      "cross_references": {
+        "kegg_id": "C00035",
+        "pubchem_id": "3337",
+        "chebi_id": "17552"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00035",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00035",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17552",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-24T06:14:06Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001201",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001201",
+        "retrieved_at": "2026-03-24T06:14:06Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17552",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001201",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00035",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:Pi|HMDB0000789": {
+    "enrichment_status": "error",
+    "primary_name": "",
+    "synonyms": [],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "",
+    "charge": 0,
+    "mass_monoisotopic": 0.0,
+    "mass_average": 0.0,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000789",
+      "cas": "28100-78-9",
+      "chemspider": "147620"
+    },
+    "kegg": {},
+    "chebi": {},
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000789",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000789",
+        "retrieved_at": "2026-03-24T06:14:07Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "HMDB",
+        "id": "HMDB0000789",
+        "retrieved_at": "2026-03-24T06:14:07Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      }
+    ]
+  },
   "compound:ubiquinone|HMDB0001072": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "Ubiquinone-10",
@@ -3150,192 +3682,6 @@
       }
     ]
   },
-  "compound:GDP|HMDB0001201": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "GDP",
-    "synonyms": [
-      "GDP",
-      "Guanosine 5'-diphosphate",
-      "Guanosine diphosphate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C10H15N5O11P2",
-    "charge": 0,
-    "mass_monoisotopic": 443.0243,
-    "mass_average": 443.2,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Nucleic acids",
-      "Nucleotides",
-      "Ribonucleotides",
-      "C00035 GDP"
-    ],
-    "pathways": [
-      "Purine metabolism",
-      "Metabolic pathways",
-      "Nucleotide metabolism",
-      "Ras signaling pathway",
-      "Rap1 signaling pathway",
-      "Mitophagy - animal",
-      "Autophagy - animal",
-      "Endocytosis"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001201",
-      "kegg_id": "C00035",
-      "chebi_id": "CHEBI:17552",
-      "pubchem_id": "8977",
-      "cas": "146-91-8",
-      "biocyc": "GDP-4-DEHYDRO-6-DEOXY-D-MANNOSE",
-      "chemspider": "8630"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00035",
-      "primary_name": "GDP",
-      "synonyms": [
-        "GDP",
-        "Guanosine 5'-diphosphate",
-        "Guanosine diphosphate"
-      ],
-      "formula": "C10H15N5O11P2",
-      "mass_monoisotopic": 443.0243,
-      "mass_average": 443.2,
-      "pathways": [
-        "Purine metabolism",
-        "Metabolic pathways",
-        "Nucleotide metabolism",
-        "Ras signaling pathway",
-        "Rap1 signaling pathway",
-        "Mitophagy - animal",
-        "Autophagy - animal",
-        "Endocytosis"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Nucleic acids",
-        "Nucleotides",
-        "Ribonucleotides",
-        "C00035 GDP"
-      ],
-      "cross_references": {
-        "kegg_id": "C00035",
-        "pubchem_id": "3337",
-        "chebi_id": "17552"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00035",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00035",
-        "retrieved_at": "2026-03-24T06:14:06Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:17552",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-24T06:14:06Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001201",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001201",
-        "retrieved_at": "2026-03-24T06:14:06Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:17552",
-        "retrieved_at": "2026-03-24T06:14:06Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001201",
-        "retrieved_at": "2026-03-24T06:14:06Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00035",
-        "retrieved_at": "2026-03-24T06:14:06Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:Pi|HMDB0000789": {
-    "enrichment_status": "error",
-    "primary_name": "",
-    "synonyms": [],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "",
-    "charge": 0,
-    "mass_monoisotopic": 0.0,
-    "mass_average": 0.0,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0000789",
-      "cas": "28100-78-9",
-      "chemspider": "147620"
-    },
-    "kegg": {},
-    "chebi": {},
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000789",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000789",
-        "retrieved_at": "2026-03-24T06:14:07Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "HMDB",
-        "id": "HMDB0000789",
-        "retrieved_at": "2026-03-24T06:14:07Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      }
-    ]
-  },
   "compound:pyruvate|HMDB0000243": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "Pyruvate",
@@ -3596,7 +3942,7 @@
       }
     ]
   },
-  "compound:H+|HMDB0059597": {
+  "compound:H|HMDB0059597": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "H+",
     "synonyms": [

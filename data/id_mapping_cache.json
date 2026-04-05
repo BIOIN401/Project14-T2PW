@@ -4970,6 +4970,43 @@
           "score": 0.92
         }
       ]
+    },
+    "db::prolyl 4hydroxylases::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::prolyl 4hydroxylases::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"prolyl 4-hydroxylases\" OR gene:\"prolyl 4-hydroxylases\") | (protein_name:\"prolyl 4 hydroxylases\" OR gene:\"prolyl 4 hydroxylases\")",
+      "confidence": 0.05,
+      "candidates": [
+        {
+          "accession": "A0A2L1K0V6",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Magallana gigas",
+          "reviewed": true,
+          "score": 0.05
+        },
+        {
+          "accession": "A0A2L1K0X0",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Magallana gigas",
+          "reviewed": true,
+          "score": 0.05
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"prolyl 4-hydroxylases\" OR gene:\"prolyl 4-hydroxylases\")",
+        "(protein_name:\"prolyl 4 hydroxylases\" OR gene:\"prolyl 4 hydroxylases\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
     }
   },
   "compounds": {

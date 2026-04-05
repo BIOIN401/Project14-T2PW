@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" level="3" version="1">
-  <model metaid="9b4b8780-e0af-4c68-8f56-bbaf8cc6ca99" id="PathwayModel">
+  <model metaid="4e787d68-0a91-436e-8ece-a5ca10270015" id="PathwayModel">
     <annotation>
   <pathwhiz:dimensions xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:width="2400" pathwhiz:height="2400"/>
     </annotation>
@@ -44,15 +44,15 @@
             </compartment>
     </listOfCompartments>
     <listOfSpecies>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="32d273e3-5469-4248-8963-4763cf6094e9" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="succinate:ubiquinone oxidoreductase complex" id="ProteinComplex40000">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="dd0d3055-a77e-49cd-83e7-b9dfac5e54d3" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="succinate:ubiquinone oxidoreductase complex" id="ProteinComplex40000">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="40000" pathwhiz:species_type="protein_complex">
             <pathwhiz:protein_associations>
               <pathwhiz:protein_complex_proteins>
-                <pathwhiz:protein>Protein30010</pathwhiz:protein>
-                <pathwhiz:protein>Protein30011</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
+                <pathwhiz:protein>Protein30011</pathwhiz:protein>
+                <pathwhiz:protein>Protein30012</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#32d273e3-5469-4248-8963-4763cf6094e9">
+	<rdf:Description rdf:about="#dd0d3055-a77e-49cd-83e7-b9dfac5e54d3">
 	<bqbiol:hasPart>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
@@ -63,25 +63,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e57fd1ce-78e3-4dc9-95ba-3d88b5d01d64" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="succinate" id="Protein30010">
-        <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30010" pathwhiz:species_type="protein"/>
-	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#e57fd1ce-78e3-4dc9-95ba-3d88b5d01d64">
-	<bqbiol:is>
-	<rdf:Bag>
-	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
-	</rdf:Bag>
-	</bqbiol:is>
-	</rdf:Description>
-	</rdf:RDF>
-	</annotation>
-            </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="92507ea8-58e1-4879-b41e-852c53a09106" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="ubiquinone oxidoreductase complex" id="Protein30011">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c99a6954-a21b-43c2-b92a-cc133f2208a2" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="succinate" id="Protein30011">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30011" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#92507ea8-58e1-4879-b41e-852c53a09106">
+	<rdf:Description rdf:about="#c99a6954-a21b-43c2-b92a-cc133f2208a2">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
@@ -91,30 +77,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="2d562a82-67a5-4a5e-9908-4a911a766299" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Succinate:CoA-SH" id="ProteinComplex40001">
-        <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="40001" pathwhiz:species_type="protein_complex">
-            <pathwhiz:protein_associations>
-              <pathwhiz:protein_complex_proteins>
-                <pathwhiz:protein>Protein30010</pathwhiz:protein>
-                <pathwhiz:protein>Protein30012</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
-	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#2d562a82-67a5-4a5e-9908-4a911a766299">
-	<bqbiol:hasPart>
-	<rdf:Bag>
-	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
-	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
-	</rdf:Bag>
-	</bqbiol:hasPart>
-	</rdf:Description>
-	</rdf:RDF>
-	</annotation>
-            </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="b7823932-64ca-4478-9f6a-132b9ac0edad" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="CoA-SH" id="Protein30012">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="208b96f8-fbc0-4fe0-959f-26a1d607757a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="ubiquinone oxidoreductase complex" id="Protein30012">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30012" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#b7823932-64ca-4478-9f6a-132b9ac0edad">
+	<rdf:Description rdf:about="#208b96f8-fbc0-4fe0-959f-26a1d607757a">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
@@ -124,11 +91,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="ce56335b-2fd7-4327-8bf8-06ca246ae80b" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="pyruvate dehydrogenase phosphatase" id="Protein17094">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="84613651-73cd-4e90-a582-acb80f025b49" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="pyruvate dehydrogenase phosphatase" id="Protein17094">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="17094" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#ce56335b-2fd7-4327-8bf8-06ca246ae80b">
+	<rdf:Description rdf:about="#84613651-73cd-4e90-a582-acb80f025b49">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Q9U300"/>
@@ -138,11 +105,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="5041f110-c324-4fdb-a0f0-a026c8e1b8b1" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Citrate synthase" id="Protein30000">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="29026cec-9fba-4f67-a28d-01cabee2fe4a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10000" name="Citrate synthase" id="Protein30000">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30000" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#5041f110-c324-4fdb-a0f0-a026c8e1b8b1">
+	<rdf:Description rdf:about="#29026cec-9fba-4f67-a28d-01cabee2fe4a">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:P0ABH7"/>
@@ -152,11 +119,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="0214b778-4b0c-4dc4-a0f1-cd949545692b" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Aconitase" id="Protein30001">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="a9a74fdc-e350-4394-b29c-6ed2dd21af14" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Aconitase" id="Protein30001">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30001" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#0214b778-4b0c-4dc4-a0f1-cd949545692b">
+	<rdf:Description rdf:about="#a9a74fdc-e350-4394-b29c-6ed2dd21af14">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:A0AB38CIT9"/>
@@ -166,11 +133,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="d471d483-d485-49e3-a366-0a96479071a3" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Isocitrate dehydrogenase" id="Protein30002">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="92f91485-c79d-4238-a7a4-508ae07939bd" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Isocitrate dehydrogenase" id="Protein30002">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30002" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#d471d483-d485-49e3-a366-0a96479071a3">
+	<rdf:Description rdf:about="#92f91485-c79d-4238-a7a4-508ae07939bd">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
@@ -180,11 +147,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e5fcb27c-d933-431f-82d8-b67d1ec7dfdd" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="alpha-Ketoglutarate dehydrogenase" id="Protein30003">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c6cf0c31-23e2-4a50-b922-89b651e4c0d6" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="α-Ketoglutarate dehydrogenase" id="Protein30003">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30003" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#e5fcb27c-d933-431f-82d8-b67d1ec7dfdd">
+	<rdf:Description rdf:about="#c6cf0c31-23e2-4a50-b922-89b651e4c0d6">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
@@ -194,11 +161,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="2bacd384-1709-423a-b11b-0c97e4d2f6ae" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Succinyl-CoA synthetase" id="Protein30004">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="aec9c26a-f283-4346-9022-82f7219b1bf3" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Succinyl-CoA synthetase" id="Protein30004">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30004" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#2bacd384-1709-423a-b11b-0c97e4d2f6ae">
+	<rdf:Description rdf:about="#aec9c26a-f283-4346-9022-82f7219b1bf3">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
@@ -208,11 +175,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e0946a6f-7f59-490f-b366-a2e9e9aa7203" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Succinate dehydrogenase" id="Protein30005">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="b7da6f4d-1b8a-440c-85c0-1068d51200e5" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10002" name="Succinate dehydrogenase" id="Protein30005">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30005" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#e0946a6f-7f59-490f-b366-a2e9e9aa7203">
+	<rdf:Description rdf:about="#b7da6f4d-1b8a-440c-85c0-1068d51200e5">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:P69054"/>
@@ -222,11 +189,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="ffe8e1fe-340f-4b05-920a-5c7a07720a86" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Fumarase" id="Protein30006">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="038c967f-a4ec-4917-9fc1-4401c173bf6c" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Fumarase" id="Protein30006">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30006" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#ffe8e1fe-340f-4b05-920a-5c7a07720a86">
+	<rdf:Description rdf:about="#038c967f-a4ec-4917-9fc1-4401c173bf6c">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
@@ -236,11 +203,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="691f14ca-373c-4f48-a1ba-9fc21437334d" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Malate dehydrogenase" id="Protein30007">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="b8f86713-0e14-40dd-a260-90d38e174bd1" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Malate dehydrogenase" id="Protein30007">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30007" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#691f14ca-373c-4f48-a1ba-9fc21437334d">
+	<rdf:Description rdf:about="#b8f86713-0e14-40dd-a260-90d38e174bd1">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:P61889"/>
@@ -250,11 +217,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="bab6ef83-7c04-4e32-949b-72806de2f6e0" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="phosphofructokinase" id="Protein30008">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="4bd55621-72c0-4f12-ad45-f769d5f99e68" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="phosphofructokinase" id="Protein30008">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30008" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#bab6ef83-7c04-4e32-949b-72806de2f6e0">
+	<rdf:Description rdf:about="#4bd55621-72c0-4f12-ad45-f769d5f99e68">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:A0A2S5IBI7"/>
@@ -264,11 +231,25 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e58bf0dd-0843-4c08-a2b9-8cc8236b5ca1" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Pyruvate dehydrogenase complex" id="Protein30009">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="693bfbbf-00ca-4055-b645-3ba16e3089e0" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="prolyl 4-hydroxylases" id="Protein30009">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30009" pathwhiz:species_type="protein"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#e58bf0dd-0843-4c08-a2b9-8cc8236b5ca1">
+	<rdf:Description rdf:about="#693bfbbf-00ca-4055-b645-3ba16e3089e0">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="168e3728-17f7-410b-90c7-f88cb4ad454f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="BiologicalState10005" name="Pyruvate dehydrogenase complex" id="Protein30010">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30010" pathwhiz:species_type="protein"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#168e3728-17f7-410b-90c7-f88cb4ad454f">
 	<bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:uniprot:D4DS51"/>
@@ -278,11 +259,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="73c83090-52c0-490d-94cf-b7fd04312b1f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="ubiquinone" id="Compound846">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="1c060618-6184-4b15-80d7-d9555cf9956a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10002" name="ubiquinone" id="Compound846">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="846" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#73c83090-52c0-490d-94cf-b7fd04312b1f">
+	<rdf:Description rdf:about="#1c060618-6184-4b15-80d7-d9555cf9956a">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:46245"/>
@@ -295,11 +276,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="00f038f2-2f7b-42dd-965f-5ee5fc34134d" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="ubiquinol" id="Compound1006">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="244dae38-537b-4306-8729-7c65483fd23f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10002" name="ubiquinol" id="Compound1006">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1006" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#00f038f2-2f7b-42dd-965f-5ee5fc34134d">
+	<rdf:Description rdf:about="#244dae38-537b-4306-8729-7c65483fd23f">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:52970"/>
@@ -313,11 +294,28 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="8bf72e16-6bcb-482c-a6ea-f59cb77c378a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="H2O" id="Compound1420">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="44474e2f-2e3b-42a0-8431-19f40e95b6c5" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="CoA-SH" id="Compound1099">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1099" pathwhiz:species_type="compound"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#44474e2f-2e3b-42a0-8431-19f40e95b6c5">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:1146900"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0001423"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00010"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:6816"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="98d3a684-aa73-4bf3-8d3a-e201e04321c8" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="H2O" id="Compound1420">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="1420" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#8bf72e16-6bcb-482c-a6ea-f59cb77c378a">
+	<rdf:Description rdf:about="#98d3a684-aa73-4bf3-8d3a-e201e04321c8">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15377"/>
@@ -330,11 +328,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="b4eb93ad-a691-4ef0-9d81-705291b9f27e" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="Acetyl-CoA" id="Compound20000">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e24caf26-c9c0-4156-9091-29019ddfe3f6" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="Acetyl-CoA" id="Compound20000">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20000" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#b4eb93ad-a691-4ef0-9d81-705291b9f27e">
+	<rdf:Description rdf:about="#e24caf26-c9c0-4156-9091-29019ddfe3f6">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15351"/>
@@ -347,11 +345,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="96f6d9f9-0cd3-4f91-9711-af9dc621e6b3" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Oxaloacetate" id="Compound20001">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="4e988a7c-2be9-4fce-a8f6-92d70d0cf3c0" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="Oxaloacetate" id="Compound20001">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20001" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#96f6d9f9-0cd3-4f91-9711-af9dc621e6b3">
+	<rdf:Description rdf:about="#4e988a7c-2be9-4fce-a8f6-92d70d0cf3c0">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30744"/>
@@ -364,11 +362,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="78ae85ca-2329-4b80-8fc1-b8968bb50f97" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="Citrate" id="Compound20002">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="1859cb53-c3b1-44b1-8f54-17701034606c" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="Citrate" id="Compound20002">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20002" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#78ae85ca-2329-4b80-8fc1-b8968bb50f97">
+	<rdf:Description rdf:about="#1859cb53-c3b1-44b1-8f54-17701034606c">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30769"/>
@@ -382,11 +380,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="3805bb39-f717-48df-9ed3-357b68753722" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="NAD+" id="Compound20003">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="3cd822e5-a6e7-4e20-83ed-32d5a86a4980" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="NAD+" id="Compound20003">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20003" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#3805bb39-f717-48df-9ed3-357b68753722">
+	<rdf:Description rdf:about="#3cd822e5-a6e7-4e20-83ed-32d5a86a4980">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15846"/>
@@ -399,11 +397,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="4a1af890-ed4e-47ce-b00c-0617cc41b0dc" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="NADH" id="Compound20004">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="42f81abf-81d0-4eb3-b09c-1544ee398eb8" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="NADH" id="Compound20004">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20004" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#4a1af890-ed4e-47ce-b00c-0617cc41b0dc">
+	<rdf:Description rdf:about="#42f81abf-81d0-4eb3-b09c-1544ee398eb8">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16908"/>
@@ -417,11 +415,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="d3dd3d27-61e2-49c0-9e1e-6876f599883d" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="FAD" id="Compound20005">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c536fe7a-3edd-4b0a-b218-18b538f0c3db" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="FAD" id="Compound20005">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20005" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#d3dd3d27-61e2-49c0-9e1e-6876f599883d">
+	<rdf:Description rdf:about="#c536fe7a-3edd-4b0a-b218-18b538f0c3db">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:16238"/>
@@ -435,11 +433,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="74638a2c-f7c7-42bc-9dc0-75f101295533" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="FADH2" id="Compound20006">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="77bd20ce-6265-4edd-8a85-7128d53a1db5" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="FADH2" id="Compound20006">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20006" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#74638a2c-f7c7-42bc-9dc0-75f101295533">
+	<rdf:Description rdf:about="#77bd20ce-6265-4edd-8a85-7128d53a1db5">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17877"/>
@@ -452,11 +450,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="8079d48e-de54-406b-9fb5-110a97c04a6f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="GTP" id="Compound20007">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="d32cee0d-0e94-47a6-8f02-6a577905d734" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="GTP" id="Compound20007">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20007" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#8079d48e-de54-406b-9fb5-110a97c04a6f">
+	<rdf:Description rdf:about="#d32cee0d-0e94-47a6-8f02-6a577905d734">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15996"/>
@@ -470,11 +468,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="0a645c81-4aaf-4a15-92cb-05f332b79c0e" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="ATP" id="Compound20008">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="a47830a0-4a8d-46b4-b65f-40c8a77a6345" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="ATP" id="Compound20008">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20008" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#0a645c81-4aaf-4a15-92cb-05f332b79c0e">
+	<rdf:Description rdf:about="#a47830a0-4a8d-46b4-b65f-40c8a77a6345">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15422"/>
@@ -488,16 +486,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="1bb4be1c-3e2e-4e32-af11-44b691e0033d" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="alpha-Ketoglutarate" id="Compound20009">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c6bc2ab1-0e14-4133-8399-95088efe5125" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="CO2" id="Compound20009">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20009" pathwhiz:species_type="compound"/>
-	</annotation>
-            </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="eea3f547-f0bc-4169-a7fa-f1bf83c5029f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="CO2" id="Compound20010">
-        <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20010" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#eea3f547-f0bc-4169-a7fa-f1bf83c5029f">
+	<rdf:Description rdf:about="#c6bc2ab1-0e14-4133-8399-95088efe5125">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:48828"/>
@@ -510,11 +503,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="406d9ba5-a125-4229-9bbc-44c5d2f90660" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="cis-Aconitate" id="Compound20011">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="e391ede5-fa99-4eed-bd44-fe8e5c332e10" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="cis-Aconitate" id="Compound20010">
         <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20011" pathwhiz:species_type="compound"/>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20010" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#406d9ba5-a125-4229-9bbc-44c5d2f90660">
+	<rdf:Description rdf:about="#e391ede5-fa99-4eed-bd44-fe8e5c332e10">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:32805"/>
@@ -527,11 +520,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="18458ad9-315f-4fa6-b36f-4d856877f779" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Isocitrate" id="Compound20012">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="df4f28fe-9625-46d3-b45c-d0abefdab03f" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="Isocitrate" id="Compound20011">
         <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20012" pathwhiz:species_type="compound"/>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20011" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#18458ad9-315f-4fa6-b36f-4d856877f779">
+	<rdf:Description rdf:about="#df4f28fe-9625-46d3-b45c-d0abefdab03f">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30887"/>
@@ -544,11 +537,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="f06546b6-45e0-4c55-b7ac-5dca5e26c3be" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Oxalosuccinate" id="Compound20013">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="83f332e0-b1b6-49f9-94ff-260df012909a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="Oxalosuccinate" id="Compound20012">
         <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20013" pathwhiz:species_type="compound"/>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20012" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#f06546b6-45e0-4c55-b7ac-5dca5e26c3be">
+	<rdf:Description rdf:about="#83f332e0-b1b6-49f9-94ff-260df012909a">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:7815"/>
@@ -561,11 +554,29 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="d6edf01a-0626-415b-9b82-c06f1c9f5914" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Succinyl-CoA" id="Compound20014">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="8b360779-3a87-45ea-8cf5-8b2b0ea95ac4" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="α-Ketoglutarate" id="Compound20013">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20013" pathwhiz:species_type="compound"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#8b360779-3a87-45ea-8cf5-8b2b0ea95ac4">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30915"/>
+	<rdf:li rdf:resource="urn:miriam:drugbank:DB02926"/>
+	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000208"/>
+	<rdf:li rdf:resource="urn:miriam:kegg.compound:C00026"/>
+	<rdf:li rdf:resource="urn:miriam:pubchem.compound:51"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="f12d0c4b-2208-40e9-9b27-b01ef53ef591" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Succinyl-CoA" id="Compound20014">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20014" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#d6edf01a-0626-415b-9b82-c06f1c9f5914">
+	<rdf:Description rdf:about="#f12d0c4b-2208-40e9-9b27-b01ef53ef591">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:15380"/>
@@ -578,11 +589,25 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="c8281341-1c22-4139-847a-1d64194dbf74" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Fumarate" id="Compound20015">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="a2730cd3-cef4-4d79-b3c8-4edd6979a0ef" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Succinate" id="Compound20015">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20015" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#c8281341-1c22-4139-847a-1d64194dbf74">
+	<rdf:Description rdf:about="#a2730cd3-cef4-4d79-b3c8-4edd6979a0ef">
+              <bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:P69054"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="5ca9920e-3c2a-4902-a514-4c57b30d6699" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Fumarate" id="Compound20016">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20016" pathwhiz:species_type="compound"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#5ca9920e-3c2a-4902-a514-4c57b30d6699">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:18012"/>
@@ -596,11 +621,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="1658b639-1d00-42a4-b1ce-77fd136e7ebf" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="L-Malate" id="Compound20016">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="441bd6a0-b686-4562-a6d4-b9ed6f6e4cb5" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="L-Malate" id="Compound20017">
         <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20016" pathwhiz:species_type="compound"/>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20017" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#1658b639-1d00-42a4-b1ce-77fd136e7ebf">
+	<rdf:Description rdf:about="#441bd6a0-b686-4562-a6d4-b9ed6f6e4cb5">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:30797"/>
@@ -613,11 +638,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="8c3b7387-09fc-4ddb-b20b-cf5588dd3714" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="GDP" id="Compound20017">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="263eba86-eac2-4b7b-a2c5-41f1eff5e7b7" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="GDP" id="Compound20018">
         <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20017" pathwhiz:species_type="compound"/>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20018" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#8c3b7387-09fc-4ddb-b20b-cf5588dd3714">
+	<rdf:Description rdf:about="#263eba86-eac2-4b7b-a2c5-41f1eff5e7b7">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:17552"/>
@@ -630,11 +655,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="fc57fe3f-20c7-446f-925e-e4222719514d" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Pi" id="Compound20018">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="b6a1fb72-2043-4093-a5e7-bc5035bf3996" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="Pi" id="Compound20019">
         <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20018" pathwhiz:species_type="compound"/>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20019" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#fc57fe3f-20c7-446f-925e-e4222719514d">
+	<rdf:Description rdf:about="#b6a1fb72-2043-4093-a5e7-bc5035bf3996">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:hmdb:HMDB0000789"/>
@@ -644,16 +669,11 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="f0500753-a825-4c83-9ab0-59cb3661ffa8" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="CoA-SH" id="Compound20019">
-        <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20019" pathwhiz:species_type="compound"/>
-	</annotation>
-            </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="8225d100-646d-4b7a-8625-b9116ae9dede" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="pyruvate" id="Compound20020">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="6190ed3e-a43e-4b92-bcb9-b648dd8dfeb0" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10001" name="pyruvate" id="Compound20020">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20020" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#8225d100-646d-4b7a-8625-b9116ae9dede">
+	<rdf:Description rdf:about="#6190ed3e-a43e-4b92-bcb9-b648dd8dfeb0">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:CHEBI:32816"/>
@@ -667,16 +687,16 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="4d644343-f475-4668-a34b-fe5422042177" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="HSCoA" id="Compound20021">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="1011a966-bde4-40c3-b53f-7b22d62d9d82" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10000" name="HSCoA" id="Compound20021">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20021" pathwhiz:species_type="compound"/>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="a55e4a8b-abc4-428b-83d6-10d5901507e7" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="H+" id="Compound20022">
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="383001b8-d896-4340-92c6-443460bf700a" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="H" id="Compound20022">
         <annotation>
   <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20022" pathwhiz:species_type="compound"/>
 	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#a55e4a8b-abc4-428b-83d6-10d5901507e7">
+	<rdf:Description rdf:about="#383001b8-d896-4340-92c6-443460bf700a">
               <bqbiol:is>
 	<rdf:Bag>
 	<rdf:li rdf:resource="urn:miriam:chebi:15378"/>
@@ -689,43 +709,82 @@
 	</rdf:RDF>
 	</annotation>
             </species>
-      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="cec88a41-011f-471b-9212-4731402d87e3" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="BiologicalState10005" name="Succinate" id="Compound20023">
-        <annotation>
-  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20023" pathwhiz:species_type="compound"/>
-	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
-	<rdf:Description rdf:about="#cec88a41-011f-471b-9212-4731402d87e3">
-              <bqbiol:is>
-	<rdf:Bag>
-	<rdf:li rdf:resource="urn:miriam:uniprot:P69054"/>
-	</rdf:Bag>
-	</bqbiol:is>
-	</rdf:Description>
-	</rdf:RDF>
-	</annotation>
-            </species>
     </listOfSpecies>
     <listOfReactions>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Oxaloacetate + Acetyl-CoA + H2O → Citrate + CoA-SH" id="Reaction50000">
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="pyruvate + HSCoA + NAD+ → Acetyl-CoA + NADH + CO2" id="Reaction50000">
         <annotation>
   <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50000" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20020" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20020" pathwhiz:location_id="100000" pathwhiz:x="81.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 120 C159 120 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20021" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20021" pathwhiz:location_id="100001" pathwhiz:x="81.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 210 C159 210 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100002" pathwhiz:x="81.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 300 C159 300 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20000" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20000" pathwhiz:location_id="100003" pathwhiz:x="401.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 210 C280 210 401 120 401 120 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20004" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100004" pathwhiz:x="401.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 210 C280 210 401 210 401 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20009" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20009" pathwhiz:location_id="100005" pathwhiz:x="401.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 210 C280 210 401 300 401 300 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Protein30010" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30010" pathwhiz:location_id="100006" pathwhiz:x="200.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Oxaloacetate + Acetyl-CoA + H2O → Citrate + CoA-SH" id="Reaction50001">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50001" pathwhiz:reaction_type="reaction"/>
         </annotation>
               <listOfReactants>
           <speciesReference stoichiometry="1" constant="false" species="Compound20001" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20001" pathwhiz:location_id="100000" pathwhiz:x="81.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 120 C159 120 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20001" pathwhiz:location_id="100007" pathwhiz:x="501.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 120 C579 120 700 210 700 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound20000" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20000" pathwhiz:location_id="100001" pathwhiz:x="81.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 210 C159 210 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20000" pathwhiz:location_id="100008" pathwhiz:x="501.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 210 C579 210 700 210 700 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound1420" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="100002" pathwhiz:x="81.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 300 C159 300 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="100009" pathwhiz:x="501.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 300 C579 300 700 210 700 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfReactants>
@@ -733,13 +792,13 @@
           <speciesReference stoichiometry="1" constant="false" species="Compound20002" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20002" pathwhiz:location_id="100003" pathwhiz:x="401.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 210 C280 210 401 165 401 165 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20002" pathwhiz:location_id="100010" pathwhiz:x="821.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 210 C700 210 821 165 821 165 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Protein30012" sboTerm="SBO:0000011">
+          <speciesReference stoichiometry="1" constant="false" species="Compound1099" sboTerm="SBO:0000011">
             <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Protein30012" pathwhiz:location_id="100004" pathwhiz:x="401.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 210 C280 210 401 255 401 255 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1099" pathwhiz:location_id="100011" pathwhiz:x="821.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 210 C700 210 821 255 821 255 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfProducts>
@@ -747,47 +806,12 @@
           <modifierSpeciesReference species="Protein30000" sboTerm="SBO:0000460">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30000" pathwhiz:location_id="100005" pathwhiz:x="200.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30000" pathwhiz:location_id="100012" pathwhiz:x="620.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </modifierSpeciesReference>
         </listOfModifiers>
       </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Citrate → cis-Aconitate + H2O" id="Reaction50001">
-        <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50001" pathwhiz:reaction_type="reaction"/>
-        </annotation>
-              <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20002" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20002" pathwhiz:location_id="100006" pathwhiz:x="501.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 210 C579 210 700 210 700 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20011" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20011" pathwhiz:location_id="100007" pathwhiz:x="821.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 210 C700 210 821 165 821 165 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound1420" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="100008" pathwhiz:x="821.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 210 C700 210 821 255 821 255 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="Protein30001" sboTerm="SBO:0000460">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30001" pathwhiz:location_id="100009" pathwhiz:x="620.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </modifierSpeciesReference>
-        </listOfModifiers>
-      </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="cis-Aconitate + H2O → Isocitrate" id="Reaction50002">
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Isocitrate + NAD+ → Oxalosuccinate + NADH + H" id="Reaction50002">
         <annotation>
   <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50002" pathwhiz:reaction_type="reaction"/>
         </annotation>
@@ -795,13 +819,13 @@
           <speciesReference stoichiometry="1" constant="false" species="Compound20011" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20011" pathwhiz:location_id="100010" pathwhiz:x="921.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 165 C999 165 1120 210 1120 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20011" pathwhiz:location_id="100013" pathwhiz:x="921.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 165 C999 165 1120 210 1120 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound1420" sboTerm="SBO:0000015">
+          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="100011" pathwhiz:x="921.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 255 C999 255 1120 210 1120 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100014" pathwhiz:x="921.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 255 C999 255 1120 210 1120 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfReactants>
@@ -809,54 +833,19 @@
           <speciesReference stoichiometry="1" constant="false" species="Compound20012" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20012" pathwhiz:location_id="100012" pathwhiz:x="1241.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 210 C1120 210 1241 210 1241 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="Protein30001" sboTerm="SBO:0000460">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30001" pathwhiz:location_id="100013" pathwhiz:x="1040.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </modifierSpeciesReference>
-        </listOfModifiers>
-      </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Isocitrate + NAD → Oxalosuccinate + NADH + H" id="Reaction50003">
-        <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50003" pathwhiz:reaction_type="reaction"/>
-        </annotation>
-              <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20012" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20012" pathwhiz:location_id="100014" pathwhiz:x="1341.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 165 C1419 165 1540 210 1540 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100015" pathwhiz:x="1341.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 255 C1419 255 1540 210 1540 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20013" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20013" pathwhiz:location_id="100016" pathwhiz:x="1661.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 210 C1540 210 1661 120 1661 120 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20012" pathwhiz:location_id="100015" pathwhiz:x="1241.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 210 C1120 210 1241 120 1241 120 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound20004" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100017" pathwhiz:x="1661.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 210 C1540 210 1661 210 1661 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100016" pathwhiz:x="1241.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 210 C1120 210 1241 210 1241 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound20022" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20022" pathwhiz:location_id="100018" pathwhiz:x="1661.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 210 C1540 210 1661 300 1661 300 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20022" pathwhiz:location_id="100017" pathwhiz:x="1241.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 210 C1120 210 1241 300 1241 300 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfProducts>
@@ -864,152 +853,40 @@
           <modifierSpeciesReference species="Protein30002" sboTerm="SBO:0000460">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30002" pathwhiz:location_id="100019" pathwhiz:x="1460.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30002" pathwhiz:location_id="100018" pathwhiz:x="1040.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </modifierSpeciesReference>
         </listOfModifiers>
       </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="alpha-Ketoglutarate + NAD + CoA-SH → Succinyl-CoA + NADH + H + CO2" id="Reaction50004">
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10002" name="Succinate + ubiquinone → Fumarate + ubiquinol" id="Reaction50003">
         <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50004" pathwhiz:reaction_type="reaction"/>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50003" pathwhiz:reaction_type="reaction"/>
         </annotation>
               <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20009" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20009" pathwhiz:location_id="100020" pathwhiz:x="1761.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 120 C1839 120 1960 210 1960 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100021" pathwhiz:x="1761.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 210 C1839 210 1960 210 1960 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Protein30012" sboTerm="SBO:0000015">
+          <speciesReference stoichiometry="1" constant="false" species="Protein30011" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Protein30012" pathwhiz:location_id="100022" pathwhiz:x="1761.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 300 C1839 300 1960 210 1960 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20014" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20014" pathwhiz:location_id="100023" pathwhiz:x="2081.0" pathwhiz:y="36.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 75 2081 75 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20004" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100024" pathwhiz:x="2081.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 165 2081 165 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20022" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20022" pathwhiz:location_id="100025" pathwhiz:x="2081.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 255 2081 255 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20010" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20010" pathwhiz:location_id="100026" pathwhiz:x="2081.0" pathwhiz:y="306.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 345 2081 345 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="Protein30003" sboTerm="SBO:0000460">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30003" pathwhiz:location_id="100027" pathwhiz:x="1880.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </modifierSpeciesReference>
-        </listOfModifiers>
-      </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Succinyl-CoA + GDP + Pi → Succinate + CoA-SH + GTP" id="Reaction50005">
-        <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50005" pathwhiz:reaction_type="reaction"/>
-        </annotation>
-              <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20014" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20014" pathwhiz:location_id="100028" pathwhiz:x="81.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 500 C159 500 280 590 280 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20017" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20017" pathwhiz:location_id="100029" pathwhiz:x="81.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 590 C159 590 280 590 280 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20018" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20018" pathwhiz:location_id="100030" pathwhiz:x="81.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 680 C159 680 280 590 280 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Protein30010" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Protein30010" pathwhiz:location_id="100031" pathwhiz:x="401.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 590 C280 590 401 500 401 500 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Protein30012" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Protein30012" pathwhiz:location_id="100032" pathwhiz:x="401.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 590 C280 590 401 590 401 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20007" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20007" pathwhiz:location_id="100033" pathwhiz:x="401.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 590 C280 590 401 680 401 680 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="Protein30004" sboTerm="SBO:0000460">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30004" pathwhiz:location_id="100034" pathwhiz:x="200.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </modifierSpeciesReference>
-        </listOfModifiers>
-      </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Succinate + ubiquinone → Fumarate + ubiquinol" id="Reaction50006">
-        <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50006" pathwhiz:reaction_type="reaction"/>
-        </annotation>
-              <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Protein30010" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Protein30010" pathwhiz:location_id="100035" pathwhiz:x="501.0" pathwhiz:y="506.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 545 C579 545 700 590 700 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Protein30011" pathwhiz:location_id="100019" pathwhiz:x="1341.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 165 C1419 165 1540 210 1540 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound846" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound846" pathwhiz:location_id="100036" pathwhiz:x="501.0" pathwhiz:y="596.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 635 C579 635 700 590 700 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound846" pathwhiz:location_id="100020" pathwhiz:x="1341.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 255 C1419 255 1540 210 1540 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20015" sboTerm="SBO:0000011">
+          <speciesReference stoichiometry="1" constant="false" species="Compound20016" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20015" pathwhiz:location_id="100037" pathwhiz:x="821.0" pathwhiz:y="506.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 590 C700 590 821 545 821 545 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20016" pathwhiz:location_id="100021" pathwhiz:x="1661.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 210 C1540 210 1661 165 1661 165 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound1006" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1006" pathwhiz:location_id="100038" pathwhiz:x="821.0" pathwhiz:y="596.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 590 C700 590 821 635 821 635 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1006" pathwhiz:location_id="100022" pathwhiz:x="1661.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 210 C1540 210 1661 255 1661 255 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfProducts>
@@ -1017,7 +894,166 @@
           <modifierSpeciesReference species="Protein30005" sboTerm="SBO:0000460">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30005" pathwhiz:location_id="100039" pathwhiz:x="620.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30005" pathwhiz:location_id="100023" pathwhiz:x="1460.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="L-Malate + NAD+ → Oxaloacetate + NADH + H" id="Reaction50004">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50004" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20017" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20017" pathwhiz:location_id="100024" pathwhiz:x="1761.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 165 C1839 165 1960 210 1960 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100025" pathwhiz:x="1761.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 255 C1839 255 1960 210 1960 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20001" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20001" pathwhiz:location_id="100026" pathwhiz:x="2081.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 120 2081 120 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20004" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100027" pathwhiz:x="2081.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 210 2081 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20022" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20022" pathwhiz:location_id="100028" pathwhiz:x="2081.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 300 2081 300 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Protein30007" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30007" pathwhiz:location_id="100029" pathwhiz:x="1880.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="α-Ketoglutarate + NAD+ + CoA-SH → Succinyl-CoA + NADH + H + CO2" id="Reaction50005">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50005" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20013" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20013" pathwhiz:location_id="100030" pathwhiz:x="81.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 500 C159 500 280 590 280 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100031" pathwhiz:x="81.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 590 C159 590 280 590 280 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1099" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1099" pathwhiz:location_id="100032" pathwhiz:x="81.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 680 C159 680 280 590 280 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20014" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20014" pathwhiz:location_id="100033" pathwhiz:x="401.0" pathwhiz:y="416.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 590 C280 590 401 455 401 455 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20004" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100034" pathwhiz:x="401.0" pathwhiz:y="506.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 590 C280 590 401 545 401 545 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20022" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20022" pathwhiz:location_id="100035" pathwhiz:x="401.0" pathwhiz:y="596.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 590 C280 590 401 635 401 635 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20009" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20009" pathwhiz:location_id="100036" pathwhiz:x="401.0" pathwhiz:y="686.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 590 C280 590 401 725 401 725 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Protein30003" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30003" pathwhiz:location_id="100037" pathwhiz:x="200.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Succinyl-CoA + GDP + Pi → Succinate + CoA-SH + GTP" id="Reaction50006">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50006" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20014" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20014" pathwhiz:location_id="100038" pathwhiz:x="501.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 500 C579 500 700 590 700 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20018" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20018" pathwhiz:location_id="100039" pathwhiz:x="501.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 590 C579 590 700 590 700 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20019" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20019" pathwhiz:location_id="100040" pathwhiz:x="501.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 680 C579 680 700 590 700 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="Protein30011" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Protein30011" pathwhiz:location_id="100041" pathwhiz:x="821.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 590 C700 590 821 500 821 500 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1099" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1099" pathwhiz:location_id="100042" pathwhiz:x="821.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 590 C700 590 821 590 821 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound20007" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20007" pathwhiz:location_id="100043" pathwhiz:x="821.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 590 C700 590 821 680 821 680 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Protein30004" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30004" pathwhiz:location_id="100044" pathwhiz:x="620.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </modifierSpeciesReference>
         </listOfModifiers>
@@ -1027,24 +1063,24 @@
   <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50007" pathwhiz:reaction_type="reaction"/>
         </annotation>
               <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20015" sboTerm="SBO:0000015">
+          <speciesReference stoichiometry="1" constant="false" species="Compound20016" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20015" pathwhiz:location_id="100040" pathwhiz:x="921.0" pathwhiz:y="506.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 545 C999 545 1120 590 1120 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20016" pathwhiz:location_id="100045" pathwhiz:x="921.0" pathwhiz:y="506.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 545 C999 545 1120 590 1120 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound1420" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="100041" pathwhiz:x="921.0" pathwhiz:y="596.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 635 C999 635 1120 590 1120 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="100046" pathwhiz:x="921.0" pathwhiz:y="596.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 635 C999 635 1120 590 1120 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20016" sboTerm="SBO:0000011">
+          <speciesReference stoichiometry="1" constant="false" species="Compound20017" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20016" pathwhiz:location_id="100042" pathwhiz:x="1241.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 590 C1120 590 1241 590 1241 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20017" pathwhiz:location_id="100047" pathwhiz:x="1241.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 590 C1120 590 1241 590 1241 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfProducts>
@@ -1052,120 +1088,55 @@
           <modifierSpeciesReference species="Protein30006" sboTerm="SBO:0000460">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30006" pathwhiz:location_id="100043" pathwhiz:x="1040.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30006" pathwhiz:location_id="100048" pathwhiz:x="1040.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </modifierSpeciesReference>
         </listOfModifiers>
       </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="L-Malate + NAD → Oxaloacetate + NADH + H" id="Reaction50008">
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="Citrate → cis-Aconitate + H2O" id="Reaction50008">
         <annotation>
   <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50008" pathwhiz:reaction_type="reaction"/>
         </annotation>
               <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20016" sboTerm="SBO:0000015">
+          <speciesReference stoichiometry="1" constant="false" species="Compound20002" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20016" pathwhiz:location_id="100044" pathwhiz:x="1341.0" pathwhiz:y="506.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 545 C1419 545 1540 590 1540 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100045" pathwhiz:x="1341.0" pathwhiz:y="596.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 635 C1419 635 1540 590 1540 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20002" pathwhiz:location_id="100049" pathwhiz:x="1341.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 590 C1419 590 1540 590 1540 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20001" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20001" pathwhiz:location_id="100046" pathwhiz:x="1661.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 590 C1540 590 1661 500 1661 500 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20004" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100047" pathwhiz:x="1661.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 590 C1540 590 1661 590 1661 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20022" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20022" pathwhiz:location_id="100048" pathwhiz:x="1661.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 590 C1540 590 1661 680 1661 680 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="Protein30007" sboTerm="SBO:0000460">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30007" pathwhiz:location_id="100049" pathwhiz:x="1460.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </modifierSpeciesReference>
-        </listOfModifiers>
-      </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="BiologicalState10000" name="pyruvate + HSCoA + NAD → Acetyl-CoA + NADH + CO2" id="Reaction50009">
-        <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50009" pathwhiz:reaction_type="reaction"/>
-        </annotation>
-              <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20020" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20020" pathwhiz:location_id="100050" pathwhiz:x="1761.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 500 C1839 500 1960 590 1960 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20021" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20021" pathwhiz:location_id="100051" pathwhiz:x="1761.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 590 C1839 590 1960 590 1960 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20003" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20003" pathwhiz:location_id="100052" pathwhiz:x="1761.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 680 C1839 680 1960 590 1960 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20000" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20000" pathwhiz:location_id="100053" pathwhiz:x="2081.0" pathwhiz:y="461.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 590 C1960 590 2081 500 2081 500 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20004" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20004" pathwhiz:location_id="100054" pathwhiz:x="2081.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 590 C1960 590 2081 590 2081 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
           <speciesReference stoichiometry="1" constant="false" species="Compound20010" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20010" pathwhiz:location_id="100055" pathwhiz:x="2081.0" pathwhiz:y="641.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 590 C1960 590 2081 680 2081 680 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20010" pathwhiz:location_id="100050" pathwhiz:x="1661.0" pathwhiz:y="506.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 590 C1540 590 1661 545 1661 545 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="Compound1420" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound1420" pathwhiz:location_id="100051" pathwhiz:x="1661.0" pathwhiz:y="596.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 590 C1540 590 1661 635 1661 635 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfProducts>
         <listOfModifiers>
-          <modifierSpeciesReference species="Protein30009" sboTerm="SBO:0000460">
+          <modifierSpeciesReference species="Protein30001" sboTerm="SBO:0000460">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
-                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30009" pathwhiz:location_id="100056" pathwhiz:x="1880.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30001" pathwhiz:location_id="100052" pathwhiz:x="1460.0" pathwhiz:y="460.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </modifierSpeciesReference>
         </listOfModifiers>
       </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState10001" name="pyruvate transport: cytosolic state → mitochondrial matrix state" id="Reaction50010">
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState10001" name="pyruvate transport: cytosolic state → mitochondrial matrix state" id="Reaction50009">
         <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50010" pathwhiz:reaction_type="transport"/>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50009" pathwhiz:reaction_type="transport"/>
         </annotation>
               <listOfReactants>
           <speciesReference stoichiometry="1" constant="false" species="Compound20020" sboTerm="SBO:0000015">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20020" pathwhiz:location_id="100057" pathwhiz:x="81.0" pathwhiz:y="931.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 970 C159 970 280 970 280 970 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20020" pathwhiz:location_id="100053" pathwhiz:x="1761.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 590 C1839 590 1960 590 1960 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfReactants>
@@ -1173,49 +1144,7 @@
           <speciesReference stoichiometry="1" constant="false" species="Compound20020" sboTerm="SBO:0000011">
             <annotation>
   <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20020" pathwhiz:location_id="100058" pathwhiz:x="401.0" pathwhiz:y="931.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 970 C280 970 401 970 401 970 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfProducts>
-      </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState10000" name="Citrate transport: mitochondrial matrix state → cytosolic state" id="Reaction50011">
-        <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50011" pathwhiz:reaction_type="transport"/>
-        </annotation>
-              <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20002" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20002" pathwhiz:location_id="100059" pathwhiz:x="501.0" pathwhiz:y="931.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 970 C579 970 700 970 700 970 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20002" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20002" pathwhiz:location_id="100060" pathwhiz:x="821.0" pathwhiz:y="931.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 970 C700 970 821 970 821 970 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfProducts>
-      </reaction>
-      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="BiologicalState10000" name="L-Malate transport: mitochondrial matrix state → cytosolic state" id="Reaction50012">
-        <annotation>
-  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50012" pathwhiz:reaction_type="transport"/>
-        </annotation>
-              <listOfReactants>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20016" sboTerm="SBO:0000015">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20016" pathwhiz:location_id="100061" pathwhiz:x="921.0" pathwhiz:y="931.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 970 C999 970 1120 970 1120 970 " pathwhiz:visualization_template_id="5" pathwhiz:options="{}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
-            </annotation>
-                    </speciesReference>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference stoichiometry="1" constant="false" species="Compound20016" sboTerm="SBO:0000011">
-            <annotation>
-  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
-                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20016" pathwhiz:location_id="100062" pathwhiz:x="1241.0" pathwhiz:y="931.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 970 C1120 970 1241 970 1241 970 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="Compound20020" pathwhiz:location_id="100054" pathwhiz:x="2081.0" pathwhiz:y="551.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 590 C1960 590 2081 590 2081 590 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
             </annotation>
                     </speciesReference>
         </listOfProducts>
