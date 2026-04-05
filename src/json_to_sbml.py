@@ -34,6 +34,245 @@ def _new_uuid() -> str:
     return str(uuid.uuid4())
 
 
+# ---------------------------------------------------------------------------
+# PathWhiz-style layout engine
+# ---------------------------------------------------------------------------
+# Key principle: each metabolite gets ONE canvas position, shared across all
+# reactions that reference it. Edges connect metabolites to reaction centers.
+# ---------------------------------------------------------------------------
+
+import math as _math
+
+# Cofactors excluded from topology (they connect everything → useless for layout)
+_COFACTOR_NORMS_LAYOUT: "Set[str]" = {
+    "nad", "nad+", "nadh", "nadp", "nadp+", "nadph",
+    "fad", "fadh", "fadh2",
+    "atp", "adp", "amp", "gtp", "gdp", "gmp", "ctp", "utp",
+    "h2o", "water", "h+", "h", "proton", "oh",
+    "o2", "oxygen", "co2", "carbon dioxide",
+    "pi", "ppi", "pyrophosphate", "phosphate", "inorganic phosphate",
+    "coa", "coa sh", "coash", "coa-sh", "coenzyme a", "acetyl coa",
+    "hco3", "bicarbonate",
+    "ubiquinone", "ubiquinol", "ubiquinone q", "ubiquinol qh2",
+    "h2o2", "hydrogen peroxide",
+    "fe2+", "fe3+", "cu+", "cu2+", "zn2+", "mg2+", "mn2+", "ca2+",
+}
+
+def _is_layout_cofactor(name: str) -> bool:
+    n = _normalize(name)
+    return not n or len(n) <= 1 or n in _COFACTOR_NORMS_LAYOUT
+
+
+def _compute_reaction_ranks_v2(reaction_plans: "List[Dict[str, Any]]") -> "List[int]":
+    """Topological sort with cofactor filtering + cycle detection."""
+    from collections import deque as _deque
+    n = len(reaction_plans)
+    if n == 0:
+        return []
+
+    produces: "Dict[str, List[int]]" = defaultdict(list)
+    consumes: "Dict[str, List[int]]" = defaultdict(list)
+    for i, plan in enumerate(reaction_plans):
+        for name in plan.get("outputs", []):
+            if not _is_layout_cofactor(name):
+                produces[_normalize(name)].append(i)
+        for name in plan.get("inputs", []):
+            if not _is_layout_cofactor(name):
+                consumes[_normalize(name)].append(i)
+
+    successors: "Dict[int, Set[int]]" = defaultdict(set)
+    in_degree: "List[int]" = [0] * n
+    for met in produces:
+        for pi in produces[met]:
+            for ci in consumes.get(met, []):
+                if pi != ci and ci not in successors[pi]:
+                    successors[pi].add(ci)
+                    in_degree[ci] += 1
+
+    ranks = [0] * n
+    queue = _deque(i for i in range(n) if in_degree[i] == 0)
+    visited: "Set[int]" = set()
+    rank = 0
+    while queue:
+        nq = _deque()
+        for i in list(queue):
+            if i in visited:
+                continue
+            visited.add(i)
+            ranks[i] = rank
+            for j in successors[i]:
+                in_degree[j] -= 1
+                if in_degree[j] == 0:
+                    nq.append(j)
+        queue = nq
+        rank += 1
+
+    # Cycle fallback — use document order within each cycle component
+    unvisited = set(range(n)) - visited
+    if unvisited:
+        undirected: "Dict[int, Set[int]]" = defaultdict(set)
+        for i in range(n):
+            for j in successors.get(i, set()):
+                undirected[i].add(j)
+                undirected[j].add(i)
+        seen_c: "Set[int]" = set()
+        for start in sorted(unvisited):
+            if start in seen_c:
+                continue
+            comp: "List[int]" = []
+            stk = [start]
+            while stk:
+                node = stk.pop()
+                if node in seen_c:
+                    continue
+                seen_c.add(node)
+                comp.append(node)
+                for nb in undirected.get(node, set()):
+                    if nb not in seen_c:
+                        stk.append(nb)
+            comp.sort()
+            for idx, i in enumerate(comp):
+                ranks[i] = rank + idx
+                visited.add(i)
+            rank += len(comp)
+
+    return ranks
+
+
+def _build_pathway_layout(
+    reaction_plans: "List[Dict[str, Any]]",
+) -> "Tuple[Dict[str, Tuple[float,float]], Dict[int, Tuple[float,float]]]":
+    """
+    Returns:
+        species_pos:  {norm_name -> (cx, cy)}  — centre of each metabolite circle
+        rxn_centers:  {rxn_idx  -> (cx, cy)}   — reaction crosshair position
+    
+    Layout algorithm:
+    1. Assign each reaction a rank (topological order).
+    2. Arrange reaction centers on an arc/grid using the rank.
+    3. For each reaction, place its metabolites radially around the center,
+       but if a metabolite is already placed (shared), keep its existing position.
+    4. Recompute reaction center as the centroid of its metabolite positions.
+    """
+    n = len(reaction_plans)
+    if n == 0:
+        return {}, {}
+
+    ranks = _compute_reaction_ranks_v2(reaction_plans)
+    max_rank = max(ranks) if ranks else 0
+
+    # ── Step 1: arrange reaction centers on a snake/arc layout ───────────────
+    # Use a multi-row snake: reactions flow left-to-right on row 0,
+    # right-to-left on row 1, etc. — like PathWhiz's TCA layout.
+    COLS = max(1, min(5, (max_rank + 2) // 2))  # reactions per row
+    RXN_GAP_X = 420.0
+    RXN_GAP_Y = 450.0
+    MARGIN_X = 280.0
+    MARGIN_Y = 280.0
+
+    # Assign tentative reaction centers based on rank
+    tentative_rxn: "Dict[int, Tuple[float,float]]" = {}
+    rank_col: "Dict[int, int]" = defaultdict(int)  # track column within each rank
+    for i in range(n):
+        r = ranks[i]
+        row = r // COLS
+        col_in_row = r % COLS
+        # Snake: even rows go left-to-right, odd rows right-to-left
+        if row % 2 == 0:
+            col = col_in_row
+        else:
+            col = COLS - 1 - col_in_row
+        cx = MARGIN_X + col * RXN_GAP_X
+        cy = MARGIN_Y + row * RXN_GAP_Y
+        tentative_rxn[i] = (cx, cy)
+
+    # ── Step 2: place metabolites around their first-encountered reaction ─────
+    METAB_DIST = 180.0      # distance from reaction center to metabolite
+    COFAC_DIST = 120.0      # cofactors placed closer
+    NODE_W = 78.0
+    NODE_H = 78.0
+    PROT_W = 160.0
+    PROT_H = 60.0
+
+    species_pos: "Dict[str, Tuple[float,float]]" = {}  # norm -> (cx, cy)
+
+    def _place_around(rxn_idx: int, names: "List[str]", angle_start: float, angle_span: float, dist: float):
+        """Place metabolites radially around a reaction center."""
+        cx, cy = tentative_rxn[rxn_idx]
+        m = len(names)
+        if m == 0:
+            return
+        for k, name in enumerate(names):
+            norm = _normalize(name)
+            if not norm or norm in species_pos:
+                continue
+            if m == 1:
+                angle = angle_start
+            else:
+                angle = angle_start + k * angle_span / (m - 1) if m > 1 else angle_start
+            d = COFAC_DIST if _is_layout_cofactor(name) else dist
+            sx = cx + d * _math.cos(angle)
+            sy = cy + d * _math.sin(angle)
+            species_pos[norm] = (sx, sy)
+
+    PI = _math.pi
+
+    # Two-pass: first pass places primary metabolites (non-cofactors), 
+    # second pass places cofactors
+    for pass_num in range(2):
+        for i, plan in enumerate(reaction_plans):
+            reactants = [x for x in plan.get("inputs", []) if isinstance(x, str) and x.strip()]
+            products  = [x for x in plan.get("outputs", []) if isinstance(x, str) and x.strip()]
+
+            if pass_num == 0:
+                # Non-cofactors: place left of center (reactants) and right (products)
+                main_reactants = [r for r in reactants if not _is_layout_cofactor(r)]
+                main_products  = [p for p in products  if not _is_layout_cofactor(p)]
+                _place_around(i, main_reactants, PI,        PI * 0.6, METAB_DIST)
+                _place_around(i, main_products,  0.0,       PI * 0.6, METAB_DIST)
+            else:
+                # Cofactors: place above/below
+                cofac_reactants = [r for r in reactants if _is_layout_cofactor(r)]
+                cofac_products  = [p for p in products  if _is_layout_cofactor(p)]
+                _place_around(i, cofac_reactants, -PI * 0.6, PI * 0.5, COFAC_DIST)
+                _place_around(i, cofac_products,   PI * 1.6, PI * 0.5, COFAC_DIST)
+
+    # ── Step 3: recompute reaction centers as centroid of their metabolites ───
+    rxn_centers: "Dict[int, Tuple[float,float]]" = {}
+    for i, plan in enumerate(reaction_plans):
+        reactants = [x for x in plan.get("inputs", [])  if isinstance(x, str) and x.strip()]
+        products  = [x for x in plan.get("outputs", []) if isinstance(x, str) and x.strip()]
+        all_main = [x for x in reactants + products if not _is_layout_cofactor(x)]
+        
+        positions = []
+        for name in all_main:
+            norm = _normalize(name)
+            if norm in species_pos:
+                positions.append(species_pos[norm])
+
+        if positions:
+            cx = sum(p[0] for p in positions) / len(positions)
+            cy = sum(p[1] for p in positions) / len(positions)
+        else:
+            cx, cy = tentative_rxn[i]
+        rxn_centers[i] = (cx, cy)
+
+    return species_pos, rxn_centers
+
+
+def _edge_path_between(x1: float, y1: float, x2: float, y2: float) -> str:
+    """Cubic bezier edge path from (x1,y1) to (x2,y2) with gentle curve."""
+    dx = x2 - x1
+    dy = y2 - y1
+    # Control points: slightly offset perpendicular for gentle curve
+    ctrl_x = (x1 + x2) / 2
+    ctrl_y = (y1 + y2) / 2
+    return (f"M{x1:.1f} {y1:.1f} "
+            f"C{ctrl_x:.1f} {y1:.1f} {ctrl_x:.1f} {y2:.1f} "
+            f"{x2:.1f} {y2:.1f} ")
+
+
+
 def _html_name(name: str) -> str:
     """Escape & in reaction names for XML attribute."""
     return name.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
@@ -63,120 +302,21 @@ _CANVAS_H = 2400.0
 _MARGIN = 120.0
 _REACTION_GAP_X = 420.0
 _REACTION_GAP_Y = 380.0
-_NODE_OFFSET_X = 160.0
-_NODE_SPACING_Y = 90.0
-_MODIFIER_OFFSET_Y = 90.0
+_NODE_OFFSET_X = 200.0      # distance from reaction center to metabolite
+_NODE_SPACING_Y = 110.0
+_MODIFIER_OFFSET_Y = 120.0
 
 # ---------------------------------------------------------------------------
 # Cofactor filtering — these metabolites connect every reaction and destroy
 # topological ordering if included in the dependency graph.
 # ---------------------------------------------------------------------------
-_COFACTOR_NORMS: "Set[str]" = {
-    "nad", "nad+", "nadh", "nadp", "nadp+", "nadph",
-    "fad", "fadh", "fadh2",
-    "atp", "adp", "amp", "gtp", "gdp", "gmp", "ctp", "utp",
-    "h2o", "water", "h+", "h", "proton", "oh",
-    "o2", "oxygen", "co2", "carbon dioxide",
-    "pi", "ppi", "pyrophosphate", "phosphate", "inorganic phosphate",
-    "coa", "coa sh", "coash", "coa-sh", "coenzyme a", "acetyl coa",
-    "hco3", "bicarbonate",
-    "ubiquinone", "ubiquinol", "ubiquinone q", "ubiquinol qh2",
-    "h2o2", "hydrogen peroxide",
-    "fe2+", "fe3+", "cu+", "cu2+", "zn2+", "mg2+", "mn2+", "ca2+",
-}
-
-
+# (Layout cofactor list moved to _COFACTOR_NORMS_LAYOUT below)
 def _is_cofactor(name: str) -> bool:
-    n = _normalize(name)
-    if not n or len(n) <= 1:
-        return True
-    return n in _COFACTOR_NORMS
+    """Kept for compatibility — delegates to layout version."""
+    return _is_layout_cofactor(name)
 
 
-def _compute_reaction_ranks(reaction_plans: "List[Dict[str, Any]]") -> "List[int]":
-    """
-    Return a rank (column index) for each reaction plan using topological sort.
-    Cofactors are excluded so they don't collapse everything to rank 0.
-    Cycles (TCA etc.) are detected and broken by using document order.
-    """
-    from collections import deque
-    n = len(reaction_plans)
-    if n == 0:
-        return []
-
-    # Build dependency graph: reaction i → reaction j  iff  i produces something j consumes
-    # (excluding cofactors)
-    produces: "Dict[str, List[int]]" = defaultdict(list)
-    consumes: "Dict[str, List[int]]" = defaultdict(list)
-    for i, plan in enumerate(reaction_plans):
-        for name in plan.get("outputs", []):
-            if not _is_cofactor(name):
-                produces[_normalize(name)].append(i)
-        for name in plan.get("inputs", []):
-            if not _is_cofactor(name):
-                consumes[_normalize(name)].append(i)
-
-    successors: "Dict[int, Set[int]]" = defaultdict(set)
-    in_degree: "List[int]" = [0] * n
-    for met in produces:
-        for pi in produces[met]:
-            for ci in consumes.get(met, []):
-                if pi != ci and ci not in successors[pi]:
-                    successors[pi].add(ci)
-                    in_degree[ci] += 1
-
-    # Kahn's BFS topological sort
-    ranks = [0] * n
-    queue: "deque[int]" = deque(i for i in range(n) if in_degree[i] == 0)
-    visited: "Set[int]" = set()
-    rank = 0
-    while queue:
-        nq: "deque[int]" = deque()
-        for i in list(queue):
-            if i in visited:
-                continue
-            visited.add(i)
-            ranks[i] = rank
-            for j in successors[i]:
-                in_degree[j] -= 1
-                if in_degree[j] == 0:
-                    nq.append(j)
-        queue = nq
-        rank += 1
-
-    # Handle unvisited nodes (cycles) — assign sequential ranks by document order
-    unvisited = set(range(n)) - visited
-    if unvisited:
-        # Build undirected adjacency to find connected components
-        undirected: "Dict[int, Set[int]]" = defaultdict(set)
-        for i in range(n):
-            for j in successors.get(i, set()):
-                undirected[i].add(j)
-                undirected[j].add(i)
-
-        seen: "Set[int]" = set()
-        for start in sorted(unvisited):
-            if start in seen:
-                continue
-            # BFS to find component
-            comp: "List[int]" = []
-            stk = [start]
-            while stk:
-                node = stk.pop()
-                if node in seen:
-                    continue
-                seen.add(node)
-                comp.append(node)
-                for nb in undirected.get(node, set()):
-                    if nb not in seen:
-                        stk.append(nb)
-            # Sort by document order and assign sequential ranks
-            comp.sort()  # document order = list index
-            for idx, i in enumerate(comp):
-                ranks[i] = rank + idx
-            rank += len(comp)
-
-    return ranks
+# (old _compute_reaction_ranks removed — see _compute_reaction_ranks_v2 above)
 
 # Compound box sizes  (width, height) — approximate PathWhiz defaults
 _COMPOUND_W = 78.0
@@ -204,7 +344,8 @@ def _reaction_center(rxn_idx: int) -> Tuple[float, float]:
 def _node_pos_for_side(
     cx: float, cy: float, idx: int, total: int, side: str
 ) -> Tuple[float, float, float, float]:
-    """Return (node_cx, node_cy, node_x, node_y) for a reactant/product node."""
+    """Return (node_cx, node_cy, node_x, node_y) for a reactant/product node.
+    Used as FALLBACK only — the global position map takes priority."""
     if side == "reactant":
         x_center = cx - _NODE_OFFSET_X
     else:
@@ -216,14 +357,102 @@ def _node_pos_for_side(
     return x_center, node_cy, node_x, node_y
 
 
+# ---------------------------------------------------------------------------
+# Global species position map — built once before the reaction loop so that
+# metabolites shared across reactions share a single canvas position.
+# ---------------------------------------------------------------------------
+
+def _build_species_position_map(
+    reaction_plans: "List[Dict[str, Any]]",
+    rxn_ranks: "List[int]",
+    rxn_lanes: "List[int]",
+) -> "Dict[str, Tuple[float, float]]":
+    """
+    Return {norm_name: (cx, cy)} for every species name referenced in any reaction.
+
+    Strategy:
+    - For each species, find the reaction where it appears (first occurrence wins).
+    - Place it to the LEFT of that reaction center if it's a reactant,
+      RIGHT if it's a product.
+    - If the same species is both reactant and product (shared metabolite),
+      place it at a midpoint between its first-reactant reaction and
+      first-product reaction — this is the key to connecting the pathway.
+    """
+    from collections import defaultdict
+
+    # first_as_reactant[norm] = (rxn_idx, slot_idx, total_slots)
+    first_as_reactant: "Dict[str, Tuple[int, int, int]]" = {}
+    first_as_product:  "Dict[str, Tuple[int, int, int]]" = {}
+
+    for i, plan in enumerate(reaction_plans):
+        reactants = [x for x in plan.get("inputs", []) if isinstance(x, str) and x.strip()]
+        products  = [x for x in plan.get("outputs", []) if isinstance(x, str) and x.strip()]
+        for j, name in enumerate(reactants):
+            norm = _normalize(name)
+            if norm and norm not in first_as_reactant:
+                first_as_reactant[norm] = (i, j, len(reactants))
+        for j, name in enumerate(products):
+            norm = _normalize(name)
+            if norm and norm not in first_as_product:
+                first_as_product[norm] = (i, j, len(products))
+
+    # Compute reaction center for a given rxn_idx
+    def _rxn_center(idx: int) -> "Tuple[float, float]":
+        rank = rxn_ranks[idx]
+        lane = rxn_lanes[idx]
+        cx = _MARGIN + _NODE_OFFSET_X + rank * _REACTION_GAP_X
+        cy = _MARGIN + _MODIFIER_OFFSET_Y + lane * _REACTION_GAP_Y
+        return cx, cy
+
+    def _slot_y(cy: float, slot: int, total: int) -> float:
+        return cy + (slot - (total - 1) / 2.0) * _NODE_SPACING_Y
+
+    pos: "Dict[str, Tuple[float, float]]" = {}
+    all_norms = set(first_as_reactant) | set(first_as_product)
+
+    for norm in all_norms:
+        in_rxn  = first_as_reactant.get(norm)
+        out_rxn = first_as_product.get(norm)
+
+        if in_rxn and out_rxn:
+            # Shared metabolite: appears as product of one reaction AND
+            # reactant of another.  Place it between those two reaction centers.
+            prod_rxn_idx, prod_slot, prod_total = out_rxn
+            reac_rxn_idx, reac_slot, reac_total = in_rxn
+            pcx, pcy = _rxn_center(prod_rxn_idx)
+            rcx, rcy = _rxn_center(reac_rxn_idx)
+            # X: midpoint between producer's right side and consumer's left side
+            node_cx = (pcx + _NODE_OFFSET_X + rcx - _NODE_OFFSET_X) / 2
+            # Y: average of the two slot positions
+            py = _slot_y(pcy, prod_slot, prod_total)
+            ry = _slot_y(rcy, reac_slot, reac_total)
+            node_cy = (py + ry) / 2
+        elif out_rxn:
+            # Only appears as a product
+            prod_rxn_idx, prod_slot, prod_total = out_rxn
+            pcx, pcy = _rxn_center(prod_rxn_idx)
+            node_cx = pcx + _NODE_OFFSET_X
+            node_cy = _slot_y(pcy, prod_slot, prod_total)
+        else:
+            # Only appears as a reactant
+            reac_rxn_idx, reac_slot, reac_total = in_rxn
+            rcx, rcy = _rxn_center(reac_rxn_idx)
+            node_cx = rcx - _NODE_OFFSET_X
+            node_cy = _slot_y(rcy, reac_slot, reac_total)
+
+        pos[norm] = (node_cx, node_cy)
+
+    return pos
+
+
 def _edge_path_reactant(node_cx: float, node_cy: float, cx: float, cy: float) -> str:
-    x1 = node_cx + _COMPOUND_W / 2
-    return f"M{x1:.0f} {node_cy:.0f} C{x1:.0f} {node_cy:.0f} {cx:.0f} {cy:.0f} {cx:.0f} {cy:.0f} "
+    """Edge from metabolite center → reaction center."""
+    return _edge_path_between(node_cx, node_cy, cx, cy)
 
 
 def _edge_path_product(cx: float, cy: float, node_cx: float, node_cy: float) -> str:
-    x2 = node_cx - _COMPOUND_W / 2
-    return f"M{cx:.0f} {cy:.0f} C{cx:.0f} {cy:.0f} {x2:.0f} {node_cy:.0f} {x2:.0f} {node_cy:.0f} "
+    """Edge from reaction center → metabolite center."""
+    return _edge_path_between(cx, cy, node_cx, node_cy)
 
 
 def _modifier_pos(cx: float, cy: float, idx: int, total: int) -> Tuple[float, float, float, float]:
@@ -921,23 +1150,23 @@ def build_sbml(
     # ------------------------------------------------------------------
     # Reactions
     # ------------------------------------------------------------------
-    # --- Compute topological layout ranks for all reactions ---
-    _rxn_ranks = _compute_reaction_ranks(reaction_plans)
-    _lane_counts: "Dict[int, int]" = defaultdict(int)
-    _rxn_lanes: "List[int]" = []
-    for _r in _rxn_ranks:
-        _rxn_lanes.append(_lane_counts[_r])
-        _lane_counts[_r] += 1
-    # ----------------------------------------------------------
+    # --- Build PathWhiz-style layout (shared metabolite positions) ---
+    _species_pos, _rxn_centers = _build_pathway_layout(reaction_plans)
+    # -----------------------------------------------------------------
 
     a('    <listOfReactions>')
 
     for rxn_idx, plan in enumerate(reaction_plans):
-        # Topological rank → column; lane (parallel reactions at same rank) → row
-        _rxn_rank = _rxn_ranks[rxn_idx]
-        _rxn_lane = _rxn_lanes[rxn_idx]
-        cx = _MARGIN + _NODE_OFFSET_X + _rxn_rank * _REACTION_GAP_X
-        cy = _MARGIN + _MODIFIER_OFFSET_Y + _rxn_lane * _REACTION_GAP_Y
+        # Get reaction center from layout engine
+        cx, cy = _rxn_centers.get(rxn_idx, (300.0 + rxn_idx * 420.0, 300.0))
+
+        # Helper: get node position from global species map
+        def _get_node_pos(name: str, fallback_side: str, fallback_idx: int, fallback_total: int):
+            norm = _normalize(name)
+            if norm in _species_pos:
+                nx, ny = _species_pos[norm]
+                return nx, ny, nx - _COMPOUND_W / 2, ny - _COMPOUND_H / 2
+            return _node_pos_for_side(cx, cy, fallback_idx, fallback_total, fallback_side)
         sbml_rxn_id = plan["sbml_id"]
         pw_rxn_id = plan["pw_id"]
         compartment_sbml = plan["compartment_sbml"]
@@ -972,7 +1201,7 @@ def build_sbml(
                 else:
                     r_compartment = _compartment_sbml_id(rec2["norm"])
 
-                node_cx, node_cy, node_x, node_y = _node_pos_for_side(cx, cy, j, n_react, "reactant")
+                node_cx, node_cy, node_x, node_y = _get_node_pos(inp_name, "reactant", j, n_react)
                 edge_path = _edge_path_reactant(node_cx, node_cy, cx, cy)
                 loc_id = location_id_ctr.next()
                 loc_type = "protein_complex" if kind2 == "complex" else ("protein" if kind2 == "protein" else "compound")
@@ -1014,7 +1243,7 @@ def build_sbml(
                 else:
                     p_compartment = _compartment_sbml_id(rec2["norm"])
 
-                node_cx, node_cy, node_x, node_y = _node_pos_for_side(cx, cy, j, n_prod, "product")
+                node_cx, node_cy, node_x, node_y = _get_node_pos(out_name, "product", j, n_prod)
                 edge_path = _edge_path_product(cx, cy, node_cx, node_cy)
                 loc_id = location_id_ctr.next()
                 loc_type = "protein_complex" if kind2 == "complex" else ("protein" if kind2 == "protein" else "compound")
