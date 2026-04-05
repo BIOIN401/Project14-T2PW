@@ -317,6 +317,9 @@ def _make_local_temp_dir() -> Path:
 
 
 def _prepare_render_input(sbml_file: str) -> Tuple[str, Optional[Path]]:
+    if _has_pathwhiz_layout(sbml_file):
+        return sbml_file, None
+
     tmp_dir = _make_local_temp_dir()
     source_path = Path(sbml_file)
     laid_out_path = tmp_dir / f"{source_path.stem}.with_layout.sbml"
@@ -376,26 +379,10 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
         ).name
         stype = species.get(e.element_id, SpeciesInfo(e.element_id, "", "unknown")).species_type
 
-        # Reaction center: filled circle with reaction name label
+        # Reaction center: small filled black square
         if e.element_type == "reaction_center":
-            cx = e.x + e.w / 2
-            cy = e.y + e.h / 2
-            radius = 14
-            dot = Circle((cx, cy), radius, linewidth=1.5, facecolor="#2c2c2c", edgecolor="white", zorder=e.z)
-            ax.add_patch(dot)
-            rxn_label = reactions.get(e.element_id, e.element_id)
-            ax.text(
-                cx,
-                cy - radius - 4,
-                rxn_label,
-                fontsize=6,
-                ha="center",
-                va="bottom",
-                rotation=45,
-                rotation_mode="anchor",
-                color="#1a1a1a",
-                zorder=e.z + 1,
-            )
+            sq = Rectangle((e.x, e.y), e.w, e.h, linewidth=0, facecolor="black", edgecolor="none", zorder=e.z)
+            ax.add_patch(sq)
             continue
 
         # Compartment-like boxes / collections

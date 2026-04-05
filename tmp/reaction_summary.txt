@@ -1,63 +1,113 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: Pyruvate dehydrogenase complex reaction
-  Reactants: pyruvate [cytosolic state], HSCoA [mitochondrial matrix state], NAD [unknown]
-  Products:  Acetyl-CoA [mitochondrial matrix state], NADH [mitochondrial matrix state], CO2 [unknown]
-  Modifier:  Pyruvate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
+REACTION 1: citrate synthase reaction
+  Reactants: oxaloacetate [unknown], Acetyl CoA [unknown], H2O [unknown]
+  Products:  citrate [mitochondrial matrix state], CoA-SH [unknown]
+  Modifier:  citrate synthase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: Citrate synthase reaction
-  Reactants: Oxaloacetate [mitochondrial matrix state], Acetyl-CoA [mitochondrial matrix state], H2O [unknown]
-  Products:  Citrate [mitochondrial matrix state], CoA-SH [unknown]
-  Modifier:  Citrate synthase [mitochondrial matrix state] (role=catalyst, confidence=1.0)
+REACTION 2: aconitase dehydration reaction
+  Reactants: citrate [mitochondrial matrix state]
+  Products:  cis-Aconitate [unknown], H2O [unknown]
+  Modifier:  aconitase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: Isocitrate dehydrogenase reaction
-  Reactants: Isocitrate [mitochondrial matrix state], NAD [unknown]
-  Products:  Oxalosuccinate [mitochondrial matrix state], NADH [mitochondrial matrix state], H [unknown]
-  Modifier:  Isocitrate dehydrogenase [unknown] (role=catalyst, confidence=1.0)
+REACTION 3: aconitase hydration reaction
+  Reactants: cis-Aconitate [unknown], H2O [unknown]
+  Products:  Isocitrate [unknown]
+  Modifier:  aconitase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: Succinate dehydrogenase reaction
-  Reactants: Succinate [unknown], ubiquinone [inner mitochondrial membrane state]
-  Products:  Fumarate [unknown], ubiquinol [inner mitochondrial membrane state]
-  Modifier:  Succinate dehydrogenase [inner mitochondrial membrane state] (role=catalyst, confidence=1.0)
+REACTION 4: isocitrate dehydrogenase oxidation reaction
+  Reactants: Isocitrate [unknown], NAD [unknown]
+  Products:  Oxalosuccinate [unknown], NADH [unknown], H [unknown]
+  Modifier:  isocitrate dehydrogenase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: Malate dehydrogenase reaction
-  Reactants: L-Malate [unknown], NAD [unknown]
-  Products:  Oxaloacetate [mitochondrial matrix state], NADH [mitochondrial matrix state], H [unknown]
-  Modifier:  Malate dehydrogenase [unknown] (role=catalyst, confidence=1.0)
+REACTION 5: oxalosuccinate decarboxylation reaction
+  Reactants: Oxalosuccinate [unknown]
+  Products:  α-ketoglutarate [unknown], CO2 [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 6: α-Ketoglutarate dehydrogenase reaction
-  Reactants: α-Ketoglutarate [mitochondrial matrix state], NAD [unknown], CoA-SH [unknown]
-  Products:  Succinyl-CoA [unknown], NADH [mitochondrial matrix state], H [unknown], CO2 [unknown]
-  Modifier:  α-Ketoglutarate dehydrogenase [unknown] (role=catalyst, confidence=1.0)
+REACTION 6: α-ketoglutarate dehydrogenase reaction
+  Reactants: α-ketoglutarate [unknown], NAD [unknown], CoA-SH [unknown]
+  Products:  succinyl-CoA [unknown], NADH [unknown], H [unknown], CO2 [unknown]
+  Modifier:  α-ketoglutarate dehydrogenase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: Succinyl-CoA synthetase reaction
-  Reactants: Succinyl-CoA [unknown], GDP [mitochondrial matrix state], Pi [mitochondrial matrix state]
-  Products:  Succinate [unknown], CoA-SH [unknown], GTP [mitochondrial matrix state]
-  Modifier:  Succinyl-CoA synthetase [unknown] (role=catalyst, confidence=1.0)
+REACTION 7: succinyl-CoA synthetase reaction
+  Reactants: succinyl-CoA [unknown], GDP [unknown], Pi [unknown]
+  Products:  succinate [unknown], CoA-SH [unknown], GTP [unknown]
+  Modifier:  succinyl-CoA synthetase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: Fumarase reaction
-  Reactants: Fumarate [unknown], H2O [unknown]
+REACTION 8: succinate dehydrogenase reaction
+  Reactants: succinate [unknown], ubiquinone [unknown]
+  Products:  fumarate [unknown], ubiquinol [unknown]
+  Modifier:  succinate dehydrogenase [unknown] (role=catalyst, confidence=1.0), succinate:ubiquinone oxidoreductase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
+  QA flags:  none
+
+REACTION 9: fumarase hydration reaction
+  Reactants: fumarate [unknown], H2O [unknown]
   Products:  L-Malate [unknown]
-  Modifier:  Fumarase [unknown] (role=catalyst, confidence=1.0)
+  Modifier:  fumarase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: Aconitase reaction
-  Reactants: Citrate [mitochondrial matrix state]
-  Products:  cis-Aconitate [mitochondrial matrix state], H2O [unknown]
-  Modifier:  Aconitase [unknown] (role=catalyst, confidence=1.0)
+REACTION 10: malate dehydrogenase reaction
+  Reactants: L-Malate [unknown], NAD [unknown]
+  Products:  oxaloacetate [unknown], NADH [unknown], H [unknown]
+  Modifier:  malate dehydrogenase [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 11: pyruvate dehydrogenase complex reaction
+  Reactants: pyruvate [cytosolic state], HSCoA [unknown], NAD [unknown]
+  Products:  acetyl-CoA [mitochondrial matrix state], NADH [unknown], CO2 [unknown]
+  Modifier:  pyruvate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
+  QA flags:  none
+
+REACTION 12: pyruvate carboxylase reaction
+  Reactants: pyruvate [cytosolic state]
+  Products:  oxaloacetate [unknown]
+  Modifier:  pyruvate carboxylase [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 13: ATP citrate lyase reaction
+  Reactants: citrate [mitochondrial matrix state]
+  Products:  acetyl-CoA [mitochondrial matrix state], oxaloacetate [unknown]
+  Modifier:  ATP citrate lyase [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: nucleoside-diphosphate kinase reaction
+  Reactants: GTP [unknown], ADP [unknown]
+  Products:  GDP [unknown], ATP [unknown]
+  Modifier:  nucleoside-diphosphate kinase [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 15: hydroxyglutarate dehydrogenase reaction
+  Reactants: 2-hydroxyglutarate [unknown]
+  Products:  α-ketoglutarate [unknown]
+  Modifier:  hydroxyglutarate dehydrogenase enzymes [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 TRANSPORT 1: pyruvate transport into mitochondrial matrix
   From: cytosolic state
   To:   mitochondrial matrix state
   Cargo: pyruvate [cytosolic state]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 2: citrate transport to cytosol
+  From: mitochondrial matrix state
+  To:   cytosolic state
+  Cargo: citrate [mitochondrial matrix state]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 3: malate transport out of mitochondrion
+  From: mitochondrial matrix state
+  To:   cytosolic state
+  Cargo: malate [mitochondrial matrix state]
   Transporter: MISSING
   QA flags:  none
