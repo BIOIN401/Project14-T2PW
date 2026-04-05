@@ -149411,6 +149411,112 @@
         "retrieved_at": "2026-04-05T04:49:15Z",
         "status": "ok"
       }
+    },
+    "chebi:CHEBI:46245": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:46245",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-04-05T05:45:55Z"
+      }
+    },
+    "hmdb:HMDB0001072": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001072",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001072",
+        "retrieved_at": "2026-04-05T05:45:55Z"
+      }
+    },
+    "kegg:C11378": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C11378",
+      "primary_name": "Ubiquinone-10",
+      "synonyms": [
+        "Ubiquinone-10",
+        "Ubidecarenone",
+        "Coenzyme Q10"
+      ],
+      "formula": "C59H90O4",
+      "mass_monoisotopic": 862.6839,
+      "mass_average": 863.34,
+      "pathways": [
+        "Ferroptosis"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Vitamins and cofactors",
+        "Cofactors",
+        "Coenzymes",
+        "C11378 Coenzyme Q10",
+        "Lipids [BR:br08002]",
+        "PR Prenol lipids",
+        "PR02 Quinones and hydroquinones",
+        "PR0201 Ubiquinones",
+        "C11378 Ubiquinone-10",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D01065)]",
+        "C CARDIOVASCULAR SYSTEM",
+        "C01 CARDIAC THERAPY",
+        "C01E OTHER CARDIAC PREPARATIONS",
+        "C01EB Other cardiac preparations",
+        "C01EB09 Ubidecarenone",
+        "D01065 Ubidecarenone (JP18/INN) &lt;JP&gt;",
+        "Therapeutic category of drugs in Japan [BR:br08301(D01065)]",
+        "2 Agents affecting individual organs",
+        "21 Cardiovascular agents",
+        "211 Cardiotonics",
+        "2119 Others",
+        "D01065 Ubidecarenone (JP18/INN)",
+        "Classification of Japanese OTC drugs [BR:br08313(D01065)]",
+        "Agents for circulatory system and blood",
+        "21 Cardiotonics (Senso containing drugs)",
+        "Risk category of Japanese OTC drugs [BR:br08312(D01065)]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Ubidecarenone",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D01065)]",
+        "Chemicals",
+        "D01065 Ubidecarenone",
+        "Rx-to-OTC switch list in Japan [br08314.html(D01065)]",
+        "D01065"
+      ],
+      "cross_references": {
+        "kegg_id": "C11378",
+        "pubchem_id": "13552",
+        "chebi_id": "46245"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C11378",
+        "source_url": "https://rest.kegg.jp/get/cpd:C11378",
+        "retrieved_at": "2026-04-05T05:45:56Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:52970": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:52970",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-04-05T05:46:01Z"
+      }
+    },
+    "hmdb:HMDB0001304": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001304",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001304",
+        "retrieved_at": "2026-04-05T05:46:01Z"
+      }
     }
   }
 }

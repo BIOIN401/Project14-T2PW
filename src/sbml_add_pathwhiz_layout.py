@@ -147,6 +147,7 @@ class RxnNode:
     cy: float = 0.0
     rank: int = 0
     lane: int = 0
+    in_cycle: bool = False
 
 
 def _topological_layout(rxns: List[RxnNode]) -> None:
@@ -187,6 +188,7 @@ def _topological_layout(rxns: List[RxnNode]) -> None:
     for i, r in enumerate(rxns):
         if i not in visited:
             r.rank = rank
+            r.in_cycle = True
 
     rank_count: Dict[int, int] = defaultdict(int)
     for r in rxns:
@@ -257,7 +259,8 @@ def _detect_cycle_order(rxns: List[RxnNode]) -> Optional[List[int]]:
 
 def _apply_circular_layout(rxns: List[RxnNode],
                             nodes: Dict[str, CanonNode],
-                            order: List[int]) -> None:
+                            order: List[int],
+                            cx_min: float = 0.0) -> None:
     """Place reactions evenly on an ellipse and metabolites around them.
 
     For each consecutive reaction pair (order[i], order[i+1]) the metabolites
@@ -273,7 +276,8 @@ def _apply_circular_layout(rxns: List[RxnNode],
     R = max(250.0, RXN_STEP_X * n / (2.0 * math.pi))
     Rx = R * 1.15   # slight horizontal stretch for readability
     Ry = R
-    CX = MARGIN + Rx + CIRC_OUT_DIST + COMPOUND_W + 20.0
+    # cx_min is the right edge of any linear prefix; push the circle past it
+    CX = max(MARGIN, cx_min) + Rx + CIRC_OUT_DIST + COMPOUND_W + 20.0
     CY = MARGIN + Ry + CIRC_OUT_DIST + COMPOUND_W + 20.0
 
     # Place reactions evenly on the ellipse, starting at the top (−π/2)
@@ -548,19 +552,40 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             modifier_sids=msids,
         ))
 
-    # Layout — use circular layout when all reactions form a single cycle
-    _cycle_order = _detect_cycle_order(rxns)
-    _is_circular = _cycle_order is not None
-    if _is_circular:
-        _apply_circular_layout(rxns, canon_nodes, _cycle_order)
+    # ── Layout ──────────────────────────────────────────────────────────────
+    # BFS topological sort first.  Reactions the BFS cannot reach (because
+    # every predecessor is also unreachable — they form a cycle) are marked
+    # in_cycle=True by _topological_layout.  We then try to arrange those
+    # cycle reactions in a circle and the remaining linear reactions in a
+    # left-to-right strip that feeds into the circle.
+    _topological_layout(rxns)
+
+    _cycle_rxns  = [r for r in rxns if r.in_cycle]
+    _linear_rxns = [r for r in rxns if not r.in_cycle]
+
+    _cycle_order = (_detect_cycle_order(_cycle_rxns)
+                    if len(_cycle_rxns) >= 3 else None)
+
+    if _cycle_order is not None:
+        # 1. Place the linear prefix using the standard grid layout.
+        _place_reactions(_linear_rxns)
+        _place_nodes(_linear_rxns, canon_nodes)
+        # 2. Find the right edge of the linear prefix so the circle sits
+        #    just to the right of it without overlap.
+        lin_max_x = max(
+            (r.cx + PRODUCT_OFFSET + COMPOUND_W for r in _linear_rxns),
+            default=MARGIN + REACTANT_OFFSET,
+        )
+        # 3. Lay out the cycle reactions on an ellipse.
+        _apply_circular_layout(_cycle_rxns, canon_nodes, _cycle_order,
+                               cx_min=lin_max_x + MARGIN)
     else:
-        _topological_layout(rxns)
         _place_reactions(rxns)
         _place_nodes(rxns, canon_nodes)
 
     def _edge_path(nd: CanonNode, r: RxnNode, role: str) -> str:
-        """Return the SVG path string for the edge between metabolite nd and reaction r."""
-        if _is_circular:
+        """Return the SVG path for the edge between metabolite nd and reaction r."""
+        if r.in_cycle and _cycle_order is not None:
             if role == "product":
                 return _path_circ(r.cx, r.cy, nd.cx, nd.cy)
             return _path_circ(nd.cx, nd.cy, r.cx, r.cy)
