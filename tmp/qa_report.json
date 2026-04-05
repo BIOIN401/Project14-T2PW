@@ -1,23 +1,213 @@
 {
   "summary": {
-    "total_species": 7,
-    "total_reactions": 1,
+    "total_species": 50,
+    "total_reactions": 14,
     "completeness_score": 0.0
   },
   "flags": {
-    "missing_compartments": [],
+    "missing_compartments": [
+      {
+        "entity": "oxaloacetate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ATP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GTP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GDP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Pi",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "CO2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "H2O",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "CoA-SH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "cis-Aconitate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Oxalosuccinate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ubiquinone (Q)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ubiquinol (QH2)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "L-Malate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ADP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "calcium",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "citrate synthase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "aconitase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "isocitrate dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "alpha-ketoglutarate dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "succinyl-CoA synthetase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "succinate dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "fumarase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "malate dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyruvate dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyruvate carboxylase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ATP citrate lyase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "phosphofructokinase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyruvate dehydrogenase phosphatase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "prolyl 4-hydroxylases",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "hydroxyglutarate dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "nucleoside-diphosphate kinase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "phosphoenolpyruvate carboxykinase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyruvate dehydrogenase complex",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Acetyl CoA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Isocitrate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NAD",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "H",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "α-Ketoglutarate",
+        "reason": "no subcellular location recorded"
+      }
+    ],
     "missing_modifiers": [],
-    "possible_complexes": [],
+    "possible_complexes": [
+      {
+        "entity": "pyruvate dehydrogenase complex",
+        "reason": "name suggests a complex or subunit"
+      }
+    ],
     "transport_like_reactions": [],
     "orphan_nodes": [
       {
-        "entity": "fructose-6-phosphate",
+        "entity": "FADH2",
+        "degree": 0
+      },
+      {
+        "entity": "FAD",
+        "degree": 0
+      },
+      {
+        "entity": "prolyl 4-hydroxylases",
+        "degree": 0
+      },
+      {
+        "entity": "hydroxyglutarate dehydrogenase",
+        "degree": 0
+      },
+      {
+        "entity": "phosphoenolpyruvate carboxykinase",
         "degree": 0
       }
     ],
     "missing_ids": [
       {
-        "entity": "glucose",
+        "entity": "acetyl-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "oxaloacetate",
+        "type": "compound"
+      },
+      {
+        "entity": "citrate",
+        "type": "compound"
+      },
+      {
+        "entity": "NADH",
+        "type": "compound"
+      },
+      {
+        "entity": "FADH2",
         "type": "compound"
       },
       {
@@ -25,7 +215,79 @@
         "type": "compound"
       },
       {
-        "entity": "glucose-6-phosphate",
+        "entity": "GTP",
+        "type": "compound"
+      },
+      {
+        "entity": "alpha-ketoglutarate",
+        "type": "compound"
+      },
+      {
+        "entity": "succinyl-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "malate",
+        "type": "compound"
+      },
+      {
+        "entity": "pyruvate",
+        "type": "compound"
+      },
+      {
+        "entity": "NAD+",
+        "type": "compound"
+      },
+      {
+        "entity": "FAD",
+        "type": "compound"
+      },
+      {
+        "entity": "GDP",
+        "type": "compound"
+      },
+      {
+        "entity": "Pi",
+        "type": "compound"
+      },
+      {
+        "entity": "CO2",
+        "type": "compound"
+      },
+      {
+        "entity": "H2O",
+        "type": "compound"
+      },
+      {
+        "entity": "CoA-SH",
+        "type": "compound"
+      },
+      {
+        "entity": "cis-Aconitate",
+        "type": "compound"
+      },
+      {
+        "entity": "Oxalosuccinate",
+        "type": "compound"
+      },
+      {
+        "entity": "ubiquinone (Q)",
+        "type": "compound"
+      },
+      {
+        "entity": "ubiquinol (QH2)",
+        "type": "compound"
+      },
+      {
+        "entity": "L-Malate",
+        "type": "compound"
+      },
+      {
+        "entity": "fumarate",
+        "type": "compound"
+      },
+      {
+        "entity": "succinate",
         "type": "compound"
       },
       {
@@ -33,20 +295,95 @@
         "type": "compound"
       },
       {
-        "entity": "fructose-6-phosphate",
+        "entity": "calcium",
         "type": "compound"
       },
       {
-        "entity": "GLUT1",
+        "entity": "citrate synthase",
         "type": "protein"
       },
       {
-        "entity": "hexokinase",
+        "entity": "aconitase",
         "type": "protein"
+      },
+      {
+        "entity": "isocitrate dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "alpha-ketoglutarate dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "succinyl-CoA synthetase",
+        "type": "protein"
+      },
+      {
+        "entity": "succinate dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "fumarase",
+        "type": "protein"
+      },
+      {
+        "entity": "malate dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "pyruvate dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "pyruvate carboxylase",
+        "type": "protein"
+      },
+      {
+        "entity": "ATP citrate lyase",
+        "type": "protein"
+      },
+      {
+        "entity": "phosphofructokinase",
+        "type": "protein"
+      },
+      {
+        "entity": "pyruvate dehydrogenase phosphatase",
+        "type": "protein"
+      },
+      {
+        "entity": "prolyl 4-hydroxylases",
+        "type": "protein"
+      },
+      {
+        "entity": "hydroxyglutarate dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "nucleoside-diphosphate kinase",
+        "type": "protein"
+      },
+      {
+        "entity": "phosphoenolpyruvate carboxykinase",
+        "type": "protein"
+      },
+      {
+        "entity": "pyruvate dehydrogenase complex",
+        "type": "protein_complex"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [],
+    "duplicate_species": [
+      {
+        "entity_a": "acetyl-CoA",
+        "entity_b": "Acetyl CoA",
+        "reason": "normalized label collision"
+      },
+      {
+        "entity_a": "NAD+",
+        "entity_b": "NAD",
+        "reason": "normalized label collision"
+      }
+    ],
     "inconsistent_class": []
   }
 }

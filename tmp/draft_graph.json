@@ -2,16 +2,52 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 9,
-    "edge_count": 7
+    "node_count": 78,
+    "edge_count": 99
   },
   "nodes": [
     {
-      "id": "compound:glucose",
-      "label": "glucose",
+      "id": "compound:acetyl-coa",
+      "label": "acetyl-CoA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "extracellular space",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:oxaloacetate",
+      "label": "oxaloacetate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:citrate",
+      "label": "citrate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nadh",
+      "label": "NADH",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fadh2",
+      "label": "FADH2",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -20,16 +56,178 @@
       "label": "ATP",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytoplasm",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:glucose-6-phosphate",
-      "label": "glucose-6-phosphate",
+      "id": "compound:gtp",
+      "label": "GTP",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytoplasm",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:alpha-ketoglutarate",
+      "label": "alpha-ketoglutarate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:succinyl-coa",
+      "label": "succinyl-CoA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:malate",
+      "label": "malate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:pyruvate",
+      "label": "pyruvate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nad+",
+      "label": "NAD+",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fad",
+      "label": "FAD",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:gdp",
+      "label": "GDP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:pi",
+      "label": "Pi",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:co2",
+      "label": "CO2",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:h2o",
+      "label": "H2O",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:coa-sh",
+      "label": "CoA-SH",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:cis-aconitate",
+      "label": "cis-Aconitate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:oxalosuccinate",
+      "label": "Oxalosuccinate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:ubiquinone (q)",
+      "label": "ubiquinone (Q)",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:ubiquinol (qh2)",
+      "label": "ubiquinol (QH2)",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:l-malate",
+      "label": "L-Malate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fumarate",
+      "label": "fumarate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:succinate",
+      "label": "succinate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -38,97 +236,1072 @@
       "label": "ADP",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytoplasm",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:fructose-6-phosphate",
-      "label": "fructose-6-phosphate",
+      "id": "compound:calcium",
+      "label": "calcium",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytoplasm",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:glut1",
-      "label": "GLUT1",
+      "id": "protein:citrate synthase",
+      "label": "citrate synthase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytoplasm",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:hexokinase",
-      "label": "hexokinase",
+      "id": "protein:aconitase",
+      "label": "aconitase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytoplasm",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:hexokinase reaction",
-      "label": "hexokinase reaction",
+      "id": "protein:isocitrate dehydrogenase",
+      "label": "isocitrate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:alpha-ketoglutarate dehydrogenase",
+      "label": "alpha-ketoglutarate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:succinyl-coa synthetase",
+      "label": "succinyl-CoA synthetase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:succinate dehydrogenase",
+      "label": "succinate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:fumarase",
+      "label": "fumarase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:malate dehydrogenase",
+      "label": "malate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:pyruvate dehydrogenase",
+      "label": "pyruvate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:pyruvate carboxylase",
+      "label": "pyruvate carboxylase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:atp citrate lyase",
+      "label": "ATP citrate lyase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphofructokinase",
+      "label": "phosphofructokinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:pyruvate dehydrogenase phosphatase",
+      "label": "pyruvate dehydrogenase phosphatase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:prolyl 4-hydroxylases",
+      "label": "prolyl 4-hydroxylases",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:hydroxyglutarate dehydrogenase",
+      "label": "hydroxyglutarate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:nucleoside-diphosphate kinase",
+      "label": "nucleoside-diphosphate kinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoenolpyruvate carboxykinase",
+      "label": "phosphoenolpyruvate carboxykinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein_complex:pyruvate dehydrogenase complex",
+      "label": "pyruvate dehydrogenase complex",
+      "kind": "protein_complex",
+      "cls": "protein_complex",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:citrate synthase reaction",
+      "label": "Citrate synthase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytoplasm",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "transport:glut1-mediated glucose transport",
-      "label": "GLUT1-mediated glucose transport",
+      "id": "compound:acetyl coa",
+      "label": "Acetyl CoA",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:aconitase dehydration reaction",
+      "label": "Aconitase dehydration reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:aconitase hydration reaction",
+      "label": "Aconitase hydration reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:isocitrate",
+      "label": "Isocitrate",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:isocitrate dehydrogenase reaction",
+      "label": "Isocitrate dehydrogenase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nad",
+      "label": "NAD",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:h",
+      "label": "H",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:oxalosuccinate decarboxylation",
+      "label": "Oxalosuccinate decarboxylation",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:α-ketoglutarate",
+      "label": "α-Ketoglutarate",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "label": "α-Ketoglutarate dehydrogenase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:succinyl-coa synthetase reaction",
+      "label": "Succinyl-CoA synthetase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:succinate dehydrogenase reaction",
+      "label": "Succinate dehydrogenase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:fumarase reaction",
+      "label": "Fumarase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:malate dehydrogenase reaction",
+      "label": "Malate dehydrogenase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:pyruvate dehydrogenase complex reaction",
+      "label": "Pyruvate dehydrogenase complex reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:pyruvate carboxylase reaction",
+      "label": "Pyruvate carboxylase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:atp citrate lyase reaction",
+      "label": "ATP citrate lyase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:nucleoside-diphosphate kinase reaction",
+      "label": "Nucleoside-diphosphate kinase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:pyruvate import into mitochondrial matrix",
+      "label": "Pyruvate import into mitochondrial matrix",
       "kind": "transport",
       "cls": "",
-      "compartment": "extracellular space → cytoplasm",
+      "compartment": "cytosolic state → mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:citrate export to cytosol",
+      "label": "Citrate export to cytosol",
+      "kind": "transport",
+      "cls": "",
+      "compartment": "mitochondrial matrix state → cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:malate export to cytosol",
+      "label": "Malate export to cytosol",
+      "kind": "transport",
+      "cls": "",
+      "compartment": "mitochondrial matrix state → cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:nadh inhibition of citrate synthase",
+      "label": "NADH inhibition of citrate synthase",
+      "kind": "interaction",
+      "cls": "inhibits",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:acetyl-coa inhibition of pyruvate dehydrogenase",
+      "label": "Acetyl-coA inhibition of pyruvate dehydrogenase",
+      "kind": "interaction",
+      "cls": "inhibits",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:calcium activation of isocitrate dehydrogenase",
+      "label": "Calcium activation of isocitrate dehydrogenase",
+      "kind": "interaction",
+      "cls": "activates",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:citrate inhibition of phosphofructokinase",
+      "label": "Citrate inhibition of phosphofructokinase",
+      "kind": "interaction",
+      "cls": "inhibits",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:pyruvate dehydrogenase phosphatase activation of pyruvate dehydrogenase complex",
+      "label": "Pyruvate dehydrogenase phosphatase activation of pyruvate dehydrogenase complex",
+      "kind": "interaction",
+      "cls": "activates",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:calcium activation of pyruvate dehydrogenase phosphatase",
+      "label": "Calcium activation of pyruvate dehydrogenase phosphatase",
+      "kind": "interaction",
+      "cls": "activates",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:nad+ alias",
+      "label": "NAD+ alias",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:alpha-ketoglutarate alias",
+      "label": "alpha-ketoglutarate alias",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:succinyl-coa alias",
+      "label": "succinyl-CoA alias",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:fumarate alias",
+      "label": "fumarate alias",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:succinate alias",
+      "label": "succinate alias",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:glucose",
-      "target": "reaction:hexokinase reaction",
+      "source": "compound:oxaloacetate",
+      "target": "reaction:citrate synthase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:atp",
-      "target": "reaction:hexokinase reaction",
+      "source": "compound:acetyl coa",
+      "target": "reaction:citrate synthase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:glucose-6-phosphate",
+      "source": "compound:h2o",
+      "target": "reaction:citrate synthase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:citrate synthase reaction",
+      "target": "compound:citrate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:adp",
+      "source": "reaction:citrate synthase reaction",
+      "target": "compound:coa-sh",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:hexokinase",
-      "target": "reaction:hexokinase reaction",
+      "source": "protein:citrate synthase",
+      "target": "reaction:citrate synthase reaction",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:glucose",
-      "target": "transport:glut1-mediated glucose transport",
+      "source": "compound:citrate",
+      "target": "reaction:aconitase dehydration reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aconitase dehydration reaction",
+      "target": "compound:cis-aconitate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aconitase dehydration reaction",
+      "target": "compound:h2o",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aconitase",
+      "target": "reaction:aconitase dehydration reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:cis-aconitate",
+      "target": "reaction:aconitase hydration reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:h2o",
+      "target": "reaction:aconitase hydration reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aconitase hydration reaction",
+      "target": "compound:isocitrate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aconitase",
+      "target": "reaction:aconitase hydration reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:isocitrate",
+      "target": "reaction:isocitrate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nad",
+      "target": "reaction:isocitrate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:isocitrate dehydrogenase reaction",
+      "target": "compound:oxalosuccinate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:isocitrate dehydrogenase reaction",
+      "target": "compound:nadh",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:isocitrate dehydrogenase reaction",
+      "target": "compound:h",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:isocitrate dehydrogenase",
+      "target": "reaction:isocitrate dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:oxalosuccinate",
+      "target": "reaction:oxalosuccinate decarboxylation",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:oxalosuccinate decarboxylation",
+      "target": "compound:α-ketoglutarate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:oxalosuccinate decarboxylation",
+      "target": "compound:co2",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:α-ketoglutarate",
+      "target": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nad",
+      "target": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:coa-sh",
+      "target": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "target": "compound:succinyl-coa",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "target": "compound:nadh",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "target": "compound:h",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "target": "compound:co2",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:alpha-ketoglutarate dehydrogenase",
+      "target": "reaction:α-ketoglutarate dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:succinyl-coa",
+      "target": "reaction:succinyl-coa synthetase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:gdp",
+      "target": "reaction:succinyl-coa synthetase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:pi",
+      "target": "reaction:succinyl-coa synthetase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:succinyl-coa synthetase reaction",
+      "target": "compound:succinate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:succinyl-coa synthetase reaction",
+      "target": "compound:coa-sh",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:succinyl-coa synthetase reaction",
+      "target": "compound:gtp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:succinyl-coa synthetase",
+      "target": "reaction:succinyl-coa synthetase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:succinate",
+      "target": "reaction:succinate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:ubiquinone (q)",
+      "target": "reaction:succinate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:succinate dehydrogenase reaction",
+      "target": "compound:fumarate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:succinate dehydrogenase reaction",
+      "target": "compound:ubiquinol (qh2)",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:succinate dehydrogenase",
+      "target": "reaction:succinate dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:fumarate",
+      "target": "reaction:fumarase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:h2o",
+      "target": "reaction:fumarase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:fumarase reaction",
+      "target": "compound:l-malate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:fumarase",
+      "target": "reaction:fumarase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:l-malate",
+      "target": "reaction:malate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nad",
+      "target": "reaction:malate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:malate dehydrogenase reaction",
+      "target": "compound:oxaloacetate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:malate dehydrogenase reaction",
+      "target": "compound:nadh",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:malate dehydrogenase reaction",
+      "target": "compound:h",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:malate dehydrogenase",
+      "target": "reaction:malate dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:pyruvate",
+      "target": "reaction:pyruvate dehydrogenase complex reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:coa-sh",
+      "target": "reaction:pyruvate dehydrogenase complex reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nad",
+      "target": "reaction:pyruvate dehydrogenase complex reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate dehydrogenase complex reaction",
+      "target": "compound:acetyl-coa",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate dehydrogenase complex reaction",
+      "target": "compound:nadh",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate dehydrogenase complex reaction",
+      "target": "compound:co2",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein_complex:pyruvate dehydrogenase complex",
+      "target": "reaction:pyruvate dehydrogenase complex reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:pyruvate dehydrogenase",
+      "target": "reaction:pyruvate dehydrogenase complex reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:pyruvate",
+      "target": "reaction:pyruvate carboxylase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:co2",
+      "target": "reaction:pyruvate carboxylase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate carboxylase reaction",
+      "target": "compound:oxaloacetate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:pyruvate carboxylase",
+      "target": "reaction:pyruvate carboxylase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:citrate",
+      "target": "reaction:atp citrate lyase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:atp citrate lyase reaction",
+      "target": "compound:acetyl-coa",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:atp citrate lyase reaction",
+      "target": "compound:oxaloacetate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:atp citrate lyase",
+      "target": "reaction:atp citrate lyase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:gtp",
+      "target": "reaction:nucleoside-diphosphate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:adp",
+      "target": "reaction:nucleoside-diphosphate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:nucleoside-diphosphate kinase reaction",
+      "target": "compound:gdp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:nucleoside-diphosphate kinase reaction",
+      "target": "compound:atp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:nucleoside-diphosphate kinase",
+      "target": "reaction:nucleoside-diphosphate kinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:pyruvate",
+      "target": "transport:pyruvate import into mitochondrial matrix",
       "role": "cargo",
       "confidence": 1.0
     },
     {
-      "source": "protein:glut1",
-      "target": "transport:glut1-mediated glucose transport",
-      "role": "transporter",
+      "source": "compound:citrate",
+      "target": "transport:citrate export to cytosol",
+      "role": "cargo",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:malate",
+      "target": "transport:malate export to cytosol",
+      "role": "cargo",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nadh",
+      "target": "interaction:nadh inhibition of citrate synthase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:nadh inhibition of citrate synthase",
+      "target": "protein:citrate synthase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:acetyl-coa",
+      "target": "interaction:acetyl-coa inhibition of pyruvate dehydrogenase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:acetyl-coa inhibition of pyruvate dehydrogenase",
+      "target": "protein:pyruvate dehydrogenase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:calcium",
+      "target": "interaction:calcium activation of isocitrate dehydrogenase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:calcium activation of isocitrate dehydrogenase",
+      "target": "protein:isocitrate dehydrogenase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:citrate",
+      "target": "interaction:citrate inhibition of phosphofructokinase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:citrate inhibition of phosphofructokinase",
+      "target": "protein:phosphofructokinase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:pyruvate dehydrogenase phosphatase",
+      "target": "interaction:pyruvate dehydrogenase phosphatase activation of pyruvate dehydrogenase complex",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:pyruvate dehydrogenase phosphatase activation of pyruvate dehydrogenase complex",
+      "target": "protein_complex:pyruvate dehydrogenase complex",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:calcium",
+      "target": "interaction:calcium activation of pyruvate dehydrogenase phosphatase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:calcium activation of pyruvate dehydrogenase phosphatase",
+      "target": "protein:pyruvate dehydrogenase phosphatase",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nad+",
+      "target": "interaction:nad+ alias",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:nad+ alias",
+      "target": "compound:nad",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:alpha-ketoglutarate",
+      "target": "interaction:alpha-ketoglutarate alias",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:alpha-ketoglutarate alias",
+      "target": "compound:α-ketoglutarate",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:succinyl-coa",
+      "target": "interaction:succinyl-coa alias",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:succinyl-coa alias",
+      "target": "compound:succinyl-coa",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:fumarate",
+      "target": "interaction:fumarate alias",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:fumarate alias",
+      "target": "compound:fumarate",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:succinate",
+      "target": "interaction:succinate alias",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:succinate alias",
+      "target": "compound:succinate",
+      "role": "participant",
       "confidence": 1.0
     }
   ]
