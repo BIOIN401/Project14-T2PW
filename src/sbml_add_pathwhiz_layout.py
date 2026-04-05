@@ -26,6 +26,7 @@ Layout algorithm:
 
 from __future__ import annotations
 
+import math
 import re
 import xml.etree.ElementTree as ET
 from collections import defaultdict, deque
@@ -60,6 +61,10 @@ NODE_SPACING_Y  = 95.0
 MODIFIER_ABOVE  = 120.0
 
 COMPARTMENT_PAD = 50.0
+
+# Circular layout constants (used when all reactions form a single cycle)
+CIRC_OUT_DIST  = 200.0   # radial distance beyond ring for non-backbone metabolites
+CIRC_MOD_EXTRA = 130.0   # additional radial distance for modifier/enzyme nodes
 
 TMPL_COMPOUND   = "3"
 TMPL_PROTEIN    = "6"
@@ -189,6 +194,164 @@ def _topological_layout(rxns: List[RxnNode]) -> None:
         rank_count[r.rank] += 1
 
 
+def _detect_cycle_order(rxns: List[RxnNode]) -> Optional[List[int]]:
+    """Return reaction indices in Hamiltonian-cycle order when all reactions
+    form a single directed cycle in the reaction-successor graph, else None.
+
+    The successor graph is built identically to _topological_layout: a directed
+    edge i→j is added whenever reaction i produces a metabolite that reaction j
+    consumes.  If every reaction has at least one predecessor in this graph
+    (i.e. the BFS queue starts empty) the pathway may be a cycle; a DFS with
+    Warnsdorff-style pruning then confirms whether a Hamiltonian cycle exists.
+    No reaction names or metabolite names are assumed.
+    """
+    n = len(rxns)
+    if n < 3:
+        return None
+
+    # Build the same successor graph used by _topological_layout
+    produces: Dict[str, List[int]] = defaultdict(list)
+    consumes: Dict[str, List[int]] = defaultdict(list)
+    for i, r in enumerate(rxns):
+        for cn in r.product_canons:
+            produces[cn].append(i)
+        for cn in r.reactant_canons:
+            consumes[cn].append(i)
+
+    successors: Dict[int, Set[int]] = defaultdict(set)
+    in_degree = [0] * n
+    for cn in produces:
+        for pi in produces[cn]:
+            for ci in consumes.get(cn, []):
+                if pi != ci and ci not in successors[pi]:
+                    successors[pi].add(ci)
+                    in_degree[ci] += 1
+
+    # If any reaction has no predecessor the graph has a source → not a cycle
+    if any(d == 0 for d in in_degree):
+        return None
+
+    # DFS with Warnsdorff heuristic: prefer candidates with fewer onward options
+    path: List[int] = [0]
+    visited: Set[int] = {0}
+
+    def _dfs() -> bool:
+        if len(path) == n:
+            return 0 in successors[path[-1]]
+        remaining = visited ^ set(range(n))   # unvisited set
+        candidates = sorted(
+            successors[path[-1]] - visited,
+            key=lambda j: len(successors[j] & remaining),
+        )
+        for nxt in candidates:
+            visited.add(nxt)
+            path.append(nxt)
+            if _dfs():
+                return True
+            path.pop()
+            visited.remove(nxt)
+        return False
+
+    return path if _dfs() else None
+
+
+def _apply_circular_layout(rxns: List[RxnNode],
+                            nodes: Dict[str, CanonNode],
+                            order: List[int]) -> None:
+    """Place reactions evenly on an ellipse and metabolites around them.
+
+    For each consecutive reaction pair (order[i], order[i+1]) the metabolites
+    that are products of the first *and* reactants of the second are placed at
+    the midpoint angle between those two reactions — they visually sit on the
+    ring connecting the two nodes.  All other metabolites (cofactors, released
+    products, etc.) are placed radially outside the ring near the reaction that
+    first references them.
+    """
+    n = len(order)
+
+    # Orbital radius: arc-length between adjacent reactions ≈ RXN_STEP_X
+    R = max(250.0, RXN_STEP_X * n / (2.0 * math.pi))
+    Rx = R * 1.15   # slight horizontal stretch for readability
+    Ry = R
+    CX = MARGIN + Rx + CIRC_OUT_DIST + COMPOUND_W + 20.0
+    CY = MARGIN + Ry + CIRC_OUT_DIST + COMPOUND_W + 20.0
+
+    # Place reactions evenly on the ellipse, starting at the top (−π/2)
+    for idx, i in enumerate(order):
+        angle = 2.0 * math.pi * idx / n - math.pi / 2.0
+        rxns[i].cx = CX + Rx * math.cos(angle)
+        rxns[i].cy = CY + Ry * math.sin(angle)
+        rxns[i].rank = idx
+        rxns[i].lane = 0
+
+    # Identify "between" metabolites for each consecutive reaction pair via
+    # simple set intersection: products of rxn[i] ∩ reactants of rxn[i+1]
+    between_cns: Set[str] = set()
+    for idx in range(n):
+        ri      = order[idx]
+        ri_next = order[(idx + 1) % n]
+        shared = set(rxns[ri].product_canons) & set(rxns[ri_next].reactant_canons)
+        mid = 2.0 * math.pi * (idx + 0.5) / n - math.pi / 2.0
+        for cn in shared:
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                between_cns.add(cn)
+                continue
+            nd.x = CX + Rx * math.cos(mid) - nd.w / 2.0
+            nd.y = CY + Ry * math.sin(mid) - nd.h / 2.0
+            nd.placed = True
+            between_cns.add(cn)
+
+    # Place remaining metabolites and modifiers radially outside the ring
+    for idx, i in enumerate(order):
+        r     = rxns[i]
+        angle = 2.0 * math.pi * idx / n - math.pi / 2.0
+        rad_x = math.cos(angle)
+        rad_y = math.sin(angle)
+        tan_x = -math.sin(angle)   # tangent: clockwise direction
+        tan_y =  math.cos(angle)
+
+        non_r = [cn for cn in r.reactant_canons if cn not in between_cns]
+        for j, cn in enumerate(non_r):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            stk = -(j + 0.5) * NODE_SPACING_Y
+            nd.x = r.cx + rad_x * CIRC_OUT_DIST + tan_x * stk - nd.w / 2.0
+            nd.y = r.cy + rad_y * CIRC_OUT_DIST + tan_y * stk - nd.h / 2.0
+            nd.placed = True
+
+        non_p = [cn for cn in r.product_canons if cn not in between_cns]
+        for j, cn in enumerate(non_p):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            stk = (j + 0.5) * NODE_SPACING_Y
+            nd.x = r.cx + rad_x * CIRC_OUT_DIST + tan_x * stk - nd.w / 2.0
+            nd.y = r.cy + rad_y * CIRC_OUT_DIST + tan_y * stk - nd.h / 2.0
+            nd.placed = True
+
+        nm = len(r.modifier_canons)
+        for j, cn in enumerate(r.modifier_canons):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            stk = (j - (nm - 1) / 2.0) * (PROTEIN_W + 20.0)
+            dist = CIRC_OUT_DIST + CIRC_MOD_EXTRA
+            nd.x = r.cx + rad_x * dist + tan_x * stk - nd.w / 2.0
+            nd.y = r.cy + rad_y * dist + tan_y * stk - nd.h / 2.0
+            nd.placed = True
+
+    # Fallback: any still-unplaced nodes go below the circle
+    fx = CX - Rx
+    fy = CY + Ry + MARGIN
+    for nd in nodes.values():
+        if not nd.placed:
+            nd.x, nd.y = fx, fy
+            nd.placed = True
+            fx += nd.w + 20.0
+
+
 def _place_reactions(rxns: List[RxnNode]) -> None:
     for r in rxns:
         r.cx = MARGIN + REACTANT_OFFSET + r.rank * RXN_STEP_X
@@ -255,6 +418,14 @@ def _path_modifier(nd: CanonNode, rx: float, ry: float) -> str:
     mx = nd.cx
     my = nd.y + nd.h
     return f"M{mx:.1f} {my:.1f} C{mx:.1f} {ry:.1f} {rx:.1f} {ry:.1f} {rx:.1f} {ry:.1f} "
+
+
+def _path_circ(x1: float, y1: float, x2: float, y2: float) -> str:
+    """Straight cubic Bezier between two canvas points (used in circular layout)."""
+    mx, my = (x1 + x2) / 2.0, (y1 + y2) / 2.0
+    return (f"M{x1:.1f} {y1:.1f} "
+            f"C{mx:.1f} {my:.1f} {mx:.1f} {my:.1f} "
+            f"{x2:.1f} {y2:.1f}")
 
 
 def _make_specref_ann(nd: CanonNode, sid: str, edge_path: str,
@@ -377,10 +548,27 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             modifier_sids=msids,
         ))
 
-    # Layout
-    _topological_layout(rxns)
-    _place_reactions(rxns)
-    _place_nodes(rxns, canon_nodes)
+    # Layout — use circular layout when all reactions form a single cycle
+    _cycle_order = _detect_cycle_order(rxns)
+    _is_circular = _cycle_order is not None
+    if _is_circular:
+        _apply_circular_layout(rxns, canon_nodes, _cycle_order)
+    else:
+        _topological_layout(rxns)
+        _place_reactions(rxns)
+        _place_nodes(rxns, canon_nodes)
+
+    def _edge_path(nd: CanonNode, r: RxnNode, role: str) -> str:
+        """Return the SVG path string for the edge between metabolite nd and reaction r."""
+        if _is_circular:
+            if role == "product":
+                return _path_circ(r.cx, r.cy, nd.cx, nd.cy)
+            return _path_circ(nd.cx, nd.cy, r.cx, r.cy)
+        if role == "reactant":
+            return _path_reactant(nd, r.cx, r.cy)
+        if role == "product":
+            return _path_product(r.cx, r.cy, nd)
+        return _path_modifier(nd, r.cx, r.cy)
 
     # Annotate compartments
     for c in root.findall(".//sbml:listOfCompartments/sbml:compartment", NS):
@@ -432,7 +620,7 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             if old is not None:
                 ref.remove(old)
             ref.insert(0, _make_specref_ann(nd, sid,
-                            _path_reactant(nd, r.cx, r.cy), "reactant"))
+                            _edge_path(nd, r, "reactant"), "reactant"))
 
         for ref in rxn_el.findall("./sbml:listOfProducts/sbml:speciesReference", NS):
             sid = ref.get("species") or ""
@@ -443,7 +631,7 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             if old is not None:
                 ref.remove(old)
             ref.insert(0, _make_specref_ann(nd, sid,
-                            _path_product(r.cx, r.cy, nd), "product"))
+                            _edge_path(nd, r, "product"), "product"))
 
         for ref in rxn_el.findall("./sbml:listOfModifiers/sbml:modifierSpeciesReference", NS):
             sid = ref.get("species") or ""
@@ -454,7 +642,7 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             if old is not None:
                 ref.remove(old)
             ref.insert(0, _make_specref_ann(nd, sid,
-                            _path_modifier(nd, r.cx, r.cy), "modifier"))
+                            _edge_path(nd, r, "modifier"), "modifier"))
 
     # Model annotation: canvas + backward-compat elements
     all_x = [nd.x + nd.w for nd in canon_nodes.values() if nd.placed]
@@ -535,17 +723,17 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             nd = canon_nodes.get(sid_to_canon.get(sid, ""))
             if nd:
                 _add_edge_le(model_ann, f"{sid}__to__{r.rid}",
-                             _path_reactant(nd, r.cx, r.cy), TMPL_EDGE)
+                             _edge_path(nd, r, "reactant"), TMPL_EDGE)
         for sid in r.product_sids:
             nd = canon_nodes.get(sid_to_canon.get(sid, ""))
             if nd:
                 _add_edge_le(model_ann, f"{r.rid}__to__{sid}",
-                             _path_product(r.cx, r.cy, nd), TMPL_EDGE)
+                             _edge_path(nd, r, "product"), TMPL_EDGE)
         for sid in r.modifier_sids:
             nd = canon_nodes.get(sid_to_canon.get(sid, ""))
             if nd:
                 _add_edge_le(model_ann, f"{sid}__mod__{r.rid}",
-                             _path_modifier(nd, r.cx, r.cy), TMPL_EDGE_MOD)
+                             _edge_path(nd, r, "modifier"), TMPL_EDGE_MOD)
 
     tree.write(out_path, encoding="utf-8", xml_declaration=True)
 
