@@ -1,13 +1,17 @@
 """
 draft_graph_render.py
 
-Render a DraftGraph dict to a PNG via graphviz (dot).
+Render a DraftGraph dict to a PNG via graphviz.
 
-Layout: top-to-bottom, reactions as labeled boxes with enzyme as italic subtitle.
-"Through" metabolites (connect one reaction to the next) flow on the main vertical
-axis. Side compounds (cofactors, terminal inputs/outputs) hang off with
-constraint=false so they don't pollute the main flow. Enzyme/protein nodes are
-suppressed entirely — their names appear inside the reaction box.
+Layout engine is chosen automatically:
+  - Cycle detected  → circo  (graphviz circular layout, purpose-built for rings)
+  - Linear/branched → dot    (top-to-bottom rankdir=TB)
+
+"Through" metabolites (connect one reaction to the next) flow on the main axis.
+Side compounds (cofactors, terminal inputs/outputs) hang off with constraint=false
+dashed edges — no rank=same forcing, which conflicts with constraint=false.
+Enzyme/protein nodes are suppressed entirely — names appear inside the reaction box.
+Interaction nodes are excluded from layout entirely (no nodes, no edges emitted).
 """
 from __future__ import annotations
 
@@ -54,6 +58,29 @@ def _dot_label(text: str, max_chars: int = 20) -> str:
 
 def _html_escape(text: str) -> str:
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def _enz_html(cats: List[str], max_chars: int = 24) -> str:
+    """Join enzyme/catalyst names, word-wrap to max_chars per line, cap total lines at 2."""
+    joined = ", ".join(cats)
+    if len(joined) <= max_chars:
+        return _html_escape(joined)
+    words = joined.split()
+    lines: List[str] = []
+    cur = ""
+    for w in words:
+        if cur and len(cur) + 1 + len(w) > max_chars:
+            lines.append(cur)
+            if len(lines) == 2:          # hard cap: 2 lines max
+                lines[-1] = lines[-1].rstrip(",") + "…"
+                cur = ""
+                break
+            cur = w
+        else:
+            cur = (cur + " " + w).strip() if cur else w
+    if cur:
+        lines.append(cur)
+    return "<BR/>".join(_html_escape(ln) for ln in lines)
 
 
 def _topo_sort(rxn_ids: List[str], successors: Dict[str, Set[str]]) -> List[str]:
@@ -144,7 +171,7 @@ def _detect_cycle_order(
     return [flow_rxn_ids[i] for i in path] if _dfs() else None
 
 
-def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
+def _build_dot(nodes: List[Dict], edges: List[Dict]) -> tuple[str, bool]:
     node_by_id = {n["id"]: n for n in nodes}
 
     # Only metabolic steps go in the main layout — interactions (regulatory) are skipped
@@ -207,16 +234,34 @@ def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
     # "Side" = everything else (terminal inputs, cofactors, byproducts)
     side = metabolite_ids - through
 
+    # Metabolite(s) that bridge ordered_rxns[-1] → ordered_rxns[0] (cycle only)
+    closing_through: Set[str] = set()
+    if is_cycle and len(ordered_rxns) >= 2:
+        last_prods  = {cid for cid in through if ordered_rxns[-1] in compound_producers[cid]}
+        first_reacts = {cid for cid in through if ordered_rxns[0]  in compound_consumers[cid]}
+        closing_through = last_prods & first_reacts
+
     # ── DOT output ────────────────────────────────────────────────────────────
-    lines: List[str] = [
-        "digraph pathway {",
-        "  rankdir=TB;",
-        "  splines=polyline;",
-        "  nodesep=0.9;",
-        "  ranksep=1.1;",
-        "  bgcolor=white;",
-        "  pad=0.6;",
-    ]
+    if is_cycle:
+        # circo: designed for ring layouts — no rankdir, no rank= tricks needed
+        lines: List[str] = [
+            "digraph pathway {",
+            "  splines=curved;",
+            "  nodesep=1.2;",
+            "  ranksep=1.4;",
+            "  bgcolor=white;",
+            "  pad=0.8;",
+        ]
+    else:
+        lines = [
+            "digraph pathway {",
+            "  rankdir=TB;",
+            "  splines=curved;",
+            "  nodesep=0.9;",
+            "  ranksep=1.1;",
+            "  bgcolor=white;",
+            "  pad=0.6;",
+        ]
 
     # Reaction boxes — name bold, enzyme italic subtitle
     for nid in ordered_rxns:
@@ -230,7 +275,7 @@ def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
         name_html = _html_escape(_dot_label(name_raw, max_chars=28)).replace("\\n", "<BR/>")
 
         if cats:
-            enz_html = _html_escape(", ".join(cats))
+            enz_html = _enz_html(cats)
             label = f'<<B>{name_html}</B><BR/><FONT POINT-SIZE="9"><I>{enz_html}</I></FONT>>'
         else:
             label = f'<<B>{name_html}</B>>'
@@ -251,33 +296,18 @@ def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
             f'fontsize=10 fontname="Helvetica" label="{label}"];'
         )
 
-    # Side metabolite nodes — small; forced to same rank as their reaction
-    # so they appear beside it rather than floating elsewhere
-    side_to_rxn: Dict[str, str] = {}
-    for e in edges:
-        src, tgt, role = e["source"], e["target"], e.get("role", "")
-        if role in ("catalyst", "modifier", "transporter", "participant"):
-            continue
-        if src in side and tgt in flow_rxn_set and src not in side_to_rxn:
-            side_to_rxn[src] = tgt
-        elif tgt in side and src in flow_rxn_set and tgt not in side_to_rxn:
-            side_to_rxn[tgt] = src
-
+    # Side metabolite nodes — small annotation-style, floated via constraint=false edges
     for cid in sorted(side):
         n = node_by_id[cid]
-        label = _dot_label(n.get("label", cid), max_chars=12)
+        label = _dot_label(n.get("label", cid), max_chars=10)
         lines.append(
             f'  {_dot_id(cid)} [shape=ellipse style="filled" fillcolor="#f5f5f5" '
-            f'color="#bbbbbb" penwidth=1.0 width=0.8 height=0.5 fixedsize=true '
-            f'fontsize=8 fontname="Helvetica" label="{label}"];'
+            f'color="#bbbbbb" penwidth=1.0 width=0.6 height=0.4 fixedsize=true '
+            f'fontsize=7 fontname="Helvetica" label="{label}"];'
         )
 
-    rxn_to_side: Dict[str, List[str]] = defaultdict(list)
-    for cid, rid in side_to_rxn.items():
-        rxn_to_side[rid].append(cid)
-    for rid, cids in rxn_to_side.items():
-        members = " ".join(_dot_id(c) for c in cids)
-        lines.append(f'  {{ rank=same; {_dot_id(rid)}; {members}; }}')
+    # No rank=same for side compounds — it conflicts with constraint=false edges.
+    # The lightweight dashed constraint=false edges already place them nearby.
 
     # ── Edges ─────────────────────────────────────────────────────────────────
     skip_roles = {"catalyst", "modifier", "transporter", "participant"}
@@ -309,8 +339,24 @@ def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
             continue
 
         is_side_edge = (src in side) or (tgt in side)
+        # Closing edge = any edge that touches the cycle-closing through-metabolite
+        # AND connects to either the last or first reaction in the cycle
+        is_closing_edge = (
+            closing_through
+            and (src in closing_through or tgt in closing_through)
+            and (
+                src in {ordered_rxns[0], ordered_rxns[-1]}
+                or tgt in {ordered_rxns[0], ordered_rxns[-1]}
+            )
+        )
 
-        if is_side_edge:
+        if is_closing_edge:
+            lines.append(
+                f'  {_dot_id(src)} -> {_dot_id(tgt)} '
+                f'[color="#aaaaaa" penwidth=1.4 arrowsize=0.7 '
+                f'style=dashed weight=0];'
+            )
+        elif is_side_edge:
             lines.append(
                 f'  {_dot_id(src)} -> {_dot_id(tgt)} '
                 f'[color="#cccccc" penwidth=1.0 arrowsize=0.55 '
@@ -333,7 +379,7 @@ def _build_dot(nodes: List[Dict], edges: List[Dict]) -> str:
             )
 
     lines.append("}")
-    return "\n".join(lines)
+    return "\n".join(lines), is_cycle
 
 
 # ── Graphviz discovery ────────────────────────────────────────────────────────
@@ -365,15 +411,22 @@ def render_draft_graph_to_png_bytes(draft_graph_dict: Dict[str, Any], dpi: int =
         raise RuntimeError("DraftGraph has no nodes — nothing to render.")
 
     dot_exe = _find_dot()
-    dot_src = _build_dot(nodes, edges)
+    dot_src, is_cycle = _build_dot(nodes, edges)
+
+    # circo handles ring layouts natively; dot handles linear/branched pathways
+    engine = "circo" if is_cycle else "dot"
+    exe_dir = os.path.dirname(dot_exe)
+    engine_exe = os.path.join(exe_dir, engine + (".exe" if dot_exe.endswith(".exe") else ""))
+    if not os.path.isfile(engine_exe):
+        engine_exe = shutil.which(engine) or dot_exe  # fallback to dot if circo missing
 
     result = subprocess.run(
-        [dot_exe, f"-Gdpi={dpi}", "-Tpng"],
+        [engine_exe, f"-Gdpi={dpi}", "-Tpng"],
         input=dot_src.encode("utf-8"),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     if result.returncode != 0:
-        raise RuntimeError(f"graphviz dot failed: {result.stderr.decode('utf-8', errors='replace')}")
+        raise RuntimeError(f"graphviz {engine} failed: {result.stderr.decode('utf-8', errors='replace')}")
 
     return result.stdout
