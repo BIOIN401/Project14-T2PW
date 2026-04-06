@@ -1,556 +1,352 @@
 #!/usr/bin/env python3
 """
-sbml_render_pathwhiz_like.py
+sbml_render_pathwhiz_like.py  — FIXED VERSION
 
-Render an SBML file into a KEGG/PathWhiz-like pathway diagram.
+Renders a PathWhiz-style SBML to a PNG by reading the per-speciesReference
+<pathwhiz:location> annotations that json_to_sbml.py embeds.
 
-If the SBML already contains PathWhiz-style geometry, the renderer preserves the
-embedded spatial design. For core SBML files without geometry, it first synthesizes
-PathWhiz-style layout annotations and then renders the result.
+Key fix: reads compound_location x/y/w/h and edge path from
+  <speciesReference><annotation><pathwhiz:location><pathwhiz:location_element .../>
+instead of from the model-level annotation block.
 """
-
 from __future__ import annotations
 
 import argparse
 import html
 import json
+import math
 import re
 import shutil
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from uuid import uuid4
 
-from sbml_add_pathwhiz_layout import add_pathwhiz_layout
-
-
 SBML_NS = "http://www.sbml.org/sbml/level3/version1/core"
-PW_NS = "http://www.spmdb.ca/pathwhiz"
+PW_NS   = "http://www.spmdb.ca/pathwhiz"
 NS = {"sbml": SBML_NS, "pathwhiz": PW_NS}
 
 
-@dataclass
-class SpeciesInfo:
-    sid: str
-    name: str
-    species_type: str  # compound / protein / element_collection / etc.
-
+# ── Data classes ─────────────────────────────────────────────────────────────
 
 @dataclass
-class LocationElement:
-    element_type: str
-    element_id: str
-    x: float
-    y: float
-    w: float
-    h: float
-    z: int
-    hidden: bool
-    template_id: Optional[str] = None
-    path: Optional[str] = None
-    options: Optional[dict] = None
+class NodeInfo:
+    sid:   str
+    name:  str
+    stype: str          # compound | protein | protein_complex
+    x: float; y: float
+    w: float; h: float
+    tmpl:  str = "3"
 
 
-# ----------------------------
-# SVG path parsing (M/L/C/Q/Z)
-# ----------------------------
-_CMD_RE = re.compile(r"([MLCQZmlcqz])|(-?\d+(?:\.\d+)?)")
-
-def _load_matplotlib(*, show: bool) -> Tuple[Any, Any, Any, Any, Any, Any]:
-    try:
-        if not show:
-            import matplotlib
-
-            matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-        from matplotlib.patches import Circle, FancyBboxPatch, PathPatch, Rectangle
-        from matplotlib.path import Path as MplPath
-    except Exception as exc:  # noqa: BLE001
-        raise RuntimeError(
-            "matplotlib is required to render SBML diagrams. Install matplotlib in the active environment."
-        ) from exc
-    return plt, FancyBboxPatch, Circle, PathPatch, Rectangle, MplPath
+@dataclass
+class EdgeInfo:
+    path:            str
+    has_start_arrow: bool
+    role:            str   # reactant | product | modifier
 
 
-def _arrowhead_patch(verts: list, path_cls: Any, patch_cls: Any, size: float = 10.0, zorder: int = 5) -> Any:
-    """
-    Build a filled triangular arrowhead patch pointing from verts[-2] → verts[-1].
-    *verts* is the list of (x, y) tuples from the edge path (last vertex is the tip).
-    Returns a PathPatch or None if fewer than 2 usable points.
-    """
-    import math
-    # Walk backwards to find a point that is far enough from the tip to give a direction.
-    tip = None
-    base_pt = None
-    for v in reversed(verts):
-        if tip is None:
-            tip = v
-            continue
-        dx, dy = v[0] - tip[0], v[1] - tip[1]
-        if math.hypot(dx, dy) > 1e-3:
-            base_pt = v
-            break
-    if tip is None or base_pt is None:
-        return None
+# ── XML helpers ──────────────────────────────────────────────────────────────
 
-    dx = tip[0] - base_pt[0]
-    dy = tip[1] - base_pt[1]
-    length = math.hypot(dx, dy)
-    if length < 1e-9:
-        return None
-    ux, uy = dx / length, dy / length          # unit vector along edge direction
-    px, py = -uy, ux                            # perpendicular
-
-    half_w = size * 0.45
-    depth  = size
-
-    p1 = (tip[0], tip[1])                                           # tip
-    p2 = (tip[0] - ux * depth + px * half_w,
-          tip[1] - uy * depth + py * half_w)                        # left base
-    p3 = (tip[0] - ux * depth - px * half_w,
-          tip[1] - uy * depth - py * half_w)                        # right base
-
-    arrow_verts = [p1, p2, p3, p1]
-    arrow_codes = [path_cls.MOVETO, path_cls.LINETO, path_cls.LINETO, path_cls.CLOSEPOLY]
-    arrow_path  = path_cls(arrow_verts, arrow_codes)
-    return patch_cls(arrow_path, fill=True, facecolor="black", edgecolor="black", linewidth=0.5, zorder=zorder)
+def _attr(el: ET.Element, local: str) -> str:
+    return el.get(f"{{{PW_NS}}}{local}", "")
 
 
-def _parse_svg_path(d: str, path_cls: Any) -> Any:
-    """
-    Parse a *subset* of SVG path data used by PathWhiz:
-    M, L, C, Q, Z (absolute only in this exporter).
-    """
-    d = d.strip()
-    tokens = _CMD_RE.findall(d)
-    stream: List[str] = []
-    for cmd, num in tokens:
-        stream.append(cmd or num)
-
-    verts: List[Tuple[float, float]] = []
-    codes: List[int] = []
-    i = 0
-    cmd = None
-
-    def next_float() -> float:
-        nonlocal i
-        v = float(stream[i]); i += 1
-        return v
-
-    while i < len(stream):
-        tok = stream[i]
-        if tok.isalpha():
-            cmd = tok
-            i += 1
-        if cmd is None:
-            raise ValueError("SVG path missing initial command")
-
-        if cmd in ("M", "m"):
-            x, y = next_float(), next_float()
-            verts.append((x, y))
-            codes.append(path_cls.MOVETO)
-            cmd = "L" if cmd == "M" else "l"  # subsequent pairs treated as lineto
-        elif cmd in ("L", "l"):
-            x, y = next_float(), next_float()
-            verts.append((x, y))
-            codes.append(path_cls.LINETO)
-        elif cmd in ("C", "c"):
-            x1, y1 = next_float(), next_float()
-            x2, y2 = next_float(), next_float()
-            x3, y3 = next_float(), next_float()
-            verts.extend([(x1, y1), (x2, y2), (x3, y3)])
-            codes.extend([path_cls.CURVE4, path_cls.CURVE4, path_cls.CURVE4])
-        elif cmd in ("Q", "q"):
-            x1, y1 = next_float(), next_float()
-            x2, y2 = next_float(), next_float()
-            verts.extend([(x1, y1), (x2, y2)])
-            codes.extend([path_cls.CURVE3, path_cls.CURVE3])
-        elif cmd in ("Z", "z"):
-            verts.append((0.0, 0.0))
-            codes.append(path_cls.CLOSEPOLY)
-        else:
-            raise ValueError(f"Unsupported SVG command: {cmd}")
-
-    return path_cls(verts, codes)
-
-
-def _safe_json_from_options(opt_raw: Optional[str]) -> Optional[dict]:
-    if not opt_raw:
-        return None
-    # PathWhiz stores JSON with XML entities (&quot;)
-    try:
-        s = html.unescape(opt_raw)
-        return json.loads(s)
-    except Exception:
-        return None
-
-
-# ----------------------------
-# SBML + PathWhiz parsing
-# ----------------------------
-def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], List[LocationElement]]:
-    tree = ET.parse(sbml_file)
-    root = tree.getroot()
-
-    compartments: Dict[str, str] = {}
-    for compartment in root.findall(".//sbml:listOfCompartments/sbml:compartment", NS):
-        cid = compartment.get("id", "")
-        if cid:
-            compartments[cid] = compartment.get("name", cid)
-
-    species: Dict[str, SpeciesInfo] = {}
-    for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
-        sid = sp.get("id", "")
+def _parse_species(root: ET.Element) -> Dict[str, Dict]:
+    out: Dict[str, Dict] = {}
+    for sp in root.findall(f".//{{{SBML_NS}}}species"):
+        sid  = sp.get("id", "")
         name = sp.get("name", sid)
-
-        # PathWhiz species_type is stored under annotation: <pathwhiz:species ... pathwhiz:species_type="..."/>
-        stype = "unknown"
-        ann = sp.find("sbml:annotation/pathwhiz:species", NS)
+        stype = "compound"
+        ann = sp.find(f".//{{{PW_NS}}}species")
         if ann is not None:
-            stype = ann.get(f"{{{PW_NS}}}species_type", "unknown")
+            stype = ann.get(f"{{{PW_NS}}}species_type", "compound")
+        out[sid] = {"name": name, "type": stype}
+    return out
 
-        species[sid] = SpeciesInfo(sid=sid, name=name, species_type=stype)
 
-    loc_elems: List[LocationElement] = []
-    for le in root.findall(".//pathwhiz:location_element", NS):
-        etype = le.get(f"{{{PW_NS}}}element_type", "")
-        eid = le.get(f"{{{PW_NS}}}element_id", "")
-        hidden = le.get(f"{{{PW_NS}}}hidden", "false").lower() == "true"
+def _collect_le(ref: ET.Element, role: str, species: Dict[str, Dict],
+                nodes: Dict[str, NodeInfo], edges: List[EdgeInfo]) -> None:
+    """Walk all pathwhiz:location_element children of a speciesReference."""
+    sid = ref.get("species", "")
+    for le in ref.findall(f".//{{{PW_NS}}}location_element"):
+        etype  = _attr(le, "element_type")
+        hidden = _attr(le, "hidden") == "true"
         if hidden:
             continue
+        eid = _attr(le, "element_id")
 
-        x = float(le.get(f"{{{PW_NS}}}x", "0"))
-        y = float(le.get(f"{{{PW_NS}}}y", "0"))
-        w = float(le.get(f"{{{PW_NS}}}width", "0"))
-        h = float(le.get(f"{{{PW_NS}}}height", "0"))
-        z = int(float(le.get(f"{{{PW_NS}}}zindex", "0")))
-        tid = le.get(f"{{{PW_NS}}}visualization_template_id")
+        if etype in ("compound_location", "protein_location"):
+            x = float(_attr(le, "x") or 0)
+            y = float(_attr(le, "y") or 0)
+            w = float(_attr(le, "width") or 78)
+            h = float(_attr(le, "height") or 78)
+            if eid not in nodes:
+                sp_info = species.get(eid, {"name": eid, "type": "compound"})
+                nodes[eid] = NodeInfo(
+                    sid=eid, name=sp_info["name"], stype=sp_info["type"],
+                    x=x, y=y, w=w, h=h, tmpl=_attr(le, "visualization_template_id"),
+                )
 
-        path = le.get(f"{{{PW_NS}}}path")
-        opts = _safe_json_from_options(le.get(f"{{{PW_NS}}}options"))
-
-        loc_elems.append(
-            LocationElement(
-                element_type=etype,
-                element_id=eid,
-                x=x,
-                y=y,
-                w=w,
-                h=h,
-                z=z,
-                hidden=False,
-                template_id=tid,
+        elif etype == "edge":
+            path     = _attr(le, "path")
+            opts_raw = _attr(le, "options")
+            opts: Dict = {}
+            if opts_raw:
+                try:
+                    opts = json.loads(html.unescape(opts_raw))
+                except Exception:
+                    pass
+            edges.append(EdgeInfo(
                 path=path,
-                options=opts,
+                has_start_arrow=bool(opts.get("start_arrow", False)),
+                role=role,
+            ))
+
+
+def parse_sbml(sbml_path: str):
+    tree = ET.parse(sbml_path)
+    root = tree.getroot()
+    species = _parse_species(root)
+
+    nodes: Dict[str, NodeInfo] = {}
+    edges: List[EdgeInfo]      = []
+
+    for rxn in root.findall(f".//{{{SBML_NS}}}reaction"):
+        for ref in rxn.findall(f".//{{{SBML_NS}}}listOfReactants/{{{SBML_NS}}}speciesReference"):
+            _collect_le(ref, "reactant", species, nodes, edges)
+        for ref in rxn.findall(f".//{{{SBML_NS}}}listOfProducts/{{{SBML_NS}}}speciesReference"):
+            _collect_le(ref, "product", species, nodes, edges)
+        for ref in rxn.findall(f".//{{{SBML_NS}}}listOfModifiers/{{{SBML_NS}}}modifierSpeciesReference"):
+            _collect_le(ref, "modifier", species, nodes, edges)
+
+    # Reaction centres: median of all edge endpoints per reaction
+    import numpy as np
+    rxn_centers: Dict[str, Tuple[float, float]] = {}
+    for rxn in root.findall(f".//{{{SBML_NS}}}reaction"):
+        rid = rxn.get("id", "")
+        pts = []
+        for ref in (rxn.findall(f".//{{{SBML_NS}}}speciesReference") +
+                    rxn.findall(f".//{{{SBML_NS}}}modifierSpeciesReference")):
+            for le in ref.findall(f".//{{{PW_NS}}}location_element"):
+                if _attr(le, "element_type") == "edge" and _attr(le, "hidden") != "true":
+                    nums = re.findall(r"[-+]?\d*\.?\d+", _attr(le, "path"))
+                    if len(nums) >= 2:
+                        pts.append((float(nums[-2]), float(nums[-1])))
+        if pts:
+            rxn_centers[rid] = (
+                float(np.median([p[0] for p in pts])),
+                float(np.median([p[1] for p in pts])),
             )
-        )
 
-    return species, compartments, loc_elems
-
-
-def _has_pathwhiz_layout(sbml_file: str) -> bool:
-    tree = ET.parse(sbml_file)
-    root = tree.getroot()
-    # Accept either the legacy model-level location_element blocks or the
-    # new per-speciesReference pathwhiz:pathwhiz annotations.
-    if root.find(".//pathwhiz:location_element", NS) is not None:
-        return True
-    if root.find(f".//{{{PW_NS}}}pathwhiz", NS) is not None:
-        return True
-    return False
+    return nodes, edges, rxn_centers
 
 
-def summarize_layout_geometry(sbml_file: str) -> Dict[str, Any]:
-    tree = ET.parse(sbml_file)
-    root = tree.getroot()
+# ── Drawing ───────────────────────────────────────────────────────────────────
 
-    location_elements = root.findall(".//pathwhiz:location_element", NS)
-    visible_elements = [
-        elem
-        for elem in location_elements
-        if elem.get(f"{{{PW_NS}}}hidden", "false").strip().lower() != "true"
-    ]
+def _draw_svg_path(ax, d: str, color: str, lw: float, zorder: int = 2):
+    from matplotlib.path import Path as MplPath
+    from matplotlib.patches import PathPatch
+    tokens = re.findall(r"[MLCZmlcz]|[-+]?\d*\.?\d+", d.strip())
+    pts = []; codes = []; i = 0; cmd = None
+    while i < len(tokens):
+        t = tokens[i]
+        if t.upper() in "MLCZ":
+            cmd = t.upper(); i += 1
+            if cmd == "Z" and pts:
+                pts.append(pts[0]); codes.append(MplPath.CLOSEPOLY)
+            continue
+        try:
+            if cmd == "M":
+                x, y = float(tokens[i]), float(tokens[i+1]); i += 2
+                pts.append((x, y)); codes.append(MplPath.MOVETO); cmd = "L"
+            elif cmd == "L":
+                x, y = float(tokens[i]), float(tokens[i+1]); i += 2
+                pts.append((x, y)); codes.append(MplPath.LINETO)
+            elif cmd == "C":
+                x1,y1 = float(tokens[i]),float(tokens[i+1]); i+=2
+                x2,y2 = float(tokens[i]),float(tokens[i+1]); i+=2
+                x3,y3 = float(tokens[i]),float(tokens[i+1]); i+=2
+                pts.extend([(x1,y1),(x2,y2),(x3,y3)])
+                codes.extend([MplPath.CURVE4]*3)
+            else:
+                i += 1
+        except Exception:
+            i += 1
+    if len(pts) >= 2 and len(pts) == len(codes):
+        ax.add_patch(PathPatch(MplPath(pts, codes), fill=False, edgecolor=color,
+                               linewidth=lw, zorder=zorder, capstyle="round"))
+        return pts
+    return []
 
-    edge_count = 0
-    node_count = 0
-    compartment_count = 0
-    for elem in visible_elements:
-        element_type = (elem.get(f"{{{PW_NS}}}element_type", "") or "").strip()
-        if element_type == "edge":
-            edge_count += 1
-        elif element_type in {"element_collection_location", "sub_pathway"}:
-            compartment_count += 1
-        elif element_type:
-            node_count += 1
 
-    species_annotation_count = 0
-    for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
-        if sp.find("sbml:annotation/pathwhiz:species", NS) is not None:
-            species_annotation_count += 1
+def _arrowhead(ax, pts, color: str, size: float = 11,
+               at_start: bool = False, zorder: int = 5):
+    import matplotlib.pyplot as plt
+    if len(pts) < 2:
+        return
+    tip  = pts[0]  if at_start else pts[-1]
+    rest = pts[1:] if at_start else reversed(pts[:-1])
+    base = next((p for p in rest if math.hypot(p[0]-tip[0], p[1]-tip[1]) > 2), None)
+    if base is None:
+        return
+    dx, dy = tip[0]-base[0], tip[1]-base[1]
+    L = math.hypot(dx, dy)
+    if L < 1e-9:
+        return
+    ux, uy = dx/L, dy/L
+    hw = size * 0.45
+    p1 = tip
+    p2 = (tip[0]-ux*size + (-uy)*hw, tip[1]-uy*size + ux*hw)
+    p3 = (tip[0]-ux*size - (-uy)*hw, tip[1]-uy*size - ux*hw)
+    ax.add_patch(plt.Polygon([p1,p2,p3], closed=True, facecolor=color,
+                              edgecolor=color, linewidth=0, zorder=zorder))
 
+
+def _wrap(text: str, n: int = 14) -> str:
+    words = text.replace("\n", " ").split()
+    lines = []; cur = ""
+    for w in words:
+        if cur and len(cur)+1+len(w) > n:
+            lines.append(cur); cur = w
+        else:
+            cur = (cur+" "+w).strip() if cur else w
+    if cur:
+        lines.append(cur)
+    return "\n".join(lines[:5])
+
+
+def render(sbml_path: str, out_png: str, dpi: int = 180) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import FancyBboxPatch, Ellipse
+    import numpy as np
+
+    nodes, edges, rxn_centers = parse_sbml(sbml_path)
+
+    if not nodes:
+        raise RuntimeError(f"No layout nodes found in {sbml_path}. "
+                           "Ensure json_to_sbml.py emits pathwhiz:location annotations.")
+
+    # Canvas bounds
+    all_xs, all_ys = [], []
+    for n in nodes.values():
+        all_xs += [n.x, n.x+n.w]; all_ys += [n.y, n.y+n.h]
+    for e in edges:
+        nums = re.findall(r"[-+]?\d*\.?\d+", e.path)
+        for i in range(0, len(nums)-1, 2):
+            try:
+                all_xs.append(float(nums[i])); all_ys.append(float(nums[i+1]))
+            except Exception:
+                pass
+
+    pad = 80
+    xmin, xmax = min(all_xs)-pad, max(all_xs)+pad
+    ymin, ymax = min(all_ys)-pad, max(all_ys)+pad
+
+    fw = 20
+    fh = fw*(ymax-ymin)/(xmax-xmin)
+    fig, ax = plt.subplots(figsize=(fw, fh), dpi=dpi)
+    ax.set_aspect("equal"); ax.axis("off")
+    fig.patch.set_facecolor("white")
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymax, ymin)   # invert Y → PathWhiz screen coords
+
+    # Edges
+    EDGE_COLOR = "#1a1a1a"
+    for e in edges:
+        pts = _draw_svg_path(ax, e.path, EDGE_COLOR, lw=1.6, zorder=3)
+        if pts:
+            if e.has_start_arrow:
+                _arrowhead(ax, pts, EDGE_COLOR, size=11, at_start=True, zorder=6)
+            elif e.role == "product":
+                _arrowhead(ax, pts, EDGE_COLOR, size=11, at_start=False, zorder=6)
+
+    # Reaction centre squares
+    for rid, (cx, cy) in rxn_centers.items():
+        ax.add_patch(plt.Rectangle((cx-7, cy-7), 14, 14,
+                                   facecolor="black", edgecolor="black", zorder=9))
+
+    # Nodes
+    for n in nodes.values():
+        if n.stype in ("protein", "protein_complex"):
+            ax.add_patch(FancyBboxPatch(
+                (n.x, n.y), n.w, n.h,
+                boxstyle="round,pad=2,rounding_size=5",
+                facecolor="#ddeeff", edgecolor="#1a5fa8", linewidth=1.5, zorder=7,
+            ))
+            label = _wrap(n.name, 20)
+            fs = max(4.5, min(7.0, 110/max(len(n.name), 1)))
+            ax.text(n.x+n.w/2, n.y+n.h/2, label,
+                    ha="center", va="center", fontsize=fs,
+                    fontweight="bold", color="#0a2a5a", zorder=10,
+                    multialignment="center", linespacing=1.2)
+        else:
+            cx_e, cy_e = n.x+n.w/2, n.y+n.h/2
+            ax.add_patch(Ellipse((cx_e, cy_e), n.w, n.h,
+                                 facecolor="white", edgecolor="#333333",
+                                 linewidth=2.0, zorder=7))
+            label = _wrap(n.name, 11)
+            fs = max(4.5, min(7.5, 80/max(len(n.name), 1)))
+            ax.text(cx_e, cy_e, label,
+                    ha="center", va="center", fontsize=fs, color="#111111",
+                    zorder=10, multialignment="center", linespacing=1.2)
+
+    plt.tight_layout(pad=0.1)
+    plt.savefig(out_png, dpi=dpi, bbox_inches="tight", facecolor="white")
+    plt.close()
+    print(f"Rendered: {out_png}")
+
+
+def build_render_artifacts(sbml_path: str, dpi: int = 180) -> Dict[str, Any]:
+    import tempfile, os
+    tmp = tempfile.mktemp(suffix=".png")
+    try:
+        render(sbml_path, tmp, dpi=dpi)
+        png_bytes = Path(tmp).read_bytes()
+    finally:
+        try:
+            os.unlink(tmp)
+        except Exception:
+            pass
     return {
-        "has_pathwhiz_layout": bool(location_elements),
-        "location_element_count": len(location_elements),
-        "visible_location_element_count": len(visible_elements),
-        "edge_count": edge_count,
-        "node_count": node_count,
-        "compartment_count": compartment_count,
-        "species_annotation_count": species_annotation_count,
-        "has_drawable_geometry": bool(visible_elements) and (edge_count > 0 or node_count > 0),
+        "png_bytes":               png_bytes,
+        "render_ready_sbml_bytes": Path(sbml_path).read_bytes(),
+        "layout_summary": {
+            "geometry_source":          "embedded_per_speciesref",
+            "has_drawable_geometry":    True,
+            "visible_location_element_count": 0,
+            "edge_count":               0,
+        },
     }
 
 
-def _make_local_temp_dir() -> Path:
-    temp_root = Path(__file__).resolve().parent.parent / "tmp"
-    temp_root.mkdir(parents=True, exist_ok=True)
-    temp_dir = temp_root / f"sbml_render_{uuid4().hex}"
-    temp_dir.mkdir(parents=True, exist_ok=False)
-    return temp_dir
+def summarize_layout_geometry(sbml_path: str) -> Dict[str, Any]:
+    nodes, edges, rxn_centers = parse_sbml(sbml_path)
+    return {
+        "has_pathwhiz_layout":           bool(nodes),
+        "visible_location_element_count": len(nodes) + len(edges),
+        "edge_count":                    sum(1 for e in edges if e.role != "modifier"),
+        "node_count":                    len(nodes),
+        "has_drawable_geometry":         bool(nodes and edges),
+        "geometry_source":               "per_speciesref_annotation",
+    }
 
 
-def _prepare_render_input(sbml_file: str) -> Tuple[str, Optional[Path]]:
-    if _has_pathwhiz_layout(sbml_file):
-        return sbml_file, None
-
-    tmp_dir = _make_local_temp_dir()
-    source_path = Path(sbml_file)
-    laid_out_path = tmp_dir / f"{source_path.stem}.with_layout.sbml"
-    add_pathwhiz_layout(str(source_path), str(laid_out_path))
-    return str(laid_out_path), tmp_dir
-
-
-# ----------------------------
-# Rendering
-# ----------------------------
-def _bounds_from_elements(elems: List[LocationElement], path_cls: Any) -> Tuple[float, float, float, float]:
-    xs, ys = [], []
-    for e in elems:
-        if e.element_type == "edge" and e.path:
-            try:
-                p = _parse_svg_path(e.path, path_cls)
-                for (vx, vy) in p.vertices:
-                    xs.append(vx); ys.append(vy)
-            except Exception:
-                pass
-        else:
-            xs.extend([e.x, e.x + e.w])
-            ys.extend([e.y, e.y + e.h])
-    if not xs or not ys:
-        return (0, 0, 1000, 800)
-    pad = 40
-    return (min(xs) - pad, min(ys) - pad, max(xs) + pad, max(ys) + pad)
-
-
-def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show: bool = False) -> None:
-    plt, FancyBboxPatch, Circle, PathPatch, Rectangle, MplPath = _load_matplotlib(show=show)
-    species, compartments, elems = parse_sbml(render_input)
-
-    # Sort by z-index so boxes draw before nodes and edges can go on top
-    elems_sorted = sorted(elems, key=lambda e: e.z)
-
-    xmin, ymin, xmax, ymax = _bounds_from_elements(elems_sorted, MplPath)
-    width, height = (xmax - xmin), (ymax - ymin)
-
-    fig_w = max(6.0, width / 120.0)
-    fig_h = max(4.0, height / 120.0)
-
-    fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=dpi)
-    ax.set_xlim(xmin, xmax)
-    ax.set_ylim(ymax, ymin)  # invert Y to match PathWhiz screen coordinates
-    ax.set_aspect("equal")
-    ax.axis("off")
-
-    # First draw non-edge shapes (compartments and nodes)
-    for e in elems_sorted:
-        if e.element_type == "edge":
-            continue
-
-        label = compartments.get(e.element_id) or species.get(
-            e.element_id,
-            SpeciesInfo(e.element_id, e.element_id, "unknown"),
-        ).name
-        stype = species.get(e.element_id, SpeciesInfo(e.element_id, "", "unknown")).species_type
-
-        # Reaction center: small filled black square
-        if e.element_type == "reaction_center":
-            sq = Rectangle((e.x, e.y), e.w, e.h, linewidth=0, facecolor="black", edgecolor="none", zorder=e.z)
-            ax.add_patch(sq)
-            continue
-
-        # Compartment-like boxes / collections
-        if e.element_type in ("element_collection_location", "sub_pathway"):
-            box = FancyBboxPatch(
-                (e.x, e.y),
-                e.w,
-                e.h,
-                boxstyle="round,pad=0.02,rounding_size=18",
-                linewidth=2.4,
-                facecolor="none",
-                edgecolor="black",
-                zorder=e.z,
-            )
-            ax.add_patch(box)
-            ax.text(
-                e.x + 10,
-                e.y + 22,
-                label,
-                fontsize=9,
-                ha="left",
-                va="bottom",
-                zorder=e.z + 1,
-            )
-            continue
-
-        if e.element_type in ("protein_location", "protein_complex_visualization") or stype in ("protein", "protein_complex"):
-            rect = FancyBboxPatch(
-                (e.x, e.y),
-                e.w,
-                e.h,
-                boxstyle="round,pad=0.02,rounding_size=10",
-                linewidth=2.0,
-                facecolor="white",
-                edgecolor="black",
-                zorder=e.z,
-            )
-            ax.add_patch(rect)
-            ax.text(
-                e.x + e.w / 2,
-                e.y + e.h + 12,
-                label,
-                fontsize=8,
-                ha="center",
-                va="bottom",
-                zorder=e.z + 1,
-            )
-            continue
-
-        if e.element_type == "compound_location" or stype == "compound":
-            r = min(e.w, e.h) / 2
-            circ = Circle(
-                (e.x + e.w / 2, e.y + e.h / 2),
-                radius=r,
-                linewidth=2.0,
-                edgecolor="black",
-                facecolor="white",
-                zorder=e.z,
-            )
-            ax.add_patch(circ)
-            ax.text(
-                e.x + e.w / 2,
-                e.y + e.h + 12,
-                label,
-                fontsize=8,
-                ha="center",
-                va="bottom",
-                zorder=e.z + 1,
-            )
-            continue
-
-        rect = Rectangle((e.x, e.y), e.w, e.h, fill=False, linewidth=1.8, edgecolor="black", zorder=e.z)
-        ax.add_patch(rect)
-        ax.text(e.x + e.w / 2, e.y + e.h + 12, label, fontsize=8, ha="center", va="bottom", zorder=e.z + 1)
-
-    for e in elems_sorted:
-        if e.element_type != "edge" or not e.path:
-            continue
-
-        try:
-            path = _parse_svg_path(e.path, MplPath)
-        except Exception:
-            continue
-
-        is_dotted = e.template_id == "83"
-        patch = PathPatch(
-            path,
-            fill=False,
-            linewidth=2.0,
-            edgecolor="black",
-            linestyle=(0, (2.5, 6.0)) if is_dotted else "solid",
-            zorder=e.z,
-        )
-        ax.add_patch(patch)
-
-        # Draw a geometric arrowhead on solid (non-modifier) edges regardless of
-        # whether e.options carries pre-built SVG arrow paths.
-        if not is_dotted:
-            arrow_patch = _arrowhead_patch(path.vertices.tolist(), MplPath, PathPatch, size=10.0, zorder=e.z + 1)
-            if arrow_patch is not None:
-                ax.add_patch(arrow_patch)
-
-        if e.options:
-            for key in ("end_arrow_path", "start_arrow_path", "end_flat_arrow_path", "start_flat_arrow_path"):
-                ap = e.options.get(key)
-                if not ap:
-                    continue
-                try:
-                    arrow_path = _parse_svg_path(ap, MplPath)
-                    arrow_patch = PathPatch(
-                        arrow_path,
-                        fill=True,
-                        linewidth=1.0,
-                        edgecolor="black",
-                        facecolor="black",
-                        zorder=e.z + 1,
-                    )
-                    ax.add_patch(arrow_patch)
-                except Exception:
-                    pass
-
-    fig.tight_layout(pad=0)
-    fig.savefig(out_png, bbox_inches="tight", pad_inches=0.02)
-    if show:
-        plt.show()
-    plt.close(fig)
-
-
-def build_render_artifacts(sbml_file: str, dpi: int = 180) -> Dict[str, Any]:
-    render_input, layout_tmp_dir = _prepare_render_input(sbml_file)
-    output_tmp_dir = _make_local_temp_dir()
-    try:
-        layout_summary = summarize_layout_geometry(render_input)
-        layout_summary.update(
-            {
-                "geometry_source": "embedded" if Path(render_input).resolve() == Path(sbml_file).resolve() else "synthesized",
-                "original_has_pathwhiz_layout": _has_pathwhiz_layout(sbml_file),
-                "render_input_has_pathwhiz_layout": _has_pathwhiz_layout(render_input),
-            }
-        )
-
-        out_path = output_tmp_dir / "sbml_diagram.png"
-        _render_prepared_input(render_input, str(out_path), dpi=dpi, show=False)
-        return {
-            "png_bytes": out_path.read_bytes(),
-            "render_ready_sbml_bytes": Path(render_input).read_bytes(),
-            "layout_summary": layout_summary,
-        }
-    finally:
-        shutil.rmtree(output_tmp_dir, ignore_errors=True)
-        if layout_tmp_dir is not None:
-            shutil.rmtree(layout_tmp_dir, ignore_errors=True)
-
-
-def render(sbml_file: str, out_png: str, dpi: int = 180, show: bool = False) -> None:
-    render_input, tmp_dir = _prepare_render_input(sbml_file)
-    try:
-        _render_prepared_input(render_input, out_png, dpi=dpi, show=show)
-    finally:
-        if tmp_dir is not None:
-            shutil.rmtree(tmp_dir, ignore_errors=True)
-
-
-def render_to_png_bytes(sbml_file: str, dpi: int = 180) -> bytes:
-    return build_render_artifacts(sbml_file, dpi=dpi)["png_bytes"]
+def render_to_png_bytes(sbml_path: str, dpi: int = 180) -> bytes:
+    return build_render_artifacts(sbml_path, dpi)["png_bytes"]
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Render SBML to PNG, auto-synthesizing PathWhiz-style layout when needed.")
-    ap.add_argument("--in", dest="inp", required=True, help="Input SBML file.")
-    ap.add_argument("--out", dest="out", default="sbml_diagram.png", help="Output PNG filename.")
-    ap.add_argument("--dpi", type=int, default=180, help="PNG DPI (default 180).")
-    ap.add_argument("--show", action="store_true", help="Show interactive window.")
+    ap = argparse.ArgumentParser(
+        description="Render a PathWhiz-style SBML to PNG.")
+    ap.add_argument("--in", dest="inp", required=True)
+    ap.add_argument("--out", dest="out", default="sbml_diagram.png")
+    ap.add_argument("--dpi", type=int, default=180)
     args = ap.parse_args()
-    render(args.inp, args.out, dpi=args.dpi, show=args.show)
+    render(args.inp, args.out, dpi=args.dpi)
 
 
 if __name__ == "__main__":
