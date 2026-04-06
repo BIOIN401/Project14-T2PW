@@ -5007,6 +5007,58 @@
       ],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::hydroxyglutarate dehydrogenase enzymes::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::hydroxyglutarate dehydrogenase enzymes::": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"hydroxyglutarate dehydrogenase enzymes\" OR gene:\"hydroxyglutarate dehydrogenase enzymes\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::von hippel lindau e3 ubiquitin ligase complex::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::von hippel lindau e3 ubiquitin ligase complex::": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"von Hippel Lindau E3 ubiquitin ligase complex\" OR gene:\"von Hippel Lindau E3 ubiquitin ligase complex\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::ubiquinone oxidoreductase complex::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "E1BAZ2",
+        "pathbank_protein_id": "21525"
+      },
+      "pathbank_protein_id": 21525,
+      "confidence": 0.7329,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 21525,
+          "name": "NADH:ubiquinone oxidoreductase complex assembly factor 1",
+          "gene_name": "NDUFAF1",
+          "uniprot": "E1BAZ2",
+          "species_id": 5,
+          "score": 0.7329
+        }
+      ]
     }
   },
   "compounds": {
@@ -15225,6 +15277,108 @@
           "short_name": "U4",
           "score": 0.705,
           "mapped_ids": {}
+        }
+      ]
+    },
+    "db::nadph": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000221",
+        "kegg": "C00005",
+        "chebi": "CHEBI:16474",
+        "pubchem": "22833512",
+        "cas": "53-57-6",
+        "biocyc": "NADPH",
+        "chemspider": "17215925",
+        "pathbank_compound_id": "146"
+      },
+      "pathbank_compound_id": 146,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 146,
+          "name": "NADPH",
+          "short_name": "NADPH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000221",
+            "kegg": "C00005",
+            "chebi": "CHEBI:16474",
+            "pubchem": "22833512",
+            "cas": "53-57-6",
+            "biocyc": "NADPH",
+            "chemspider": "17215925"
+          }
+        },
+        {
+          "pathbank_compound_id": 109087,
+          "name": "Reduced NADPH---hemoprotein reductase",
+          "short_name": "",
+          "score": 0.5675,
+          "mapped_ids": {
+            "kegg": "C03024",
+            "pubchem": "5930"
+          }
+        },
+        {
+          "pathbank_compound_id": 109088,
+          "name": "Oxidized NADPH--hemoprotein reductase",
+          "short_name": "",
+          "score": 0.5675,
+          "mapped_ids": {
+            "kegg": "C03024",
+            "pubchem": "5930"
+          }
+        }
+      ]
+    },
+    "db::gsh": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000125",
+        "kegg": "C00051",
+        "chebi": "CHEBI:16856",
+        "pubchem": "124886",
+        "cas": "70-18-8",
+        "biocyc": "OXIDIZED-GLUTATHIONE",
+        "chemspider": "111188",
+        "drugbank": "DB00143",
+        "pathbank_compound_id": "80"
+      },
+      "pathbank_compound_id": 80,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 80,
+          "name": "Glutathione",
+          "short_name": "GSH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000125",
+            "kegg": "C00051",
+            "chebi": "CHEBI:16856",
+            "pubchem": "124886",
+            "cas": "70-18-8",
+            "biocyc": "OXIDIZED-GLUTATHIONE",
+            "chemspider": "111188",
+            "drugbank": "DB00143"
+          }
+        },
+        {
+          "pathbank_compound_id": 41211,
+          "name": "Glutathionylspermidine",
+          "short_name": "N1-(&γ",
+          "score": 0.35,
+          "mapped_ids": {
+            "chebi": "CHEBI:16613",
+            "pubchem": "440772"
+          }
         }
       ]
     }

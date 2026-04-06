@@ -149517,6 +149517,147 @@
         "source_url": "https://hmdb.ca/metabolites/HMDB0001304",
         "retrieved_at": "2026-04-05T05:46:01Z"
       }
+    },
+    "chebi:CHEBI:16474": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16474",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-04-06T00:35:34Z"
+      }
+    },
+    "hmdb:HMDB0000221": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000221",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000221",
+        "retrieved_at": "2026-04-06T00:35:35Z"
+      }
+    },
+    "kegg:C00005": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00005",
+      "primary_name": "NADPH",
+      "synonyms": [
+        "NADPH",
+        "TPNH",
+        "Reduced nicotinamide adenine dinucleotide phosphate"
+      ],
+      "formula": "C21H30N7O17P3",
+      "mass_monoisotopic": 745.0911,
+      "mass_average": 745.42,
+      "pathways": [
+        "Photosynthesis",
+        "Glutathione metabolism",
+        "Metabolic pathways",
+        "Thyroid hormone synthesis",
+        "Aldosterone synthesis and secretion",
+        "Alcoholic liver disease",
+        "Chemical carcinogenesis - reactive oxygen species",
+        "Diabetic cardiomyopathy"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00005",
+        "pubchem_id": "3307",
+        "chebi_id": "16474"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00005",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00005",
+        "retrieved_at": "2026-04-06T00:35:36Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:16856": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16856",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-04-06T00:35:40Z"
+      }
+    },
+    "hmdb:HMDB0000125": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000125",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000125",
+        "retrieved_at": "2026-04-06T00:35:41Z"
+      }
+    },
+    "kegg:C00051": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00051",
+      "primary_name": "Glutathione",
+      "synonyms": [
+        "Glutathione",
+        "5-L-Glutamyl-L-cysteinylglycine",
+        "N-(N-gamma-L-Glutamyl-L-cysteinyl)glycine",
+        "gamma-L-Glutamyl-L-cysteinyl-glycine",
+        "GSH",
+        "Reduced glutathione"
+      ],
+      "formula": "C10H17N3O6S",
+      "mass_monoisotopic": 307.0838,
+      "mass_average": 307.33,
+      "pathways": [
+        "Cysteine and methionine metabolism",
+        "Glutathione metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of cofactors",
+        "ABC transporters",
+        "Ferroptosis",
+        "Thyroid hormone synthesis",
+        "Bile secretion",
+        "Chemical carcinogenesis - reactive oxygen species",
+        "Diabetic cardiomyopathy"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Vitamins and cofactors",
+        "Cofactors",
+        "Coenzymes",
+        "C00051 Glutathione",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00014)]",
+        "V VARIOUS",
+        "V03 ALL OTHER THERAPEUTIC PRODUCTS",
+        "V03A ALL OTHER THERAPEUTIC PRODUCTS",
+        "V03AB Antidotes",
+        "V03AB32 Glutathione",
+        "D00014 Glutathione (JP18) &lt;JP&gt;",
+        "Therapeutic category of drugs in Japan [BR:br08301(D00014)]",
+        "3 Agents affecting metabolism",
+        "39 Other agents affecting metabolism",
+        "392 Antidotes",
+        "3922 Glutathiones",
+        "D00014 Glutathione (JP18)",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00014)]",
+        "Chemicals",
+        "D00014 Glutathione"
+      ],
+      "cross_references": {
+        "kegg_id": "C00051",
+        "pubchem_id": "3353",
+        "chebi_id": "16856"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00051",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00051",
+        "retrieved_at": "2026-04-06T00:35:41Z",
+        "status": "ok"
+      }
     }
   }
 }

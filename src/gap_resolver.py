@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from apply_audit_patch import apply_patch_with_policy
-from llm_client import chat
+from llm_client import chat, chat_with_tools
 from map_ids import (
     HttpClient,
     PathBankDbResolver,
@@ -786,6 +786,109 @@ def _get_enrichment_system_prompt() -> str:
     return _ENRICHMENT_SYSTEM_PROMPT
 
 
+# ---------------------------------------------------------------------------
+# Agentic enrichment — tool schemas and prompt loader
+# ---------------------------------------------------------------------------
+
+_ENRICHMENT_TOOLS: List[Dict[str, Any]] = [
+    {
+        "type": "function",
+        "function": {
+            "name": "lookup_compound",
+            "description": "Look up external database IDs (HMDB, KEGG, ChEBI, PubChem) for a compound by name",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Compound name to look up"},
+                },
+                "required": ["name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "lookup_protein",
+            "description": "Look up UniProt accession for a protein by name and optional organism",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Protein name to look up"},
+                    "organism": {"type": "string", "description": "Organism name (optional)", "default": ""},
+                },
+                "required": ["name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "lookup_compartment_candidates",
+            "description": "Return known cellular compartment/location candidates for an entity from the PathBank database",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "entity_name": {"type": "string", "description": "Name of the entity"},
+                    "entity_type": {
+                        "type": "string",
+                        "enum": ["compound", "protein"],
+                        "description": "Type of entity: 'compound' or 'protein'",
+                    },
+                },
+                "required": ["entity_name", "entity_type"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "propose_patch",
+            "description": "Commit a JSON patch operation to the pathway payload. Use this to write your decisions.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "op": {
+                        "type": "string",
+                        "enum": ["add", "replace", "remove"],
+                        "description": "JSON patch operation type",
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "JSON Pointer path e.g. /entities/compounds/3/mapped_ids",
+                    },
+                    "value": {
+                        "description": "New value to write (required for add/replace)",
+                    },
+                    "evidence": {
+                        "type": "string",
+                        "description": "One sentence explaining why this patch is proposed",
+                    },
+                    "confidence": {
+                        "type": "number",
+                        "description": "Confidence score from 0.0 to 1.0",
+                    },
+                },
+                "required": ["op", "path", "evidence", "confidence"],
+            },
+        },
+    },
+]
+
+_ENRICHMENT_AGENTIC_SYSTEM_PROMPT: Optional[str] = None
+
+
+def _get_enrichment_agentic_system_prompt() -> str:
+    global _ENRICHMENT_AGENTIC_SYSTEM_PROMPT  # noqa: PLW0603
+    if _ENRICHMENT_AGENTIC_SYSTEM_PROMPT is None:
+        prompt_path = Path(__file__).resolve().parent / "prompts" / "enrichment_agentic_system.txt"
+        _ENRICHMENT_AGENTIC_SYSTEM_PROMPT = (
+            prompt_path.read_text(encoding="utf-8")
+            if prompt_path.exists()
+            else "You are an enrichment agent. Use tools to look up IDs and propose patches."
+        )
+    return _ENRICHMENT_AGENTIC_SYSTEM_PROMPT
+
+
 def _build_entity_index(payload: Dict[str, Any]) -> Dict[str, Tuple[str, int]]:
     """Return {normalized_name: (array_path_prefix, index)} for path construction.
 
@@ -1006,7 +1109,7 @@ def _run_enrichment_agent(
     max_flags_per_type: int = 20,
     reaction_summary: Optional[str] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-    """Pre-fetch API candidates for each QA flag, build enrichment context, call LLM.
+    """Agentic enrichment: LLM uses tools to look up IDs/compartments and propose patches.
 
     Returns (normalized_patches, enrichment_report).
     The patches use the same format as apply_audit_patch (op/evidence) after normalization.
@@ -1015,67 +1118,126 @@ def _run_enrichment_agent(
     entity_index = _build_entity_index(payload)
 
     actionable = ["missing_ids", "missing_compartments", "possible_complexes", "transport_like_reactions"]
-    pre_fetched_all: List[Dict[str, Any]] = []
-
+    flags_for_agent: Dict[str, Any] = {}
+    total_flag_entries = 0
     for flag_type in actionable:
-        for entry in _safe_list(flags.get(flag_type, []))[:max_flags_per_type]:
-            if isinstance(entry, dict):
-                pre_fetched_all.append(
-                    _pre_fetch_for_flag(
-                        flag_type,
-                        entry,
-                        db=db,
-                        client=client,
-                        global_organism=global_organism,
-                    )
-                )
+        entries = [e for e in _safe_list(flags.get(flag_type, [])) if isinstance(e, dict)][:max_flags_per_type]
+        if entries:
+            flags_for_agent[flag_type] = entries
+            total_flag_entries += len(entries)
 
     enrichment_report: Dict[str, Any] = {
-        "flags_processed": len(pre_fetched_all),
-        "pre_fetched_count": len(pre_fetched_all),
+        "flags_processed": total_flag_entries,
     }
 
-    if not pre_fetched_all:
+    if total_flag_entries == 0:
         enrichment_report["patches_proposed"] = 0
         return [], enrichment_report
 
-    context_block = _format_enrichment_context(pre_fetched_all, entity_index)
-    system_prompt = _get_enrichment_system_prompt()
+    accumulated_patches: List[Dict[str, Any]] = []
+
+    def tool_executor(tool_name: str, tool_args: Dict[str, Any]) -> Any:
+        if tool_name == "lookup_compound":
+            name = tool_args.get("name", "")
+            api_result = map_compound_all(client, name)
+            hmdb_result = lookup_hmdb_background(client, name)
+            mapped_ids = _safe_dict(api_result.get("mapped_ids"))
+            candidates = _safe_list(_safe_dict(hmdb_result).get("candidates", []))
+            return {
+                "status": api_result.get("status", "unmapped"),
+                "mapped_ids": mapped_ids,
+                "candidates": candidates,
+            }
+
+        elif tool_name == "lookup_protein":
+            name = tool_args.get("name", "")
+            organism = tool_args.get("organism", global_organism) or global_organism
+            api_result = map_protein_uniprot(client, name, organism)
+            bg_result = lookup_protein_api_background(client, name, organism)
+            mapped_ids = _safe_dict(api_result.get("mapped_ids"))
+            candidates = _safe_list(_safe_dict(bg_result).get("candidates", []))
+            return {
+                "status": api_result.get("status", "unmapped"),
+                "mapped_ids": mapped_ids,
+                "candidates": candidates,
+            }
+
+        elif tool_name == "lookup_compartment_candidates":
+            entity_name = tool_args.get("entity_name", "")
+            entity_type = tool_args.get("entity_type", "compound")
+            if db is None or not db.available():
+                return {"candidates": [], "source": "db_unavailable"}
+            kind = entity_type if entity_type in {"compound", "protein"} else "compound"
+            candidates = _db_location_candidates(db, kind=kind, name=entity_name)
+            return {"candidates": candidates, "source": "pathbank_db"}
+
+        elif tool_name == "propose_patch":
+            patch = {
+                "op": tool_args.get("op"),
+                "path": tool_args.get("path"),
+                "value": tool_args.get("value"),
+                "evidence": tool_args.get("evidence", ""),
+                "confidence": tool_args.get("confidence", 0.7),
+            }
+            accumulated_patches.append(patch)
+            return {"accepted": True, "patch_index": len(accumulated_patches) - 1}
+
+        else:
+            return {"error": f"unknown tool: {tool_name}"}
 
     user_content_dict: Dict[str, Any] = {
-        "task": "Generate patches to fix the flagged entities based on pre-fetched API data.",
-        "entity_count": sum(
-            len(_safe_list(_safe_dict(payload.get("entities")).get(k, [])))
-            for k in ["compounds", "proteins", "protein_complexes"]
-        ),
-        "qa_summary": _safe_dict(qa_report.get("summary")),
-        "enrichment_context": context_block,
+        "task": "Process these QA flags and propose patches.",
+        "global_organism": global_organism,
+        "entity_index": {k: list(v) for k, v in entity_index.items()},
+        "qa_flags": flags_for_agent,
     }
     if reaction_summary and isinstance(reaction_summary, str) and reaction_summary.strip():
         user_content_dict["pathway_reaction_summary"] = reaction_summary.strip()
     user_content = json.dumps(user_content_dict, ensure_ascii=False)
 
-    raw = ""
+    final_text = ""
     try:
-        raw = chat(
-            [
-                {"role": "system", "content": system_prompt},
+        final_text = chat_with_tools(
+            messages=[
+                {"role": "system", "content": _get_enrichment_agentic_system_prompt()},
                 {"role": "user", "content": user_content},
             ],
+            tools=_ENRICHMENT_TOOLS,
+            tool_executor=tool_executor,
             temperature=llm_temperature,
             max_tokens=llm_max_tokens,
-            response_json=True,
+            max_tool_rounds=15,
         )
-        parsed = _extract_json_object(raw) or {}
-        raw_patches = _safe_list(parsed.get("patches"))
-        enrichment_report["warnings"] = _safe_list(parsed.get("warnings"))
-        enrichment_report["raw"] = raw[:800]
-        enrichment_report["patches_proposed"] = len(raw_patches)
 
-        # Normalize enrichment patch format → apply_audit_patch format
-        # (action → op, reason → evidence)
+        # Also try to parse patches from the final text response
+        parsed = _extract_json_object(final_text) or {}
+        final_response_patches = _safe_list(parsed.get("patches"))
+        enrichment_report["warnings"] = _safe_list(parsed.get("warnings"))
+        enrichment_report["raw"] = final_text[:800]
+
+        # Merge: prefer mid-loop tool-call patches, deduplicate by (op, path)
+        seen: Dict[Tuple[str, str], bool] = {}
+        merged: List[Dict[str, Any]] = []
+        for patch in accumulated_patches:
+            key = (str(patch.get("op", "")), str(patch.get("path", "")))
+            if key not in seen:
+                seen[key] = True
+                merged.append(patch)
+        for patch in final_response_patches:
+            if not isinstance(patch, dict):
+                continue
+            key = (str(patch.get("op", patch.get("action", ""))), str(patch.get("path", "")))
+            if key not in seen:
+                seen[key] = True
+                merged.append(patch)
+
+        enrichment_report["patches_from_tool_calls"] = len(accumulated_patches)
+        enrichment_report["patches_from_final_response"] = len(final_response_patches)
+        enrichment_report["patches_proposed"] = len(merged)
+
+        # Normalize patch format → apply_audit_patch format (action → op, reason → evidence)
         normalized: List[Dict[str, Any]] = []
-        for patch in raw_patches:
+        for patch in merged:
             if not isinstance(patch, dict):
                 continue
             norm = dict(patch)
@@ -1086,9 +1248,10 @@ def _run_enrichment_agent(
             normalized.append(norm)
 
         return normalized, enrichment_report
+
     except Exception as exc:  # noqa: BLE001
         enrichment_report["error"] = str(exc)
-        enrichment_report["raw"] = raw[:400]
+        enrichment_report["raw"] = final_text[:400]
         enrichment_report["patches_proposed"] = 0
         return [], enrichment_report
 

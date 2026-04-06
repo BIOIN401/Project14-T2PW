@@ -273,6 +273,14 @@ def render_draft_graph_to_png_bytes(draft_graph_dict: Dict[str, Any], dpi: int =
 
         _draw_reaction_block(ax, ox, oy, rxn_label, reactant_labels, product_labels, enzyme_names)
 
+        # Reaction order number — top-left corner of each block
+        ax.text(
+            ox + 6, oy + 6,
+            str(idx + 1),
+            fontsize=_FONT + 1, ha="left", va="top",
+            color="#333333", fontweight="bold", zorder=11,
+        )
+
     fig.tight_layout(pad=0)
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", pad_inches=0.1, dpi=dpi)
