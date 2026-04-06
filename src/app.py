@@ -22,6 +22,7 @@ from audit_json_llm import run_audit
 from enrich_entities import run_enrichment
 from grounding import apply_grounding
 from gap_resolver import run_gap_resolution
+from pathway_curator import run_pathway_curator
 from json_to_sbml import build_sbml
 from map_ids import run_mapping
 from sbml_render_pathwhiz_like import build_render_artifacts
@@ -53,6 +54,9 @@ from pipeline import (
     run_stage_two_with_feedback_loop,
     run_stage_one_with_chunking,
 )
+from draft_graph import build_draft_graph
+from qa_graph import generate_qa_report
+from reaction_summary import generate_reaction_summary
 from preprocessor import preprocess
 from pdf_parser import extract_text_from_pdf, get_pdf_info, parse_pdf, SKIP_SECTIONS
 from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree
@@ -345,6 +349,7 @@ def run_post_pipeline_sbml_artifacts(
     use_llm_gap_resolver: bool,
     gap_resolver_max_items: int,
     qa_report: Optional[Dict[str, Any]] = None,
+    reaction_summary: Optional[str] = None,
 ) -> Dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     cache_path = Path(mapping_cache_path)
@@ -579,6 +584,7 @@ def run_post_pipeline_sbml_artifacts(
         gap_iterations: List[Dict[str, Any]] = []
         seen_hashes: set = set()
         current_input = input_json
+        current_round_summary: Optional[str] = reaction_summary  # refreshed each round
         max_rounds = max(1, int(audit_max_rounds))
         timeout_seconds = max(30, int(audit_timeout_seconds))
         max_candidates = max(1, int(audit_candidate_count))
@@ -810,7 +816,7 @@ def run_post_pipeline_sbml_artifacts(
                     llm_max_tokens=gap_tokens,
                     max_items=max(10, int(gap_resolver_max_items)),
                     enable_id_resolution=True,
-                    reaction_summary=st.session_state.get("reaction_summary"),
+                    reaction_summary=current_round_summary,
                 )
                 current_after_round = round_resolved
             else:
@@ -878,6 +884,17 @@ def run_post_pipeline_sbml_artifacts(
                     }
                 )
 
+            # Rebuild reaction summary from this round's settled output so the
+            # next gap_resolver call receives an up-to-date picture of the
+            # pathway rather than the stale pre-audit string.
+            try:
+                _round_payload = json.loads(current_after_round.read_text(encoding="utf-8"))
+                _round_graph = build_draft_graph(_round_payload)
+                _round_qa = generate_qa_report(_round_graph, _round_payload)
+                current_round_summary = generate_reaction_summary(_round_graph, _round_qa)
+            except Exception:
+                pass  # keep previous summary if rebuild fails
+
             current_input = current_after_round
             if timed_out_mid_round:
                 stop_reason = "timeout"
@@ -905,6 +922,58 @@ def run_post_pipeline_sbml_artifacts(
 
         audited_json.write_text(current_input.read_text(encoding="utf-8"), encoding="utf-8")
         loop_duration = round(time.time() - audit_started_at, 3)
+
+        # Rebuild draft graph from the fully-audited payload so the PNG shown
+        # in the UI and the reaction summary both reflect the corrected state.
+        post_audit_draft_graph_dict: Dict[str, Any] = {}
+        post_audit_qa_report: Dict[str, Any] = {}
+        post_audit_reaction_summary: str = current_round_summary or ""
+        post_audit_png_bytes: bytes = b""
+        try:
+            _audited_payload = json.loads(audited_json.read_text(encoding="utf-8"))
+            _audited_graph = build_draft_graph(_audited_payload)
+            post_audit_qa_report = generate_qa_report(_audited_graph, _audited_payload)
+            post_audit_reaction_summary = generate_reaction_summary(_audited_graph, post_audit_qa_report)
+            post_audit_draft_graph_dict = _audited_graph.to_dict()
+            try:
+                post_audit_png_bytes = render_draft_graph_to_png_bytes(post_audit_draft_graph_dict)
+            except Exception:
+                pass
+        except Exception:
+            pass
+
+        # ── Curator step: name fixes, compartment fills, transporter proposals ──
+        curator_json = tmp / "final.curated.json"
+        curator_report_path = tmp / "curator_report.json"
+        curator_report: Dict[str, Any] = {}
+        try:
+            _meta = _safe_dict(json.loads(audited_json.read_text(encoding="utf-8")).get("metadata", {}))
+            curator_report = run_pathway_curator(
+                audited_json,
+                curator_json,
+                curator_report_path,
+                reaction_summary=post_audit_reaction_summary or current_round_summary,
+                pathway_name=str(_meta.get("pathway_name", "") or ""),
+                organism=str(_meta.get("organism", "") or ""),
+                llm_temperature=0.2,
+                llm_max_tokens=2000,
+            )
+            # Use curated output as input to mapping only if patches were accepted
+            if int(_safe_dict(curator_report.get("summary", {})).get("patches_accepted", 0)) > 0:
+                audited_json.write_text(curator_json.read_text(encoding="utf-8"), encoding="utf-8")
+                # Rebuild the PNG using curator's reaction_order if present
+                _curated_payload = json.loads(audited_json.read_text(encoding="utf-8"))
+                _curator_order = _curated_payload.get("reaction_order")
+                if _curator_order and post_audit_draft_graph_dict:
+                    try:
+                        post_audit_png_bytes = render_draft_graph_to_png_bytes(
+                            post_audit_draft_graph_dict,
+                            reaction_order=_curator_order,
+                        )
+                    except Exception:
+                        pass
+        except Exception as _cur_exc:
+            curator_report = {"error": str(_cur_exc), "summary": {}}
 
         run_mapping_params = inspect.signature(run_mapping).parameters
         mapping_kwargs: Dict[str, Any] = {"cache_path": cache_path}
@@ -1033,6 +1102,11 @@ def run_post_pipeline_sbml_artifacts(
             "example_index_path": resolved_example_index_path,
             "example_index_error": motif_index_error,
             "example_index_entry_count": int(motif_index_data.get("entry_count", 0)) if motif_index_data else 0,
+            "post_audit_draft_graph": post_audit_draft_graph_dict,
+            "post_audit_qa_report": post_audit_qa_report,
+            "post_audit_reaction_summary": post_audit_reaction_summary,
+            "post_audit_png_bytes": post_audit_png_bytes,
+            "curator_report": curator_report,
             "audit_iterations": audit_iterations,
             "gap_resolution_iterations": gap_iterations,
             "audit_loop_summary": {
@@ -1684,9 +1758,21 @@ if st.session_state.get("pipeline_ready"):
                     use_llm_gap_resolver=bool(use_llm_gap_resolver),
                     gap_resolver_max_items=int(gap_resolver_max_items),
                     qa_report=st.session_state.get("qa_report"),
+                    reaction_summary=st.session_state.get("reaction_summary"),
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
-            if bool(_safe_dict(artifacts).get("gate_failed", False)):
+            # Upgrade the draft graph / reaction summary to the post-audit versions
+            # so the Pathway Summary tab reflects corrected data.
+            _pa = _safe_dict(artifacts)
+            if _pa.get("post_audit_draft_graph"):
+                st.session_state["draft_graph"] = _pa["post_audit_draft_graph"]
+            if _pa.get("post_audit_png_bytes"):
+                st.session_state["draft_graph_png_bytes"] = _pa["post_audit_png_bytes"]
+            if _pa.get("post_audit_qa_report"):
+                st.session_state["qa_report"] = _pa["post_audit_qa_report"]
+            if _pa.get("post_audit_reaction_summary"):
+                st.session_state["reaction_summary"] = _pa["post_audit_reaction_summary"]
+            if bool(_pa.get("gate_failed", False)):
                 st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
             else:
                 st.success("Post-pipeline conversion completed.")

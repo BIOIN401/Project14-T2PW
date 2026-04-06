@@ -19,6 +19,21 @@ _FLOW_RXN_KINDS   = {"reaction", "transport", "reaction_coupled_transport"}
 _METABOLITE_KINDS = {"compound", "nucleic_acid"}
 _ENZYME_KINDS     = {"protein", "protein_complex", "element_collection"}
 
+# Promiscuous cofactors that appear as both reactant and product across many
+# reactions.  Including them in the successor-edge graph creates false cycles
+# that break topological ordering (e.g. the NAD+/NADH shuttle causing
+# aconitase ↔ citrate-synthase false loops).  Exclude them from the
+# rxn_successors computation so topo-sort reflects biological reaction order.
+_COFACTOR_SKIP: set = {
+    "h2o", "water", "nad+", "nad", "nadh", "nadph", "nadp+",
+    "co2", "h", "h+", "pi", "ppi",
+    "atp", "adp", "amp",
+    "fadh2", "fad",
+    "coenzyme a", "coa", "coa-sh", "hscoa",
+    "gtp", "gdp",
+    "ubiquinone", "ubiquinol",
+}
+
 # Layout constants (matplotlib data units = pixels at 1:1)
 _BLOCK_W   = 400   # width of one reaction block
 _BLOCK_H   = 340   # height of one reaction block
@@ -91,9 +106,14 @@ def _parse_graph(
             if src_node and src_node["kind"] in _ENZYME_KINDS and tgt in flow_rxn_set:
                 rxn_enzymes[tgt].append(src_node.get("label", src))
 
-    # Topo-sort reactions
+    # Topo-sort reactions.
+    # Skip promiscuous cofactors — they appear on both sides of many reactions
+    # and create false cycles that break the topological ordering.
     rxn_successors: Dict[str, Set[str]] = defaultdict(set)
     for cid in metabolite_ids:
+        label_norm = (node_by_id.get(cid, {}).get("label") or "").strip().lower()
+        if label_norm in _COFACTOR_SKIP:
+            continue
         for prod_r in compound_producers[cid]:
             for cons_r in compound_consumers[cid]:
                 if prod_r != cons_r:
@@ -219,7 +239,11 @@ def _draw_reaction_block(
     )
 
 
-def render_draft_graph_to_png_bytes(draft_graph_dict: Dict[str, Any], dpi: int = 160) -> bytes:
+def render_draft_graph_to_png_bytes(
+    draft_graph_dict: Dict[str, Any],
+    dpi: int = 160,
+    reaction_order: Optional[List[str]] = None,
+) -> bytes:
     try:
         import matplotlib
         matplotlib.use("Agg")
@@ -237,6 +261,25 @@ def render_draft_graph_to_png_bytes(draft_graph_dict: Dict[str, Any], dpi: int =
 
     if not ordered:
         raise RuntimeError("DraftGraph has no reaction nodes — nothing to render.")
+
+    # If an explicit reaction_order list of labels is provided (e.g. from the
+    # pathway curator), use it to override the topo-sort ordering.
+    if reaction_order:
+        label_to_id: Dict[str, str] = {
+            node_by_id[rid].get("label", "").strip().lower(): rid
+            for rid in ordered
+        }
+        remapped: List[str] = []
+        seen_remap: Set[str] = set()
+        for name in reaction_order:
+            rid = label_to_id.get(name.strip().lower())
+            if rid and rid not in seen_remap:
+                remapped.append(rid)
+                seen_remap.add(rid)
+        for rid in ordered:
+            if rid not in seen_remap:
+                remapped.append(rid)
+        ordered = remapped
 
     n_rxns = len(ordered)
     cols = min(_COLS, n_rxns)
