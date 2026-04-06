@@ -25,12 +25,14 @@ direction (e.g. pyruvate → MPC1/MPC2 complex; phosphate → SLC25A3).
 Use propose_patch with op=add to append a transporter entry to the reaction's modifiers list
 at /processes/transports/<index>/modifiers.
 
-## 4. Reaction order
-If the payload does not already have a "reaction_order" key at the top level, infer the
-correct biological sequence from the reaction summary and propose a single patch:
-  op=add, path=/reaction_order, value=["<reaction_name_1>", "<reaction_name_2>", ...]
-List reaction names in the order they occur in the pathway cycle or linear sequence.
-If a reaction_order already exists, skip this step.
+## 4. Reaction order (MANDATORY — always emit this patch)
+Infer the correct biological sequence from the reaction summary and propose a patch:
+  - If /reaction_order does not exist: op=add, path=/reaction_order
+  - If /reaction_order already exists:  op=replace, path=/reaction_order
+  value=["<reaction_name_1>", "<reaction_name_2>", ...]
+List ALL reaction names in the order they occur in the pathway cycle or linear sequence.
+This patch is required — you must always propose it, even when a reaction_order already exists,
+so that the graph renderer can apply the biologically correct layout order.
 
 ## Rules
 - Only propose patches you are confident about (confidence >= 0.7).

@@ -961,17 +961,19 @@ def run_post_pipeline_sbml_artifacts(
             # Use curated output as input to mapping only if patches were accepted
             if int(_safe_dict(curator_report.get("summary", {})).get("patches_accepted", 0)) > 0:
                 audited_json.write_text(curator_json.read_text(encoding="utf-8"), encoding="utf-8")
-                # Rebuild the PNG using curator's reaction_order if present
-                _curated_payload = json.loads(audited_json.read_text(encoding="utf-8"))
-                _curator_order = _curated_payload.get("reaction_order")
-                if _curator_order and post_audit_draft_graph_dict:
-                    try:
-                        post_audit_png_bytes = render_draft_graph_to_png_bytes(
-                            post_audit_draft_graph_dict,
-                            reaction_order=_curator_order,
-                        )
-                    except Exception:
-                        pass
+            # Always rebuild the PNG with the curator's reaction_order (mandatory output).
+            # This ensures the graph layout reflects biological sequence even when the
+            # only change was a new reaction_order patch.
+            if post_audit_draft_graph_dict:
+                try:
+                    _curated_payload = json.loads(audited_json.read_text(encoding="utf-8"))
+                    _curator_order = _curated_payload.get("reaction_order")
+                    post_audit_png_bytes = render_draft_graph_to_png_bytes(
+                        post_audit_draft_graph_dict,
+                        reaction_order=_curator_order,
+                    )
+                except Exception:
+                    pass
         except Exception as _cur_exc:
             curator_report = {"error": str(_cur_exc), "summary": {}}
 

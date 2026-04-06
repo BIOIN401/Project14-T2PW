@@ -7,6 +7,120 @@ from copy import deepcopy
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 
+# ---------------------------------------------------------------------------
+# Biochemical alias map — collapses common synonyms to one canonical name
+# before graph building so variants don't create phantom duplicate nodes.
+# Keys are the result of .strip().casefold(); values are canonical display names.
+# ---------------------------------------------------------------------------
+BIOCHEMICAL_ALIAS_MAP: Dict[str, str] = {
+    # Acetyl-CoA variants
+    "acetyl-coa": "Acetyl-CoA",
+    "acetyl coa": "Acetyl-CoA",
+    "acetyl coenzyme a": "Acetyl-CoA",
+    "acetyl-coenzyme a": "Acetyl-CoA",
+    # CoA variants
+    "coa-sh": "CoA-SH",
+    "hscoa": "CoA-SH",
+    "coenzyme a": "CoA-SH",
+    # NAD+/NADH
+    "nad": "NAD+",
+    "nad+": "NAD+",
+    "nadh": "NADH",
+    # NADP+/NADPH
+    "nadp": "NADP+",
+    "nadp+": "NADP+",
+    "nadph": "NADPH",
+    # FAD/FADH2
+    "fad": "FAD",
+    "fadh2": "FADH2",
+    "fadh₂": "FADH2",
+    # TCA cycle metabolites
+    "oxaloacetic acid": "oxaloacetate",
+    "alpha-ketoglutarate": "α-ketoglutarate",
+    "alpha ketoglutarate": "α-ketoglutarate",
+    "2-oxoglutarate": "α-ketoglutarate",
+    "2 oxoglutarate": "α-ketoglutarate",
+    "succinic acid": "succinate",
+    "fumaric acid": "fumarate",
+    "malic acid": "malate",
+    "citric acid": "citrate",
+    "isocitric acid": "isocitrate",
+    "pyruvic acid": "pyruvate",
+    # Phosphate / nucleotides
+    "phosphoenolpyruvate": "phosphoenolpyruvate",
+    "pep": "phosphoenolpyruvate",
+    "atp": "ATP",
+    "adp": "ADP",
+    "amp": "AMP",
+    "gtp": "GTP",
+    "gdp": "GDP",
+    # Other
+    "pi": "Pi",
+    "ppi": "PPi",
+    "inorganic phosphate": "Pi",
+    "inorganic pyrophosphate": "PPi",
+}
+
+
+def apply_biochemical_aliases(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Rewrite compound (and protein) names that are known biochemical synonyms to
+    their canonical form, using BIOCHEMICAL_ALIAS_MAP.
+
+    This runs *before* other normalization steps so that downstream passes see
+    consistent names and don't create phantom duplicate nodes for e.g.
+    "Acetyl-CoA" vs "acetyl coa" vs "Acetyl CoA".
+
+    Only the entity registry rows and reaction input/output token lists are
+    rewritten here; full pointer-based rewriting is left to the existing
+    rewrite_process_references / canonicalize_same_as_aliases passes.
+    """
+    rep = report if isinstance(report, dict) else _new_report()
+    rewrites: List[Dict[str, Any]] = []
+
+    def _alias(name: str) -> str:
+        key = _canonical(name).casefold()
+        return BIOCHEMICAL_ALIAS_MAP.get(key, name)
+
+    def _alias_list(rows: List[Dict[str, Any]]) -> None:
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            orig = _canonical(str(row.get("name", "")))
+            canon = _alias(orig)
+            if canon != orig:
+                row["name"] = canon
+                rewrites.append({"from": orig, "to": canon})
+
+    entities = _safe_dict(payload.get("entities", {}))
+    _alias_list(_safe_list(entities.get("compounds")))
+    _alias_list(_safe_list(entities.get("proteins")))
+
+    # Rewrite tokens in reaction inputs / outputs
+    processes = _safe_dict(payload.get("processes", {}))
+    for rxn in _safe_list(processes.get("reactions")):
+        if not isinstance(rxn, dict):
+            continue
+        for side in ("inputs", "outputs"):
+            tokens = rxn.get(side)
+            if not isinstance(tokens, list):
+                continue
+            rxn[side] = [_alias(t) if isinstance(t, str) else t for t in tokens]
+
+    if rewrites:
+        rep.setdefault("actions", []).append({
+            "type": "biochemical_alias_rewrite",
+            "count": len(rewrites),
+            "rewrites": rewrites[:30],  # cap log size
+        })
+
+    return payload
+
+
 PROTEIN_LIKE_RE = re.compile(
     r"(protein|globulin|peroxidase|symporter|deiodinase|atpase|enzyme|receptor|transporter|kinase|phosphatase)",
     flags=re.IGNORECASE,
@@ -1894,6 +2008,103 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     return payload
 
 
+def backfill_reaction_compartments(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    For every reaction whose ``biological_state`` is empty, attempt to inherit
+    a compartment from its reactants/products/modifiers.
+
+    Strategy
+    --------
+    1. Build a map of {entity_name_norm: biological_state_name} from all
+       compound_locations and protein_locations.
+    2. For each reaction with no biological_state, collect the biological_states
+       of all its inputs, outputs, and modifier entities.
+    3. If all resolved states agree on the same canonical compartment, assign
+       that state to the reaction's biological_state.
+    """
+    rep = report if isinstance(report, dict) else _new_report()
+    rep.setdefault("summary", {}).setdefault("n_reactions_compartment_backfilled", 0)
+
+    # Build entity → biological_state lookup
+    element_locations = _safe_dict(payload.get("element_locations", {}))
+    entity_state: Dict[str, str] = {}
+    for list_key in ("compound_locations", "protein_locations", "nucleic_acid_locations",
+                     "element_collection_locations"):
+        for row in _safe_list(element_locations.get(list_key)):
+            if not isinstance(row, dict):
+                continue
+            for key in ("compound", "protein", "nucleic_acid", "element_collection"):
+                name = _canonical(str(row.get(key, "")))
+                if not name:
+                    continue
+                state = _canonical(str(row.get("biological_state", "")))
+                if state:
+                    entity_state[_normalize(name)] = state
+
+    # Build biological_state → compartment_canonical lookup
+    state_compartment: Dict[str, str] = {}
+    for bs in _safe_list(payload.get("biological_states")):
+        if not isinstance(bs, dict):
+            continue
+        name = _canonical(str(bs.get("name", "")))
+        canon = _canonical(str(bs.get("compartment_canonical", "")))
+        if name and canon:
+            state_compartment[name] = canon
+
+    processes = _safe_dict(payload.get("processes", {}))
+    reactions = _safe_list(processes.get("reactions"))
+
+    for rxn in reactions:
+        if not isinstance(rxn, dict):
+            continue
+        if _canonical(str(rxn.get("biological_state", ""))):
+            continue  # already assigned
+
+        # Collect entity names from inputs + outputs + modifiers
+        participant_names: List[str] = []
+        for side in ("inputs", "outputs"):
+            for token in _safe_list(rxn.get(side)):
+                if isinstance(token, str):
+                    participant_names.append(token)
+        for mod in _safe_list(rxn.get("modifiers")):
+            if isinstance(mod, dict):
+                name = _canonical(str(mod.get("entity", "")))
+                if name:
+                    participant_names.append(name)
+
+        # Resolve each participant to its compartment canonical
+        compartments_seen: Set[str] = set()
+        for name in participant_names:
+            state_name = entity_state.get(_normalize(name))
+            if state_name:
+                comp = state_compartment.get(state_name)
+                if comp:
+                    compartments_seen.add(comp)
+
+        if len(compartments_seen) == 1:
+            inferred_comp = next(iter(compartments_seen))
+            # Find the first biological_state that has this canonical compartment
+            inferred_state = next(
+                (s for s, c in state_compartment.items() if c == inferred_comp),
+                None,
+            )
+            if inferred_state:
+                rxn["biological_state"] = inferred_state
+                rep["summary"]["n_reactions_compartment_backfilled"] += 1
+                rep.setdefault("actions", []).append({
+                    "type": "reaction_compartment_backfill",
+                    "reaction": rxn.get("name", ""),
+                    "assigned_state": inferred_state,
+                    "inferred_from": participant_names[:5],
+                })
+
+    return payload
+
+
 def attach_transporters_from_evidence(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     entities = _safe_dict(payload.get("entities"))
@@ -2752,10 +2963,15 @@ def run_strict_post_normalization_gates(
 def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     data = deepcopy(payload)
     report = _new_report()
+    # Step 0 — collapse biochemical synonyms before any other pass so that all
+    # downstream logic sees consistent canonical names (Issue 3).
+    apply_biochemical_aliases(data, report=report)
     normalize_composites(data, report=report)
     rewrite_reactions_to_complex_states(data, report=report)
     cleanup_disallowed_complexes(data, report=report)
     ensure_autostates(data, report=report)
+    # Backfill missing reaction compartments from participant entity locations (Issue 4).
+    backfill_reaction_compartments(data, report=report)
     attach_transporters_from_evidence(data, report=report)
     promote_interaction_enzymes(data, report=report)
     promote_catalysts(data, report=report)

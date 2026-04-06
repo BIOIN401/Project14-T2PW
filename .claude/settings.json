@@ -27,7 +27,9 @@
       "Bash(winget --version)",
       "Bash(choco --version)",
       "Bash(where dot:*)",
-      "Read(//c/Program Files/Graphviz/bin/**)"
+      "Read(//c/Program Files/Graphviz/bin/**)",
+      "Read(//tmp/**)",
+      "Bash(xargs -I {} basename {})"
     ],
     "ask": [
       "Edit(.env)",
@@ -60,6 +62,9 @@
       "Bash(rm:*)",
       "Bash(rmdir:*)",
       "Bash(mv:*)"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
     ]
   }
 }

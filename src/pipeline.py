@@ -33,23 +33,72 @@ def run_extraction_pipeline(
     input_text: str,
     *,
     pathway_context: Optional[Dict[str, Any]] = None,
+    pathway_scope: Optional[str] = None,
     max_attempts: int = 2,
     temperature: float = 0.0,
     max_tokens: int = 12000,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     """
     Stage 1: strict extraction. Automatically retries with self-repair instructions if JSON parsing fails.
+
+    Parameters
+    ----------
+    pathway_scope : str, optional
+        Short name of the pathway being modelled (e.g. "TCA cycle", "glycolysis").
+        When provided it is injected into the prompt so the LLM can classify each
+        reaction with a ``scope_membership`` label.
     """
     return _run_json_stage(
         stage_name="extraction",
         system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8"),
         build_user_prompt=lambda prev_output, last_error: _build_extraction_prompt(
-            input_text, prev_output, last_error, pathway_context=pathway_context
+            input_text, prev_output, last_error,
+            pathway_context=pathway_context,
+            pathway_scope=pathway_scope,
         ),
         max_attempts=max_attempts,
         temperature=temperature,
         max_tokens=max_tokens,
     )
+
+
+def filter_out_of_scope_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Remove reactions whose ``scope_membership`` is ``"out_of_scope"`` from the
+    payload's ``processes.reactions`` list.
+
+    Returns
+    -------
+    (filtered_payload, removed_names)
+        filtered_payload — a shallow-copy of *payload* with out-of-scope reactions dropped
+        removed_names    — list of reaction names that were removed
+    """
+    import copy as _copy
+    filtered = _copy.deepcopy(payload)
+    processes = filtered.setdefault("processes", {})
+    reactions = processes.get("reactions")
+    if not isinstance(reactions, list):
+        return filtered, []
+
+    kept: List[Dict[str, Any]] = []
+    removed_names: List[str] = []
+    for rxn in reactions:
+        if not isinstance(rxn, dict):
+            kept.append(rxn)
+            continue
+        if rxn.get("scope_membership", "core") == "out_of_scope":
+            removed_names.append(rxn.get("name", "<unnamed>"))
+        else:
+            kept.append(rxn)
+
+    processes["reactions"] = kept
+    if removed_names:
+        logger.info(
+            "filter_out_of_scope_reactions: removed %d reaction(s): %s",
+            len(removed_names),
+            removed_names,
+        )
+    return filtered, removed_names
 
 
 def run_inference_pipeline(
@@ -1834,12 +1883,16 @@ def _build_extraction_prompt(
     last_error: Optional[str],
     *,
     pathway_context: Optional[Dict[str, Any]] = None,
+    pathway_scope: Optional[str] = None,
 ) -> str:
     prompt = []
 
     context_header = format_context_header(pathway_context)
     if context_header:
         prompt.extend([context_header, ""])
+
+    if pathway_scope and pathway_scope.strip():
+        prompt.extend([f"<pathway_scope>{pathway_scope.strip()}</pathway_scope>", ""])
 
     prompt.extend(
         [

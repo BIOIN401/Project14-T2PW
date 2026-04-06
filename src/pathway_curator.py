@@ -190,14 +190,15 @@ def run_pathway_curator(
     user_payload: Dict[str, Any] = {
         "task": (
             "Curate this pathway JSON. Fix entity name mismatches, fill unknown "
-            "compartments, propose missing transporters, and add reaction_order if absent."
+            "compartments, propose missing transporters, and always propose a "
+            "reaction_order patch (add or replace) with the correct biological sequence."
         ),
         "pathway_name": pathway_name,
         "organism": organism,
         "entity_index": {k: list(v) for k, v in entity_index.items()},
         "reactions": reaction_list,
         "transports": transport_list,
-        "has_reaction_order": "reaction_order" in payload,
+        "reaction_order_exists": "reaction_order" in payload,
     }
     if reaction_summary and reaction_summary.strip():
         user_payload["reaction_summary"] = reaction_summary.strip()
