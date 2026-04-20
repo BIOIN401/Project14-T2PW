@@ -298,24 +298,49 @@ class DeterministicPwmlBuilder:
                 )
 
             enzymes: List[Dict[str, Any]] = []
-            for enzyme in raw.get("enzymes", []) if isinstance(raw.get("enzymes"), list) else []:
-                if not isinstance(enzyme, dict):
-                    continue
-                pc_name = (
-                    str(enzyme.get("protein_complex") or enzyme.get("protein-complex") or "").strip()
-                )
-                if not pc_name:
-                    continue
-                pc = self.entity_lookup.get("protein_complexes", {}).get(_normalize_key(pc_name))
-                if not pc:
-                    continue
-                enzymes.append(
-                    {
-                        "id": self.ids.next(),
-                        "protein-complex-id": int(pc["id"]),
-                        "enzyme-class": str(enzyme.get("enzyme_class") or "").strip(),
-                    }
-                )
+            modifiers = raw.get("modifiers") if isinstance(raw.get("modifiers"), list) else None
+            if modifiers is not None:
+                for mod in modifiers:
+                    if not isinstance(mod, dict):
+                        continue
+                    role = str(mod.get("role") or "").strip().lower()
+                    entity_name = str(mod.get("entity") or "").strip()
+                    entity_type = str(mod.get("entity_type") or "").strip().lower()
+                    if not entity_name or role not in {"catalyst", "activator", "inhibitor"}:
+                        continue
+                    entry: Dict[str, Any] = {"id": self.ids.next()}
+                    if entity_type == "protein_complex":
+                        pc = self.entity_lookup.get("protein_complexes", {}).get(_normalize_key(entity_name))
+                        if not pc:
+                            continue
+                        entry["protein-complex-id"] = int(pc["id"])
+                    else:
+                        prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(entity_name))
+                        if not prot:
+                            continue
+                        entry["protein-id"] = int(prot["id"])
+                    if role == "inhibitor":
+                        entry["inhibitor"] = True
+                    enzymes.append(entry)
+            else:
+                for enzyme in raw.get("enzymes", []) if isinstance(raw.get("enzymes"), list) else []:
+                    if not isinstance(enzyme, dict):
+                        continue
+                    pc_name = (
+                        str(enzyme.get("protein_complex") or enzyme.get("protein-complex") or "").strip()
+                    )
+                    if not pc_name:
+                        continue
+                    pc = self.entity_lookup.get("protein_complexes", {}).get(_normalize_key(pc_name))
+                    if not pc:
+                        continue
+                    enzymes.append(
+                        {
+                            "id": self.ids.next(),
+                            "protein-complex-id": int(pc["id"]),
+                            "enzyme-class": str(enzyme.get("enzyme_class") or "").strip(),
+                        }
+                    )
 
             out.append(
                 {
@@ -677,6 +702,10 @@ class DeterministicPwmlBuilder:
                 "pwc-id": f"PW_C{int(rec['id']):06d}",
                 "short-name": rec["name"],
                 "element-states": [],
+                "hmdb-id": rec.get("mapped_ids", {}).get("hmdb") or None,
+                "kegg-id": rec.get("mapped_ids", {}).get("kegg") or None,
+                "chebi-id": rec.get("mapped_ids", {}).get("chebi") or None,
+                "pubchem-cid": rec.get("mapped_ids", {}).get("pubchem") or None,
             }
             for rec in self.entity_records.get("compounds", [])
         ]
@@ -709,6 +738,8 @@ class DeterministicPwmlBuilder:
                 "name": rec["name"],
                 "species-id": default_species_id,
                 "element-states": [],
+                "uniprot-id": rec.get("mapped_ids", {}).get("uniprot") or None,
+                "ec-numbers": rec.get("ec_numbers", []),
             }
             for rec in self.entity_records.get("proteins", [])
         ]
