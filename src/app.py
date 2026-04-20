@@ -61,6 +61,7 @@ from preprocessor import preprocess
 from pdf_parser import extract_text_from_pdf, get_pdf_info, parse_pdf, SKIP_SECTIONS
 from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree
 from pwml_writer import DeterministicPwmlBuilder
+from pwml_qa import run_pwml_qa
 from qa_graph import build_graph, connected_components, degrees, get_entities, node
 
 st.set_page_config(page_title="PWML Multi-Stage Pipeline", layout="wide")
@@ -1123,6 +1124,52 @@ def run_post_pipeline_sbml_artifacts(
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def run_post_pipeline_pwml_artifacts(
+    final_payload: Dict[str, Any],
+    pathway_name: str,
+    pathway_description: str,
+    pathway_subject: str,
+    project_root: Path,
+) -> Dict[str, Any]:
+    try:
+        ref_path = project_root / "reference" / "PW000001.pwml"
+        signature = discover_structure_signature(ref_path)
+        args = SimpleNamespace(
+            named_for_id=1,
+            name=pathway_name,
+            description=pathway_description,
+            subject=pathway_subject,
+            height=1400,
+            width=3200,
+            background_color="#FFFFFF",
+            pw_id="PW000000",
+            ref=str(ref_path),
+        )
+        builder = DeterministicPwmlBuilder(extraction=final_payload, signature=signature, args=args)
+        build_result = builder.build()
+        tree = etree.ElementTree(build_result.root)
+        repaired = repair_tree(tree, signature)
+        report = validate_generated_tree(repaired, signature)
+        xml_bytes = etree.tostring(
+            repaired.getroot(), encoding="utf-8", xml_declaration=True, pretty_print=True
+        )
+        qa_report = run_pwml_qa(xml_bytes)
+        out_path = project_root / "outputs" / "pathway.pwml"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_bytes(xml_bytes)
+        return {
+            "ok": True,
+            "counts": build_result.counts,
+            "issues": report["issue_count"],
+            "output_path": str(out_path),
+            "xml_bytes": xml_bytes,
+            "validation_report": report,
+            "qa": qa_report,
+        }
+    except Exception as exc:
+        return {"ok": False, "error": str(exc), "counts": {}, "issues": 0, "output_path": "", "qa": {}}
+
+
 # ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
 input_mode = st.radio(
     "Input mode",
@@ -2063,6 +2110,62 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/json",
                 key="dl_libsbml_checker",
             )
+
+    st.subheader("Post-pipeline PWML export")
+    if st.button("Run PWML generation", key="run_pwml_gen_btn"):
+        if not isinstance(final_payload, dict) or not final_payload:
+            st.error("No final payload in session state. Run the pipeline first.")
+        else:
+            with st.spinner("Generating PWML..."):
+                _project_root = Path(__file__).resolve().parent.parent
+                pwml_result = run_post_pipeline_pwml_artifacts(
+                    final_payload,
+                    pathway_name=st.session_state.get("pwml_gen_name", "Generated Pathway"),
+                    pathway_description=st.session_state.get("pwml_gen_description", ""),
+                    pathway_subject=st.session_state.get("pwml_gen_subject", "Metabolic"),
+                    project_root=_project_root,
+                )
+            st.session_state["post_pipeline_pwml_result"] = pwml_result
+            if pwml_result.get("ok"):
+                st.success(f"PWML generated successfully. Written to: {pwml_result.get('output_path')}")
+            else:
+                st.error(f"PWML generation failed: {pwml_result.get('error', 'unknown error')}")
+
+    _pwml_gen_cols = st.columns(3)
+    st.session_state["pwml_gen_name"] = _pwml_gen_cols[0].text_input(
+        "Pathway name (PWML)", value="Generated Pathway", key="pwml_gen_name_input"
+    )
+    st.session_state["pwml_gen_subject"] = _pwml_gen_cols[1].text_input(
+        "Subject (PWML)", value="Metabolic", key="pwml_gen_subject_input"
+    )
+    st.session_state["pwml_gen_description"] = _pwml_gen_cols[2].text_input(
+        "Description (PWML)", value="", key="pwml_gen_description_input"
+    )
+
+    _pwml_result = st.session_state.get("post_pipeline_pwml_result")
+    if isinstance(_pwml_result, dict):
+        if _pwml_result.get("ok"):
+            with st.expander("PWML build report", expanded=True):
+                st.write("Build counts", _pwml_result.get("counts", {}))
+                st.write("Structural validation issues", _pwml_result.get("issues", 0))
+                _qa = _pwml_result.get("qa", {})
+                if _qa:
+                    st.write("QA ok", _qa.get("ok"))
+                    st.write("QA stats", _qa.get("stats", {}))
+                    if _qa.get("errors"):
+                        st.error("QA errors:\n" + "\n".join(_qa["errors"]))
+                    if _qa.get("warnings"):
+                        st.warning("QA warnings:\n" + "\n".join(_qa["warnings"]))
+            if _pwml_result.get("xml_bytes"):
+                st.download_button(
+                    "Download pathway.pwml",
+                    data=_pwml_result["xml_bytes"],
+                    file_name="pathway.pwml",
+                    mime="application/xml",
+                    key="dl_post_pipeline_pwml",
+                )
+        else:
+            st.error(f"PWML generation error: {_pwml_result.get('error', 'unknown')}")
 
     render_pathwhiz_converter_section(llm_client_module)
 
