@@ -1681,6 +1681,11 @@ if st.session_state.get("pipeline_ready"):
         help="Runs deterministic + LLM semantic review on generated SBML.",
         key="post_use_sbml_overwatch",
     )
+    use_stoich_agent = post_col_a.checkbox(
+        "Stoichiometry agent (fill missing ATP/ADP/NAD etc.)",
+        value=False,
+        key="post_use_stoich_agent",
+    )
     default_compartment = post_col_b.text_input(
         "Default compartment",
         value="cell",
@@ -1820,6 +1825,7 @@ if st.session_state.get("pipeline_ready"):
                     gap_resolver_max_items=int(gap_resolver_max_items),
                     qa_report=st.session_state.get("qa_report"),
                     reaction_summary=st.session_state.get("reaction_summary"),
+                    use_stoich_agent=bool(use_stoich_agent),
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
             # Upgrade the draft graph / reaction summary to the post-audit versions
@@ -1850,6 +1856,9 @@ if st.session_state.get("pipeline_ready"):
         sbml_validation = post_artifacts.get("sbml_report_json", {}).get("validation", {})
         sbml_overwatch_summary = post_artifacts.get("sbml_overwatch_report", {}).get("summary", {})
         sbml_layout_summary = _safe_dict(post_artifacts.get("sbml_render_layout_summary"))
+        stoich_audit_log = post_artifacts.get("stoich_audit_log") or []
+        stoich_additions_made = sum(1 for e in stoich_audit_log if e.get("llm_verdict") == "add")
+        stoich_audits_reversed = sum(1 for e in stoich_audit_log if e.get("audit_verdict") == "reversed")
 
         st.write(
             {
@@ -1881,6 +1890,8 @@ if st.session_state.get("pipeline_ready"):
                 "example_index_error": post_artifacts.get("example_index_error"),
                 "example_index_entry_count": post_artifacts.get("example_index_entry_count"),
                 "audit_loop": post_artifacts.get("audit_loop_summary"),
+                "stoich_additions_made": stoich_additions_made,
+                "stoich_audits_reversed": stoich_audits_reversed,
             }
         )
         if gate_failed:
@@ -1896,6 +1907,9 @@ if st.session_state.get("pipeline_ready"):
         if post_artifacts.get("gap_resolution_iterations"):
             with st.expander("Stage 3 resolution iterations", expanded=False):
                 st.write(post_artifacts.get("gap_resolution_iterations"))
+        if post_artifacts.get("stoich_audit_log"):
+            with st.expander("Stoichiometry audit log"):
+                st.dataframe(post_artifacts["stoich_audit_log"])
         if sbml_layout_summary:
             st.write("SBML render geometry", sbml_layout_summary)
             if sbml_layout_summary.get("has_drawable_geometry"):
