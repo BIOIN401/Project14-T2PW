@@ -64,6 +64,46 @@ else:
 
 
 # -----------------------------------------------------------------------------
+# Token usage tracking
+# -----------------------------------------------------------------------------
+_token_stats: Dict[str, int] = {"prompt_tokens": 0, "completion_tokens": 0, "calls": 0}
+
+# Per-million-token prices (configurable via .env)
+_COST_INPUT_PER_M = float(os.getenv("LLM_COST_INPUT_PER_M", "0.12"))
+_COST_OUTPUT_PER_M = float(os.getenv("LLM_COST_OUTPUT_PER_M", "0.30"))
+
+
+def _record_usage(resp: Any) -> None:
+    usage = getattr(resp, "usage", None)
+    if usage is None:
+        return
+    _token_stats["prompt_tokens"] += getattr(usage, "prompt_tokens", 0) or 0
+    _token_stats["completion_tokens"] += getattr(usage, "completion_tokens", 0) or 0
+    _token_stats["calls"] += 1
+
+
+def get_token_stats() -> Dict[str, Any]:
+    """Return a snapshot of cumulative token usage and estimated cost."""
+    p = _token_stats["prompt_tokens"]
+    c = _token_stats["completion_tokens"]
+    cost = (p / 1_000_000) * _COST_INPUT_PER_M + (c / 1_000_000) * _COST_OUTPUT_PER_M
+    return {
+        "prompt_tokens": p,
+        "completion_tokens": c,
+        "total_tokens": p + c,
+        "api_calls": _token_stats["calls"],
+        "estimated_cost_usd": round(cost, 6),
+    }
+
+
+def reset_token_stats() -> None:
+    """Reset cumulative token counters (e.g. at the start of a new run)."""
+    _token_stats["prompt_tokens"] = 0
+    _token_stats["completion_tokens"] = 0
+    _token_stats["calls"] = 0
+
+
+# -----------------------------------------------------------------------------
 # Chat function (NOW supports response_json=True)
 # -----------------------------------------------------------------------------
 def chat(
@@ -109,6 +149,7 @@ def chat(
     for attempt in range(max_retries):
         try:
             resp = _client.chat.completions.create(**kwargs)
+            _record_usage(resp)
             time.sleep(spacing)
             return (resp.choices[0].message.content or "").strip()
 
@@ -186,6 +227,7 @@ def chat_with_tools(
         for attempt in range(max_retries):
             try:
                 resp = _client.chat.completions.create(**kwargs)
+                _record_usage(resp)
                 time.sleep(spacing)
                 return resp
             except AuthenticationError as e:
