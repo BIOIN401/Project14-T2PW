@@ -450,8 +450,8 @@ def render_pwml(pwml_path: str, out_png: str, show: bool = False) -> None:
         cx, cy = n.x, n.y
 
         if n.element_type in ("Compound", "ElementCollection", "NucleicAcid"):
-            vis_w = _clamp(n.w, 26, 60)
-            vis_h = _clamp(n.h, 26, 60)
+            vis_w = _clamp(n.w, 26, 78)
+            vis_h = _clamp(n.h, 26, 78)
             ax.add_patch(Ellipse((cx, cy), width=vis_w, height=vis_h, fill=False, linewidth=1.6, zorder=n.z + 5))
             ax.text(cx, cy, _wrap_label(n.label, 12, 3), ha="center", va="center", fontsize=3, zorder=n.z + 6)
         else:

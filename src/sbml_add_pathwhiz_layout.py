@@ -1,280 +1,482 @@
 #!/usr/bin/env python3
-"""sbml_add_pathwhiz_layout.py
+"""sbml_add_pathwhiz_layout.py  (v3 — name-deduped connected pathway layout)
 
-Take a *core* SBML Level-3 file and add PathWhiz-compatible layout annotations.
+Root cause of the disconnected diagram:
+  The same metabolite (e.g. "citrate") appears in the SBML as multiple species
+  with different IDs because each compartment instance gets its own ID:
+      Compound20005_c_cell
+      Compound20005_c_mitochondrial_matrix
+  The previous layout placed each sid independently, so "citrate" was drawn
+  multiple times with no visual link between the reactions that share it.
 
-Structure matches real PathWhiz SBML exports:
+Fix:
+  Group all species by their *normalised name*.  Each unique name gets exactly
+  ONE canvas position.  Every reaction that references any sid whose name maps
+  to that canonical name points its edge at that shared position.
+  This is how KEGG and PathWhiz diagrams look — shared metabolites visually
+  connect consecutive reactions.
 
-  Model annotation:
-    <pathwhiz:dimensions pathwhiz:width="..." pathwhiz:height="..."/>
-
-  Compartment annotation:
-    <pathwhiz:compartment pathwhiz:compartment_type="biological_state"/>
-
-  Reaction annotation:
-    <pathwhiz:reaction pathwhiz:reaction_id="..." pathwhiz:reaction_type="reaction|transport"/>
-
-  speciesReference annotation (reactants & products):
-    <pathwhiz:location pathwhiz:location_type="compound|protein|element_collection">
-      <pathwhiz:location_element pathwhiz:element_type="compound_location|protein_location|..."
-                                  pathwhiz:element_id="..." pathwhiz:location_id="..."
-                                  pathwhiz:x="..." pathwhiz:y="..."
-                                  pathwhiz:visualization_template_id="..."
-                                  pathwhiz:width="..." pathwhiz:height="..."
-                                  pathwhiz:zindex="10" pathwhiz:hidden="false"/>
-      <pathwhiz:location_element pathwhiz:element_type="edge"
-                                  pathwhiz:path="M x y L x y"
-                                  pathwhiz:visualization_template_id="5"
-                                  pathwhiz:zindex="18" pathwhiz:hidden="false"/>
-    </pathwhiz:location>
-
-  modifierSpeciesReference annotation:
-    <pathwhiz:location pathwhiz:location_type="protein">
-      <pathwhiz:location_element pathwhiz:element_type="protein_location" .../>
-      <pathwhiz:location_element pathwhiz:element_type="edge" .../>
-    </pathwhiz:location>
-
-Also keeps backward-compat model-level <pathwhiz:location_element> blocks for the
-local renderer (sbml_render_pathwhiz_like.py).
-
-Usage:
-  python sbml_add_pathwhiz_layout.py --in core.sbml --out core_with_layout.sbml
+Layout algorithm:
+  1. Build name -> sids mapping.
+  2. Topological BFS on reactions via shared names to assign left-right ranks.
+  3. Stack same-rank reactions into vertical lanes.
+  4. Place one node per canonical name (first use wins).
+  5. Emit PathWhiz-style annotations on every speciesReference.
 """
 
 from __future__ import annotations
 
-import argparse
 import math
-import shutil
-import subprocess
+import re
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from collections import defaultdict, deque
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Set, Tuple
 
+# Namespaces
 SBML_NS = "http://www.sbml.org/sbml/level3/version1/core"
-PW_NS = "http://www.spmdb.ca/pathwhiz"
+PW_NS   = "http://www.spmdb.ca/pathwhiz"
 
-ET.register_namespace("", SBML_NS)
+ET.register_namespace("",         SBML_NS)
 ET.register_namespace("pathwhiz", PW_NS)
-ET.register_namespace("bqbiol", "http://biomodels.net/biology-qualifiers/")
-ET.register_namespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+ET.register_namespace("bqbiol",   "http://biomodels.net/biology-qualifiers/")
+ET.register_namespace("rdf",      "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
 NS = {"sbml": SBML_NS, "pathwhiz": PW_NS}
 
-# ---------------------------------------------------------------------------
-# Layout constants (pixels)
-# ---------------------------------------------------------------------------
-CANVAS_MARGIN = 80.0
-NODE_OFFSET_X = 160.0      # horizontal distance from reaction center to species node center
-NODE_SPACING_Y = 85.0      # vertical spacing between stacked reactants/products
-MODIFIER_OFFSET_Y = 110.0  # distance above reaction center for enzyme nodes
-REACTION_GAP_X = 420.0     # horizontal gap between consecutive reaction centers
-CENTER_Y_BASE = 300.0      # baseline vertical center for all reactions
+# Layout constants
+MARGIN          = 120.0
+RXN_STEP_X      = 400.0
+LANE_H          = 300.0
+BASE_CY         = 280.0
 
-# Node sizes (pixels) — match PathWhiz defaults
-COMPOUND_W, COMPOUND_H = 78.0, 78.0
-PROTEIN_W, PROTEIN_H = 150.0, 70.0
-EC_W, EC_H = 150.0, 70.0  # element_collection
+COMPOUND_W      = 78.0
+COMPOUND_H      = 78.0
+PROTEIN_W       = 160.0
+PROTEIN_H       = 60.0
 
-# PathWhiz visualization_template_id values
-TMPL_COMPOUND_REACTANT = "49"
-TMPL_COMPOUND_PRODUCT = "55"
-TMPL_ELEMENT_COLLECTION = "37"
-TMPL_PROTEIN = "99"
-TMPL_EDGE = "5"
+REACTANT_OFFSET = 180.0
+PRODUCT_OFFSET  = 180.0
+NODE_SPACING_Y  = 95.0
+MODIFIER_ABOVE  = 120.0
 
-# sboTerm Z-index
-Z_NODE = 10
-Z_EDGE = 18
-Z_BOX = 5
+COMPARTMENT_PAD = 50.0
 
+# Circular layout constants (used when all reactions form a single cycle)
+CIRC_OUT_DIST  = 200.0   # radial distance beyond ring for non-backbone metabolites
+CIRC_MOD_EXTRA = 130.0   # additional radial distance for modifier/enzyme nodes
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+TMPL_COMPOUND   = "3"
+TMPL_PROTEIN    = "6"
+TMPL_EDGE       = "5"
+TMPL_EDGE_MOD   = "83"
+Z_NODE          = 10
+Z_ENZYME        = 8
+Z_EDGE          = 18
+Z_COMP          = 5
+
 
 def _q(tag: str, ns: str = SBML_NS) -> str:
     return f"{{{ns}}}{tag}"
 
 
-def _guess_species_type(sid: str) -> str:
-    if sid.startswith("p_"):
-        return "protein"
-    if sid.startswith("m_"):
-        return "compound"
-    return "compound"
+def _norm(name: str) -> str:
+    s = re.sub(r"\s+", " ", (name or "").strip().lower())
+    return re.sub(r"[^a-z0-9 ]", "", s)
 
 
-def _node_size(stype: str) -> Tuple[float, float]:
-    if stype == "protein":
-        return PROTEIN_W, PROTEIN_H
-    if stype == "element_collection":
-        return EC_W, EC_H
-    return COMPOUND_W, COMPOUND_H
+def _is_protein(sid: str, name: str) -> bool:
+    if sid.lower().startswith("p_"):
+        return True
+    kw = [
+        "enzyme", "protein", "kinase", "peroxidase", "transporter", "atpase",
+        "phosphatase", "deiodinase", "symporter", "receptor", "ligase",
+        "reductase", "synthase", "dehydrogenase", "complex", "transferase",
+        "isomerase", "mutase", "carboxylase", "oxidase", "hydrolase",
+    ]
+    nl = name.lower()
+    return any(k in nl for k in kw)
 
 
-def _location_type(stype: str) -> str:
-    """PathWhiz pathwhiz:location_type value for a given species type."""
-    if stype == "protein":
-        return "protein"
-    if stype == "element_collection":
-        return "element_collection"
-    return "compound"
+_lid = [0]
 
 
-def _element_type(stype: str) -> str:
-    """PathWhiz pathwhiz:element_type value for the node location_element."""
-    if stype == "protein":
-        return "protein_location"
-    if stype == "element_collection":
-        return "element_collection_location"
-    return "compound_location"
+def _next_lid() -> str:
+    _lid[0] += 1
+    return str(_lid[0])
 
 
-def _template_id(stype: str, role: str) -> str:
-    """PathWhiz visualization_template_id for a species in a given role."""
-    if stype == "protein":
-        return TMPL_PROTEIN
-    if stype == "element_collection":
-        return TMPL_ELEMENT_COLLECTION
-    if role == "reactant":
-        return TMPL_COMPOUND_REACTANT
-    return TMPL_COMPOUND_PRODUCT
+@dataclass
+class CanonNode:
+    canon_name: str
+    display_name: str
+    is_protein: bool
+    sids: List[str] = field(default_factory=list)
+    x: float = 0.0
+    y: float = 0.0
+    placed: bool = False
+
+    @property
+    def cx(self) -> float:
+        return self.x + self.w / 2
+
+    @property
+    def cy(self) -> float:
+        return self.y + self.h / 2
+
+    @property
+    def w(self) -> float:
+        return PROTEIN_W if self.is_protein else COMPOUND_W
+
+    @property
+    def h(self) -> float:
+        return PROTEIN_H if self.is_protein else COMPOUND_H
 
 
-def _next_loc_id(counter: List[int]) -> str:
-    counter[0] += 1
-    return str(counter[0])
+@dataclass
+class RxnNode:
+    rid: str
+    name: str
+    reactant_canons: List[str] = field(default_factory=list)
+    product_canons: List[str] = field(default_factory=list)
+    modifier_canons: List[str] = field(default_factory=list)
+    reactant_sids: List[str] = field(default_factory=list)
+    product_sids: List[str] = field(default_factory=list)
+    modifier_sids: List[str] = field(default_factory=list)
+    cx: float = 0.0
+    cy: float = 0.0
+    rank: int = 0
+    lane: int = 0
+    in_cycle: bool = False
 
 
-def _build_speciesref_annotation(
-    sid: str,
-    x: float,
-    y: float,
-    w: float,
-    h: float,
-    edge_path: str,
-    stype: str,
-    role: str,
-    loc_id: str,
-    edge_loc_id: str,
-) -> ET.Element:
-    """Build annotation exactly matching PathWhiz's speciesReference format."""
+def _topological_layout(rxns: List[RxnNode]) -> None:
+    produces: Dict[str, List[int]] = defaultdict(list)
+    consumes: Dict[str, List[int]] = defaultdict(list)
+    for i, r in enumerate(rxns):
+        for cn in r.product_canons:
+            produces[cn].append(i)
+        for cn in r.reactant_canons:
+            consumes[cn].append(i)
+
+    successors: Dict[int, Set[int]] = defaultdict(set)
+    in_degree = [0] * len(rxns)
+    for cn in produces:
+        for pi in produces[cn]:
+            for ci in consumes.get(cn, []):
+                if pi != ci and ci not in successors[pi]:
+                    successors[pi].add(ci)
+                    in_degree[ci] += 1
+
+    queue: deque = deque(i for i in range(len(rxns)) if in_degree[i] == 0)
+    rank = 0
+    visited: Set[int] = set()
+    while queue:
+        next_q: deque = deque()
+        for i in list(queue):
+            if i in visited:
+                continue
+            visited.add(i)
+            rxns[i].rank = rank
+            for j in successors[i]:
+                in_degree[j] -= 1
+                if in_degree[j] == 0:
+                    next_q.append(j)
+        queue = next_q
+        rank += 1
+
+    for i, r in enumerate(rxns):
+        if i not in visited:
+            r.rank = rank
+            r.in_cycle = True
+
+    rank_count: Dict[int, int] = defaultdict(int)
+    for r in rxns:
+        r.lane = rank_count[r.rank]
+        rank_count[r.rank] += 1
+
+
+def _detect_cycle_order(rxns: List[RxnNode]) -> Optional[List[int]]:
+    """Return reaction indices in Hamiltonian-cycle order when all reactions
+    form a single directed cycle in the reaction-successor graph, else None.
+
+    The successor graph is built identically to _topological_layout: a directed
+    edge i→j is added whenever reaction i produces a metabolite that reaction j
+    consumes.  If every reaction has at least one predecessor in this graph
+    (i.e. the BFS queue starts empty) the pathway may be a cycle; a DFS with
+    Warnsdorff-style pruning then confirms whether a Hamiltonian cycle exists.
+    No reaction names or metabolite names are assumed.
+    """
+    n = len(rxns)
+    if n < 3:
+        return None
+
+    # Build the same successor graph used by _topological_layout
+    produces: Dict[str, List[int]] = defaultdict(list)
+    consumes: Dict[str, List[int]] = defaultdict(list)
+    for i, r in enumerate(rxns):
+        for cn in r.product_canons:
+            produces[cn].append(i)
+        for cn in r.reactant_canons:
+            consumes[cn].append(i)
+
+    successors: Dict[int, Set[int]] = defaultdict(set)
+    in_degree = [0] * n
+    for cn in produces:
+        for pi in produces[cn]:
+            for ci in consumes.get(cn, []):
+                if pi != ci and ci not in successors[pi]:
+                    successors[pi].add(ci)
+                    in_degree[ci] += 1
+
+    # If any reaction has no predecessor the graph has a source → not a cycle
+    if any(d == 0 for d in in_degree):
+        return None
+
+    # DFS with Warnsdorff heuristic: prefer candidates with fewer onward options
+    path: List[int] = [0]
+    visited: Set[int] = {0}
+
+    def _dfs() -> bool:
+        if len(path) == n:
+            return 0 in successors[path[-1]]
+        remaining = visited ^ set(range(n))   # unvisited set
+        candidates = sorted(
+            successors[path[-1]] - visited,
+            key=lambda j: len(successors[j] & remaining),
+        )
+        for nxt in candidates:
+            visited.add(nxt)
+            path.append(nxt)
+            if _dfs():
+                return True
+            path.pop()
+            visited.remove(nxt)
+        return False
+
+    return path if _dfs() else None
+
+
+def _apply_circular_layout(rxns: List[RxnNode],
+                            nodes: Dict[str, CanonNode],
+                            order: List[int],
+                            cx_min: float = 0.0) -> None:
+    """Place reactions evenly on an ellipse and metabolites around them.
+
+    For each consecutive reaction pair (order[i], order[i+1]) the metabolites
+    that are products of the first *and* reactants of the second are placed at
+    the midpoint angle between those two reactions — they visually sit on the
+    ring connecting the two nodes.  All other metabolites (cofactors, released
+    products, etc.) are placed radially outside the ring near the reaction that
+    first references them.
+    """
+    n = len(order)
+
+    # Orbital radius: arc-length between adjacent reactions ≈ RXN_STEP_X
+    R = max(250.0, RXN_STEP_X * n / (2.0 * math.pi))
+    Rx = R * 1.15   # slight horizontal stretch for readability
+    Ry = R
+    # cx_min is the right edge of any linear prefix; push the circle past it
+    CX = max(MARGIN, cx_min) + Rx + CIRC_OUT_DIST + COMPOUND_W + 20.0
+    CY = MARGIN + Ry + CIRC_OUT_DIST + COMPOUND_W + 20.0
+
+    # Place reactions evenly on the ellipse, starting at the top (−π/2)
+    for idx, i in enumerate(order):
+        angle = 2.0 * math.pi * idx / n - math.pi / 2.0
+        rxns[i].cx = CX + Rx * math.cos(angle)
+        rxns[i].cy = CY + Ry * math.sin(angle)
+        rxns[i].rank = idx
+        rxns[i].lane = 0
+
+    # Identify "between" metabolites for each consecutive reaction pair via
+    # simple set intersection: products of rxn[i] ∩ reactants of rxn[i+1]
+    between_cns: Set[str] = set()
+    for idx in range(n):
+        ri      = order[idx]
+        ri_next = order[(idx + 1) % n]
+        shared = set(rxns[ri].product_canons) & set(rxns[ri_next].reactant_canons)
+        mid = 2.0 * math.pi * (idx + 0.5) / n - math.pi / 2.0
+        for cn in shared:
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                between_cns.add(cn)
+                continue
+            nd.x = CX + Rx * math.cos(mid) - nd.w / 2.0
+            nd.y = CY + Ry * math.sin(mid) - nd.h / 2.0
+            nd.placed = True
+            between_cns.add(cn)
+
+    # Place remaining metabolites and modifiers radially outside the ring
+    for idx, i in enumerate(order):
+        r     = rxns[i]
+        angle = 2.0 * math.pi * idx / n - math.pi / 2.0
+        rad_x = math.cos(angle)
+        rad_y = math.sin(angle)
+        tan_x = -math.sin(angle)   # tangent: clockwise direction
+        tan_y =  math.cos(angle)
+
+        non_r = [cn for cn in r.reactant_canons if cn not in between_cns]
+        for j, cn in enumerate(non_r):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            stk = -(j + 0.5) * NODE_SPACING_Y
+            nd.x = r.cx + rad_x * CIRC_OUT_DIST + tan_x * stk - nd.w / 2.0
+            nd.y = r.cy + rad_y * CIRC_OUT_DIST + tan_y * stk - nd.h / 2.0
+            nd.placed = True
+
+        non_p = [cn for cn in r.product_canons if cn not in between_cns]
+        for j, cn in enumerate(non_p):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            stk = (j + 0.5) * NODE_SPACING_Y
+            nd.x = r.cx + rad_x * CIRC_OUT_DIST + tan_x * stk - nd.w / 2.0
+            nd.y = r.cy + rad_y * CIRC_OUT_DIST + tan_y * stk - nd.h / 2.0
+            nd.placed = True
+
+        nm = len(r.modifier_canons)
+        for j, cn in enumerate(r.modifier_canons):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            stk = (j - (nm - 1) / 2.0) * (PROTEIN_W + 20.0)
+            dist = CIRC_OUT_DIST + CIRC_MOD_EXTRA
+            nd.x = r.cx + rad_x * dist + tan_x * stk - nd.w / 2.0
+            nd.y = r.cy + rad_y * dist + tan_y * stk - nd.h / 2.0
+            nd.placed = True
+
+    # Fallback: any still-unplaced nodes go below the circle
+    fx = CX - Rx
+    fy = CY + Ry + MARGIN
+    for nd in nodes.values():
+        if not nd.placed:
+            nd.x, nd.y = fx, fy
+            nd.placed = True
+            fx += nd.w + 20.0
+
+
+def _place_reactions(rxns: List[RxnNode]) -> None:
+    for r in rxns:
+        r.cx = MARGIN + REACTANT_OFFSET + r.rank * RXN_STEP_X
+        r.cy = BASE_CY + r.lane * LANE_H
+
+
+def _stack_y(center_y: float, idx: int, total: int) -> float:
+    return center_y + (idx - (total - 1) / 2.0) * NODE_SPACING_Y
+
+
+def _place_nodes(rxns: List[RxnNode], nodes: Dict[str, CanonNode]) -> None:
+    for r in rxns:
+        nr = len(r.reactant_canons)
+        for j, cn in enumerate(r.reactant_canons):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            nd.x = r.cx - REACTANT_OFFSET - nd.w / 2
+            nd.y = _stack_y(r.cy, j, nr) - nd.h / 2
+            nd.placed = True
+
+        np_ = len(r.product_canons)
+        for j, cn in enumerate(r.product_canons):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            nd.x = r.cx + PRODUCT_OFFSET - nd.w / 2
+            nd.y = _stack_y(r.cy, j, np_) - nd.h / 2
+            nd.placed = True
+
+        nm = len(r.modifier_canons)
+        for j, cn in enumerate(r.modifier_canons):
+            nd = nodes.get(cn)
+            if nd is None or nd.placed:
+                continue
+            x_off = (j - (nm - 1) / 2.0) * (PROTEIN_W + 20.0)
+            nd.x = r.cx + x_off - nd.w / 2
+            nd.y = r.cy - MODIFIER_ABOVE - nd.h / 2
+            nd.placed = True
+
+    fx, fy = MARGIN, BASE_CY + len(rxns) * LANE_H + 100.0
+    for nd in nodes.values():
+        if not nd.placed:
+            nd.x, nd.y = fx, fy
+            nd.placed = True
+            fx += nd.w + 20.0
+
+
+def _path_reactant(nd: CanonNode, rx: float, ry: float) -> str:
+    x1 = nd.x + nd.w
+    y1 = nd.cy
+    mx = (x1 + rx) / 2
+    return f"M{x1:.1f} {y1:.1f} C{mx:.1f} {y1:.1f} {mx:.1f} {ry:.1f} {rx:.1f} {ry:.1f} "
+
+
+def _path_product(rx: float, ry: float, nd: CanonNode) -> str:
+    x2 = nd.x
+    y2 = nd.cy
+    mx = (rx + x2) / 2
+    return f"M{rx:.1f} {ry:.1f} C{mx:.1f} {ry:.1f} {mx:.1f} {y2:.1f} {x2:.1f} {y2:.1f} "
+
+
+def _path_modifier(nd: CanonNode, rx: float, ry: float) -> str:
+    mx = nd.cx
+    my = nd.y + nd.h
+    return f"M{mx:.1f} {my:.1f} C{mx:.1f} {ry:.1f} {rx:.1f} {ry:.1f} {rx:.1f} {ry:.1f} "
+
+
+def _path_circ(x1: float, y1: float, x2: float, y2: float) -> str:
+    """Straight cubic Bezier between two canvas points (used in circular layout)."""
+    mx, my = (x1 + x2) / 2.0, (y1 + y2) / 2.0
+    return (f"M{x1:.1f} {y1:.1f} "
+            f"C{mx:.1f} {my:.1f} {mx:.1f} {my:.1f} "
+            f"{x2:.1f} {y2:.1f}")
+
+
+def _make_specref_ann(nd: CanonNode, sid: str, edge_path: str,
+                      role: str) -> ET.Element:
+    loc_type  = "protein" if nd.is_protein else "compound"
+    el_type   = "protein_location" if nd.is_protein else "compound_location"
+    tmpl      = TMPL_PROTEIN if nd.is_protein else TMPL_COMPOUND
+    z         = Z_ENZYME if role == "modifier" else Z_NODE
+    edge_tmpl = TMPL_EDGE_MOD if role == "modifier" else TMPL_EDGE
+
     ann = ET.Element(_q("annotation"))
-    loc_wrapper = ET.SubElement(ann, _q("location", PW_NS))
-    loc_wrapper.set(f"{{{PW_NS}}}location_type", _location_type(stype))
+    wrapper = ET.SubElement(ann, _q("location", PW_NS))
+    wrapper.set(f"{{{PW_NS}}}location_type", loc_type)
 
-    # Node location_element
-    node_le = ET.SubElement(loc_wrapper, _q("location_element", PW_NS))
-    node_le.set(f"{{{PW_NS}}}element_type", _element_type(stype))
-    node_le.set(f"{{{PW_NS}}}element_id", sid)
-    node_le.set(f"{{{PW_NS}}}location_id", loc_id)
-    node_le.set(f"{{{PW_NS}}}x", f"{x:.1f}")
-    node_le.set(f"{{{PW_NS}}}y", f"{y:.1f}")
-    node_le.set(f"{{{PW_NS}}}visualization_template_id", _template_id(stype, role))
-    node_le.set(f"{{{PW_NS}}}width", f"{w:.1f}")
-    node_le.set(f"{{{PW_NS}}}height", f"{h:.1f}")
-    node_le.set(f"{{{PW_NS}}}zindex", str(Z_NODE))
-    node_le.set(f"{{{PW_NS}}}hidden", "false")
+    nle = ET.SubElement(wrapper, _q("location_element", PW_NS))
+    nle.set(f"{{{PW_NS}}}element_type",  el_type)
+    nle.set(f"{{{PW_NS}}}element_id",    sid)
+    nle.set(f"{{{PW_NS}}}location_id",   _next_lid())
+    nle.set(f"{{{PW_NS}}}x",     f"{nd.x:.1f}")
+    nle.set(f"{{{PW_NS}}}y",     f"{nd.y:.1f}")
+    nle.set(f"{{{PW_NS}}}visualization_template_id", tmpl)
+    nle.set(f"{{{PW_NS}}}width",  f"{nd.w:.1f}")
+    nle.set(f"{{{PW_NS}}}height", f"{nd.h:.1f}")
+    nle.set(f"{{{PW_NS}}}zindex", str(z))
+    nle.set(f"{{{PW_NS}}}hidden", "false")
 
-    # Edge location_element
-    edge_le = ET.SubElement(loc_wrapper, _q("location_element", PW_NS))
-    edge_le.set(f"{{{PW_NS}}}element_type", "edge")
-    edge_le.set(f"{{{PW_NS}}}path", edge_path)
-    edge_le.set(f"{{{PW_NS}}}visualization_template_id", TMPL_EDGE)
-    edge_le.set(f"{{{PW_NS}}}zindex", str(Z_EDGE))
-    edge_le.set(f"{{{PW_NS}}}hidden", "false")
+    ele = ET.SubElement(wrapper, _q("location_element", PW_NS))
+    ele.set(f"{{{PW_NS}}}element_type", "edge")
+    ele.set(f"{{{PW_NS}}}path", edge_path)
+    ele.set(f"{{{PW_NS}}}visualization_template_id", edge_tmpl)
+    ele.set(f"{{{PW_NS}}}zindex", str(Z_EDGE))
+    ele.set(f"{{{PW_NS}}}hidden", "false")
 
     return ann
 
 
-# ---------------------------------------------------------------------------
-# Graphviz / fallback layout (for model-level renderer compat)
-# ---------------------------------------------------------------------------
+def _add_edge_le(parent: ET.Element, eid: str, path: str, tmpl: str) -> None:
+    le = ET.SubElement(parent, _q("location_element", PW_NS))
+    le.set(f"{{{PW_NS}}}element_type", "edge")
+    le.set(f"{{{PW_NS}}}element_id",   eid)
+    le.set(f"{{{PW_NS}}}x", "0"); le.set(f"{{{PW_NS}}}y", "0")
+    le.set(f"{{{PW_NS}}}width", "0"); le.set(f"{{{PW_NS}}}height", "0")
+    le.set(f"{{{PW_NS}}}zindex", "30")
+    le.set(f"{{{PW_NS}}}hidden", "false")
+    le.set(f"{{{PW_NS}}}path", path)
+    le.set(f"{{{PW_NS}}}visualization_template_id", tmpl)
 
-@dataclass
-class _Species:
-    sid: str
-    name: str
-    compartment: str
-    stype: str
-
-
-def _run_dot(dot_src: str) -> str:
-    proc = subprocess.run(
-        ["dot", "-Tplain"],
-        input=dot_src.encode("utf-8"),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=True,
-    )
-    return proc.stdout.decode("utf-8", errors="replace")
-
-
-def _parse_dot_plain(plain: str) -> Tuple[Dict[str, Tuple[float, float]], List[Tuple[str, str, List[Tuple[float, float]]]]]:
-    pos: Dict[str, Tuple[float, float]] = {}
-    edges: List[Tuple[str, str, List[Tuple[float, float]]]] = []
-    for line in plain.splitlines():
-        parts = line.strip().split()
-        if not parts:
-            continue
-        if parts[0] == "node" and len(parts) >= 4:
-            pos[parts[1]] = (float(parts[2]), float(parts[3]))
-        elif parts[0] == "edge" and len(parts) >= 4:
-            tail, head, n = parts[1], parts[2], int(parts[3])
-            coords = [(float(parts[4 + 2 * i]), float(parts[5 + 2 * i])) for i in range(n)]
-            edges.append((tail, head, coords))
-    return pos, edges
-
-
-def _build_fallback_layout(
-    species_nodes: Dict[str, _Species],
-    comp_names: Dict[str, str],
-    edge_pairs: List[Tuple[str, str]],
-) -> Tuple[Dict[str, Tuple[float, float]], List[Tuple[str, str, List[Tuple[float, float]]]]]:
-    pos: Dict[str, Tuple[float, float]] = {}
-    edges: List[Tuple[str, str, List[Tuple[float, float]]]] = []
-    box_pad_x, box_pad_y = 0.9, 0.9
-    col_gap, row_gap, comp_gap = 1.8, 1.3, 1.8
-
-    species_by_comp: Dict[str, List[_Species]] = {}
-    for sid in sorted(species_nodes):
-        s = species_nodes[sid]
-        species_by_comp.setdefault(s.compartment, []).append(s)
-        comp_names.setdefault(s.compartment, s.compartment)
-
-    current_y = 0.0
-    for cid in sorted(species_by_comp):
-        members = sorted(species_by_comp[cid], key=lambda s: (s.stype != "protein", s.name.lower(), s.sid))
-        if not members:
-            continue
-        cols = max(1, min(4, math.ceil(math.sqrt(len(members)))))
-        rows = max(1, math.ceil(len(members) / cols))
-        for idx, s in enumerate(members):
-            pos[s.sid] = (box_pad_x + (idx % cols) * col_gap, current_y + box_pad_y + (idx // cols) * row_gap)
-        current_y += ((rows - 1) * row_gap) + (2 * box_pad_y) + comp_gap
-
-    for tail, head in edge_pairs:
-        tp, hp = pos.get(tail), pos.get(head)
-        if tp is None or hp is None:
-            continue
-        x1, y1 = tp; x2, y2 = hp
-        if abs(y1 - y2) < 0.01:
-            coords = [(x1, y1), (x2, y2)]
-        else:
-            mx = round((x1 + x2) / 2.0, 4)
-            coords = [(x1, y1), (mx, y1), (mx, y2), (x2, y2)]
-        edges.append((tail, head, coords))
-    return pos, edges
-
-
-def _scale_and_flip(x: float, y: float, *, scale: float, yflip_max: float, margin: float) -> Tuple[float, float]:
-    return (x * scale + margin, (yflip_max - y) * scale + margin)
-
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
 
 def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
     tree = ET.parse(in_path)
@@ -282,339 +484,294 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
 
     model = root.find("sbml:model", NS)
     if model is None:
-        raise ValueError("No <model> found")
+        raise ValueError("No <model> element found.")
 
-    # ------------------------------------------------------------------
-    # Collect species and compartment info
-    # ------------------------------------------------------------------
-    species_type: Dict[str, str] = {}
-    species_nodes: Dict[str, _Species] = {}
+    # Compartment names
     comp_names: Dict[str, str] = {}
-
-    for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
-        sid = sp.get("id") or ""
-        if not sid:
-            continue
-        stype = _guess_species_type(sid)
-        species_type[sid] = stype
-        species_nodes[sid] = _Species(
-            sid=sid,
-            name=sp.get("name") or sid,
-            compartment=sp.get("compartment") or "c_cell",
-            stype=stype,
-        )
-
     for c in root.findall(".//sbml:listOfCompartments/sbml:compartment", NS):
         cid = c.get("id") or ""
         if cid:
             comp_names[cid] = c.get("name") or cid
 
-    # ------------------------------------------------------------------
-    # Annotate compartments: <pathwhiz:compartment compartment_type="biological_state"/>
-    # ------------------------------------------------------------------
-    for c in root.findall(".//sbml:listOfCompartments/sbml:compartment", NS):
-        cid = c.get("id") or ""
-        if not cid:
+    # Species info: sid -> (display_name, is_protein, compartment_id)
+    sid_info: Dict[str, Tuple[str, bool, str]] = {}
+    for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
+        sid  = sp.get("id") or ""
+        name = (sp.get("name") or sid).strip()
+        comp = sp.get("compartment") or ""
+        if sid:
+            sid_info[sid] = (name, _is_protein(sid, name), comp)
+
+    # Build canonical nodes keyed by normalised name
+    canon_nodes: Dict[str, CanonNode] = {}
+    sid_to_canon: Dict[str, str] = {}
+
+    for sid, (name, is_prot, _comp) in sid_info.items():
+        cn = _norm(name)
+        if not cn:
             continue
-        c_ann = c.find("sbml:annotation", NS)
-        if c_ann is None:
-            c_ann = ET.SubElement(c, _q("annotation"))
-        existing_comp_id = None
-        for old in list(c_ann.findall(f"{{{PW_NS}}}compartment")):
-            existing_comp_id = old.get(f"{{{PW_NS}}}compartment_id")
-            c_ann.remove(old)
-        for old in list(c_ann.findall(f"{{{PW_NS}}}pathwhiz")):
-            c_ann.remove(old)
-        pw_comp = ET.SubElement(c_ann, _q("compartment", PW_NS))
-        pw_comp.set(f"{{{PW_NS}}}compartment_type", "biological_state")
-        if existing_comp_id is not None:
-            pw_comp.set(f"{{{PW_NS}}}compartment_id", existing_comp_id)
+        if cn not in canon_nodes:
+            canon_nodes[cn] = CanonNode(
+                canon_name=cn, display_name=name, is_protein=is_prot)
+        if len(name) > len(canon_nodes[cn].display_name):
+            canon_nodes[cn].display_name = name
+        canon_nodes[cn].sids.append(sid)
+        sid_to_canon[sid] = cn
 
-    # ------------------------------------------------------------------
     # Collect reactions
-    # ------------------------------------------------------------------
-    reactions = root.findall(".//sbml:listOfReactions/sbml:reaction", NS)
+    rxns: List[RxnNode] = []
+    for rxn_el in root.findall(".//sbml:listOfReactions/sbml:reaction", NS):
+        rid   = rxn_el.get("id") or ""
+        rname = rxn_el.get("name") or rid
 
-    # Edge pairs for fallback layout
-    edge_pairs: List[Tuple[str, str]] = []
-    for rxn in reactions:
-        reactants = [r.get("species") for r in rxn.findall("./sbml:listOfReactants/sbml:speciesReference", NS) if r.get("species")]
-        products = [p.get("species") for p in rxn.findall("./sbml:listOfProducts/sbml:speciesReference", NS) if p.get("species")]
-        for r in reactants:
-            for p in products:
-                if r != p:
-                    edge_pairs.append((r, p))  # type: ignore[arg-type]
+        def _sids(xpath: str) -> List[str]:
+            return [r.get("species") for r in rxn_el.findall(xpath, NS)
+                    if r.get("species")]
 
-    # ------------------------------------------------------------------
-    # Compute reaction-centered positions
-    # ------------------------------------------------------------------
-    first_cx = CANVAS_MARGIN + NODE_OFFSET_X + 20.0
-    rxn_layouts: List[Dict] = []
-    for ridx, rxn in enumerate(reactions):
-        reactant_sids = [r.get("species") or "" for r in rxn.findall("./sbml:listOfReactants/sbml:speciesReference", NS)]
-        product_sids = [p.get("species") or "" for p in rxn.findall("./sbml:listOfProducts/sbml:speciesReference", NS)]
-        modifier_sids = [m.get("species") or "" for m in rxn.findall("./sbml:listOfModifiers/sbml:modifierSpeciesReference", NS)]
-        n_mod = len(modifier_sids)
-        cx = first_cx + ridx * REACTION_GAP_X
-        cy = CENTER_Y_BASE + (MODIFIER_OFFSET_Y / 2 if n_mod > 0 else 0.0)
-        rxn_layouts.append({
-            "cx": cx, "cy": cy,
-            "reactant_sids": reactant_sids,
-            "product_sids": product_sids,
-            "modifier_sids": modifier_sids,
-        })
+        rsids = _sids("./sbml:listOfReactants/sbml:speciesReference")
+        psids = _sids("./sbml:listOfProducts/sbml:speciesReference")
+        msids = _sids("./sbml:listOfModifiers/sbml:modifierSpeciesReference")
 
-    # Canvas dimensions
-    if rxn_layouts:
-        last_cx = rxn_layouts[-1]["cx"]
-        canvas_w = last_cx + NODE_OFFSET_X + CANVAS_MARGIN + 20.0
+        def _uniq_canons(sids: List[str]) -> List[str]:
+            seen: Set[str] = set()
+            out: List[str] = []
+            for s in sids:
+                cn = sid_to_canon.get(s)
+                if cn and cn not in seen:
+                    seen.add(cn)
+                    out.append(cn)
+            return out
+
+        rxns.append(RxnNode(
+            rid=rid, name=rname,
+            reactant_canons=_uniq_canons(rsids),
+            product_canons=_uniq_canons(psids),
+            modifier_canons=_uniq_canons(msids),
+            reactant_sids=rsids,
+            product_sids=psids,
+            modifier_sids=msids,
+        ))
+
+    # ── Layout ──────────────────────────────────────────────────────────────
+    # BFS topological sort first.  Reactions the BFS cannot reach (because
+    # every predecessor is also unreachable — they form a cycle) are marked
+    # in_cycle=True by _topological_layout.  We then try to arrange those
+    # cycle reactions in a circle and the remaining linear reactions in a
+    # left-to-right strip that feeds into the circle.
+    _topological_layout(rxns)
+
+    _cycle_rxns  = [r for r in rxns if r.in_cycle]
+    _linear_rxns = [r for r in rxns if not r.in_cycle]
+
+    _cycle_order = (_detect_cycle_order(_cycle_rxns)
+                    if len(_cycle_rxns) >= 3 else None)
+
+    if _cycle_order is not None:
+        # 1. Place the linear prefix using the standard grid layout.
+        _place_reactions(_linear_rxns)
+        _place_nodes(_linear_rxns, canon_nodes)
+        # 2. Find the right edge of the linear prefix so the circle sits
+        #    just to the right of it without overlap.
+        lin_max_x = max(
+            (r.cx + PRODUCT_OFFSET + COMPOUND_W for r in _linear_rxns),
+            default=MARGIN + REACTANT_OFFSET,
+        )
+        # 3. Lay out the cycle reactions on an ellipse.
+        _apply_circular_layout(_cycle_rxns, canon_nodes, _cycle_order,
+                               cx_min=lin_max_x + MARGIN)
     else:
-        canvas_w = 800.0
-    max_stack = max(
-        (max(len(l["reactant_sids"]), len(l["product_sids"]), 1) for l in rxn_layouts),
-        default=1,
-    )
-    canvas_h = CENTER_Y_BASE + (max_stack / 2) * NODE_SPACING_Y + CANVAS_MARGIN + MODIFIER_OFFSET_Y
+        _place_reactions(rxns)
+        _place_nodes(rxns, canon_nodes)
 
-    # Location ID counter (auto-increment to give each location_element a unique id)
-    loc_id_counter = [1000]
+    def _edge_path(nd: CanonNode, r: RxnNode, role: str) -> str:
+        """Return the SVG path for the edge between metabolite nd and reaction r."""
+        if r.in_cycle and _cycle_order is not None:
+            if role == "product":
+                return _path_circ(r.cx, r.cy, nd.cx, nd.cy)
+            return _path_circ(nd.cx, nd.cy, r.cx, r.cy)
+        if role == "reactant":
+            return _path_reactant(nd, r.cx, r.cy)
+        if role == "product":
+            return _path_product(r.cx, r.cy, nd)
+        return _path_modifier(nd, r.cx, r.cy)
 
-    # ------------------------------------------------------------------
-    # Write per-reaction and per-speciesReference annotations (PathWhiz format)
-    # ------------------------------------------------------------------
-    for rxn, lay in zip(reactions, rxn_layouts):
-        cx, cy = lay["cx"], lay["cy"]
-        rxn_id_str = rxn.get("id") or ""
-        rtype = "transport" if "transport" in rxn_id_str.lower() else "reaction"
+    # Annotate compartments
+    for c in root.findall(".//sbml:listOfCompartments/sbml:compartment", NS):
+        ann = c.find("sbml:annotation", NS)
+        if ann is None:
+            ann = ET.SubElement(c, _q("annotation"))
+        for old in [e for e in list(ann) if PW_NS in e.tag]:
+            ann.remove(old)
+        pw = ET.SubElement(ann, _q("compartment", PW_NS))
+        pw.set(f"{{{PW_NS}}}compartment_type", "biological_state")
 
-        # Reaction annotation: <pathwhiz:reaction reaction_id="..." reaction_type="..."/>
-        rxn_ann = rxn.find("sbml:annotation", NS)
-        if rxn_ann is None:
-            rxn_ann = ET.SubElement(rxn, _q("annotation"))
-        existing_rxn_id = None
-        for old in list(rxn_ann.findall(f"{{{PW_NS}}}reaction")):
-            existing_rxn_id = old.get(f"{{{PW_NS}}}reaction_id")
-            rxn_ann.remove(old)
-        for old in list(rxn_ann.findall(f"{{{PW_NS}}}pathwhiz")):
-            rxn_ann.remove(old)
-        rxn_pw = ET.SubElement(rxn_ann, _q("reaction", PW_NS))
-        rxn_pw.set(f"{{{PW_NS}}}reaction_type", rtype)
-        if existing_rxn_id is not None:
-            rxn_pw.set(f"{{{PW_NS}}}reaction_id", existing_rxn_id)
+    # Annotate species
+    for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
+        sid = sp.get("id") or ""
+        info = sid_info.get(sid)
+        if info is None:
+            continue
+        ann = sp.find("sbml:annotation", NS)
+        if ann is None:
+            ann = ET.SubElement(sp, _q("annotation"))
+        for old in [e for e in list(ann) if PW_NS in e.tag]:
+            ann.remove(old)
+        pw = ET.SubElement(ann, _q("species", PW_NS))
+        pw.set(f"{{{PW_NS}}}species_type", "protein" if info[1] else "compound")
 
-        # Reactants
-        reactant_refs = rxn.findall("./sbml:listOfReactants/sbml:speciesReference", NS)
-        n_react = len(reactant_refs)
-        for j, ref in enumerate(reactant_refs):
+    # Annotate reactions + speciesReferences
+    rxn_by_id = {r.rid: r for r in rxns}
+    for rxn_el in root.findall(".//sbml:listOfReactions/sbml:reaction", NS):
+        rid = rxn_el.get("id") or ""
+        r = rxn_by_id.get(rid)
+        if r is None:
+            continue
+
+        ann = rxn_el.find("sbml:annotation", NS)
+        if ann is None:
+            ann = ET.SubElement(rxn_el, _q("annotation"))
+        for old in [e for e in list(ann) if PW_NS in e.tag]:
+            ann.remove(old)
+        rtype = "transport" if "transport" in rid.lower() else "reaction"
+        pw = ET.SubElement(ann, _q("reaction", PW_NS))
+        pw.set(f"{{{PW_NS}}}reaction_type", rtype)
+
+        for ref in rxn_el.findall("./sbml:listOfReactants/sbml:speciesReference", NS):
             sid = ref.get("species") or ""
-            stype = species_type.get(sid, "compound")
-            w, h = _node_size(stype)
-            y_off = (j - (n_react - 1) / 2.0) * NODE_SPACING_Y
-            node_cx = cx - NODE_OFFSET_X
-            node_cy = cy + y_off
-            node_x = node_cx - w / 2
-            node_y = node_cy - h / 2
-            # Edge: right edge of node → reaction center
-            edge_path = f"M{node_cx + w/2:.0f} {node_cy:.0f} L{cx:.0f} {cy:.0f}"
-            old_ann = ref.find("sbml:annotation", NS)
-            if old_ann is not None:
-                ref.remove(old_ann)
-            ref.insert(0, _build_speciesref_annotation(
-                sid, node_x, node_y, w, h, edge_path, stype, "reactant",
-                _next_loc_id(loc_id_counter), _next_loc_id(loc_id_counter),
-            ))
+            nd  = canon_nodes.get(sid_to_canon.get(sid, ""))
+            if nd is None:
+                continue
+            old = ref.find("sbml:annotation", NS)
+            if old is not None:
+                ref.remove(old)
+            ref.insert(0, _make_specref_ann(nd, sid,
+                            _edge_path(nd, r, "reactant"), "reactant"))
 
-        # Products
-        product_refs = rxn.findall("./sbml:listOfProducts/sbml:speciesReference", NS)
-        n_prod = len(product_refs)
-        for j, ref in enumerate(product_refs):
+        for ref in rxn_el.findall("./sbml:listOfProducts/sbml:speciesReference", NS):
             sid = ref.get("species") or ""
-            stype = species_type.get(sid, "compound")
-            w, h = _node_size(stype)
-            y_off = (j - (n_prod - 1) / 2.0) * NODE_SPACING_Y
-            node_cx = cx + NODE_OFFSET_X
-            node_cy = cy + y_off
-            node_x = node_cx - w / 2
-            node_y = node_cy - h / 2
-            # Edge: reaction center → left edge of node
-            edge_path = f"M{cx:.0f} {cy:.0f} L{node_cx - w/2:.0f} {node_cy:.0f}"
-            old_ann = ref.find("sbml:annotation", NS)
-            if old_ann is not None:
-                ref.remove(old_ann)
-            ref.insert(0, _build_speciesref_annotation(
-                sid, node_x, node_y, w, h, edge_path, stype, "product",
-                _next_loc_id(loc_id_counter), _next_loc_id(loc_id_counter),
-            ))
+            nd  = canon_nodes.get(sid_to_canon.get(sid, ""))
+            if nd is None:
+                continue
+            old = ref.find("sbml:annotation", NS)
+            if old is not None:
+                ref.remove(old)
+            ref.insert(0, _make_specref_ann(nd, sid,
+                            _edge_path(nd, r, "product"), "product"))
 
-        # Modifiers (enzymes)
-        modifier_refs = rxn.findall("./sbml:listOfModifiers/sbml:modifierSpeciesReference", NS)
-        n_mod = len(modifier_refs)
-        for j, ref in enumerate(modifier_refs):
+        for ref in rxn_el.findall("./sbml:listOfModifiers/sbml:modifierSpeciesReference", NS):
             sid = ref.get("species") or ""
-            stype = species_type.get(sid, "protein")
-            w, h = _node_size(stype)
-            x_off = (j - (n_mod - 1) / 2.0) * (w + 20.0)
-            node_cx = cx + x_off
-            node_cy = cy - MODIFIER_OFFSET_Y
-            node_x = node_cx - w / 2
-            node_y = node_cy - h / 2
-            # Edge: bottom of modifier → reaction center
-            edge_path = f"M{node_cx:.0f} {node_cy + h/2:.0f} L{cx:.0f} {cy:.0f}"
-            old_ann = ref.find("sbml:annotation", NS)
-            if old_ann is not None:
-                ref.remove(old_ann)
-            ref.insert(0, _build_speciesref_annotation(
-                sid, node_x, node_y, w, h, edge_path, stype, "modifier",
-                _next_loc_id(loc_id_counter), _next_loc_id(loc_id_counter),
-            ))
+            nd  = canon_nodes.get(sid_to_canon.get(sid, ""))
+            if nd is None:
+                continue
+            old = ref.find("sbml:annotation", NS)
+            if old is not None:
+                ref.remove(old)
+            ref.insert(0, _make_specref_ann(nd, sid,
+                            _edge_path(nd, r, "modifier"), "modifier"))
 
-    # ------------------------------------------------------------------
-    # Model annotation: canvas dimensions + backward-compat location_elements
-    # ------------------------------------------------------------------
+    # Model annotation: canvas + backward-compat elements
+    all_x = [nd.x + nd.w for nd in canon_nodes.values() if nd.placed]
+    all_y = [nd.y + nd.h for nd in canon_nodes.values() if nd.placed]
+    for r in rxns:
+        all_x.append(r.cx + PRODUCT_OFFSET + COMPOUND_W)
+        all_y.append(r.cy + MODIFIER_ABOVE + PROTEIN_H)
+
+    canvas_w = max(all_x, default=1200.0) + MARGIN
+    canvas_h = max(all_y, default=800.0)  + MARGIN
+
     model_ann = model.find("sbml:annotation", NS)
     if model_ann is None:
         model_ann = ET.SubElement(model, _q("annotation"))
-    for old in list(model_ann.findall(f"{{{PW_NS}}}dimensions")):
-        model_ann.remove(old)
-    for old in list(model_ann.findall(f"{{{PW_NS}}}pathwhiz")):
-        model_ann.remove(old)
-    for old in list(model_ann.findall(f"{{{PW_NS}}}location_element")):
+    for old in [e for e in list(model_ann) if PW_NS in e.tag]:
         model_ann.remove(old)
 
-    # <pathwhiz:dimensions .../>  (directly in model annotation, no wrapper)
     dims = ET.SubElement(model_ann, _q("dimensions", PW_NS))
-    dims.set(f"{{{PW_NS}}}width", f"{canvas_w:.0f}")
+    dims.set(f"{{{PW_NS}}}width",  f"{canvas_w:.0f}")
     dims.set(f"{{{PW_NS}}}height", f"{canvas_h:.0f}")
 
-    # ------------------------------------------------------------------
-    # Graphviz / fallback layout for model-level location_elements
-    # (keeps sbml_render_pathwhiz_like.py working)
-    # ------------------------------------------------------------------
-    dot_lines = ["digraph G {", "rankdir=LR;", "splines=true;", "overlap=false;"]
+    # Species location_elements (one per sid, all pointing to the same position)
+    for nd in canon_nodes.values():
+        if not nd.placed:
+            continue
+        etype = "protein_location" if nd.is_protein else "compound_location"
+        for sid in nd.sids:
+            le = ET.SubElement(model_ann, _q("location_element", PW_NS))
+            le.set(f"{{{PW_NS}}}element_type",  etype)
+            le.set(f"{{{PW_NS}}}element_id",    sid)
+            le.set(f"{{{PW_NS}}}x",     f"{nd.x:.2f}")
+            le.set(f"{{{PW_NS}}}y",     f"{nd.y:.2f}")
+            le.set(f"{{{PW_NS}}}width", f"{nd.w:.2f}")
+            le.set(f"{{{PW_NS}}}height",f"{nd.h:.2f}")
+            le.set(f"{{{PW_NS}}}zindex","50")
+            le.set(f"{{{PW_NS}}}hidden","false")
+
+    # Compartment bounding boxes
     for cid, cname in comp_names.items():
-        members = [s.sid for s in species_nodes.values() if s.compartment == cid]
+        members = [
+            nd for nd in canon_nodes.values()
+            if nd.placed and any(
+                sid_info.get(s, ("", False, ""))[2] == cid
+                for s in nd.sids
+            )
+        ]
         if not members:
             continue
-        dot_lines += [f"subgraph cluster_{cid} {{", "style=rounded;", f'label="{cname}";']
-        for sid in members:
-            dot_lines.append(f'"{sid}";')
-        dot_lines.append("}")
-    for sid in species_nodes:
-        dot_lines.append(f'"{sid}";')
-    for a, b in edge_pairs:
-        dot_lines.append(f'"{a}" -> "{b}";')
-    dot_lines.append("}")
-    dot_src = "\n".join(dot_lines)
-
-    if shutil.which("dot"):
-        try:
-            plain = _run_dot(dot_src)
-            pos, dot_edges = _parse_dot_plain(plain)
-        except subprocess.CalledProcessError:
-            pos, dot_edges = _build_fallback_layout(species_nodes, comp_names, edge_pairs)
-    else:
-        pos, dot_edges = _build_fallback_layout(species_nodes, comp_names, edge_pairs)
-
-    if not pos:
-        tree.write(out_path, encoding="utf-8", xml_declaration=True)
-        return
-
-    xs = [p[0] for p in pos.values()]
-    ys = [p[1] for p in pos.values()]
-    y_max = max(ys)
-    scale, margin = 140.0, 80.0
-    compound_r = 13.0
-    protein_w_px, protein_h_px = 92.0, 30.0
-
-    # <pathwhiz:species species_type="..."/> on each species annotation (renderer uses this)
-    for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
-        sid = sp.get("id") or ""
-        if sid not in species_nodes:
-            continue
-        sp_ann = sp.find("sbml:annotation", NS)
-        if sp_ann is None:
-            sp_ann = ET.SubElement(sp, _q("annotation"))
-        existing_sp_id = None
-        for old in list(sp_ann.findall(f"{{{PW_NS}}}species")):
-            existing_sp_id = old.get(f"{{{PW_NS}}}species_id")
-            sp_ann.remove(old)
-        pw_sp = ET.SubElement(sp_ann, _q("species", PW_NS))
-        pw_sp.set(f"{{{PW_NS}}}species_type", species_nodes[sid].stype)
-        if existing_sp_id is not None:
-            pw_sp.set(f"{{{PW_NS}}}species_id", existing_sp_id)
-
-    for sid, s in species_nodes.items():
-        if sid not in pos:
-            continue
-        xd, yd = pos[sid]
-        x, y = _scale_and_flip(xd, yd, scale=scale, yflip_max=y_max, margin=margin)
-        if s.stype == "protein":
-            w_px, h_px = protein_w_px, protein_h_px
-            etype = "protein_location"
-            x0, y0 = x - w_px / 2, y - h_px / 2
-        else:
-            w_px = h_px = compound_r * 2
-            etype = "compound_location"
-            x0, y0 = x - compound_r, y - compound_r
+        x1 = min(nd.x for nd in members) - COMPARTMENT_PAD
+        y1 = min(nd.y for nd in members) - COMPARTMENT_PAD
+        x2 = max(nd.x + nd.w for nd in members) + COMPARTMENT_PAD
+        y2 = max(nd.y + nd.h for nd in members) + COMPARTMENT_PAD
         le = ET.SubElement(model_ann, _q("location_element", PW_NS))
-        le.set(f"{{{PW_NS}}}element_type", etype)
-        le.set(f"{{{PW_NS}}}element_id", sid)
-        le.set(f"{{{PW_NS}}}x", f"{x0:.2f}")
-        le.set(f"{{{PW_NS}}}y", f"{y0:.2f}")
-        le.set(f"{{{PW_NS}}}width", f"{w_px:.2f}")
-        le.set(f"{{{PW_NS}}}height", f"{h_px:.2f}")
-        le.set(f"{{{PW_NS}}}zindex", "50")
+        le.set(f"{{{PW_NS}}}element_type",  "element_collection_location")
+        le.set(f"{{{PW_NS}}}element_id",    cid)
+        le.set(f"{{{PW_NS}}}x",      f"{x1:.2f}")
+        le.set(f"{{{PW_NS}}}y",      f"{y1:.2f}")
+        le.set(f"{{{PW_NS}}}width",  f"{x2-x1:.2f}")
+        le.set(f"{{{PW_NS}}}height", f"{y2-y1:.2f}")
+        le.set(f"{{{PW_NS}}}zindex", str(Z_COMP))
         le.set(f"{{{PW_NS}}}hidden", "false")
 
-    pad = 60.0
-    for cid in comp_names:
-        members = [s.sid for s in species_nodes.values() if s.compartment == cid and s.sid in pos]
-        if not members:
-            continue
-        pts = [pos[sid] for sid in members]
-        xds = [p[0] for p in pts]; yds = [p[1] for p in pts]
-        x1, y1 = _scale_and_flip(min(xds), max(yds), scale=scale, yflip_max=y_max, margin=margin)
-        x2, y2 = _scale_and_flip(max(xds), min(yds), scale=scale, yflip_max=y_max, margin=margin)
-        left, top = min(x1, x2) - pad, min(y1, y2) - pad
-        w_box, h_box = abs(x2 - x1) + 2 * pad, abs(y2 - y1) + 2 * pad
+    # Reaction centers
+    for r in rxns:
         le = ET.SubElement(model_ann, _q("location_element", PW_NS))
-        le.set(f"{{{PW_NS}}}element_type", "element_collection_location")
-        le.set(f"{{{PW_NS}}}element_id", cid)
-        le.set(f"{{{PW_NS}}}x", f"{left:.2f}")
-        le.set(f"{{{PW_NS}}}y", f"{top:.2f}")
-        le.set(f"{{{PW_NS}}}width", f"{w_box:.2f}")
-        le.set(f"{{{PW_NS}}}height", f"{h_box:.2f}")
-        le.set(f"{{{PW_NS}}}zindex", "10")
-        le.set(f"{{{PW_NS}}}hidden", "false")
+        le.set(f"{{{PW_NS}}}element_type",  "reaction_center")
+        le.set(f"{{{PW_NS}}}element_id",    r.rid)
+        le.set(f"{{{PW_NS}}}x",     f"{r.cx - 5:.2f}")
+        le.set(f"{{{PW_NS}}}y",     f"{r.cy - 5:.2f}")
+        le.set(f"{{{PW_NS}}}width", "10.00")
+        le.set(f"{{{PW_NS}}}height","10.00")
+        le.set(f"{{{PW_NS}}}zindex","35")
+        le.set(f"{{{PW_NS}}}hidden","false")
 
-    for tail, head, coords in dot_edges:
-        if tail not in species_nodes or head not in species_nodes or not coords:
-            continue
-        pts_px = [_scale_and_flip(x, y, scale=scale, yflip_max=y_max, margin=margin) for (x, y) in coords]
-        d = [f"M {pts_px[0][0]:.2f} {pts_px[0][1]:.2f}"]
-        for x, y in pts_px[1:]:
-            d.append(f"L {x:.2f} {y:.2f}")
-        dotted = species_nodes[tail].compartment != species_nodes[head].compartment
-        le = ET.SubElement(model_ann, _q("location_element", PW_NS))
-        le.set(f"{{{PW_NS}}}element_type", "edge")
-        le.set(f"{{{PW_NS}}}element_id", f"{tail}__to__{head}")
-        le.set(f"{{{PW_NS}}}x", "0"); le.set(f"{{{PW_NS}}}y", "0")
-        le.set(f"{{{PW_NS}}}width", "0"); le.set(f"{{{PW_NS}}}height", "0")
-        le.set(f"{{{PW_NS}}}zindex", "30")
-        le.set(f"{{{PW_NS}}}hidden", "false")
-        le.set(f"{{{PW_NS}}}path", " ".join(d))
-        if dotted:
-            le.set(f"{{{PW_NS}}}visualization_template_id", "83")
+    # Edges
+    for r in rxns:
+        for sid in r.reactant_sids:
+            nd = canon_nodes.get(sid_to_canon.get(sid, ""))
+            if nd:
+                _add_edge_le(model_ann, f"{sid}__to__{r.rid}",
+                             _edge_path(nd, r, "reactant"), TMPL_EDGE)
+        for sid in r.product_sids:
+            nd = canon_nodes.get(sid_to_canon.get(sid, ""))
+            if nd:
+                _add_edge_le(model_ann, f"{r.rid}__to__{sid}",
+                             _edge_path(nd, r, "product"), TMPL_EDGE)
+        for sid in r.modifier_sids:
+            nd = canon_nodes.get(sid_to_canon.get(sid, ""))
+            if nd:
+                _add_edge_le(model_ann, f"{sid}__mod__{r.rid}",
+                             _edge_path(nd, r, "modifier"), TMPL_EDGE_MOD)
 
     tree.write(out_path, encoding="utf-8", xml_declaration=True)
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--in", dest="inp", required=True)
+    import argparse
+    ap = argparse.ArgumentParser(
+        description="Add connected pathway layout to an SBML file.")
+    ap.add_argument("--in",  dest="inp", required=True)
     ap.add_argument("--out", dest="out", required=True)
     args = ap.parse_args()
     add_pathwhiz_layout(args.inp, args.out)
+    print(f"Written: {args.out}")
 
 
 if __name__ == "__main__":

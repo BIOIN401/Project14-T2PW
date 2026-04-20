@@ -4501,6 +4501,564 @@
           "score": 1.0
         }
       ]
+    },
+    "db::glut1::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9W0L2"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 16110,
+          "name": "Glucose transporter type 1",
+          "gene_name": "Glut1",
+          "uniprot": "Q9W0L2",
+          "species_id": 10,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 96595,
+          "name": "Protein O-glucosyltransferase 1",
+          "gene_name": "POGLUT1",
+          "uniprot": "Q8NBL1",
+          "species_id": 1,
+          "score": 0.51
+        }
+      ]
+    },
+    "db::alphaketoglutarate dehydrogenase::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::alphaketoglutarate dehydrogenase::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"alpha-ketoglutarate dehydrogenase\" OR gene:\"alpha-ketoglutarate dehydrogenase\") | (protein_name:\"alpha ketoglutarate dehydrogenase\" OR gene:\"alpha ketoglutarate dehydrogenase\")",
+      "confidence": 0.6,
+      "candidates": [
+        {
+          "accession": "P0AFG3",
+          "protein_name": "2-oxoglutarate dehydrogenase E1 component",
+          "gene_names": [
+            "sucA"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "Q02218",
+          "protein_name": "2-oxoglutarate dehydrogenase complex component E1",
+          "gene_names": [
+            "OGDH"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "Q5XI78",
+          "protein_name": "2-oxoglutarate dehydrogenase complex component E1",
+          "gene_names": [
+            "Ogdh",
+            "Ogdhl"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "Q60597",
+          "protein_name": "2-oxoglutarate dehydrogenase complex component E1",
+          "gene_names": [
+            "Kiaa4192",
+            "Ogdh"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.6
+        },
+        {
+          "accession": "Q9CQX8",
+          "protein_name": "Alpha-ketoglutarate dehydrogenase component 4",
+          "gene_names": [
+            "Kgd4",
+            "Mrps36"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.225
+        },
+        {
+          "accession": "P82908",
+          "protein_name": "Alpha-ketoglutarate dehydrogenase component 4",
+          "gene_names": [
+            "KGD4",
+            "MRPS36"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.225
+        },
+        {
+          "accession": "P19262",
+          "protein_name": "Dihydrolipoyllysine-residue succinyltransferase component of 2-oxoglutarate dehydrogenase complex, mitochondrial",
+          "gene_names": [
+            "KGD2"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.225
+        },
+        {
+          "accession": "P19955",
+          "protein_name": "Alpha-ketoglutarate dehydrogenase subunit 4, mitochondrial",
+          "gene_names": [
+            "KGD4",
+            "YMR31"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.19
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"alpha-ketoglutarate dehydrogenase\" OR gene:\"alpha-ketoglutarate dehydrogenase\")",
+        "(protein_name:\"alpha ketoglutarate dehydrogenase\" OR gene:\"alpha ketoglutarate dehydrogenase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::pyruvate carboxylase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q0E9E2",
+        "pathbank_protein_id": "14908"
+      },
+      "pathbank_protein_id": 14908,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 14908,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "PCB",
+          "uniprot": "Q0E9E2",
+          "species_id": 10,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 22932,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "pcxa",
+          "uniprot": "A0A0R4IFJ4",
+          "species_id": 8,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33383,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "MELS_0013",
+          "uniprot": "G0VQI0",
+          "species_id": 1242,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33473,
+          "name": "pyruvate carboxylase",
+          "gene_name": "OFBG_01739",
+          "uniprot": "C3XBY5",
+          "species_id": 1791,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33506,
+          "name": "pyruvate carboxylase",
+          "gene_name": "DESPIG_01343",
+          "uniprot": "B6WTD7",
+          "species_id": 1827,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33596,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "pyc",
+          "uniprot": "A6NQS2",
+          "species_id": 2380,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33603,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "pyc",
+          "uniprot": "E8LCG8",
+          "species_id": 2423,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33612,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "pyc",
+          "uniprot": "C9LQ62",
+          "species_id": 2429,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33615,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "HMPREF9453_01952",
+          "uniprot": "H1D2W4",
+          "species_id": 2432,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 33618,
+          "name": "Pyruvate carboxylase",
+          "gene_name": "pyc",
+          "uniprot": "C4FRB6",
+          "species_id": 2435,
+          "score": 1.0
+        }
+      ]
+    },
+    "db::atp citrate lyase::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::atp citrate lyase::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"ATP citrate lyase\" OR gene:\"ATP citrate lyase\")",
+      "confidence": 0.225,
+      "candidates": [
+        {
+          "accession": "F4I5V8",
+          "protein_name": "ATP citrate synthase",
+          "gene_names": [
+            "ACLA-1",
+            "ATP-citrate lyase A-1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.225
+        },
+        {
+          "accession": "Q9SGY2",
+          "protein_name": "ATP-citrate synthase alpha chain protein 1",
+          "gene_names": [
+            "ACLA-1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.12
+        },
+        {
+          "accession": "Q9FGX1",
+          "protein_name": "ATP-citrate synthase beta chain protein 2",
+          "gene_names": [
+            "ACLB-2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.12
+        },
+        {
+          "accession": "O22718",
+          "protein_name": "ATP-citrate synthase alpha chain protein 2",
+          "gene_names": [
+            "ACLA-2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.12
+        },
+        {
+          "accession": "Q2QZ86",
+          "protein_name": "ATP-citrate synthase alpha chain protein 2",
+          "gene_names": [
+            "ACLA-2"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.12
+        },
+        {
+          "accession": "Q9C522",
+          "protein_name": "ATP-citrate synthase beta chain protein 1",
+          "gene_names": [
+            "ACLB-1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.12
+        },
+        {
+          "accession": "Q2QNG7",
+          "protein_name": "ATP-citrate synthase alpha chain protein 3",
+          "gene_names": [
+            "ACLA-3"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.12
+        },
+        {
+          "accession": "O80526",
+          "protein_name": "ATP-citrate synthase alpha chain protein 3",
+          "gene_names": [
+            "ACLA-3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.12
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"ATP citrate lyase\" OR gene:\"ATP citrate lyase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::pyruvate dehydrogenase phosphatase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9U300",
+        "pathbank_protein_id": "17094"
+      },
+      "pathbank_protein_id": 17094,
+      "confidence": 0.822,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 17094,
+          "name": "Pyruvate Dehydrogenase Phosphatase Regulatory subunit",
+          "gene_name": "pdpr-1",
+          "uniprot": "Q9U300",
+          "species_id": 6,
+          "score": 0.822
+        },
+        {
+          "pathbank_protein_id": 4003,
+          "name": "Pyruvate dehydrogenase phosphatase regulatory subunit, mitochondrial",
+          "gene_name": "PDPR",
+          "uniprot": "Q8NCN5",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 13718,
+          "name": "Pyruvate dehydrogenase phosphatase regulatory subunit, mitochondrial",
+          "gene_name": "Pdpr",
+          "uniprot": "Q7TSQ8",
+          "species_id": 12,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 17088,
+          "name": "Pyruvate dehydrogenase phosphatase regulatory subunit, mitochondrial",
+          "gene_name": "PDPR",
+          "uniprot": "O46504",
+          "species_id": 5,
+          "score": 0.77
+        }
+      ]
+    },
+    "db::nucleosidediphosphate kinase::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "C9LIM6",
+        "pathbank_protein_id": "52603"
+      },
+      "pathbank_protein_id": 52603,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 52603,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "GCWU000325_02085",
+          "uniprot": "C9LIM6",
+          "species_id": 1658,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 68953,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "BXY_30360",
+          "uniprot": "D6D0V2",
+          "species_id": 408,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 69032,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "HMPREF9455_03809",
+          "uniprot": "F5J392",
+          "species_id": 457,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 70079,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "HMPREF9007_01507",
+          "uniprot": "D7IB70",
+          "species_id": 1632,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 70088,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "HMPREF0127_01852",
+          "uniprot": "F7M318",
+          "species_id": 1633,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 70348,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "HMPREF0106_00665",
+          "uniprot": "D7IZT0",
+          "species_id": 1647,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 70677,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "HMPREF9442_01604",
+          "uniprot": "F3QTT5",
+          "species_id": 1660,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 81219,
+          "name": "nucleoside-diphosphate kinase",
+          "gene_name": "HMPREF1094_01922",
+          "uniprot": "N9WVN5",
+          "species_id": 2407,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 5081,
+          "name": "Nucleoside diphosphate kinase",
+          "gene_name": "NME4",
+          "uniprot": "A2IDD0",
+          "species_id": 1,
+          "score": 0.92
+        },
+        {
+          "pathbank_protein_id": 6034,
+          "name": "Nucleoside diphosphate kinase",
+          "gene_name": "ndk",
+          "uniprot": "P0A763",
+          "species_id": 3,
+          "score": 0.92
+        }
+      ]
+    },
+    "db::prolyl 4hydroxylases::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::prolyl 4hydroxylases::": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"prolyl 4-hydroxylases\" OR gene:\"prolyl 4-hydroxylases\") | (protein_name:\"prolyl 4 hydroxylases\" OR gene:\"prolyl 4 hydroxylases\")",
+      "confidence": 0.05,
+      "candidates": [
+        {
+          "accession": "A0A2L1K0V6",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Magallana gigas",
+          "reviewed": true,
+          "score": 0.05
+        },
+        {
+          "accession": "A0A2L1K0X0",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Magallana gigas",
+          "reviewed": true,
+          "score": 0.05
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"prolyl 4-hydroxylases\" OR gene:\"prolyl 4-hydroxylases\")",
+        "(protein_name:\"prolyl 4 hydroxylases\" OR gene:\"prolyl 4 hydroxylases\")"
+      ],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::hydroxyglutarate dehydrogenase enzymes::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::hydroxyglutarate dehydrogenase enzymes::": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"hydroxyglutarate dehydrogenase enzymes\" OR gene:\"hydroxyglutarate dehydrogenase enzymes\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::von hippel lindau e3 ubiquitin ligase complex::": {
+      "status": "unmapped",
+      "reason": "no_db_match",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": []
+    },
+    "api::von hippel lindau e3 ubiquitin ligase complex::": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"von Hippel Lindau E3 ubiquitin ligase complex\" OR gene:\"von Hippel Lindau E3 ubiquitin ligase complex\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api"
+    },
+    "db::ubiquinone oxidoreductase complex::": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "E1BAZ2",
+        "pathbank_protein_id": "21525"
+      },
+      "pathbank_protein_id": 21525,
+      "confidence": 0.7329,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 21525,
+          "name": "NADH:ubiquinone oxidoreductase complex assembly factor 1",
+          "gene_name": "NDUFAF1",
+          "uniprot": "E1BAZ2",
+          "species_id": 5,
+          "score": 0.7329
+        }
+      ]
     }
   },
   "compounds": {
@@ -13900,6 +14458,926 @@
             "pubchem": "440122",
             "cas": "19046-78-7",
             "chemspider": "389122"
+          }
+        }
+      ]
+    },
+    "db::malate": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000156",
+        "kegg": "C00149",
+        "chebi": "CHEBI:30797",
+        "pubchem": "222656",
+        "cas": "97-67-6",
+        "chemspider": "193317",
+        "biocyc": "MAL",
+        "pathbank_compound_id": "101"
+      },
+      "pathbank_compound_id": 101,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 101,
+          "name": "L-Malic acid",
+          "short_name": "Malate",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000156",
+            "kegg": "C00149",
+            "chebi": "CHEBI:30797",
+            "pubchem": "222656",
+            "cas": "97-67-6",
+            "chemspider": "193317"
+          }
+        },
+        {
+          "pathbank_compound_id": 592,
+          "name": "Malic acid",
+          "short_name": "Malate",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000744",
+            "kegg": "C00711",
+            "chebi": "CHEBI:6650",
+            "pubchem": "525",
+            "cas": "6915-15-7",
+            "biocyc": "MAL",
+            "chemspider": "510"
+          }
+        },
+        {
+          "pathbank_compound_id": 108868,
+          "name": "Malate ",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 12873,
+          "name": "Dibutyl malate",
+          "short_name": "DM",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0031696",
+            "pubchem": "95385",
+            "cas": "2385-79-7",
+            "chemspider": "86081"
+          }
+        },
+        {
+          "pathbank_compound_id": 21045,
+          "name": "Diethyl L-malate",
+          "short_name": "EM",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0040220",
+            "chebi": "CHEBI:53781",
+            "pubchem": "24197",
+            "cas": "7554-28-1",
+            "chemspider": "22619"
+          }
+        },
+        {
+          "pathbank_compound_id": 108958,
+          "name": "Sinapoyl malate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "kegg": "C02887",
+            "chebi": "CHEBI:139533",
+            "pubchem": "5818"
+          }
+        },
+        {
+          "pathbank_compound_id": 118655,
+          "name": "Magnesium malate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB15555"
+          }
+        },
+        {
+          "pathbank_compound_id": 9673,
+          "name": "Sunitinib",
+          "short_name": "Sutent",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0015397",
+            "chebi": "CHEBI:38940",
+            "pubchem": "5329102",
+            "cas": "557795-19-4",
+            "chemspider": "4486264",
+            "drugbank": "DB01268"
+          }
+        },
+        {
+          "pathbank_compound_id": 104711,
+          "name": "2-[(2'-methylsulfanyl)ethyl]malate",
+          "short_name": "MSEMate",
+          "score": 0.5675,
+          "mapped_ids": {
+            "kegg": "C17210",
+            "chebi": "CHEBI:58816",
+            "pubchem": "25203353"
+          }
+        },
+        {
+          "pathbank_compound_id": 104712,
+          "name": "3-[(2'-methylsulfanyl)ethyl]malate",
+          "short_name": "32ME",
+          "score": 0.54,
+          "mapped_ids": {
+            "kegg": "C17212",
+            "chebi": "CHEBI:133497",
+            "pubchem": "25203496"
+          }
+        }
+      ]
+    },
+    "db::h2o": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002111",
+        "kegg": "C00001",
+        "chebi": "CHEBI:15377",
+        "pubchem": "962",
+        "cas": "7732-18-5",
+        "chemspider": "937",
+        "pathbank_compound_id": "1420"
+      },
+      "pathbank_compound_id": 1420,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1420,
+          "name": "Water",
+          "short_name": "H2O",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002111",
+            "kegg": "C00001",
+            "chebi": "CHEBI:15377",
+            "pubchem": "962",
+            "cas": "7732-18-5",
+            "chemspider": "937"
+          }
+        },
+        {
+          "pathbank_compound_id": 20898,
+          "name": "2-Ethyl-4,5-dimethylthiazole",
+          "short_name": "A9Y",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0040068",
+            "pubchem": "522877",
+            "cas": "873-64-3",
+            "chemspider": "456107"
+          }
+        },
+        {
+          "pathbank_compound_id": 1568,
+          "name": "Oxalic acid",
+          "short_name": "H2Ox",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0002329",
+            "kegg": "C00209",
+            "chebi": "CHEBI:16995",
+            "pubchem": "971",
+            "cas": "144-62-7",
+            "biocyc": "CUPRIZONE",
+            "chemspider": "946",
+            "drugbank": "DB03902"
+          }
+        },
+        {
+          "pathbank_compound_id": 1783,
+          "name": "Hydrogen peroxide",
+          "short_name": "H2O2",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0003125",
+            "kegg": "C00027",
+            "chebi": "CHEBI:16240",
+            "pubchem": "784",
+            "cas": "7722-84-1",
+            "biocyc": "HYDROGEN-PEROXIDE",
+            "chemspider": "763"
+          }
+        },
+        {
+          "pathbank_compound_id": 8528,
+          "name": "1-hydroxy-2-Oxopropyl tetrahydropterin",
+          "short_name": "1H2OT",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0013642",
+            "pubchem": "13846017",
+            "chemspider": "26777299"
+          }
+        },
+        {
+          "pathbank_compound_id": 12399,
+          "name": "4-Hydroxy-2-oxobutanoic acid",
+          "short_name": "4H2OA",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0031204",
+            "pubchem": "11963036",
+            "cas": "22136-38-5",
+            "chemspider": "10137246"
+          }
+        },
+        {
+          "pathbank_compound_id": 12673,
+          "name": "(E)-4-Hepten-2-one",
+          "short_name": "E4H2O",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0031487",
+            "pubchem": "5363123",
+            "cas": "36678-43-0",
+            "chemspider": "4515512"
+          }
+        },
+        {
+          "pathbank_compound_id": 12697,
+          "name": "(E)-8-Hydroxy-2-octene-4,6-diynoic acid",
+          "short_name": "E8H2O46",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0031515",
+            "cas": "65367-65-9",
+            "chemspider": "30776905"
+          }
+        },
+        {
+          "pathbank_compound_id": 12771,
+          "name": "3-Methyl-3-hepten-2-one",
+          "short_name": "3M3H2O",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0031590",
+            "pubchem": "5364798",
+            "cas": "39899-08-6",
+            "chemspider": "4516934"
+          }
+        },
+        {
+          "pathbank_compound_id": 12772,
+          "name": "5-Methyl-5-hepten-2-one",
+          "short_name": "5M5H2O",
+          "score": 0.43,
+          "mapped_ids": {
+            "hmdb": "HMDB0031591",
+            "cas": "10339-67-0",
+            "chemspider": "30776910"
+          }
+        }
+      ]
+    },
+    "db::coash": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001423",
+        "kegg": "C00010",
+        "chebi": "CHEBI:1146900",
+        "pubchem": "6816",
+        "cas": "85-61-0",
+        "biocyc": "CO-A",
+        "chemspider": "6557",
+        "pathbank_compound_id": "1099"
+      },
+      "pathbank_compound_id": 1099,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1099,
+          "name": "Coenzyme A",
+          "short_name": "CoA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001423",
+            "kegg": "C00010",
+            "chebi": "CHEBI:1146900",
+            "pubchem": "6816",
+            "cas": "85-61-0",
+            "biocyc": "CO-A",
+            "chemspider": "6557"
+          }
+        },
+        {
+          "pathbank_compound_id": 282377,
+          "name": "coenzyme A(4−)",
+          "short_name": "CoA-SH",
+          "score": 1.0,
+          "mapped_ids": {
+            "chebi": "CHEBI:57287"
+          }
+        }
+      ]
+    },
+    "db::calcium": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000464",
+        "kegg": "C00076",
+        "chebi": "CHEBI:29108",
+        "pubchem": "271",
+        "cas": "14127-61-8",
+        "biocyc": "CA%2b2",
+        "chemspider": "266",
+        "drugbank": "DB01373",
+        "pathbank_compound_id": "353"
+      },
+      "pathbank_compound_id": 353,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 353,
+          "name": "Calcium",
+          "short_name": "Ca2+",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000464",
+            "kegg": "C00076",
+            "chebi": "CHEBI:29108",
+            "pubchem": "271",
+            "cas": "14127-61-8",
+            "biocyc": "CA%2b2",
+            "chemspider": "266",
+            "drugbank": "DB01373"
+          }
+        },
+        {
+          "pathbank_compound_id": 8857,
+          "name": "Calcium Gluceptate",
+          "short_name": "CG",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0014471",
+            "chebi": "CHEBI:3314",
+            "pubchem": "62859",
+            "cas": "29039-00-7",
+            "chemspider": "56591",
+            "drugbank": "DB00326"
+          }
+        },
+        {
+          "pathbank_compound_id": 18912,
+          "name": "Calcium trimetaphosphate",
+          "short_name": "CT",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0038053",
+            "cas": "32280-49-2"
+          }
+        },
+        {
+          "pathbank_compound_id": 118535,
+          "name": "Calcium acetate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB00258"
+          }
+        },
+        {
+          "pathbank_compound_id": 118536,
+          "name": "Calcium ascorbate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB14483"
+          }
+        },
+        {
+          "pathbank_compound_id": 118537,
+          "name": "Calcium carbimide",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB09116"
+          }
+        },
+        {
+          "pathbank_compound_id": 118538,
+          "name": "Calcium carbonate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB06724"
+          }
+        },
+        {
+          "pathbank_compound_id": 118539,
+          "name": "Calcium citrate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB11093"
+          }
+        },
+        {
+          "pathbank_compound_id": 118540,
+          "name": "Calcium gluconate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB11126"
+          }
+        },
+        {
+          "pathbank_compound_id": 118541,
+          "name": "Calcium glycerophosphate",
+          "short_name": "",
+          "score": 0.705,
+          "mapped_ids": {
+            "drugbank": "DB11264"
+          }
+        }
+      ]
+    },
+    "db::acetyl coa": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.5333,
+      "candidates": [
+        {
+          "pathbank_compound_id": 1142,
+          "name": "Acetoacetyl-CoA",
+          "short_name": "ActaCoA",
+          "score": 0.5333,
+          "mapped_ids": {
+            "hmdb": "HMDB0001484",
+            "kegg": "C00332",
+            "chebi": "CHEBI:15345",
+            "pubchem": "439214",
+            "cas": "1420-36-6",
+            "biocyc": "ACETOACETYL-COA",
+            "chemspider": "388353"
+          }
+        },
+        {
+          "pathbank_compound_id": 112816,
+          "name": "AcetylCoA",
+          "short_name": "",
+          "score": 0.32,
+          "mapped_ids": {
+            "cas": "18439-24-2"
+          }
+        }
+      ]
+    },
+    "api::acetyl coa": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.5,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C00024",
+          "name": "Acetyl-CoA",
+          "score": 0.5
+        },
+        {
+          "database": "kegg",
+          "id": "C00332",
+          "name": "Acetoacetyl-CoA",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00582",
+          "name": "Phenylacetyl-CoA",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C01139",
+          "name": "[Acetyl-CoA carboxylase]",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C01247",
+          "name": "[Acetyl-CoA carboxylase] phosphate",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C02331",
+          "name": "Vinylacetyl-CoA",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C02577",
+          "name": "Phenoxyacetyl-CoA",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C03344",
+          "name": "2-Methylacetoacetyl-CoA",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C03466",
+          "name": "3-Methylbut-3-enoyl-CoA",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C04316",
+          "name": "(1-Hydroxycyclohexan-1-yl)acetyl-CoA",
+          "score": 0.35
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api"
+    },
+    "db::ubiquinone": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001072",
+        "kegg": "C11378",
+        "chebi": "CHEBI:46245",
+        "pubchem": "5281915",
+        "cas": "303-98-0",
+        "biocyc": "UBIQUINONE-10",
+        "chemspider": "4445197",
+        "pathbank_compound_id": "846"
+      },
+      "pathbank_compound_id": 846,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 846,
+          "name": "Coenzyme Q10",
+          "short_name": "Coq",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001072",
+            "kegg": "C11378",
+            "chebi": "CHEBI:46245",
+            "pubchem": "5281915",
+            "cas": "303-98-0",
+            "biocyc": "UBIQUINONE-10",
+            "chemspider": "4445197"
+          }
+        },
+        {
+          "pathbank_compound_id": 109111,
+          "name": "Ubiquinone",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C00399",
+            "chebi": "CHEBI:16389",
+            "pubchem": "3689"
+          }
+        },
+        {
+          "pathbank_compound_id": 1347,
+          "name": "Ubiquinone-1",
+          "short_name": "Coq1",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0002012",
+            "kegg": "C00399",
+            "chebi": "CHEBI:16389",
+            "pubchem": "4462",
+            "cas": "727-81-1",
+            "chemspider": "4307",
+            "drugbank": "DB08689"
+          }
+        },
+        {
+          "pathbank_compound_id": 2884,
+          "name": "Ubiquinone-2",
+          "short_name": "Q 2",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0006709",
+            "kegg": "C00399",
+            "chebi": "CHEBI:46372",
+            "pubchem": "5280346",
+            "cas": "606-06-4",
+            "chemspider": "4444053",
+            "drugbank": "DB08690"
+          }
+        },
+        {
+          "pathbank_compound_id": 2885,
+          "name": "Ubiquinone-4",
+          "short_name": "Coq4",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0006710",
+            "chebi": "CHEBI:529178",
+            "pubchem": "5283545",
+            "cas": "4370-62-1",
+            "chemspider": "4446658"
+          }
+        },
+        {
+          "pathbank_compound_id": 17005,
+          "name": "Ubiquinone-6",
+          "short_name": "Ubiq6",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0036062",
+            "kegg": "C17568",
+            "chebi": "CHEBI:52971",
+            "pubchem": "98470",
+            "cas": "1065-31-2",
+            "chemspider": "4446657"
+          }
+        },
+        {
+          "pathbank_compound_id": 40849,
+          "name": "an ubiquinone",
+          "short_name": "AU",
+          "score": 0.705,
+          "mapped_ids": {
+            "chebi": "CHEBI:16389"
+          }
+        },
+        {
+          "pathbank_compound_id": 41411,
+          "name": "Ubiquinone-0",
+          "short_name": "Ubiq0",
+          "score": 0.705,
+          "mapped_ids": {
+            "chebi": "CHEBI:27906",
+            "pubchem": "69068"
+          }
+        },
+        {
+          "pathbank_compound_id": 41611,
+          "name": "Ubiquinone-8",
+          "short_name": "Coq8",
+          "score": 0.705,
+          "mapped_ids": {
+            "chebi": "CHEBI:61683",
+            "pubchem": "5283546"
+          }
+        },
+        {
+          "pathbank_compound_id": 41687,
+          "name": "Ubiquinone-7",
+          "short_name": "Coq7",
+          "score": 0.705,
+          "mapped_ids": {
+            "chebi": "CHEBI:46448",
+            "pubchem": "5289540"
+          }
+        }
+      ]
+    },
+    "db::ubiquinol": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001304",
+        "kegg": "C00390",
+        "pubchem": "5280344",
+        "cas": "56275-39-9",
+        "biocyc": "QH2",
+        "chemspider": "4444052",
+        "chebi": "CHEBI:52970",
+        "drugbank": "DB11340",
+        "pathbank_compound_id": "1006"
+      },
+      "pathbank_compound_id": 1006,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1006,
+          "name": "QH2",
+          "short_name": "QH2",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001304",
+            "kegg": "C00390",
+            "pubchem": "5280344",
+            "cas": "56275-39-9",
+            "biocyc": "QH2",
+            "chemspider": "4444052"
+          }
+        },
+        {
+          "pathbank_compound_id": 7831,
+          "name": "Ubiquinol-6",
+          "short_name": "Ubqol6",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0012299",
+            "chebi": "CHEBI:52970",
+            "pubchem": "5813154",
+            "cas": "5677-58-7",
+            "chemspider": "4710167"
+          }
+        },
+        {
+          "pathbank_compound_id": 119551,
+          "name": "Ubiquinol",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "drugbank": "DB11340"
+          }
+        },
+        {
+          "pathbank_compound_id": 835,
+          "name": "Ubiquinol-8",
+          "short_name": "U8",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0001060",
+            "chebi": "CHEBI:61682",
+            "pubchem": "22833558",
+            "cas": "74075-00-6",
+            "biocyc": "CPD-9956",
+            "chemspider": "24603698"
+          }
+        },
+        {
+          "pathbank_compound_id": 8202,
+          "name": "Ubiquinol-10",
+          "short_name": "Coq10h2",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0013111",
+            "chebi": "CHEBI:64183",
+            "pubchem": "9962735",
+            "cas": "5677-55-4",
+            "biocyc": "CPD-9873",
+            "chemspider": "8138335"
+          }
+        },
+        {
+          "pathbank_compound_id": 41686,
+          "name": "Ubiquinol-7",
+          "short_name": "Coq7",
+          "score": 0.705,
+          "mapped_ids": {
+            "pubchem": "448338"
+          }
+        },
+        {
+          "pathbank_compound_id": 42951,
+          "name": "Ubiquinol-1",
+          "short_name": "UBQ1",
+          "score": 0.705,
+          "mapped_ids": {
+            "pubchem": "447920"
+          }
+        },
+        {
+          "pathbank_compound_id": 42953,
+          "name": "Ubiquinol-2",
+          "short_name": "U2",
+          "score": 0.705,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 42954,
+          "name": "Ubiquinol-3",
+          "short_name": "U3",
+          "score": 0.705,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 42955,
+          "name": "Ubiquinol-4",
+          "short_name": "U4",
+          "score": 0.705,
+          "mapped_ids": {}
+        }
+      ]
+    },
+    "db::nadph": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000221",
+        "kegg": "C00005",
+        "chebi": "CHEBI:16474",
+        "pubchem": "22833512",
+        "cas": "53-57-6",
+        "biocyc": "NADPH",
+        "chemspider": "17215925",
+        "pathbank_compound_id": "146"
+      },
+      "pathbank_compound_id": 146,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 146,
+          "name": "NADPH",
+          "short_name": "NADPH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000221",
+            "kegg": "C00005",
+            "chebi": "CHEBI:16474",
+            "pubchem": "22833512",
+            "cas": "53-57-6",
+            "biocyc": "NADPH",
+            "chemspider": "17215925"
+          }
+        },
+        {
+          "pathbank_compound_id": 109087,
+          "name": "Reduced NADPH---hemoprotein reductase",
+          "short_name": "",
+          "score": 0.5675,
+          "mapped_ids": {
+            "kegg": "C03024",
+            "pubchem": "5930"
+          }
+        },
+        {
+          "pathbank_compound_id": 109088,
+          "name": "Oxidized NADPH--hemoprotein reductase",
+          "short_name": "",
+          "score": 0.5675,
+          "mapped_ids": {
+            "kegg": "C03024",
+            "pubchem": "5930"
+          }
+        }
+      ]
+    },
+    "db::gsh": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000125",
+        "kegg": "C00051",
+        "chebi": "CHEBI:16856",
+        "pubchem": "124886",
+        "cas": "70-18-8",
+        "biocyc": "OXIDIZED-GLUTATHIONE",
+        "chemspider": "111188",
+        "drugbank": "DB00143",
+        "pathbank_compound_id": "80"
+      },
+      "pathbank_compound_id": 80,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 80,
+          "name": "Glutathione",
+          "short_name": "GSH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000125",
+            "kegg": "C00051",
+            "chebi": "CHEBI:16856",
+            "pubchem": "124886",
+            "cas": "70-18-8",
+            "biocyc": "OXIDIZED-GLUTATHIONE",
+            "chemspider": "111188",
+            "drugbank": "DB00143"
+          }
+        },
+        {
+          "pathbank_compound_id": 41211,
+          "name": "Glutathionylspermidine",
+          "short_name": "N1-(&γ",
+          "score": 0.35,
+          "mapped_ids": {
+            "chebi": "CHEBI:16613",
+            "pubchem": "440772"
           }
         }
       ]

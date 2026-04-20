@@ -16,6 +16,7 @@ import html
 import json
 import re
 import shutil
+import textwrap
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
@@ -71,6 +72,50 @@ def _load_matplotlib(*, show: bool) -> Tuple[Any, Any, Any, Any, Any, Any]:
             "matplotlib is required to render SBML diagrams. Install matplotlib in the active environment."
         ) from exc
     return plt, FancyBboxPatch, Circle, PathPatch, Rectangle, MplPath
+
+
+def _arrowhead_patch(verts: list, path_cls: Any, patch_cls: Any, size: float = 10.0, zorder: int = 5) -> Any:
+    """
+    Build a filled triangular arrowhead patch pointing from verts[-2] → verts[-1].
+    *verts* is the list of (x, y) tuples from the edge path (last vertex is the tip).
+    Returns a PathPatch or None if fewer than 2 usable points.
+    """
+    import math
+    # Walk backwards to find a point that is far enough from the tip to give a direction.
+    tip = None
+    base_pt = None
+    for v in reversed(verts):
+        if tip is None:
+            tip = v
+            continue
+        dx, dy = v[0] - tip[0], v[1] - tip[1]
+        if math.hypot(dx, dy) > 1e-3:
+            base_pt = v
+            break
+    if tip is None or base_pt is None:
+        return None
+
+    dx = tip[0] - base_pt[0]
+    dy = tip[1] - base_pt[1]
+    length = math.hypot(dx, dy)
+    if length < 1e-9:
+        return None
+    ux, uy = dx / length, dy / length          # unit vector along edge direction
+    px, py = -uy, ux                            # perpendicular
+
+    half_w = size * 0.45
+    depth  = size
+
+    p1 = (tip[0], tip[1])                                           # tip
+    p2 = (tip[0] - ux * depth + px * half_w,
+          tip[1] - uy * depth + py * half_w)                        # left base
+    p3 = (tip[0] - ux * depth - px * half_w,
+          tip[1] - uy * depth - py * half_w)                        # right base
+
+    arrow_verts = [p1, p2, p3, p1]
+    arrow_codes = [path_cls.MOVETO, path_cls.LINETO, path_cls.LINETO, path_cls.CLOSEPOLY]
+    arrow_path  = path_cls(arrow_verts, arrow_codes)
+    return patch_cls(arrow_path, fill=True, facecolor="black", edgecolor="black", linewidth=0.5, zorder=zorder)
 
 
 def _parse_svg_path(d: str, path_cls: Any) -> Any:
@@ -145,7 +190,7 @@ def _safe_json_from_options(opt_raw: Optional[str]) -> Optional[dict]:
 # ----------------------------
 # SBML + PathWhiz parsing
 # ----------------------------
-def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], List[LocationElement]]:
+def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], List[LocationElement], Dict[str, str]]:
     tree = ET.parse(sbml_file)
     root = tree.getroot()
 
@@ -154,6 +199,12 @@ def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], 
         cid = compartment.get("id", "")
         if cid:
             compartments[cid] = compartment.get("name", cid)
+
+    reactions: Dict[str, str] = {}
+    for rxn in root.findall(".//sbml:listOfReactions/sbml:reaction", NS):
+        rid = rxn.get("id", "")
+        if rid:
+            reactions[rid] = rxn.get("name", rid)
 
     species: Dict[str, SpeciesInfo] = {}
     for sp in root.findall(".//sbml:listOfSpecies/sbml:species", NS):
@@ -202,7 +253,7 @@ def parse_sbml(sbml_file: str) -> Tuple[Dict[str, SpeciesInfo], Dict[str, str], 
             )
         )
 
-    return species, compartments, loc_elems
+    return species, compartments, loc_elems, reactions
 
 
 def _has_pathwhiz_layout(sbml_file: str) -> bool:
@@ -300,7 +351,7 @@ def _bounds_from_elements(elems: List[LocationElement], path_cls: Any) -> Tuple[
 
 def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show: bool = False) -> None:
     plt, FancyBboxPatch, Circle, PathPatch, Rectangle, MplPath = _load_matplotlib(show=show)
-    species, compartments, elems = parse_sbml(render_input)
+    species, compartments, elems, reactions = parse_sbml(render_input)
 
     # Sort by z-index so boxes draw before nodes and edges can go on top
     elems_sorted = sorted(elems, key=lambda e: e.z)
@@ -328,6 +379,12 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
         ).name
         stype = species.get(e.element_id, SpeciesInfo(e.element_id, "", "unknown")).species_type
 
+        # Reaction center: small filled black square
+        if e.element_type == "reaction_center":
+            sq = Rectangle((e.x, e.y), e.w, e.h, linewidth=0, facecolor="black", edgecolor="none", zorder=e.z)
+            ax.add_patch(sq)
+            continue
+
         # Compartment-like boxes / collections
         if e.element_type in ("element_collection_location", "sub_pathway"):
             box = FancyBboxPatch(
@@ -344,7 +401,7 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
             ax.text(
                 e.x + 10,
                 e.y + 22,
-                label,
+                "\n".join(textwrap.wrap(label, width=22)),
                 fontsize=9,
                 ha="left",
                 va="bottom",
@@ -366,11 +423,11 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
             ax.add_patch(rect)
             ax.text(
                 e.x + e.w / 2,
-                e.y + e.h + 12,
-                label,
+                e.y + e.h / 2,
+                "\n".join(textwrap.wrap(label, width=18)),
                 fontsize=8,
                 ha="center",
-                va="bottom",
+                va="center",
                 zorder=e.z + 1,
             )
             continue
@@ -388,18 +445,18 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
             ax.add_patch(circ)
             ax.text(
                 e.x + e.w / 2,
-                e.y + e.h + 12,
-                label,
+                e.y + e.h / 2,
+                "\n".join(textwrap.wrap(label, width=18)),
                 fontsize=8,
                 ha="center",
-                va="bottom",
+                va="center",
                 zorder=e.z + 1,
             )
             continue
 
         rect = Rectangle((e.x, e.y), e.w, e.h, fill=False, linewidth=1.8, edgecolor="black", zorder=e.z)
         ax.add_patch(rect)
-        ax.text(e.x + e.w / 2, e.y + e.h + 12, label, fontsize=8, ha="center", va="bottom", zorder=e.z + 1)
+        ax.text(e.x + e.w / 2, e.y + e.h / 2, "\n".join(textwrap.wrap(label, width=18)), fontsize=8, ha="center", va="center", zorder=e.z + 1)
 
     for e in elems_sorted:
         if e.element_type != "edge" or not e.path:
@@ -420,6 +477,13 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
             zorder=e.z,
         )
         ax.add_patch(patch)
+
+        # Draw a geometric arrowhead on solid (non-modifier) edges regardless of
+        # whether e.options carries pre-built SVG arrow paths.
+        if not is_dotted:
+            arrow_patch = _arrowhead_patch(path.vertices.tolist(), MplPath, PathPatch, size=10.0, zorder=e.z + 1)
+            if arrow_patch is not None:
+                ax.add_patch(arrow_patch)
 
         if e.options:
             for key in ("end_arrow_path", "start_arrow_path", "end_flat_arrow_path", "start_flat_arrow_path"):

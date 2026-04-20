@@ -6,6 +6,8 @@ import os
 import re
 import time
 from copy import deepcopy
+import sys
+import shutil
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import quote_plus
@@ -449,11 +451,16 @@ class PathBankDbResolver:
             for candidate in candidates[1:]:
                 if float(candidate.get("score", 0.0)) >= 0.9:
                     merged_ids = _merge_mapped_ids(merged_ids, _safe_dict(candidate.get("mapped_ids")))
+            # Carry the PathWhiz internal compound ID so json_to_sbml can use it
+            best_pw_cid = best.get("pathbank_compound_id")
+            if best_pw_cid:
+                merged_ids["pathbank_compound_id"] = str(best_pw_cid)
             return {
                 "status": "mapped",
                 "provider": "PathBankDB",
                 "source": "db",
                 "mapped_ids": merged_ids,
+                "pathbank_compound_id": best_pw_cid,
                 "confidence": best_score,
                 "chosen_rule": "db_top_candidate_relaxed",
                 "candidates": candidates[:10],
@@ -560,11 +567,17 @@ class PathBankDbResolver:
             or (best_score >= 0.72 and best_score >= second + 0.03)
             or (len(candidates) == 1 and best_score >= 0.68)
         ):
+            # Carry the PathWhiz internal protein ID so json_to_sbml can use it
+            best_pw_pid = best.get("pathbank_protein_id")
+            protein_mapped_ids: Dict[str, str] = {"uniprot": uniprot_id}
+            if best_pw_pid:
+                protein_mapped_ids["pathbank_protein_id"] = str(best_pw_pid)
             return {
                 "status": "mapped",
                 "provider": "PathBankDB",
                 "source": "db",
-                "mapped_ids": {"uniprot": uniprot_id},
+                "mapped_ids": protein_mapped_ids,
+                "pathbank_protein_id": best_pw_pid,
                 "confidence": best_score,
                 "chosen_rule": "db_top_candidate_relaxed",
                 "candidates": candidates[:10],
@@ -1348,6 +1361,10 @@ def run_mapping(
             else:
                 proteins_mapped_by_api += 1
             protein["mapped_ids"] = _merge_mapped_ids(_safe_dict(protein.get("mapped_ids")), _safe_dict(result.get("mapped_ids")))
+            # Stamp PathWhiz internal protein ID directly on entity for json_to_sbml
+            if result.get("pathbank_protein_id"):
+                protein["pathbank_protein_id"] = int(result["pathbank_protein_id"])
+                protein["mapping_meta"]["pathbank_protein_id"] = int(result["pathbank_protein_id"])
             status = "mapped"
             reason = ""
         else:
@@ -1470,6 +1487,10 @@ def run_mapping(
                 else:
                     compounds_mapped_by_api += 1
             compound["mapped_ids"] = _merge_mapped_ids(_safe_dict(compound.get("mapped_ids")), _safe_dict(result.get("mapped_ids")))
+            # Stamp PathWhiz internal compound ID directly on entity for json_to_sbml
+            if result.get("pathbank_compound_id"):
+                compound["pathbank_compound_id"] = int(result["pathbank_compound_id"])
+                compound["mapping_meta"]["pathbank_compound_id"] = int(result["pathbank_compound_id"])
             status = "mapped"
             reason = ""
         else:
