@@ -258,6 +258,9 @@ class DeterministicPwmlBuilder:
             }
             states.append(state)
 
+        self._state_id_map: Dict[str, int] = {
+            _normalize_key(s["name"]): int(s["id"]) for s in states
+        }
         return states, int(states[0]["id"])
 
     def _build_reactions(self) -> List[Dict[str, Any]]:
@@ -459,10 +462,12 @@ class DeterministicPwmlBuilder:
         pc_vis_by_pc_id: Dict[int, Dict[str, Any]] = {}
 
         for rec, (x, y) in zip(self.entity_records.get("compounds", []), compound_pos):
+            entity_state_name = rec.get("biological_state", "")
+            bs_id = self._state_id_map.get(entity_state_name.strip().casefold(), default_state_id)
             loc = {
                 "id": self.ids.next(),
                 "compound-id": int(rec["id"]),
-                "biological-state-id": default_state_id,
+                "biological-state-id": bs_id,
                 "visualization-template-id": 0,
                 "hidden": False,
                 "x": x,
@@ -476,11 +481,13 @@ class DeterministicPwmlBuilder:
             compound_loc_by_id[int(rec["id"])] = loc
 
         for rec, (x, y) in zip(self.entity_records.get("element-collections", []), element_collection_pos):
+            entity_state_name = rec.get("biological_state", "")
+            bs_id = self._state_id_map.get(entity_state_name.strip().casefold(), default_state_id)
             loc = {
                 "id": self.ids.next(),
                 "element-collection-id": int(rec["id"]),
                 "visualization-template-id": 0,
-                "biological-state-id": default_state_id,
+                "biological-state-id": bs_id,
                 "hidden": False,
                 "x": x,
                 "y": y,
@@ -493,10 +500,12 @@ class DeterministicPwmlBuilder:
             element_collection_loc_by_id[int(rec["id"])] = loc
 
         for rec, (x, y) in zip(self.entity_records.get("nucleic-acids", []), nucleic_acid_pos):
+            entity_state_name = rec.get("biological_state", "")
+            bs_id = self._state_id_map.get(entity_state_name.strip().casefold(), default_state_id)
             loc = {
                 "id": self.ids.next(),
                 "nucleic-acid-id": int(rec["id"]),
-                "biological-state-id": default_state_id,
+                "biological-state-id": bs_id,
                 "visualization-template-id": 0,
                 "hidden": False,
                 "x": x,
@@ -510,10 +519,12 @@ class DeterministicPwmlBuilder:
             nucleic_acid_loc_by_id[int(rec["id"])] = loc
 
         for rec, (x, y) in zip(self.entity_records.get("proteins", []), protein_pos):
+            entity_state_name = rec.get("biological_state", "")
+            bs_id = self._state_id_map.get(entity_state_name.strip().casefold(), default_state_id)
             loc = {
                 "id": self.ids.next(),
                 "protein-id": int(rec["id"]),
-                "biological-state-id": default_state_id,
+                "biological-state-id": bs_id,
                 "visualization-template-id": 0,
                 "hidden": False,
                 "x": x,
