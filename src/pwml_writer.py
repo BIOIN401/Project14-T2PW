@@ -234,6 +234,7 @@ class DeterministicPwmlBuilder:
         self.pathway_visualization_id_int = self.pathway_id_int
         self.pathway_visualization_id = f"PathwayVisualization{self.pathway_visualization_id_int}"
         self.pathway_visualization_context_id = f"PathwayVisualizationContext{self.pathway_visualization_id_int}"
+        self._state_id_map: Dict[str, int] = {}
 
     def _prepare_entities(self) -> None:
         key_to_section = {
@@ -684,12 +685,22 @@ class DeterministicPwmlBuilder:
                 protein_loc_by_id[int(rec["id"])] = loc
 
         for rec in self.entity_records.get("protein-complexes", []):
+            pc_protein_vis: List[Dict[str, Any]] = []
+            for comp_name in _as_string_list(rec.get("components", [])):
+                prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
+                if prot:
+                    prot_loc = protein_loc_by_id.get(int(prot["id"]))
+                    if prot_loc:
+                        pc_protein_vis.append({
+                            "id": self.ids.next(),
+                            "protein-location-id": int(prot_loc["id"]),
+                        })
             visualization = {
                 "id": self.ids.next(),
                 "protein-complex-id": int(rec["id"]),
                 "pathway-visualization-id": self.pathway_visualization_id_int,
                 "biological-state-id": default_state_id,
-                "protein_complex_protein_visualizations": [],
+                "protein_complex_protein_visualizations": pc_protein_vis,
             }
             protein_complex_visualizations.append(visualization)
             pc_vis_by_pc_id[int(rec["id"])] = visualization
@@ -762,15 +773,26 @@ class DeterministicPwmlBuilder:
                         })
 
             for enzyme in reaction.get("reaction-enzymes", []) if isinstance(reaction.get("reaction-enzymes"), list) else []:
-                pc_id = int(enzyme.get("protein-complex-id") or 0)
-                pc_vis = pc_vis_by_pc_id.get(pc_id)
-                if not pc_vis:
-                    continue
-                reaction_enzyme_visualizations.append({
-                    "id": self.ids.next(),
-                    "reaction-enzyme-id": int(enzyme["id"]),
-                    "protein-complex-visualization-id": int(pc_vis["id"]),
-                })
+                pc_id = enzyme.get("protein-complex-id")
+                prot_id = enzyme.get("protein-id")
+                if pc_id is not None:
+                    pc_vis = pc_vis_by_pc_id.get(int(pc_id))
+                    if not pc_vis:
+                        continue
+                    reaction_enzyme_visualizations.append({
+                        "id": self.ids.next(),
+                        "reaction-enzyme-id": int(enzyme["id"]),
+                        "protein-complex-visualization-id": int(pc_vis["id"]),
+                    })
+                elif prot_id is not None:
+                    prot_loc = protein_loc_by_id.get(int(prot_id))
+                    if not prot_loc:
+                        continue
+                    reaction_enzyme_visualizations.append({
+                        "id": self.ids.next(),
+                        "reaction-enzyme-id": int(enzyme["id"]),
+                        "protein-location-id": int(prot_loc["id"]),
+                    })
 
             reaction_visualizations.append({
                 "id": self.ids.next(),
