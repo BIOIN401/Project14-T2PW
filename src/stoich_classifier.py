@@ -1,8 +1,8 @@
 import json
 from typing import Any
 
-from .llm_client import chat
-from .stoich_templates import REACTION_TEMPLATES, REACTION_CLASS_NAMES
+from llm_client import chat
+from stoich_templates import REACTION_TEMPLATES, REACTION_CLASS_NAMES
 
 _MOLECULE_HINTS: dict[str, list[str]] = {
     t: tmpl.get("required_inputs", []) + tmpl.get("required_outputs", [])
