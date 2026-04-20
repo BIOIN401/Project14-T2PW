@@ -351,6 +351,7 @@ def run_post_pipeline_sbml_artifacts(
     gap_resolver_max_items: int,
     qa_report: Optional[Dict[str, Any]] = None,
     reaction_summary: Optional[str] = None,
+    use_stoich_agent: bool = False,
 ) -> Dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     cache_path = Path(mapping_cache_path)
@@ -381,6 +382,8 @@ def run_post_pipeline_sbml_artifacts(
         post_transport_attachment_probe_path = tmp / "post_transport_attachment_probe.json"
         post_dedupe_probe_path = tmp / "post_dedupe_probe.json"
         gate_fail_report_path = tmp / "gate_fail_report.json"
+        stoich_json_path = tmp / "final.stoich.json"
+        stoich_audit_log_path = tmp / "stoich_audit_log.json"
 
         pre_normalization_input = deepcopy(final_payload)
         normalized_input = deepcopy(final_payload)
@@ -996,6 +999,14 @@ def run_post_pipeline_sbml_artifacts(
             mapping_report_path,
             **mapping_kwargs,
         )
+        mapped_payload = json.loads(mapped_json.read_text(encoding="utf-8"))
+        stoich_audit_log: list = []
+        if use_stoich_agent:
+            from stoich_agent import run_stoich_agent
+            mapped_payload, stoich_audit_log = run_stoich_agent(mapped_payload)
+            stoich_json_path.write_text(json.dumps(mapped_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+            stoich_audit_log_path.write_text(json.dumps(stoich_audit_log, indent=2, ensure_ascii=False), encoding="utf-8")
+            mapped_json.write_text(json.dumps(mapped_payload, indent=2, ensure_ascii=False), encoding="utf-8")
         enrichment_cache_path = cache_path.with_name("enrichment_cache.json")
         enrichment_dump_path = project_root / "out" / "enrichment_dump.json"
         enrichment_report: Dict[str, Any] = {}
@@ -1110,6 +1121,7 @@ def run_post_pipeline_sbml_artifacts(
             "post_audit_reaction_summary": post_audit_reaction_summary,
             "post_audit_png_bytes": post_audit_png_bytes,
             "curator_report": curator_report,
+            "stoich_audit_log": stoich_audit_log,
             "audit_iterations": audit_iterations,
             "gap_resolution_iterations": gap_iterations,
             "audit_loop_summary": {
