@@ -2,8 +2,8 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 24,
-    "edge_count": 25
+    "node_count": 42,
+    "edge_count": 48
   },
   "nodes": [
     {
@@ -11,7 +11,88 @@
       "label": "glucose",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:glucose-6-phosphate",
+      "label": "Glucose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-6-phosphate",
+      "label": "Fructose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-1,6-bisphosphate",
+      "label": "Fructose-1,6-bisphosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:glyceraldehyde-3-phosphate",
+      "label": "Glyceraldehyde-3-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dihydroxyacetone phosphate",
+      "label": "Dihydroxyacetone phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:1,3-bisphosphoglycerate",
+      "label": "1,3-Bisphosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:3-phosphoglycerate",
+      "label": "3-Phosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:2-phosphoglycerate",
+      "label": "2-Phosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:phosphoenolpyruvate",
+      "label": "Phosphoenolpyruvate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -20,7 +101,7 @@
       "label": "pyruvate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -28,8 +109,26 @@
       "id": "compound:atp",
       "label": "ATP",
       "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "cls": "cofactor",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:adp",
+      "label": "ADP",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nad+",
+      "label": "NAD+",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -37,188 +136,251 @@
       "id": "compound:nadh",
       "label": "NADH",
       "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "cls": "cofactor",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:glucose 6-phosphate",
-      "label": "glucose 6-phosphate",
+      "id": "compound:pi",
+      "label": "Pi",
       "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "cls": "cofactor",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:fructose 6-phosphate",
-      "label": "fructose 6-phosphate",
+      "id": "compound:h2o",
+      "label": "H2O",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:fructose 1,6-bisphosphate",
-      "label": "fructose 1,6-bisphosphate",
+      "id": "compound:h+",
+      "label": "H+",
       "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "cls": "ion",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:dihydroxyacetone phosphate",
-      "label": "dihydroxyacetone phosphate",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "id": "protein:hexokinase",
+      "label": "Hexokinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:glyceraldehyde 3-phosphate",
-      "label": "glyceraldehyde 3-phosphate",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "id": "protein:phosphoglucose isomerase",
+      "label": "Phosphoglucose isomerase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:1,3-bisphosphoglycerate",
-      "label": "1,3-bisphosphoglycerate",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "id": "protein:phosphofructokinase-1",
+      "label": "Phosphofructokinase-1",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:3-phosphoglycerate",
-      "label": "3-phosphoglycerate",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "id": "protein:aldolase",
+      "label": "Aldolase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:2-phosphoglycerate",
-      "label": "2-phosphoglycerate",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "id": "protein:triose phosphate isomerase",
+      "label": "Triose phosphate isomerase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:phosphoenolpyruvate",
-      "label": "phosphoenolpyruvate",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state",
+      "id": "protein:glyceraldehyde-3-phosphate dehydrogenase",
+      "label": "Glyceraldehyde-3-phosphate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoglycerate kinase",
+      "label": "Phosphoglycerate kinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoglycerate mutase",
+      "label": "Phosphoglycerate mutase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:enolase",
+      "label": "Enolase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "protein:pyruvate kinase",
-      "label": "pyruvate kinase",
+      "label": "Pyruvate kinase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:glucose phosphorylation",
-      "label": "glucose phosphorylation",
+      "id": "reaction:hexokinase reaction",
+      "label": "Hexokinase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:glucose 6-phosphate rearrangement",
-      "label": "glucose 6-phosphate rearrangement",
+      "id": "reaction:phosphoglucose isomerase reaction",
+      "label": "Phosphoglucose isomerase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:fructose 6-phosphate phosphorylation",
-      "label": "fructose 6-phosphate phosphorylation",
+      "id": "reaction:phosphofructokinase-1 reaction",
+      "label": "Phosphofructokinase-1 reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:fructose 1,6-bisphosphate cleavage",
-      "label": "fructose 1,6-bisphosphate cleavage",
+      "id": "reaction:aldolase reaction",
+      "label": "Aldolase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:dihydroxyacetone phosphate conversion",
-      "label": "dihydroxyacetone phosphate conversion",
+      "id": "reaction:triose phosphate isomerase reaction",
+      "label": "Triose phosphate isomerase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:glyceraldehyde 3-phosphate oxidation",
-      "label": "glyceraldehyde 3-phosphate oxidation",
+      "id": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "label": "Glyceraldehyde-3-phosphate dehydrogenase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:1,3-bisphosphoglycerate phosphorylation",
-      "label": "1,3-bisphosphoglycerate phosphorylation",
-      "kind": "reaction",
+      "id": "compound:nad",
+      "label": "NAD",
+      "kind": "compound",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:3-phosphoglycerate conversion",
-      "label": "3-phosphoglycerate conversion",
-      "kind": "reaction",
+      "id": "compound:h",
+      "label": "H",
+      "kind": "compound",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:2-phosphoglycerate conversion",
-      "label": "2-phosphoglycerate conversion",
+      "id": "reaction:phosphoglycerate kinase reaction",
+      "label": "Phosphoglycerate kinase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphoglycerate mutase reaction",
+      "label": "Phosphoglycerate mutase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:enolase reaction",
+      "label": "Enolase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytoplasmic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "reaction:pyruvate kinase reaction",
-      "label": "pyruvate kinase reaction",
+      "label": "Pyruvate kinase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytoplasmic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:nad+ alias",
+      "label": "NAD+ alias",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:h+ alias",
+      "label": "H+ alias",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     }
@@ -226,132 +388,246 @@
   "edges": [
     {
       "source": "compound:glucose",
-      "target": "reaction:glucose phosphorylation",
+      "target": "reaction:hexokinase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:glucose phosphorylation",
-      "target": "compound:glucose 6-phosphate",
+      "source": "compound:atp",
+      "target": "reaction:hexokinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:glucose-6-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:glucose 6-phosphate",
-      "target": "reaction:glucose 6-phosphate rearrangement",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:glucose 6-phosphate rearrangement",
-      "target": "compound:fructose 6-phosphate",
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:adp",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:fructose 6-phosphate",
-      "target": "reaction:fructose 6-phosphate phosphorylation",
+      "source": "protein:hexokinase",
+      "target": "reaction:hexokinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:glucose-6-phosphate",
+      "target": "reaction:phosphoglucose isomerase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:fructose 6-phosphate phosphorylation",
-      "target": "compound:fructose 1,6-bisphosphate",
+      "source": "reaction:phosphoglucose isomerase reaction",
+      "target": "compound:fructose-6-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:fructose 1,6-bisphosphate",
-      "target": "reaction:fructose 1,6-bisphosphate cleavage",
+      "source": "protein:phosphoglucose isomerase",
+      "target": "reaction:phosphoglucose isomerase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:fructose-6-phosphate",
+      "target": "reaction:phosphofructokinase-1 reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:fructose 1,6-bisphosphate cleavage",
+      "source": "compound:atp",
+      "target": "reaction:phosphofructokinase-1 reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphofructokinase-1 reaction",
+      "target": "compound:fructose-1,6-bisphosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphofructokinase-1 reaction",
+      "target": "compound:adp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphofructokinase-1",
+      "target": "reaction:phosphofructokinase-1 reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:fructose-1,6-bisphosphate",
+      "target": "reaction:aldolase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aldolase reaction",
+      "target": "compound:glyceraldehyde-3-phosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aldolase reaction",
       "target": "compound:dihydroxyacetone phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:fructose 1,6-bisphosphate cleavage",
-      "target": "compound:glyceraldehyde 3-phosphate",
-      "role": "product",
+      "source": "protein:aldolase",
+      "target": "reaction:aldolase reaction",
+      "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:dihydroxyacetone phosphate",
-      "target": "reaction:dihydroxyacetone phosphate conversion",
+      "target": "reaction:triose phosphate isomerase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:dihydroxyacetone phosphate conversion",
-      "target": "compound:glyceraldehyde 3-phosphate",
+      "source": "reaction:triose phosphate isomerase reaction",
+      "target": "compound:glyceraldehyde-3-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:glyceraldehyde 3-phosphate",
-      "target": "reaction:glyceraldehyde 3-phosphate oxidation",
+      "source": "protein:triose phosphate isomerase",
+      "target": "reaction:triose phosphate isomerase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:glyceraldehyde-3-phosphate",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:glyceraldehyde 3-phosphate oxidation",
+      "source": "compound:nad",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:pi",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
       "target": "compound:1,3-bisphosphoglycerate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:glyceraldehyde 3-phosphate oxidation",
+      "source": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
       "target": "compound:nadh",
       "role": "product",
       "confidence": 1.0
     },
     {
+      "source": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "target": "compound:h",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:glyceraldehyde-3-phosphate dehydrogenase",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
       "source": "compound:1,3-bisphosphoglycerate",
-      "target": "reaction:1,3-bisphosphoglycerate phosphorylation",
+      "target": "reaction:phosphoglycerate kinase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:1,3-bisphosphoglycerate phosphorylation",
+      "source": "compound:adp",
+      "target": "reaction:phosphoglycerate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglycerate kinase reaction",
       "target": "compound:3-phosphoglycerate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:1,3-bisphosphoglycerate phosphorylation",
+      "source": "reaction:phosphoglycerate kinase reaction",
       "target": "compound:atp",
       "role": "product",
       "confidence": 1.0
     },
     {
+      "source": "protein:phosphoglycerate kinase",
+      "target": "reaction:phosphoglycerate kinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
       "source": "compound:3-phosphoglycerate",
-      "target": "reaction:3-phosphoglycerate conversion",
+      "target": "reaction:phosphoglycerate mutase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:3-phosphoglycerate conversion",
+      "source": "reaction:phosphoglycerate mutase reaction",
       "target": "compound:2-phosphoglycerate",
       "role": "product",
       "confidence": 1.0
     },
     {
+      "source": "protein:phosphoglycerate mutase",
+      "target": "reaction:phosphoglycerate mutase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
       "source": "compound:2-phosphoglycerate",
-      "target": "reaction:2-phosphoglycerate conversion",
+      "target": "reaction:enolase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:2-phosphoglycerate conversion",
+      "source": "reaction:enolase reaction",
       "target": "compound:phosphoenolpyruvate",
       "role": "product",
       "confidence": 1.0
     },
     {
+      "source": "reaction:enolase reaction",
+      "target": "compound:h2o",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:enolase",
+      "target": "reaction:enolase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
       "source": "compound:phosphoenolpyruvate",
+      "target": "reaction:pyruvate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:adp",
       "target": "reaction:pyruvate kinase reaction",
       "role": "reactant",
       "confidence": 1.0
@@ -372,6 +648,30 @@
       "source": "protein:pyruvate kinase",
       "target": "reaction:pyruvate kinase reaction",
       "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nad+",
+      "target": "interaction:nad+ alias",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:nad+ alias",
+      "target": "compound:nad",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:h+",
+      "target": "interaction:h+ alias",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:h+ alias",
+      "target": "compound:h",
+      "role": "participant",
       "confidence": 1.0
     }
   ]

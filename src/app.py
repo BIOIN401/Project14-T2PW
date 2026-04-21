@@ -2249,6 +2249,7 @@ if st.session_state.get("pipeline_ready"):
                 height=int(vis_height),
                 width=int(vis_width),
                 background_color=background_color,
+                ref=str(reference_path),
             )
             builder = DeterministicPwmlBuilder(payload_for_writer, signature, args)
             build = builder.build()

@@ -1,62 +1,62 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: glucose phosphorylation
-  Reactants: glucose [cytosolic state]
-  Products:  glucose 6-phosphate [cytosolic state]
-  Modifier:  MISSING
-  QA flags:  missing_modifier — reaction name implies enzymatic catalysis
-
-REACTION 2: glucose 6-phosphate rearrangement
-  Reactants: glucose 6-phosphate [cytosolic state]
-  Products:  fructose 6-phosphate [cytosolic state]
-  Modifier:  MISSING
+REACTION 1: Hexokinase reaction
+  Reactants: glucose [cytoplasmic state], ATP [unknown]
+  Products:  Glucose-6-phosphate [unknown], ADP [unknown]
+  Modifier:  Hexokinase [cytoplasmic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: fructose 6-phosphate phosphorylation
-  Reactants: fructose 6-phosphate [cytosolic state]
-  Products:  fructose 1,6-bisphosphate [cytosolic state]
-  Modifier:  MISSING
-  QA flags:  missing_modifier — reaction name implies enzymatic catalysis
-
-REACTION 4: fructose 1,6-bisphosphate cleavage
-  Reactants: fructose 1,6-bisphosphate [cytosolic state]
-  Products:  dihydroxyacetone phosphate [cytosolic state], glyceraldehyde 3-phosphate [cytosolic state]
-  Modifier:  MISSING
+REACTION 2: Phosphoglucose isomerase reaction
+  Reactants: Glucose-6-phosphate [unknown]
+  Products:  Fructose-6-phosphate [unknown]
+  Modifier:  Phosphoglucose isomerase [cytoplasmic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: dihydroxyacetone phosphate conversion
-  Reactants: dihydroxyacetone phosphate [cytosolic state]
-  Products:  glyceraldehyde 3-phosphate [cytosolic state]
-  Modifier:  MISSING
+REACTION 3: Phosphofructokinase-1 reaction
+  Reactants: Fructose-6-phosphate [unknown], ATP [unknown]
+  Products:  Fructose-1,6-bisphosphate [unknown], ADP [unknown]
+  Modifier:  Phosphofructokinase-1 [cytoplasmic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: glyceraldehyde 3-phosphate oxidation
-  Reactants: glyceraldehyde 3-phosphate [cytosolic state]
-  Products:  1,3-bisphosphoglycerate [cytosolic state], NADH [cytosolic state]
-  Modifier:  MISSING
+REACTION 4: Aldolase reaction
+  Reactants: Fructose-1,6-bisphosphate [unknown]
+  Products:  Glyceraldehyde-3-phosphate [unknown], Dihydroxyacetone phosphate [unknown]
+  Modifier:  Aldolase [cytoplasmic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: 1,3-bisphosphoglycerate phosphorylation
-  Reactants: 1,3-bisphosphoglycerate [cytosolic state]
-  Products:  3-phosphoglycerate [cytosolic state], ATP [cytosolic state]
-  Modifier:  MISSING
-  QA flags:  missing_modifier — reaction name implies enzymatic catalysis
-
-REACTION 8: 3-phosphoglycerate conversion
-  Reactants: 3-phosphoglycerate [cytosolic state]
-  Products:  2-phosphoglycerate [cytosolic state]
-  Modifier:  MISSING
+REACTION 5: Triose phosphate isomerase reaction
+  Reactants: Dihydroxyacetone phosphate [unknown]
+  Products:  Glyceraldehyde-3-phosphate [unknown]
+  Modifier:  Triose phosphate isomerase [cytoplasmic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: 2-phosphoglycerate conversion
-  Reactants: 2-phosphoglycerate [cytosolic state]
-  Products:  phosphoenolpyruvate [cytosolic state]
-  Modifier:  MISSING
+REACTION 6: Glyceraldehyde-3-phosphate dehydrogenase reaction
+  Reactants: Glyceraldehyde-3-phosphate [unknown], NAD [unknown], Pi [unknown]
+  Products:  1,3-Bisphosphoglycerate [unknown], NADH [unknown], H [unknown]
+  Modifier:  Glyceraldehyde-3-phosphate dehydrogenase [cytoplasmic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 10: pyruvate kinase reaction
-  Reactants: phosphoenolpyruvate [cytosolic state]
-  Products:  pyruvate [cytosolic state], ATP [cytosolic state]
-  Modifier:  pyruvate kinase [cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 7: Phosphoglycerate kinase reaction
+  Reactants: 1,3-Bisphosphoglycerate [unknown], ADP [unknown]
+  Products:  3-Phosphoglycerate [unknown], ATP [unknown]
+  Modifier:  Phosphoglycerate kinase [cytoplasmic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 8: Phosphoglycerate mutase reaction
+  Reactants: 3-Phosphoglycerate [unknown]
+  Products:  2-Phosphoglycerate [unknown]
+  Modifier:  Phosphoglycerate mutase [cytoplasmic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 9: Enolase reaction
+  Reactants: 2-Phosphoglycerate [unknown]
+  Products:  Phosphoenolpyruvate [unknown], H2O [unknown]
+  Modifier:  Enolase [cytoplasmic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 10: Pyruvate kinase reaction
+  Reactants: Phosphoenolpyruvate [unknown], ADP [unknown]
+  Products:  pyruvate [cytoplasmic state], ATP [unknown]
+  Modifier:  Pyruvate kinase [cytoplasmic state] (role=catalyst, confidence=1.0)
   QA flags:  none

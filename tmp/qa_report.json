@@ -1,31 +1,127 @@
 {
   "summary": {
-    "total_species": 14,
+    "total_species": 30,
     "total_reactions": 10,
-    "completeness_score": 0.292
+    "completeness_score": 0.0
   },
   "flags": {
-    "missing_compartments": [],
-    "missing_modifiers": [
+    "missing_compartments": [
       {
-        "reaction": "glucose phosphorylation",
-        "reason": "reaction name implies enzymatic catalysis"
+        "entity": "Glucose-6-phosphate",
+        "reason": "no subcellular location recorded"
       },
       {
-        "reaction": "fructose 6-phosphate phosphorylation",
-        "reason": "reaction name implies enzymatic catalysis"
+        "entity": "Fructose-6-phosphate",
+        "reason": "no subcellular location recorded"
       },
       {
-        "reaction": "1,3-bisphosphoglycerate phosphorylation",
-        "reason": "reaction name implies enzymatic catalysis"
+        "entity": "Fructose-1,6-bisphosphate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Glyceraldehyde-3-phosphate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Dihydroxyacetone phosphate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "1,3-Bisphosphoglycerate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "3-Phosphoglycerate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "2-Phosphoglycerate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Phosphoenolpyruvate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ATP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ADP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NAD+",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Pi",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "H2O",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "H+",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NAD",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "H",
+        "reason": "no subcellular location recorded"
       }
     ],
+    "missing_modifiers": [],
     "possible_complexes": [],
     "transport_like_reactions": [],
     "orphan_nodes": [],
     "missing_ids": [
       {
         "entity": "glucose",
+        "type": "compound"
+      },
+      {
+        "entity": "Glucose-6-phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "Fructose-6-phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "Fructose-1,6-bisphosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "Glyceraldehyde-3-phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "Dihydroxyacetone phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "1,3-Bisphosphoglycerate",
+        "type": "compound"
+      },
+      {
+        "entity": "3-Phosphoglycerate",
+        "type": "compound"
+      },
+      {
+        "entity": "2-Phosphoglycerate",
+        "type": "compound"
+      },
+      {
+        "entity": "Phosphoenolpyruvate",
         "type": "compound"
       },
       {
@@ -37,52 +133,83 @@
         "type": "compound"
       },
       {
+        "entity": "ADP",
+        "type": "compound"
+      },
+      {
+        "entity": "NAD+",
+        "type": "compound"
+      },
+      {
         "entity": "NADH",
         "type": "compound"
       },
       {
-        "entity": "glucose 6-phosphate",
+        "entity": "Pi",
         "type": "compound"
       },
       {
-        "entity": "fructose 6-phosphate",
+        "entity": "H2O",
         "type": "compound"
       },
       {
-        "entity": "fructose 1,6-bisphosphate",
+        "entity": "H+",
         "type": "compound"
       },
       {
-        "entity": "dihydroxyacetone phosphate",
-        "type": "compound"
+        "entity": "Hexokinase",
+        "type": "protein"
       },
       {
-        "entity": "glyceraldehyde 3-phosphate",
-        "type": "compound"
+        "entity": "Phosphoglucose isomerase",
+        "type": "protein"
       },
       {
-        "entity": "1,3-bisphosphoglycerate",
-        "type": "compound"
+        "entity": "Phosphofructokinase-1",
+        "type": "protein"
       },
       {
-        "entity": "3-phosphoglycerate",
-        "type": "compound"
+        "entity": "Aldolase",
+        "type": "protein"
       },
       {
-        "entity": "2-phosphoglycerate",
-        "type": "compound"
+        "entity": "Triose phosphate isomerase",
+        "type": "protein"
       },
       {
-        "entity": "phosphoenolpyruvate",
-        "type": "compound"
+        "entity": "Glyceraldehyde-3-phosphate dehydrogenase",
+        "type": "protein"
       },
       {
-        "entity": "pyruvate kinase",
+        "entity": "Phosphoglycerate kinase",
+        "type": "protein"
+      },
+      {
+        "entity": "Phosphoglycerate mutase",
+        "type": "protein"
+      },
+      {
+        "entity": "Enolase",
+        "type": "protein"
+      },
+      {
+        "entity": "Pyruvate kinase",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [],
+    "duplicate_species": [
+      {
+        "entity_a": "NAD+",
+        "entity_b": "NAD",
+        "reason": "normalized label collision"
+      },
+      {
+        "entity_a": "H+",
+        "entity_b": "H",
+        "reason": "normalized label collision"
+      }
+    ],
     "inconsistent_class": []
   }
 }
