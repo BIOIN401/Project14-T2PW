@@ -1136,28 +1136,35 @@ def run_post_pipeline_sbml_artifacts(
         shutil.rmtree(tmp, ignore_errors=True)
 
 
-def run_post_pipeline_pwml_artifacts(
+def run_pwml_export(
     final_payload: Dict[str, Any],
     pathway_name: str,
     pathway_description: str,
     pathway_subject: str,
     project_root: Path,
+    ref_path: Path,
+    vis_width: int = 3200,
+    vis_height: int = 1400,
+    background_color: str = "#FFFFFF",
+    grounding_dict: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     try:
-        ref_path = project_root / "reference" / "PW000001.pwml"
+        payload = final_payload
+        grounding_report: Dict[str, Any] = {}
+        if grounding_dict:
+            payload, grounding_report = apply_grounding(payload, grounding_dict)
         signature = discover_structure_signature(ref_path)
         args = SimpleNamespace(
-            named_for_id=1,
             name=pathway_name,
             description=pathway_description,
             subject=pathway_subject,
-            height=1400,
-            width=3200,
-            background_color="#FFFFFF",
             pw_id="PW000000",
+            height=vis_height,
+            width=vis_width,
+            background_color=background_color,
             ref=str(ref_path),
         )
-        builder = DeterministicPwmlBuilder(extraction=final_payload, signature=signature, args=args)
+        builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=args)
         build_result = builder.build()
         tree = etree.ElementTree(build_result.root)
         repaired = repair_tree(tree, signature)
@@ -1177,9 +1184,11 @@ def run_post_pipeline_pwml_artifacts(
             "xml_bytes": xml_bytes,
             "validation_report": report,
             "qa": qa_report,
+            "grounding_report": grounding_report,
         }
     except Exception as exc:
-        return {"ok": False, "error": str(exc), "counts": {}, "issues": 0, "output_path": "", "qa": {}}
+        return {"ok": False, "error": str(exc), "counts": {}, "issues": 0,
+                "output_path": "", "qa": {}, "grounding_report": {}}
 
 
 # ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
@@ -2137,42 +2146,69 @@ if st.session_state.get("pipeline_ready"):
                 key="dl_libsbml_checker",
             )
 
-    st.subheader("Post-pipeline PWML export")
-    if st.button("Run PWML generation", key="run_pwml_gen_btn"):
+    st.subheader("PWML export")
+
+    _project_root_pwml = Path(__file__).resolve().parent.parent
+    _ref_candidates = [
+        _project_root_pwml / "reference" / "PW000001.pwml",
+        _project_root_pwml / "reference" / "PW012926.pwml",
+    ]
+    _ref_path_pwml = next((p for p in _ref_candidates if p.exists()), _ref_candidates[0])
+
+    _pwml_cols = st.columns(3)
+    _pwml_name = _pwml_cols[0].text_input("Pathway name", value="Generated Pathway", key="pwml_name")
+    _pwml_subject = _pwml_cols[1].text_input("Subject", value="Metabolic", key="pwml_subject")
+    _pwml_description = _pwml_cols[2].text_input("Description", value="", key="pwml_description")
+
+    _vis_cols = st.columns(3)
+    _pwml_width = _vis_cols[0].number_input("Width", min_value=200, max_value=10000, value=3200, step=100, key="pwml_width")
+    _pwml_height = _vis_cols[1].number_input("Height", min_value=200, max_value=10000, value=1400, step=100, key="pwml_height")
+    _pwml_bg = _vis_cols[2].text_input("Background color", value="#FFFFFF", key="pwml_bg")
+
+    _pwml_grounding = st.checkbox("Apply grounding before export", value=False, key="pwml_grounding")
+    _pwml_grounding_dict: Optional[Dict[str, Any]] = None
+    if _pwml_grounding:
+        _pwml_grounding_path = st.text_input(
+            "Grounding dictionary path", value="data/grounding_dictionary.example.json",
+            key="pwml_grounding_path"
+        )
+        if st.button("Load grounding dictionary", key="pwml_load_grounding"):
+            try:
+                _gp = resolve_path(_pwml_grounding_path)
+                _pwml_grounding_dict = json.loads(_gp.read_text(encoding="utf-8"))
+                if not isinstance(_pwml_grounding_dict, dict):
+                    raise ValueError("Grounding dictionary must be a JSON object.")
+                st.session_state["pwml_grounding_dict"] = _pwml_grounding_dict
+                st.success("Grounding dictionary loaded.")
+            except Exception as _ge:
+                st.error(f"Grounding load failed: {_ge}")
+        _pwml_grounding_dict = st.session_state.get("pwml_grounding_dict")
+
+    if st.button("Generate PWML", key="pwml_generate_btn"):
         if not isinstance(final_payload, dict) or not final_payload:
-            st.error("No final payload in session state. Run the pipeline first.")
+            st.error("No pipeline output in session state. Run the pipeline first.")
         else:
-            with st.spinner("Generating PWML..."):
-                _project_root = Path(__file__).resolve().parent.parent
-                pwml_result = run_post_pipeline_pwml_artifacts(
+            with st.spinner("Building PWML..."):
+                _pwml_result = run_pwml_export(
                     final_payload,
-                    pathway_name=st.session_state.get("pwml_gen_name", "Generated Pathway"),
-                    pathway_description=st.session_state.get("pwml_gen_description", ""),
-                    pathway_subject=st.session_state.get("pwml_gen_subject", "Metabolic"),
-                    project_root=_project_root,
+                    pathway_name=_pwml_name,
+                    pathway_description=_pwml_description,
+                    pathway_subject=_pwml_subject,
+                    project_root=_project_root_pwml,
+                    ref_path=_ref_path_pwml,
+                    vis_width=int(_pwml_width),
+                    vis_height=int(_pwml_height),
+                    background_color=_pwml_bg,
+                    grounding_dict=_pwml_grounding_dict,
                 )
-            st.session_state["post_pipeline_pwml_result"] = pwml_result
-            if pwml_result.get("ok"):
-                st.success(f"PWML generated successfully. Written to: {pwml_result.get('output_path')}")
-            else:
-                st.error(f"PWML generation failed: {pwml_result.get('error', 'unknown error')}")
+            st.session_state["pwml_export_result"] = _pwml_result
 
-    _pwml_gen_cols = st.columns(3)
-    st.session_state["pwml_gen_name"] = _pwml_gen_cols[0].text_input(
-        "Pathway name (PWML)", value="Generated Pathway", key="pwml_gen_name_input"
-    )
-    st.session_state["pwml_gen_subject"] = _pwml_gen_cols[1].text_input(
-        "Subject (PWML)", value="Metabolic", key="pwml_gen_subject_input"
-    )
-    st.session_state["pwml_gen_description"] = _pwml_gen_cols[2].text_input(
-        "Description (PWML)", value="", key="pwml_gen_description_input"
-    )
-
-    _pwml_result = st.session_state.get("post_pipeline_pwml_result")
+    _pwml_result = st.session_state.get("pwml_export_result")
     if isinstance(_pwml_result, dict):
         if _pwml_result.get("ok"):
-            with st.expander("PWML build report", expanded=True):
-                st.write("Build counts", _pwml_result.get("counts", {}))
+            st.success(f"Written to: {_pwml_result.get('output_path')}")
+            with st.expander("Build report", expanded=True):
+                st.write("Counts", _pwml_result.get("counts", {}))
                 st.write("Structural validation issues", _pwml_result.get("issues", 0))
                 _qa = _pwml_result.get("qa", {})
                 if _qa:
@@ -2182,102 +2218,22 @@ if st.session_state.get("pipeline_ready"):
                         st.error("QA errors:\n" + "\n".join(_qa["errors"]))
                     if _qa.get("warnings"):
                         st.warning("QA warnings:\n" + "\n".join(_qa["warnings"]))
-            if _pwml_result.get("xml_bytes"):
-                st.download_button(
-                    "Download pathway.pwml",
-                    data=_pwml_result["xml_bytes"],
-                    file_name="pathway.pwml",
-                    mime="application/xml",
-                    key="dl_post_pipeline_pwml",
-                )
+                _gr = _pwml_result.get("grounding_report")
+                if _gr:
+                    st.write("Grounding report", _gr)
+            _dl_cols = st.columns(2)
+            _dl_cols[0].download_button(
+                "Download pathway.pwml", data=_pwml_result["xml_bytes"],
+                file_name="pathway.pwml", mime="application/xml", key="dl_pwml"
+            )
+            _dl_cols[1].download_button(
+                "Download validation report", data=json.dumps(_pwml_result["validation_report"], indent=2),
+                file_name="pwml_validation_report.json", mime="application/json", key="dl_pwml_report"
+            )
         else:
-            st.error(f"PWML generation error: {_pwml_result.get('error', 'unknown')}")
+            st.error(f"PWML export failed: {_pwml_result.get('error', 'unknown')}")
 
     render_pathwhiz_converter_section(llm_client_module)
-
-    st.subheader("PWML export")
-    pwml_col_a, pwml_col_b = st.columns(2)
-    ref_path_text = pwml_col_a.text_input("Reference PWML path", value="reference/PW012926.pwml")
-    grounding_enabled = pwml_col_b.checkbox("Apply deterministic grounding before PWML export", value=False)
-
-    grounding_path_text = ""
-    if grounding_enabled:
-        grounding_path_text = st.text_input("Grounding dictionary path", value="data/grounding_dictionary.example.json")
-
-    meta_col_1, meta_col_2, meta_col_3 = st.columns(3)
-    pw_id = meta_col_1.text_input("pw-id", value="PW000XYZ")
-    named_for_id = meta_col_2.number_input("named-for-id", min_value=1, max_value=99999999, value=123, step=1)
-    subject = meta_col_3.text_input("subject", value="Metabolic")
-
-    naming_col_1, naming_col_2 = st.columns(2)
-    pathway_name = naming_col_1.text_input("Pathway name", value="Generated Pathway")
-    pathway_description = naming_col_2.text_input("Pathway description", value="")
-
-    vis_col_1, vis_col_2, vis_col_3 = st.columns(3)
-    vis_width = vis_col_1.number_input("Visualization width", min_value=200, max_value=10000, value=3200, step=100)
-    vis_height = vis_col_2.number_input("Visualization height", min_value=200, max_value=10000, value=1400, step=100)
-    background_color = vis_col_3.text_input("Background color", value="#FFFFFF")
-
-    if st.button("Generate PWML from final JSON"):
-        payload_for_writer = final_payload
-        if grounding_enabled:
-            try:
-                grounding_path = resolve_path(grounding_path_text)
-                grounding_dict = json.loads(grounding_path.read_text(encoding="utf-8"))
-                if not isinstance(grounding_dict, dict):
-                    raise ValueError("Grounding dictionary must be a JSON object.")
-                payload_for_writer, grounding_report = apply_grounding(payload_for_writer, grounding_dict)
-                st.write("Grounding report", grounding_report)
-                st.download_button(
-                    "Download grounded JSON",
-                    json.dumps(payload_for_writer, indent=2),
-                    file_name="grounded_output.json",
-                    mime="application/json",
-                )
-            except Exception as exc:
-                st.error(f"Grounding failed: {exc}")
-                st.stop()
-        try:
-            reference_path = resolve_path(ref_path_text)
-            signature = discover_structure_signature(reference_path)
-            args = SimpleNamespace(
-                named_for_id=int(named_for_id),
-                name=pathway_name,
-                description=pathway_description,
-                subject=subject,
-                pw_id=pw_id,
-                height=int(vis_height),
-                width=int(vis_width),
-                background_color=background_color,
-                ref=str(reference_path),
-            )
-            builder = DeterministicPwmlBuilder(payload_for_writer, signature, args)
-            build = builder.build()
-            tree = etree.ElementTree(build.root)
-            repaired = repair_tree(tree, signature)
-            report = validate_generated_tree(repaired, signature)
-            xml_bytes = etree.tostring(
-                repaired.getroot(), encoding="utf-8", xml_declaration=True, pretty_print=True
-            )
-            st.write("PWML generation summary", build.counts)
-            st.write("Dummy geometry generated", build.geometry_generated)
-            st.write("PWML structural validation", {"ok": report["ok"], "issue_count": report["issue_count"]})
-            if not report["ok"]:
-                st.json(report["issues"])
-            st.download_button(
-                "Download PWML",
-                data=xml_bytes,
-                file_name="out.pwml",
-                mime="application/xml",
-            )
-            st.download_button(
-                "Download PWML validation report",
-                data=json.dumps(report, indent=2),
-                file_name="writer_validation_report.json",
-                mime="application/json",
-            )
-        except Exception as exc:
-            st.error(f"PWML generation failed: {exc}")
 
     st.subheader("Connectivity snapshot")
     stats = graph_summary(final_payload)
