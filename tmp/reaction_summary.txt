@@ -1,62 +1,142 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: Hexokinase reaction
-  Reactants: glucose [cytoplasmic state], ATP [unknown]
-  Products:  Glucose-6-phosphate [unknown], ADP [unknown]
-  Modifier:  Hexokinase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 1: PAL reaction
+  Reactants: phenylalanine [unknown]
+  Products:  coumaryl alcohol [unknown]
+  Modifier:  PAL [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: Phosphoglucose isomerase reaction
-  Reactants: Glucose-6-phosphate [unknown]
-  Products:  Fructose-6-phosphate [unknown]
-  Modifier:  Phosphoglucose isomerase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 2: CCR/CAD monolignol production
+  Reactants: coniferyl aldehyde [unknown]
+  Products:  coniferyl alcohol [unknown]
+  Modifier:  CCR [unknown] (role=catalyst, confidence=1.0), CAD [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: Phosphofructokinase-1 reaction
-  Reactants: Fructose-6-phosphate [unknown], ATP [unknown]
-  Products:  Fructose-1,6-bisphosphate [unknown], ADP [unknown]
-  Modifier:  Phosphofructokinase-1 [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 3: CFAT reaction
+  Reactants: coniferyl alcohol [unknown]
+  Products:  coniferyl acetate [unknown]
+  Modifier:  CFAT [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: Aldolase reaction
-  Reactants: Fructose-1,6-bisphosphate [unknown]
-  Products:  Glyceraldehyde-3-phosphate [unknown], Dihydroxyacetone phosphate [unknown]
-  Modifier:  Aldolase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 4: EGS reaction
+  Reactants: coniferyl acetate [unknown]
+  Products:  eugenol [clove leaves/buds cytosol]
+  Modifier:  EGS [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: Triose phosphate isomerase reaction
-  Reactants: Dihydroxyacetone phosphate [unknown]
-  Products:  Glyceraldehyde-3-phosphate [unknown]
-  Modifier:  Triose phosphate isomerase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 5: IGS reaction
+  Reactants: coniferyl acetate [unknown]
+  Products:  isoeugenol [unknown]
+  Modifier:  IGS [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: Glyceraldehyde-3-phosphate dehydrogenase reaction
-  Reactants: Glyceraldehyde-3-phosphate [unknown], NAD [unknown], Pi [unknown]
-  Products:  1,3-Bisphosphoglycerate [unknown], NADH [unknown], H [unknown]
-  Modifier:  Glyceraldehyde-3-phosphate dehydrogenase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 6: AAT eugenol acetylation
+  Reactants: eugenol [clove leaves/buds cytosol]
+  Products:  eugenol acetate [clove leaves/buds cytosol]
+  Modifier:  AAT [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: Phosphoglycerate kinase reaction
-  Reactants: 1,3-Bisphosphoglycerate [unknown], ADP [unknown]
-  Products:  3-Phosphoglycerate [unknown], ATP [unknown]
-  Modifier:  Phosphoglycerate kinase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 7: eugenol acetate hydrolysis
+  Reactants: eugenol acetate [clove leaves/buds cytosol]
+  Products:  eugenol [clove leaves/buds cytosol]
+  Modifier:  hydrolase [unknown] (role=catalyst, confidence=1.0), esterase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: Phosphoglycerate mutase reaction
-  Reactants: 3-Phosphoglycerate [unknown]
-  Products:  2-Phosphoglycerate [unknown]
-  Modifier:  Phosphoglycerate mutase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 8: AAT chavicol acetylation
+  Reactants: chavicol [unknown]
+  Products:  chavicol acetate [unknown]
+  Modifier:  AAT [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: Enolase reaction
-  Reactants: 2-Phosphoglycerate [unknown]
-  Products:  Phosphoenolpyruvate [unknown], H2O [unknown]
-  Modifier:  Enolase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 9: AAT isoeugenol acetylation
+  Reactants: isoeugenol [unknown]
+  Products:  isoeugenol acetate [unknown]
+  Modifier:  AAT [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 10: Pyruvate kinase reaction
-  Reactants: Phosphoenolpyruvate [unknown], ADP [unknown]
-  Products:  pyruvate [cytoplasmic state], ATP [unknown]
-  Modifier:  Pyruvate kinase [cytoplasmic state] (role=catalyst, confidence=1.0)
+REACTION 10: C4H hydroxylation
+  Reactants: cinnamate [unknown]
+  Products:  p-coumarate [unknown]
+  Modifier:  C4H [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 11: PAL phenylalanine deamination
+  Reactants: phenylalanine [unknown]
+  Products:  cinnamate [unknown]
+  Modifier:  PAL [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 12: 4CL p-coumarate CoA ligation
+  Reactants: p-coumarate [unknown]
+  Products:  p-coumaroyl-CoA [unknown]
+  Modifier:  4CL [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 13: HCT shikimate hydroxycinnamoyl transfer
+  Reactants: p-coumaroyl-CoA [unknown], shikimate [unknown]
+  Products:  p-coumaroyl shikimate [unknown]
+  Modifier:  HCT [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: C3'H p-coumaroyl shikimate hydroxylation
+  Reactants: p-coumaroyl shikimate [unknown]
+  Products:  caffeoyl shikimate [unknown]
+  Modifier:  C3′H [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 15: CSE caffeoyl shikimate esterase reaction
+  Reactants: caffeoyl shikimate [unknown]
+  Products:  caffeate [unknown]
+  Modifier:  CSE [unknown] (role=catalyst, confidence=1.0), esterase [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 16: COMT caffeate/5-hydroxyferulate methylation
+  Reactants: caffeate [unknown]
+  Products:  ferulate [unknown]
+  Modifier:  COMT [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 17: CCoAOMT caffeoyl-CoA methylation
+  Reactants: caffeoyl-CoA [unknown]
+  Products:  feruloyl-CoA [unknown]
+  Modifier:  CCoAOMT [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 18: CCR feruloyl-CoA reduction
+  Reactants: feruloyl-CoA [unknown]
+  Products:  coniferyl aldehyde [unknown]
+  Modifier:  CCR [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 19: F5H coniferaldehyde hydroxylation
+  Reactants: coniferyl aldehyde [unknown]
+  Products:  5-hydroxyconiferaldehyde [unknown]
+  Modifier:  F5H [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 20: CAD sinapaldehyde reduction to sinapyl alcohol
+  Reactants: 5-hydroxyconiferaldehyde [unknown]
+  Products:  sinapyl alcohol [unknown]
+  Modifier:  CAD [unknown] (role=catalyst, confidence=1.0), PAL [unknown] (role=catalyst, confidence=1.0), CCR [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 21: CFAT coumaryl alcohol acetylation
+  Reactants: coumaryl alcohol [unknown]
+  Products:  coumaryl acetate [unknown]
+  Modifier:  CFAT [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 1: ABC-mediated eugenol acetate transport
+  From: clove leaves/buds cytosol
+  To:   clove leaves/buds plasma membrane
+  Cargo: eugenol acetate [clove leaves/buds cytosol]
+  Transporter: ABC transporter [clove leaves/buds plasma membrane] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 2: ABC-mediated eugenol transport
+  From: clove leaves/buds cytosol
+  To:   clove leaves/buds plasma membrane
+  Cargo: eugenol [clove leaves/buds cytosol]
+  Transporter: ABC transporter [clove leaves/buds plasma membrane] (role=transporter, confidence=1.0)
   QA flags:  none
