@@ -66,6 +66,12 @@ def _first_nonempty(row: Dict[str, Any], keys: Sequence[str]) -> Any:
     for key in keys:
         if key in mapped and mapped.get(key) not in (None, ""):
             return mapped.get(key)
+    candidates = _safe_list(meta.get("candidates"))
+    if candidates and isinstance(candidates[0], dict):
+        top = candidates[0]
+        for key in keys:
+            if key in top and top.get(key) not in (None, ""):
+                return top.get(key)
     return None
 
 
@@ -431,7 +437,7 @@ def build_pwml_ir(
                 report["unresolved"]["db_identities"].append(issue)
                 _add_issue(
                     report,
-                    "error",
+                    "warning",
                     "missing_db_identity",
                     f"{entity_type} '{rec['name']}' has no required DB-backed PWML identity.",
                     pointer=f"/entities/{source_key}",
