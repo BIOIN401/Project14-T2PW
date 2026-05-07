@@ -2206,6 +2206,9 @@ if st.session_state.get("pipeline_ready"):
                 _gr = _pwml_result.get("grounding_report")
                 if _gr:
                     st.write("Grounding report", _gr)
+            with st.expander("PWML XML", expanded=False):
+                _pwml_xml_str = _pwml_result.get("xml_bytes", b"").decode("utf-8", errors="replace")
+                st.code(_pwml_xml_str, language="xml")
             _dl_cols = st.columns(4)
             _dl_cols[0].download_button(
                 "Download pathway.pwml", data=_pwml_result["xml_bytes"],
