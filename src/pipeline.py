@@ -1062,18 +1062,23 @@ def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
         if not isinstance(item, dict):
             continue
         entry: Dict[str, Any] = {}
-        # Accept both old "protein_complex" key and new "entity" key from modifier schema.
+        # Accept protein_complex, entity (modifier schema), or plain protein key.
         protein_complex = (
             item.get("protein_complex")
             or item.get("entity")
             or ""
         ).strip()
-        if protein_complex:
-            norm = _normalize_name(protein_complex)
+        plain_protein = (item.get("protein") or "").strip()
+        actor_name = protein_complex or plain_protein
+        if actor_name:
+            norm = _normalize_name(actor_name)
             if norm in seen_names:
                 continue
             seen_names.add(norm)
-            entry["protein_complex"] = protein_complex
+            if protein_complex:
+                entry["protein_complex"] = protein_complex
+            else:
+                entry["protein"] = plain_protein
         evidence = (item.get("evidence") or "").strip()
         if evidence:
             entry["evidence"] = evidence

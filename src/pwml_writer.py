@@ -216,7 +216,14 @@ class DeterministicPwmlBuilder:
         self.extraction = extraction
         self.signature = signature
         self.args = args
-        self.ids = IdFactory(1)
+        self.aux_ids = IdFactory(1)
+        self.ids = self.aux_ids  # alias for visualization/edge sub-objects
+        self.state_ids = IdFactory(10000)
+        self.compound_ids = IdFactory(20000)
+        self.protein_ids = IdFactory(30000)
+        self.complex_ids = IdFactory(40000)
+        self.reaction_ids = IdFactory(50000)
+        self.location_ids = IdFactory(100000)
 
         entities = extraction.get("entities", {}) if isinstance(extraction, dict) else {}
         self.entities = entities if isinstance(entities, dict) else {}
@@ -230,7 +237,7 @@ class DeterministicPwmlBuilder:
 
         self.section_items: Dict[str, List[Dict[str, Any]]] = {}
 
-        self.pathway_id_int = args.named_for_id if args.named_for_id > 0 else 1
+        self.pathway_id_int = 1
         self.pathway_visualization_id_int = self.pathway_id_int
         self.pathway_visualization_id = f"PathwayVisualization{self.pathway_visualization_id_int}"
         self.pathway_visualization_context_id = f"PathwayVisualizationContext{self.pathway_visualization_id_int}"
@@ -252,7 +259,32 @@ class DeterministicPwmlBuilder:
         for key, section in key_to_section.items():
             records = _as_named_records(self.entities.get(key, []))
             for record in records:
-                record["id"] = self.ids.next()
+                if key == "compounds":
+                    pw_id = None
+                    for k in ["pathbank_compound_id", "pw_compound_id"]:
+                        v = record.get(k) or (record.get("mapping_meta") or {}).get(k)
+                        if v:
+                            try: pw_id = int(v); break
+                            except (ValueError, TypeError): pass
+                    record["id"] = pw_id if pw_id is not None else self.compound_ids.next()
+                elif key == "proteins":
+                    pw_id = None
+                    for k in ["pathbank_protein_id", "pw_protein_id"]:
+                        v = record.get(k) or (record.get("mapping_meta") or {}).get(k)
+                        if v:
+                            try: pw_id = int(v); break
+                            except (ValueError, TypeError): pass
+                    record["id"] = pw_id if pw_id is not None else self.protein_ids.next()
+                elif key == "protein_complexes":
+                    pw_id = None
+                    for k in ["pathbank_complex_id", "pw_complex_id"]:
+                        v = record.get(k) or (record.get("mapping_meta") or {}).get(k)
+                        if v:
+                            try: pw_id = int(v); break
+                            except (ValueError, TypeError): pass
+                    record["id"] = pw_id if pw_id is not None else self.complex_ids.next()
+                else:
+                    record["id"] = self.ids.next()
             self.entity_records[section] = records
             self.entity_lookup[key] = {_normalize_key(rec["name"]): rec for rec in records}
 
@@ -307,7 +339,7 @@ class DeterministicPwmlBuilder:
         reactions_raw = _as_process_list(self.processes, "reactions")
         out: List[Dict[str, Any]] = []
         for raw in reactions_raw:
-            rid = self.ids.next()
+            rid = self.reaction_ids.next()
             left: List[Dict[str, Any]] = []
             right: List[Dict[str, Any]] = []
 
@@ -372,18 +404,26 @@ class DeterministicPwmlBuilder:
                     pc_name = (
                         str(enzyme.get("protein_complex") or enzyme.get("protein-complex") or "").strip()
                     )
-                    if not pc_name:
-                        continue
-                    pc = self.entity_lookup.get("protein_complexes", {}).get(_normalize_key(pc_name))
-                    if not pc:
-                        continue
-                    enzymes.append(
-                        {
-                            "id": self.ids.next(),
-                            "protein-complex-id": int(pc["id"]),
-                            "enzyme-class": str(enzyme.get("enzyme_class") or "").strip(),
-                        }
-                    )
+                    prot_name = str(enzyme.get("protein") or "").strip()
+                    if pc_name:
+                        pc = self.entity_lookup.get("protein_complexes", {}).get(_normalize_key(pc_name))
+                        if pc:
+                            enzymes.append(
+                                {
+                                    "id": self.ids.next(),
+                                    "protein-complex-id": int(pc["id"]),
+                                    "enzyme-class": str(enzyme.get("enzyme_class") or "").strip(),
+                                }
+                            )
+                            continue
+                        # protein_complex key may hold a plain protein name (from _clean_enzymes)
+                        prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(pc_name))
+                        if prot:
+                            enzymes.append({"id": self.ids.next(), "protein-id": int(prot["id"])})
+                    elif prot_name:
+                        prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(prot_name))
+                        if prot:
+                            enzymes.append({"id": self.ids.next(), "protein-id": int(prot["id"])})
 
             out.append(
                 {
@@ -1163,7 +1203,7 @@ class DeterministicPwmlBuilder:
             if tag == "named-for-id":
                 node = etree.SubElement(root, tag)
                 node.set("type", "integer")
-                node.text = str(self.args.named_for_id)
+                node.text = str(self.pathway_id_int)
             elif tag == "named-for-type":
                 node = etree.SubElement(root, tag)
                 node.text = "Pathway"
