@@ -61,6 +61,7 @@ from preprocessor import preprocess
 from pdf_parser import extract_text_from_pdf, get_pdf_info, parse_pdf, SKIP_SECTIONS
 from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree
 from pwml_writer import DeterministicPwmlBuilder
+from pwml_ir import build_pwml_ir, validate_pwml_ir
 from pwml_qa import run_pwml_qa
 from qa_graph import build_graph, connected_components, degrees, get_entities, node
 
@@ -330,6 +331,7 @@ def attach_enzymes_from_reaction_evidence(payload, report=None):
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
+    build_legacy_sbml: bool = False,
     use_llm_audit: bool,
     use_sbml_overwatch: bool,
     default_compartment: str,
@@ -1027,49 +1029,51 @@ def run_post_pipeline_sbml_artifacts(
                 "error": str(exc),
             }
             sbml_input_path = mapped_json
-        sbml_build_report = build_sbml(
-            sbml_input_path,
-            sbml_path,
-            sbml_report_json_path,
-            sbml_report_txt_path,
-            default_compartment_name=default_compartment,
-            db_config={
-                "host": db_host,
-                "port": db_port,
-                "user": db_user,
-                "password": db_password,
-                "schema": db_schema,
-            },
-        )
         sbml_overwatch_report: Dict[str, Any] = {}
-        if use_sbml_overwatch:
-            sbml_overwatch_report = run_sbml_overwatch(
-                sbml_input_path,
-                sbml_path,
-                sbml_report_json_path,
-                sbml_overwatch_path,
-                use_llm=True,
-                llm_max_tokens=3000,
-            )
         sbml_diagram_png_bytes = b""
         sbml_diagram_error = ""
         sbml_render_layout_summary: Dict[str, Any] = {}
         sbml_render_ready_sbml_bytes = b""
         sbml_clean_bytes = b""
         sbml_clean_summary: Dict[str, Any] = {}
-        try:
-            render_artifacts = build_render_artifacts(str(sbml_path))
-            sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
-            sbml_render_layout_summary = _safe_dict(render_artifacts.get("layout_summary"))
-            sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
-        except Exception as exc:  # noqa: BLE001
-            sbml_diagram_error = str(exc)
-
-        if sbml_render_ready_sbml_bytes:
+        sbml_build_report: Dict[str, Any] = {}
+        if build_legacy_sbml:
+            sbml_build_report = build_sbml(
+                sbml_input_path,
+                sbml_path,
+                sbml_report_json_path,
+                sbml_report_txt_path,
+                default_compartment_name=default_compartment,
+                db_config={
+                    "host": db_host,
+                    "port": db_port,
+                    "user": db_user,
+                    "password": db_password,
+                    "schema": db_schema,
+                },
+            )
+            if use_sbml_overwatch:
+                sbml_overwatch_report = run_sbml_overwatch(
+                    sbml_input_path,
+                    sbml_path,
+                    sbml_report_json_path,
+                    sbml_overwatch_path,
+                    use_llm=True,
+                    llm_max_tokens=3000,
+                )
             try:
-                sbml_clean_bytes, sbml_clean_summary = strip_unmapped(sbml_render_ready_sbml_bytes)
-            except Exception:  # noqa: BLE001
-                pass
+                render_artifacts = build_render_artifacts(str(sbml_path))
+                sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
+                sbml_render_layout_summary = _safe_dict(render_artifacts.get("layout_summary"))
+                sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
+            except Exception as exc:  # noqa: BLE001
+                sbml_diagram_error = str(exc)
+
+            if sbml_render_ready_sbml_bytes:
+                try:
+                    sbml_clean_bytes, sbml_clean_summary = strip_unmapped(sbml_render_ready_sbml_bytes)
+                except Exception:  # noqa: BLE001
+                    pass
 
         return {
             "gate_failed": False,
@@ -1088,10 +1092,14 @@ def run_post_pipeline_sbml_artifacts(
             "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
             "mapping_report": mapping_report,
             "enrichment_report": enrichment_report,
-            "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")),
-            "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
+            "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8"))
+            if sbml_report_json_path.exists()
+            else {},
+            "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8")
+            if sbml_report_txt_path.exists()
+            else "",
             "sbml_overwatch_report": sbml_overwatch_report,
-            "sbml_xml_bytes": sbml_path.read_bytes(),
+            "sbml_xml_bytes": sbml_path.read_bytes() if sbml_path.exists() else b"",
             "sbml_diagram_png_bytes": sbml_diagram_png_bytes,
             "sbml_diagram_error": sbml_diagram_error,
             "sbml_render_layout_summary": sbml_render_layout_summary,
@@ -1105,7 +1113,9 @@ def run_post_pipeline_sbml_artifacts(
                 sbml_path.read_bytes() if sbml_path.exists() else b"",
                 sbml_render_ready_sbml_bytes,
                 sbml_clean_bytes,
-            ),
+            )
+            if build_legacy_sbml
+            else "",
             "enrichment_cache_path": str(enrichment_cache_path),
             "enrichment_dump_path": str(enrichment_dump_path),
             "mapping_id_source": id_source,
@@ -1147,12 +1157,36 @@ def run_pwml_export(
     vis_height: int = 1400,
     background_color: str = "#FFFFFF",
     grounding_dict: Optional[Dict[str, Any]] = None,
+    strict_db: bool = True,
 ) -> Dict[str, Any]:
     try:
         payload = final_payload
         grounding_report: Dict[str, Any] = {}
         if grounding_dict:
             payload, grounding_report = apply_grounding(payload, grounding_dict)
+        pwml_ir, ir_report = build_pwml_ir(
+            payload,
+            pathway_name=pathway_name,
+            pathway_subject=pathway_subject,
+            strict_db=bool(strict_db),
+            width=int(vis_width),
+            height=int(vis_height),
+        )
+        pwml_ir.setdefault("pathway", {})["description"] = pathway_description
+        ir_validation = validate_pwml_ir(pwml_ir)
+        if ir_report.get("errors") or ir_validation.get("errors"):
+            return {
+                "ok": False,
+                "error": "PWML IR validation failed.",
+                "counts": ir_report.get("counts", {}),
+                "issues": len(ir_validation.get("errors", [])),
+                "output_path": "",
+                "qa": {},
+                "grounding_report": grounding_report,
+                "pwml_ir": pwml_ir,
+                "pwml_ir_report": ir_report,
+                "pwml_ir_validation": ir_validation,
+            }
         signature = discover_structure_signature(ref_path)
         args = SimpleNamespace(
             name=pathway_name,
@@ -1164,7 +1198,7 @@ def run_pwml_export(
             background_color=background_color,
             ref=str(ref_path),
         )
-        builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=args)
+        builder = DeterministicPwmlBuilder(extraction=pwml_ir, signature=signature, args=args)
         build_result = builder.build()
         tree = etree.ElementTree(build_result.root)
         repaired = repair_tree(tree, signature)
@@ -1185,6 +1219,9 @@ def run_pwml_export(
             "validation_report": report,
             "qa": qa_report,
             "grounding_report": grounding_report,
+            "pwml_ir": pwml_ir,
+            "pwml_ir_report": ir_report,
+            "pwml_ir_validation": ir_validation,
         }
     except Exception as exc:
         return {"ok": False, "error": str(exc), "counts": {}, "issues": 0,
@@ -1676,7 +1713,7 @@ if st.session_state.get("pipeline_ready"):
     else:
         st.info("Run the pipeline to generate a pathway summary.")
 
-    st.subheader("Post-pipeline SBML export")
+    st.subheader("Post-pipeline audit and DB mapping")
     post_col_a, post_col_b = st.columns(2)
     use_llm_audit = post_col_a.checkbox(
         "Use LLM in audit stage",
@@ -1685,9 +1722,9 @@ if st.session_state.get("pipeline_ready"):
         key="post_use_llm_audit",
     )
     use_sbml_overwatch = post_col_a.checkbox(
-        "Use SBML semantic overwatch",
-        value=True,
-        help="Runs deterministic + LLM semantic review on generated SBML.",
+        "Use SBML semantic overwatch for legacy export",
+        value=False,
+        help="Only used by the legacy SBML export path.",
         key="post_use_sbml_overwatch",
     )
     use_stoich_agent = post_col_a.checkbox(
@@ -1737,8 +1774,8 @@ if st.session_state.get("pipeline_ready"):
     )
     retrieval_cols = st.columns(3)
     use_example_retrieval = retrieval_cols[0].checkbox(
-        "Use SBML motif retrieval",
-        value=True,
+        "Use SBML motif retrieval during audit",
+        value=False,
         key="post_use_example_retrieval",
         help="Injects nearest SBML motif examples into each audit LLM call.",
     )
@@ -1808,11 +1845,12 @@ if st.session_state.get("pipeline_ready"):
             key="post_db_password",
         )
 
-    if st.button("Run post-pipeline SBML conversion"):
+    if st.button("Run post-pipeline audit + DB mapping"):
         try:
-            with st.spinner("Running audit, patching, ID mapping, and SBML build..."):
+            with st.spinner("Running audit, patching, and ID mapping..."):
                 artifacts = run_post_pipeline_sbml_artifacts(
                     final_payload,
+                    build_legacy_sbml=False,
                     use_llm_audit=bool(use_llm_audit),
                     use_sbml_overwatch=bool(use_sbml_overwatch),
                     default_compartment=(default_compartment or "cell").strip() or "cell",
@@ -1851,7 +1889,7 @@ if st.session_state.get("pipeline_ready"):
             if bool(_pa.get("gate_failed", False)):
                 st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
             else:
-                st.success("Post-pipeline conversion completed.")
+                st.success("Post-pipeline audit and DB mapping completed.")
         except Exception as exc:
             st.error(f"Post-pipeline conversion failed: {exc}")
 
@@ -2056,97 +2094,125 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
-        if post_artifacts.get("sbml_xml_bytes"):
-            st.download_button(
-                "Download pathway.sbml",
-                post_artifacts["sbml_xml_bytes"],
-                file_name="pathway.sbml",
-                mime="application/xml",
-                key="dl_pathway_sbml",
-            )
-        if post_artifacts.get("sbml_render_ready_sbml_bytes"):
-            st.download_button(
-                "Download pathway.render_ready.sbml",
-                post_artifacts["sbml_render_ready_sbml_bytes"],
-                file_name="pathway.render_ready.sbml",
-                mime="application/xml",
-                key="dl_pathway_render_ready_sbml",
-            )
-        if post_artifacts.get("sbml_clean_bytes"):
-            st.download_button(
-                "Download pathway.render_ready.clean.sbml (unmapped entities removed)",
-                post_artifacts["sbml_clean_bytes"],
-                file_name="pathway.render_ready.clean.sbml",
-                mime="application/xml",
-                key="dl_pathway_render_ready_clean_sbml",
-            )
-            clean_summary = post_artifacts.get("sbml_clean_summary", {})
-            if clean_summary:
-                with st.expander("Clean SBML removal summary"):
-                    st.write(f"Compartments removed: {clean_summary.get('total_removed_compartments', 0)}")
-                    st.write(f"Species removed: {clean_summary.get('total_removed_species', 0)}")
-                    st.write(f"Reactions removed (no ID): {clean_summary.get('total_removed_reactions', 0)}")
-                    st.write(f"Reactions removed (cascade): {clean_summary.get('total_cascade_removed_reactions', 0)}")
-                    if clean_summary.get("removed_species"):
-                        st.json(clean_summary["removed_species"])
-                    if clean_summary.get("removed_reactions") or clean_summary.get("cascade_removed_reactions"):
-                        st.json(
-                            clean_summary.get("removed_reactions", [])
-                            + clean_summary.get("cascade_removed_reactions", [])
+        with st.expander("Advanced / Legacy SBML Export", expanded=False):
+            if not post_artifacts.get("sbml_xml_bytes"):
+                st.caption("SBML is not generated by the primary post-pipeline path. Use the legacy export button below when needed.")
+            if st.button("Run legacy SBML export", key="run_legacy_sbml_export_btn"):
+                try:
+                    with st.spinner("Running legacy SBML export..."):
+                        legacy_artifacts = run_post_pipeline_sbml_artifacts(
+                            final_payload,
+                            build_legacy_sbml=True,
+                            use_llm_audit=bool(use_llm_audit),
+                            use_sbml_overwatch=bool(use_sbml_overwatch),
+                            default_compartment=(default_compartment or "cell").strip() or "cell",
+                            mapping_cache_path=mapping_cache_text.strip() or "id_mapping_cache.json",
+                            id_source=(id_source_mode or "hybrid").strip().lower(),
+                            db_host=(db_host or "").strip(),
+                            db_port=int(db_port),
+                            db_user=(db_user or "").strip(),
+                            db_password=db_password or "",
+                            db_schema=(db_schema or "pathbank").strip() or "pathbank",
+                            audit_max_rounds=int(audit_max_rounds),
+                            audit_timeout_seconds=int(audit_timeout_seconds),
+                            audit_candidate_count=int(audit_candidate_count),
+                            use_example_retrieval=bool(use_example_retrieval),
+                            example_index_path=(example_index_path or "").strip(),
+                            example_top_k=int(example_top_k),
+                            use_gap_resolver=bool(use_gap_resolver),
+                            use_llm_gap_resolver=bool(use_llm_gap_resolver),
+                            gap_resolver_max_items=int(gap_resolver_max_items),
+                            qa_report=st.session_state.get("qa_report"),
+                            reaction_summary=st.session_state.get("reaction_summary"),
+                            use_stoich_agent=bool(use_stoich_agent),
                         )
-        if post_artifacts.get("sbml_diagram_png_bytes"):
-            st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
-            st.download_button(
-                "Download sbml_diagram.png",
-                post_artifacts["sbml_diagram_png_bytes"],
-                file_name="sbml_diagram.png",
-                mime="image/png",
-                key="dl_sbml_diagram_png",
-            )
-        elif str(post_artifacts.get("sbml_diagram_error", "")).strip():
-            st.warning(f"SBML diagram render issue: {post_artifacts.get('sbml_diagram_error')}")
-        st.download_button(
-            "Download sbml_validation_report.json",
-            json.dumps(post_artifacts["sbml_report_json"], indent=2),
-            file_name="sbml_validation_report.json",
-            mime="application/json",
-            key="dl_sbml_json",
-        )
-        st.download_button(
-            "Download sbml_validation_report.txt",
-            post_artifacts["sbml_report_txt"],
-            file_name="sbml_validation_report.txt",
-            mime="text/plain",
-            key="dl_sbml_txt",
-        )
-        if post_artifacts.get("sbml_overwatch_report"):
-            st.download_button(
-                "Download sbml_overwatch_report.json",
-                json.dumps(post_artifacts["sbml_overwatch_report"], indent=2),
-                file_name="sbml_overwatch_report.json",
-                mime="application/json",
-                key="dl_sbml_overwatch",
-            )
+                    st.session_state["post_pipeline_artifacts"] = legacy_artifacts
+                    post_artifacts = legacy_artifacts
+                    st.success("Legacy SBML export completed.")
+                except Exception as exc:
+                    st.error(f"Legacy SBML export failed: {exc}")
+            if post_artifacts.get("sbml_xml_bytes"):
+                st.download_button(
+                    "Download pathway.sbml",
+                    post_artifacts["sbml_xml_bytes"],
+                    file_name="pathway.sbml",
+                    mime="application/xml",
+                    key="dl_pathway_sbml",
+                )
+            if post_artifacts.get("sbml_render_ready_sbml_bytes"):
+                st.download_button(
+                    "Download pathway.render_ready.sbml",
+                    post_artifacts["sbml_render_ready_sbml_bytes"],
+                    file_name="pathway.render_ready.sbml",
+                    mime="application/xml",
+                    key="dl_pathway_render_ready_sbml",
+                )
+            if post_artifacts.get("sbml_clean_bytes"):
+                st.download_button(
+                    "Download pathway.render_ready.clean.sbml (unmapped entities removed)",
+                    post_artifacts["sbml_clean_bytes"],
+                    file_name="pathway.render_ready.clean.sbml",
+                    mime="application/xml",
+                    key="dl_pathway_render_ready_clean_sbml",
+                )
+                clean_summary = post_artifacts.get("sbml_clean_summary", {})
+                if clean_summary:
+                    st.write("Clean SBML removal summary", clean_summary)
+            if post_artifacts.get("sbml_diagram_png_bytes"):
+                st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
+                st.download_button(
+                    "Download sbml_diagram.png",
+                    post_artifacts["sbml_diagram_png_bytes"],
+                    file_name="sbml_diagram.png",
+                    mime="image/png",
+                    key="dl_sbml_diagram_png",
+                )
+            elif str(post_artifacts.get("sbml_diagram_error", "")).strip():
+                st.warning(f"SBML diagram render issue: {post_artifacts.get('sbml_diagram_error')}")
+            if post_artifacts.get("sbml_report_json"):
+                st.download_button(
+                    "Download sbml_validation_report.json",
+                    json.dumps(post_artifacts["sbml_report_json"], indent=2),
+                    file_name="sbml_validation_report.json",
+                    mime="application/json",
+                    key="dl_sbml_json",
+                )
+            if post_artifacts.get("sbml_report_txt"):
+                st.download_button(
+                    "Download sbml_validation_report.txt",
+                    post_artifacts["sbml_report_txt"],
+                    file_name="sbml_validation_report.txt",
+                    mime="text/plain",
+                    key="dl_sbml_txt",
+                )
+            if post_artifacts.get("sbml_overwatch_report"):
+                st.download_button(
+                    "Download sbml_overwatch_report.json",
+                    json.dumps(post_artifacts["sbml_overwatch_report"], indent=2),
+                    file_name="sbml_overwatch_report.json",
+                    mime="application/json",
+                    key="dl_sbml_overwatch",
+                )
 
-        checker_key = "post_pipeline_libsbml_check"
-        if post_artifacts.get("sbml_xml_bytes") and st.button("Run libSBML checker on generated SBML", key="run_libsbml_checker_btn"):
-            with st.spinner("Running libSBML checker..."):
-                st.session_state[checker_key] = run_libsbml_checker(post_artifacts["sbml_xml_bytes"])
+            checker_key = "post_pipeline_libsbml_check"
+            if post_artifacts.get("sbml_xml_bytes") and st.button("Run libSBML checker on generated SBML", key="run_libsbml_checker_btn"):
+                with st.spinner("Running libSBML checker..."):
+                    st.session_state[checker_key] = run_libsbml_checker(post_artifacts["sbml_xml_bytes"])
 
-        checker_report = st.session_state.get(checker_key)
-        if isinstance(checker_report, dict):
-            st.write("libSBML checker summary", checker_report.get("validation", {}))
-            if str(checker_report.get("error", "")).strip():
-                st.error(str(checker_report.get("error", "")))
-            st.download_button(
-                "Download libsbml_checker_report.json",
-                json.dumps(checker_report, indent=2),
-                file_name="libsbml_checker_report.json",
-                mime="application/json",
-                key="dl_libsbml_checker",
-            )
+            checker_report = st.session_state.get(checker_key)
+            if isinstance(checker_report, dict):
+                st.write("libSBML checker summary", checker_report.get("validation", {}))
+                if str(checker_report.get("error", "")).strip():
+                    st.error(str(checker_report.get("error", "")))
+                st.download_button(
+                    "Download libsbml_checker_report.json",
+                    json.dumps(checker_report, indent=2),
+                    file_name="libsbml_checker_report.json",
+                    mime="application/json",
+                    key="dl_libsbml_checker",
+                )
 
-    st.subheader("PWML export")
+    st.subheader("PWML Export")
 
     _project_root_pwml = Path(__file__).resolve().parent.parent
     _ref_candidates = [
@@ -2164,6 +2230,12 @@ if st.session_state.get("pipeline_ready"):
     _pwml_width = _vis_cols[0].number_input("Width", min_value=200, max_value=10000, value=3200, step=100, key="pwml_width")
     _pwml_height = _vis_cols[1].number_input("Height", min_value=200, max_value=10000, value=1400, step=100, key="pwml_height")
     _pwml_bg = _vis_cols[2].text_input("Background color", value="#FFFFFF", key="pwml_bg")
+    _pwml_strict_db = st.checkbox(
+        "Require DB-backed PWML identities",
+        value=True,
+        key="pwml_strict_db",
+        help="When enabled, compounds/proteins/complexes without PathBank/PW IDs stop PWML serialization at the IR stage.",
+    )
 
     _pwml_grounding = st.checkbox("Apply grounding before export", value=False, key="pwml_grounding")
     _pwml_grounding_dict: Optional[Dict[str, Any]] = None
@@ -2184,13 +2256,21 @@ if st.session_state.get("pipeline_ready"):
                 st.error(f"Grounding load failed: {_ge}")
         _pwml_grounding_dict = st.session_state.get("pwml_grounding_dict")
 
-    if st.button("Generate PWML", key="pwml_generate_btn"):
-        if not isinstance(final_payload, dict) or not final_payload:
+    _post_artifacts_pwml = st.session_state.get("post_pipeline_artifacts")
+    _pwml_source_payload = final_payload
+    if isinstance(_post_artifacts_pwml, dict) and isinstance(_post_artifacts_pwml.get("final_mapped"), dict):
+        _pwml_source_payload = _post_artifacts_pwml["final_mapped"]
+        st.caption("PWML export source: mapped/audited post-pipeline JSON.")
+    else:
+        st.caption("PWML export source: current final JSON. Run DB mapping first for strict PWML export.")
+
+    if st.button("Build PWML IR and Generate PWML", key="pwml_generate_btn"):
+        if not isinstance(_pwml_source_payload, dict) or not _pwml_source_payload:
             st.error("No pipeline output in session state. Run the pipeline first.")
         else:
             with st.spinner("Building PWML..."):
                 _pwml_result = run_pwml_export(
-                    final_payload,
+                    _pwml_source_payload,
                     pathway_name=_pwml_name,
                     pathway_description=_pwml_description,
                     pathway_subject=_pwml_subject,
@@ -2200,14 +2280,27 @@ if st.session_state.get("pipeline_ready"):
                     vis_height=int(_pwml_height),
                     background_color=_pwml_bg,
                     grounding_dict=_pwml_grounding_dict,
+                    strict_db=bool(_pwml_strict_db),
                 )
             st.session_state["pwml_export_result"] = _pwml_result
 
     _pwml_result = st.session_state.get("pwml_export_result")
     if isinstance(_pwml_result, dict):
+        _ir_report = _safe_dict(_pwml_result.get("pwml_ir_report"))
+        _ir_validation = _safe_dict(_pwml_result.get("pwml_ir_validation"))
         if _pwml_result.get("ok"):
             st.success(f"Written to: {_pwml_result.get('output_path')}")
-            with st.expander("Build report", expanded=True):
+            with st.expander("PWML IR report", expanded=True):
+                st.write("IR counts", _ir_report.get("counts", {}))
+                st.write("IR validation", _ir_validation.get("counts", {}))
+                if _ir_report.get("errors"):
+                    st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _ir_report["errors"]))
+                if _ir_report.get("warnings"):
+                    st.warning("IR warnings:\n" + "\n".join(str(w.get("message", w)) for w in _ir_report["warnings"]))
+                unresolved = _safe_dict(_ir_report.get("unresolved"))
+                if unresolved:
+                    st.write("Unresolved references", unresolved)
+            with st.expander("PWML XML validation and QA", expanded=True):
                 st.write("Counts", _pwml_result.get("counts", {}))
                 st.write("Structural validation issues", _pwml_result.get("issues", 0))
                 _qa = _pwml_result.get("qa", {})
@@ -2221,17 +2314,48 @@ if st.session_state.get("pipeline_ready"):
                 _gr = _pwml_result.get("grounding_report")
                 if _gr:
                     st.write("Grounding report", _gr)
-            _dl_cols = st.columns(2)
+            _dl_cols = st.columns(4)
             _dl_cols[0].download_button(
                 "Download pathway.pwml", data=_pwml_result["xml_bytes"],
                 file_name="pathway.pwml", mime="application/xml", key="dl_pwml"
             )
             _dl_cols[1].download_button(
+                "Download PWML IR JSON", data=json.dumps(_pwml_result.get("pwml_ir", {}), indent=2),
+                file_name="final.pwml_ir.json", mime="application/json", key="dl_pwml_ir"
+            )
+            _dl_cols[2].download_button(
+                "Download PWML IR report", data=json.dumps(_ir_report, indent=2),
+                file_name="pwml_ir_report.json", mime="application/json", key="dl_pwml_ir_report"
+            )
+            _dl_cols[3].download_button(
                 "Download validation report", data=json.dumps(_pwml_result["validation_report"], indent=2),
                 file_name="pwml_validation_report.json", mime="application/json", key="dl_pwml_report"
             )
         else:
             st.error(f"PWML export failed: {_pwml_result.get('error', 'unknown')}")
+            if _ir_report:
+                with st.expander("PWML IR report", expanded=True):
+                    st.write("IR counts", _ir_report.get("counts", {}))
+                    if _ir_report.get("errors"):
+                        st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _ir_report["errors"]))
+                    if _ir_report.get("warnings"):
+                        st.warning("IR warnings:\n" + "\n".join(str(w.get("message", w)) for w in _ir_report["warnings"]))
+                    st.write("Unresolved references", _safe_dict(_ir_report.get("unresolved")))
+                st.download_button(
+                    "Download PWML IR report",
+                    data=json.dumps(_ir_report, indent=2),
+                    file_name="pwml_ir_report.json",
+                    mime="application/json",
+                    key="dl_pwml_ir_report_failed",
+                )
+            if isinstance(_pwml_result.get("pwml_ir"), dict):
+                st.download_button(
+                    "Download PWML IR JSON",
+                    data=json.dumps(_pwml_result.get("pwml_ir", {}), indent=2),
+                    file_name="final.pwml_ir.json",
+                    mime="application/json",
+                    key="dl_pwml_ir_failed",
+                )
 
     render_pathwhiz_converter_section(llm_client_module)
 

@@ -5,7 +5,7 @@ import json
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from lxml import etree
 
@@ -17,6 +17,7 @@ from pwml_validate import (
     validate_generated_tree,
     write_json_report,
 )
+from pwml_ir import is_pwml_ir, validate_pwml_ir
 
 
 def _singularize(tag: str) -> str:
@@ -242,6 +243,9 @@ class DeterministicPwmlBuilder:
         self.pathway_visualization_id = f"PathwayVisualization{self.pathway_visualization_id_int}"
         self.pathway_visualization_context_id = f"PathwayVisualizationContext{self.pathway_visualization_id_int}"
         self._state_id_map: Dict[str, int] = {}
+        self._ir_key_ids: Dict[str, Dict[str, int]] = {}
+        self._ir_entity_info: Dict[str, Dict[str, Any]] = {}
+        self._ir_pathway_species_id: Optional[int] = None
 
     def _prepare_entities(self) -> None:
         key_to_section = {
@@ -922,7 +926,640 @@ class DeterministicPwmlBuilder:
             "membrane-visualizations": membrane_visualizations,
         }
 
+    def _populate_sections_from_ir(self) -> Dict[str, int]:
+        validation = validate_pwml_ir(self.extraction)
+        if not validation.get("ok"):
+            messages = [
+                str(issue.get("message") or issue.get("code") or "PWML IR validation error")
+                for issue in validation.get("errors", [])[:5]
+                if isinstance(issue, dict)
+            ]
+            raise ValueError("PWML IR validation failed before serialization: " + "; ".join(messages))
+
+        ir = self.extraction
+        self._ir_key_ids = {}
+        self._ir_entity_info = {}
+        self._ir_pathway_species_id = None
+        member_ids: Dict[str, Dict[str, Any]] = {}
+
+        def remember(namespace: str, key: Any, value: int) -> None:
+            if key is None:
+                return
+            self._ir_key_ids.setdefault(namespace, {})[str(key)] = int(value)
+
+        def lookup(namespace: str, key: Any) -> Optional[int]:
+            if key is None:
+                return None
+            return self._ir_key_ids.get(namespace, {}).get(str(key))
+
+        def first_int(record: Dict[str, Any], keys: Sequence[str]) -> Optional[int]:
+            for key in keys:
+                value = record.get(key)
+                if value not in (None, ""):
+                    try:
+                        return int(value)
+                    except (TypeError, ValueError):
+                        continue
+            meta = record.get("mapping_meta") if isinstance(record.get("mapping_meta"), dict) else {}
+            for key in keys:
+                value = meta.get(key)
+                if value not in (None, ""):
+                    try:
+                        return int(value)
+                    except (TypeError, ValueError):
+                        continue
+            mapped = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            for key in keys:
+                value = mapped.get(key)
+                if value not in (None, ""):
+                    try:
+                        return int(value)
+                    except (TypeError, ValueError):
+                        continue
+            return None
+
+        def id_for(record: Dict[str, Any], keys: Sequence[str], fallback: IdFactory) -> int:
+            return first_int(record, keys) or fallback.next()
+
+        def direction_for(value: Any) -> str:
+            text = str(value or "").strip().casefold()
+            if text in {"<", "left", "reverse"}:
+                return "Left"
+            if text in {"<>", "<=>", "both", "reversible"}:
+                return "Both"
+            return "Right"
+
+        def entity_info(entity_key: Any) -> Optional[Dict[str, Any]]:
+            if entity_key is None:
+                return None
+            return self._ir_entity_info.get(str(entity_key))
+
+        def element_type(entity_type: str) -> str:
+            return {
+                "compound": "Compound",
+                "protein": "Protein",
+                "protein_complex": "ProteinComplex",
+                "nucleic_acid": "NucleicAcid",
+                "element_collection": "ElementCollection",
+            }.get(entity_type, "")
+
+        self.section_items = {}
+
+        self.section_items["cell-types"] = []
+        for record in ir.get("cell_types", []) if isinstance(ir.get("cell_types"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(record, ["pathwhiz_id", "pathbank_cell_type_id", "pw_cell_type_id"], self.ids)
+            remember("cell_types", record.get("key"), rid)
+            self.section_items["cell-types"].append(
+                {"id": rid, "name": record.get("name", ""), "ontology-id": record.get("ontology_id")}
+            )
+
+        self.section_items["species"] = []
+        for record in ir.get("species", []) if isinstance(ir.get("species"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(record, ["pathwhiz_id", "pathbank_species_id", "pw_species_id"], self.ids)
+            remember("species", record.get("key"), rid)
+            if self._ir_pathway_species_id is None:
+                self._ir_pathway_species_id = rid
+            self.section_items["species"].append(
+                {
+                    "id": rid,
+                    "name": record.get("name", ""),
+                    "taxonomy-id": record.get("taxonomy_id"),
+                    "classification": record.get("classification"),
+                    "common-name": record.get("common_name"),
+                }
+            )
+
+        self.section_items["subcellular-locations"] = []
+        for record in ir.get("subcellular_locations", []) if isinstance(ir.get("subcellular_locations"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(
+                record,
+                ["pathwhiz_id", "pathbank_subcellular_location_id", "pw_subcellular_location_id"],
+                self.ids,
+            )
+            remember("subcellular_locations", record.get("key"), rid)
+            self.section_items["subcellular-locations"].append(
+                {"id": rid, "name": record.get("name", ""), "ontology-id": record.get("ontology_id")}
+            )
+
+        self.section_items["tissues"] = []
+        for record in ir.get("tissues", []) if isinstance(ir.get("tissues"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(record, ["pathwhiz_id", "pathbank_tissue_id", "pw_tissue_id"], self.ids)
+            remember("tissues", record.get("key"), rid)
+            self.section_items["tissues"].append(
+                {
+                    "id": rid,
+                    "name": record.get("name", ""),
+                    "ontology-id": record.get("ontology_id"),
+                    "visualization-template-id": None,
+                    "drawable-image-id": None,
+                }
+            )
+
+        biological_states = []
+        for record in ir.get("biological_states", []) if isinstance(ir.get("biological_states"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = self.ids.next()
+            remember("biological_states", record.get("key"), rid)
+            biological_states.append(
+                {
+                    "id": rid,
+                    "name": record.get("name") or record.get("key") or f"State {rid}",
+                    "tissue-id": lookup("tissues", record.get("tissue_key")),
+                    "subcellular-location-id": lookup(
+                        "subcellular_locations", record.get("subcellular_location_key")
+                    ),
+                    "species-id": lookup("species", record.get("species_key")),
+                    "cell-type-id": lookup("cell_types", record.get("cell_type_key")),
+                    "pwbs-id": f"PW_BS{rid:06d}",
+                }
+            )
+        self.section_items["biological-states"] = biological_states
+
+        entities = ir.get("entities") if isinstance(ir.get("entities"), dict) else {}
+        self.section_items["bounds"] = []
+        self.section_items["compounds"] = []
+        for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(record, ["pathwhiz_id", "pathbank_compound_id", "pw_compound_id"], self.compound_ids)
+            remember("entities", record.get("key"), rid)
+            self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Compound", "entity_type": "compound"}
+            mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            self.section_items["compounds"].append(
+                {
+                    "id": rid,
+                    "name": record.get("name", ""),
+                    "pwc-id": f"PW_C{rid:06d}",
+                    "short-name": record.get("name", ""),
+                    "element-states": [],
+                    "hmdb-id": mapped_ids.get("hmdb") or None,
+                    "kegg-id": mapped_ids.get("kegg") or None,
+                    "chebi-id": mapped_ids.get("chebi") or None,
+                    "pubchem-cid": mapped_ids.get("pubchem") or None,
+                }
+            )
+
+        self.section_items["element-collections"] = []
+        for record in entities.get("element_collections", []) if isinstance(entities.get("element_collections"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(
+                record,
+                ["pathwhiz_id", "pathbank_element_collection_id", "pw_element_collection_id"],
+                self.ids,
+            )
+            remember("entities", record.get("key"), rid)
+            self._ir_entity_info[str(record.get("key"))] = {
+                "id": rid,
+                "type": "ElementCollection",
+                "entity_type": "element_collection",
+            }
+            self.section_items["element-collections"].append(
+                {
+                    "id": rid,
+                    "name": record.get("name", ""),
+                    "element-type": "Compound",
+                    "element-id": None,
+                    "collection-type": "Set",
+                    "pwec-id": f"PW_EC{rid:06d}",
+                    "external-id": "",
+                    "external-id-type": "",
+                    "short-name": record.get("name", ""),
+                }
+            )
+
+        self.section_items["nucleic-acids"] = []
+        for record in entities.get("nucleic_acids", []) if isinstance(entities.get("nucleic_acids"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(record, ["pathwhiz_id", "pathbank_nucleic_acid_id", "pw_nucleic_acid_id"], self.ids)
+            remember("entities", record.get("key"), rid)
+            self._ir_entity_info[str(record.get("key"))] = {
+                "id": rid,
+                "type": "NucleicAcid",
+                "entity_type": "nucleic_acid",
+            }
+            self.section_items["nucleic-acids"].append(
+                {"id": rid, "name": record.get("name", ""), "element-states": []}
+            )
+
+        default_species_id = self._ir_pathway_species_id
+        self.section_items["proteins"] = []
+        for record in entities.get("proteins", []) if isinstance(entities.get("proteins"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(record, ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id"], self.protein_ids)
+            remember("entities", record.get("key"), rid)
+            self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Protein", "entity_type": "protein"}
+            mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            self.section_items["proteins"].append(
+                {
+                    "id": rid,
+                    "name": record.get("name", ""),
+                    "species-id": default_species_id,
+                    "element-states": [],
+                    "uniprot-id": mapped_ids.get("uniprot") or None,
+                    "ec-numbers": record.get("ec_numbers", []),
+                }
+            )
+
+        self.section_items["protein-complexes"] = []
+        for record in entities.get("protein_complexes", []) if isinstance(entities.get("protein_complexes"), list) else []:
+            if not isinstance(record, dict):
+                continue
+            rid = id_for(record, ["pathwhiz_id", "pathbank_complex_id", "pw_complex_id"], self.complex_ids)
+            remember("entities", record.get("key"), rid)
+            self._ir_entity_info[str(record.get("key"))] = {
+                "id": rid,
+                "type": "ProteinComplex",
+                "entity_type": "protein_complex",
+            }
+            self.section_items["protein-complexes"].append(
+                {
+                    "id": rid,
+                    "name": record.get("name", ""),
+                    "species-id": default_species_id,
+                    "pwp-id": f"PW_P{rid:06d}",
+                    "protein_complex-proteins": [],
+                    "element-states": [],
+                }
+            )
+
+        process_items = ir.get("processes") if isinstance(ir.get("processes"), dict) else {}
+
+        reactions: List[Dict[str, Any]] = []
+        for reaction in process_items.get("reactions", []) if isinstance(process_items.get("reactions"), list) else []:
+            if not isinstance(reaction, dict):
+                continue
+            rid = self.reaction_ids.next()
+            remember("processes", reaction.get("key"), rid)
+            left: List[Dict[str, Any]] = []
+            right: List[Dict[str, Any]] = []
+            for side_key, out in [("left", left), ("right", right)]:
+                for member in reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []:
+                    if not isinstance(member, dict):
+                        continue
+                    info = entity_info(member.get("entity_key"))
+                    if not info:
+                        continue
+                    mid = self.ids.next()
+                    member_ids[str(member.get("key"))] = {
+                        "id": mid,
+                        "entity_type": member.get("entity_type"),
+                        "process_key": reaction.get("key"),
+                    }
+                    out.append(
+                        {
+                            "id": mid,
+                            "element-id": int(info["id"]),
+                            "stoichiometry": int(member.get("stoichiometry") or 1),
+                            "element-type": info["type"],
+                            "currency": False,
+                        }
+                    )
+            enzymes: List[Dict[str, Any]] = []
+            for member in reaction.get("enzymes", []) if isinstance(reaction.get("enzymes"), list) else []:
+                if not isinstance(member, dict):
+                    continue
+                info = entity_info(member.get("entity_key"))
+                if not info:
+                    continue
+                mid = self.ids.next()
+                member_ids[str(member.get("key"))] = {
+                    "id": mid,
+                    "entity_type": member.get("entity_type"),
+                    "process_key": reaction.get("key"),
+                    "entity_key": member.get("entity_key"),
+                }
+                item: Dict[str, Any] = {"id": mid}
+                if info["entity_type"] == "protein_complex":
+                    item["protein-complex-id"] = int(info["id"])
+                else:
+                    item["protein-id"] = int(info["id"])
+                if str(member.get("role") or "").casefold() == "inhibitor":
+                    item["inhibitor"] = True
+                enzymes.append(item)
+            reactions.append(
+                {
+                    "id": rid,
+                    "spontaneous": reaction.get("spontaneous"),
+                    "pwr-id": f"PW_R{rid:06d}",
+                    "direction": direction_for(reaction.get("direction")),
+                    "reaction-left-elements": left,
+                    "reaction-right-elements": right,
+                    "reaction-enzymes": enzymes,
+                }
+            )
+        self.section_items["reactions"] = reactions
+
+        transports: List[Dict[str, Any]] = []
+        for transport in process_items.get("transports", []) if isinstance(process_items.get("transports"), list) else []:
+            if not isinstance(transport, dict):
+                continue
+            tid = self.ids.next()
+            remember("processes", transport.get("key"), tid)
+            elements_out: List[Dict[str, Any]] = []
+            for member in transport.get("transport_elements", []) if isinstance(transport.get("transport_elements"), list) else []:
+                if not isinstance(member, dict):
+                    continue
+                info = entity_info(member.get("entity_key"))
+                if not info:
+                    continue
+                mid = self.ids.next()
+                member_ids[str(member.get("key"))] = {
+                    "id": mid,
+                    "entity_type": member.get("entity_type"),
+                    "process_key": transport.get("key"),
+                }
+                elements_out.append(
+                    {
+                        "id": mid,
+                        "element-id": int(info["id"]),
+                        "stoichiometry": int(member.get("stoichiometry") or 1),
+                        "element-type": info["type"],
+                        "left-biological-state-id": lookup("biological_states", member.get("left_biological_state_key")),
+                        "right-biological-state-id": lookup("biological_states", member.get("right_biological_state_key")),
+                        "direction": "Right",
+                    }
+                )
+            transporters_out: List[Dict[str, Any]] = []
+            for member in transport.get("transporters", []) if isinstance(transport.get("transporters"), list) else []:
+                if not isinstance(member, dict):
+                    continue
+                info = entity_info(member.get("entity_key"))
+                if not info:
+                    continue
+                mid = self.ids.next()
+                member_ids[str(member.get("key"))] = {
+                    "id": mid,
+                    "entity_type": member.get("entity_type"),
+                    "process_key": transport.get("key"),
+                    "entity_key": member.get("entity_key"),
+                }
+                item: Dict[str, Any] = {"id": mid, "biological-state-id": lookup("biological_states", member.get("biological_state_key"))}
+                if info["entity_type"] == "protein_complex":
+                    item["protein-complex-id"] = int(info["id"])
+                else:
+                    item["protein-id"] = int(info["id"])
+                transporters_out.append(item)
+            transports.append(
+                {
+                    "id": tid,
+                    "pwt-id": f"PW_T{tid:06d}",
+                    "transport-type": transport.get("transport_type"),
+                    "transport-elements": elements_out,
+                    "transport-transporters": transporters_out,
+                }
+            )
+        self.section_items["transports"] = transports
+
+        self.section_items["reaction-coupled-transports"] = [
+            {"id": self.ids.next(), "name": item.get("name", "")}
+            for item in process_items.get("reaction_coupled_transports", [])
+            if isinstance(item, dict)
+        ]
+        for item, raw in zip(
+            self.section_items["reaction-coupled-transports"],
+            process_items.get("reaction_coupled_transports", []) if isinstance(process_items.get("reaction_coupled_transports"), list) else [],
+        ):
+            if isinstance(raw, dict):
+                remember("processes", raw.get("key"), int(item["id"]))
+
+        self.section_items["interactions"] = []
+        for interaction in process_items.get("interactions", []) if isinstance(process_items.get("interactions"), list) else []:
+            if not isinstance(interaction, dict):
+                continue
+            iid = self.ids.next()
+            remember("processes", interaction.get("key"), iid)
+            self.section_items["interactions"].append(
+                {
+                    "id": iid,
+                    "name": interaction.get("name", ""),
+                    "interaction-type": interaction.get("interaction_type"),
+                }
+            )
+
+        self.section_items["bound-visualizations"] = []
+        for item in ir.get("bound_visualizations", []) if isinstance(ir.get("bound_visualizations"), list) else []:
+            if not isinstance(item, dict):
+                continue
+            vid = self.ids.next()
+            remember("bound_visualizations", item.get("key"), vid)
+            self.section_items["bound-visualizations"].append(
+                {
+                    "id": vid,
+                    "biological-state-id": lookup("biological_states", item.get("biological_state_key")),
+                    "x": int(item.get("x") or 0),
+                    "y": int(item.get("y") or 0),
+                    "width": str(item.get("width") or self.args.width),
+                    "height": str(item.get("height") or self.args.height),
+                    "zindex": int(item.get("zindex") or 1),
+                    "hidden": bool(item.get("hidden", False)),
+                }
+            )
+
+        section_by_location_type = {
+            "compound_location": ("compound-locations", "compound-id"),
+            "protein_location": ("protein-locations", "protein-id"),
+            "nucleic_acid_location": ("nucleic-acid-locations", "nucleic-acid-id"),
+            "element_collection_location": ("element-collection-locations", "element-collection-id"),
+        }
+        for section in [
+            "compound-locations",
+            "protein-locations",
+            "nucleic-acid-locations",
+            "element-collection-locations",
+        ]:
+            self.section_items[section] = []
+        for loc in ir.get("locations", []) if isinstance(ir.get("locations"), list) else []:
+            if not isinstance(loc, dict):
+                continue
+            section_info = section_by_location_type.get(str(loc.get("type") or ""))
+            info = entity_info(loc.get("entity_key"))
+            if not section_info or not info:
+                continue
+            section, entity_field = section_info
+            lid = self.ids.next()
+            remember("locations", loc.get("key"), lid)
+            self.section_items[section].append(
+                {
+                    "id": lid,
+                    entity_field: int(info["id"]),
+                    "biological-state-id": lookup("biological_states", loc.get("biological_state_key")),
+                    "visualization-template-id": int(loc.get("visualization_template_id") or 0),
+                    "hidden": bool(loc.get("hidden", False)),
+                    "x": int(loc.get("x") or 0),
+                    "y": int(loc.get("y") or 0),
+                    "zindex": int(loc.get("zindex") or 10),
+                    "font-size": str(loc.get("font_size") or loc.get("font-size") or "regular"),
+                    "width": str(loc.get("width") or 160),
+                    "height": str(loc.get("height") or 60),
+                }
+            )
+
+        self.section_items["protein-complex-visualizations"] = []
+        protein_complex_viz_by_entity: Dict[str, int] = {}
+        for item in ir.get("protein_complex_visualizations", []) if isinstance(ir.get("protein_complex_visualizations"), list) else []:
+            if not isinstance(item, dict):
+                continue
+            info = entity_info(item.get("entity_key"))
+            if not info:
+                continue
+            vid = self.ids.next()
+            remember("protein_complex_visualizations", item.get("key"), vid)
+            protein_complex_viz_by_entity[str(item.get("entity_key"))] = vid
+            self.section_items["protein-complex-visualizations"].append(
+                {
+                    "id": vid,
+                    "protein-complex-id": int(info["id"]),
+                    "pathway-visualization-id": self.pathway_visualization_id_int,
+                    "biological-state-id": lookup("biological_states", item.get("biological_state_key")),
+                    "protein_complex_protein_visualizations": [],
+                }
+            )
+
+        self.section_items["edges"] = []
+        for edge in ir.get("edges", []) if isinstance(ir.get("edges"), list) else []:
+            if not isinstance(edge, dict):
+                continue
+            eid = self.ids.next()
+            remember("edges", edge.get("key"), eid)
+            self.section_items["edges"].append(
+                {
+                    "id": eid,
+                    "path": edge.get("path", ""),
+                    "visualization-template-id": int(edge.get("visualization_template_id") or 0),
+                    "hidden": bool(edge.get("hidden", False)),
+                    "zindex": int(edge.get("zindex") or 18),
+                }
+            )
+
+        self.section_items["reaction-visualizations"] = []
+        self.section_items["transport-visualizations"] = []
+        self.section_items["reaction-coupled-transport_visualizations"] = []
+        self.section_items["interaction-visualizations"] = []
+        self.section_items["sub-pathway-visualizations"] = []
+
+        for viz in ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []:
+            if not isinstance(viz, dict):
+                continue
+            vtype = str(viz.get("type") or "")
+            process_id = lookup("processes", viz.get("process_key"))
+            if process_id is None:
+                continue
+            if vtype == "reaction_visualization":
+                item = {
+                    "id": self.ids.next(),
+                    "pathway-visualization-id": self.pathway_visualization_id_int,
+                    "reaction-id": process_id,
+                    "biological-state-id": lookup("biological_states", viz.get("biological_state_key")),
+                    "reaction_compound_visualizations": [],
+                    "reaction_element_collection_visualizations": [],
+                    "reaction_nucleic_acid_visualizations": [],
+                    "reaction_enzyme_visualizations": [],
+                }
+                for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
+                    if not isinstance(member, dict):
+                        continue
+                    minfo = member_ids.get(str(member.get("process_member_key")))
+                    loc_id = lookup("locations", member.get("location_key"))
+                    edge_id = lookup("edges", member.get("edge_key"))
+                    if not minfo:
+                        continue
+                    role = str(member.get("role") or "")
+                    side = "Left" if role == "left" else "Right" if role == "right" else ""
+                    mtype = str(member.get("member_type") or minfo.get("entity_type") or "")
+                    if role == "enzyme":
+                        ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
+                        entity_key = minfo.get("entity_key")
+                        pcv_id = protein_complex_viz_by_entity.get(str(entity_key)) if entity_key is not None else None
+                        if mtype == "protein_complex" and pcv_id:
+                            ev["protein-complex-visualization-id"] = pcv_id
+                        elif loc_id is not None:
+                            ev["protein-location-id"] = loc_id
+                        item["reaction_enzyme_visualizations"].append(ev)
+                    elif mtype == "compound" and loc_id is not None and edge_id is not None:
+                        item["reaction_compound_visualizations"].append(
+                            {"id": self.ids.next(), "compound-location-id": loc_id, "edge-id": edge_id, "side": side}
+                        )
+                    elif mtype == "element_collection" and loc_id is not None and edge_id is not None:
+                        item["reaction_element_collection_visualizations"].append(
+                            {
+                                "id": self.ids.next(),
+                                "element-collection-location-id": loc_id,
+                                "edge-id": edge_id,
+                                "side": side,
+                            }
+                        )
+                    elif mtype == "nucleic_acid" and loc_id is not None and edge_id is not None:
+                        item["reaction_nucleic_acid_visualizations"].append(
+                            {"id": self.ids.next(), "nucleic-acid-location-id": loc_id, "edge-id": edge_id, "side": side}
+                        )
+                self.section_items["reaction-visualizations"].append(item)
+            elif vtype == "transport_visualization":
+                item = {
+                    "id": self.ids.next(),
+                    "transport-id": process_id,
+                    "pathway-visualization-id": self.pathway_visualization_id_int,
+                    "transport_compound_visualizations": [],
+                    "transport_transporter_visualizations": [],
+                }
+                for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
+                    if not isinstance(member, dict):
+                        continue
+                    minfo = member_ids.get(str(member.get("process_member_key")))
+                    loc_id = lookup("locations", member.get("location_key"))
+                    edge_id = lookup("edges", member.get("edge_key"))
+                    if not minfo:
+                        continue
+                    role = str(member.get("role") or "")
+                    side = "Left" if role == "left" else "Right" if role == "right" else ""
+                    mtype = str(member.get("member_type") or minfo.get("entity_type") or "")
+                    if mtype == "compound" and loc_id is not None and edge_id is not None:
+                        item["transport_compound_visualizations"].append(
+                            {"id": self.ids.next(), "compound-location-id": loc_id, "edge-id": edge_id, "side": side}
+                        )
+                    elif role == "transporter":
+                        tv = {"id": self.ids.next(), "transport-transporter-id": int(minfo["id"])}
+                        entity_key = minfo.get("entity_key")
+                        pcv_id = protein_complex_viz_by_entity.get(str(entity_key)) if entity_key is not None else None
+                        if mtype == "protein_complex" and pcv_id:
+                            tv["protein-complex-visualization-id"] = pcv_id
+                        elif loc_id is not None:
+                            tv["protein-location-id"] = loc_id
+                        item["transport_transporter_visualizations"].append(tv)
+                self.section_items["transport-visualizations"].append(item)
+
+        self.section_items["vacuous-compound-visualizations"] = []
+        self.section_items["vacuous-edge-visualizations"] = []
+        self.section_items["vacuous-nucleic-acid-visualizations"] = []
+        self.section_items["vacuous-element-collection-visualizations"] = []
+        self.section_items["vacuous-protein-visualizations"] = []
+        self.section_items["drawable-element-locations"] = []
+        self.section_items["membrane-visualizations"] = []
+        self.section_items["label-locations"] = []
+        self.section_items["zoom-visualizations"] = []
+
+        return {
+            "compounds": len(self.section_items.get("compounds", [])),
+            "proteins": len(self.section_items.get("proteins", [])),
+            "reactions": len(self.section_items.get("reactions", [])),
+            "edges": len(self.section_items.get("edges", [])),
+        }
+
     def _populate_sections(self) -> Dict[str, int]:
+        if is_pwml_ir(self.extraction):
+            return self._populate_sections_from_ir()
+
         self._prepare_entities()
         biological_states, default_state_id = self._build_biological_states()
 
@@ -1159,7 +1796,11 @@ class DeterministicPwmlBuilder:
 
     def _emit_pathway(self, pv: etree._Element) -> None:
         pathway = etree.SubElement(pv, "pathway")
-        first_species_id = self._resolve_ref_id(None, "species", fallback=True)
+        first_species_id = (
+            self._ir_pathway_species_id
+            if is_pwml_ir(self.extraction)
+            else self._resolve_ref_id(None, "species", fallback=True)
+        )
         pathway_values: Dict[str, Any] = {
             "id": self.pathway_id_int,
             "name": self.args.name,

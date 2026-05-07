@@ -26,7 +26,7 @@ def _resolve_output_path(out_dir: Path, filename: str) -> Path:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Post-pipeline converter: final.json -> audit -> mapped IDs -> SBML."
+        description="Legacy SBML converter: final.json -> audit -> mapped IDs -> SBML."
     )
     parser.add_argument(
         "--in",
