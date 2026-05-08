@@ -1952,7 +1952,39 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 })
                 existing_modifier_norms.add(_normalize(ename))
                 summary["modifier_refs_canonicalized"] += 1
-            reaction.pop("enzymes", None)
+        # Keep a legacy enzymes[] view for callers that have not migrated to
+        # modifiers[] yet. The canonical representation remains modifiers[].
+        legacy_enzymes: List[Dict[str, Any]] = []
+        seen_enzyme_norms: Set[Tuple[str, str]] = set()
+        for mod in reaction["modifiers"]:
+            if not isinstance(mod, dict):
+                continue
+            role = _canonical(str(mod.get("role", "catalyst"))).casefold() or "catalyst"
+            if role != "catalyst":
+                continue
+            entity = _canonical(str(mod.get("entity", "")))
+            if not entity:
+                continue
+            entity_type = _canonical(str(mod.get("entity_type", "protein"))).casefold() or "protein"
+            key = (entity_type, _normalize(entity))
+            if key in seen_enzyme_norms:
+                continue
+            seen_enzyme_norms.add(key)
+            legacy_row: Dict[str, Any] = {
+                "role": "catalyst",
+                "confidence": mod.get("confidence", 1.0),
+                "provenance": mod.get("provenance", "extracted"),
+            }
+            if entity_type == "protein_complex":
+                legacy_row["protein_complex"] = entity
+            else:
+                legacy_row["protein"] = entity
+            evidence = _canonical(str(mod.get("evidence", "")))
+            if evidence:
+                legacy_row["evidence"] = evidence
+            legacy_enzymes.append(legacy_row)
+        if legacy_enzymes or "enzymes" in reaction:
+            reaction["enzymes"] = legacy_enzymes
 
     for tidx, transport in enumerate(transports):
         if not isinstance(transport, dict):

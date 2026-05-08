@@ -437,7 +437,7 @@ def build_pwml_ir(
                 report["unresolved"]["db_identities"].append(issue)
                 _add_issue(
                     report,
-                    "warning",
+                    "error" if strict_db else "warning",
                     "missing_db_identity",
                     f"{entity_type} '{rec['name']}' has no required DB-backed PWML identity.",
                     pointer=f"/entities/{source_key}",

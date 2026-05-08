@@ -3,6 +3,7 @@ import inspect
 import os
 import re
 import hashlib
+import sys
 import time
 import shutil
 from copy import deepcopy
@@ -10,6 +11,12 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Tuple
 from uuid import uuid4
+
+# Streamlit executes this file directly, so Python puts src/t2pw/app on
+# sys.path instead of the project src directory that contains the t2pw package.
+SRC_ROOT = Path(__file__).resolve().parents[2]
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 import streamlit as st
 from lxml import etree

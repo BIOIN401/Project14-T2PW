@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "compounds": [
+      {
+        "name": "triacylglycerol",
+        "mapped_ids": {
+          "chebi": "CHEBI:75848"
+        }
+      },
+      {
+        "name": "triglyceride",
+        "mapped_ids": {
+          "chebi": "CHEBI:75848"
+        }
+      }
+    ],
+    "proteins": [],
+    "protein_complexes": [],
+    "subcellular_locations": [
+      {
+        "name": "cell"
+      },
+      {
+        "name": "mitochondrial inner membrane"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "cell_state",
+      "subcellular_location": "cell"
+    },
+    {
+      "name": "mim_state",
+      "subcellular_location": "mitochondrial inner membrane"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "triacylglycerol",
+        "biological_state": "cell_state"
+      },
+      {
+        "compound": "triglyceride",
+        "biological_state": "mim_state"
+      }
+    ],
+    "protein_locations": []
+  },
+  "processes": {
+    "reactions": [],
+    "transports": []
+  }
+}

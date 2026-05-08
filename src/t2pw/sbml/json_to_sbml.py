@@ -96,7 +96,7 @@ def _short_hash(value: str, length: int = 8) -> str:
 
 
 def _new_uuid() -> str:
-    return str(uuid.uuid4())
+    return f"meta_{uuid.uuid4().hex}"
 
 
 def _sbml_token(value: str) -> str:
@@ -288,6 +288,22 @@ def build_sbml(
     state_name_to_id: Dict[str, int] = {}   # state name  → numeric id
     state_name_to_sbml: Dict[str, str] = {} # state name  → "BiologicalState{id}"
     state_display: Dict[str, str] = {}      # state name  → display label for <compartment name>
+    state_name_to_display_hint: Dict[str, str] = {}
+
+    for bs in states_raw:
+        if not isinstance(bs, dict):
+            continue
+        nm = (bs.get("name") or "").strip()
+        if not nm:
+            continue
+        state_name_to_display_hint[nm] = (
+            (bs.get("subcellular_location") or "").strip()
+            or (bs.get("compartment") or "").strip()
+            or nm
+        )
+
+    def _compartment_id(display: str, fallback: str) -> str:
+        return f"c_{_sbml_token(display or fallback).lower()}"
 
     def _register_state(name: str) -> str:
         nm = name.strip()
@@ -295,10 +311,14 @@ def build_sbml(
             nm = default_compartment_name
         if nm not in state_name_to_id:
             sid = state_id_ctr.next()
+            display = state_name_to_display_hint.get(nm, nm)
+            sbml_id = _compartment_id(display, nm)
+            if sbml_id in set(state_name_to_sbml.values()):
+                sbml_id = f"{sbml_id}_{sid}"
             state_name_to_id[nm] = sid
-            state_name_to_sbml[nm] = f"BiologicalState{sid}"
+            state_name_to_sbml[nm] = sbml_id
             # Build a PathWhiz-style display name: "Organism, Cell, Compartment"
-            state_display[nm] = nm
+            state_display[nm] = display
         return state_name_to_sbml[nm]
 
     # Register states from biological_states list
@@ -514,6 +534,43 @@ def build_sbml(
     # Determine compartment for each entity
     def _compartment_sbml_id(entity_norm: str) -> str:
         return _register_state(_primary_state(entity_norm))
+
+    def _states_for_entity(entity_norm: str) -> List[str]:
+        states = entity_states.get(entity_norm, [])
+        if not states:
+            states = [default_compartment_name]
+        out: List[str] = []
+        seen: Set[str] = set()
+        for state in states:
+            state_name = state or default_compartment_name
+            if state_name in seen:
+                continue
+            seen.add(state_name)
+            out.append(state_name)
+        return out
+
+    def _species_id(rec: Dict[str, Any], kind: str, state_name: Optional[str] = None) -> str:
+        state = state_name or _primary_state(rec["norm"])
+        species_by_state = rec.setdefault("species_by_state", {})
+        if state not in species_by_state:
+            compartment_id = _register_state(state)
+            species_by_state[state] = sbml_species_id(
+                {
+                    "kind": kind,
+                    "type": kind,
+                    "name": rec.get("name", ""),
+                    "mapped_ids": rec.get("mapped_ids", {}),
+                },
+                compartment_id,
+            )
+        return species_by_state[state]
+
+    for rec in compound_by_norm.values():
+        rec["sbml_id"] = _species_id(rec, "compound")
+    for rec in protein_by_norm.values():
+        rec["sbml_id"] = _species_id(rec, "protein")
+    for rec in complex_by_norm.values():
+        rec["sbml_id"] = _species_id(rec, "protein_complex")
 
     # ------------------------------------------------------------------
     # 4. Build reaction plan
@@ -763,6 +820,8 @@ def build_sbml(
             elif prec and kind == "complex":
                 # Unusual but handle gracefully
                 member_protein_ids.append(prec["sbml_id"])
+            elif prec and kind == "compound":
+                continue
             else:
                 # Create an anonymous protein if needed
                 pnorm = _normalize(comp_name)
@@ -888,30 +947,32 @@ def build_sbml(
 
     # --- Compounds ---
     for crec in sorted(compound_by_norm.values(), key=lambda r: r["pw_id"]):
-        c_metaid = _new_uuid()
-        c_compartment = _compartment_sbml_id(crec["norm"])
-        mapped = crec["mapped_ids"]
-        a(f'      <species boundaryCondition="false" constant="false"'
-          f' substanceUnits="Unit1" metaid="{c_metaid}"'
-          f' hasOnlySubstanceUnits="true" initialAmount="1"'
-          f' sboTerm="SBO:0000247" compartment="{c_compartment}"'
-          f' name="{_html_name(crec["name"])}" id="{crec["sbml_id"]}">')
-        a('        <annotation>')
-        a(f'  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-          f' pathwhiz:species_id="{crec["pw_id"]}" pathwhiz:species_type="compound"/>')
+        for state_name in _states_for_entity(crec["norm"]):
+            c_metaid = _new_uuid()
+            c_compartment = _register_state(state_name)
+            species_id = _species_id(crec, "compound", state_name)
+            mapped = crec["mapped_ids"]
+            a(f'      <species boundaryCondition="false" constant="false"'
+              f' substanceUnits="Unit1" metaid="{c_metaid}"'
+              f' hasOnlySubstanceUnits="true" initialAmount="1"'
+              f' sboTerm="SBO:0000247" compartment="{c_compartment}"'
+              f' name="{_html_name(crec["name"])}" id="{species_id}">')
+            a('        <annotation>')
+            a(f'  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+              f' pathwhiz:species_id="{crec["pw_id"]}" pathwhiz:species_type="compound"/>')
 
-        # RDF: bqbiol:is + bqbiol:isDescribedBy
-        rdf_lines = _rdf_xrefs_bqbiol_is(c_metaid, mapped)
-        for rl in rdf_lines:
-            a(rl)
+            # RDF: bqbiol:is + bqbiol:isDescribedBy
+            rdf_lines = _rdf_xrefs_bqbiol_is(c_metaid, mapped)
+            for rl in rdf_lines:
+                a(rl)
 
-        a('\t</annotation>')
-        a('            </species>')
+            a('\t</annotation>')
+            a('            </species>')
 
-        if mapped:
-            report["pathwhiz_id_stats"]["compounds_matched"] += 1
-        else:
-            report["pathwhiz_id_stats"]["species_no_id"] += 1
+            if mapped:
+                report["pathwhiz_id_stats"]["compounds_matched"] += 1
+            else:
+                report["pathwhiz_id_stats"]["species_no_id"] += 1
 
     a('    </listOfSpecies>')
 
