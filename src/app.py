@@ -61,6 +61,8 @@ from preprocessor import preprocess
 from pdf_parser import extract_text_from_pdf, get_pdf_info, parse_pdf, SKIP_SECTIONS
 from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree
 from pwml_writer import DeterministicPwmlBuilder
+from pwml_ir import build_pwml_ir, validate_pwml_ir
+from pwml_qa import run_pwml_qa
 from qa_graph import build_graph, connected_components, degrees, get_entities, node
 
 st.set_page_config(page_title="PWML Multi-Stage Pipeline", layout="wide")
@@ -329,6 +331,7 @@ def attach_enzymes_from_reaction_evidence(payload, report=None):
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
+    build_legacy_sbml: bool = False,
     use_llm_audit: bool,
     use_sbml_overwatch: bool,
     default_compartment: str,
@@ -350,6 +353,7 @@ def run_post_pipeline_sbml_artifacts(
     gap_resolver_max_items: int,
     qa_report: Optional[Dict[str, Any]] = None,
     reaction_summary: Optional[str] = None,
+    use_stoich_agent: bool = False,
 ) -> Dict[str, Any]:
     project_root = Path(__file__).resolve().parent.parent
     cache_path = Path(mapping_cache_path)
@@ -380,6 +384,8 @@ def run_post_pipeline_sbml_artifacts(
         post_transport_attachment_probe_path = tmp / "post_transport_attachment_probe.json"
         post_dedupe_probe_path = tmp / "post_dedupe_probe.json"
         gate_fail_report_path = tmp / "gate_fail_report.json"
+        stoich_json_path = tmp / "final.stoich.json"
+        stoich_audit_log_path = tmp / "stoich_audit_log.json"
 
         pre_normalization_input = deepcopy(final_payload)
         normalized_input = deepcopy(final_payload)
@@ -995,6 +1001,14 @@ def run_post_pipeline_sbml_artifacts(
             mapping_report_path,
             **mapping_kwargs,
         )
+        mapped_payload = json.loads(mapped_json.read_text(encoding="utf-8"))
+        stoich_audit_log: list = []
+        if use_stoich_agent:
+            from stoich_agent import run_stoich_agent
+            mapped_payload, stoich_audit_log = run_stoich_agent(mapped_payload)
+            stoich_json_path.write_text(json.dumps(mapped_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+            stoich_audit_log_path.write_text(json.dumps(stoich_audit_log, indent=2, ensure_ascii=False), encoding="utf-8")
+            mapped_json.write_text(json.dumps(mapped_payload, indent=2, ensure_ascii=False), encoding="utf-8")
         enrichment_cache_path = cache_path.with_name("enrichment_cache.json")
         enrichment_dump_path = project_root / "out" / "enrichment_dump.json"
         enrichment_report: Dict[str, Any] = {}
@@ -1015,49 +1029,51 @@ def run_post_pipeline_sbml_artifacts(
                 "error": str(exc),
             }
             sbml_input_path = mapped_json
-        sbml_build_report = build_sbml(
-            sbml_input_path,
-            sbml_path,
-            sbml_report_json_path,
-            sbml_report_txt_path,
-            default_compartment_name=default_compartment,
-            db_config={
-                "host": db_host,
-                "port": db_port,
-                "user": db_user,
-                "password": db_password,
-                "schema": db_schema,
-            },
-        )
         sbml_overwatch_report: Dict[str, Any] = {}
-        if use_sbml_overwatch:
-            sbml_overwatch_report = run_sbml_overwatch(
-                sbml_input_path,
-                sbml_path,
-                sbml_report_json_path,
-                sbml_overwatch_path,
-                use_llm=True,
-                llm_max_tokens=3000,
-            )
         sbml_diagram_png_bytes = b""
         sbml_diagram_error = ""
         sbml_render_layout_summary: Dict[str, Any] = {}
         sbml_render_ready_sbml_bytes = b""
         sbml_clean_bytes = b""
         sbml_clean_summary: Dict[str, Any] = {}
-        try:
-            render_artifacts = build_render_artifacts(str(sbml_path))
-            sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
-            sbml_render_layout_summary = _safe_dict(render_artifacts.get("layout_summary"))
-            sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
-        except Exception as exc:  # noqa: BLE001
-            sbml_diagram_error = str(exc)
-
-        if sbml_render_ready_sbml_bytes:
+        sbml_build_report: Dict[str, Any] = {}
+        if build_legacy_sbml:
+            sbml_build_report = build_sbml(
+                sbml_input_path,
+                sbml_path,
+                sbml_report_json_path,
+                sbml_report_txt_path,
+                default_compartment_name=default_compartment,
+                db_config={
+                    "host": db_host,
+                    "port": db_port,
+                    "user": db_user,
+                    "password": db_password,
+                    "schema": db_schema,
+                },
+            )
+            if use_sbml_overwatch:
+                sbml_overwatch_report = run_sbml_overwatch(
+                    sbml_input_path,
+                    sbml_path,
+                    sbml_report_json_path,
+                    sbml_overwatch_path,
+                    use_llm=True,
+                    llm_max_tokens=3000,
+                )
             try:
-                sbml_clean_bytes, sbml_clean_summary = strip_unmapped(sbml_render_ready_sbml_bytes)
-            except Exception:  # noqa: BLE001
-                pass
+                render_artifacts = build_render_artifacts(str(sbml_path))
+                sbml_diagram_png_bytes = render_artifacts.get("png_bytes", b"")
+                sbml_render_layout_summary = _safe_dict(render_artifacts.get("layout_summary"))
+                sbml_render_ready_sbml_bytes = render_artifacts.get("render_ready_sbml_bytes", b"")
+            except Exception as exc:  # noqa: BLE001
+                sbml_diagram_error = str(exc)
+
+            if sbml_render_ready_sbml_bytes:
+                try:
+                    sbml_clean_bytes, sbml_clean_summary = strip_unmapped(sbml_render_ready_sbml_bytes)
+                except Exception:  # noqa: BLE001
+                    pass
 
         return {
             "gate_failed": False,
@@ -1076,10 +1092,14 @@ def run_post_pipeline_sbml_artifacts(
             "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
             "mapping_report": mapping_report,
             "enrichment_report": enrichment_report,
-            "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8")),
-            "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8"),
+            "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8"))
+            if sbml_report_json_path.exists()
+            else {},
+            "sbml_report_txt": sbml_report_txt_path.read_text(encoding="utf-8")
+            if sbml_report_txt_path.exists()
+            else "",
             "sbml_overwatch_report": sbml_overwatch_report,
-            "sbml_xml_bytes": sbml_path.read_bytes(),
+            "sbml_xml_bytes": sbml_path.read_bytes() if sbml_path.exists() else b"",
             "sbml_diagram_png_bytes": sbml_diagram_png_bytes,
             "sbml_diagram_error": sbml_diagram_error,
             "sbml_render_layout_summary": sbml_render_layout_summary,
@@ -1093,7 +1113,9 @@ def run_post_pipeline_sbml_artifacts(
                 sbml_path.read_bytes() if sbml_path.exists() else b"",
                 sbml_render_ready_sbml_bytes,
                 sbml_clean_bytes,
-            ),
+            )
+            if build_legacy_sbml
+            else "",
             "enrichment_cache_path": str(enrichment_cache_path),
             "enrichment_dump_path": str(enrichment_dump_path),
             "mapping_id_source": id_source,
@@ -1109,6 +1131,7 @@ def run_post_pipeline_sbml_artifacts(
             "post_audit_reaction_summary": post_audit_reaction_summary,
             "post_audit_png_bytes": post_audit_png_bytes,
             "curator_report": curator_report,
+            "stoich_audit_log": stoich_audit_log,
             "audit_iterations": audit_iterations,
             "gap_resolution_iterations": gap_iterations,
             "audit_loop_summary": {
@@ -1123,25 +1146,121 @@ def run_post_pipeline_sbml_artifacts(
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def run_pwml_export(
+    final_payload: Dict[str, Any],
+    pathway_name: str,
+    pathway_description: str,
+    pathway_subject: str,
+    project_root: Path,
+    ref_path: Path,
+    vis_width: int = 3200,
+    vis_height: int = 1400,
+    background_color: str = "#FFFFFF",
+    grounding_dict: Optional[Dict[str, Any]] = None,
+    strict_db: bool = True,
+) -> Dict[str, Any]:
+    try:
+        payload = final_payload
+        grounding_report: Dict[str, Any] = {}
+        if grounding_dict:
+            payload, grounding_report = apply_grounding(payload, grounding_dict)
+        pwml_ir, ir_report = build_pwml_ir(
+            payload,
+            pathway_name=pathway_name,
+            pathway_subject=pathway_subject,
+            strict_db=bool(strict_db),
+            width=int(vis_width),
+            height=int(vis_height),
+        )
+        pwml_ir.setdefault("pathway", {})["description"] = pathway_description
+        ir_validation = validate_pwml_ir(pwml_ir)
+        if ir_report.get("errors") or ir_validation.get("errors"):
+            return {
+                "ok": False,
+                "error": "PWML IR validation failed.",
+                "counts": ir_report.get("counts", {}),
+                "issues": len(ir_validation.get("errors", [])),
+                "output_path": "",
+                "qa": {},
+                "grounding_report": grounding_report,
+                "pwml_ir": pwml_ir,
+                "pwml_ir_report": ir_report,
+                "pwml_ir_validation": ir_validation,
+            }
+        signature = discover_structure_signature(ref_path)
+        args = SimpleNamespace(
+            name=pathway_name,
+            description=pathway_description,
+            subject=pathway_subject,
+            pw_id="PW000000",
+            height=vis_height,
+            width=vis_width,
+            background_color=background_color,
+            ref=str(ref_path),
+        )
+        builder = DeterministicPwmlBuilder(extraction=pwml_ir, signature=signature, args=args)
+        build_result = builder.build()
+        tree = etree.ElementTree(build_result.root)
+        repaired = repair_tree(tree, signature)
+        report = validate_generated_tree(repaired, signature)
+        xml_bytes = etree.tostring(
+            repaired.getroot(), encoding="utf-8", xml_declaration=True, pretty_print=True
+        )
+        qa_report = run_pwml_qa(xml_bytes)
+        out_path = project_root / "outputs" / "pathway.pwml"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_bytes(xml_bytes)
+        return {
+            "ok": True,
+            "counts": build_result.counts,
+            "issues": report["issue_count"],
+            "output_path": str(out_path),
+            "xml_bytes": xml_bytes,
+            "validation_report": report,
+            "qa": qa_report,
+            "grounding_report": grounding_report,
+            "pwml_ir": pwml_ir,
+            "pwml_ir_report": ir_report,
+            "pwml_ir_validation": ir_validation,
+        }
+    except Exception as exc:
+        return {"ok": False, "error": str(exc), "counts": {}, "issues": 0,
+                "output_path": "", "qa": {}, "grounding_report": {}}
+
+
 # ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
 input_mode = st.radio(
     "Input mode",
-    ["Paste text", "Upload PDF"],
+    ["Paste text", "Upload PDF", "Text + PDF"],
     horizontal=True,
     key="input_mode_radio",
 )
 
 # ── PDF controls (OUTSIDE form — file_uploader is banned inside st.form) ───
-uploaded_pdf   = None
+uses_text_input = input_mode in {"Paste text", "Text + PDF"}
+uses_pdf_input = input_mode in {"Upload PDF", "Text + PDF"}
+uploaded_pdfs  = []
 pdf_page_range = ""
 pdf_skip_refs  = True
 pdf_ocr        = False
 
-if input_mode == "Upload PDF":
-    uploaded_pdf = st.file_uploader(
-        "Upload a scientific PDF (research paper, pathway description, etc.)",
+text_entry_count = 1
+if uses_text_input:
+    text_entry_count = st.number_input(
+        "Number of text entries",
+        min_value=1,
+        max_value=10,
+        value=1,
+        step=1,
+        key="text_entry_count",
+    )
+
+if uses_pdf_input:
+    uploaded_pdfs = st.file_uploader(
+        "Upload scientific PDFs (research papers, pathway descriptions, etc.)",
         type=["pdf"],
-        key="pdf_upload_widget",
+        key="pdf_uploads_widget",
+        accept_multiple_files=True,
     )
     _c1, _c2, _c3 = st.columns(3)
     pdf_page_range = _c1.text_input(
@@ -1164,17 +1283,30 @@ if input_mode == "Upload PDF":
 
 # ── Form — only the text area changes; everything else is UNCHANGED ─────────
 with st.form("pwml_pipeline"):
-    if input_mode == "Paste text":
-        text = st.text_area("Paste pathway description:", height=220)
-    else:
-        text = ""   # populated after submit from the PDF
-        if uploaded_pdf is not None:
+    text_entries = []
+    if uses_text_input:
+        for _idx in range(int(text_entry_count)):
+            _label = "Paste pathway description:" if int(text_entry_count) == 1 else f"Paste pathway description {_idx + 1}:"
+            text_entries.append(st.text_area(_label, height=220, key=f"pathway_text_{_idx}"))
+
+    user_task_context = st.text_area(
+        "Optional extraction focus / task context",
+        height=100,
+        help="Use this to tell the model what pathway or scope you want extracted. This guides extraction but does not override the source text or validation rules.",
+    )
+
+    if uses_pdf_input:
+        if uploaded_pdfs:
+            _pdf_names = ", ".join(_pdf.name for _pdf in uploaded_pdfs)
             st.info(
-                f"PDF ready: **{uploaded_pdf.name}**  "
-                f"— configure options above, then click **Run pipeline**."
+                f"PDFs ready: **{_pdf_names}**  "
+                f"- configure options above, then click **Run pipeline**."
             )
         else:
-            st.warning("Upload a PDF using the file uploader above, then click **Run pipeline**.")
+            if input_mode == "Upload PDF":
+                st.warning("Upload one or more PDFs using the file uploader above, then click **Run pipeline**.")
+            else:
+                st.caption("Optional: upload one or more PDFs using the file uploader above.")
 
         
     run_inference = st.checkbox(
@@ -1257,75 +1389,83 @@ with st.form("pwml_pipeline"):
     submit = st.form_submit_button("Run pipeline")
 
 if submit:
-    llm_client_module.reset_token_stats()
+    text_parts = [entry.strip() for entry in text_entries if entry.strip()]
+    user_task_context = (user_task_context or "").strip() or None
+
     # PDF extraction runs here — outside the form, so uploaded_pdf is accessible
-    if input_mode == "Upload PDF":
-        if uploaded_pdf is None:
-            st.warning("Please upload a PDF using the file uploader above.")
-            st.stop()
+    if uses_pdf_input:
+        if not uploaded_pdfs:
+            if input_mode == "Upload PDF":
+                st.warning("Please upload one or more PDFs using the file uploader above.")
+                st.stop()
+            uploaded_pdfs = []
 
         import tempfile, os
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as _tmp:
-            _tmp.write(uploaded_pdf.read())
-            _tmp_path = _tmp.name
-
-        try:
-            # Parse page range
-            _ps, _pe = 1, None
-            _pr = (pdf_page_range or "").strip()
-            if _pr:
-                _parts = _pr.split("-")
-                try:
-                    _ps = int(_parts[0])
-                    _pe = int(_parts[1]) if len(_parts) > 1 else _ps
-                except ValueError:
-                    st.warning(f"Invalid page range '{_pr}'; extracting all pages.")
-
-            _skip = SKIP_SECTIONS if pdf_skip_refs else set()
-
-            with st.spinner(f"Extracting text from {uploaded_pdf.name}..."):
-                _pdf = parse_pdf(
-                    _tmp_path,
-                    page_start=_ps,
-                    page_end=_pe,
-                    skip_sections=_skip,
-                    enable_ocr_fallback=bool(pdf_ocr),
-                )
-        finally:
+        # Parse page range once and apply it to every uploaded PDF.
+        _ps, _pe = 1, None
+        _pr = (pdf_page_range or "").strip()
+        if _pr:
+            _parts = _pr.split("-")
             try:
-                os.unlink(_tmp_path)
-            except Exception:
-                pass
+                _ps = int(_parts[0])
+                _pe = int(_parts[1]) if len(_parts) > 1 else _ps
+            except ValueError:
+                st.warning(f"Invalid page range '{_pr}'; extracting all pages.")
 
-        if _pdf["error"]:
-            st.error(f"PDF extraction failed: {_pdf['error']}")
-            st.stop()
+        _skip = SKIP_SECTIONS if pdf_skip_refs else set()
 
-        text = _pdf["text"]
+        for uploaded_pdf in uploaded_pdfs:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as _tmp:
+                _tmp.write(uploaded_pdf.read())
+                _tmp_path = _tmp.name
 
-        for _w in _pdf.get("warnings", []):
-            st.warning(f"PDF: {_w}")
+            try:
+                with st.spinner(f"Extracting text from {uploaded_pdf.name}..."):
+                    _pdf = parse_pdf(
+                        _tmp_path,
+                        page_start=_ps,
+                        page_end=_pe,
+                        skip_sections=_skip,
+                        enable_ocr_fallback=bool(pdf_ocr),
+                    )
+            finally:
+                try:
+                    os.unlink(_tmp_path)
+                except Exception:
+                    pass
 
-        st.success(
-            f"Extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
-            f"via **{_pdf['method']}**. "
-            f"Sections: {', '.join(_pdf['sections'].keys()) or 'none'}"
-        )
-        _meta = _pdf.get("metadata", {})
-        _mp = [p for p in [
-            f"Title: {_meta['title']}"     if _meta.get("title")  else "",
-            f"Author(s): {_meta['author']}" if _meta.get("author") else "",
-            f"DOI: {_meta['doi']}"          if _meta.get("doi")    else "",
-        ] if p]
-        if _mp:
-            st.caption(" | ".join(_mp))
+            if _pdf["error"]:
+                st.error(f"PDF extraction failed for {uploaded_pdf.name}: {_pdf['error']}")
+                st.stop()
 
-        with st.expander("Preview extracted text (first 1000 chars)", expanded=False):
-            st.text(text[:1000] + ("..." if len(text) > 1000 else ""))
+            if _pdf["text"].strip():
+                text_parts.append(_pdf["text"].strip())
 
+            for _w in _pdf.get("warnings", []):
+                st.warning(f"{uploaded_pdf.name}: {_w}")
+
+            st.success(
+                f"{uploaded_pdf.name}: extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
+                f"via **{_pdf['method']}**. "
+                f"Sections: {', '.join(_pdf['sections'].keys()) or 'none'}"
+            )
+            _meta = _pdf.get("metadata", {})
+            _mp = [p for p in [
+                f"Title: {_meta['title']}"     if _meta.get("title")  else "",
+                f"Author(s): {_meta['author']}" if _meta.get("author") else "",
+                f"DOI: {_meta['doi']}"          if _meta.get("doi")    else "",
+            ] if p]
+            if _mp:
+                st.caption(" | ".join(_mp))
+
+            with st.expander(f"Preview extracted text from {uploaded_pdf.name} (first 1000 chars)", expanded=False):
+                _preview = _pdf["text"][:1000] + ("..." if len(_pdf["text"]) > 1000 else "")
+                st.text(_preview)
+
+    text = "\n\n".join(text_parts)
     if not text.strip():
-        st.warning("No text to process. Paste text or upload a PDF.")
+        st.warning("No text to process. Paste text, upload one or more PDFs, or use both.")
         st.stop()
 
     # Preprocessing: lightweight context summary to guide extraction and inference
@@ -1338,6 +1478,7 @@ if submit:
             stage_one, chunk_details = run_stage_one_with_chunking(
                 text,
                 pathway_context=pathway_context,
+                user_task_context=user_task_context,
                 enable_chunking=enable_chunking,
                 chunk_word_limit=int(chunk_size),
                 chunk_overlap=int(chunk_overlap),
@@ -1365,6 +1506,7 @@ if submit:
                     stage_one,
                     chunk_details=chunk_details,
                     pathway_context=pathway_context,
+                    user_task_context=user_task_context,
                     qa_rounds=int(infer_rounds),
                     enable_chunking=enable_chunking,
                     chunk_word_limit=int(chunk_size),
@@ -1395,6 +1537,7 @@ if submit:
     st.session_state["pipeline_ready"] = True
     st.session_state["run_inference_enabled"] = bool(run_inference)
     st.session_state["pathway_context"] = pathway_context
+    st.session_state["user_task_context"] = user_task_context
     st.session_state["stage_one"] = stage_one
     st.session_state["chunk_details"] = chunk_details
     st.session_state["stage_two"] = stage_two
@@ -1620,7 +1763,7 @@ if st.session_state.get("pipeline_ready"):
     else:
         st.info("Run the pipeline to generate a pathway summary.")
 
-    st.subheader("Post-pipeline SBML export")
+    st.subheader("Post-pipeline audit and DB mapping")
     post_col_a, post_col_b = st.columns(2)
     use_llm_audit = post_col_a.checkbox(
         "Use LLM in audit stage",
@@ -1629,10 +1772,15 @@ if st.session_state.get("pipeline_ready"):
         key="post_use_llm_audit",
     )
     use_sbml_overwatch = post_col_a.checkbox(
-        "Use SBML semantic overwatch",
-        value=True,
-        help="Runs deterministic + LLM semantic review on generated SBML.",
+        "Use SBML semantic overwatch for legacy export",
+        value=False,
+        help="Only used by the legacy SBML export path.",
         key="post_use_sbml_overwatch",
+    )
+    use_stoich_agent = post_col_a.checkbox(
+        "Stoichiometry agent (fill missing ATP/ADP/NAD etc.)",
+        value=False,
+        key="post_use_stoich_agent",
     )
     default_compartment = post_col_b.text_input(
         "Default compartment",
@@ -1676,8 +1824,8 @@ if st.session_state.get("pipeline_ready"):
     )
     retrieval_cols = st.columns(3)
     use_example_retrieval = retrieval_cols[0].checkbox(
-        "Use SBML motif retrieval",
-        value=True,
+        "Use SBML motif retrieval during audit",
+        value=False,
         key="post_use_example_retrieval",
         help="Injects nearest SBML motif examples into each audit LLM call.",
     )
@@ -1747,11 +1895,12 @@ if st.session_state.get("pipeline_ready"):
             key="post_db_password",
         )
 
-    if st.button("Run post-pipeline SBML conversion"):
+    if st.button("Run post-pipeline audit + DB mapping"):
         try:
-            with st.spinner("Running audit, patching, ID mapping, and SBML build..."):
+            with st.spinner("Running audit, patching, and ID mapping..."):
                 artifacts = run_post_pipeline_sbml_artifacts(
                     final_payload,
+                    build_legacy_sbml=False,
                     use_llm_audit=bool(use_llm_audit),
                     use_sbml_overwatch=bool(use_sbml_overwatch),
                     default_compartment=(default_compartment or "cell").strip() or "cell",
@@ -1773,6 +1922,7 @@ if st.session_state.get("pipeline_ready"):
                     gap_resolver_max_items=int(gap_resolver_max_items),
                     qa_report=st.session_state.get("qa_report"),
                     reaction_summary=st.session_state.get("reaction_summary"),
+                    use_stoich_agent=bool(use_stoich_agent),
                 )
             st.session_state["post_pipeline_artifacts"] = artifacts
             # Upgrade the draft graph / reaction summary to the post-audit versions
@@ -1789,7 +1939,7 @@ if st.session_state.get("pipeline_ready"):
             if bool(_pa.get("gate_failed", False)):
                 st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
             else:
-                st.success("Post-pipeline conversion completed.")
+                st.success("Post-pipeline audit and DB mapping completed.")
         except Exception as exc:
             st.error(f"Post-pipeline conversion failed: {exc}")
 
@@ -1803,6 +1953,9 @@ if st.session_state.get("pipeline_ready"):
         sbml_validation = post_artifacts.get("sbml_report_json", {}).get("validation", {})
         sbml_overwatch_summary = post_artifacts.get("sbml_overwatch_report", {}).get("summary", {})
         sbml_layout_summary = _safe_dict(post_artifacts.get("sbml_render_layout_summary"))
+        stoich_audit_log = post_artifacts.get("stoich_audit_log") or []
+        stoich_additions_made = sum(1 for e in stoich_audit_log if e.get("llm_verdict") == "add")
+        stoich_audits_reversed = sum(1 for e in stoich_audit_log if e.get("audit_verdict") == "reversed")
 
         st.write(
             {
@@ -1834,6 +1987,8 @@ if st.session_state.get("pipeline_ready"):
                 "example_index_error": post_artifacts.get("example_index_error"),
                 "example_index_entry_count": post_artifacts.get("example_index_entry_count"),
                 "audit_loop": post_artifacts.get("audit_loop_summary"),
+                "stoich_additions_made": stoich_additions_made,
+                "stoich_audits_reversed": stoich_audits_reversed,
             }
         )
         if gate_failed:
@@ -1849,6 +2004,9 @@ if st.session_state.get("pipeline_ready"):
         if post_artifacts.get("gap_resolution_iterations"):
             with st.expander("Stage 3 resolution iterations", expanded=False):
                 st.write(post_artifacts.get("gap_resolution_iterations"))
+        if post_artifacts.get("stoich_audit_log"):
+            with st.expander("Stoichiometry audit log"):
+                st.dataframe(post_artifacts["stoich_audit_log"])
         if sbml_layout_summary:
             st.write("SBML render geometry", sbml_layout_summary)
             if sbml_layout_summary.get("has_drawable_geometry"):
@@ -1986,6 +2144,211 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
+    st.subheader("PWML Export")
+
+    _project_root_pwml = Path(__file__).resolve().parent.parent
+    _ref_candidates = [
+        _project_root_pwml / "reference" / "PW000001.pwml",
+        _project_root_pwml / "reference" / "PW012926.pwml",
+    ]
+    _ref_path_pwml = next((p for p in _ref_candidates if p.exists()), _ref_candidates[0])
+
+    _pwml_cols = st.columns(3)
+    _pwml_name = _pwml_cols[0].text_input("Pathway name", value="Generated Pathway", key="pwml_name")
+    _pwml_subject = _pwml_cols[1].text_input("Subject", value="Metabolic", key="pwml_subject")
+    _pwml_description = _pwml_cols[2].text_input("Description", value="", key="pwml_description")
+
+    _vis_cols = st.columns(3)
+    _pwml_width = _vis_cols[0].number_input("Width", min_value=200, max_value=10000, value=3200, step=100, key="pwml_width")
+    _pwml_height = _vis_cols[1].number_input("Height", min_value=200, max_value=10000, value=1400, step=100, key="pwml_height")
+    _pwml_bg = _vis_cols[2].text_input("Background color", value="#FFFFFF", key="pwml_bg")
+    _pwml_strict_db = st.checkbox(
+        "Require DB-backed PWML identities",
+        value=True,
+        key="pwml_strict_db",
+        help="When enabled, compounds/proteins/complexes without PathBank/PW IDs stop PWML serialization at the IR stage.",
+    )
+
+    _pwml_grounding = st.checkbox("Apply grounding before export", value=False, key="pwml_grounding")
+    _pwml_grounding_dict: Optional[Dict[str, Any]] = None
+    if _pwml_grounding:
+        _pwml_grounding_path = st.text_input(
+            "Grounding dictionary path", value="data/grounding_dictionary.example.json",
+            key="pwml_grounding_path"
+        )
+        if st.button("Load grounding dictionary", key="pwml_load_grounding"):
+            try:
+                _gp = resolve_path(_pwml_grounding_path)
+                _pwml_grounding_dict = json.loads(_gp.read_text(encoding="utf-8"))
+                if not isinstance(_pwml_grounding_dict, dict):
+                    raise ValueError("Grounding dictionary must be a JSON object.")
+                st.session_state["pwml_grounding_dict"] = _pwml_grounding_dict
+                st.success("Grounding dictionary loaded.")
+            except Exception as _ge:
+                st.error(f"Grounding load failed: {_ge}")
+        _pwml_grounding_dict = st.session_state.get("pwml_grounding_dict")
+
+    _post_artifacts_pwml = st.session_state.get("post_pipeline_artifacts")
+    _pwml_source_payload = final_payload
+    if isinstance(_post_artifacts_pwml, dict) and isinstance(_post_artifacts_pwml.get("final_mapped"), dict):
+        _pwml_source_payload = _post_artifacts_pwml["final_mapped"]
+        st.caption("PWML export source: mapped/audited post-pipeline JSON.")
+    else:
+        st.caption("PWML export source: current final JSON. Run DB mapping first for strict PWML export.")
+
+    if st.button("Build PWML IR and Generate PWML", key="pwml_generate_btn"):
+        if not isinstance(_pwml_source_payload, dict) or not _pwml_source_payload:
+            st.error("No pipeline output in session state. Run the pipeline first.")
+        else:
+            with st.spinner("Building PWML..."):
+                _pwml_result = run_pwml_export(
+                    _pwml_source_payload,
+                    pathway_name=_pwml_name,
+                    pathway_description=_pwml_description,
+                    pathway_subject=_pwml_subject,
+                    project_root=_project_root_pwml,
+                    ref_path=_ref_path_pwml,
+                    vis_width=int(_pwml_width),
+                    vis_height=int(_pwml_height),
+                    background_color=_pwml_bg,
+                    grounding_dict=_pwml_grounding_dict,
+                    strict_db=bool(_pwml_strict_db),
+                )
+            st.session_state["pwml_export_result"] = _pwml_result
+
+    _pwml_result = st.session_state.get("pwml_export_result")
+    if isinstance(_pwml_result, dict):
+        _ir_report = _safe_dict(_pwml_result.get("pwml_ir_report"))
+        _ir_validation = _safe_dict(_pwml_result.get("pwml_ir_validation"))
+        if _pwml_result.get("ok"):
+            st.success(f"Written to: {_pwml_result.get('output_path')}")
+            with st.expander("PWML IR report", expanded=True):
+                st.write("IR counts", _ir_report.get("counts", {}))
+                st.write("IR validation", _ir_validation.get("counts", {}))
+                if _ir_report.get("errors"):
+                    st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _ir_report["errors"]))
+                if _ir_report.get("warnings"):
+                    st.warning("IR warnings:\n" + "\n".join(str(w.get("message", w)) for w in _ir_report["warnings"]))
+                unresolved = _safe_dict(_ir_report.get("unresolved"))
+                if unresolved:
+                    st.write("Unresolved references", unresolved)
+            with st.expander("PWML IR JSON", expanded=False):
+                _ir_json_str = json.dumps(_pwml_result.get("pwml_ir", {}), indent=2)
+                st.code(_ir_json_str, language="json")
+                st.download_button(
+                    "Download PWML IR JSON",
+                    data=_ir_json_str,
+                    file_name="final.pwml_ir.json",
+                    mime="application/json",
+                    key="dl_pwml_ir_inline",
+                )
+            with st.expander("PWML XML validation and QA", expanded=True):
+                st.write("Counts", _pwml_result.get("counts", {}))
+                st.write("Structural validation issues", _pwml_result.get("issues", 0))
+                _qa = _pwml_result.get("qa", {})
+                if _qa:
+                    st.write("QA ok", _qa.get("ok"))
+                    st.write("QA stats", _qa.get("stats", {}))
+                    if _qa.get("errors"):
+                        st.error("QA errors:\n" + "\n".join(_qa["errors"]))
+                    if _qa.get("warnings"):
+                        st.warning("QA warnings:\n" + "\n".join(_qa["warnings"]))
+                _gr = _pwml_result.get("grounding_report")
+                if _gr:
+                    st.write("Grounding report", _gr)
+            with st.expander("PWML XML", expanded=False):
+                _pwml_xml_str = _pwml_result.get("xml_bytes", b"").decode("utf-8", errors="replace")
+                st.code(_pwml_xml_str, language="xml")
+            _dl_cols = st.columns(4)
+            _dl_cols[0].download_button(
+                "Download pathway.pwml", data=_pwml_result["xml_bytes"],
+                file_name="pathway.pwml", mime="application/xml", key="dl_pwml"
+            )
+            _dl_cols[1].download_button(
+                "Download PWML IR JSON", data=json.dumps(_pwml_result.get("pwml_ir", {}), indent=2),
+                file_name="final.pwml_ir.json", mime="application/json", key="dl_pwml_ir"
+            )
+            _dl_cols[2].download_button(
+                "Download PWML IR report", data=json.dumps(_ir_report, indent=2),
+                file_name="pwml_ir_report.json", mime="application/json", key="dl_pwml_ir_report"
+            )
+            _dl_cols[3].download_button(
+                "Download validation report", data=json.dumps(_pwml_result["validation_report"], indent=2),
+                file_name="pwml_validation_report.json", mime="application/json", key="dl_pwml_report"
+            )
+        else:
+            st.error(f"PWML export failed: {_pwml_result.get('error', 'unknown')}")
+            if _ir_report:
+                with st.expander("PWML IR report", expanded=True):
+                    st.write("IR counts", _ir_report.get("counts", {}))
+                    if _ir_report.get("errors"):
+                        st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _ir_report["errors"]))
+                    if _ir_report.get("warnings"):
+                        st.warning("IR warnings:\n" + "\n".join(str(w.get("message", w)) for w in _ir_report["warnings"]))
+                    st.write("Unresolved references", _safe_dict(_ir_report.get("unresolved")))
+                st.download_button(
+                    "Download PWML IR report",
+                    data=json.dumps(_ir_report, indent=2),
+                    file_name="pwml_ir_report.json",
+                    mime="application/json",
+                    key="dl_pwml_ir_report_failed",
+                )
+            if isinstance(_pwml_result.get("pwml_ir"), dict):
+                with st.expander("PWML IR JSON (failed run)", expanded=False):
+                    _ir_json_failed_str = json.dumps(_pwml_result.get("pwml_ir", {}), indent=2)
+                    st.code(_ir_json_failed_str, language="json")
+                st.download_button(
+                    "Download PWML IR JSON",
+                    data=json.dumps(_pwml_result.get("pwml_ir", {}), indent=2),
+                    file_name="final.pwml_ir.json",
+                    mime="application/json",
+                    key="dl_pwml_ir_failed",
+                )
+
+    render_pathwhiz_converter_section(llm_client_module)
+
+    st.subheader("Connectivity snapshot")
+    stats = graph_summary(final_payload)
+    st.write(stats)
+    if run_inference_from_state:
+        st.write("Connectivity repair hints used for later rounds", build_qa_feedback(final_payload))
+
+    with st.expander("Legacy SBML Export", expanded=False):
+        st.caption("SBML is a legacy export path. Use PWML above for primary output.")
+        if st.button("Run legacy SBML export", key="run_legacy_sbml_export_btn"):
+            try:
+                with st.spinner("Running legacy SBML export..."):
+                    legacy_artifacts = run_post_pipeline_sbml_artifacts(
+                        final_payload,
+                        build_legacy_sbml=True,
+                        use_llm_audit=bool(use_llm_audit),
+                        use_sbml_overwatch=bool(use_sbml_overwatch),
+                        default_compartment=(default_compartment or "cell").strip() or "cell",
+                        mapping_cache_path=mapping_cache_text.strip() or "id_mapping_cache.json",
+                        id_source=(id_source_mode or "hybrid").strip().lower(),
+                        db_host=(db_host or "").strip(),
+                        db_port=int(db_port),
+                        db_user=(db_user or "").strip(),
+                        db_password=db_password or "",
+                        db_schema=(db_schema or "pathbank").strip() or "pathbank",
+                        audit_max_rounds=int(audit_max_rounds),
+                        audit_timeout_seconds=int(audit_timeout_seconds),
+                        audit_candidate_count=int(audit_candidate_count),
+                        use_example_retrieval=bool(use_example_retrieval),
+                        example_index_path=(example_index_path or "").strip(),
+                        example_top_k=int(example_top_k),
+                        use_gap_resolver=bool(use_gap_resolver),
+                        use_llm_gap_resolver=bool(use_llm_gap_resolver),
+                        gap_resolver_max_items=int(gap_resolver_max_items),
+                        qa_report=st.session_state.get("qa_report"),
+                        reaction_summary=st.session_state.get("reaction_summary"),
+                        use_stoich_agent=bool(use_stoich_agent),
+                    )
+                st.session_state["post_pipeline_artifacts"] = legacy_artifacts
+                post_artifacts = legacy_artifacts
+                st.success("Legacy SBML export completed.")
+            except Exception as exc:
+                st.error(f"Legacy SBML export failed: {exc}")
         if post_artifacts.get("sbml_xml_bytes"):
             st.download_button(
                 "Download pathway.sbml",
@@ -2012,18 +2375,7 @@ if st.session_state.get("pipeline_ready"):
             )
             clean_summary = post_artifacts.get("sbml_clean_summary", {})
             if clean_summary:
-                with st.expander("Clean SBML removal summary"):
-                    st.write(f"Compartments removed: {clean_summary.get('total_removed_compartments', 0)}")
-                    st.write(f"Species removed: {clean_summary.get('total_removed_species', 0)}")
-                    st.write(f"Reactions removed (no ID): {clean_summary.get('total_removed_reactions', 0)}")
-                    st.write(f"Reactions removed (cascade): {clean_summary.get('total_cascade_removed_reactions', 0)}")
-                    if clean_summary.get("removed_species"):
-                        st.json(clean_summary["removed_species"])
-                    if clean_summary.get("removed_reactions") or clean_summary.get("cascade_removed_reactions"):
-                        st.json(
-                            clean_summary.get("removed_reactions", [])
-                            + clean_summary.get("cascade_removed_reactions", [])
-                        )
+                st.write("Clean SBML removal summary", clean_summary)
         if post_artifacts.get("sbml_diagram_png_bytes"):
             st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
             st.download_button(
@@ -2035,20 +2387,22 @@ if st.session_state.get("pipeline_ready"):
             )
         elif str(post_artifacts.get("sbml_diagram_error", "")).strip():
             st.warning(f"SBML diagram render issue: {post_artifacts.get('sbml_diagram_error')}")
-        st.download_button(
-            "Download sbml_validation_report.json",
-            json.dumps(post_artifacts["sbml_report_json"], indent=2),
-            file_name="sbml_validation_report.json",
-            mime="application/json",
-            key="dl_sbml_json",
-        )
-        st.download_button(
-            "Download sbml_validation_report.txt",
-            post_artifacts["sbml_report_txt"],
-            file_name="sbml_validation_report.txt",
-            mime="text/plain",
-            key="dl_sbml_txt",
-        )
+        if post_artifacts.get("sbml_report_json"):
+            st.download_button(
+                "Download sbml_validation_report.json",
+                json.dumps(post_artifacts["sbml_report_json"], indent=2),
+                file_name="sbml_validation_report.json",
+                mime="application/json",
+                key="dl_sbml_json",
+            )
+        if post_artifacts.get("sbml_report_txt"):
+            st.download_button(
+                "Download sbml_validation_report.txt",
+                post_artifacts["sbml_report_txt"],
+                file_name="sbml_validation_report.txt",
+                mime="text/plain",
+                key="dl_sbml_txt",
+            )
         if post_artifacts.get("sbml_overwatch_report"):
             st.download_button(
                 "Download sbml_overwatch_report.json",
@@ -2057,12 +2411,10 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/json",
                 key="dl_sbml_overwatch",
             )
-
         checker_key = "post_pipeline_libsbml_check"
         if post_artifacts.get("sbml_xml_bytes") and st.button("Run libSBML checker on generated SBML", key="run_libsbml_checker_btn"):
             with st.spinner("Running libSBML checker..."):
                 st.session_state[checker_key] = run_libsbml_checker(post_artifacts["sbml_xml_bytes"])
-
         checker_report = st.session_state.get(checker_key)
         if isinstance(checker_report, dict):
             st.write("libSBML checker summary", checker_report.get("validation", {}))
@@ -2075,94 +2427,3 @@ if st.session_state.get("pipeline_ready"):
                 mime="application/json",
                 key="dl_libsbml_checker",
             )
-
-    render_pathwhiz_converter_section(llm_client_module)
-
-    st.subheader("PWML export")
-    pwml_col_a, pwml_col_b = st.columns(2)
-    ref_path_text = pwml_col_a.text_input("Reference PWML path", value="reference/PW012926.pwml")
-    grounding_enabled = pwml_col_b.checkbox("Apply deterministic grounding before PWML export", value=False)
-
-    grounding_path_text = ""
-    if grounding_enabled:
-        grounding_path_text = st.text_input("Grounding dictionary path", value="data/grounding_dictionary.example.json")
-
-    meta_col_1, meta_col_2, meta_col_3 = st.columns(3)
-    pw_id = meta_col_1.text_input("pw-id", value="PW000XYZ")
-    named_for_id = meta_col_2.number_input("named-for-id", min_value=1, max_value=99999999, value=123, step=1)
-    subject = meta_col_3.text_input("subject", value="Metabolic")
-
-    naming_col_1, naming_col_2 = st.columns(2)
-    pathway_name = naming_col_1.text_input("Pathway name", value="Generated Pathway")
-    pathway_description = naming_col_2.text_input("Pathway description", value="")
-
-    vis_col_1, vis_col_2, vis_col_3 = st.columns(3)
-    vis_width = vis_col_1.number_input("Visualization width", min_value=200, max_value=10000, value=3200, step=100)
-    vis_height = vis_col_2.number_input("Visualization height", min_value=200, max_value=10000, value=1400, step=100)
-    background_color = vis_col_3.text_input("Background color", value="#FFFFFF")
-
-    if st.button("Generate PWML from final JSON"):
-        payload_for_writer = final_payload
-        if grounding_enabled:
-            try:
-                grounding_path = resolve_path(grounding_path_text)
-                grounding_dict = json.loads(grounding_path.read_text(encoding="utf-8"))
-                if not isinstance(grounding_dict, dict):
-                    raise ValueError("Grounding dictionary must be a JSON object.")
-                payload_for_writer, grounding_report = apply_grounding(payload_for_writer, grounding_dict)
-                st.write("Grounding report", grounding_report)
-                st.download_button(
-                    "Download grounded JSON",
-                    json.dumps(payload_for_writer, indent=2),
-                    file_name="grounded_output.json",
-                    mime="application/json",
-                )
-            except Exception as exc:
-                st.error(f"Grounding failed: {exc}")
-                st.stop()
-        try:
-            reference_path = resolve_path(ref_path_text)
-            signature = discover_structure_signature(reference_path)
-            args = SimpleNamespace(
-                named_for_id=int(named_for_id),
-                name=pathway_name,
-                description=pathway_description,
-                subject=subject,
-                pw_id=pw_id,
-                height=int(vis_height),
-                width=int(vis_width),
-                background_color=background_color,
-            )
-            builder = DeterministicPwmlBuilder(payload_for_writer, signature, args)
-            build = builder.build()
-            tree = etree.ElementTree(build.root)
-            repaired = repair_tree(tree, signature)
-            report = validate_generated_tree(repaired, signature)
-            xml_bytes = etree.tostring(
-                repaired.getroot(), encoding="utf-8", xml_declaration=True, pretty_print=True
-            )
-            st.write("PWML generation summary", build.counts)
-            st.write("Dummy geometry generated", build.geometry_generated)
-            st.write("PWML structural validation", {"ok": report["ok"], "issue_count": report["issue_count"]})
-            if not report["ok"]:
-                st.json(report["issues"])
-            st.download_button(
-                "Download PWML",
-                data=xml_bytes,
-                file_name="out.pwml",
-                mime="application/xml",
-            )
-            st.download_button(
-                "Download PWML validation report",
-                data=json.dumps(report, indent=2),
-                file_name="writer_validation_report.json",
-                mime="application/json",
-            )
-        except Exception as exc:
-            st.error(f"PWML generation failed: {exc}")
-
-    st.subheader("Connectivity snapshot")
-    stats = graph_summary(final_payload)
-    st.write(stats)
-    if run_inference_from_state:
-        st.write("Connectivity repair hints used for later rounds", build_qa_feedback(final_payload))

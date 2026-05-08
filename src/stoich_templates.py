@@ -1,0 +1,81 @@
+REACTION_TEMPLATES: dict[str, dict] = {
+    "kinase_phosphorylation": {
+        "match_keywords": ["kinase", "phosphorylat"],
+        "match_enzyme_hints": ["kinase"],
+        "required_inputs": ["ATP"],
+        "required_outputs": ["ADP"],
+        "note": "Kinase transfers a phosphate group from ATP to a substrate, producing ADP.",
+    },
+    "substrate_level_phosphorylation": {
+        "match_keywords": ["substrate-level phosphorylation", "substrate level phosphorylation"],
+        "match_enzyme_hints": ["kinase", "synthase"],
+        "required_inputs": ["ADP", "Pi"],
+        "required_outputs": ["ATP"],
+        "note": "Substrate-level phosphorylation synthesises ATP from ADP and inorganic phosphate without an electron-transport chain.",
+    },
+    "nad_linked_dehydrogenase": {
+        "match_keywords": ["dehydrogenase", "oxidoreductase"],
+        "match_enzyme_hints": ["dehydrogenase", "reductase"],
+        "required_inputs": ["NAD+"],
+        "required_outputs": ["NADH"],
+        "note": "NAD+-linked dehydrogenase oxidises a substrate and reduces NAD+ to NADH.",
+    },
+    "fad_linked_dehydrogenase": {
+        "match_keywords": ["dehydrogenase", "oxidoreductase"],
+        "match_enzyme_hints": ["dehydrogenase", "reductase", "flavoprotein"],
+        "required_inputs": ["FAD"],
+        "required_outputs": ["FADH2"],
+        "note": "FAD-linked dehydrogenase oxidises a substrate and reduces FAD to FADH2.",
+    },
+    "decarboxylation": {
+        "match_keywords": ["decarboxylase", "decarboxylation", "decarboxylat"],
+        "match_enzyme_hints": ["decarboxylase"],
+        "required_inputs": [],
+        "required_outputs": ["CO2"],
+        "note": "Decarboxylation removes a carboxyl group from the substrate, releasing CO2.",
+    },
+    "hydration": {
+        "match_keywords": ["hydratase", "hydration", "hydrat"],
+        "match_enzyme_hints": ["hydratase", "hydrase"],
+        "required_inputs": ["H2O"],
+        "required_outputs": [],
+        "note": "Hydration adds water across a double bond.",
+    },
+    "dehydration": {
+        "match_keywords": ["dehydratase", "dehydration", "dehydrat"],
+        "match_enzyme_hints": ["dehydratase"],
+        "required_inputs": [],
+        "required_outputs": ["H2O"],
+        "note": "Dehydration removes water from the substrate, often forming a double bond.",
+    },
+    "coa_transfer": {
+        "match_keywords": ["coa", "acyl-coa", "thiokinase", "synthetase", "ligase"],
+        "match_enzyme_hints": ["transferase", "synthetase", "ligase"],
+        "required_inputs": ["CoA"],
+        "required_outputs": [],
+        "note": "CoA transfer attaches or transfers a coenzyme A thioester group.",
+    },
+    "transaminase": {
+        "match_keywords": ["transaminase", "aminotransferase", "transamination"],
+        "match_enzyme_hints": ["transaminase", "aminotransferase"],
+        "required_inputs": [],
+        "required_outputs": [],
+        "note": "Transaminase (aminotransferase) transfers an amino group between an amino acid and an alpha-keto acid.",
+    },
+    "lyase_cleavage": {
+        "match_keywords": ["lyase", "cleavage", "aldolase", "synthase"],
+        "match_enzyme_hints": ["lyase", "aldolase"],
+        "required_inputs": [],
+        "required_outputs": [],
+        "note": "Lyase cleaves a C–C, C–O, or C–N bond without oxidation or hydrolysis.",
+    },
+    "transport": {
+        "match_keywords": ["transport", "transporter", "carrier", "channel", "permease", "antiport", "symport", "uniport"],
+        "match_enzyme_hints": ["transporter", "carrier", "permease"],
+        "required_inputs": [],
+        "required_outputs": [],
+        "note": "Transport reaction — skip stoichiometry checks; molecule moves across a membrane.",
+    },
+}
+
+REACTION_CLASS_NAMES: list[str] = sorted(REACTION_TEMPLATES.keys())
