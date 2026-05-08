@@ -1860,214 +1860,215 @@ if st.session_state.get("pipeline_ready"):
             else:
                 st.warning("SBML render geometry could not be confirmed from the render-ready SBML.")
 
-        st.download_button(
-            "Download pre_normalization_input.json",
-            json.dumps(post_artifacts.get("pre_normalization_input", {}), indent=2),
-            file_name="pre_normalization_input.json",
-            mime="application/json",
-            key="dl_pre_normalization_input",
-        )
-        st.download_button(
-            "Download pre_normalized_input.json",
-            json.dumps(post_artifacts.get("pre_normalized_input", {}), indent=2),
-            file_name="pre_normalized_input.json",
-            mime="application/json",
-            key="dl_pre_normalized_input",
-        )
-        st.download_button(
-            "Download pre_normalization_report.json",
-            json.dumps(post_artifacts.get("pre_normalization_report", {}), indent=2),
-            file_name="pre_normalization_report.json",
-            mime="application/json",
-            key="dl_pre_normalization_report",
-        )
-        st.download_button(
-            "Download post_normalization_probe.json",
-            json.dumps(post_artifacts.get("post_normalization_probe", {}), indent=2),
-            file_name="post_normalization_probe.json",
-            mime="application/json",
-            key="dl_post_normalization_probe",
-        )
-        st.download_button(
-            "Download post_transport_attachment_probe.json",
-            json.dumps(post_artifacts.get("post_transport_attachment_probe", {}), indent=2),
-            file_name="post_transport_attachment_probe.json",
-            mime="application/json",
-            key="dl_post_transport_attachment_probe",
-        )
-        st.download_button(
-            "Download post_dedupe_probe.json",
-            json.dumps(post_artifacts.get("post_dedupe_probe", {}), indent=2),
-            file_name="post_dedupe_probe.json",
-            mime="application/json",
-            key="dl_post_dedupe_probe",
-        )
-        if gate_failed:
+        with st.expander("Post-pipeline artifacts (audit, mapping, enrichment)", expanded=False):
             st.download_button(
-                "Download gate_fail_report.json",
-                json.dumps(post_artifacts.get("gate_fail_report", {}), indent=2),
-                file_name="gate_fail_report.json",
+                "Download pre_normalization_input.json",
+                json.dumps(post_artifacts.get("pre_normalization_input", {}), indent=2),
+                file_name="pre_normalization_input.json",
                 mime="application/json",
-                key="dl_gate_fail_report",
+                key="dl_pre_normalization_input",
             )
-        st.download_button(
-            "Download audit_report.json",
-            json.dumps(post_artifacts["audit_report"], indent=2),
-            file_name="audit_report.json",
-            mime="application/json",
-            key="dl_audit_report",
-        )
-        st.download_button(
-            "Download audit_patch.json",
-            json.dumps(post_artifacts["audit_patch"], indent=2),
-            file_name="audit_patch.json",
-            mime="application/json",
-            key="dl_audit_patch",
-        )
-        st.download_button(
-            "Download audit_apply_report.json",
-            json.dumps(post_artifacts["audit_apply_report"], indent=2),
-            file_name="audit_apply_report.json",
-            mime="application/json",
-            key="dl_audit_apply",
-        )
-        if post_artifacts.get("audit_iterations"):
             st.download_button(
-                "Download audit_iterations.json",
-                json.dumps(post_artifacts["audit_iterations"], indent=2),
-                file_name="audit_iterations.json",
+                "Download pre_normalized_input.json",
+                json.dumps(post_artifacts.get("pre_normalized_input", {}), indent=2),
+                file_name="pre_normalized_input.json",
                 mime="application/json",
-                key="dl_audit_iterations",
+                key="dl_pre_normalized_input",
             )
-        if post_artifacts.get("gap_resolution_iterations"):
             st.download_button(
-                "Download stage3_resolution_iterations.json",
-                json.dumps(post_artifacts["gap_resolution_iterations"], indent=2),
-                file_name="stage3_resolution_iterations.json",
+                "Download pre_normalization_report.json",
+                json.dumps(post_artifacts.get("pre_normalization_report", {}), indent=2),
+                file_name="pre_normalization_report.json",
                 mime="application/json",
-                key="dl_gap_resolution_iterations",
+                key="dl_pre_normalization_report",
             )
-        st.download_button(
-            "Download final.audited.json",
-            json.dumps(post_artifacts["final_audited"], indent=2),
-            file_name="final.audited.json",
-            mime="application/json",
-            key="dl_final_audited",
-        )
-        st.download_button(
-            "Download final.mapped.json",
-            json.dumps(post_artifacts["final_mapped"], indent=2),
-            file_name="final.mapped.json",
-            mime="application/json",
-            key="dl_final_mapped",
-        )
-        st.download_button(
-            "Download mapping_report.json",
-            json.dumps(post_artifacts["mapping_report"], indent=2),
-            file_name="mapping_report.json",
-            mime="application/json",
-            key="dl_mapping_report",
-        )
-        st.download_button(
-            "Download enrichment_report.json",
-            json.dumps(post_artifacts.get("enrichment_report", {}), indent=2),
-            file_name="enrichment_report.json",
-            mime="application/json",
-            key="dl_enrichment_report",
-        )
-        dump_path_value = str(post_artifacts.get("enrichment_dump_path", "") or "").strip()
-        if dump_path_value:
-            dump_path = Path(dump_path_value)
-            if dump_path.exists():
+            st.download_button(
+                "Download post_normalization_probe.json",
+                json.dumps(post_artifacts.get("post_normalization_probe", {}), indent=2),
+                file_name="post_normalization_probe.json",
+                mime="application/json",
+                key="dl_post_normalization_probe",
+            )
+            st.download_button(
+                "Download post_transport_attachment_probe.json",
+                json.dumps(post_artifacts.get("post_transport_attachment_probe", {}), indent=2),
+                file_name="post_transport_attachment_probe.json",
+                mime="application/json",
+                key="dl_post_transport_attachment_probe",
+            )
+            st.download_button(
+                "Download post_dedupe_probe.json",
+                json.dumps(post_artifacts.get("post_dedupe_probe", {}), indent=2),
+                file_name="post_dedupe_probe.json",
+                mime="application/json",
+                key="dl_post_dedupe_probe",
+            )
+            if gate_failed:
                 st.download_button(
-                    "Download enrichment_dump.json",
-                    dump_path.read_text(encoding="utf-8"),
-                    file_name="enrichment_dump.json",
+                    "Download gate_fail_report.json",
+                    json.dumps(post_artifacts.get("gate_fail_report", {}), indent=2),
+                    file_name="gate_fail_report.json",
                     mime="application/json",
-                    key="dl_enrichment_dump",
+                    key="dl_gate_fail_report",
                 )
-        if post_artifacts.get("sbml_xml_bytes"):
             st.download_button(
-                "Download pathway.sbml",
-                post_artifacts["sbml_xml_bytes"],
-                file_name="pathway.sbml",
-                mime="application/xml",
-                key="dl_pathway_sbml",
-            )
-        if post_artifacts.get("sbml_render_ready_sbml_bytes"):
-            st.download_button(
-                "Download pathway.render_ready.sbml",
-                post_artifacts["sbml_render_ready_sbml_bytes"],
-                file_name="pathway.render_ready.sbml",
-                mime="application/xml",
-                key="dl_pathway_render_ready_sbml",
-            )
-        if post_artifacts.get("sbml_clean_bytes"):
-            st.download_button(
-                "Download pathway.render_ready.clean.sbml (unmapped entities removed)",
-                post_artifacts["sbml_clean_bytes"],
-                file_name="pathway.render_ready.clean.sbml",
-                mime="application/xml",
-                key="dl_pathway_render_ready_clean_sbml",
-            )
-            clean_summary = post_artifacts.get("sbml_clean_summary", {})
-            if clean_summary:
-                with st.expander("Clean SBML removal summary"):
-                    st.write(f"Compartments removed: {clean_summary.get('total_removed_compartments', 0)}")
-                    st.write(f"Species removed: {clean_summary.get('total_removed_species', 0)}")
-                    st.write(f"Reactions removed (no ID): {clean_summary.get('total_removed_reactions', 0)}")
-                    st.write(f"Reactions removed (cascade): {clean_summary.get('total_cascade_removed_reactions', 0)}")
-                    if clean_summary.get("removed_species"):
-                        st.json(clean_summary["removed_species"])
-                    if clean_summary.get("removed_reactions") or clean_summary.get("cascade_removed_reactions"):
-                        st.json(
-                            clean_summary.get("removed_reactions", [])
-                            + clean_summary.get("cascade_removed_reactions", [])
-                        )
-        if post_artifacts.get("sbml_diagram_png_bytes"):
-            st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
-            st.download_button(
-                "Download sbml_diagram.png",
-                post_artifacts["sbml_diagram_png_bytes"],
-                file_name="sbml_diagram.png",
-                mime="image/png",
-                key="dl_sbml_diagram_png",
-            )
-        elif str(post_artifacts.get("sbml_diagram_error", "")).strip():
-            st.warning(f"SBML diagram render issue: {post_artifacts.get('sbml_diagram_error')}")
-        st.download_button(
-            "Download sbml_validation_report.json",
-            json.dumps(post_artifacts["sbml_report_json"], indent=2),
-            file_name="sbml_validation_report.json",
-            mime="application/json",
-            key="dl_sbml_json",
-        )
-        st.download_button(
-            "Download sbml_validation_report.txt",
-            post_artifacts["sbml_report_txt"],
-            file_name="sbml_validation_report.txt",
-            mime="text/plain",
-            key="dl_sbml_txt",
-        )
-        if post_artifacts.get("sbml_overwatch_report"):
-            st.download_button(
-                "Download sbml_overwatch_report.json",
-                json.dumps(post_artifacts["sbml_overwatch_report"], indent=2),
-                file_name="sbml_overwatch_report.json",
+                "Download audit_report.json",
+                json.dumps(post_artifacts["audit_report"], indent=2),
+                file_name="audit_report.json",
                 mime="application/json",
-                key="dl_sbml_overwatch",
+                key="dl_audit_report",
             )
+            st.download_button(
+                "Download audit_patch.json",
+                json.dumps(post_artifacts["audit_patch"], indent=2),
+                file_name="audit_patch.json",
+                mime="application/json",
+                key="dl_audit_patch",
+            )
+            st.download_button(
+                "Download audit_apply_report.json",
+                json.dumps(post_artifacts["audit_apply_report"], indent=2),
+                file_name="audit_apply_report.json",
+                mime="application/json",
+                key="dl_audit_apply",
+            )
+            if post_artifacts.get("audit_iterations"):
+                st.download_button(
+                    "Download audit_iterations.json",
+                    json.dumps(post_artifacts["audit_iterations"], indent=2),
+                    file_name="audit_iterations.json",
+                    mime="application/json",
+                    key="dl_audit_iterations",
+                )
+            if post_artifacts.get("gap_resolution_iterations"):
+                st.download_button(
+                    "Download stage3_resolution_iterations.json",
+                    json.dumps(post_artifacts["gap_resolution_iterations"], indent=2),
+                    file_name="stage3_resolution_iterations.json",
+                    mime="application/json",
+                    key="dl_gap_resolution_iterations",
+                )
+            st.download_button(
+                "Download final.audited.json",
+                json.dumps(post_artifacts["final_audited"], indent=2),
+                file_name="final.audited.json",
+                mime="application/json",
+                key="dl_final_audited",
+            )
+            st.download_button(
+                "Download final.mapped.json",
+                json.dumps(post_artifacts["final_mapped"], indent=2),
+                file_name="final.mapped.json",
+                mime="application/json",
+                key="dl_final_mapped",
+            )
+            st.download_button(
+                "Download mapping_report.json",
+                json.dumps(post_artifacts["mapping_report"], indent=2),
+                file_name="mapping_report.json",
+                mime="application/json",
+                key="dl_mapping_report",
+            )
+            st.download_button(
+                "Download enrichment_report.json",
+                json.dumps(post_artifacts.get("enrichment_report", {}), indent=2),
+                file_name="enrichment_report.json",
+                mime="application/json",
+                key="dl_enrichment_report",
+            )
+            dump_path_value = str(post_artifacts.get("enrichment_dump_path", "") or "").strip()
+            if dump_path_value:
+                dump_path = Path(dump_path_value)
+                if dump_path.exists():
+                    st.download_button(
+                        "Download enrichment_dump.json",
+                        dump_path.read_text(encoding="utf-8"),
+                        file_name="enrichment_dump.json",
+                        mime="application/json",
+                        key="dl_enrichment_dump",
+                    )
+            if post_artifacts.get("sbml_xml_bytes"):
+                st.download_button(
+                    "Download pathway.sbml",
+                    post_artifacts["sbml_xml_bytes"],
+                    file_name="pathway.sbml",
+                    mime="application/xml",
+                    key="dl_pathway_sbml",
+                )
+            if post_artifacts.get("sbml_render_ready_sbml_bytes"):
+                st.download_button(
+                    "Download pathway.render_ready.sbml",
+                    post_artifacts["sbml_render_ready_sbml_bytes"],
+                    file_name="pathway.render_ready.sbml",
+                    mime="application/xml",
+                    key="dl_pathway_render_ready_sbml",
+                )
+            if post_artifacts.get("sbml_clean_bytes"):
+                st.download_button(
+                    "Download pathway.render_ready.clean.sbml (unmapped entities removed)",
+                    post_artifacts["sbml_clean_bytes"],
+                    file_name="pathway.render_ready.clean.sbml",
+                    mime="application/xml",
+                    key="dl_pathway_render_ready_clean_sbml",
+                )
+                clean_summary = post_artifacts.get("sbml_clean_summary", {})
+                if clean_summary:
+                    with st.expander("Clean SBML removal summary"):
+                        st.write(f"Compartments removed: {clean_summary.get('total_removed_compartments', 0)}")
+                        st.write(f"Species removed: {clean_summary.get('total_removed_species', 0)}")
+                        st.write(f"Reactions removed (no ID): {clean_summary.get('total_removed_reactions', 0)}")
+                        st.write(f"Reactions removed (cascade): {clean_summary.get('total_cascade_removed_reactions', 0)}")
+                        if clean_summary.get("removed_species"):
+                            st.json(clean_summary["removed_species"])
+                        if clean_summary.get("removed_reactions") or clean_summary.get("cascade_removed_reactions"):
+                            st.json(
+                                clean_summary.get("removed_reactions", [])
+                                + clean_summary.get("cascade_removed_reactions", [])
+                            )
+            if post_artifacts.get("sbml_diagram_png_bytes"):
+                st.image(post_artifacts["sbml_diagram_png_bytes"], caption="Generated SBML diagram")
+                st.download_button(
+                    "Download sbml_diagram.png",
+                    post_artifacts["sbml_diagram_png_bytes"],
+                    file_name="sbml_diagram.png",
+                    mime="image/png",
+                    key="dl_sbml_diagram_png",
+                )
+            elif str(post_artifacts.get("sbml_diagram_error", "")).strip():
+                st.warning(f"SBML diagram render issue: {post_artifacts.get('sbml_diagram_error')}")
+            st.download_button(
+                "Download sbml_validation_report.json",
+                json.dumps(post_artifacts["sbml_report_json"], indent=2),
+                file_name="sbml_validation_report.json",
+                mime="application/json",
+                key="dl_sbml_json",
+            )
+            st.download_button(
+                "Download sbml_validation_report.txt",
+                post_artifacts["sbml_report_txt"],
+                file_name="sbml_validation_report.txt",
+                mime="text/plain",
+                key="dl_sbml_txt",
+            )
+            if post_artifacts.get("sbml_overwatch_report"):
+                st.download_button(
+                    "Download sbml_overwatch_report.json",
+                    json.dumps(post_artifacts["sbml_overwatch_report"], indent=2),
+                    file_name="sbml_overwatch_report.json",
+                    mime="application/json",
+                    key="dl_sbml_overwatch",
+                )
 
-        checker_key = "post_pipeline_libsbml_check"
-        if post_artifacts.get("sbml_xml_bytes") and st.button("Run libSBML checker on generated SBML", key="run_libsbml_checker_btn"):
-            with st.spinner("Running libSBML checker..."):
-                st.session_state[checker_key] = run_libsbml_checker(post_artifacts["sbml_xml_bytes"])
+            checker_key = "post_pipeline_libsbml_check"
+            if post_artifacts.get("sbml_xml_bytes") and st.button("Run libSBML checker on generated SBML", key="run_libsbml_checker_btn"):
+                with st.spinner("Running libSBML checker..."):
+                    st.session_state[checker_key] = run_libsbml_checker(post_artifacts["sbml_xml_bytes"])
 
-        checker_report = st.session_state.get(checker_key)
-        if isinstance(checker_report, dict):
-            st.write("libSBML checker summary", checker_report.get("validation", {}))
-            if str(checker_report.get("error", "")).strip():
-                st.error(str(checker_report.get("error", "")))
+            checker_report = st.session_state.get(checker_key)
+            if isinstance(checker_report, dict):
+                st.write("libSBML checker summary", checker_report.get("validation", {}))
+                if str(checker_report.get("error", "")).strip():
+                    st.error(str(checker_report.get("error", "")))
             st.download_button(
                 "Download libsbml_checker_report.json",
                 json.dumps(checker_report, indent=2),
