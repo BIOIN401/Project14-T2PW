@@ -19,7 +19,6 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     attach_transporters_from_evidence,
     canonicalize_same_as_aliases,
     cleanup_disallowed_complexes,
-    compute_normalization_stats,
     dedupe_processes,
     ensure_autostates,
     normalize_composites,
@@ -27,9 +26,6 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     promote_catalysts,
     rewrite_reactions_to_complex_states,
     run_strict_post_normalization_gates,
-    validate_no_scaffold_modifiers,
-    validate_no_composites,
-    validate_registry_references,
 )
 
 try:

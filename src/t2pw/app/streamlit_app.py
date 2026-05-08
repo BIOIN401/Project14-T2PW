@@ -10,8 +10,6 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Tuple
 from uuid import uuid4
-from dotenv import load_dotenv
-from pathlib import Path
 
 import streamlit as st
 from lxml import etree
@@ -59,7 +57,7 @@ from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
 from t2pw.pipeline.preprocessor import preprocess
-from t2pw.extraction.pdf_parser import extract_text_from_pdf, get_pdf_info, parse_pdf, SKIP_SECTIONS
+from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
 from t2pw.pwml.writer import DeterministicPwmlBuilder
 from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir
@@ -1401,7 +1399,8 @@ if submit:
                 st.stop()
             uploaded_pdfs = []
 
-        import tempfile, os
+        import tempfile
+        import os
 
         # Parse page range once and apply it to every uploaded PDF.
         _ps, _pe = 1, None

@@ -6,8 +6,6 @@ import os
 import re
 import time
 from copy import deepcopy
-import sys
-import shutil
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 from urllib.parse import quote_plus

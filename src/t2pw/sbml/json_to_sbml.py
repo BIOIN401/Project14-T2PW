@@ -3,12 +3,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
-import os
 import re
-import sys
 import uuid
-from collections import Counter, defaultdict
+from collections import defaultdict
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
@@ -542,7 +539,7 @@ def build_sbml(
         # Dedup key
         key = "|".join(sorted(inputs)) + "→" + "|".join(sorted(outputs))
         if key in seen_reaction_keys:
-            report["warnings"].append({"path": "/processes/reactions", "reason": f"Duplicate reaction collapsed."})
+            report["warnings"].append({"path": "/processes/reactions", "reason": "Duplicate reaction collapsed."})
             continue
         seen_reaction_keys.add(key)
 
@@ -715,8 +712,8 @@ def build_sbml(
         if not uris:
             return []
         out = [
-            f'\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
-            f' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">',
+            '\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
+            ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">',
             f'\t<rdf:Description rdf:about="#{metaid}">',
             "              <bqbiol:is>",
             "\t<rdf:Bag>",
@@ -730,7 +727,6 @@ def build_sbml(
         """Generate bqbiol:hasPart RDF block for a protein complex."""
         uniprots = []
         for pid in protein_sbml_ids:
-            norm = _normalize(pid.replace("Protein", ""))
             # Find the protein record by sbml_id
             for prec in protein_by_norm.values():
                 if prec["sbml_id"] == pid:
@@ -740,8 +736,8 @@ def build_sbml(
             else:
                 uniprots.append("Unknown")
         out = [
-            f'\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
-            f' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">',
+            '\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
+            ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">',
             f'\t<rdf:Description rdf:about="#{metaid}">',
             "\t<bqbiol:hasPart>",
             "\t<rdf:Bag>",
@@ -807,9 +803,9 @@ def build_sbml(
         for pid_str in member_protein_ids:
             pw_ann += f"\n                <pathwhiz:protein>{pid_str}</pathwhiz:protein>"
         pw_ann += (
-            f'</pathwhiz:protein_complex_proteins>'
-            f'</pathwhiz:protein_associations>'
-            f'</pathwhiz:species>'
+            '</pathwhiz:protein_complex_proteins>'
+            '</pathwhiz:protein_associations>'
+            '</pathwhiz:species>'
         )
         a(pw_ann)
 
@@ -844,8 +840,8 @@ def build_sbml(
             )
             a(pw_sp)
             # RDF bqbiol:is for uniprot
-            a(f'\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
-              f' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">')
+            a('\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
+              ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">')
             a(f'\t<rdf:Description rdf:about="#{p_metaid}">')
             a('\t<bqbiol:is>')
             a('\t<rdf:Bag>')
@@ -873,8 +869,8 @@ def build_sbml(
         a('        <annotation>')
         a(f'  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
           f' pathwhiz:species_id="{prec["pw_id"]}" pathwhiz:species_type="protein"/>')
-        a(f'\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
-          f' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">')
+        a('\t<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'
+          ' xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">')
         a(f'\t<rdf:Description rdf:about="#{p_metaid}">')
         a('\t<bqbiol:is>')
         a('\t<rdf:Bag>')
@@ -956,9 +952,7 @@ def build_sbml(
                     continue
                 # Use transport source state if available
                 if inputs_state:
-                    r_compartment = _register_state(inputs_state)
-                else:
-                    r_compartment = _compartment_sbml_id(rec2["norm"])
+                    _register_state(inputs_state)
 
                 node_cx, node_cy, node_x, node_y = _node_pos_for_side(cx, cy, j, n_react, "reactant")
                 edge_path = _edge_path_reactant(node_cx, node_cy, cx, cy)
@@ -1062,8 +1056,8 @@ def build_sbml(
 
                     a(f'          <modifierSpeciesReference species="{mrec["sbml_id"]}" sboTerm="SBO:0000460">')
                     a('            <annotation>')
-                    a(f'  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-                      f' pathwhiz:location_type="protein_complex">')
+                    a('  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+                      ' pathwhiz:location_type="protein_complex">')
                     a(f'                <pathwhiz:location_element'
                       f' pathwhiz:element_type="protein_complex_visualization"'
                       f' pathwhiz:element_id="{mrec["sbml_id"]}">')
@@ -1086,8 +1080,8 @@ def build_sbml(
                     # Regular protein modifier
                     a(f'          <modifierSpeciesReference species="{mrec["sbml_id"]}" sboTerm="SBO:0000460">')
                     a('            <annotation>')
-                    a(f'  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
-                      f' pathwhiz:location_type="protein">')
+                    a('  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz"'
+                      ' pathwhiz:location_type="protein">')
                     a(f'                <pathwhiz:location_element'
                       f' pathwhiz:element_type="protein_location"'
                       f' pathwhiz:element_id="{mrec["sbml_id"]}"'

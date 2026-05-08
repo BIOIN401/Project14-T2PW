@@ -2393,7 +2393,6 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
         for token in outputs:
             for part in _complex_components(token):
                 output_complex_parts.add(_normalize(part))
-        output_norms = {_normalize(token) for token in outputs}
         modifier_entity_norms: Set[str] = set()
         for mod in modifiers_list:
             if not isinstance(mod, dict):
@@ -3031,7 +3030,7 @@ def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F
         The same object (mutated), for chaining convenience.
     """
     # Lazy import to avoid circular dependency at module load time.
-    from t2pw.pipeline.draft_graph import DraftEdge, DraftGraph, DraftNode
+    from t2pw.pipeline.draft_graph import DraftEdge, DraftNode
 
     warnings: List[Dict[str, Any]] = []
     graph = draft_graph

@@ -5,10 +5,14 @@ import json
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 from lxml import etree
 
+from t2pw.paths import PROJECT_ROOT
+from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
+from t2pw.pwml.qa import run_pwml_qa
 from t2pw.pwml.validate import (
     SectionSignature,
     StructureSignature,
@@ -17,7 +21,6 @@ from t2pw.pwml.validate import (
     validate_generated_tree,
     write_json_report,
 )
-from t2pw.pwml.ir import is_pwml_ir, validate_pwml_ir
 
 
 def _singularize(tag: str) -> str:
@@ -268,24 +271,33 @@ class DeterministicPwmlBuilder:
                     for k in ["pathbank_compound_id", "pw_compound_id"]:
                         v = record.get(k) or (record.get("mapping_meta") or {}).get(k)
                         if v:
-                            try: pw_id = int(v); break
-                            except (ValueError, TypeError): pass
+                            try:
+                                pw_id = int(v)
+                                break
+                            except (ValueError, TypeError):
+                                pass
                     record["id"] = pw_id if pw_id is not None else self.compound_ids.next()
                 elif key == "proteins":
                     pw_id = None
                     for k in ["pathbank_protein_id", "pw_protein_id"]:
                         v = record.get(k) or (record.get("mapping_meta") or {}).get(k)
                         if v:
-                            try: pw_id = int(v); break
-                            except (ValueError, TypeError): pass
+                            try:
+                                pw_id = int(v)
+                                break
+                            except (ValueError, TypeError):
+                                pass
                     record["id"] = pw_id if pw_id is not None else self.protein_ids.next()
                 elif key == "protein_complexes":
                     pw_id = None
                     for k in ["pathbank_complex_id", "pw_complex_id"]:
                         v = record.get(k) or (record.get("mapping_meta") or {}).get(k)
                         if v:
-                            try: pw_id = int(v); break
-                            except (ValueError, TypeError): pass
+                            try:
+                                pw_id = int(v)
+                                break
+                            except (ValueError, TypeError):
+                                pass
                     record["id"] = pw_id if pw_id is not None else self.complex_ids.next()
                 else:
                     record["id"] = self.ids.next()
@@ -1956,6 +1968,116 @@ def run_writer(args: argparse.Namespace) -> Dict[str, Any]:
         "ok": report["ok"],
         "issues": report["issue_count"],
     }
+
+
+def _write_json(path: Path, value: Dict[str, Any]) -> None:
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
+    input_path = Path(args.input_path)
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    payload = json.loads(input_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Input JSON must be an object.")
+
+    ir, ir_report = build_pwml_ir(
+        payload,
+        pathway_name=args.name,
+        pathway_subject=args.subject,
+        strict_db=not args.non_strict_db,
+        width=args.width,
+        height=args.height,
+    )
+    ir.setdefault("pathway", {})["description"] = args.description
+    ir_validation = validate_pwml_ir(ir)
+
+    ir_path = out_dir / "final.pwml_ir.json"
+    ir_report_path = out_dir / "pwml_ir_report.json"
+    ir_validation_path = out_dir / "pwml_ir_validation_report.json"
+    pwml_path = out_dir / "pathway.pwml"
+    validation_report_path = out_dir / "pwml_validation_report.json"
+    qa_report_path = out_dir / "pwml_qa_report.json"
+
+    _write_json(ir_path, ir)
+    _write_json(ir_report_path, ir_report)
+    _write_json(ir_validation_path, ir_validation)
+
+    if ir_report.get("errors") or ir_validation.get("errors"):
+        return {
+            "ok": False,
+            "pwml_ir": str(ir_path),
+            "pwml_ir_report": str(ir_report_path),
+            "pwml_ir_validation_report": str(ir_validation_path),
+            "error": "PWML IR validation failed.",
+        }
+
+    ref_path = Path(args.ref)
+    signature = discover_structure_signature(ref_path)
+    writer_args = SimpleNamespace(
+        name=args.name,
+        description=args.description,
+        subject=args.subject,
+        pw_id="PW000000",
+        height=args.height,
+        width=args.width,
+        background_color=args.background_color,
+        ref=str(ref_path),
+    )
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=writer_args)
+    build_result = builder.build()
+    repaired = repair_tree(etree.ElementTree(build_result.root), signature)
+    validation_report = validate_generated_tree(repaired, signature)
+    xml_bytes = etree.tostring(
+        repaired.getroot(),
+        encoding="utf-8",
+        xml_declaration=True,
+        pretty_print=True,
+    )
+    qa_report = run_pwml_qa(xml_bytes)
+
+    pwml_path.write_bytes(xml_bytes)
+    _write_json(validation_report_path, validation_report)
+    _write_json(qa_report_path, qa_report)
+
+    return {
+        "ok": bool(validation_report.get("ok")) and bool(qa_report.get("ok")),
+        "pwml_ir": str(ir_path),
+        "pwml_ir_report": str(ir_report_path),
+        "pwml_ir_validation_report": str(ir_validation_path),
+        "pwml_file": str(pwml_path),
+        "pwml_validation_report": str(validation_report_path),
+        "pwml_qa_report": str(qa_report_path),
+        "counts": build_result.counts,
+        "pwml_validation_issue_count": validation_report.get("issue_count", 0),
+        "pwml_qa_ok": qa_report.get("ok"),
+    }
+
+
+def build_pwml_pipeline_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="PWML-first converter: mapped final JSON -> PWML IR -> PWML.")
+    parser.add_argument("--in", dest="input_path", required=True, help="Input final mapped JSON path")
+    parser.add_argument("--out-dir", default="outputs", help="Output directory for PWML artifacts")
+    parser.add_argument("--ref", default=str(PROJECT_ROOT / "reference" / "PW000001.pwml"), help="Reference PWML file")
+    parser.add_argument("--name", default="Generated Pathway", help="Pathway name")
+    parser.add_argument("--subject", default="Metabolic", help="Pathway subject")
+    parser.add_argument("--description", default="", help="Pathway description")
+    parser.add_argument("--width", type=int, default=3200, help="PWML canvas width")
+    parser.add_argument("--height", type=int, default=1400, help="PWML canvas height")
+    parser.add_argument("--background-color", default="#FFFFFF", help="PWML background color")
+    parser.add_argument("--non-strict-db", action="store_true", help="Warn instead of erroring on missing DB identities")
+    return parser
+
+
+def pwml_pipeline_cli_main(argv: Optional[List[str]] = None) -> None:
+    parser = build_pwml_pipeline_arg_parser()
+    args = parser.parse_args(argv)
+    summary = run_pwml_pipeline_export(args)
+    print(json.dumps(summary, indent=2))
+    if not summary["ok"]:
+        raise SystemExit(1)
 
 
 def build_arg_parser() -> argparse.ArgumentParser:

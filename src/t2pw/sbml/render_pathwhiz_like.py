@@ -137,7 +137,8 @@ def _parse_svg_path(d: str, path_cls: Any) -> Any:
 
     def next_float() -> float:
         nonlocal i
-        v = float(stream[i]); i += 1
+        v = float(stream[i])
+        i += 1
         return v
 
     while i < len(stream):
@@ -338,7 +339,8 @@ def _bounds_from_elements(elems: List[LocationElement], path_cls: Any) -> Tuple[
             try:
                 p = _parse_svg_path(e.path, path_cls)
                 for (vx, vy) in p.vertices:
-                    xs.append(vx); ys.append(vy)
+                    xs.append(vx)
+                    ys.append(vy)
             except Exception:
                 pass
         else:

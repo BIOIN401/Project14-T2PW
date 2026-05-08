@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 import re
@@ -6,13 +7,153 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from t2pw.llm.client import chat
-from t2pw.paths import PROMPTS_DIR
+from t2pw.paths import PROMPTS_DIR, TMP_DIR
 from t2pw.pipeline.preprocessor import format_context_header
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
 
 logger = logging.getLogger(__name__)
+
+
+def _resolve_output_path(out_dir: Path, filename: str) -> Path:
+    out_dir.mkdir(parents=True, exist_ok=True)
+    return out_dir / filename
+
+
+def run_legacy_sbml_pipeline(
+    input_path: Path | str,
+    *,
+    out_dir: Path | str = ".",
+    use_llm_audit: bool = True,
+    default_compartment: str = "cell",
+    mapping_cache: Path | str = "data/id_mapping_cache.json",
+    use_sbml_overwatch: bool = True,
+) -> Dict[str, Any]:
+    """Run the legacy final-JSON to SBML conversion path."""
+    from t2pw.curation.apply_audit_patch import run_apply
+    from t2pw.curation.audit_json_llm import run_audit
+    from t2pw.mapping.map_ids import run_mapping
+    from t2pw.sbml.json_to_sbml import build_sbml
+    from t2pw.sbml.overwatch import run_sbml_overwatch
+
+    input_path = Path(input_path)
+    out_dir = Path(out_dir)
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file not found: {input_path}")
+
+    audit_report = _resolve_output_path(out_dir, "audit_report.json")
+    audit_patch = _resolve_output_path(out_dir, "audit_patch.json")
+    apply_report = _resolve_output_path(out_dir, "audit_apply_report.json")
+    audited_json = _resolve_output_path(out_dir, "final.audited.json")
+    mapped_json = _resolve_output_path(out_dir, "final.mapped.json")
+    mapping_report = _resolve_output_path(out_dir, "mapping_report.json")
+    sbml_file = _resolve_output_path(out_dir, "pathway.sbml")
+    sbml_report_json = _resolve_output_path(out_dir, "sbml_validation_report.json")
+    sbml_report_txt = _resolve_output_path(out_dir, "sbml_validation_report.txt")
+    sbml_overwatch_report = _resolve_output_path(out_dir, "sbml_overwatch_report.json")
+
+    mapping_cache = Path(mapping_cache)
+    if not mapping_cache.is_absolute():
+        mapping_cache = out_dir / mapping_cache
+
+    run_audit(
+        input_path,
+        audit_report,
+        audit_patch,
+        use_llm=use_llm_audit,
+        llm_temperature=0.0,
+        llm_max_tokens=3600,
+    )
+    run_apply(
+        input_path,
+        audit_patch,
+        audited_json,
+        audit_report_path=audit_report,
+        apply_report_path=apply_report,
+    )
+    run_mapping(
+        audited_json,
+        mapped_json,
+        mapping_report,
+        cache_path=mapping_cache,
+    )
+
+    sbml_result = build_sbml(
+        mapped_json,
+        sbml_file,
+        sbml_report_json,
+        sbml_report_txt,
+        default_compartment_name=str(default_compartment),
+    )
+
+    overwatch_result: Dict[str, Any] = {}
+    if use_sbml_overwatch:
+        overwatch_result = run_sbml_overwatch(
+            mapped_json,
+            sbml_file,
+            sbml_report_json,
+            sbml_overwatch_report,
+            use_llm=True,
+            llm_max_tokens=3000,
+        )
+
+    return {
+        "audit_report": str(audit_report),
+        "audit_patch": str(audit_patch),
+        "audited_json": str(audited_json),
+        "mapped_json": str(mapped_json),
+        "mapping_report": str(mapping_report),
+        "sbml_file": str(sbml_file),
+        "sbml_validation_report_json": str(sbml_report_json),
+        "sbml_validation_report_txt": str(sbml_report_txt),
+        "sbml_overwatch_report_json": str(sbml_overwatch_report) if use_sbml_overwatch else "",
+        "sbml_overwatch_summary": overwatch_result.get("summary", {}),
+        "sbml_validation_has_errors": bool(sbml_result.get("validation", {}).get("has_errors")),
+    }
+
+
+def build_legacy_sbml_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Legacy SBML converter: final.json -> audit -> mapped IDs -> SBML."
+    )
+    parser.add_argument(
+        "--in",
+        dest="input_path",
+        default="pwml_pipeline_output.json",
+        help="Input final JSON path from the existing extraction/inference pipeline",
+    )
+    parser.add_argument(
+        "--out-dir",
+        dest="out_dir",
+        default=".",
+        help="Directory for generated artifacts",
+    )
+    parser.add_argument("--no-llm-audit", action="store_true", help="Disable LLM stage for audit and use deterministic checks only")
+    parser.add_argument("--default-compartment", default="cell", help="Default compartment name if missing")
+    parser.add_argument(
+        "--mapping-cache",
+        default="data/id_mapping_cache.json",
+        help="Path to mapping cache JSON (relative to out-dir if not absolute)",
+    )
+    parser.add_argument("--no-sbml-overwatch", action="store_true", help="Disable semantic SBML overwatch stage")
+    return parser
+
+
+def legacy_sbml_cli_main(argv: Optional[List[str]] = None) -> None:
+    parser = build_legacy_sbml_arg_parser()
+    args = parser.parse_args(argv)
+    summary = run_legacy_sbml_pipeline(
+        args.input_path,
+        out_dir=args.out_dir,
+        use_llm_audit=not args.no_llm_audit,
+        default_compartment=args.default_compartment,
+        mapping_cache=args.mapping_cache,
+        use_sbml_overwatch=not args.no_sbml_overwatch,
+    )
+    print(json.dumps(summary, indent=2))
+    if summary["sbml_validation_has_errors"]:
+        raise SystemExit(1)
 
 
 class PipelineFailure(RuntimeError):
@@ -604,9 +745,8 @@ def build_and_save_draft_graph(
     graph = build_draft_graph(merged_json)
 
     if output_path is None:
-        tmp_dir = BASE_DIR.parent / "tmp"
-        tmp_dir.mkdir(parents=True, exist_ok=True)
-        output_path = tmp_dir / "draft_graph.json"
+        TMP_DIR.mkdir(parents=True, exist_ok=True)
+        output_path = TMP_DIR / "draft_graph.json"
 
     output_path.write_text(
         json.dumps(graph.to_dict(), indent=2, ensure_ascii=False),

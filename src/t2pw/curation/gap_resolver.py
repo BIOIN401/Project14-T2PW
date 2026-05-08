@@ -1033,7 +1033,7 @@ def _format_enrichment_context(
         path_info = entity_index.get(norm_name)
         json_path = f"{path_info[0]}/{path_info[1]}" if path_info else None
 
-        lines.append(f"\n---")
+        lines.append("\n---")
         lines.append(f"ENTITY: {entity_name}")
         lines.append(f"TYPE: {entity_type or 'unknown'}")
         lines.append(f"FLAG: {flag_type}")

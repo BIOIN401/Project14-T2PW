@@ -94,7 +94,6 @@ def _parse_graph(
     for e in edges:
         src, tgt, role = e["source"], e["target"], e.get("role", "")
         src_node = node_by_id.get(src)
-        tgt_node = node_by_id.get(tgt)
 
         if role == "product" and src in flow_rxn_set and tgt in metabolite_ids:
             rxn_products[src].append(tgt)

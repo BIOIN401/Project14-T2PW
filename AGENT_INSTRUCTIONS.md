@@ -230,8 +230,7 @@ After `build_sbml()` runs, check the report JSON for:
 ## Running the Pipeline
 
 ```bash
-cd src
-streamlit run app.py
+streamlit run src/t2pw/app/streamlit_app.py
 ```
 
 Fill in:
