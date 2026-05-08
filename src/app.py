@@ -1231,22 +1231,36 @@ def run_pwml_export(
 # ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
 input_mode = st.radio(
     "Input mode",
-    ["Paste text", "Upload PDF"],
+    ["Paste text", "Upload PDF", "Text + PDF"],
     horizontal=True,
     key="input_mode_radio",
 )
 
 # ── PDF controls (OUTSIDE form — file_uploader is banned inside st.form) ───
-uploaded_pdf   = None
+uses_text_input = input_mode in {"Paste text", "Text + PDF"}
+uses_pdf_input = input_mode in {"Upload PDF", "Text + PDF"}
+uploaded_pdfs  = []
 pdf_page_range = ""
 pdf_skip_refs  = True
 pdf_ocr        = False
 
-if input_mode == "Upload PDF":
-    uploaded_pdf = st.file_uploader(
-        "Upload a scientific PDF (research paper, pathway description, etc.)",
+text_entry_count = 1
+if uses_text_input:
+    text_entry_count = st.number_input(
+        "Number of text entries",
+        min_value=1,
+        max_value=10,
+        value=1,
+        step=1,
+        key="text_entry_count",
+    )
+
+if uses_pdf_input:
+    uploaded_pdfs = st.file_uploader(
+        "Upload scientific PDFs (research papers, pathway descriptions, etc.)",
         type=["pdf"],
-        key="pdf_upload_widget",
+        key="pdf_uploads_widget",
+        accept_multiple_files=True,
     )
     _c1, _c2, _c3 = st.columns(3)
     pdf_page_range = _c1.text_input(
@@ -1269,17 +1283,24 @@ if input_mode == "Upload PDF":
 
 # ── Form — only the text area changes; everything else is UNCHANGED ─────────
 with st.form("pwml_pipeline"):
-    if input_mode == "Paste text":
-        text = st.text_area("Paste pathway description:", height=220)
-    else:
-        text = ""   # populated after submit from the PDF
-        if uploaded_pdf is not None:
+    text_entries = []
+    if uses_text_input:
+        for _idx in range(int(text_entry_count)):
+            _label = "Paste pathway description:" if int(text_entry_count) == 1 else f"Paste pathway description {_idx + 1}:"
+            text_entries.append(st.text_area(_label, height=220, key=f"pathway_text_{_idx}"))
+
+    if uses_pdf_input:
+        if uploaded_pdfs:
+            _pdf_names = ", ".join(_pdf.name for _pdf in uploaded_pdfs)
             st.info(
-                f"PDF ready: **{uploaded_pdf.name}**  "
-                f"— configure options above, then click **Run pipeline**."
+                f"PDFs ready: **{_pdf_names}**  "
+                f"- configure options above, then click **Run pipeline**."
             )
         else:
-            st.warning("Upload a PDF using the file uploader above, then click **Run pipeline**.")
+            if input_mode == "Upload PDF":
+                st.warning("Upload one or more PDFs using the file uploader above, then click **Run pipeline**.")
+            else:
+                st.caption("Optional: upload one or more PDFs using the file uploader above.")
 
         
     run_inference = st.checkbox(
@@ -1362,74 +1383,82 @@ with st.form("pwml_pipeline"):
     submit = st.form_submit_button("Run pipeline")
 
 if submit:
+    text_parts = [entry.strip() for entry in text_entries if entry.strip()]
+
     # PDF extraction runs here — outside the form, so uploaded_pdf is accessible
-    if input_mode == "Upload PDF":
-        if uploaded_pdf is None:
-            st.warning("Please upload a PDF using the file uploader above.")
-            st.stop()
+    if uses_pdf_input:
+        if not uploaded_pdfs:
+            if input_mode == "Upload PDF":
+                st.warning("Please upload one or more PDFs using the file uploader above.")
+                st.stop()
+            uploaded_pdfs = []
 
         import tempfile, os
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as _tmp:
-            _tmp.write(uploaded_pdf.read())
-            _tmp_path = _tmp.name
-
-        try:
-            # Parse page range
-            _ps, _pe = 1, None
-            _pr = (pdf_page_range or "").strip()
-            if _pr:
-                _parts = _pr.split("-")
-                try:
-                    _ps = int(_parts[0])
-                    _pe = int(_parts[1]) if len(_parts) > 1 else _ps
-                except ValueError:
-                    st.warning(f"Invalid page range '{_pr}'; extracting all pages.")
-
-            _skip = SKIP_SECTIONS if pdf_skip_refs else set()
-
-            with st.spinner(f"Extracting text from {uploaded_pdf.name}..."):
-                _pdf = parse_pdf(
-                    _tmp_path,
-                    page_start=_ps,
-                    page_end=_pe,
-                    skip_sections=_skip,
-                    enable_ocr_fallback=bool(pdf_ocr),
-                )
-        finally:
+        # Parse page range once and apply it to every uploaded PDF.
+        _ps, _pe = 1, None
+        _pr = (pdf_page_range or "").strip()
+        if _pr:
+            _parts = _pr.split("-")
             try:
-                os.unlink(_tmp_path)
-            except Exception:
-                pass
+                _ps = int(_parts[0])
+                _pe = int(_parts[1]) if len(_parts) > 1 else _ps
+            except ValueError:
+                st.warning(f"Invalid page range '{_pr}'; extracting all pages.")
 
-        if _pdf["error"]:
-            st.error(f"PDF extraction failed: {_pdf['error']}")
-            st.stop()
+        _skip = SKIP_SECTIONS if pdf_skip_refs else set()
 
-        text = _pdf["text"]
+        for uploaded_pdf in uploaded_pdfs:
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as _tmp:
+                _tmp.write(uploaded_pdf.read())
+                _tmp_path = _tmp.name
 
-        for _w in _pdf.get("warnings", []):
-            st.warning(f"PDF: {_w}")
+            try:
+                with st.spinner(f"Extracting text from {uploaded_pdf.name}..."):
+                    _pdf = parse_pdf(
+                        _tmp_path,
+                        page_start=_ps,
+                        page_end=_pe,
+                        skip_sections=_skip,
+                        enable_ocr_fallback=bool(pdf_ocr),
+                    )
+            finally:
+                try:
+                    os.unlink(_tmp_path)
+                except Exception:
+                    pass
 
-        st.success(
-            f"Extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
-            f"via **{_pdf['method']}**. "
-            f"Sections: {', '.join(_pdf['sections'].keys()) or 'none'}"
-        )
-        _meta = _pdf.get("metadata", {})
-        _mp = [p for p in [
-            f"Title: {_meta['title']}"     if _meta.get("title")  else "",
-            f"Author(s): {_meta['author']}" if _meta.get("author") else "",
-            f"DOI: {_meta['doi']}"          if _meta.get("doi")    else "",
-        ] if p]
-        if _mp:
-            st.caption(" | ".join(_mp))
+            if _pdf["error"]:
+                st.error(f"PDF extraction failed for {uploaded_pdf.name}: {_pdf['error']}")
+                st.stop()
 
-        with st.expander("Preview extracted text (first 1000 chars)", expanded=False):
-            st.text(text[:1000] + ("..." if len(text) > 1000 else ""))
+            if _pdf["text"].strip():
+                text_parts.append(_pdf["text"].strip())
 
+            for _w in _pdf.get("warnings", []):
+                st.warning(f"{uploaded_pdf.name}: {_w}")
+
+            st.success(
+                f"{uploaded_pdf.name}: extracted **{_pdf['pages_used']}** of **{_pdf['total_pages']}** pages "
+                f"via **{_pdf['method']}**. "
+                f"Sections: {', '.join(_pdf['sections'].keys()) or 'none'}"
+            )
+            _meta = _pdf.get("metadata", {})
+            _mp = [p for p in [
+                f"Title: {_meta['title']}"     if _meta.get("title")  else "",
+                f"Author(s): {_meta['author']}" if _meta.get("author") else "",
+                f"DOI: {_meta['doi']}"          if _meta.get("doi")    else "",
+            ] if p]
+            if _mp:
+                st.caption(" | ".join(_mp))
+
+            with st.expander(f"Preview extracted text from {uploaded_pdf.name} (first 1000 chars)", expanded=False):
+                _preview = _pdf["text"][:1000] + ("..." if len(_pdf["text"]) > 1000 else "")
+                st.text(_preview)
+
+    text = "\n\n".join(text_parts)
     if not text.strip():
-        st.warning("No text to process. Paste text or upload a PDF.")
+        st.warning("No text to process. Paste text, upload one or more PDFs, or use both.")
         st.stop()
 
     # Preprocessing: lightweight context summary to guide extraction and inference
