@@ -1289,6 +1289,12 @@ with st.form("pwml_pipeline"):
             _label = "Paste pathway description:" if int(text_entry_count) == 1 else f"Paste pathway description {_idx + 1}:"
             text_entries.append(st.text_area(_label, height=220, key=f"pathway_text_{_idx}"))
 
+    user_task_context = st.text_area(
+        "Optional extraction focus / task context",
+        height=100,
+        help="Use this to tell the model what pathway or scope you want extracted. This guides extraction but does not override the source text or validation rules.",
+    )
+
     if uses_pdf_input:
         if uploaded_pdfs:
             _pdf_names = ", ".join(_pdf.name for _pdf in uploaded_pdfs)
@@ -1384,6 +1390,7 @@ with st.form("pwml_pipeline"):
 
 if submit:
     text_parts = [entry.strip() for entry in text_entries if entry.strip()]
+    user_task_context = (user_task_context or "").strip() or None
 
     # PDF extraction runs here — outside the form, so uploaded_pdf is accessible
     if uses_pdf_input:
@@ -1471,6 +1478,7 @@ if submit:
             stage_one, chunk_details = run_stage_one_with_chunking(
                 text,
                 pathway_context=pathway_context,
+                user_task_context=user_task_context,
                 enable_chunking=enable_chunking,
                 chunk_word_limit=int(chunk_size),
                 chunk_overlap=int(chunk_overlap),
@@ -1498,6 +1506,7 @@ if submit:
                     stage_one,
                     chunk_details=chunk_details,
                     pathway_context=pathway_context,
+                    user_task_context=user_task_context,
                     qa_rounds=int(infer_rounds),
                     enable_chunking=enable_chunking,
                     chunk_word_limit=int(chunk_size),
@@ -1528,6 +1537,7 @@ if submit:
     st.session_state["pipeline_ready"] = True
     st.session_state["run_inference_enabled"] = bool(run_inference)
     st.session_state["pathway_context"] = pathway_context
+    st.session_state["user_task_context"] = user_task_context
     st.session_state["stage_one"] = stage_one
     st.session_state["chunk_details"] = chunk_details
     st.session_state["stage_two"] = stage_two
