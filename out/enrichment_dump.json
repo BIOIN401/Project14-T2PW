@@ -104,13 +104,14 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00031",
       "hmdb_id": "HMDB0000122",
+      "kegg_id": "C00031",
       "chebi_id": "CHEBI:4167",
       "pubchem_id": "5793",
       "cas": "2280-44-6",
       "biocyc": "GLC",
-      "chemspider": "5589"
+      "chemspider": "5589",
+      "pathbank_compound_id": "77"
     },
     "kegg": {
       "status": "ok",
@@ -350,14 +351,15 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00002",
       "hmdb_id": "HMDB0000538",
+      "kegg_id": "C00002",
       "chebi_id": "CHEBI:15422",
       "pubchem_id": "5957",
       "cas": "56-65-5",
       "biocyc": "ATP",
       "chemspider": "5742",
-      "drugbank_id": "DB00171"
+      "drugbank_id": "DB00171",
+      "pathbank_compound_id": "414"
     },
     "kegg": {
       "status": "ok",
@@ -537,13 +539,14 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00092",
       "hmdb_id": "HMDB0001401",
+      "kegg_id": "C00092",
       "chebi_id": "CHEBI:4170",
       "pubchem_id": "5958",
       "cas": "56-73-5",
       "biocyc": "GLC-6-P",
-      "chemspider": "5743"
+      "chemspider": "5743",
+      "pathbank_compound_id": "1083"
     },
     "kegg": {
       "status": "ok",
@@ -691,13 +694,14 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00008",
       "hmdb_id": "HMDB0001341",
+      "kegg_id": "C00008",
       "chebi_id": "CHEBI:16761",
       "pubchem_id": "6022",
       "cas": "58-64-0",
       "biocyc": "ADP",
-      "chemspider": "5800"
+      "chemspider": "5800",
+      "pathbank_compound_id": "1034"
     },
     "kegg": {
       "status": "ok",
@@ -853,11 +857,12 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
+      "hmdb_id": "HMDB0059597",
       "kegg_id": "C00080",
       "chebi_id": "CHEBI:15378",
-      "hmdb_id": "HMDB0059597",
       "pubchem_id": "1038",
-      "chemspider": "1010"
+      "chemspider": "1010",
+      "pathbank_compound_id": "40034"
     },
     "kegg": {
       "status": "ok",
@@ -959,50 +964,34 @@
       }
     ]
   },
-  "protein:Hexokinase|Q2TB90": {
+  "protein:Hexokinase|F5IXG6": {
     "status": "ok",
-    "uniprot_id": "Q2TB90",
-    "recommended_name": "Hexokinase HKDC1",
-    "alternative_names": [
-      "Hexokinase domain-containing protein 1"
-    ],
-    "gene_names": [
-      "HKDC1"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Catalyzes the phosphorylation of hexose to hexose 6-phosphate, although at very low level compared to other hexokinases (PubMed:30517626). Has low glucose phosphorylating activity compared to other hexokinases (PubMed:30517626). Involved in glucose homeostasis and hepatic lipid accumulation. Required to maintain whole-body glucose homeostasis during pregnancy; however additional evidences are required to confirm this role (By similarity)",
+    "uniprot_id": "F5IXG6",
+    "recommended_name": "Hexokinase",
+    "alternative_names": [],
+    "gene_names": [],
+    "organism": "Dysgonomonas gadei ATCC BAA-286",
+    "taxonomy_id": "742766",
+    "function_text": "",
     "catalytic_activity": [
-      "a D-hexose + ATP = a D-hexose 6-phosphate + ADP + H(+)",
-      "D-glucose + ATP = D-glucose 6-phosphate + ADP + H(+)"
+      "D-fructose + ATP = D-fructose 6-phosphate + ADP + H(+)"
     ],
     "enzyme_commission": [
       "2.7.1.1"
     ],
     "pathways": [
-      "Carbohydrate metabolism; hexose metabolism",
-      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 1/4"
+      "Carbohydrate degradation",
+      "Carbohydrate metabolism"
     ],
     "keywords": [
-      "Alternative splicing",
       "ATP-binding",
-      "Cytoplasm",
       "Glycolysis",
       "Kinase",
-      "Membrane",
-      "Mitochondrion",
       "Nucleotide-binding",
-      "Proteomics identification",
       "Reference proteome",
-      "Repeat",
-      "Retinitis pigmentosa",
       "Transferase"
     ],
-    "subcellular_locations": [
-      "Cytoplasm",
-      "Mitochondrion membrane",
-      "Photoreceptor inner segment"
-    ],
+    "subcellular_locations": [],
     "go_mf_ids": [
       "GO:0005524",
       "GO:0005536",
@@ -1010,35 +999,28 @@
       "GO:0004340"
     ],
     "go_bp_ids": [
-      "GO:0051156",
       "GO:0006006",
       "GO:0006096",
       "GO:0001678"
     ],
     "go_cellular_component_ids": [
-      "GO:0005737",
-      "GO:0005829",
-      "GO:0031966",
-      "GO:0005739",
-      "GO:0001917"
+      "GO:0005829"
     ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 917,
+    "protein_existence": "3: Inferred from homology",
+    "sequence_length": 402,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [],
-    "reactome_ids": [
-      "R-HSA-70171"
-    ],
-    "string_id": "9606.ENSP00000346643",
+    "reactome_ids": [],
+    "string_id": "742766.HMPREF9455_01783",
     "provenance": {
       "source": "UniProt",
-      "query": "Q2TB90",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q2TB90.json",
-      "retrieved_at": "2026-03-26T20:00:35Z"
+      "query": "F5IXG6",
+      "source_url": "https://rest.uniprot.org/uniprotkb/F5IXG6.json",
+      "retrieved_at": "2026-03-20T19:31:13Z"
     }
   }
 }

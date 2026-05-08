@@ -15,10 +15,10 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from pwml_ir import build_pwml_ir, validate_pwml_ir  # noqa: E402
-from pwml_qa import run_pwml_qa  # noqa: E402
-from pwml_validate import discover_structure_signature, repair_tree, validate_generated_tree  # noqa: E402
-from pwml_writer import DeterministicPwmlBuilder  # noqa: E402
+from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir  # noqa: E402
+from t2pw.pwml.qa import run_pwml_qa  # noqa: E402
+from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree  # noqa: E402
+from t2pw.pwml.writer import DeterministicPwmlBuilder  # noqa: E402
 
 
 def _write_json(path: Path, value: Dict[str, Any]) -> None:

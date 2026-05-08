@@ -12,10 +12,10 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species_id  # noqa: E402
-from map_ids import route_entity_for_mapping  # noqa: E402
-from qa_graph import build_graph, connected_components  # noqa: E402
-from process_normalizer import (  # noqa: E402
+from t2pw.sbml.json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species_id  # noqa: E402
+from t2pw.mapping.map_ids import route_entity_for_mapping  # noqa: E402
+from t2pw.pipeline.qa_graph import build_graph, connected_components  # noqa: E402
+from t2pw.pipeline.process_normalizer import (  # noqa: E402
     attach_transporters_from_evidence,
     canonicalize_same_as_aliases,
     cleanup_disallowed_complexes,

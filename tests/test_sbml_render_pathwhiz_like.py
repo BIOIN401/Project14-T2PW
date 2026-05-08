@@ -14,10 +14,10 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from sbml_add_pathwhiz_layout import NS as PW_NS_MAP  # noqa: E402
-from sbml_add_pathwhiz_layout import add_pathwhiz_layout  # noqa: E402
-from sbml_render_pathwhiz_like import build_render_artifacts  # noqa: E402
-from sbml_render_pathwhiz_like import render_to_png_bytes  # noqa: E402
+from t2pw.sbml.add_pathwhiz_layout import NS as PW_NS_MAP  # noqa: E402
+from t2pw.sbml.add_pathwhiz_layout import add_pathwhiz_layout  # noqa: E402
+from t2pw.sbml.render_pathwhiz_like import build_render_artifacts  # noqa: E402
+from t2pw.sbml.render_pathwhiz_like import render_to_png_bytes  # noqa: E402
 
 
 CORE_SBML = """<?xml version="1.0" encoding="UTF-8"?>

@@ -12,11 +12,11 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from apply_audit_patch import run_apply  # noqa: E402
-from audit_json_llm import run_audit  # noqa: E402
-from json_to_sbml import build_sbml  # noqa: E402
-from map_ids import run_mapping  # noqa: E402
-from sbml_overwatch import run_sbml_overwatch  # noqa: E402
+from t2pw.curation.apply_audit_patch import run_apply  # noqa: E402
+from t2pw.curation.audit_json_llm import run_audit  # noqa: E402
+from t2pw.mapping.map_ids import run_mapping  # noqa: E402
+from t2pw.sbml.json_to_sbml import build_sbml  # noqa: E402
+from t2pw.sbml.overwatch import run_sbml_overwatch  # noqa: E402
 
 
 def _resolve_output_path(out_dir: Path, filename: str) -> Path:
