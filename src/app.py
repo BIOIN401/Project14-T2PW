@@ -1555,14 +1555,9 @@ if st.session_state.get("pipeline_ready"):
         qa_summary = qa_report_data.get("summary", {})
         qa_flags = qa_report_data.get("flags", {})
 
-        qr_col1, qr_col2, qr_col3 = st.columns(3)
+        qr_col1, qr_col2 = st.columns(2)
         qr_col1.metric("Total species", qa_summary.get("total_species", 0))
         qr_col2.metric("Total reactions", qa_summary.get("total_reactions", 0))
-        qr_col3.metric(
-            "Completeness score",
-            f"{qa_summary.get('completeness_score', 0.0):.3f}",
-            help="1.0 = no structural issues detected. Lower = more flags.",
-        )
 
         FLAG_LABELS: List[Tuple[str, str]] = [
             ("missing_compartments", "Missing compartments"),
