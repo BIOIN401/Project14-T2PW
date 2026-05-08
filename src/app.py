@@ -1546,6 +1546,7 @@ if submit:
     st.session_state["qa_hints"] = qa_hints
     st.session_state["final_payload"] = final_payload
     st.session_state.pop("post_pipeline_artifacts", None)
+    st.session_state["token_stats"] = llm_client_module.get_token_stats()
 
 if st.session_state.get("pipeline_ready"):
     run_inference_from_state = bool(st.session_state.get("run_inference_enabled", False))
@@ -1556,6 +1557,21 @@ if st.session_state.get("pipeline_ready"):
     stage_two_rounds = st.session_state.get("stage_two_rounds", [])
     qa_hints = st.session_state.get("qa_hints")
     final_payload = st.session_state.get("final_payload", {})
+
+    _ts = st.session_state.get("token_stats")
+    if _ts:
+        with st.expander("Token usage & estimated cost", expanded=False):
+            _tc1, _tc2, _tc3, _tc4, _tc5 = st.columns(5)
+            _tc1.metric("Prompt tokens", f"{_ts['prompt_tokens']:,}")
+            _tc2.metric("Completion tokens", f"{_ts['completion_tokens']:,}")
+            _tc3.metric("Total tokens", f"{_ts['total_tokens']:,}")
+            _tc4.metric("API calls", _ts["api_calls"])
+            _tc5.metric("Est. cost (USD)", f"${_ts['estimated_cost_usd']:.4f}")
+            st.caption(
+                f"Prices: ${llm_client_module._COST_INPUT_PER_M}/1M input, "
+                f"${llm_client_module._COST_OUTPUT_PER_M}/1M output. "
+                "Override with LLM_COST_INPUT_PER_M / LLM_COST_OUTPUT_PER_M in .env"
+            )
 
     st.subheader("Stage 1 - Strict extraction")
     st.json(stage_one)
@@ -1682,14 +1698,9 @@ if st.session_state.get("pipeline_ready"):
         qa_summary = qa_report_data.get("summary", {})
         qa_flags = qa_report_data.get("flags", {})
 
-        qr_col1, qr_col2, qr_col3 = st.columns(3)
+        qr_col1, qr_col2 = st.columns(2)
         qr_col1.metric("Total species", qa_summary.get("total_species", 0))
         qr_col2.metric("Total reactions", qa_summary.get("total_reactions", 0))
-        qr_col3.metric(
-            "Completeness score",
-            f"{qa_summary.get('completeness_score', 0.0):.3f}",
-            help="1.0 = no structural issues detected. Lower = more flags.",
-        )
 
         FLAG_LABELS: List[Tuple[str, str]] = [
             ("missing_compartments", "Missing compartments"),
