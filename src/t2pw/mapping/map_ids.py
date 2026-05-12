@@ -2182,6 +2182,103 @@ def run_mapping(
     return report
 
 
+def resolve_mapping_gaps(
+    payload: Dict[str, Any],
+    mapping_report: Dict[str, Any],
+    db: "PathBankDbResolver",
+    *,
+    global_organism: str = "",
+) -> Dict[str, Any]:
+    """Re-attempt resolution of every unmapped/ambiguous entity using DB primitives.
+
+    Returns a dict with:
+        resolved_count  - how many newly resolved
+        total           - how many were attempted
+        rows            - per-entity result rows
+        patched_payload - deepcopy of payload with mapped_ids stamped in for resolved entities
+    """
+    from copy import deepcopy
+
+    entity_logs = _safe_list(mapping_report.get("entities"))
+    targets = [
+        e for e in entity_logs
+        if isinstance(e, dict) and (e.get("status") == "unmapped" or e.get("reason") == "ambiguous")
+    ]
+
+    patched = deepcopy(payload)
+    p_entities = _safe_dict(patched.get("entities"))
+    proteins_list = _safe_list(p_entities.get("proteins"))
+    compounds_list = _safe_list(p_entities.get("compounds"))
+
+    rows: List[Dict[str, Any]] = []
+    resolved_count = 0
+
+    for entry in targets:
+        name = str(entry.get("name") or "").strip()
+        etype = str(entry.get("entity_type") or "").strip()
+        organism = str(entry.get("organism") or global_organism or "").strip()
+        if not name:
+            continue
+
+        result: Dict[str, Any] = {}
+        try:
+            if etype == "protein":
+                result = db.map_protein_by_name_species(name, organism)
+            elif etype == "compound":
+                result = db.map_compound_by_name(name)
+            elif etype == "protein_complex":
+                result = db.map_protein_complex(name, organism)
+            else:
+                result = db.map_compound_by_name(name)
+        except Exception as exc:  # noqa: BLE001
+            result = {"status": "error", "reason": str(exc), "candidates": [], "confidence": 0.0, "chosen_rule": ""}
+
+        resolved = result.get("status") == "mapped"
+        if resolved:
+            resolved_count += 1
+
+        top_cand = (_safe_list(result.get("candidates")) or [{}])[0]
+        rows.append({
+            "type": etype,
+            "name": name,
+            "organism": organism,
+            "was_unmapped_reason": entry.get("reason", ""),
+            "resolved": resolved,
+            "confidence": round(float(result.get("confidence") or 0.0), 4),
+            "chosen_rule": result.get("chosen_rule", ""),
+            "top_candidate_name": str(top_cand.get("name") or top_cand.get("uniprot") or ""),
+            "mapped_ids": _safe_dict(result.get("mapped_ids")) if resolved else {},
+        })
+
+        if not resolved:
+            continue
+
+        new_ids = _safe_dict(result.get("mapped_ids"))
+        if etype == "protein":
+            for ep in proteins_list:
+                if isinstance(ep, dict) and ep.get("name") == name:
+                    ep["mapped_ids"] = _merge_mapped_ids(_safe_dict(ep.get("mapped_ids")), new_ids)
+                    ep.setdefault("mapping_meta", {})["db_gap_resolved"] = True
+                    ep["mapping_meta"]["confidence"] = result.get("confidence")
+                    if result.get("pathbank_protein_id"):
+                        ep["pathbank_protein_id"] = int(result["pathbank_protein_id"])
+        elif etype == "compound":
+            for ec in compounds_list:
+                if isinstance(ec, dict) and ec.get("name") == name:
+                    ec["mapped_ids"] = _merge_mapped_ids(_safe_dict(ec.get("mapped_ids")), new_ids)
+                    ec.setdefault("mapping_meta", {})["db_gap_resolved"] = True
+                    ec["mapping_meta"]["confidence"] = result.get("confidence")
+                    if result.get("pathbank_compound_id"):
+                        ec["pathbank_compound_id"] = int(result["pathbank_compound_id"])
+
+    return {
+        "resolved_count": resolved_count,
+        "total": len(rows),
+        "rows": rows,
+        "patched_payload": patched,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Deterministic ID mapping for proteins and compounds.")
     parser.add_argument("--in", dest="input_path", required=True, help="Input audited JSON path")

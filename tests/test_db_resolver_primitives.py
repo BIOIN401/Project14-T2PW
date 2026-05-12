@@ -16,7 +16,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.mapping.map_ids import PathBankDbResolver  # noqa: E402
+from t2pw.mapping.map_ids import PathBankDbResolver, resolve_mapping_gaps  # noqa: E402
 
 
 def _make_resolver() -> PathBankDbResolver:
@@ -504,3 +504,144 @@ class TestFindComplexByComponent:
             result = r.find_complex_by_component("SomeProtein", "Homo sapiens")
         for key in ("status", "candidates", "chosen_rule", "confidence"):
             assert key in result
+
+
+# ---------------------------------------------------------------------------
+# resolve_mapping_gaps
+# ---------------------------------------------------------------------------
+
+def _make_payload_with_entities(
+    proteins: List[Dict] = None,
+    compounds: List[Dict] = None,
+) -> Dict[str, Any]:
+    return {
+        "entities": {
+            "proteins": proteins or [],
+            "compounds": compounds or [],
+            "protein_complexes": [],
+            "species": [],
+        },
+        "biological_states": [],
+    }
+
+
+def _make_mapping_report(entities: List[Dict]) -> Dict[str, Any]:
+    return {"summary": {}, "entities": entities}
+
+
+class TestResolveMappingGaps:
+    def test_resolves_unmapped_protein(self):
+        r = _make_resolver()
+        payload = _make_payload_with_entities(proteins=[{"name": "Albumin"}])
+        report = _make_mapping_report([
+            {"name": "Albumin", "entity_type": "protein", "status": "unmapped", "reason": "no_db_match", "organism": "Homo sapiens"},
+        ])
+        mapped_result = {
+            "status": "mapped", "confidence": 0.9, "chosen_rule": "db_top_candidate_relaxed",
+            "candidates": [{"name": "Albumin", "uniprot": "P02768"}],
+            "mapped_ids": {"uniprot": "P02768"},
+            "pathbank_protein_id": 500,
+        }
+        with patch.object(r, "map_protein_by_name_species", return_value=mapped_result):
+            out = resolve_mapping_gaps(payload, report, r, global_organism="Homo sapiens")
+
+        assert out["resolved_count"] == 1
+        assert out["total"] == 1
+        assert out["rows"][0]["resolved"] is True
+        assert out["rows"][0]["mapped_ids"] == {"uniprot": "P02768"}
+
+    def test_resolves_unmapped_compound(self):
+        r = _make_resolver()
+        payload = _make_payload_with_entities(compounds=[{"name": "Glucose"}])
+        report = _make_mapping_report([
+            {"name": "Glucose", "entity_type": "compound", "status": "unmapped", "reason": "no_db_match", "organism": ""},
+        ])
+        mapped_result = {
+            "status": "mapped", "confidence": 0.95, "chosen_rule": "db_top_candidate_relaxed",
+            "candidates": [{"name": "Glucose"}],
+            "mapped_ids": {"hmdb": "HMDB0000122", "kegg": "C00031"},
+            "pathbank_compound_id": 99,
+        }
+        with patch.object(r, "map_compound_by_name", return_value=mapped_result):
+            out = resolve_mapping_gaps(payload, report, r)
+
+        assert out["resolved_count"] == 1
+        patched_compound = out["patched_payload"]["entities"]["compounds"][0]
+        assert patched_compound["mapped_ids"]["hmdb"] == "HMDB0000122"
+        assert patched_compound["mapping_meta"]["db_gap_resolved"] is True
+        assert patched_compound["pathbank_compound_id"] == 99
+
+    def test_unresolvable_entity_stays_in_rows(self):
+        r = _make_resolver()
+        payload = _make_payload_with_entities(proteins=[{"name": "Mystery protein"}])
+        report = _make_mapping_report([
+            {"name": "Mystery protein", "entity_type": "protein", "status": "unmapped", "reason": "no_db_match", "organism": ""},
+        ])
+        unmapped_result = {
+            "status": "unmapped", "reason": "no_db_match", "confidence": 0.0,
+            "chosen_rule": "", "candidates": [],
+        }
+        with patch.object(r, "map_protein_by_name_species", return_value=unmapped_result):
+            out = resolve_mapping_gaps(payload, report, r)
+
+        assert out["resolved_count"] == 0
+        assert out["total"] == 1
+        assert out["rows"][0]["resolved"] is False
+
+    def test_does_not_mutate_original_payload(self):
+        r = _make_resolver()
+        payload = _make_payload_with_entities(compounds=[{"name": "ATP"}])
+        report = _make_mapping_report([
+            {"name": "ATP", "entity_type": "compound", "status": "unmapped", "reason": "no_db_match", "organism": ""},
+        ])
+        mapped_result = {
+            "status": "mapped", "confidence": 0.9, "chosen_rule": "db_top_candidate_relaxed",
+            "candidates": [], "mapped_ids": {"hmdb": "HMDB0001"}, "pathbank_compound_id": 1,
+        }
+        with patch.object(r, "map_compound_by_name", return_value=mapped_result):
+            out = resolve_mapping_gaps(payload, report, r)
+
+        # Original payload unchanged
+        assert "mapped_ids" not in payload["entities"]["compounds"][0]
+        # Patched payload has the IDs
+        assert out["patched_payload"]["entities"]["compounds"][0].get("mapped_ids", {}).get("hmdb") == "HMDB0001"
+
+    def test_ambiguous_entities_are_also_retried(self):
+        r = _make_resolver()
+        payload = _make_payload_with_entities(proteins=[{"name": "Transferrin"}])
+        report = _make_mapping_report([
+            {"name": "Transferrin", "entity_type": "protein", "status": "unmapped", "reason": "ambiguous", "organism": "Homo sapiens"},
+        ])
+        mapped_result = {
+            "status": "mapped", "confidence": 0.88, "chosen_rule": "db_top_candidate_relaxed",
+            "candidates": [{"name": "Transferrin"}], "mapped_ids": {"uniprot": "P02787"},
+            "pathbank_protein_id": 600,
+        }
+        with patch.object(r, "map_protein_by_name_species", return_value=mapped_result):
+            out = resolve_mapping_gaps(payload, report, r, global_organism="Homo sapiens")
+
+        assert out["resolved_count"] == 1
+        assert out["rows"][0]["was_unmapped_reason"] == "ambiguous"
+
+    def test_empty_report_returns_zero(self):
+        r = _make_resolver()
+        payload = _make_payload_with_entities()
+        out = resolve_mapping_gaps(payload, _make_mapping_report([]), r)
+        assert out["resolved_count"] == 0
+        assert out["total"] == 0
+        assert out["rows"] == []
+
+    def test_result_shape(self):
+        r = _make_resolver()
+        payload = _make_payload_with_entities(compounds=[{"name": "Fructose"}])
+        report = _make_mapping_report([
+            {"name": "Fructose", "entity_type": "compound", "status": "unmapped", "reason": "no_db_match", "organism": ""},
+        ])
+        with patch.object(r, "map_compound_by_name", return_value={"status": "unmapped", "confidence": 0.0, "chosen_rule": "", "candidates": []}):
+            out = resolve_mapping_gaps(payload, report, r)
+
+        for key in ("resolved_count", "total", "rows", "patched_payload"):
+            assert key in out
+        row = out["rows"][0]
+        for key in ("type", "name", "resolved", "confidence", "chosen_rule", "mapped_ids"):
+            assert key in row
