@@ -30,7 +30,7 @@ from t2pw.mapping.grounding import apply_grounding
 from t2pw.curation.gap_resolver import run_gap_resolution
 from t2pw.curation.pathway_curator import run_pathway_curator
 from t2pw.sbml.json_to_sbml import build_sbml
-from t2pw.mapping.map_ids import run_mapping
+from t2pw.mapping.map_ids import run_mapping, PathBankDbResolver
 from t2pw.sbml.render_pathwhiz_like import build_render_artifacts
 from t2pw.pipeline.draft_graph_render import render_draft_graph_to_png_bytes
 from t2pw.sbml.strip_unmapped import strip_unmapped
@@ -2103,6 +2103,139 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
+    # ── DB Gap Resolution ─────────────────────────────────────────────────────
+    with st.expander("Resolve unmapped entities via DB", expanded=False):
+        st.caption(
+            "Runs every unmapped / ambiguous entity from the last pipeline mapping "
+            "through the DB lookup primitives and shows what resolves. "
+            "Uses the DB connection configured above."
+        )
+
+        _gap_db_host = st.session_state.get("post_db_host", os.getenv("PATHBANK_DB_HOST", ""))
+        _gap_db_port = int(st.session_state.get("post_db_port", int(os.getenv("PATHBANK_DB_PORT", "3306") or 3306)))
+        _gap_db_user = st.session_state.get("post_db_user", os.getenv("PATHBANK_DB_USER", ""))
+        _gap_db_pass = st.session_state.get("post_db_password", os.getenv("PATHBANK_DB_PASSWORD", ""))
+        _gap_db_schema = st.session_state.get("post_db_schema", os.getenv("PATHBANK_DB_SCHEMA", "pathbank"))
+
+        _gap_mr = (post_artifacts or {}).get("mapping_report", {})
+        _gap_entities_log = _gap_mr.get("entities", [])
+        _gap_targets = [
+            e for e in _gap_entities_log
+            if e.get("status") == "unmapped" or e.get("reason") == "ambiguous"
+        ]
+        _gap_payload = (post_artifacts or {}).get("final_mapped")
+
+        if not _gap_targets:
+            st.info("No unmapped or ambiguous entities from the last pipeline run.")
+        elif not _gap_db_host or not _gap_db_user:
+            st.warning("Configure DB host and user in the PathBank DB connection section above first.")
+        else:
+            st.write(f"**{len(_gap_targets)} entities to resolve** "
+                     f"({sum(1 for e in _gap_targets if e.get('status') == 'unmapped')} unmapped, "
+                     f"{sum(1 for e in _gap_targets if e.get('reason') == 'ambiguous')} ambiguous)")
+
+            if st.button("Run DB gap resolution", key="gap_resolve_btn"):
+                _gap_resolver = PathBankDbResolver(
+                    host=_gap_db_host,
+                    port=_gap_db_port,
+                    user=_gap_db_user,
+                    password=_gap_db_pass,
+                    schema=_gap_db_schema,
+                )
+                if not _gap_resolver.available():
+                    st.error(f"pymysql not available: {_gap_resolver.last_error}")
+                else:
+                    # Derive global organism from the payload
+                    from t2pw.mapping.map_ids import _extract_global_organism, _safe_dict as _g_sd, _safe_list as _g_sl, _merge_mapped_ids
+                    _gap_organism = ""
+                    if isinstance(_gap_payload, dict):
+                        _gap_organism = _extract_global_organism(_gap_payload)
+
+                    _gap_rows: List[Dict[str, Any]] = []
+                    _patched_payload = deepcopy(_gap_payload) if isinstance(_gap_payload, dict) else None
+
+                    for _ge in _gap_targets:
+                        _gname = str(_ge.get("name") or "").strip()
+                        _gtype = str(_ge.get("entity_type") or "").strip()
+                        _gorg = str(_ge.get("organism") or _gap_organism or "").strip()
+                        if not _gname:
+                            continue
+
+                        _gresult: Dict[str, Any] = {}
+                        try:
+                            if _gtype == "protein":
+                                _gresult = _gap_resolver.map_protein_by_name_species(_gname, _gorg)
+                            elif _gtype == "compound":
+                                _gresult = _gap_resolver.map_compound_by_name(_gname)
+                            elif _gtype == "protein_complex":
+                                _gresult = _gap_resolver.map_protein_complex(_gname, _gorg)
+                            else:
+                                _gresult = _gap_resolver.map_compound_by_name(_gname)
+                        except Exception as _ge_exc:
+                            _gresult = {"status": "error", "reason": str(_ge_exc), "candidates": [], "confidence": 0.0, "chosen_rule": ""}
+
+                        _resolved = _gresult.get("status") == "mapped"
+                        _top_cand = (_gresult.get("candidates") or [{}])[0]
+
+                        _gap_rows.append({
+                            "type": _gtype,
+                            "name": _gname,
+                            "was_unmapped_reason": _ge.get("reason", ""),
+                            "resolved": _resolved,
+                            "confidence": round(float(_gresult.get("confidence") or 0.0), 3),
+                            "chosen_rule": _gresult.get("chosen_rule", ""),
+                            "top_candidate": (
+                                _top_cand.get("name") or _top_cand.get("uniprot") or ""
+                            ),
+                            "mapped_ids": json.dumps(_g_sd(_gresult.get("mapped_ids"))) if _resolved else "",
+                        })
+
+                        # Patch the payload in-place for download
+                        if _resolved and _patched_payload:
+                            _entities = _g_sd(_patched_payload.get("entities"))
+                            if _gtype == "protein":
+                                for _ep in _g_sl(_entities.get("proteins")):
+                                    if isinstance(_ep, dict) and _ep.get("name") == _gname:
+                                        _ep["mapped_ids"] = _merge_mapped_ids(
+                                            _g_sd(_ep.get("mapped_ids")),
+                                            _g_sd(_gresult.get("mapped_ids")),
+                                        )
+                                        _ep.setdefault("mapping_meta", {})["db_gap_resolved"] = True
+                                        _ep["mapping_meta"]["confidence"] = _gresult.get("confidence")
+                            elif _gtype == "compound":
+                                for _ec in _g_sl(_entities.get("compounds")):
+                                    if isinstance(_ec, dict) and _ec.get("name") == _gname:
+                                        _ec["mapped_ids"] = _merge_mapped_ids(
+                                            _g_sd(_ec.get("mapped_ids")),
+                                            _g_sd(_gresult.get("mapped_ids")),
+                                        )
+                                        _ec.setdefault("mapping_meta", {})["db_gap_resolved"] = True
+                                        _ec["mapping_meta"]["confidence"] = _gresult.get("confidence")
+
+                    _gap_resolver.close()
+
+                    _n_resolved = sum(1 for r in _gap_rows if r["resolved"])
+                    st.success(f"Resolved **{_n_resolved} / {len(_gap_rows)}** entities via DB.")
+                    if _gap_resolver.last_error:
+                        st.warning(f"DB last_error: `{_gap_resolver.last_error}`")
+
+                    if _gap_rows:
+                        import pandas as _pd
+                        _gap_df = _pd.DataFrame(_gap_rows)
+                        st.dataframe(
+                            _gap_df.sort_values("resolved", ascending=False),
+                            use_container_width=True,
+                        )
+
+                    if _n_resolved > 0 and _patched_payload:
+                        st.download_button(
+                            f"Download patched payload ({_n_resolved} newly resolved)",
+                            json.dumps(_patched_payload, indent=2, ensure_ascii=False),
+                            file_name="final.mapped.gap_resolved.json",
+                            mime="application/json",
+                            key="dl_gap_resolved_payload",
+                        )
+
     # ── Contract Audit ────────────────────────────────────────────────────────
     st.subheader("PWML Contract Audit")
     st.caption(

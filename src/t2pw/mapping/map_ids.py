@@ -369,6 +369,637 @@ class PathBankDbResolver:
         chosen = [sid for score, sid in scored if score >= max(0.7, top - 0.08)]
         return chosen[:6]
 
+    # ------------------------------------------------------------------
+    # Public DB lookup primitives
+    # ------------------------------------------------------------------
+
+    def find_species(
+        self,
+        organism: str,
+        *,
+        taxonomy_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Resolve a species name/taxonomy ID to PathBank species candidates."""
+        text = _canonical_name(organism)
+        tid = (taxonomy_id or "").strip()
+        if not text and not tid:
+            return {"status": "unmapped", "reason": "empty_query", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        params: tuple
+        if tid:
+            rows = self._query(
+                (
+                    "SELECT id, name, common_name, taxonomy_id "
+                    "FROM species "
+                    "WHERE taxonomy_id=%s "
+                    "   OR LOWER(name)=LOWER(%s) "
+                    "   OR LOWER(common_name)=LOWER(%s) "
+                    "   OR LOWER(name) LIKE LOWER(%s) "
+                    "   OR LOWER(common_name) LIKE LOWER(%s) "
+                    "LIMIT 40"
+                ),
+                (tid, text, text, f"%{text}%", f"%{text}%"),
+            )
+        else:
+            rows = self._query(
+                (
+                    "SELECT id, name, common_name, taxonomy_id "
+                    "FROM species "
+                    "WHERE LOWER(name)=LOWER(%s) "
+                    "   OR LOWER(common_name)=LOWER(%s) "
+                    "   OR LOWER(name) LIKE LOWER(%s) "
+                    "   OR LOWER(common_name) LIKE LOWER(%s) "
+                    "LIMIT 40"
+                ),
+                (text, text, f"%{text}%", f"%{text}%"),
+            )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        norm_text = _normalize_name(text)
+        candidates: List[Dict[str, Any]] = []
+        for row in rows:
+            sid = int(row.get("id") or 0)
+            if sid <= 0:
+                continue
+            name_db = str(row.get("name") or "")
+            common_name = str(row.get("common_name") or "")
+            row_tid = str(row.get("taxonomy_id") or "")
+            score = 0.0
+            if tid and row_tid == tid:
+                score = max(score, 0.98)
+            if norm_text and norm_text == _normalize_name(name_db):
+                score = max(score, 1.0)
+            if norm_text and norm_text == _normalize_name(common_name):
+                score = max(score, 0.95)
+            score = max(score, 0.45 + 0.5 * _jaccard(text, name_db), 0.42 + 0.5 * _jaccard(text, common_name))
+            candidates.append({
+                "pathbank_species_id": sid,
+                "name": name_db,
+                "common_name": common_name,
+                "taxonomy_id": row_tid,
+                "confidence": round(score, 4),
+            })
+        candidates.sort(key=lambda c: c["confidence"], reverse=True)
+        if not candidates:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        best = candidates[0]
+        threshold = max(0.7, best["confidence"] - 0.08)
+        top = [c for c in candidates if c["confidence"] >= threshold]
+        chosen_rule = "exact_match" if best["confidence"] >= 0.95 else "fuzzy_match"
+        return {
+            "status": "mapped" if best["confidence"] >= 0.7 else "unmapped",
+            "reason": "" if best["confidence"] >= 0.7 else "low_confidence",
+            "candidates": top[:6],
+            "chosen_rule": chosen_rule,
+            "confidence": best["confidence"],
+        }
+
+    def find_subcellular_location(self, name: str) -> Dict[str, Any]:
+        """Find a subcellular location by name."""
+        text = _canonical_name(name)
+        if not text:
+            return {"status": "unmapped", "reason": "empty_query", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            (
+                "SELECT id, name "
+                "FROM subcellular_locations "
+                "WHERE LOWER(name)=LOWER(%s) "
+                "   OR LOWER(name) LIKE LOWER(%s) "
+                "LIMIT 40"
+            ),
+            (text, f"%{text}%"),
+        )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        norm_text = _normalize_name(text)
+        candidates: List[Dict[str, Any]] = []
+        for row in rows:
+            lid = int(row.get("id") or 0)
+            if lid <= 0:
+                continue
+            loc_name = str(row.get("name") or "")
+            score = 1.0 if norm_text == _normalize_name(loc_name) else max(0.4, 0.4 + 0.55 * _jaccard(text, loc_name))
+            candidates.append({"pathbank_subcellular_location_id": lid, "name": loc_name, "confidence": round(score, 4)})
+        candidates.sort(key=lambda c: c["confidence"], reverse=True)
+        best = candidates[0]
+        return {
+            "status": "mapped" if best["confidence"] >= 0.6 else "unmapped",
+            "reason": "" if best["confidence"] >= 0.6 else "low_confidence",
+            "candidates": candidates[:8],
+            "chosen_rule": "exact_match" if best["confidence"] >= 0.95 else "fuzzy_match",
+            "confidence": best["confidence"],
+        }
+
+    def find_cell_type(self, name: str) -> Dict[str, Any]:
+        """Find a cell type by name."""
+        text = _canonical_name(name)
+        if not text:
+            return {"status": "unmapped", "reason": "empty_query", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            (
+                "SELECT id, name "
+                "FROM cell_types "
+                "WHERE LOWER(name)=LOWER(%s) "
+                "   OR LOWER(name) LIKE LOWER(%s) "
+                "LIMIT 40"
+            ),
+            (text, f"%{text}%"),
+        )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        norm_text = _normalize_name(text)
+        candidates: List[Dict[str, Any]] = []
+        for row in rows:
+            cid = int(row.get("id") or 0)
+            if cid <= 0:
+                continue
+            ct_name = str(row.get("name") or "")
+            score = 1.0 if norm_text == _normalize_name(ct_name) else max(0.4, 0.4 + 0.55 * _jaccard(text, ct_name))
+            candidates.append({"pathbank_cell_type_id": cid, "name": ct_name, "confidence": round(score, 4)})
+        candidates.sort(key=lambda c: c["confidence"], reverse=True)
+        best = candidates[0]
+        return {
+            "status": "mapped" if best["confidence"] >= 0.6 else "unmapped",
+            "reason": "" if best["confidence"] >= 0.6 else "low_confidence",
+            "candidates": candidates[:8],
+            "chosen_rule": "exact_match" if best["confidence"] >= 0.95 else "fuzzy_match",
+            "confidence": best["confidence"],
+        }
+
+    def find_tissue(self, name: str) -> Dict[str, Any]:
+        """Find a tissue by name."""
+        text = _canonical_name(name)
+        if not text:
+            return {"status": "unmapped", "reason": "empty_query", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            (
+                "SELECT id, name "
+                "FROM tissues "
+                "WHERE LOWER(name)=LOWER(%s) "
+                "   OR LOWER(name) LIKE LOWER(%s) "
+                "LIMIT 40"
+            ),
+            (text, f"%{text}%"),
+        )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        norm_text = _normalize_name(text)
+        candidates: List[Dict[str, Any]] = []
+        for row in rows:
+            tid = int(row.get("id") or 0)
+            if tid <= 0:
+                continue
+            tissue_name = str(row.get("name") or "")
+            score = 1.0 if norm_text == _normalize_name(tissue_name) else max(0.4, 0.4 + 0.55 * _jaccard(text, tissue_name))
+            candidates.append({"pathbank_tissue_id": tid, "name": tissue_name, "confidence": round(score, 4)})
+        candidates.sort(key=lambda c: c["confidence"], reverse=True)
+        best = candidates[0]
+        return {
+            "status": "mapped" if best["confidence"] >= 0.6 else "unmapped",
+            "reason": "" if best["confidence"] >= 0.6 else "low_confidence",
+            "candidates": candidates[:8],
+            "chosen_rule": "exact_match" if best["confidence"] >= 0.95 else "fuzzy_match",
+            "confidence": best["confidence"],
+        }
+
+    def find_biological_state(
+        self,
+        species: str,
+        subcellular_location: str,
+        *,
+        cell_type: Optional[str] = None,
+        tissue: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Find a biological state matching species + subcellular location + optional cell type/tissue."""
+        species_result = self.find_species(species)
+        loc_result = self.find_subcellular_location(subcellular_location)
+        if species_result["status"] != "mapped" or not species_result["candidates"]:
+            return {
+                "status": "unmapped",
+                "reason": f"species_not_found:{species}",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        if loc_result["status"] != "mapped" or not loc_result["candidates"]:
+            return {
+                "status": "unmapped",
+                "reason": f"subcellular_location_not_found:{subcellular_location}",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        species_ids = [c["pathbank_species_id"] for c in species_result["candidates"][:3]]
+        loc_ids = [c["pathbank_subcellular_location_id"] for c in loc_result["candidates"][:3]]
+
+        # Build parameterised IN clauses
+        sp_marks = ", ".join(["%s"] * len(species_ids))
+        loc_marks = ", ".join(["%s"] * len(loc_ids))
+
+        extra_sql = ""
+        extra_params: List[Any] = []
+        cell_type_id: Optional[int] = None
+        tissue_id: Optional[int] = None
+
+        if cell_type:
+            ct_result = self.find_cell_type(cell_type)
+            if ct_result["status"] == "mapped" and ct_result["candidates"]:
+                cell_type_id = ct_result["candidates"][0]["pathbank_cell_type_id"]
+                extra_sql += " AND (cell_type_id=%s OR cell_type_id IS NULL)"
+                extra_params.append(cell_type_id)
+
+        if tissue:
+            tissue_result = self.find_tissue(tissue)
+            if tissue_result["status"] == "mapped" and tissue_result["candidates"]:
+                tissue_id = tissue_result["candidates"][0]["pathbank_tissue_id"]
+                extra_sql += " AND (tissue_id=%s OR tissue_id IS NULL)"
+                extra_params.append(tissue_id)
+
+        rows = self._query(
+            (
+                "SELECT id, species_id, subcellular_location_id, cell_type_id, tissue_id "
+                "FROM biological_states "
+                f"WHERE species_id IN ({sp_marks}) "
+                f"  AND subcellular_location_id IN ({loc_marks})"
+                f"{extra_sql} "
+                "LIMIT 40"
+            ),
+            tuple(species_ids + loc_ids + extra_params),
+        )
+        if not rows:
+            return {
+                "status": "unmapped",
+                "reason": "no_db_match",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+
+        sp_conf = {c["pathbank_species_id"]: c["confidence"] for c in species_result["candidates"][:3]}
+        loc_conf = {c["pathbank_subcellular_location_id"]: c["confidence"] for c in loc_result["candidates"][:3]}
+
+        candidates: List[Dict[str, Any]] = []
+        for row in rows:
+            bs_id = int(row.get("id") or 0)
+            if bs_id <= 0:
+                continue
+            row_sp = int(row.get("species_id") or 0)
+            row_loc = int(row.get("subcellular_location_id") or 0)
+            row_ct = row.get("cell_type_id")
+            row_ti = row.get("tissue_id")
+            sp_score = sp_conf.get(row_sp, 0.5)
+            loc_score = loc_conf.get(row_loc, 0.5)
+            ct_bonus = 0.05 if (cell_type_id and row_ct == cell_type_id) else 0.0
+            ti_bonus = 0.05 if (tissue_id and row_ti == tissue_id) else 0.0
+            score = round((sp_score + loc_score) / 2.0 + ct_bonus + ti_bonus, 4)
+            candidates.append({
+                "pathbank_biological_state_id": bs_id,
+                "species_id": row_sp,
+                "subcellular_location_id": row_loc,
+                "cell_type_id": row_ct,
+                "tissue_id": row_ti,
+                "confidence": score,
+            })
+        candidates.sort(key=lambda c: c["confidence"], reverse=True)
+        best = candidates[0]
+        return {
+            "status": "mapped" if best["confidence"] >= 0.6 else "unmapped",
+            "reason": "" if best["confidence"] >= 0.6 else "low_confidence",
+            "candidates": candidates[:8],
+            "chosen_rule": "species_and_location_match",
+            "confidence": best["confidence"],
+        }
+
+    def map_compound_by_ids(self, ids: Dict[str, str]) -> Dict[str, Any]:
+        """Direct compound lookup by external IDs (hmdb, kegg, chebi, pubchem, cas, drugbank, biocyc, chemspider).
+
+        Tries IDs in priority order; first match wins.
+        """
+        _id_cols = [
+            ("hmdb", "hmdb_id"),
+            ("kegg", "kegg_id"),
+            ("chebi", "chebi_id"),
+            ("pubchem", "pubchem_cid"),
+            ("cas", "cas"),
+            ("drugbank", "drugbank_id"),
+            ("biocyc", "biocyc_id"),
+            ("chemspider", "chemspider_id"),
+        ]
+        by_id: Dict[int, Dict[str, Any]] = {}
+        for id_key, col in _id_cols:
+            val = str(ids.get(id_key) or "").strip()
+            if not val:
+                continue
+            # Also try stripping CHEBI: prefix for the chebi_id column
+            search_vals = [val]
+            if id_key == "chebi" and val.upper().startswith("CHEBI:"):
+                search_vals.append(val[6:].strip())
+            for sval in search_vals:
+                rows = self._query(
+                    (
+                        f"SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, biocyc_id, chemspider_id, drugbank_id "
+                        f"FROM compounds WHERE LOWER({col})=LOWER(%s) LIMIT 20"
+                    ),
+                    (sval,),
+                )
+                for row in rows:
+                    cid = int(row.get("id") or 0)
+                    if cid <= 0 or cid in by_id:
+                        continue
+                    mapped_ids = {
+                        "hmdb": str(row.get("hmdb_id") or "").strip(),
+                        "kegg": str(row.get("kegg_id") or "").strip(),
+                        "chebi": (lambda v: f"CHEBI:{v}" if v and not v.upper().startswith("CHEBI:") else v)(str(row.get("chebi_id") or "").strip()),
+                        "pubchem": str(row.get("pubchem_cid") or "").strip(),
+                        "cas": str(row.get("cas") or "").strip(),
+                        "biocyc": str(row.get("biocyc_id") or "").strip(),
+                        "chemspider": str(row.get("chemspider_id") or "").strip(),
+                        "drugbank": str(row.get("drugbank_id") or "").strip(),
+                    }
+                    mapped_ids = {k: v for k, v in mapped_ids.items() if v}
+                    by_id[cid] = {
+                        "pathbank_compound_id": cid,
+                        "name": str(row.get("name") or ""),
+                        "short_name": str(row.get("short_name") or ""),
+                        "matched_on": id_key,
+                        "score": 1.0,
+                        "mapped_ids": mapped_ids,
+                    }
+        if not by_id:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        candidates = list(by_id.values())
+        best = candidates[0]
+        merged = dict(best["mapped_ids"])
+        merged["pathbank_compound_id"] = str(best["pathbank_compound_id"])
+        return {
+            "status": "mapped",
+            "provider": "PathBankDB",
+            "source": "db",
+            "mapped_ids": merged,
+            "pathbank_compound_id": best["pathbank_compound_id"],
+            "confidence": 1.0,
+            "chosen_rule": f"direct_id_match:{best['matched_on']}",
+            "candidates": candidates[:10],
+        }
+
+    def map_compound_by_name(self, name: str) -> Dict[str, Any]:
+        """Compound lookup by name/synonym fuzzy matching. Delegates to map_compound."""
+        return self.map_compound(name)
+
+    def map_protein_by_ids(
+        self,
+        ids: Dict[str, str],
+        *,
+        species: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Direct protein lookup by external IDs (uniprot, gene_name).
+
+        Species is optional but narrows results when supplied.
+        """
+        uniprot = str(ids.get("uniprot") or ids.get("uniprot_id") or "").strip()
+        gene = str(ids.get("gene") or ids.get("gene_name") or "").strip()
+        if not uniprot and not gene:
+            return {"status": "unmapped", "reason": "no_ids_provided", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+
+        species_ids: List[int] = []
+        if species:
+            species_ids = self._find_species_ids(species)
+
+        by_id: Dict[int, Dict[str, Any]] = {}
+        for query_val, col in [(uniprot, "uniprot_id"), (gene, "gene_name")]:
+            if not query_val:
+                continue
+            params_list: List[Any] = [query_val]
+            sp_sql = ""
+            if species_ids:
+                sp_marks = ", ".join(["%s"] * len(species_ids))
+                sp_sql = f" AND species_id IN ({sp_marks})"
+                params_list.extend(species_ids)
+            rows = self._query(
+                (
+                    f"SELECT id, name, uniprot_id, gene_name, species_id "
+                    f"FROM proteins WHERE LOWER({col})=LOWER(%s){sp_sql} LIMIT 20"
+                ),
+                tuple(params_list),
+            )
+            for row in rows:
+                pid = int(row.get("id") or 0)
+                if pid <= 0 or pid in by_id:
+                    continue
+                row_sp = int(row.get("species_id") or 0)
+                sp_bonus = 0.08 if species_ids and row_sp in species_ids else 0.0
+                score = round(1.0 + sp_bonus, 4)
+                by_id[pid] = {
+                    "pathbank_protein_id": pid,
+                    "name": str(row.get("name") or ""),
+                    "uniprot": str(row.get("uniprot_id") or "").strip(),
+                    "gene_name": str(row.get("gene_name") or "").strip(),
+                    "species_id": row_sp,
+                    "matched_on": col,
+                    "score": score,
+                }
+        if not by_id:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        candidates = sorted(by_id.values(), key=lambda c: c["score"], reverse=True)
+        best = candidates[0]
+        uid = best["uniprot"]
+        if not uid:
+            return {
+                "status": "unmapped",
+                "reason": "no_uniprot_id",
+                "candidates": candidates[:10],
+                "chosen_rule": "",
+                "confidence": float(best["score"]),
+            }
+        protein_mapped_ids: Dict[str, str] = {"uniprot": uid, "pathbank_protein_id": str(best["pathbank_protein_id"])}
+        return {
+            "status": "mapped",
+            "provider": "PathBankDB",
+            "source": "db",
+            "mapped_ids": protein_mapped_ids,
+            "pathbank_protein_id": best["pathbank_protein_id"],
+            "confidence": float(best["score"]),
+            "chosen_rule": f"direct_id_match:{best['matched_on']}",
+            "candidates": candidates[:10],
+        }
+
+    def map_protein_by_name_species(self, name: str, species: str) -> Dict[str, Any]:
+        """Protein lookup by name/gene with required species filter. Delegates to map_protein."""
+        if not species:
+            return {
+                "status": "unmapped",
+                "reason": "species_required",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        return self.map_protein(name, species)
+
+    def map_protein_complex(self, name: str, species: str) -> Dict[str, Any]:
+        """Find a protein complex by name with required species."""
+        if not species:
+            return {
+                "status": "unmapped",
+                "reason": "species_required",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        species_ids = self._find_species_ids(species)
+        if not species_ids:
+            return {
+                "status": "unmapped",
+                "reason": f"species_not_found:{species}",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        variants = _name_variants(name, max_variants=3)
+        by_id: Dict[int, Dict[str, Any]] = {}
+        sp_marks = ", ".join(["%s"] * len(species_ids))
+        for variant_idx, variant in enumerate(variants):
+            for term in _search_terms(variant, max_terms=4):
+                rows = self._query(
+                    (
+                        "SELECT id, name, species_id "
+                        "FROM protein_complexes "
+                        f"WHERE (LOWER(name)=LOWER(%s) OR LOWER(name) LIKE LOWER(%s)) "
+                        f"  AND species_id IN ({sp_marks}) "
+                        "LIMIT 60"
+                    ),
+                    (term, f"%{term}%") + tuple(species_ids),
+                )
+                variant_penalty = 0.06 * variant_idx
+                for row in rows:
+                    cid = int(row.get("id") or 0)
+                    if cid <= 0:
+                        continue
+                    db_name = str(row.get("name") or "")
+                    row_sp = int(row.get("species_id") or 0)
+                    norm_name = _normalize_name(name)
+                    exact = norm_name == _normalize_name(db_name)
+                    sp_bonus = 0.1 if row_sp in species_ids else 0.0
+                    score = round(
+                        max(0.0, min(1.0, (0.9 if exact else 0.35 + 0.55 * _jaccard(name, db_name)) + sp_bonus - variant_penalty)),
+                        4,
+                    )
+                    existing = by_id.get(cid)
+                    if not existing or score > float(existing.get("score", 0.0)):
+                        by_id[cid] = {
+                            "pathbank_complex_id": cid,
+                            "name": db_name,
+                            "species_id": row_sp,
+                            "score": score,
+                        }
+        candidates = sorted(by_id.values(), key=lambda c: c["score"], reverse=True)
+        if not candidates:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        best = candidates[0]
+        second = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
+        best_score = float(best["score"])
+        if best_score >= 0.8 and best_score >= second + 0.05:
+            return {
+                "status": "mapped",
+                "provider": "PathBankDB",
+                "source": "db",
+                "pathbank_complex_id": best["pathbank_complex_id"],
+                "confidence": best_score,
+                "chosen_rule": "top_unique_complex_candidate",
+                "candidates": candidates[:10],
+            }
+        return {
+            "status": "unmapped",
+            "reason": "ambiguous" if candidates else "no_db_match",
+            "confidence": best_score,
+            "chosen_rule": "",
+            "candidates": candidates[:10],
+        }
+
+    def find_complex_by_component(self, component_name: str, species: str) -> Dict[str, Any]:
+        """Find all protein complexes that contain a given protein component, filtered by species."""
+        if not species:
+            return {
+                "status": "unmapped",
+                "reason": "species_required",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        species_ids = self._find_species_ids(species)
+        if not species_ids:
+            return {
+                "status": "unmapped",
+                "reason": f"species_not_found:{species}",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        # First find the protein
+        protein_result = self.map_protein_by_name_species(component_name, species)
+        protein_id: Optional[int] = None
+        if protein_result.get("status") == "mapped":
+            protein_id = protein_result.get("pathbank_protein_id")
+        if protein_id is None:
+            # Fallback: fuzzy protein search to get candidate IDs
+            for term in _search_terms(_canonical_name(component_name), max_terms=3):
+                sp_marks = ", ".join(["%s"] * len(species_ids))
+                rows = self._query(
+                    (
+                        "SELECT id FROM proteins "
+                        f"WHERE (LOWER(name) LIKE LOWER(%s) OR LOWER(gene_name) LIKE LOWER(%s)) "
+                        f"  AND species_id IN ({sp_marks}) LIMIT 5"
+                    ),
+                    (f"%{term}%", f"%{term}%") + tuple(species_ids),
+                )
+                if rows:
+                    protein_id = int(rows[0].get("id") or 0) or None
+                    break
+        if not protein_id:
+            return {
+                "status": "unmapped",
+                "reason": f"component_protein_not_found:{component_name}",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        sp_marks = ", ".join(["%s"] * len(species_ids))
+        rows = self._query(
+            (
+                "SELECT pc.id, pc.name, pc.species_id "
+                "FROM protein_complexes pc "
+                "JOIN protein_complex_proteins pcp ON pcp.complex_id = pc.id "
+                f"WHERE pcp.protein_id=%s AND pc.species_id IN ({sp_marks}) "
+                "LIMIT 40"
+            ),
+            (protein_id,) + tuple(species_ids),
+        )
+        if not rows:
+            return {
+                "status": "unmapped",
+                "reason": "no_complex_found_for_component",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
+        candidates: List[Dict[str, Any]] = []
+        for row in rows:
+            cid = int(row.get("id") or 0)
+            if cid <= 0:
+                continue
+            candidates.append({
+                "pathbank_complex_id": cid,
+                "name": str(row.get("name") or ""),
+                "species_id": int(row.get("species_id") or 0),
+                "component_protein_id": protein_id,
+                "confidence": 0.9,
+            })
+        return {
+            "status": "mapped" if candidates else "unmapped",
+            "reason": "" if candidates else "no_complex_found_for_component",
+            "candidates": candidates[:10],
+            "chosen_rule": "component_join_lookup",
+            "confidence": 0.9 if candidates else 0.0,
+        }
+
     def map_compound(self, name: str) -> Dict[str, Any]:
         variants = _name_variants(name, max_variants=4)
         by_id: Dict[int, Dict[str, Any]] = {}
