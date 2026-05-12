@@ -20,23 +20,15 @@
           <name>Generated Pathway</name>
           <description></description>
           <subject>Metabolic</subject>
-          <species-id type="integer">1</species-id>
+          <species-id type="integer" nil="true"/>
           <sub-pathways/>
           <references/>
         </pathway>
         <cell-types/>
-        <species>
-          <species>
-            <id type="integer">1</id>
-            <name>Homo sapiens</name>
-            <taxonomy-id nil="true"/>
-            <classification nil="true"/>
-            <common-name nil="true"/>
-          </species>
-        </species>
+        <species/>
         <subcellular-locations>
           <subcellular-location>
-            <id type="integer">2</id>
+            <id type="integer">1</id>
             <name>Cytosol</name>
             <ontology-id nil="true"/>
           </subcellular-location>
@@ -44,12 +36,12 @@
         <tissues/>
         <biological-states>
           <biological-state>
-            <id type="integer">3</id>
+            <id type="integer">2</id>
             <tissue-id nil="true" type="integer"/>
-            <subcellular-location-id type="integer">2</subcellular-location-id>
-            <species-id type="integer">1</species-id>
+            <subcellular-location-id type="integer">1</subcellular-location-id>
+            <species-id nil="true" type="integer"/>
             <cell-type-id nil="true" type="integer"/>
-            <pwbs-id>PW_BS000003</pwbs-id>
+            <pwbs-id>PW_BS000002</pwbs-id>
             <name>cytosolic state</name>
           </biological-state>
         </biological-states>
@@ -187,7 +179,7 @@
             <cas/>
             <kegg-id>C00080</kegg-id>
             <pubchem-cid>1038</pubchem-cid>
-            <chebi-id>CHEBI:15378</chebi-id>
+            <chebi-id>15378</chebi-id>
             <biocyc-id/>
             <chemspider-id/>
             <drugbank-id/>
@@ -217,14 +209,14 @@
           <protein>
             <id type="integer">55976</id>
             <name>Hexokinase</name>
-            <uniprot-id>F5IXG6</uniprot-id>
+            <uniprot-id>P19367</uniprot-id>
             <description/>
             <hmdbp-id/>
             <gene-name/>
             <locus/>
             <drugbank-id nil="true"/>
             <genbank-id/>
-            <species-id type="integer">1</species-id>
+            <species-id nil="true" type="integer"/>
             <ec-numbers/>
             <synonyms nil="true"/>
             <element-states/>
@@ -239,14 +231,14 @@
             <direction>Right</direction>
             <reaction-left-elements>
               <reaction-left-element>
-                <id type="integer">4</id>
+                <id type="integer">3</id>
                 <element-id type="integer">77</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
               </reaction-left-element>
               <reaction-left-element>
-                <id type="integer">5</id>
+                <id type="integer">4</id>
                 <element-id type="integer">414</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
@@ -255,21 +247,21 @@
             </reaction-left-elements>
             <reaction-right-elements>
               <reaction-right-element>
-                <id type="integer">6</id>
+                <id type="integer">5</id>
                 <element-id type="integer">1083</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
               </reaction-right-element>
               <reaction-right-element>
-                <id type="integer">7</id>
+                <id type="integer">6</id>
                 <element-id type="integer">1034</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
               </reaction-right-element>
               <reaction-right-element>
-                <id type="integer">8</id>
+                <id type="integer">7</id>
                 <element-id type="integer">40034</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
@@ -277,6 +269,10 @@
               </reaction-right-element>
             </reaction-right-elements>
             <reaction-enzymes>
+              <reaction-enzyme>
+                <id type="integer">8</id>
+                <protein-id type="integer">55976</protein-id>
+              </reaction-enzyme>
               <reaction-enzyme>
                 <id type="integer">9</id>
                 <protein-id type="integer">55976</protein-id>
@@ -290,7 +286,7 @@
         <bound-visualizations>
           <bound-visualization>
             <id>10</id>
-            <biological-state-id>3</biological-state-id>
+            <biological-state-id>2</biological-state-id>
             <x>0</x>
             <y>0</y>
             <width>3200</width>
@@ -303,7 +299,7 @@
           <compound-location>
             <id type="integer">11</id>
             <compound-id type="integer">77</compound-id>
-            <biological-state-id type="integer">3</biological-state-id>
+            <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">220</x>
@@ -316,7 +312,7 @@
           <compound-location>
             <id type="integer">12</id>
             <compound-id type="integer">414</compound-id>
-            <biological-state-id type="integer">3</biological-state-id>
+            <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">400</x>
@@ -329,7 +325,7 @@
           <compound-location>
             <id type="integer">13</id>
             <compound-id type="integer">1083</compound-id>
-            <biological-state-id type="integer">3</biological-state-id>
+            <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">580</x>
@@ -342,7 +338,7 @@
           <compound-location>
             <id type="integer">14</id>
             <compound-id type="integer">1034</compound-id>
-            <biological-state-id type="integer">3</biological-state-id>
+            <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">760</x>
@@ -355,7 +351,7 @@
           <compound-location>
             <id type="integer">15</id>
             <compound-id type="integer">40034</compound-id>
-            <biological-state-id type="integer">3</biological-state-id>
+            <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">940</x>
@@ -372,7 +368,7 @@
           <protein-location>
             <id type="integer">16</id>
             <protein-id type="integer">55976</protein-id>
-            <biological-state-id type="integer">3</biological-state-id>
+            <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">4</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">1120</x>
@@ -427,7 +423,7 @@
             <id type="integer">22</id>
             <pathway-visualization-id type="integer">1</pathway-visualization-id>
             <reaction-id type="integer">50000</reaction-id>
-            <biological-state-id type="integer">3</biological-state-id>
+            <biological-state-id type="integer">2</biological-state-id>
             <reaction_compound_visualizations>
               <reaction-compound-visualization>
                 <id type="integer">23</id>
@@ -464,6 +460,11 @@
             <reaction_enzyme_visualizations>
               <reaction-enzyme-visualization>
                 <id type="integer">28</id>
+                <reaction-enzyme-id type="integer">8</reaction-enzyme-id>
+                <protein-location-id type="integer">16</protein-location-id>
+              </reaction-enzyme-visualization>
+              <reaction-enzyme-visualization>
+                <id type="integer">29</id>
                 <reaction-enzyme-id type="integer">9</reaction-enzyme-id>
                 <protein-location-id type="integer">16</protein-location-id>
               </reaction-enzyme-visualization>

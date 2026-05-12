@@ -67,7 +67,7 @@ from t2pw.pipeline.preprocessor import preprocess
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
 from t2pw.pwml.writer import DeterministicPwmlBuilder
-from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir
+from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, get_entities, node
 
@@ -2103,6 +2103,106 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
+    # ── Contract Audit ────────────────────────────────────────────────────────
+    st.subheader("PWML Contract Audit")
+    st.caption(
+        "Run this before export to surface every required-field gap in the hydrated payload. "
+        "Errors block export; warnings are advisory."
+    )
+
+    _contract_audit_target = st.radio(
+        "Audit target",
+        ["Current payload (pre-IR)", "Last built IR"],
+        key="contract_audit_target",
+        horizontal=True,
+    )
+
+    if st.button("Run Contract Audit", key="run_contract_audit_btn"):
+        _audit_input: Optional[Dict[str, Any]] = None
+        if _contract_audit_target == "Last built IR":
+            _prev_result = st.session_state.get("pwml_export_result")
+            _audit_input = _safe_dict(_prev_result).get("pwml_ir") if isinstance(_prev_result, dict) else None
+            if not _audit_input:
+                st.warning("No built IR found in session — run PWML export first, or audit the payload instead.")
+        else:
+            _audit_input = final_payload if isinstance(final_payload, dict) and final_payload else None
+            if not _audit_input:
+                st.error("No pipeline payload in session. Run the pipeline first.")
+
+        if _audit_input:
+            _contract_report = validate_required_pwml_contract(_audit_input)
+            st.session_state["contract_audit_report"] = _contract_report
+
+    _contract_report = st.session_state.get("contract_audit_report")
+    if isinstance(_contract_report, dict):
+        _ca_summary = _safe_dict(_contract_report.get("summary"))
+        _ca_errors = _contract_report.get("errors", [])
+        _ca_warnings = _contract_report.get("warnings", [])
+        _ca_ok = _contract_report.get("ok", True)
+        _ca_checked_as = _ca_summary.get("checked_as", "unknown")
+
+        if _ca_ok and not _ca_warnings:
+            st.success(
+                f"Contract audit passed ({_ca_checked_as}): no errors or warnings."
+            )
+        elif _ca_ok:
+            st.warning(
+                f"Contract audit passed with {len(_ca_warnings)} warning(s) ({_ca_checked_as})."
+            )
+        else:
+            st.error(
+                f"Contract audit FAILED: {len(_ca_errors)} error(s), {len(_ca_warnings)} warning(s) ({_ca_checked_as})."
+            )
+
+        _audit_cols = st.columns(2)
+        with _audit_cols[0]:
+            st.markdown(f"**Error codes:** {', '.join(_ca_summary.get('error_codes', [])) or '—'}")
+        with _audit_cols[1]:
+            st.markdown(f"**Warning codes:** {', '.join(_ca_summary.get('warning_codes', [])) or '—'}")
+
+        if _ca_errors:
+            with st.expander(f"Errors ({len(_ca_errors)})", expanded=True):
+                _err_by_code: Dict[str, List[Any]] = {}
+                for _e in _ca_errors:
+                    _err_by_code.setdefault(_e.get("code", "unknown"), []).append(_e)
+                for _code, _group in sorted(_err_by_code.items()):
+                    st.markdown(f"**{_code}** ({len(_group)})")
+                    for _issue in _group:
+                        _ptr = _issue.get("pointer", "")
+                        _extra = {k: v for k, v in _issue.items() if k not in ("code", "message", "pointer")}
+                        _detail = f"`{_ptr}` — " if _ptr else ""
+                        _detail += _issue.get("message", "")
+                        if _extra:
+                            _detail += f"  \n&nbsp;&nbsp;&nbsp;&nbsp;_{', '.join(f'{k}={v}' for k, v in _extra.items())}_"
+                        st.markdown(f"- {_detail}")
+
+        if _ca_warnings:
+            with st.expander(f"Warnings ({len(_ca_warnings)})", expanded=False):
+                _warn_by_code: Dict[str, List[Any]] = {}
+                for _w in _ca_warnings:
+                    _warn_by_code.setdefault(_w.get("code", "unknown"), []).append(_w)
+                for _code, _group in sorted(_warn_by_code.items()):
+                    st.markdown(f"**{_code}** ({len(_group)})")
+                    for _issue in _group:
+                        _ptr = _issue.get("pointer", "")
+                        _extra = {k: v for k, v in _issue.items() if k not in ("code", "message", "pointer")}
+                        _detail = f"`{_ptr}` — " if _ptr else ""
+                        _detail += _issue.get("message", "")
+                        if _extra:
+                            _detail += f"  \n&nbsp;&nbsp;&nbsp;&nbsp;_{', '.join(f'{k}={v}' for k, v in _extra.items())}_"
+                        st.markdown(f"- {_detail}")
+
+        st.download_button(
+            "Download contract audit report",
+            data=json.dumps(_contract_report, indent=2),
+            file_name="contract_audit_report.json",
+            mime="application/json",
+            key="dl_contract_audit",
+        )
+
+    st.divider()
+
+    # ── PWML Export ───────────────────────────────────────────────────────────
     st.subheader("PWML Export")
 
     _project_root_pwml = PROJECT_ROOT

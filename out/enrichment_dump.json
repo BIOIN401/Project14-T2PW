@@ -104,14 +104,13 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000122",
       "kegg_id": "C00031",
+      "hmdb_id": "HMDB0000122",
       "chebi_id": "CHEBI:4167",
       "pubchem_id": "5793",
       "cas": "2280-44-6",
       "biocyc": "GLC",
-      "chemspider": "5589",
-      "pathbank_compound_id": "77"
+      "chemspider": "5589"
     },
     "kegg": {
       "status": "ok",
@@ -351,15 +350,14 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000538",
       "kegg_id": "C00002",
+      "hmdb_id": "HMDB0000538",
       "chebi_id": "CHEBI:15422",
       "pubchem_id": "5957",
       "cas": "56-65-5",
       "biocyc": "ATP",
       "chemspider": "5742",
-      "drugbank_id": "DB00171",
-      "pathbank_compound_id": "414"
+      "drugbank_id": "DB00171"
     },
     "kegg": {
       "status": "ok",
@@ -539,14 +537,13 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0001401",
       "kegg_id": "C00092",
+      "hmdb_id": "HMDB0001401",
       "chebi_id": "CHEBI:4170",
       "pubchem_id": "5958",
       "cas": "56-73-5",
       "biocyc": "GLC-6-P",
-      "chemspider": "5743",
-      "pathbank_compound_id": "1083"
+      "chemspider": "5743"
     },
     "kegg": {
       "status": "ok",
@@ -694,14 +691,13 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0001341",
       "kegg_id": "C00008",
+      "hmdb_id": "HMDB0001341",
       "chebi_id": "CHEBI:16761",
       "pubchem_id": "6022",
       "cas": "58-64-0",
       "biocyc": "ADP",
-      "chemspider": "5800",
-      "pathbank_compound_id": "1034"
+      "chemspider": "5800"
     },
     "kegg": {
       "status": "ok",
@@ -857,12 +853,11 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0059597",
       "kegg_id": "C00080",
-      "chebi_id": "CHEBI:15378",
+      "hmdb_id": "HMDB0059597",
+      "chebi_id": "15378",
       "pubchem_id": "1038",
-      "chemspider": "1010",
-      "pathbank_compound_id": "40034"
+      "chemspider": "1010"
     },
     "kegg": {
       "status": "ok",
@@ -964,63 +959,133 @@
       }
     ]
   },
-  "protein:Hexokinase|F5IXG6": {
+  "protein:Hexokinase|P19367": {
     "status": "ok",
-    "uniprot_id": "F5IXG6",
-    "recommended_name": "Hexokinase",
-    "alternative_names": [],
-    "gene_names": [],
-    "organism": "Dysgonomonas gadei ATCC BAA-286",
-    "taxonomy_id": "742766",
-    "function_text": "",
+    "uniprot_id": "P19367",
+    "recommended_name": "Hexokinase-1",
+    "alternative_names": [
+      "Brain form hexokinase",
+      "Hexokinase type I",
+      "Hexokinase-A"
+    ],
+    "gene_names": [
+      "HK1"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Catalyzes the phosphorylation of various hexoses, such as D-glucose, D-glucosamine, D-fructose, D-mannose and 2-deoxy-D-glucose, to hexose 6-phosphate (D-glucose 6-phosphate, D-glucosamine 6-phosphate, D-fructose 6-phosphate, D-mannose 6-phosphate and 2-deoxy-D-glucose 6-phosphate, respectively) (PubMed:1637300, PubMed:25316723, PubMed:27374331). Does not phosphorylate N-acetyl-D-glucosamine (PubMed:27374331). Mediates the initial step of glycolysis by catalyzing phosphorylation of D-glucose to D-glucose 6-phosphate (By similarity). Involved in innate immunity and inflammation by acting as a pattern recognition receptor for bacterial peptidoglycan (PubMed:27374331). When released in the cytosol, N-acetyl-D-glucosamine component of bacterial peptidoglycan inhibits the hexokinase activity of HK1 and causes its dissociation from mitochondrial outer membrane, thereby activating the NLRP3 inflammasome (PubMed:27374331)",
     "catalytic_activity": [
-      "D-fructose + ATP = D-fructose 6-phosphate + ADP + H(+)"
+      "a D-hexose + ATP = a D-hexose 6-phosphate + ADP + H(+)",
+      "D-fructose + ATP = D-fructose 6-phosphate + ADP + H(+)",
+      "D-glucose + ATP = D-glucose 6-phosphate + ADP + H(+)",
+      "D-mannose + ATP = D-mannose 6-phosphate + ADP + H(+)",
+      "D-glucosamine + ATP = D-glucosamine 6-phosphate + ADP + H(+)"
     ],
     "enzyme_commission": [
       "2.7.1.1"
     ],
     "pathways": [
-      "Carbohydrate degradation",
-      "Carbohydrate metabolism"
+      "Carbohydrate metabolism; hexose metabolism",
+      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 1/4"
     ],
     "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Allosteric enzyme",
+      "Alternative splicing",
       "ATP-binding",
+      "Charcot-Marie-Tooth disease",
+      "Cytoplasm",
+      "Direct protein sequencing",
+      "Disease variant",
       "Glycolysis",
+      "Hereditary hemolytic anemia",
+      "Immunity",
+      "Inflammatory response",
+      "Innate immunity",
+      "Intellectual disability",
       "Kinase",
+      "Membrane",
+      "Mitochondrion",
+      "Mitochondrion outer membrane",
+      "Neurodegeneration",
+      "Neuropathy",
       "Nucleotide-binding",
+      "Phosphoprotein",
+      "Proteomics identification",
       "Reference proteome",
+      "Repeat",
+      "Retinitis pigmentosa",
       "Transferase"
     ],
-    "subcellular_locations": [],
+    "subcellular_locations": [
+      "Mitochondrion outer membrane",
+      "Cytoplasm, cytosol"
+    ],
     "go_mf_ids": [
       "GO:0005524",
       "GO:0005536",
       "GO:0008865",
-      "GO:0004340"
+      "GO:0004340",
+      "GO:0047931",
+      "GO:0004396",
+      "GO:0019158",
+      "GO:0042834"
     ],
     "go_bp_ids": [
+      "GO:0061621",
+      "GO:0046835",
+      "GO:0072655",
+      "GO:0006002",
+      "GO:0009298",
+      "GO:0061728",
+      "GO:0051156",
       "GO:0006006",
       "GO:0006096",
-      "GO:0001678"
+      "GO:0006954",
+      "GO:0045087",
+      "GO:0001678",
+      "GO:0072656",
+      "GO:0006013",
+      "GO:0002720",
+      "GO:0032731"
     ],
     "go_cellular_component_ids": [
-      "GO:0005829"
+      "GO:0005829",
+      "GO:0045121",
+      "GO:0005741",
+      "GO:0005739"
     ],
-    "protein_existence": "3: Inferred from homology",
-    "sequence_length": 402,
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 917,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "742766.HMPREF9455_01783",
+    "pdb_ids": [
+      "1CZA",
+      "1DGK",
+      "1HKB",
+      "1HKC",
+      "1QHA",
+      "4F9O",
+      "4FOE",
+      "4FOI",
+      "4FPA",
+      "4FPB"
+    ],
+    "reactome_ids": [
+      "R-HSA-446205",
+      "R-HSA-5619056",
+      "R-HSA-70171"
+    ],
+    "string_id": "9606.ENSP00000494664",
     "provenance": {
       "source": "UniProt",
-      "query": "F5IXG6",
-      "source_url": "https://rest.uniprot.org/uniprotkb/F5IXG6.json",
-      "retrieved_at": "2026-03-20T19:31:13Z"
+      "query": "P19367",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P19367.json",
+      "retrieved_at": "2026-05-12T18:25:46Z"
     }
   }
 }
