@@ -176,6 +176,101 @@ def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
 
 
+def _json_dump(value: Any) -> str:
+    return json.dumps(value, indent=2, ensure_ascii=False)
+
+
+def _json_artifact_entries(
+    post_artifacts: Optional[Dict[str, Any]],
+    pwml_result: Optional[Dict[str, Any]],
+) -> List[Tuple[str, str, Any]]:
+    entries: List[Tuple[str, str, Any]] = []
+    if isinstance(post_artifacts, dict):
+        for label, filename, key in [
+            ("Final merged output", "final.json", "final_payload_snapshot"),
+            ("Pre-normalized input", "pre_normalized_input.json", "pre_normalized_input"),
+            ("Final audited", "final.audited.json", "final_audited"),
+            ("Final mapped - DB mapping", "final.mapped.json", "final_mapped_db"),
+            ("Final export input", "final.export_input.json", "final_export_input"),
+            ("Mapping report", "mapping_report.json", "mapping_report"),
+            ("Enrichment report", "enrichment_report.json", "enrichment_report"),
+            ("Audit report", "audit_report.json", "audit_report"),
+            ("Audit apply report", "audit_apply_report.json", "audit_apply_report"),
+        ]:
+            value = post_artifacts.get(key)
+            if value not in (None, "", [], {}):
+                entries.append((label, filename, value))
+        if post_artifacts.get("gap_resolution_iterations"):
+            entries.append(
+                (
+                    "Stage 3 resolution iterations",
+                    "stage3_resolution_iterations.json",
+                    post_artifacts.get("gap_resolution_iterations"),
+                )
+            )
+    if isinstance(pwml_result, dict):
+        for label, filename, key in [
+            ("PWML IR", "final.pwml_ir.json", "pwml_ir"),
+            ("PWML IR report", "pwml_ir_report.json", "pwml_ir_report"),
+            ("PWML IR validation", "pwml_ir_validation.json", "pwml_ir_validation"),
+            ("PWML validation report", "pwml_validation_report.json", "validation_report"),
+            ("PWML QA", "pwml_qa.json", "qa"),
+        ]:
+            value = pwml_result.get(key)
+            if value not in (None, "", [], {}):
+                entries.append((label, filename, value))
+    return entries
+
+
+def render_json_artifact_compare(
+    post_artifacts: Optional[Dict[str, Any]],
+    pwml_result: Optional[Dict[str, Any]],
+    *,
+    key_prefix: str,
+) -> None:
+    entries = _json_artifact_entries(post_artifacts, pwml_result)
+    if len(entries) < 2:
+        return
+    labels = [entry[0] for entry in entries]
+    default_right = labels.index("PWML IR") if "PWML IR" in labels else min(1, len(labels) - 1)
+    with st.expander("Compare JSON artifacts", expanded=False):
+        st.caption("Use this to inspect final.mapped.json beside the PWML IR or any report.")
+        col_left, col_right = st.columns(2)
+        left_label = col_left.selectbox(
+            "Left artifact",
+            labels,
+            index=labels.index("Final mapped - DB mapping") if "Final mapped - DB mapping" in labels else 0,
+            key=f"{key_prefix}_json_compare_left",
+        )
+        right_label = col_right.selectbox(
+            "Right artifact",
+            labels,
+            index=default_right,
+            key=f"{key_prefix}_json_compare_right",
+        )
+        entry_by_label = {label: (filename, value) for label, filename, value in entries}
+        left_filename, left_value = entry_by_label[left_label]
+        right_filename, right_value = entry_by_label[right_label]
+        with col_left:
+            st.download_button(
+                f"Download {left_filename}",
+                _json_dump(left_value),
+                file_name=left_filename,
+                mime="application/json",
+                key=f"{key_prefix}_json_compare_left_download",
+            )
+            st.code(_json_dump(left_value), language="json")
+        with col_right:
+            st.download_button(
+                f"Download {right_filename}",
+                _json_dump(right_value),
+                file_name=right_filename,
+                mime="application/json",
+                key=f"{key_prefix}_json_compare_right_download",
+            )
+            st.code(_json_dump(right_value), language="json")
+
+
 def _read_json(path: Path) -> Dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -1096,6 +1191,8 @@ def run_post_pipeline_sbml_artifacts(
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
             "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
             "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
+            "final_mapped_db": json.loads(mapped_json.read_text(encoding="utf-8")),
+            "final_export_input": json.loads(sbml_input_path.read_text(encoding="utf-8")),
             "mapping_report": mapping_report,
             "enrichment_report": enrichment_report,
             "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8"))
@@ -1552,6 +1649,7 @@ if submit:
     st.session_state["stage_two_rounds"] = stage_two_rounds
     st.session_state["qa_hints"] = qa_hints
     st.session_state["final_payload"] = final_payload
+    st.session_state["final_payload_snapshot"] = final_payload
     st.session_state.pop("post_pipeline_artifacts", None)
     st.session_state["token_stats"] = llm_client_module.get_token_stats()
 
@@ -2073,11 +2171,19 @@ if st.session_state.get("pipeline_ready"):
         )
         st.download_button(
             "Download final.mapped.json",
-            json.dumps(post_artifacts["final_mapped"], indent=2),
+            json.dumps(post_artifacts.get("final_mapped_db", post_artifacts.get("final_mapped", {})), indent=2),
             file_name="final.mapped.json",
             mime="application/json",
             key="dl_final_mapped",
         )
+        if post_artifacts.get("final_export_input") and post_artifacts.get("final_export_input") != post_artifacts.get("final_mapped_db"):
+            st.download_button(
+                "Download final.export_input.json",
+                json.dumps(post_artifacts.get("final_export_input", {}), indent=2),
+                file_name="final.export_input.json",
+                mime="application/json",
+                key="dl_final_export_input",
+            )
         st.download_button(
             "Download mapping_report.json",
             json.dumps(post_artifacts["mapping_report"], indent=2),
@@ -2103,6 +2209,11 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
+        render_json_artifact_compare(
+            post_artifacts,
+            st.session_state.get("pwml_export_result"),
+            key_prefix="post_pipeline",
+        )
     # ── DB Gap Resolution ─────────────────────────────────────────────────────
     with st.expander("Resolve unmapped entities via DB", expanded=False):
         st.caption(
@@ -2353,10 +2464,11 @@ if st.session_state.get("pipeline_ready"):
                     st.session_state["qa_report"] = _pa["post_audit_qa_report"]
                 if _pa.get("post_audit_reaction_summary"):
                     st.session_state["reaction_summary"] = _pa["post_audit_reaction_summary"]
+                _pa["final_payload_snapshot"] = st.session_state.get("final_payload_snapshot", final_payload)
                 if bool(_pa.get("gate_failed", False)):
                     st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
                 else:
-                    _pwml_source_payload = _pa.get("final_mapped") or final_payload
+                    _pwml_source_payload = _pa.get("final_export_input") or _pa.get("final_mapped") or final_payload
                     with st.spinner("Building PWML..."):
                         _pwml_result = run_pwml_export(
                             _pwml_source_payload,

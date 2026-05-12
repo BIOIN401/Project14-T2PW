@@ -20,12 +20,20 @@
           <name>Generated Pathway</name>
           <description></description>
           <subject>Metabolic</subject>
-          <species-id type="integer" nil="true"/>
+          <species-id type="integer">1</species-id>
           <sub-pathways/>
           <references/>
         </pathway>
         <cell-types/>
-        <species/>
+        <species>
+          <species>
+            <id type="integer">1</id>
+            <name>Homo sapiens</name>
+            <taxonomy-id>9606</taxonomy-id>
+            <classification nil="true"/>
+            <common-name>Human</common-name>
+          </species>
+        </species>
         <subcellular-locations>
           <subcellular-location>
             <id type="integer">1</id>
@@ -39,10 +47,10 @@
             <id type="integer">2</id>
             <tissue-id nil="true" type="integer"/>
             <subcellular-location-id type="integer">1</subcellular-location-id>
-            <species-id nil="true" type="integer"/>
+            <species-id type="integer">1</species-id>
             <cell-type-id nil="true" type="integer"/>
             <pwbs-id>PW_BS000002</pwbs-id>
-            <name>cytosolic state</name>
+            <name>Cytosolic state (Homo sapiens)</name>
           </biological-state>
         </biological-states>
         <bounds/>
@@ -173,13 +181,13 @@
           </compound>
           <compound>
             <id type="integer">40034</id>
-            <name>H⁺</name>
+            <name>H+</name>
             <hmdb-id>HMDB0059597</hmdb-id>
             <description/>
             <cas/>
             <kegg-id>C00080</kegg-id>
             <pubchem-cid>1038</pubchem-cid>
-            <chebi-id>15378</chebi-id>
+            <chebi-id>CHEBI:15378</chebi-id>
             <biocyc-id/>
             <chemspider-id/>
             <drugbank-id/>
@@ -199,7 +207,7 @@
             <foodb-id/>
             <synonyms/>
             <pwc-id>PW_C040034</pwc-id>
-            <short-name>H⁺</short-name>
+            <short-name>H+</short-name>
             <element-states/>
           </compound>
         </compounds>
@@ -207,16 +215,16 @@
         <nucleic-acids/>
         <proteins>
           <protein>
-            <id type="integer">55976</id>
+            <id type="integer">206</id>
             <name>Hexokinase</name>
-            <uniprot-id>P19367</uniprot-id>
+            <uniprot-id>P52790</uniprot-id>
             <description/>
             <hmdbp-id/>
             <gene-name/>
             <locus/>
             <drugbank-id nil="true"/>
             <genbank-id/>
-            <species-id nil="true" type="integer"/>
+            <species-id type="integer">1</species-id>
             <ec-numbers/>
             <synonyms nil="true"/>
             <element-states/>
@@ -271,11 +279,11 @@
             <reaction-enzymes>
               <reaction-enzyme>
                 <id type="integer">8</id>
-                <protein-id type="integer">55976</protein-id>
+                <protein-id type="integer">206</protein-id>
               </reaction-enzyme>
               <reaction-enzyme>
                 <id type="integer">9</id>
-                <protein-id type="integer">55976</protein-id>
+                <protein-id type="integer">206</protein-id>
               </reaction-enzyme>
             </reaction-enzymes>
           </reaction>
@@ -367,7 +375,7 @@
         <protein-locations>
           <protein-location>
             <id type="integer">16</id>
-            <protein-id type="integer">55976</protein-id>
+            <protein-id type="integer">206</protein-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">4</visualization-template-id>
             <hidden type="boolean">false</hidden>
