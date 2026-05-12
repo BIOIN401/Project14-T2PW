@@ -148,6 +148,47 @@ def _merge_mapped_ids(*mapped_dicts: Dict[str, Any]) -> Dict[str, str]:
     return out
 
 
+def _first_row_value(row: Dict[str, Any], *keys: str) -> str:
+    mapped_ids = _safe_dict(row.get("mapped_ids"))
+    for key in keys:
+        value = row.get(key)
+        if value is None or str(value).strip() == "":
+            value = mapped_ids.get(key)
+        if value is None or str(value).strip() == "":
+            value = mapped_ids.get(key.replace("_id", ""))
+        sval = str(value or "").strip()
+        if sval:
+            return sval
+    return ""
+
+
+def _row_external_ids(row: Dict[str, Any], id_keys: List[Tuple[str, Tuple[str, ...]]]) -> Dict[str, str]:
+    out: Dict[str, str] = {}
+    for canonical_key, aliases in id_keys:
+        value = _first_row_value(row, canonical_key, *aliases)
+        if value:
+            out[canonical_key] = value
+    return out
+
+
+def _with_resolution(
+    result: Dict[str, Any],
+    resolution_status: str,
+    *,
+    issue: str = "",
+    order_step: str = "",
+) -> Dict[str, Any]:
+    result.setdefault("resolution", {})
+    resolution = _safe_dict(result.get("resolution"))
+    resolution["status"] = resolution_status
+    if issue:
+        resolution["issue"] = issue
+    if order_step:
+        resolution["order_step"] = order_step
+    result["resolution"] = resolution
+    return result
+
+
 class HttpClient:
     def __init__(self, timeout: int = 15, max_retries: int = 3, backoff_seconds: float = 0.6) -> None:
         self.timeout = timeout
@@ -372,6 +413,147 @@ class PathBankDbResolver:
     # ------------------------------------------------------------------
     # Public DB lookup primitives
     # ------------------------------------------------------------------
+
+    def _compound_result_from_row(
+        self,
+        row: Dict[str, Any],
+        *,
+        confidence: float,
+        chosen_rule: str,
+        candidates: Optional[List[Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        cid = int(row.get("id") or row.get("pathbank_compound_id") or 0)
+        mapped_ids = {
+            "hmdb": str(row.get("hmdb_id") or "").strip(),
+            "kegg": str(row.get("kegg_id") or "").strip(),
+            "chebi": (lambda v: f"CHEBI:{v}" if v and not v.upper().startswith("CHEBI:") else v)(
+                str(row.get("chebi_id") or "").strip()
+            ),
+            "pubchem": str(row.get("pubchem_cid") or row.get("pubchem_id") or "").strip(),
+            "cas": str(row.get("cas") or "").strip(),
+            "biocyc": str(row.get("biocyc_id") or "").strip(),
+            "chemspider": str(row.get("chemspider_id") or "").strip(),
+            "drugbank": str(row.get("drugbank_id") or "").strip(),
+            "pwc_id": str(row.get("pwc_id") or "").strip(),
+        }
+        mapped_ids = {k: v for k, v in mapped_ids.items() if v}
+        if cid:
+            mapped_ids["pathbank_compound_id"] = str(cid)
+        candidate = {
+            "pathbank_compound_id": cid,
+            "name": str(row.get("name") or ""),
+            "short_name": str(row.get("short_name") or ""),
+            "score": round(confidence, 4),
+            "mapped_ids": mapped_ids,
+        }
+        return {
+            "status": "mapped",
+            "provider": "PathBankDB",
+            "source": "db",
+            "mapped_ids": mapped_ids,
+            "pathbank_compound_id": cid,
+            "confidence": float(confidence),
+            "chosen_rule": chosen_rule,
+            "candidates": candidates or [candidate],
+        }
+
+    def _protein_result_from_row(
+        self,
+        row: Dict[str, Any],
+        *,
+        confidence: float,
+        chosen_rule: str,
+        candidates: Optional[List[Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        pid = int(row.get("id") or row.get("pathbank_protein_id") or 0)
+        uniprot = str(row.get("uniprot_id") or row.get("uniprot") or "").strip()
+        mapped_ids: Dict[str, str] = {}
+        if uniprot:
+            mapped_ids["uniprot"] = uniprot
+        if pid:
+            mapped_ids["pathbank_protein_id"] = str(pid)
+        gene_name = str(row.get("gene_name") or "").strip()
+        if gene_name:
+            mapped_ids["gene_name"] = gene_name
+        candidate = {
+            "pathbank_protein_id": pid,
+            "name": str(row.get("name") or ""),
+            "uniprot": uniprot,
+            "gene_name": gene_name,
+            "species_id": int(row.get("species_id") or 0),
+            "score": round(confidence, 4),
+        }
+        return {
+            "status": "mapped",
+            "provider": "PathBankDB",
+            "source": "db",
+            "mapped_ids": mapped_ids,
+            "pathbank_protein_id": pid,
+            "confidence": float(confidence),
+            "chosen_rule": chosen_rule,
+            "candidates": candidates or [candidate],
+        }
+
+    def _map_compound_by_pathbank_id(self, pathbank_id: str) -> Dict[str, Any]:
+        cid_text = str(pathbank_id or "").strip()
+        if not cid_text:
+            return {"status": "unmapped", "reason": "no_id_provided", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            (
+                "SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, "
+                "biocyc_id, chemspider_id, drugbank_id "
+                "FROM compounds WHERE id=%s LIMIT 2"
+            ),
+            (cid_text,),
+        )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+        return self._compound_result_from_row(rows[0], confidence=1.0, chosen_rule="pathbank_compound_id")
+
+    def _map_compound_by_pwc_id(self, pwc_id: str) -> Dict[str, Any]:
+        text = str(pwc_id or "").strip()
+        if not text:
+            return {"status": "unmapped", "reason": "no_id_provided", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            (
+                "SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, "
+                "biocyc_id, chemspider_id, drugbank_id, pwc_id "
+                "FROM compounds WHERE LOWER(pwc_id)=LOWER(%s) LIMIT 20"
+            ),
+            (text,),
+        )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+        if len(rows) > 1:
+            candidates = [
+                self._compound_result_from_row(row, confidence=1.0, chosen_rule="pwc_id")["candidates"][0]
+                for row in rows
+            ]
+            return {
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 1.0,
+                "chosen_rule": "pwc_id",
+                "candidates": candidates[:10],
+            }
+        return self._compound_result_from_row(rows[0], confidence=1.0, chosen_rule="pwc_id")
+
+    def _map_protein_by_pathbank_id(self, pathbank_id: str) -> Dict[str, Any]:
+        pid_text = str(pathbank_id or "").strip()
+        if not pid_text:
+            return {"status": "unmapped", "reason": "no_id_provided", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            (
+                "SELECT id, name, uniprot_id, gene_name, species_id "
+                "FROM proteins WHERE id=%s LIMIT 2"
+            ),
+            (pid_text,),
+        )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+        return self._protein_result_from_row(rows[0], confidence=1.0, chosen_rule="pathbank_protein_id")
 
     def find_species(
         self,
@@ -745,6 +927,144 @@ class PathBankDbResolver:
         """Compound lookup by name/synonym fuzzy matching. Delegates to map_compound."""
         return self.map_compound(name)
 
+    def _map_compound_exact_name(self, name: str) -> Dict[str, Any]:
+        text = _canonical_name(name)
+        if not text:
+            return {"status": "unmapped", "reason": "empty_query", "provider": "PathBankDB", "source": "db", "candidates": []}
+        rows = self._query(
+            (
+                "SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, "
+                "biocyc_id, chemspider_id, drugbank_id "
+                "FROM compounds "
+                "WHERE LOWER(name)=LOWER(%s) OR LOWER(short_name)=LOWER(%s) "
+                "LIMIT 40"
+            ),
+            (text, text),
+        )
+        norm = _normalize_name(text)
+        exact_rows = [
+            row for row in rows
+            if norm in {_normalize_name(str(row.get("name") or "")), _normalize_name(str(row.get("short_name") or ""))}
+        ]
+        if not exact_rows:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+        candidates = [
+            self._compound_result_from_row(row, confidence=1.0, chosen_rule="exact_normalized_name")["candidates"][0]
+            for row in exact_rows
+        ]
+        if len({c["pathbank_compound_id"] for c in candidates}) > 1:
+            return {
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 1.0,
+                "chosen_rule": "exact_normalized_name",
+                "candidates": candidates[:10],
+            }
+        return self._compound_result_from_row(exact_rows[0], confidence=1.0, chosen_rule="exact_normalized_name", candidates=candidates[:10])
+
+    def _map_compound_synonym(self, name: str) -> Dict[str, Any]:
+        text = _canonical_name(name)
+        if not text:
+            return {"status": "unmapped", "reason": "empty_query", "provider": "PathBankDB", "source": "db", "candidates": []}
+        rows = self._query(
+            (
+                "SELECT id, name, short_name, hmdb_id, kegg_id, chebi_id, pubchem_cid, cas, "
+                "biocyc_id, chemspider_id, drugbank_id, synonyms "
+                "FROM compounds "
+                "WHERE LOWER(synonyms) LIKE LOWER(%s) "
+                "LIMIT 120"
+            ),
+            (f"%{text}%",),
+        )
+        norm = _normalize_name(text)
+        synonym_rows = [
+            row for row in rows
+            if any(norm == _normalize_name(s) for s in _split_synonyms(str(row.get("synonyms") or ""), max_items=80))
+        ]
+        if not synonym_rows:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+        candidates = [
+            self._compound_result_from_row(row, confidence=0.95, chosen_rule="synonym")["candidates"][0]
+            for row in synonym_rows
+        ]
+        if len({c["pathbank_compound_id"] for c in candidates}) > 1:
+            return {
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 0.95,
+                "chosen_rule": "synonym",
+                "candidates": candidates[:10],
+            }
+        return self._compound_result_from_row(synonym_rows[0], confidence=0.95, chosen_rule="synonym", candidates=candidates[:10])
+
+    def map_compound_row(self, row: Dict[str, Any]) -> Dict[str, Any]:
+        """Compound resolution order: internal IDs, external IDs, exact name, synonym, fuzzy, novel."""
+        name = _canonical_name(str(row.get("name") or ""))
+        pathbank_id = _first_row_value(row, "pathbank_compound_id", "pw_compound_id", "pathwhiz_id")
+        if pathbank_id:
+            result = self._map_compound_by_pathbank_id(pathbank_id)
+            if result.get("status") == "mapped":
+                return _with_resolution(result, "matched", order_step="pathbank_compound_id")
+
+        pwc_id = _first_row_value(row, "pwc_id")
+        if pwc_id:
+            result = self._map_compound_by_pwc_id(pwc_id)
+            if result.get("status") == "mapped":
+                return _with_resolution(result, "matched", order_step="pwc_id")
+            if result.get("reason") == "ambiguous":
+                return _with_resolution(result, "ambiguous", issue="ambiguous_pwc_id", order_step="pwc_id")
+
+        external_ids = _row_external_ids(
+            row,
+            [
+                ("hmdb", ("hmdb_id",)),
+                ("kegg", ("kegg_id",)),
+                ("chebi", ("chebi_id",)),
+                ("pubchem", ("pubchem_cid", "pubchem_id")),
+                ("cas", ("cas_id", "cas_number")),
+            ],
+        )
+        if external_ids:
+            result = self.map_compound_by_ids(external_ids)
+            if result.get("status") == "mapped":
+                return _with_resolution(result, "matched", order_step=f"external_id:{result.get('chosen_rule', '')}")
+            if result.get("reason") == "ambiguous":
+                return _with_resolution(result, "ambiguous", issue="ambiguous_external_id", order_step="external_id")
+
+        exact = self._map_compound_exact_name(name)
+        if exact.get("status") == "mapped":
+            return _with_resolution(exact, "matched", order_step="exact_normalized_name")
+        if exact.get("reason") == "ambiguous":
+            return _with_resolution(exact, "ambiguous", issue="ambiguous_exact_name", order_step="exact_normalized_name")
+
+        synonym = self._map_compound_synonym(name)
+        if synonym.get("status") == "mapped":
+            return _with_resolution(synonym, "matched", order_step="synonym")
+        if synonym.get("reason") == "ambiguous":
+            return _with_resolution(synonym, "ambiguous", issue="ambiguous_synonym", order_step="synonym")
+
+        fuzzy = self.map_compound(name)
+        if fuzzy.get("status") == "mapped":
+            return _with_resolution(fuzzy, "matched", order_step="high_confidence_fuzzy")
+        candidates = _safe_list(fuzzy.get("candidates"))
+        if candidates:
+            return _with_resolution(fuzzy, "ambiguous", issue=str(fuzzy.get("reason") or "unsafe_fuzzy_candidates"), order_step="high_confidence_fuzzy")
+
+        novel = {
+            "status": "unmapped",
+            "reason": "novel_compound",
+            "provider": "PathBankDB",
+            "source": "db",
+            "confidence": 0.0,
+            "chosen_rule": "novel_compound",
+            "candidates": [],
+        }
+        return _with_resolution(novel, "novel", issue="no_db_candidates", order_step="novel_compound")
+
     def map_protein_by_ids(
         self,
         ids: Dict[str, str],
@@ -763,10 +1083,23 @@ class PathBankDbResolver:
         species_ids: List[int] = []
         if species:
             species_ids = self._find_species_ids(species)
+        species_lookup_failed = bool(species) and not species_ids
+        if gene and not uniprot and species_lookup_failed:
+            return {
+                "status": "unmapped",
+                "reason": f"species_not_found:{species}",
+                "provider": "PathBankDB",
+                "source": "db",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
 
         by_id: Dict[int, Dict[str, Any]] = {}
         for query_val, col in [(uniprot, "uniprot_id"), (gene, "gene_name")]:
             if not query_val:
+                continue
+            if col == "gene_name" and species_lookup_failed:
                 continue
             params_list: List[Any] = [query_val]
             sp_sql = ""
@@ -825,14 +1158,141 @@ class PathBankDbResolver:
     def map_protein_by_name_species(self, name: str, species: str) -> Dict[str, Any]:
         """Protein lookup by name/gene with required species filter. Delegates to map_protein."""
         if not species:
-            return {
+            return _with_resolution({
                 "status": "unmapped",
                 "reason": "species_required",
                 "candidates": [],
                 "chosen_rule": "",
                 "confidence": 0.0,
-            }
+            }, "unresolved", issue="needs_species")
         return self.map_protein(name, species)
+
+    def _map_protein_exact_name_species(self, name: str, species: str) -> Dict[str, Any]:
+        text = _canonical_name(name)
+        if not text:
+            return {"status": "unmapped", "reason": "empty_query", "provider": "PathBankDB", "source": "db", "candidates": []}
+        species_ids = self._find_species_ids(species)
+        if not species_ids:
+            return {
+                "status": "unmapped",
+                "reason": f"species_not_found:{species}",
+                "provider": "PathBankDB",
+                "source": "db",
+                "candidates": [],
+            }
+        marks = ", ".join(["%s"] * len(species_ids))
+        rows = self._query(
+            (
+                "SELECT id, name, uniprot_id, gene_name, species_id "
+                "FROM proteins "
+                f"WHERE LOWER(name)=LOWER(%s) AND species_id IN ({marks}) "
+                "LIMIT 40"
+            ),
+            (text,) + tuple(species_ids),
+        )
+        norm = _normalize_name(text)
+        exact_rows = [row for row in rows if norm == _normalize_name(str(row.get("name") or ""))]
+        if not exact_rows:
+            return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
+        candidates = [
+            self._protein_result_from_row(row, confidence=1.0, chosen_rule="exact_protein_name_species")["candidates"][0]
+            for row in exact_rows
+        ]
+        if len({c["pathbank_protein_id"] for c in candidates}) > 1:
+            return {
+                "status": "unmapped",
+                "reason": "ambiguous",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 1.0,
+                "chosen_rule": "exact_protein_name_species",
+                "candidates": candidates[:10],
+            }
+        return self._protein_result_from_row(
+            exact_rows[0],
+            confidence=1.0,
+            chosen_rule="exact_protein_name_species",
+            candidates=candidates[:10],
+        )
+
+    def map_protein_row(self, row: Dict[str, Any], species: str) -> Dict[str, Any]:
+        """Protein resolution order: internal ID, UniProt, gene/species, exact name/species, fuzzy/species, novel."""
+        name = _canonical_name(str(row.get("name") or ""))
+        pathbank_id = _first_row_value(row, "pathbank_protein_id", "pw_protein_id", "pathwhiz_id")
+        if pathbank_id:
+            result = self._map_protein_by_pathbank_id(pathbank_id)
+            if result.get("status") == "mapped":
+                return _with_resolution(result, "matched", order_step="pathbank_protein_id")
+
+        protein_ids = _row_external_ids(row, [("uniprot", ("uniprot_id",))])
+        if protein_ids.get("uniprot"):
+            result = self.map_protein_by_ids(protein_ids, species=species or None)
+            if result.get("status") == "mapped":
+                return _with_resolution(result, "matched", order_step="uniprot")
+            if result.get("reason") == "ambiguous":
+                return _with_resolution(result, "ambiguous", issue="ambiguous_uniprot", order_step="uniprot")
+
+        if not species:
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": "needs_species",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                    "candidates": [],
+                },
+                "unresolved",
+                issue="needs_species",
+            )
+
+        if not self._find_species_ids(species):
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": f"species_not_found:{species}",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                    "candidates": [],
+                },
+                "unresolved",
+                issue="species_not_found",
+            )
+
+        gene = _first_row_value(row, "gene", "gene_name")
+        if gene:
+            result = self.map_protein_by_ids({"gene_name": gene}, species=species)
+            if result.get("status") == "mapped":
+                return _with_resolution(result, "matched", order_step="gene_name_species")
+            if result.get("reason") == "ambiguous":
+                return _with_resolution(result, "ambiguous", issue="ambiguous_gene_name_species", order_step="gene_name_species")
+
+        exact = self._map_protein_exact_name_species(name, species)
+        if exact.get("status") == "mapped":
+            return _with_resolution(exact, "matched", order_step="exact_protein_name_species")
+        if exact.get("reason") == "ambiguous":
+            return _with_resolution(exact, "ambiguous", issue="ambiguous_exact_protein_name_species", order_step="exact_protein_name_species")
+
+        fuzzy = self.map_protein(name, species)
+        if fuzzy.get("status") == "mapped":
+            return _with_resolution(fuzzy, "matched", order_step="synonym_or_fuzzy_species")
+        candidates = _safe_list(fuzzy.get("candidates"))
+        if candidates:
+            return _with_resolution(fuzzy, "ambiguous", issue=str(fuzzy.get("reason") or "unsafe_fuzzy_candidates"), order_step="synonym_or_fuzzy_species")
+
+        novel = {
+            "status": "unmapped",
+            "reason": "novel_protein",
+            "provider": "PathBankDB",
+            "source": "db",
+            "confidence": 0.0,
+            "chosen_rule": "novel_protein",
+            "candidates": [],
+        }
+        return _with_resolution(novel, "novel", issue="no_db_candidates", order_step="novel_protein")
 
     def map_protein_complex(self, name: str, species: str) -> Dict[str, Any]:
         """Find a protein complex by name with required species."""
@@ -1106,13 +1566,37 @@ class PathBankDbResolver:
         }
 
     def map_protein(self, name: str, organism: str) -> Dict[str, Any]:
+        if not organism:
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": "needs_species",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                    "candidates": [],
+                },
+                "unresolved",
+                issue="needs_species",
+            )
         variants = _name_variants(name, max_variants=4)
         species_ids = self._find_species_ids(organism)
+        if not species_ids:
+            return {
+                "status": "unmapped",
+                "reason": f"species_not_found:{organism}",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 0.0,
+                "chosen_rule": "",
+                "candidates": [],
+            }
         by_id: Dict[int, Dict[str, Any]] = {}
 
         for variant_idx, variant in enumerate(variants):
             for term_idx, term in enumerate(_search_terms(variant, max_terms=5)):
-                pass_modes = [True, False] if species_ids else [False]
+                pass_modes = [True]
                 for pass_idx, use_species_filter in enumerate(pass_modes):
                     params: List[Any] = [term, term, term, f"%{term}%", f"%{term}%", f"%{term}%"]
                     species_sql = ""
@@ -1809,16 +2293,37 @@ def _map_protein_with_strategy(
     cache: MappingCache,
     name: str,
     organism: str,
+    protein_row: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}"
+    row_ids = _row_external_ids(
+        _safe_dict(protein_row),
+        [("uniprot", ("uniprot_id",)), ("gene_name", ("gene",))],
+    )
+    pathbank_id = _first_row_value(_safe_dict(protein_row), "pathbank_protein_id", "pw_protein_id", "pathwhiz_id")
+    base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}"
     db_key = f"db::{base_key}"
     api_key = f"api::{base_key}"
+
+    if not organism and not row_ids.get("uniprot") and not pathbank_id:
+        return _with_resolution(
+            {
+                "status": "unmapped",
+                "reason": "needs_species",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 0.0,
+                "chosen_rule": "",
+                "candidates": [],
+            },
+            "unresolved",
+            issue="needs_species",
+        )
 
     if id_source in {"db", "hybrid"}:
         db_result = cache.get("proteins", db_key)
         if db_result is None:
             if db and db.available():
-                db_result = db.map_protein(name, organism)
+                db_result = db.map_protein_row(_safe_dict(protein_row) or {"name": name}, organism)
             else:
                 db_reason = db.last_error if db else "db_not_configured"
                 db_result = {
@@ -1828,8 +2333,10 @@ def _map_protein_with_strategy(
                     "source": "db",
                     "candidates": [],
                 }
+                _with_resolution(db_result, "unresolved", issue="db_unavailable")
             cache.set("proteins", db_key, db_result)
-        if db_result.get("status") == "mapped" or id_source == "db":
+        db_resolution = _safe_dict(db_result.get("resolution")).get("status")
+        if db_result.get("status") == "mapped" or id_source == "db" or db_resolution in {"ambiguous", "novel", "unresolved"}:
             return db_result
 
     if id_source in {"api", "hybrid"}:
@@ -1843,10 +2350,20 @@ def _map_protein_with_strategy(
                 api_result = map_protein_uniprot(client, name, organism)
             api_result.setdefault("provider", "UniProt")
             api_result.setdefault("source", "api")
+            if api_result.get("status") == "mapped":
+                _with_resolution(api_result, "matched", order_step="api_uniprot")
+            elif api_result.get("reason") == "ambiguous":
+                _with_resolution(api_result, "ambiguous", issue="api_ambiguous", order_step="api_uniprot")
+            else:
+                _with_resolution(api_result, "unresolved", issue=str(api_result.get("reason") or "api_unmapped"), order_step="api_uniprot")
             cache.set("proteins", api_key, api_result)
         return api_result
 
-    return {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []}
+    return _with_resolution(
+        {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []},
+        "unresolved",
+        issue="invalid_id_source",
+    )
 
 
 def _map_compound_with_strategy(
@@ -1856,8 +2373,21 @@ def _map_compound_with_strategy(
     client: HttpClient,
     cache: MappingCache,
     name: str,
+    compound_row: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    base_key = _normalize_name(name)
+    row_ids = _row_external_ids(
+        _safe_dict(compound_row),
+        [
+            ("hmdb", ("hmdb_id",)),
+            ("kegg", ("kegg_id",)),
+            ("chebi", ("chebi_id",)),
+            ("pubchem", ("pubchem_cid", "pubchem_id")),
+            ("cas", ("cas_id", "cas_number")),
+            ("pwc_id", ()),
+        ],
+    )
+    pathbank_id = _first_row_value(_safe_dict(compound_row), "pathbank_compound_id", "pw_compound_id", "pathwhiz_id")
+    base_key = f"{_normalize_name(name)}::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}"
     db_key = f"db::{base_key}"
     api_key = f"api::{base_key}"
 
@@ -1865,7 +2395,7 @@ def _map_compound_with_strategy(
         db_result = cache.get("compounds", db_key)
         if db_result is None:
             if db and db.available():
-                db_result = db.map_compound(name)
+                db_result = db.map_compound_row(_safe_dict(compound_row) or {"name": name})
             else:
                 db_reason = db.last_error if db else "db_not_configured"
                 db_result = {
@@ -1875,8 +2405,10 @@ def _map_compound_with_strategy(
                     "source": "db",
                     "candidates": [],
                 }
+                _with_resolution(db_result, "unresolved", issue="db_unavailable")
             cache.set("compounds", db_key, db_result)
-        if db_result.get("status") == "mapped" or id_source == "db":
+        db_resolution = _safe_dict(db_result.get("resolution")).get("status")
+        if db_result.get("status") == "mapped" or id_source == "db" or db_resolution in {"ambiguous", "novel"}:
             return db_result
 
     if id_source in {"api", "hybrid"}:
@@ -1889,10 +2421,20 @@ def _map_compound_with_strategy(
                 api_result = map_compound_all(client, name)
             api_result.setdefault("provider", "ChEBI/KEGG/HMDB")
             api_result.setdefault("source", "api")
+            if api_result.get("status") == "mapped":
+                _with_resolution(api_result, "matched", order_step="api_external_id")
+            elif api_result.get("reason") == "ambiguous":
+                _with_resolution(api_result, "ambiguous", issue="api_ambiguous", order_step="api_external_id")
+            else:
+                _with_resolution(api_result, "unresolved", issue=str(api_result.get("reason") or "api_unmapped"), order_step="api_external_id")
             cache.set("compounds", api_key, api_result)
         return api_result
 
-    return {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []}
+    return _with_resolution(
+        {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []},
+        "unresolved",
+        issue="invalid_id_source",
+    )
 
 
 def run_mapping(
@@ -1970,6 +2512,7 @@ def run_mapping(
             cache=cache,
             name=name,
             organism=organism,
+            protein_row=protein,
         )
         provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "UniProt"))
         source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
@@ -1982,6 +2525,7 @@ def run_mapping(
         protein["mapping_meta"]["chosen_rule"] = result.get("chosen_rule", "")
         protein["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
         protein["mapping_meta"]["reviewed"] = bool(result.get("reviewed", False))
+        protein["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
 
         if result.get("status") == "mapped":
             proteins_mapped += 1
@@ -1999,7 +2543,7 @@ def run_mapping(
         else:
             status = "unmapped"
             reason = str(result.get("reason", "unknown"))
-            if reason == "ambiguous":
+            if reason == "ambiguous" or _safe_dict(result.get("resolution")).get("status") == "ambiguous":
                 protein_ambiguous += 1
 
         logs.append(
@@ -2014,6 +2558,8 @@ def run_mapping(
                 "candidate_count": len(_safe_list(result.get("candidates"))),
                 "source": source,
                 "provider": provider,
+                "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
+                "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
             }
         )
 
@@ -2073,6 +2619,7 @@ def run_mapping(
                 client=client,
                 cache=cache,
                 name=name,
+                compound_row=compound,
             )
             provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "ChEBI/KEGG/HMDB"))
             source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
@@ -2085,6 +2632,7 @@ def run_mapping(
                 cache=cache,
                 name=name,
                 organism=global_organism,
+                protein_row={"name": name},
             )
             provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "UniProt"))
             source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
@@ -2107,6 +2655,7 @@ def run_mapping(
         compound["mapping_meta"]["candidates"] = result.get("candidates", [])
         compound["mapping_meta"]["chosen_rule"] = result.get("chosen_rule", "")
         compound["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
+        compound["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
 
         if result.get("status") == "mapped":
             if route["route"] == "compound":
@@ -2125,7 +2674,9 @@ def run_mapping(
         else:
             status = "unmapped"
             reason = str(result.get("reason", "unknown"))
-            if route["route"] == "compound" and reason == "ambiguous":
+            if route["route"] == "compound" and (
+                reason == "ambiguous" or _safe_dict(result.get("resolution")).get("status") == "ambiguous"
+            ):
                 compound_ambiguous += 1
 
         logs.append(
@@ -2141,6 +2692,8 @@ def run_mapping(
                 "candidate_count": len(_safe_list(result.get("candidates"))),
                 "source": source,
                 "provider": provider,
+                "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
+                "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
             }
         )
 

@@ -401,6 +401,63 @@ class TestMapProteinByNameSpecies:
 
 
 # ---------------------------------------------------------------------------
+# row-aware ordered mapping
+# ---------------------------------------------------------------------------
+
+class TestRowAwareOrderedMapping:
+    def test_compound_hmdb_resolves_before_fuzzy_name(self):
+        r = _make_resolver()
+        compound_row = {
+            "id": 1420, "name": "Water", "short_name": "H2O",
+            "hmdb_id": "HMDB0002111", "kegg_id": "C00001",
+            "chebi_id": "15377", "pubchem_cid": "962",
+            "cas": "7732-18-5", "biocyc_id": "", "chemspider_id": "937",
+            "drugbank_id": "",
+        }
+        with _patch_query(r, [compound_row]), patch.object(r, "map_compound", side_effect=AssertionError("fuzzy should not run")):
+            result = r.map_compound_row({"name": "not water by name", "mapped_ids": {"hmdb": "HMDB0002111"}})
+        assert result["status"] == "mapped"
+        assert result["pathbank_compound_id"] == 1420
+        assert result["resolution"]["status"] == "matched"
+        assert "hmdb" in result["chosen_rule"]
+
+    def test_ambiguous_compound_fuzzy_is_not_marked_novel(self):
+        r = _make_resolver()
+        fuzzy = {
+            "status": "unmapped",
+            "reason": "ambiguous",
+            "provider": "PathBankDB",
+            "source": "db",
+            "confidence": 0.78,
+            "candidates": [{"pathbank_compound_id": 1, "name": "A"}, {"pathbank_compound_id": 2, "name": "B"}],
+        }
+        with _patch_query(r, []), patch.object(r, "map_compound", return_value=fuzzy):
+            result = r.map_compound_row({"name": "near match"})
+        assert result["status"] == "unmapped"
+        assert result["reason"] == "ambiguous"
+        assert result["resolution"]["status"] == "ambiguous"
+        assert result["resolution"]["status"] != "novel"
+
+    def test_protein_without_species_does_not_name_match(self):
+        r = _make_resolver()
+        with patch.object(r, "map_protein", side_effect=AssertionError("unsafe name match should not run")):
+            result = r.map_protein_row({"name": "Albumin"}, "")
+        assert result["status"] == "unmapped"
+        assert result["reason"] == "needs_species"
+        assert result["resolution"]["issue"] == "needs_species"
+
+    def test_protein_uniprot_resolves_without_species(self):
+        r = _make_resolver()
+        protein_row = {"id": 500, "name": "Albumin", "uniprot_id": "P02768", "gene_name": "ALB", "species_id": 1}
+        with _patch_query(r, [protein_row]), patch.object(r, "map_protein", side_effect=AssertionError("fuzzy should not run")):
+            result = r.map_protein_row({"name": "Albumin", "mapped_ids": {"uniprot": "P02768"}}, "")
+        assert result["status"] == "mapped"
+        assert result["pathbank_protein_id"] == 500
+        assert result["mapped_ids"]["uniprot"] == "P02768"
+        assert result["resolution"]["status"] == "matched"
+
+
+# ---------------------------------------------------------------------------
 # map_protein_complex
 # ---------------------------------------------------------------------------
 
