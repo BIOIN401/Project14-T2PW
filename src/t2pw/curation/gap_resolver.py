@@ -61,6 +61,113 @@ def _extract_global_organism(payload: Dict[str, Any]) -> str:
     return ""
 
 
+def infer_entity_species(
+    payload: Dict[str, Any],
+    *,
+    entity_type: str,
+    entity_name: str,
+    use_llm: bool = True,
+    temperature: float = 0.0,
+    max_tokens: int = 450,
+) -> Dict[str, Any]:
+    """Infer a species name for a protein/protein-complex gap.
+
+    This is intentionally narrow so ID mapping can call it as a species-only
+    gap resolver without invoking the broader stage-3 enrichment workflow.
+    """
+    name = _canonical(entity_name)
+    kind = _canonical(entity_type).lower()
+    if not name or kind not in {"protein", "protein_complex"}:
+        return {"status": "unmapped", "reason": "invalid_entity", "name": "", "confidence": 0.0}
+    if not use_llm:
+        return {"status": "unmapped", "reason": "llm_disabled", "name": "", "confidence": 0.0}
+
+    entities = _safe_dict(payload.get("entities"))
+    species_rows = [
+        {
+            "name": _canonical(str(row.get("name", ""))),
+            "taxonomy_id": _canonical(str(row.get("taxonomy_id") or row.get("taxonomy-id") or "")),
+            "pathbank_species_id": row.get("pathbank_species_id") or row.get("species_id") or row.get("pathwhiz_id"),
+        }
+        for row in _safe_list(entities.get("species"))
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    ][:8]
+    biological_states = [
+        {
+            "name": _canonical(str(state.get("name", ""))),
+            "species": _canonical(str(state.get("species") or state.get("organism") or state.get("species_name") or "")),
+            "subcellular_location": _canonical(str(state.get("subcellular_location", ""))),
+        }
+        for state in _safe_list(payload.get("biological_states"))
+        if isinstance(state, dict)
+    ][:12]
+    metadata = _safe_dict(payload.get("metadata"))
+    processes = _safe_dict(payload.get("processes"))
+    reaction_evidence: List[Dict[str, Any]] = []
+    for reaction in _safe_list(processes.get("reactions"))[:12]:
+        if not isinstance(reaction, dict):
+            continue
+        enzymes = [
+            enz for enz in _safe_list(reaction.get("enzymes"))
+            if isinstance(enz, dict) and name.casefold() in json.dumps(enz, ensure_ascii=False).casefold()
+        ]
+        if enzymes:
+            reaction_evidence.append(
+                {
+                    "reaction": _canonical(str(reaction.get("name", ""))),
+                    "evidence": _canonical(str(reaction.get("evidence", "")))[:280],
+                    "enzymes": enzymes[:3],
+                }
+            )
+    prompt = {
+        "task": "Infer the organism/species for this protein or protein complex.",
+        "entity": {"type": kind, "name": name},
+        "metadata": metadata,
+        "known_pathway_species": species_rows,
+        "biological_states": biological_states,
+        "reaction_evidence": reaction_evidence[:6],
+        "rules": [
+            "Return JSON only with keys: name, taxonomy_id, confidence, reason.",
+            "Use a known_pathway_species name when the context clearly indicates it.",
+            "If the species cannot be inferred, return an empty name and confidence 0.",
+            "Do not infer a species from generic protein names alone.",
+        ],
+    }
+    system = "You are a strict biological species resolver. Return only compact JSON."
+    raw = ""
+    try:
+        raw = chat(
+            [
+                {"role": "system", "content": system},
+                {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
+            ],
+            temperature=float(temperature),
+            max_tokens=int(max_tokens),
+            response_json=True,
+        )
+        parsed = _extract_json_object(raw) or {}
+        species_name = _canonical(str(parsed.get("name") or parsed.get("species") or ""))
+        confidence = max(0.0, min(1.0, float(parsed.get("confidence", 0.0) or 0.0)))
+        if not species_name or confidence < 0.55:
+            return {
+                "status": "unmapped",
+                "reason": str(parsed.get("reason") or "low_confidence"),
+                "name": "",
+                "confidence": confidence,
+                "raw": raw[:400],
+            }
+        return {
+            "status": "mapped",
+            "name": species_name,
+            "taxonomy_id": _canonical(str(parsed.get("taxonomy_id") or "")),
+            "confidence": confidence,
+            "reason": _canonical(str(parsed.get("reason") or "llm_inferred_species")),
+            "raw": raw[:400],
+        }
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "unmapped", "reason": f"llm_error:{exc}", "name": "", "confidence": 0.0, "raw": raw[:400]}
+
+
 def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
     raw = (text or "").strip()
     if not raw:

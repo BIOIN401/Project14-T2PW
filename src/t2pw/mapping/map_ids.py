@@ -162,6 +162,16 @@ def _first_row_value(row: Dict[str, Any], *keys: str) -> str:
     return ""
 
 
+def _to_positive_int(value: Any) -> Optional[int]:
+    if value in (None, "") or isinstance(value, bool):
+        return None
+    try:
+        parsed = int(float(str(value).strip()))
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed > 0 else None
+
+
 def _row_external_ids(row: Dict[str, Any], id_keys: List[Tuple[str, Tuple[str, ...]]]) -> Dict[str, str]:
     out: Dict[str, str] = {}
     for canonical_key, aliases in id_keys:
@@ -633,6 +643,38 @@ class PathBankDbResolver:
             "candidates": top[:6],
             "chosen_rule": chosen_rule,
             "confidence": best["confidence"],
+        }
+
+    def find_species_by_pathbank_id(self, pathbank_species_id: Any) -> Dict[str, Any]:
+        """Resolve a PathBank species ID to a species candidate."""
+        sid = _to_positive_int(pathbank_species_id)
+        if sid is None:
+            return {"status": "unmapped", "reason": "empty_query", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            (
+                "SELECT id, name, common_name, taxonomy_id "
+                "FROM species "
+                "WHERE id=%s "
+                "LIMIT 2"
+            ),
+            (sid,),
+        )
+        if not rows:
+            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        row = rows[0]
+        candidate = {
+            "pathbank_species_id": int(row.get("id") or sid),
+            "name": str(row.get("name") or ""),
+            "common_name": str(row.get("common_name") or ""),
+            "taxonomy_id": str(row.get("taxonomy_id") or ""),
+            "confidence": 1.0,
+        }
+        return {
+            "status": "mapped",
+            "reason": "",
+            "candidates": [candidate],
+            "chosen_rule": "pathbank_species_id",
+            "confidence": 1.0,
         }
 
     def find_subcellular_location(self, name: str) -> Dict[str, Any]:
@@ -1726,6 +1768,429 @@ def _extract_global_organism(payload: Dict[str, Any]) -> str:
     return ""
 
 
+def _species_id_from_row(row: Dict[str, Any]) -> Optional[int]:
+    ref = _safe_dict(row.get("species_ref") or row.get("species_reference"))
+    meta = _safe_dict(row.get("mapping_meta"))
+    mapped = _safe_dict(row.get("mapped_ids"))
+    for container in [row, ref, meta, mapped]:
+        sid = _to_positive_int(
+            container.get("pathbank_species_id")
+            or container.get("pw_species_id")
+            or container.get("species_id")
+        )
+        if sid is not None:
+            return sid
+    return None
+
+
+def _species_hint_from_row(row: Dict[str, Any]) -> Dict[str, Any]:
+    ref = _safe_dict(row.get("species_ref") or row.get("species_reference"))
+    species_value = row.get("species")
+    if isinstance(species_value, dict):
+        ref = {**species_value, **ref}
+        species_value = ref.get("name")
+    name = _canonical_name(
+        str(
+            ref.get("name")
+            or ref.get("species")
+            or row.get("species_name")
+            or species_value
+            or row.get("organism")
+            or row.get("organism_name")
+            or ""
+        )
+    )
+    taxonomy_id = _canonical_name(
+        str(
+            ref.get("taxonomy_id")
+            or ref.get("taxonomy-id")
+            or row.get("taxonomy_id")
+            or row.get("taxonomy-id")
+            or row.get("taxon_id")
+            or row.get("ncbi_taxonomy_id")
+            or ""
+        )
+    )
+    sid = _species_id_from_row({**row, "species_ref": ref})
+    return {"name": name, "taxonomy_id": taxonomy_id, "pathbank_species_id": sid}
+
+
+def _compact_species_ref(ref: Dict[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    for key in [
+        "name",
+        "pathbank_species_id",
+        "species_id",
+        "taxonomy_id",
+        "common_name",
+        "source",
+        "status",
+        "confidence",
+        "reason",
+    ]:
+        value = ref.get(key)
+        if value not in (None, ""):
+            out[key] = value
+    return out
+
+
+def _species_ref_from_candidate(candidate: Dict[str, Any], *, source: str, chosen_rule: str = "") -> Dict[str, Any]:
+    sid = _to_positive_int(candidate.get("pathbank_species_id") or candidate.get("species_id"))
+    name = _canonical_name(str(candidate.get("name") or candidate.get("common_name") or ""))
+    ref: Dict[str, Any] = {
+        "name": name,
+        "source": source,
+        "status": "matched",
+        "confidence": float(candidate.get("confidence", 1.0) or 1.0),
+        "chosen_rule": chosen_rule,
+    }
+    if sid is not None:
+        ref["pathbank_species_id"] = sid
+        ref["species_id"] = sid
+    taxonomy_id = _canonical_name(str(candidate.get("taxonomy_id") or ""))
+    if taxonomy_id:
+        ref["taxonomy_id"] = taxonomy_id
+    common_name = _canonical_name(str(candidate.get("common_name") or ""))
+    if common_name:
+        ref["common_name"] = common_name
+    return ref
+
+
+def _novel_species_ref(hint: Dict[str, Any], *, source: str, reason: str = "no_db_match") -> Dict[str, Any]:
+    name = _canonical_name(str(hint.get("name") or "Unknown species")) or "Unknown species"
+    ref: Dict[str, Any] = {
+        "name": name,
+        "source": source,
+        "status": "novel",
+        "reason": reason,
+        "confidence": float(hint.get("confidence", 0.0) or 0.0),
+    }
+    sid = _to_positive_int(hint.get("pathbank_species_id") or hint.get("species_id"))
+    if sid is not None:
+        ref["pathbank_species_id"] = sid
+        ref["species_id"] = sid
+    taxonomy_id = _canonical_name(str(hint.get("taxonomy_id") or ""))
+    if taxonomy_id:
+        ref["taxonomy_id"] = taxonomy_id
+    return ref
+
+
+def _resolve_species_hint(
+    hint: Dict[str, Any],
+    *,
+    source: str,
+    db: Optional[PathBankDbResolver],
+) -> Optional[Dict[str, Any]]:
+    name = _canonical_name(str(hint.get("name") or ""))
+    taxonomy_id = _canonical_name(str(hint.get("taxonomy_id") or ""))
+    pathbank_species_id = _to_positive_int(hint.get("pathbank_species_id") or hint.get("species_id"))
+    if not name and not taxonomy_id and pathbank_species_id is None:
+        return None
+
+    if pathbank_species_id is not None:
+        if db and db.available():
+            result = db.find_species_by_pathbank_id(pathbank_species_id)
+            if result.get("status") == "mapped" and _safe_list(result.get("candidates")):
+                return _species_ref_from_candidate(
+                    _safe_list(result.get("candidates"))[0],
+                    source=source,
+                    chosen_rule=str(result.get("chosen_rule") or "pathbank_species_id"),
+                )
+        if name:
+            ref = _novel_species_ref({**hint, "pathbank_species_id": pathbank_species_id}, source=source, reason="explicit_species_id_unverified")
+            ref["status"] = "matched"
+            ref["confidence"] = max(float(ref.get("confidence", 0.0)), 0.9)
+            return ref
+
+    if db and db.available() and (name or taxonomy_id):
+        result = db.find_species(name, taxonomy_id=taxonomy_id or None)
+        if result.get("status") == "mapped" and _safe_list(result.get("candidates")):
+            return _species_ref_from_candidate(
+                _safe_list(result.get("candidates"))[0],
+                source=source,
+                chosen_rule=str(result.get("chosen_rule") or "species_lookup"),
+            )
+        return _novel_species_ref(hint, source=source, reason=str(result.get("reason") or "no_db_match"))
+
+    return _novel_species_ref(hint, source=source, reason="db_unavailable" if db is None or not db.available() else "no_db_match")
+
+
+def _merge_species_record(entities: Dict[str, Any], ref: Dict[str, Any]) -> None:
+    species_rows = entities.setdefault("species", [])
+    if not isinstance(species_rows, list):
+        species_rows = []
+        entities["species"] = species_rows
+    name = _canonical_name(str(ref.get("name") or ""))
+    sid = _to_positive_int(ref.get("pathbank_species_id") or ref.get("species_id"))
+    taxonomy_id = _canonical_name(str(ref.get("taxonomy_id") or ""))
+    if not name and sid is None:
+        return
+
+    target: Optional[Dict[str, Any]] = None
+    for row in species_rows:
+        if not isinstance(row, dict):
+            continue
+        row_sid = _species_id_from_row(row)
+        row_name = _canonical_name(str(row.get("name") or ""))
+        if (sid is not None and row_sid == sid) or (name and _normalize_name(row_name) == _normalize_name(name)):
+            target = row
+            break
+
+    if target is None:
+        target = {"name": name or f"Species {sid}"}
+        species_rows.append(target)
+    elif name and not _canonical_name(str(target.get("name") or "")):
+        target["name"] = name
+
+    if sid is not None:
+        target["pathbank_species_id"] = sid
+        target["species_id"] = sid
+    if taxonomy_id:
+        target["taxonomy_id"] = taxonomy_id
+    if ref.get("common_name") and not target.get("common_name"):
+        target["common_name"] = ref.get("common_name")
+    target.setdefault("mapping_meta", {})
+    target["mapping_meta"]["species_resolution"] = _compact_species_ref(ref)
+
+
+def _stamp_entity_species(row: Dict[str, Any], ref: Dict[str, Any]) -> None:
+    compact = _compact_species_ref(ref)
+    name = str(compact.get("name") or "").strip()
+    if name:
+        row["species"] = name
+        row["species_name"] = name
+        row["organism"] = name
+    sid = _to_positive_int(compact.get("pathbank_species_id") or compact.get("species_id"))
+    if sid is not None:
+        row["pathbank_species_id"] = sid
+        row["species_id"] = sid
+    if compact.get("taxonomy_id"):
+        row["taxonomy_id"] = compact["taxonomy_id"]
+    row["species_ref"] = compact
+    row.setdefault("mapping_meta", {})
+    row["mapping_meta"]["species_resolution"] = compact
+
+
+def _state_species_hints_for_entity(payload: Dict[str, Any], *, entity_type: str, name: str) -> List[Dict[str, Any]]:
+    state_by_name = {
+        _normalize_name(str(state.get("name") or "")): state
+        for state in _safe_list(payload.get("biological_states"))
+        if isinstance(state, dict) and str(state.get("name") or "").strip()
+    }
+    state_names: List[str] = []
+    name_norm = _normalize_name(name)
+    element_locations = _safe_dict(payload.get("element_locations"))
+
+    if entity_type == "protein":
+        for row in _safe_list(element_locations.get("protein_locations")):
+            if not isinstance(row, dict):
+                continue
+            row_name = _canonical_name(str(row.get("protein") or row.get("name") or ""))
+            if _normalize_name(row_name) == name_norm:
+                state = _canonical_name(str(row.get("biological_state") or ""))
+                if state:
+                    state_names.append(state)
+
+    processes = _safe_dict(payload.get("processes"))
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for enzyme in _safe_list(reaction.get("enzymes")):
+            if not isinstance(enzyme, dict):
+                continue
+            key = "protein_complex" if entity_type == "protein_complex" else "protein"
+            actor_name = _canonical_name(str(enzyme.get(key) or enzyme.get("name") or ""))
+            if _normalize_name(actor_name) == name_norm:
+                state = _canonical_name(str(enzyme.get("biological_state") or reaction.get("biological_state") or ""))
+                if state:
+                    state_names.append(state)
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        for transporter in _safe_list(transport.get("transporters")):
+            if not isinstance(transporter, dict):
+                continue
+            key = "protein_complex" if entity_type == "protein_complex" else "protein"
+            actor_name = _canonical_name(str(transporter.get(key) or transporter.get("name") or ""))
+            if _normalize_name(actor_name) == name_norm:
+                state = _canonical_name(
+                    str(
+                        transporter.get("biological_state")
+                        or transport.get("to_biological_state")
+                        or transport.get("from_biological_state")
+                        or ""
+                    )
+                )
+                if state:
+                    state_names.append(state)
+
+    hints: List[Dict[str, Any]] = []
+    seen: Set[str] = set()
+    for state_name in state_names:
+        state = state_by_name.get(_normalize_name(state_name))
+        if not state:
+            continue
+        hint = _species_hint_from_row(state)
+        key = f"{_normalize_name(str(hint.get('name') or ''))}:{hint.get('pathbank_species_id') or ''}:{hint.get('taxonomy_id') or ''}"
+        if key.strip(":") and key not in seen:
+            seen.add(key)
+            hints.append(hint)
+    if hints:
+        return hints
+
+    all_state_hints = []
+    for state in state_by_name.values():
+        hint = _species_hint_from_row(state)
+        if hint.get("name") or hint.get("pathbank_species_id") or hint.get("taxonomy_id"):
+            all_state_hints.append(hint)
+    unique = {
+        f"{_normalize_name(str(h.get('name') or ''))}:{h.get('pathbank_species_id') or ''}:{h.get('taxonomy_id') or ''}": h
+        for h in all_state_hints
+    }
+    return list(unique.values()) if len(unique) == 1 else []
+
+
+def _single_pathway_species_hint(entities: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    species_rows = [row for row in _safe_list(entities.get("species")) if isinstance(row, dict)]
+    meaningful = [
+        row for row in species_rows
+        if _species_hint_from_row(row).get("name")
+        or _species_hint_from_row(row).get("taxonomy_id")
+        or _species_hint_from_row(row).get("pathbank_species_id")
+    ]
+    if len(meaningful) != 1:
+        return None
+    return _species_hint_from_row(meaningful[0])
+
+
+def _infer_species_with_gap_resolver(
+    payload: Dict[str, Any],
+    *,
+    entity_type: str,
+    name: str,
+    use_llm: bool,
+) -> Optional[Dict[str, Any]]:
+    if not use_llm:
+        return None
+    try:
+        from t2pw.curation.gap_resolver import infer_entity_species  # pylint: disable=import-outside-toplevel
+
+        result = infer_entity_species(
+            payload,
+            entity_type=entity_type,
+            entity_name=name,
+            use_llm=True,
+            temperature=0.0,
+            max_tokens=450,
+        )
+    except Exception:
+        return None
+    if not isinstance(result, dict):
+        return None
+    species_name = _canonical_name(str(result.get("name") or result.get("species") or ""))
+    if not species_name:
+        return None
+    return {
+        "name": species_name,
+        "taxonomy_id": _canonical_name(str(result.get("taxonomy_id") or "")),
+        "confidence": float(result.get("confidence", 0.65) or 0.65),
+    }
+
+
+def hydrate_species_references(
+    payload: Dict[str, Any],
+    *,
+    db: Optional[PathBankDbResolver] = None,
+    use_llm: bool = True,
+) -> Dict[str, Any]:
+    """Hydrate protein/protein-complex species before ID mapping.
+
+    Resolution order: explicit entity species, single pathway species,
+    biological-state species, LLM-inferred species, then a novel species record.
+    """
+    entities = _safe_dict(payload.setdefault("entities", {}))
+    protein_like_sections = [("proteins", "protein"), ("protein_complexes", "protein_complex")]
+    single_pathway_hint = _single_pathway_species_hint(entities)
+    report: Dict[str, Any] = {
+        "hydrated": 0,
+        "matched": 0,
+        "novel": 0,
+        "unresolved": 0,
+        "rows": [],
+    }
+
+    for list_key, entity_type in protein_like_sections:
+        for idx, row in enumerate(_safe_list(entities.get(list_key))):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical_name(str(row.get("name") or ""))
+            if not name:
+                continue
+
+            selected_ref: Optional[Dict[str, Any]] = None
+            selected_source = ""
+            explicit_hint = _species_hint_from_row(row)
+            sources: List[Tuple[str, Optional[Dict[str, Any]]]] = [
+                ("explicit_entity_species", explicit_hint if any(explicit_hint.values()) else None),
+                ("single_pathway_species", single_pathway_hint),
+            ]
+            state_hints = _state_species_hints_for_entity(payload, entity_type=entity_type, name=name)
+            if state_hints:
+                sources.append(("biological_state_species", state_hints[0] if len(state_hints) == 1 else None))
+
+            for source, hint in sources:
+                if not hint:
+                    continue
+                selected_ref = _resolve_species_hint(hint, source=source, db=db)
+                selected_source = source
+                if selected_ref is not None:
+                    break
+
+            if selected_ref is None:
+                inferred_hint = _infer_species_with_gap_resolver(
+                    payload,
+                    entity_type=entity_type,
+                    name=name,
+                    use_llm=use_llm,
+                )
+                if inferred_hint:
+                    selected_ref = _resolve_species_hint(inferred_hint, source="gap_resolver_llm", db=db)
+                    selected_source = "gap_resolver_llm"
+
+            if selected_ref is None:
+                selected_ref = _novel_species_ref(
+                    {"name": "Unknown species", "confidence": 0.0},
+                    source="novel_species",
+                    reason="no_species_source",
+                )
+                selected_source = "novel_species"
+
+            _merge_species_record(entities, selected_ref)
+            _stamp_entity_species(row, selected_ref)
+            status = str(selected_ref.get("status") or "unresolved")
+            report["hydrated"] += 1
+            if status == "matched":
+                report["matched"] += 1
+            elif status == "novel":
+                report["novel"] += 1
+            else:
+                report["unresolved"] += 1
+            report["rows"].append(
+                {
+                    "entity_type": entity_type,
+                    "name": name,
+                    "json_pointer": f"/entities/{list_key}/{idx}",
+                    "source": selected_source,
+                    "status": status,
+                    "species": selected_ref.get("name", ""),
+                    "pathbank_species_id": selected_ref.get("pathbank_species_id"),
+                    "taxonomy_id": selected_ref.get("taxonomy_id", ""),
+                }
+            )
+
+    return report
+
+
 def _entity_locations(payload: Dict[str, Any], location_key: str, name_key: str) -> Dict[str, List[str]]:
     states = {
         (item.get("name") or "").strip(): (item.get("subcellular_location") or "").strip()
@@ -2467,6 +2932,9 @@ def run_mapping(
     protein_complexes = _safe_list(entities.get("protein_complexes"))
     protein_like_names = _collect_protein_like_names(mapped)
 
+    species_llm_enabled = str(os.getenv("T2PW_SPECIES_LLM", "1")).strip().lower() not in {"0", "false", "no", "off"}
+    species_report = hydrate_species_references(mapped, db=db, use_llm=species_llm_enabled)
+
     global_organism = _extract_global_organism(mapped)
     protein_locations = _entity_locations(mapped, "protein_locations", "protein")
     compound_locations = _entity_locations(mapped, "compound_locations", "compound")
@@ -2483,6 +2951,8 @@ def run_mapping(
     compounds_rerouted_to_protein = 0
     compounds_skipped_as_complex = 0
     protein_complexes_skipped = 0
+    protein_complexes_mapped = 0
+    protein_complexes_ambiguous = 0
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -2500,7 +2970,15 @@ def run_mapping(
                 }
             )
             continue
-        organism = (protein.get("organism") or "").strip() if isinstance(protein.get("organism"), str) else ""
+        organism = (
+            protein.get("organism")
+            or protein.get("species")
+            or _safe_dict(protein.get("species_ref")).get("name")
+            or ""
+        ).strip() if isinstance(
+            protein.get("organism") or protein.get("species") or _safe_dict(protein.get("species_ref")).get("name"),
+            str,
+        ) else ""
         if not organism and global_organism:
             organism = global_organism
             protein["organism"] = global_organism
@@ -2569,25 +3047,64 @@ def run_mapping(
         name = (complex_row.get("name") or "").strip() if isinstance(complex_row.get("name"), str) else ""
         if not name:
             continue
+        organism = (
+            complex_row.get("organism")
+            or complex_row.get("species")
+            or _safe_dict(complex_row.get("species_ref")).get("name")
+            or global_organism
+            or ""
+        )
+        organism = organism.strip() if isinstance(organism, str) else ""
+        result: Dict[str, Any] = {
+            "status": "unmapped",
+            "reason": "complex_external_mapping_skipped",
+            "provider": "none",
+            "source": "none",
+            "candidates": [],
+            "confidence": 0.0,
+            "chosen_rule": "skip_external_mapping_for_complex",
+        }
+        if source_mode in {"db", "hybrid"} and db and db.available():
+            result = db.map_protein_complex(name, organism)
+            result.setdefault("provider", "PathBankDB")
+            result.setdefault("source", "db")
         complex_row.setdefault("mapping_meta", {})
         complex_row["mapping_meta"]["route"] = "complex"
-        complex_row["mapping_meta"]["provider"] = "none"
-        complex_row["mapping_meta"]["source"] = "none"
-        complex_row["mapping_meta"]["chosen_rule"] = "skip_external_mapping_for_complex"
-        complex_row["mapping_meta"]["confidence"] = 0.0
-        complex_row["mapping_meta"]["candidates"] = []
-        protein_complexes_skipped += 1
+        complex_row["mapping_meta"]["query"] = {"name": name, "organism": organism}
+        complex_row["mapping_meta"]["provider"] = str(result.get("provider") or "none")
+        complex_row["mapping_meta"]["source"] = str(result.get("source") or "none")
+        complex_row["mapping_meta"]["chosen_rule"] = str(result.get("chosen_rule") or "")
+        complex_row["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0) or 0.0)
+        complex_row["mapping_meta"]["candidates"] = result.get("candidates", [])
+        complex_row["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
+
+        if result.get("status") == "mapped":
+            protein_complexes_mapped += 1
+            if result.get("pathbank_complex_id"):
+                complex_row["pathbank_complex_id"] = int(result["pathbank_complex_id"])
+                complex_row["mapping_meta"]["pathbank_complex_id"] = int(result["pathbank_complex_id"])
+            complex_status = "mapped"
+            complex_reason = ""
+        else:
+            if str(result.get("reason") or "") == "ambiguous":
+                protein_complexes_ambiguous += 1
+            protein_complexes_skipped += 1
+            complex_status = "unmapped"
+            complex_reason = str(result.get("reason") or "complex_external_mapping_skipped")
         logs.append(
             {
                 "entity_type": "protein_complex",
                 "name": name,
                 "json_pointer": f"/entities/protein_complexes/{idx}",
-                "status": "unmapped",
-                "reason": "complex_external_mapping_skipped",
+                "status": complex_status,
+                "reason": complex_reason,
                 "location": ", ".join(protein_locations.get(name, [])),
-                "candidate_count": 0,
-                "source": "none",
-                "provider": "none",
+                "organism": organism,
+                "candidate_count": len(_safe_list(result.get("candidates"))),
+                "source": str(result.get("source") or "none"),
+                "provider": str(result.get("provider") or "none"),
+                "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
+                "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
             }
         )
 
@@ -2726,11 +3243,16 @@ def run_mapping(
         "compounds_rerouted_to_protein": compounds_rerouted_to_protein,
         "compounds_skipped_as_complex": compounds_skipped_as_complex,
         "protein_complexes_total": protein_complexes_total,
+        "protein_complexes_mapped": protein_complexes_mapped,
+        "protein_complexes_ambiguous": protein_complexes_ambiguous,
         "protein_complexes_skipped": protein_complexes_skipped,
         "complexes_skipped": compounds_skipped_as_complex + protein_complexes_skipped,
+        "species_hydrated": int(species_report.get("hydrated", 0)),
+        "species_matched": int(species_report.get("matched", 0)),
+        "species_novel": int(species_report.get("novel", 0)),
     }
 
-    report = {"summary": summary, "entities": logs}
+    report = {"summary": summary, "species": species_report, "entities": logs}
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     return report
 
@@ -2762,6 +3284,26 @@ def resolve_mapping_gaps(
     p_entities = _safe_dict(patched.get("entities"))
     proteins_list = _safe_list(p_entities.get("proteins"))
     compounds_list = _safe_list(p_entities.get("compounds"))
+    protein_complexes_list = _safe_list(p_entities.get("protein_complexes"))
+
+    for entry in targets:
+        if not isinstance(entry, dict):
+            continue
+        entry_name = str(entry.get("name") or "").strip()
+        entry_type = str(entry.get("entity_type") or "").strip()
+        entry_organism = str(entry.get("organism") or global_organism or "").strip()
+        if not entry_name or not entry_organism:
+            continue
+        if entry_type == "protein":
+            for ep in proteins_list:
+                if isinstance(ep, dict) and ep.get("name") == entry_name and not _species_hint_from_row(ep).get("name"):
+                    ep["organism"] = entry_organism
+        elif entry_type == "protein_complex":
+            for pc in protein_complexes_list:
+                if isinstance(pc, dict) and pc.get("name") == entry_name and not _species_hint_from_row(pc).get("name"):
+                    pc["organism"] = entry_organism
+
+    species_hydration = hydrate_species_references(patched, db=db, use_llm=False)
 
     rows: List[Dict[str, Any]] = []
     resolved_count = 0
@@ -2772,6 +3314,16 @@ def resolve_mapping_gaps(
         organism = str(entry.get("organism") or global_organism or "").strip()
         if not name:
             continue
+        if not organism and etype == "protein":
+            for ep in proteins_list:
+                if isinstance(ep, dict) and ep.get("name") == name:
+                    organism = str(ep.get("organism") or ep.get("species") or _safe_dict(ep.get("species_ref")).get("name") or "").strip()
+                    break
+        if not organism and etype == "protein_complex":
+            for pc in protein_complexes_list:
+                if isinstance(pc, dict) and pc.get("name") == name:
+                    organism = str(pc.get("organism") or pc.get("species") or _safe_dict(pc.get("species_ref")).get("name") or "").strip()
+                    break
 
         result: Dict[str, Any] = {}
         try:
@@ -2823,11 +3375,20 @@ def resolve_mapping_gaps(
                     ec["mapping_meta"]["confidence"] = result.get("confidence")
                     if result.get("pathbank_compound_id"):
                         ec["pathbank_compound_id"] = int(result["pathbank_compound_id"])
+        elif etype == "protein_complex":
+            for pc in protein_complexes_list:
+                if isinstance(pc, dict) and pc.get("name") == name:
+                    pc.setdefault("mapping_meta", {})["db_gap_resolved"] = True
+                    pc["mapping_meta"]["confidence"] = result.get("confidence")
+                    if result.get("pathbank_complex_id"):
+                        pc["pathbank_complex_id"] = int(result["pathbank_complex_id"])
+                        pc["mapping_meta"]["pathbank_complex_id"] = int(result["pathbank_complex_id"])
 
     return {
         "resolved_count": resolved_count,
         "total": len(rows),
         "rows": rows,
+        "species_hydration": species_hydration,
         "patched_payload": patched,
     }
 

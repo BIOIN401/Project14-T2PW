@@ -16,7 +16,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.mapping.map_ids import PathBankDbResolver, resolve_mapping_gaps  # noqa: E402
+from t2pw.mapping.map_ids import PathBankDbResolver, hydrate_species_references, resolve_mapping_gaps  # noqa: E402
 
 
 def _make_resolver() -> PathBankDbResolver:
@@ -87,6 +87,75 @@ class TestFindSpecies:
         cand = result["candidates"][0]
         for key in ("pathbank_species_id", "name", "taxonomy_id", "confidence"):
             assert key in cand
+
+
+class TestHydrateSpeciesReferences:
+    def test_explicit_entity_species_is_resolved_before_mapping(self):
+        r = _make_resolver()
+        payload = {"entities": {"proteins": [{"name": "Albumin", "species": "Homo sapiens"}], "protein_complexes": [], "species": []}}
+        rows = [{"id": 1, "name": "Homo sapiens", "common_name": "Human", "taxonomy_id": "9606"}]
+        with _patch_query(r, rows):
+            report = hydrate_species_references(payload, db=r, use_llm=False)
+
+        protein = payload["entities"]["proteins"][0]
+        assert protein["organism"] == "Homo sapiens"
+        assert protein["pathbank_species_id"] == 1
+        assert protein["species_ref"]["taxonomy_id"] == "9606"
+        assert report["matched"] == 1
+
+    def test_single_pathway_species_hydrates_complexes(self):
+        r = _make_resolver()
+        payload = {
+            "entities": {
+                "proteins": [],
+                "protein_complexes": [{"name": "Hemoglobin complex"}],
+                "species": [{"name": "Homo sapiens", "pathbank_species_id": 1}],
+            }
+        }
+        with _patch_query(r, [{"id": 1, "name": "Homo sapiens", "common_name": "Human", "taxonomy_id": "9606"}]):
+            hydrate_species_references(payload, db=r, use_llm=False)
+
+        complex_row = payload["entities"]["protein_complexes"][0]
+        assert complex_row["species"] == "Homo sapiens"
+        assert complex_row["species_id"] == 1
+
+    def test_biological_state_species_is_used_when_no_pathway_species(self):
+        r = _make_resolver()
+        payload = {
+            "entities": {"proteins": [{"name": "Albumin"}], "protein_complexes": [], "species": []},
+            "biological_states": [{"name": "cytosol", "species": "Mus musculus", "subcellular_location": "cytosol"}],
+            "element_locations": {"protein_locations": [{"protein": "Albumin", "biological_state": "cytosol"}]},
+        }
+        rows = [{"id": 2, "name": "Mus musculus", "common_name": "Mouse", "taxonomy_id": "10090"}]
+        with _patch_query(r, rows):
+            hydrate_species_references(payload, db=r, use_llm=False)
+
+        assert payload["entities"]["proteins"][0]["species_ref"]["source"] == "biological_state_species"
+        assert payload["entities"]["proteins"][0]["pathbank_species_id"] == 2
+
+    def test_llm_inferred_species_uses_gap_resolver_hook(self):
+        r = _make_resolver()
+        payload = {"entities": {"proteins": [{"name": "Albumin"}], "protein_complexes": [], "species": []}}
+        rows = [{"id": 3, "name": "Rattus norvegicus", "common_name": "Rat", "taxonomy_id": "10116"}]
+        with patch("t2pw.curation.gap_resolver.infer_entity_species", return_value={"name": "Rattus norvegicus", "confidence": 0.8}):
+            with _patch_query(r, rows):
+                hydrate_species_references(payload, db=r, use_llm=True)
+
+        protein = payload["entities"]["proteins"][0]
+        assert protein["species_ref"]["source"] == "gap_resolver_llm"
+        assert protein["pathbank_species_id"] == 3
+
+    def test_novel_species_record_is_created_when_db_has_no_match(self):
+        r = _make_resolver()
+        payload = {"entities": {"proteins": [{"name": "Novelase", "species": "Fictivus exampleus"}], "protein_complexes": [], "species": []}}
+        with _patch_query(r, []):
+            report = hydrate_species_references(payload, db=r, use_llm=False)
+
+        protein = payload["entities"]["proteins"][0]
+        assert protein["species_ref"]["status"] == "novel"
+        assert protein["species"] == "Fictivus exampleus"
+        assert payload["entities"]["species"][0]["name"] == "Fictivus exampleus"
+        assert report["novel"] == 1
 
 
 # ---------------------------------------------------------------------------
