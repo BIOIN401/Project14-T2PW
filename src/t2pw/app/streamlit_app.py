@@ -229,11 +229,31 @@ def render_json_artifact_compare(
     key_prefix: str,
 ) -> None:
     entries = _json_artifact_entries(post_artifacts, pwml_result)
-    if len(entries) < 2:
-        return
-    labels = [entry[0] for entry in entries]
-    default_right = labels.index("PWML IR") if "PWML IR" in labels else min(1, len(labels) - 1)
     with st.expander("Compare JSON artifacts", expanded=False):
+        if not entries:
+            st.info("Run audit, DB mapping + PWML export to populate final.mapped.json and PWML IR here.")
+            return
+        labels = [entry[0] for entry in entries]
+        if len(entries) == 1:
+            selected_label = st.selectbox(
+                "Artifact",
+                labels,
+                index=0,
+                key=f"{key_prefix}_json_single",
+            )
+            entry_by_label = {label: (filename, value) for label, filename, value in entries}
+            filename, value = entry_by_label[selected_label]
+            st.download_button(
+                f"Download {filename}",
+                _json_dump(value),
+                file_name=filename,
+                mime="application/json",
+                key=f"{key_prefix}_json_single_download",
+            )
+            st.code(_json_dump(value), language="json")
+            return
+
+        default_right = labels.index("PWML IR") if "PWML IR" in labels else min(1, len(labels) - 1)
         st.caption("Use this to inspect final.mapped.json beside the PWML IR or any report.")
         col_left, col_right = st.columns(2)
         left_label = col_left.selectbox(
@@ -1679,14 +1699,15 @@ if st.session_state.get("pipeline_ready"):
             )
 
     st.subheader("Stage 1 - Strict extraction")
-    st.json(stage_one)
     st.caption(f"Stage 1 QA: {qa_summary_line(stage_one)}")
-    st.download_button(
-        "Download Stage 1 JSON",
-        json.dumps(stage_one, indent=2),
-        file_name="stage1_extract.json",
-        mime="application/json",
-    )
+    with st.expander("Stage 1 JSON", expanded=False):
+        st.json(stage_one)
+        st.download_button(
+            "Download Stage 1 JSON",
+            json.dumps(stage_one, indent=2),
+            file_name="stage1_extract.json",
+            mime="application/json",
+        )
 
     chunk_count = len(chunk_details)
     if chunk_count > 1:
@@ -1704,9 +1725,18 @@ if st.session_state.get("pipeline_ready"):
 
     if run_inference_from_state and isinstance(stage_two, dict):
         st.subheader("Stage 2 - Inference / enrichment")
-        st.json(stage_two)
-        if stage_two_rounds:
-            st.write("Stage 2 QA rounds", stage_two_rounds)
+        with st.expander("Stage 2 JSON", expanded=False):
+            st.json(stage_two)
+            if stage_two_rounds:
+                st.write("Stage 2 QA rounds", stage_two_rounds)
+            st.download_button(
+                "Download Stage 2 additions",
+                json.dumps(stage_two, indent=2),
+                file_name="stage2_additions.json",
+                mime="application/json",
+            )
+            if qa_hints:
+                st.write("QA hints", qa_hints)
         chunk_count = len(stage_two_chunks)
         if chunk_count > 1:
             st.info(
@@ -1725,24 +1755,17 @@ if st.session_state.get("pipeline_ready"):
                 st.markdown("**Chunk additions JSON**")
                 st.json(chunk["output"])
             render_attempts(f"{chunk_label} attempts", chunk["attempts"])
-        st.download_button(
-            "Download Stage 2 additions",
-            json.dumps(stage_two, indent=2),
-            file_name="stage2_additions.json",
-            mime="application/json",
-        )
-        if qa_hints:
-            st.write("QA hints", qa_hints)
 
     st.subheader("Final merged output")
-    st.json(final_payload)
     st.caption(f"Final QA: {qa_summary_line(final_payload)}")
-    st.download_button(
-        "Download merged JSON",
-        json.dumps(final_payload, indent=2),
-        file_name="pwml_pipeline_output.json",
-        mime="application/json",
-    )
+    with st.expander("Final merged JSON", expanded=False):
+        st.json(final_payload)
+        st.download_button(
+            "Download merged JSON",
+            json.dumps(final_payload, indent=2),
+            file_name="pwml_pipeline_output.json",
+            mime="application/json",
+        )
 
     st.subheader("Draft Graph")
     draft_graph_dict = st.session_state.get("draft_graph", {})
@@ -2209,11 +2232,6 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
-        render_json_artifact_compare(
-            post_artifacts,
-            st.session_state.get("pwml_export_result"),
-            key_prefix="post_pipeline",
-        )
     # ── DB Gap Resolution ─────────────────────────────────────────────────────
     with st.expander("Resolve unmapped entities via DB", expanded=False):
         st.caption(
@@ -2584,6 +2602,16 @@ if st.session_state.get("pipeline_ready"):
     st.write(stats)
     if run_inference_from_state:
         st.write("Connectivity repair hints used for later rounds", build_qa_feedback(final_payload))
+
+    st.subheader("JSON Artifact Viewer")
+    _viewer_post_artifacts = st.session_state.get("post_pipeline_artifacts")
+    if not isinstance(_viewer_post_artifacts, dict):
+        _viewer_post_artifacts = {"final_payload_snapshot": final_payload}
+    render_json_artifact_compare(
+        _viewer_post_artifacts,
+        st.session_state.get("pwml_export_result"),
+        key_prefix="bottom_artifact_viewer",
+    )
 
     with st.expander("Legacy SBML Export", expanded=False):
         st.caption("SBML is a legacy export path. Use PWML above for primary output.")
