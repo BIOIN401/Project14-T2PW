@@ -16,6 +16,13 @@ from t2pw.stoich.templates import REACTION_TEMPLATES
 _KEGG_CACHE: dict = {}
 _CHEBI_CACHE: dict = {}
 
+def _item_name(x) -> str:
+    if isinstance(x, dict):
+        return x.get("name") or ""
+    if isinstance(x, str):
+        return x
+    return ""
+
 _SESSION = requests.Session()
 _SESSION.headers.update({"User-Agent": "Project14-T2PW-StoichAgent/1.0"})
 
@@ -207,7 +214,7 @@ def apply_stoich_fix(
         return {"added_inputs": [], "added_outputs": [], "skipped": list(add_inputs) + list(add_outputs)}
 
     compounds_list: list[dict] = pathway_json.setdefault("entities", {}).setdefault("compounds", [])
-    existing_names_cf = {(c.get("name") or "").casefold() for c in compounds_list}
+    existing_names_cf = {_item_name(c).casefold() for c in compounds_list}
 
     def _ensure_compound(name: str) -> None:
         if name.casefold() not in existing_names_cf:
@@ -217,8 +224,8 @@ def apply_stoich_fix(
     rxn_inputs: list[dict] = target_reaction.setdefault("inputs", [])
     rxn_outputs: list[dict] = target_reaction.setdefault("outputs", [])
 
-    existing_input_names_cf = {(x.get("name") or "").casefold() for x in rxn_inputs}
-    existing_output_names_cf = {(x.get("name") or "").casefold() for x in rxn_outputs}
+    existing_input_names_cf = {_item_name(x).casefold() for x in rxn_inputs}
+    existing_output_names_cf = {_item_name(x).casefold() for x in rxn_outputs}
 
     for compound in add_inputs:
         if compound.casefold() in existing_input_names_cf:
