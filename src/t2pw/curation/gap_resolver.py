@@ -8,7 +8,16 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from t2pw.curation.apply_audit_patch import apply_patch_with_policy
-from t2pw.llm.client import chat, chat_with_tools
+try:
+    from t2pw.llm.client import chat, chat_with_tools
+except ModuleNotFoundError as exc:  # pragma: no cover - exercised only when optional LLM deps are absent
+    _LLM_IMPORT_ERROR = exc
+
+    def chat(*args: Any, **kwargs: Any) -> str:
+        raise RuntimeError(f"LLM client dependencies are not available: {_LLM_IMPORT_ERROR}") from _LLM_IMPORT_ERROR
+
+    def chat_with_tools(*args: Any, **kwargs: Any) -> str:
+        raise RuntimeError(f"LLM client dependencies are not available: {_LLM_IMPORT_ERROR}") from _LLM_IMPORT_ERROR
 from t2pw.paths import PROMPTS_DIR
 from t2pw.mapping.map_ids import (
     HttpClient,
@@ -59,6 +68,113 @@ def _extract_global_organism(payload: Dict[str, Any]) -> str:
     if len(state_species) == 1:
         return sorted(state_species)[0]
     return ""
+
+
+def infer_entity_species(
+    payload: Dict[str, Any],
+    *,
+    entity_type: str,
+    entity_name: str,
+    use_llm: bool = True,
+    temperature: float = 0.0,
+    max_tokens: int = 450,
+) -> Dict[str, Any]:
+    """Infer a species name for a protein/protein-complex gap.
+
+    This is intentionally narrow so ID mapping can call it as a species-only
+    gap resolver without invoking the broader stage-3 enrichment workflow.
+    """
+    name = _canonical(entity_name)
+    kind = _canonical(entity_type).lower()
+    if not name or kind not in {"protein", "protein_complex"}:
+        return {"status": "unmapped", "reason": "invalid_entity", "name": "", "confidence": 0.0}
+    if not use_llm:
+        return {"status": "unmapped", "reason": "llm_disabled", "name": "", "confidence": 0.0}
+
+    entities = _safe_dict(payload.get("entities"))
+    species_rows = [
+        {
+            "name": _canonical(str(row.get("name", ""))),
+            "taxonomy_id": _canonical(str(row.get("taxonomy_id") or row.get("taxonomy-id") or "")),
+            "pathbank_species_id": row.get("pathbank_species_id") or row.get("species_id") or row.get("pathwhiz_id"),
+        }
+        for row in _safe_list(entities.get("species"))
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    ][:8]
+    biological_states = [
+        {
+            "name": _canonical(str(state.get("name", ""))),
+            "species": _canonical(str(state.get("species") or state.get("organism") or state.get("species_name") or "")),
+            "subcellular_location": _canonical(str(state.get("subcellular_location", ""))),
+        }
+        for state in _safe_list(payload.get("biological_states"))
+        if isinstance(state, dict)
+    ][:12]
+    metadata = _safe_dict(payload.get("metadata"))
+    processes = _safe_dict(payload.get("processes"))
+    reaction_evidence: List[Dict[str, Any]] = []
+    for reaction in _safe_list(processes.get("reactions"))[:12]:
+        if not isinstance(reaction, dict):
+            continue
+        enzymes = [
+            enz for enz in _safe_list(reaction.get("enzymes"))
+            if isinstance(enz, dict) and name.casefold() in json.dumps(enz, ensure_ascii=False).casefold()
+        ]
+        if enzymes:
+            reaction_evidence.append(
+                {
+                    "reaction": _canonical(str(reaction.get("name", ""))),
+                    "evidence": _canonical(str(reaction.get("evidence", "")))[:280],
+                    "enzymes": enzymes[:3],
+                }
+            )
+    prompt = {
+        "task": "Infer the organism/species for this protein or protein complex.",
+        "entity": {"type": kind, "name": name},
+        "metadata": metadata,
+        "known_pathway_species": species_rows,
+        "biological_states": biological_states,
+        "reaction_evidence": reaction_evidence[:6],
+        "rules": [
+            "Return JSON only with keys: name, taxonomy_id, confidence, reason.",
+            "Use a known_pathway_species name when the context clearly indicates it.",
+            "If the species cannot be inferred, return an empty name and confidence 0.",
+            "Do not infer a species from generic protein names alone.",
+        ],
+    }
+    system = "You are a strict biological species resolver. Return only compact JSON."
+    raw = ""
+    try:
+        raw = chat(
+            [
+                {"role": "system", "content": system},
+                {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
+            ],
+            temperature=float(temperature),
+            max_tokens=int(max_tokens),
+            response_json=True,
+        )
+        parsed = _extract_json_object(raw) or {}
+        species_name = _canonical(str(parsed.get("name") or parsed.get("species") or ""))
+        confidence = max(0.0, min(1.0, float(parsed.get("confidence", 0.0) or 0.0)))
+        if not species_name or confidence < 0.55:
+            return {
+                "status": "unmapped",
+                "reason": str(parsed.get("reason") or "low_confidence"),
+                "name": "",
+                "confidence": confidence,
+                "raw": raw[:400],
+            }
+        return {
+            "status": "mapped",
+            "name": species_name,
+            "taxonomy_id": _canonical(str(parsed.get("taxonomy_id") or "")),
+            "confidence": confidence,
+            "reason": _canonical(str(parsed.get("reason") or "llm_inferred_species")),
+            "raw": raw[:400],
+        }
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "unmapped", "reason": f"llm_error:{exc}", "name": "", "confidence": 0.0, "raw": raw[:400]}
 
 
 def _extract_json_object(text: str) -> Optional[Dict[str, Any]]:
@@ -323,46 +439,394 @@ def _issue_key(kind: str, name: str) -> str:
     return f"{kind}:{_normalize(name)}"
 
 
+def _present(value: Any) -> bool:
+    if value is None:
+        return False
+    if isinstance(value, str):
+        return bool(value.strip())
+    if isinstance(value, (int, float)):
+        return value > 0
+    return bool(value)
+
+
+def _first_present(row: Dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        value = row.get(key)
+        if _present(value):
+            return value
+    return None
+
+
+def _row_species_name(row: Dict[str, Any]) -> str:
+    ref = _safe_dict(row.get("species_ref"))
+    return _canonical(
+        str(
+            row.get("species")
+            or row.get("organism")
+            or row.get("species_name")
+            or ref.get("name")
+            or ""
+        )
+    )
+
+
+def _has_species_ref(row: Dict[str, Any]) -> bool:
+    ref = _safe_dict(row.get("species_ref"))
+    return bool(
+        _row_species_name(row)
+        or _first_present(row, "pathbank_species_id", "species_id", "pw_species_id")
+        or _first_present(ref, "pathbank_species_id", "species_id", "pw_species_id")
+    )
+
+
+def _has_entity_db_id(row: Dict[str, Any], kind: str) -> bool:
+    if kind == "species":
+        return bool(_first_present(row, "pathbank_species_id", "species_id", "pw_species_id", "pathwhiz_id"))
+    if kind == "compound":
+        return bool(
+            _first_present(
+                row,
+                "pathbank_compound_id",
+                "pw_compound_id",
+                "pwc_id",
+                "pathwhiz_id",
+            )
+            or _safe_dict(row.get("mapped_ids"))
+        )
+    if kind == "protein":
+        return bool(
+            _first_present(row, "pathbank_protein_id", "pw_protein_id", "pathwhiz_id")
+            or _safe_dict(row.get("mapped_ids"))
+        )
+    if kind == "protein_complex":
+        return bool(
+            _first_present(
+                row,
+                "pathbank_protein_complex_id",
+                "pathbank_complex_id",
+                "pw_complex_id",
+                "pathwhiz_id",
+            )
+            or _safe_dict(row.get("mapped_ids"))
+        )
+    return bool(_safe_dict(row.get("mapped_ids")))
+
+
+def _component_name(value: Any) -> str:
+    if isinstance(value, str):
+        return _canonical(value)
+    if isinstance(value, dict):
+        return _canonical(
+            str(
+                value.get("name")
+                or value.get("protein")
+                or value.get("component")
+                or value.get("entity")
+                or ""
+            )
+        )
+    return ""
+
+
+def _component_has_stoichiometry(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return _present(value.get("stoichiometry")) or _present(value.get("coefficient"))
+
+
+def _component_is_resolved(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    if _first_present(value, "pathbank_protein_id", "pw_protein_id", "pathwhiz_id"):
+        return True
+    mapped_ids = _safe_dict(value.get("mapped_ids"))
+    if mapped_ids.get("uniprot") or mapped_ids.get("pathbank_protein_id") or mapped_ids.get("pw_protein_id"):
+        return True
+    return str(value.get("mapping_status") or "").strip().lower() == "mapped"
+
+
+def _indexed_locations(payload: Dict[str, Any]) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
+    locations = _safe_dict(payload.get("element_locations"))
+    out: Dict[str, Dict[str, List[Dict[str, Any]]]] = {
+        "compound": {},
+        "protein": {},
+        "protein_complex": {},
+    }
+    specs = [
+        ("compound_locations", "compound", "compound"),
+        ("protein_locations", "protein", "protein"),
+        ("protein_locations", "protein_complex", "protein_complex"),
+        # Protein complexes are still often stored in the legacy protein key.
+        ("protein_locations", "protein_complex", "protein"),
+    ]
+    for list_key, kind, name_field in specs:
+        for idx, row in enumerate(_safe_list(locations.get(list_key))):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get(name_field) or ""))
+            if not name:
+                continue
+            out.setdefault(kind, {}).setdefault(name, []).append({"index": idx, "row": row, "list_key": list_key})
+    return out
+
+
+def _location_gap_fields(location_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    has_location_row = bool(location_rows)
+    has_location_state = any(
+        isinstance(_safe_dict(wrap.get("row")).get("biological_state"), str)
+        and _safe_dict(wrap.get("row")).get("biological_state", "").strip()
+        for wrap in location_rows
+    )
+    return {
+        "needs_location_link": not has_location_row,
+        "needs_location_state_fill": has_location_row and not has_location_state,
+        "visible_entity_missing_location": not has_location_row,
+    }
+
+
+def _compound_unmapped_after_db_pass(row: Dict[str, Any]) -> bool:
+    if _first_present(row, "pathbank_compound_id", "pw_compound_id", "pwc_id", "pathwhiz_id"):
+        return False
+    meta = _safe_dict(row.get("mapping_meta"))
+    resolution = _safe_dict(meta.get("resolution"))
+    providers = meta.get("providers")
+    provider_text = " ".join(str(p) for p in providers) if isinstance(providers, list) else str(meta.get("provider") or "")
+    source_text = str(meta.get("source") or "")
+    db_attempted = bool(resolution or "pathbank" in provider_text.casefold() or source_text.casefold() == "db")
+    if not db_attempted:
+        return False
+    status = str(resolution.get("status") or "").strip().lower()
+    issue = str(resolution.get("issue") or "").strip().lower()
+    return status in {"unresolved", "ambiguous"} or issue in {"no_db_candidates", "db_unavailable"}
+
+
+def _direct_protein_complex_enzyme_issues(
+    payload: Dict[str, Any],
+    *,
+    protein_names: set[str],
+    complex_names: set[str],
+) -> List[Dict[str, Any]]:
+    issues: List[Dict[str, Any]] = []
+    processes = _safe_dict(payload.get("processes"))
+    complexish = re.compile(r"\b(complex|holoenzyme|heterodimer|homodimer|multimer|subunit)\b|:", re.IGNORECASE)
+    for reaction_idx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+        if not isinstance(reaction, dict):
+            continue
+        reaction_name = _canonical(str(reaction.get("name") or reaction.get("id") or f"reaction_{reaction_idx}"))
+        rows: List[Tuple[str, int, Dict[str, Any]]] = []
+        rows.extend(("enzymes", idx, row) for idx, row in enumerate(_safe_list(reaction.get("enzymes"))) if isinstance(row, dict))
+        rows.extend(("modifiers", idx, row) for idx, row in enumerate(_safe_list(reaction.get("modifiers"))) if isinstance(row, dict))
+        for list_key, row_idx, row in rows:
+            entity_name = _canonical(str(row.get("protein") or row.get("protein_name") or ""))
+            if not entity_name and str(row.get("entity_type") or "").strip().lower() == "protein":
+                entity_name = _canonical(str(row.get("entity") or row.get("name") or ""))
+            if not entity_name:
+                continue
+            norm = _normalize(entity_name)
+            requires_complex = norm in complex_names or bool(complexish.search(entity_name))
+            represented_as_protein = "protein" in row or str(row.get("entity_type") or "").strip().lower() == "protein"
+            if represented_as_protein and requires_complex:
+                issues.append(
+                    {
+                        "issue_key": f"enzyme_direct_protein_requires_complex:{reaction_idx}:{row_idx}:{_normalize(entity_name)}",
+                        "entity_type": "reaction_modifier",
+                        "name": entity_name,
+                        "reaction": reaction_name,
+                        "path": f"/processes/reactions/{reaction_idx}/{list_key}/{row_idx}",
+                        "enzyme_still_direct_protein_when_complex_required": True,
+                        "protein_entity_exists": norm in protein_names,
+                        "protein_complex_entity_exists": norm in complex_names,
+                        "missing_fields": ["protein_complex_reference"],
+                        "reasons": ["enzyme_direct_protein_requires_complex"],
+                    }
+                )
+    return issues
+
+
 def _collect_stage3_issues(payload: Dict[str, Any], *, max_items: int) -> List[Dict[str, Any]]:
     entities = _safe_dict(payload.get("entities"))
-    compound_locs = _index_locations(payload, key="compound_locations", field="compound")
-    protein_locs = _index_locations(payload, key="protein_locations", field="protein")
+    locations_by_kind = _indexed_locations(payload)
     issues: List[Dict[str, Any]] = []
 
+    for idx, item in enumerate(_safe_list(entities.get("species"))):
+        if not isinstance(item, dict):
+            continue
+        name = _canonical(str(item.get("name") or item.get("common_name") or item.get("taxonomy_id") or f"species_{idx}"))
+        if not _has_entity_db_id(item, "species"):
+            issues.append(
+                {
+                    "issue_key": _issue_key("species", name),
+                    "entity_type": "species",
+                    "name": name,
+                    "path": f"/entities/species/{idx}",
+                    "needs_id_mapping": True,
+                    "species_missing_db_id": True,
+                    "taxonomy_id": _canonical(str(item.get("taxonomy_id") or "")),
+                    "missing_fields": ["pathbank_species_id"],
+                    "reasons": ["species_missing_db_id"],
+                }
+            )
+
+    for idx, state in enumerate(_safe_list(payload.get("biological_states"))):
+        if not isinstance(state, dict):
+            continue
+        name = _canonical(str(state.get("name") or f"biological_state_{idx}"))
+        missing_fields: List[str] = []
+        reasons: List[str] = []
+        needs_species = not _has_species_ref(state)
+        needs_subcellular_location = not _canonical(str(state.get("subcellular_location") or ""))
+        if needs_species:
+            missing_fields.append("species")
+            reasons.append("biological_state_missing_species")
+        if needs_subcellular_location:
+            missing_fields.append("subcellular_location")
+            reasons.append("biological_state_missing_subcellular_location")
+        if missing_fields:
+            issues.append(
+                {
+                    "issue_key": _issue_key("biological_state", name),
+                    "entity_type": "biological_state",
+                    "name": name,
+                    "path": f"/biological_states/{idx}",
+                    "needs_species": needs_species,
+                    "needs_subcellular_location": needs_subcellular_location,
+                    "missing_fields": missing_fields,
+                    "reasons": reasons,
+                }
+            )
+
     for kind, rows in [("protein", _safe_list(entities.get("proteins"))), ("compound", _safe_list(entities.get("compounds")))]:
-        for item in rows:
+        for idx, item in enumerate(rows):
             if not isinstance(item, dict):
                 continue
             name = _canonical(str(item.get("name", "")))
             if not name:
                 continue
-            mapped_ids = _safe_dict(item.get("mapped_ids"))
-            location_rows = protein_locs.get(name, []) if kind == "protein" else compound_locs.get(name, [])
-            has_location_row = bool(location_rows)
-            has_location_state = any(
-                isinstance(_safe_dict(wrap.get("row")).get("biological_state"), str)
-                and _safe_dict(wrap.get("row")).get("biological_state", "").strip()
-                for wrap in location_rows
+            location_fields = _location_gap_fields(locations_by_kind.get(kind, {}).get(name, []))
+            needs_id_mapping = not _has_entity_db_id(item, kind)
+            needs_species = kind == "protein" and not _has_species_ref(item)
+            compound_missing_class_type = bool(
+                kind == "compound"
+                and not _canonical(str(item.get("class") or item.get("type") or item.get("compound_class") or item.get("compound_type") or ""))
             )
+            compound_unmapped_after_db_pass = bool(kind == "compound" and _compound_unmapped_after_db_pass(item))
+            missing_fields: List[str] = []
+            reasons: List[str] = []
+            if needs_id_mapping:
+                missing_fields.append("mapped_ids")
+                reasons.append("entity_missing_id_mapping")
+            if needs_species:
+                missing_fields.append("species")
+                reasons.append("protein_missing_species")
+            if compound_missing_class_type:
+                missing_fields.append("class_or_type")
+                reasons.append("compound_missing_class_type")
+            if compound_unmapped_after_db_pass:
+                reasons.append("compound_unmapped_after_db_pass")
+            if bool(location_fields["needs_location_link"]):
+                missing_fields.append("location")
+                reasons.append("visible_entity_missing_location")
+            if bool(location_fields["needs_location_state_fill"]):
+                missing_fields.append("biological_state")
+                reasons.append("location_row_missing_biological_state")
             issue = {
                 "issue_key": _issue_key(kind, name),
                 "entity_type": kind,
                 "name": name,
-                "needs_id_mapping": not bool(mapped_ids),
-                "needs_location_link": not has_location_row,
-                "needs_location_state_fill": has_location_row and not has_location_state,
-                "needs_organism": bool(kind == "protein" and not _canonical(str(item.get("organism", "")))),
+                "path": f"/entities/{'proteins' if kind == 'protein' else 'compounds'}/{idx}",
+                "needs_id_mapping": needs_id_mapping,
+                "needs_location_link": bool(location_fields["needs_location_link"]),
+                "needs_location_state_fill": bool(location_fields["needs_location_state_fill"]),
+                "visible_entity_missing_location": bool(location_fields["visible_entity_missing_location"]),
+                "needs_organism": needs_species,
+                "needs_species": needs_species,
+                "compound_missing_class_type": compound_missing_class_type,
+                "compound_unmapped_after_db_pass": compound_unmapped_after_db_pass,
+                "missing_fields": missing_fields,
+                "reasons": reasons,
             }
-            if any(
-                bool(issue.get(field))
-                for field in [
-                    "needs_id_mapping",
-                    "needs_location_link",
-                    "needs_location_state_fill",
-                    "needs_organism",
-                ]
-            ):
+            if reasons:
                 issues.append(issue)
+
+    for idx, item in enumerate(_safe_list(entities.get("protein_complexes"))):
+        if not isinstance(item, dict):
+            continue
+        name = _canonical(str(item.get("name", "")))
+        if not name:
+            continue
+        location_fields = _location_gap_fields(locations_by_kind.get("protein_complex", {}).get(name, []))
+        components = _safe_list(item.get("components"))
+        missing_stoich = []
+        unresolved_components = []
+        for component_idx, component in enumerate(components):
+            component_name = _component_name(component) or f"component_{component_idx}"
+            if not _component_has_stoichiometry(component):
+                missing_stoich.append(
+                    {"component_index": component_idx, "component": component_name, "path": f"/entities/protein_complexes/{idx}/components/{component_idx}"}
+                )
+            if not _component_is_resolved(component):
+                unresolved_components.append(
+                    {"component_index": component_idx, "component": component_name, "path": f"/entities/protein_complexes/{idx}/components/{component_idx}"}
+                )
+        needs_species = not _has_species_ref(item)
+        missing_components = not bool(components)
+        needs_id_mapping = not _has_entity_db_id(item, "protein_complex")
+        missing_fields = []
+        reasons = []
+        if needs_id_mapping:
+            missing_fields.append("pathbank_protein_complex_id")
+            reasons.append("protein_complex_missing_id_mapping")
+        if needs_species:
+            missing_fields.append("species")
+            reasons.append("protein_complex_missing_species")
+        if missing_components:
+            missing_fields.append("components")
+            reasons.append("protein_complex_missing_components")
+        if missing_stoich:
+            missing_fields.append("components.stoichiometry")
+            reasons.append("component_missing_stoichiometry")
+        if unresolved_components:
+            missing_fields.append("components.pathbank_protein_id")
+            reasons.append("component_protein_unresolved")
+        if bool(location_fields["needs_location_link"]):
+            missing_fields.append("location")
+            reasons.append("visible_entity_missing_location")
+        if bool(location_fields["needs_location_state_fill"]):
+            missing_fields.append("biological_state")
+            reasons.append("location_row_missing_biological_state")
+        if reasons:
+            issues.append(
+                {
+                    "issue_key": _issue_key("protein_complex", name),
+                    "entity_type": "protein_complex",
+                    "name": name,
+                    "path": f"/entities/protein_complexes/{idx}",
+                    "needs_id_mapping": needs_id_mapping,
+                    "needs_species": needs_species,
+                    "needs_location_link": bool(location_fields["needs_location_link"]),
+                    "needs_location_state_fill": bool(location_fields["needs_location_state_fill"]),
+                    "visible_entity_missing_location": bool(location_fields["visible_entity_missing_location"]),
+                    "protein_complex_missing_components": missing_components,
+                    "component_missing_stoichiometry": bool(missing_stoich),
+                    "component_protein_unresolved": bool(unresolved_components),
+                    "missing_component_stoichiometry": missing_stoich,
+                    "unresolved_components": unresolved_components,
+                    "missing_fields": missing_fields,
+                    "reasons": reasons,
+                }
+            )
+
+    protein_names = {
+        _normalize(str(item.get("name") or ""))
+        for item in _safe_list(entities.get("proteins"))
+        if isinstance(item, dict) and _canonical(str(item.get("name") or ""))
+    }
+    complex_names = {
+        _normalize(str(item.get("name") or ""))
+        for item in _safe_list(entities.get("protein_complexes"))
+        if isinstance(item, dict) and _canonical(str(item.get("name") or ""))
+    }
+    issues.extend(_direct_protein_complex_enzyme_issues(payload, protein_names=protein_names, complex_names=complex_names))
     return issues[: max(1, int(max_items))]
 
 

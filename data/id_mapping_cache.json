@@ -8702,6 +8702,152 @@
       ],
       "provider": "UniProt",
       "source": "api"
+    },
+    "db::hexokinase::homo sapiens::::{\"uniprot\": \"Q2TB90\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::hexokinase::homo sapiens::206::{\"uniprot\": \"P52790\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P52790",
+        "pathbank_protein_id": "206",
+        "gene_name": "HK3"
+      },
+      "pathbank_protein_id": 206,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 206,
+          "name": "Hexokinase-3",
+          "uniprot": "P52790",
+          "gene_name": "HK3",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::sdha::homo sapiens::145::{\"uniprot\": \"P31040\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P31040",
+        "pathbank_protein_id": "145",
+        "gene_name": "SDHA"
+      },
+      "pathbank_protein_id": 145,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 145,
+          "name": "Succinate dehydrogenase [ubiquinone] flavoprotein subunit, mitochondrial",
+          "uniprot": "P31040",
+          "gene_name": "SDHA",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::sdhb::homo sapiens::188::{\"uniprot\": \"P21912\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P21912",
+        "pathbank_protein_id": "188",
+        "gene_name": "SDHB"
+      },
+      "pathbank_protein_id": 188,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 188,
+          "name": "Succinate dehydrogenase [ubiquinone] iron-sulfur subunit, mitochondrial",
+          "uniprot": "P21912",
+          "gene_name": "SDHB",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::sdhc::homo sapiens::116::{\"uniprot\": \"Q99643\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q99643",
+        "pathbank_protein_id": "116",
+        "gene_name": "SDHC"
+      },
+      "pathbank_protein_id": 116,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 116,
+          "name": "Succinate dehydrogenase cytochrome b560 subunit, mitochondrial",
+          "uniprot": "Q99643",
+          "gene_name": "SDHC",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::sdhd::homo sapiens::174::{\"uniprot\": \"O14521\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O14521",
+        "pathbank_protein_id": "174",
+        "gene_name": "SDHD"
+      },
+      "pathbank_protein_id": 174,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 174,
+          "name": "Succinate dehydrogenase [ubiquinone] cytochrome b small subunit, mitochondrial",
+          "uniprot": "O14521",
+          "gene_name": "SDHD",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
     }
   },
   "compounds": {
@@ -21531,6 +21677,821 @@
           }
         }
       ]
+    },
+    "db::glucose::::{\"kegg\": \"C00031\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "api::glucose::::{\"kegg\": \"C00031\"}": {
+      "status": "mapped",
+      "mapped_ids": {
+        "kegg": "C00031"
+      },
+      "confidence": 0.95,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C00031",
+          "name": "D-Glucose",
+          "score": 0.95
+        },
+        {
+          "database": "kegg",
+          "id": "C00092",
+          "name": "D-Glucose 6-phosphate",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C04473",
+          "name": "3-alpha-D-Galactosyl-[lipopolysaccharide glucose]",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C22855",
+          "name": "Glucose monomycolate",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C00029",
+          "name": "UDP-glucose",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C15970",
+          "name": "Abscisic acid glucose ester",
+          "score": 0.5
+        },
+        {
+          "database": "kegg",
+          "id": "C00103",
+          "name": "D-Glucose 1-phosphate",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00140",
+          "name": "N-Acetyl-D-glucosamine",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00221",
+          "name": "beta-D-Glucose",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00267",
+          "name": "alpha-D-Glucose",
+          "score": 0.35
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_external_id"
+      }
+    },
+    "db::atp::::{\"kegg\": \"C00002\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "api::atp::::{\"kegg\": \"C00002\"}": {
+      "status": "mapped",
+      "mapped_ids": {
+        "kegg": "C00002"
+      },
+      "confidence": 0.95,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C00002",
+          "name": "ATP",
+          "score": 0.95
+        },
+        {
+          "database": "kegg",
+          "id": "C13740",
+          "name": "alpha,beta-Methylene ATP",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C13741",
+          "name": "beta,gamma-Methylene ATP",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C13744",
+          "name": "3'-O-(4-Benzoyl)benzoyl ATP",
+          "score": 0.65
+        },
+        {
+          "database": "kegg",
+          "id": "C07305",
+          "name": "Products of ATP breakdown",
+          "score": 0.5
+        },
+        {
+          "database": "kegg",
+          "id": "C00131",
+          "name": "dATP",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C02739",
+          "name": "1-(5-Phospho-D-ribosyl)-ATP",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C04727",
+          "name": "[Propionyl-CoA:carbon-dioxide ligase (ADP-forming)]",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C04763",
+          "name": "Apo-[propionyl-CoA:carbon-dioxide ligase (ADP-forming)]",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C07024",
+          "name": "3'-Keto-3'-deoxy-ATP",
+          "score": 0.35
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_external_id"
+      }
+    },
+    "db::glucose6phosphate::::{\"kegg\": \"C00092\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "api::glucose6phosphate::::{\"kegg\": \"C00092\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.46,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C00092",
+          "name": "D-Glucose 6-phosphate",
+          "score": 0.46
+        },
+        {
+          "database": "kegg",
+          "id": "C00663",
+          "name": "beta-D-Glucose 1-phosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C00668",
+          "name": "alpha-D-Glucose 6-phosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C01172",
+          "name": "beta-D-Glucose 6-phosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C01231",
+          "name": "alpha-D-Glucose 1,6-bisphosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C04534",
+          "name": "6-Phospho-beta-D-glucosyl-(1,4)-D-glucose",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C06369",
+          "name": "2-Deoxy-D-glucose 6-phosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C20668",
+          "name": "3-Dehydro-D-glucose 6-phosphate",
+          "score": 0.322
+        },
+        {
+          "database": "kegg",
+          "id": "C20979",
+          "name": "Glucoselysine-6-phosphate",
+          "score": 0.322
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_external_id"
+      }
+    },
+    "db::adp::::{\"kegg\": \"C00008\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "api::adp::::{\"kegg\": \"C00008\"}": {
+      "status": "mapped",
+      "mapped_ids": {
+        "kegg": "C00008"
+      },
+      "confidence": 0.95,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C00008",
+          "name": "ADP",
+          "score": 0.95
+        },
+        {
+          "database": "kegg",
+          "id": "C00005",
+          "name": "NADPH",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00006",
+          "name": "NADP+",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00206",
+          "name": "dADP",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00301",
+          "name": "ADP-ribose",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C00498",
+          "name": "ADP-glucose",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C01201",
+          "name": "N(omega)-(ADP-D-ribosyl)-L-arginine",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C01253",
+          "name": "ADP-D-ribosyl-[dinitrogen reductase]",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C01281",
+          "name": "[L-Glutamate:ammonia ligase (ADP-forming)]",
+          "score": 0.35
+        },
+        {
+          "database": "kegg",
+          "id": "C01299",
+          "name": "Adenylyl-[L-glutamate:ammonia ligase (ADP-forming)]",
+          "score": 0.35
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_external_id"
+      }
+    },
+    "db::h::::{\"kegg\": \"C00080\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "api::h::::{\"kegg\": \"C00080\"}": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "candidates": [],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_external_id"
+      }
+    },
+    "db::glucose::77::{\"cas\": \"2280-44-6\", \"chebi\": \"CHEBI:4167\", \"hmdb\": \"HMDB0000122\", \"kegg\": \"C00031\", \"pubchem\": \"5793\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000122",
+        "kegg": "C00031",
+        "chebi": "CHEBI:4167",
+        "pubchem": "5793",
+        "cas": "2280-44-6",
+        "biocyc": "GLC",
+        "chemspider": "5589",
+        "pathbank_compound_id": "77"
+      },
+      "pathbank_compound_id": 77,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 77,
+          "name": "D-Glucose",
+          "short_name": "D-Glc",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000122",
+            "kegg": "C00031",
+            "chebi": "CHEBI:4167",
+            "pubchem": "5793",
+            "cas": "2280-44-6",
+            "biocyc": "GLC",
+            "chemspider": "5589",
+            "pathbank_compound_id": "77"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::atp::414::{\"cas\": \"56-65-5\", \"chebi\": \"CHEBI:15422\", \"hmdb\": \"HMDB0000538\", \"kegg\": \"C00002\", \"pubchem\": \"5957\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000538",
+        "kegg": "C00002",
+        "chebi": "CHEBI:15422",
+        "pubchem": "5957",
+        "cas": "56-65-5",
+        "biocyc": "ATP",
+        "chemspider": "5742",
+        "drugbank": "DB00171",
+        "pathbank_compound_id": "414"
+      },
+      "pathbank_compound_id": 414,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 414,
+          "name": "Adenosine triphosphate",
+          "short_name": "ATP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000538",
+            "kegg": "C00002",
+            "chebi": "CHEBI:15422",
+            "pubchem": "5957",
+            "cas": "56-65-5",
+            "biocyc": "ATP",
+            "chemspider": "5742",
+            "drugbank": "DB00171",
+            "pathbank_compound_id": "414"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::glucose6phosphate::1083::{\"cas\": \"56-73-5\", \"chebi\": \"CHEBI:4170\", \"hmdb\": \"HMDB0001401\", \"kegg\": \"C00092\", \"pubchem\": \"5958\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001401",
+        "kegg": "C00092",
+        "chebi": "CHEBI:4170",
+        "pubchem": "5958",
+        "cas": "56-73-5",
+        "biocyc": "GLC-6-P",
+        "chemspider": "5743",
+        "pathbank_compound_id": "1083"
+      },
+      "pathbank_compound_id": 1083,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1083,
+          "name": "Glucose 6-phosphate",
+          "short_name": "Gluc-6P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001401",
+            "kegg": "C00092",
+            "chebi": "CHEBI:4170",
+            "pubchem": "5958",
+            "cas": "56-73-5",
+            "biocyc": "GLC-6-P",
+            "chemspider": "5743",
+            "pathbank_compound_id": "1083"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::adp::1034::{\"cas\": \"58-64-0\", \"chebi\": \"CHEBI:16761\", \"hmdb\": \"HMDB0001341\", \"kegg\": \"C00008\", \"pubchem\": \"6022\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001341",
+        "kegg": "C00008",
+        "chebi": "CHEBI:16761",
+        "pubchem": "6022",
+        "cas": "58-64-0",
+        "biocyc": "ADP",
+        "chemspider": "5800",
+        "pathbank_compound_id": "1034"
+      },
+      "pathbank_compound_id": 1034,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1034,
+          "name": "Adenosine diphosphate",
+          "short_name": "ADP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001341",
+            "kegg": "C00008",
+            "chebi": "CHEBI:16761",
+            "pubchem": "6022",
+            "cas": "58-64-0",
+            "biocyc": "ADP",
+            "chemspider": "5800",
+            "pathbank_compound_id": "1034"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::h::40034::{\"chebi\": \"CHEBI:15378\", \"hmdb\": \"HMDB0059597\", \"kegg\": \"C00080\", \"pubchem\": \"1038\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0059597",
+        "kegg": "C00080",
+        "chebi": "CHEBI:15378",
+        "pubchem": "1038",
+        "chemspider": "1010",
+        "pathbank_compound_id": "40034"
+      },
+      "pathbank_compound_id": 40034,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 40034,
+          "name": "Hydrogen Ion",
+          "short_name": "H+",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0059597",
+            "kegg": "C00080",
+            "chebi": "CHEBI:15378",
+            "pubchem": "1038",
+            "chemspider": "1010",
+            "pathbank_compound_id": "40034"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::succinate::174::{\"cas\": \"110-15-6\", \"chebi\": \"CHEBI:15741\", \"hmdb\": \"HMDB0000254\", \"kegg\": \"C00042\", \"pubchem\": \"1110\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000254",
+        "kegg": "C00042",
+        "chebi": "CHEBI:15741",
+        "pubchem": "1110",
+        "cas": "110-15-6",
+        "biocyc": "SUC",
+        "chemspider": "1078",
+        "drugbank": "DB00139",
+        "pathbank_compound_id": "174"
+      },
+      "pathbank_compound_id": 174,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 174,
+          "name": "Succinic acid",
+          "short_name": "Succini",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000254",
+            "kegg": "C00042",
+            "chebi": "CHEBI:15741",
+            "pubchem": "1110",
+            "cas": "110-15-6",
+            "biocyc": "SUC",
+            "chemspider": "1078",
+            "drugbank": "DB00139",
+            "pathbank_compound_id": "174"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::fumarate::88::{\"cas\": \"110-17-8\", \"chebi\": \"CHEBI:18012\", \"hmdb\": \"HMDB0000134\", \"kegg\": \"C00122\", \"pubchem\": \"21883788\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000134",
+        "kegg": "C00122",
+        "chebi": "CHEBI:18012",
+        "pubchem": "21883788",
+        "cas": "110-17-8",
+        "biocyc": "FUM",
+        "chemspider": "10197150",
+        "drugbank": "DB04299",
+        "pathbank_compound_id": "88"
+      },
+      "pathbank_compound_id": 88,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 88,
+          "name": "Fumaric acid",
+          "short_name": "Fumarat",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000134",
+            "kegg": "C00122",
+            "chebi": "CHEBI:18012",
+            "pubchem": "21883788",
+            "cas": "110-17-8",
+            "biocyc": "FUM",
+            "chemspider": "10197150",
+            "drugbank": "DB04299",
+            "pathbank_compound_id": "88"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::ubiquinone::::{\"kegg\": \"C00399\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002012",
+        "kegg": "C00399",
+        "chebi": "CHEBI:16389",
+        "pubchem": "4462",
+        "cas": "727-81-1",
+        "chemspider": "4307",
+        "drugbank": "DB08689",
+        "pathbank_compound_id": "1347"
+      },
+      "pathbank_compound_id": 1347,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1347,
+          "name": "Ubiquinone-1",
+          "short_name": "Coq1",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002012",
+            "kegg": "C00399",
+            "chebi": "CHEBI:16389",
+            "pubchem": "4462",
+            "cas": "727-81-1",
+            "chemspider": "4307",
+            "drugbank": "DB08689"
+          }
+        },
+        {
+          "pathbank_compound_id": 2884,
+          "name": "Ubiquinone-2",
+          "short_name": "Q 2",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0006709",
+            "kegg": "C00399",
+            "chebi": "CHEBI:46372",
+            "pubchem": "5280346",
+            "cas": "606-06-4",
+            "chemspider": "4444053",
+            "drugbank": "DB08690"
+          }
+        },
+        {
+          "pathbank_compound_id": 109111,
+          "name": "Ubiquinone",
+          "short_name": "",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C00399",
+            "chebi": "CHEBI:16389",
+            "pubchem": "3689"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::ubiquinol::1006::{\"cas\": \"56275-39-9\", \"chebi\": \"CHEBI:52970\", \"hmdb\": \"HMDB0001304\", \"kegg\": \"C00390\", \"pubchem\": \"5280344\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001304",
+        "kegg": "C00390",
+        "pubchem": "5280344",
+        "cas": "56275-39-9",
+        "biocyc": "QH2",
+        "chemspider": "4444052",
+        "pathbank_compound_id": "1006"
+      },
+      "pathbank_compound_id": 1006,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1006,
+          "name": "QH2",
+          "short_name": "QH2",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001304",
+            "kegg": "C00390",
+            "pubchem": "5280344",
+            "cas": "56275-39-9",
+            "biocyc": "QH2",
+            "chemspider": "4444052",
+            "pathbank_compound_id": "1006"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    }
+  },
+  "complexes": {
+    "db::succinate dehydrogenase complex::homo sapiens::::[{\"ids\": {}, \"name\": \"SDHA\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"SDHB\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"SDHC\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"SDHD\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "SDHA",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 145,
+          "mapped_ids": {
+            "uniprot": "P31040",
+            "pathbank_protein_id": "145"
+          }
+        },
+        {
+          "name": "SDHB",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 188,
+          "mapped_ids": {
+            "uniprot": "P21912",
+            "pathbank_protein_id": "188"
+          }
+        },
+        {
+          "name": "SDHC",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 116,
+          "mapped_ids": {
+            "uniprot": "Q99643",
+            "pathbank_protein_id": "116"
+          }
+        },
+        {
+          "name": "SDHD",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 174,
+          "mapped_ids": {
+            "uniprot": "O14521",
+            "pathbank_protein_id": "174"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
+      }
     }
   }
 }

@@ -1044,6 +1044,345 @@ def build_pwml_ir(
     return ir, report
 
 
+def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
+    """
+    Pre-export contract validator for the hydrated payload or built IR.
+
+    Checks every required field defined by the PWML-ready contract without
+    mutating the input or making any DB calls. Returns a structured report
+    with ``errors``, ``warnings``, ``summary``, and ``ok``.
+    """
+    errors: List[Dict[str, Any]] = []
+    warnings: List[Dict[str, Any]] = []
+
+    def err(code: str, message: str, pointer: str = "", **extra: Any) -> None:
+        issue: Dict[str, Any] = {"code": code, "message": message}
+        if pointer:
+            issue["pointer"] = pointer
+        issue.update(extra)
+        errors.append(issue)
+
+    def warn(code: str, message: str, pointer: str = "", **extra: Any) -> None:
+        issue: Dict[str, Any] = {"code": code, "message": message}
+        if pointer:
+            issue["pointer"] = pointer
+        issue.update(extra)
+        warnings.append(issue)
+
+    if not isinstance(payload_or_ir, dict):
+        err("invalid_input", "Input must be a dict (payload or IR).")
+        return {"ok": False, "errors": errors, "warnings": warnings, "summary": {}}
+
+    is_ir = is_pwml_ir(payload_or_ir)
+
+    # ── PATHWAY ──────────────────────────────────────────────────────────────
+    if is_ir:
+        pathway = _safe_dict(payload_or_ir.get("pathway"))
+        pw_id = pathway.get("pw_id") or pathway.get("pathbank_pathway_id")
+        name = pathway.get("name")
+        subject = pathway.get("subject")
+        width = pathway.get("width")
+        height = pathway.get("height")
+        base = "/pathway"
+    else:
+        meta = _safe_dict(payload_or_ir.get("metadata"))
+        pw_id = meta.get("pw_id") or meta.get("pathbank_pathway_id") or meta.get("pathway_id")
+        name = meta.get("pathway_name") or meta.get("name")
+        subject = meta.get("pathway_subject") or meta.get("subject")
+        width = meta.get("width")
+        height = meta.get("height")
+        base = "/metadata"
+
+    if not pw_id:
+        warn("pathway_missing_pw_id", "Pathway has no pw_id / pathbank_pathway_id.", f"{base}/pw_id")
+    if not name:
+        err("pathway_missing_name", "Pathway is missing a name.", f"{base}/name")
+    if not subject:
+        err("pathway_missing_subject", "Pathway is missing a subject.", f"{base}/subject")
+    if is_ir:
+        if not width:
+            err("pathway_missing_width", "Pathway IR is missing width.", f"{base}/width")
+        if not height:
+            err("pathway_missing_height", "Pathway IR is missing height.", f"{base}/height")
+    else:
+        if not width:
+            warn("pathway_missing_width", "Payload metadata has no explicit width (will default at IR build time).", f"{base}/width")
+        if not height:
+            warn("pathway_missing_height", "Payload metadata has no explicit height (will default at IR build time).", f"{base}/height")
+
+    # ── ENTITY REGISTRIES ─────────────────────────────────────────────────────
+    entities = _safe_dict(payload_or_ir.get("entities"))
+    all_entity_names: set = set()
+    all_entity_keys: set = set()
+
+    for bucket in ENTITY_BUCKETS.values():
+        for e in _safe_list(entities.get(bucket)):
+            if isinstance(e, dict):
+                n = _canonical(e.get("name"))
+                if n:
+                    all_entity_names.add(_norm(n))
+                k = e.get("key")
+                if k:
+                    all_entity_keys.add(k)
+
+    # ── PROTEINS ─────────────────────────────────────────────────────────────
+    for idx, prot in enumerate(_safe_list(entities.get("proteins"))):
+        if not isinstance(prot, dict):
+            continue
+        pname = _canonical(prot.get("name"))
+        species = (
+            prot.get("species")
+            or prot.get("organism")
+            or prot.get("taxonomy_id")
+            or _safe_dict(prot.get("mapping_meta")).get("species")
+        )
+        if not species:
+            err(
+                "protein_missing_species",
+                f"Protein '{pname}' is missing species/organism.",
+                f"/entities/proteins/{idx}",
+                entity_name=pname,
+            )
+
+    # ── PROTEIN COMPLEXES ────────────────────────────────────────────────────
+    for idx, pc in enumerate(_safe_list(entities.get("protein_complexes"))):
+        if not isinstance(pc, dict):
+            continue
+        pcname = _canonical(pc.get("name"))
+        species = (
+            pc.get("species")
+            or pc.get("organism")
+            or pc.get("taxonomy_id")
+            or _safe_dict(pc.get("mapping_meta")).get("species")
+        )
+        if not species:
+            err(
+                "protein_complex_missing_species",
+                f"Protein complex '{pcname}' is missing species.",
+                f"/entities/protein_complexes/{idx}",
+                entity_name=pcname,
+            )
+        components = _safe_list(pc.get("components"))
+        if not components:
+            err(
+                "protein_complex_missing_components",
+                f"Protein complex '{pcname}' has no protein components.",
+                f"/entities/protein_complexes/{idx}/components",
+                entity_name=pcname,
+            )
+        else:
+            for cidx, comp in enumerate(components):
+                if not isinstance(comp, dict):
+                    continue
+                stoich = comp.get("stoichiometry") or comp.get("coefficient")
+                if stoich is None:
+                    err(
+                        "component_missing_stoichiometry",
+                        f"Component[{cidx}] in complex '{pcname}' is missing stoichiometry.",
+                        f"/entities/protein_complexes/{idx}/components/{cidx}",
+                        complex_name=pcname,
+                    )
+
+    # ── BIOLOGICAL STATES ────────────────────────────────────────────────────
+    bio_states = _safe_list(payload_or_ir.get("biological_states"))
+    if not bio_states:
+        warn("no_biological_states", "No biological_states defined; a default will be generated.")
+    for idx, state in enumerate(bio_states):
+        if not isinstance(state, dict):
+            continue
+        sname = state.get("name", f"state[{idx}]")
+        if is_ir:
+            has_species = bool(state.get("species_key"))
+            has_subcell = bool(state.get("subcellular_location_key"))
+        else:
+            has_species = bool(
+                state.get("species") or state.get("organism") or state.get("taxonomy_id")
+            )
+            has_subcell = bool(
+                state.get("subcellular_location")
+                or state.get("subcellular-location")
+                or state.get("compartment")
+                or state.get("compartment_canonical")
+            )
+        if not has_species:
+            err(
+                "biological_state_missing_species",
+                f"Biological state '{sname}' is missing species.",
+                f"/biological_states/{idx}",
+                state_name=sname,
+            )
+        if not has_subcell:
+            warn(
+                "biological_state_missing_subcellular_location",
+                f"Biological state '{sname}' has no subcellular location.",
+                f"/biological_states/{idx}",
+                state_name=sname,
+            )
+
+    # ── REACTIONS ─────────────────────────────────────────────────────────────
+    processes = _safe_dict(payload_or_ir.get("processes"))
+    for idx, rx in enumerate(_safe_list(processes.get("reactions"))):
+        if not isinstance(rx, dict):
+            continue
+        rname = rx.get("name", f"reaction[{idx}]")
+
+        if is_ir:
+            left = _safe_list(rx.get("left"))
+            right = _safe_list(rx.get("right"))
+            left_key, right_key = "left", "right"
+        else:
+            left = _safe_list(rx.get("inputs") or rx.get("left") or rx.get("substrates"))
+            right = _safe_list(rx.get("outputs") or rx.get("right") or rx.get("products"))
+            left_key = "inputs" if rx.get("inputs") else "left"
+            right_key = "outputs" if rx.get("outputs") else "right"
+
+        if not left:
+            err(
+                "reaction_missing_left_participants",
+                f"Reaction '{rname}' has no left/input participants.",
+                f"/processes/reactions/{idx}/{left_key}",
+                reaction_name=rname,
+            )
+        if not right:
+            err(
+                "reaction_missing_right_participants",
+                f"Reaction '{rname}' has no right/output participants.",
+                f"/processes/reactions/{idx}/{right_key}",
+                reaction_name=rname,
+            )
+
+        for side_label, side in [(left_key, left), (right_key, right)]:
+            for midx, part in enumerate(side):
+                if isinstance(part, str):
+                    warn(
+                        "reaction_participant_missing_stoichiometry",
+                        f"Reaction '{rname}' {side_label}[{midx}] is a bare string with no explicit stoichiometry (defaults to 1).",
+                        f"/processes/reactions/{idx}/{side_label}/{midx}",
+                        reaction_name=rname,
+                    )
+                    continue
+                if not isinstance(part, dict):
+                    continue
+                stoich = part.get("stoichiometry") or part.get("coefficient")
+                if stoich is None:
+                    warn(
+                        "reaction_participant_missing_stoichiometry",
+                        f"Reaction '{rname}' {side_label}[{midx}] has no explicit stoichiometry (defaults to 1).",
+                        f"/processes/reactions/{idx}/{side_label}/{midx}",
+                        reaction_name=rname,
+                    )
+
+        # Enzyme references against entity registry
+        enzyme_raw = _safe_list(rx.get("enzymes") or rx.get("catalysts"))
+        for eidx, actor in enumerate(enzyme_raw):
+            if is_ir:
+                # IR enzyme members use entity_key; cross-check against built keys
+                if isinstance(actor, dict):
+                    ekey = actor.get("entity_key")
+                    if ekey and ekey not in all_entity_keys:
+                        err(
+                            "enzyme_reference_not_found",
+                            f"Reaction '{rname}' enzyme entity_key '{ekey}' not found in entities.",
+                            f"/processes/reactions/{idx}/enzymes/{eidx}",
+                            reaction_name=rname,
+                            entity_key=ekey,
+                        )
+            else:
+                if isinstance(actor, str):
+                    ename = _canonical(actor)
+                elif isinstance(actor, dict):
+                    ename = _canonical(
+                        actor.get("name")
+                        or actor.get("protein")
+                        or actor.get("protein_complex")
+                        or actor.get("entity")
+                    )
+                else:
+                    continue
+                if ename and _norm(ename) not in all_entity_names:
+                    err(
+                        "enzyme_reference_not_found",
+                        f"Reaction '{rname}' enzyme '{ename}' not found in entity registries.",
+                        f"/processes/reactions/{idx}/enzymes/{eidx}",
+                        reaction_name=rname,
+                        enzyme_name=ename,
+                    )
+
+    # ── LOCATION / VISUALIZATION REFERENCES (IR only) ────────────────────────
+    if is_ir:
+        bio_state_keys = {
+            s.get("key")
+            for s in _safe_list(payload_or_ir.get("biological_states"))
+            if isinstance(s, dict)
+        }
+        process_keys: set = set()
+        for bucket in PROCESS_BUCKETS.values():
+            for p in _safe_list(_safe_dict(payload_or_ir.get("processes")).get(bucket)):
+                if isinstance(p, dict) and p.get("key"):
+                    process_keys.add(p["key"])
+        location_keys = {
+            loc.get("key")
+            for loc in _safe_list(payload_or_ir.get("locations"))
+            if isinstance(loc, dict)
+        }
+
+        for idx, loc in enumerate(_safe_list(payload_or_ir.get("locations"))):
+            if not isinstance(loc, dict):
+                continue
+            if loc.get("entity_key") not in all_entity_keys:
+                err(
+                    "location_missing_entity",
+                    f"Location '{loc.get('key', idx)}' references unknown entity_key '{loc.get('entity_key')}'.",
+                    f"/locations/{idx}",
+                )
+            if loc.get("biological_state_key") not in bio_state_keys:
+                err(
+                    "location_missing_biological_state",
+                    f"Location '{loc.get('key', idx)}' references unknown biological_state_key '{loc.get('biological_state_key')}'.",
+                    f"/locations/{idx}",
+                )
+
+        for idx, viz in enumerate(_safe_list(payload_or_ir.get("process_visualizations"))):
+            if not isinstance(viz, dict):
+                continue
+            if viz.get("process_key") not in process_keys:
+                err(
+                    "visualization_missing_process",
+                    f"Process visualization '{viz.get('key', idx)}' references unknown process_key '{viz.get('process_key')}'.",
+                    f"/process_visualizations/{idx}",
+                )
+            if viz.get("biological_state_key") and viz.get("biological_state_key") not in bio_state_keys:
+                err(
+                    "visualization_missing_biological_state",
+                    f"Process visualization '{viz.get('key', idx)}' references unknown biological_state_key.",
+                    f"/process_visualizations/{idx}",
+                )
+            for midx, member in enumerate(_safe_list(viz.get("members"))):
+                if not isinstance(member, dict):
+                    continue
+                if member.get("location_key") and member.get("location_key") not in location_keys:
+                    err(
+                        "visualization_member_missing_location",
+                        f"Visualization member references unknown location_key '{member.get('location_key')}'.",
+                        f"/process_visualizations/{idx}/members/{midx}",
+                    )
+
+    error_codes = sorted({e["code"] for e in errors})
+    warning_codes = sorted({w["code"] for w in warnings})
+    return {
+        "ok": not errors,
+        "errors": errors,
+        "warnings": warnings,
+        "summary": {
+            "error_count": len(errors),
+            "warning_count": len(warnings),
+            "error_codes": error_codes,
+            "warning_codes": warning_codes,
+            "checked_as": "ir" if is_ir else "payload",
+        },
+    }
+
+
 def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
     errors: List[Dict[str, Any]] = []
     warnings: List[Dict[str, Any]] = []

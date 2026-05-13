@@ -30,7 +30,7 @@ from t2pw.mapping.grounding import apply_grounding
 from t2pw.curation.gap_resolver import run_gap_resolution
 from t2pw.curation.pathway_curator import run_pathway_curator
 from t2pw.sbml.json_to_sbml import build_sbml
-from t2pw.mapping.map_ids import run_mapping
+from t2pw.mapping.map_ids import run_mapping, PathBankDbResolver, resolve_mapping_gaps
 from t2pw.sbml.render_pathwhiz_like import build_render_artifacts
 from t2pw.pipeline.draft_graph_render import render_draft_graph_to_png_bytes
 from t2pw.sbml.strip_unmapped import strip_unmapped
@@ -67,7 +67,7 @@ from t2pw.pipeline.preprocessor import preprocess
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
 from t2pw.pwml.writer import DeterministicPwmlBuilder
-from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir
+from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, get_entities, node
 
@@ -174,6 +174,121 @@ def _save_pipeline_outputs(
 
 def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
+
+
+def _json_dump(value: Any) -> str:
+    return json.dumps(value, indent=2, ensure_ascii=False)
+
+
+def _json_artifact_entries(
+    post_artifacts: Optional[Dict[str, Any]],
+    pwml_result: Optional[Dict[str, Any]],
+) -> List[Tuple[str, str, Any]]:
+    entries: List[Tuple[str, str, Any]] = []
+    if isinstance(post_artifacts, dict):
+        for label, filename, key in [
+            ("Final merged output", "final.json", "final_payload_snapshot"),
+            ("Pre-normalized input", "pre_normalized_input.json", "pre_normalized_input"),
+            ("Final audited", "final.audited.json", "final_audited"),
+            ("Final mapped - DB mapping", "final.mapped.json", "final_mapped_db"),
+            ("Final export input", "final.export_input.json", "final_export_input"),
+            ("Mapping report", "mapping_report.json", "mapping_report"),
+            ("Enrichment report", "enrichment_report.json", "enrichment_report"),
+            ("Audit report", "audit_report.json", "audit_report"),
+            ("Audit apply report", "audit_apply_report.json", "audit_apply_report"),
+        ]:
+            value = post_artifacts.get(key)
+            if value not in (None, "", [], {}):
+                entries.append((label, filename, value))
+        if post_artifacts.get("gap_resolution_iterations"):
+            entries.append(
+                (
+                    "Stage 3 resolution iterations",
+                    "stage3_resolution_iterations.json",
+                    post_artifacts.get("gap_resolution_iterations"),
+                )
+            )
+    if isinstance(pwml_result, dict):
+        for label, filename, key in [
+            ("PWML IR", "final.pwml_ir.json", "pwml_ir"),
+            ("PWML IR report", "pwml_ir_report.json", "pwml_ir_report"),
+            ("PWML IR validation", "pwml_ir_validation.json", "pwml_ir_validation"),
+            ("PWML validation report", "pwml_validation_report.json", "validation_report"),
+            ("PWML QA", "pwml_qa.json", "qa"),
+        ]:
+            value = pwml_result.get(key)
+            if value not in (None, "", [], {}):
+                entries.append((label, filename, value))
+    return entries
+
+
+def render_json_artifact_compare(
+    post_artifacts: Optional[Dict[str, Any]],
+    pwml_result: Optional[Dict[str, Any]],
+    *,
+    key_prefix: str,
+) -> None:
+    entries = _json_artifact_entries(post_artifacts, pwml_result)
+    with st.expander("Compare JSON artifacts", expanded=False):
+        if not entries:
+            st.info("Run audit, DB mapping + PWML export to populate final.mapped.json and PWML IR here.")
+            return
+        labels = [entry[0] for entry in entries]
+        if len(entries) == 1:
+            selected_label = st.selectbox(
+                "Artifact",
+                labels,
+                index=0,
+                key=f"{key_prefix}_json_single",
+            )
+            entry_by_label = {label: (filename, value) for label, filename, value in entries}
+            filename, value = entry_by_label[selected_label]
+            st.download_button(
+                f"Download {filename}",
+                _json_dump(value),
+                file_name=filename,
+                mime="application/json",
+                key=f"{key_prefix}_json_single_download",
+            )
+            st.code(_json_dump(value), language="json")
+            return
+
+        default_right = labels.index("PWML IR") if "PWML IR" in labels else min(1, len(labels) - 1)
+        st.caption("Use this to inspect final.mapped.json beside the PWML IR or any report.")
+        col_left, col_right = st.columns(2)
+        left_label = col_left.selectbox(
+            "Left artifact",
+            labels,
+            index=labels.index("Final mapped - DB mapping") if "Final mapped - DB mapping" in labels else 0,
+            key=f"{key_prefix}_json_compare_left",
+        )
+        right_label = col_right.selectbox(
+            "Right artifact",
+            labels,
+            index=default_right,
+            key=f"{key_prefix}_json_compare_right",
+        )
+        entry_by_label = {label: (filename, value) for label, filename, value in entries}
+        left_filename, left_value = entry_by_label[left_label]
+        right_filename, right_value = entry_by_label[right_label]
+        with col_left:
+            st.download_button(
+                f"Download {left_filename}",
+                _json_dump(left_value),
+                file_name=left_filename,
+                mime="application/json",
+                key=f"{key_prefix}_json_compare_left_download",
+            )
+            st.code(_json_dump(left_value), language="json")
+        with col_right:
+            st.download_button(
+                f"Download {right_filename}",
+                _json_dump(right_value),
+                file_name=right_filename,
+                mime="application/json",
+                key=f"{key_prefix}_json_compare_right_download",
+            )
+            st.code(_json_dump(right_value), language="json")
 
 
 def _read_json(path: Path) -> Dict[str, Any]:
@@ -1096,6 +1211,8 @@ def run_post_pipeline_sbml_artifacts(
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
             "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
             "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
+            "final_mapped_db": json.loads(mapped_json.read_text(encoding="utf-8")),
+            "final_export_input": json.loads(sbml_input_path.read_text(encoding="utf-8")),
             "mapping_report": mapping_report,
             "enrichment_report": enrichment_report,
             "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8"))
@@ -1552,6 +1669,7 @@ if submit:
     st.session_state["stage_two_rounds"] = stage_two_rounds
     st.session_state["qa_hints"] = qa_hints
     st.session_state["final_payload"] = final_payload
+    st.session_state["final_payload_snapshot"] = final_payload
     st.session_state.pop("post_pipeline_artifacts", None)
     st.session_state["token_stats"] = llm_client_module.get_token_stats()
 
@@ -1581,14 +1699,15 @@ if st.session_state.get("pipeline_ready"):
             )
 
     st.subheader("Stage 1 - Strict extraction")
-    st.json(stage_one)
     st.caption(f"Stage 1 QA: {qa_summary_line(stage_one)}")
-    st.download_button(
-        "Download Stage 1 JSON",
-        json.dumps(stage_one, indent=2),
-        file_name="stage1_extract.json",
-        mime="application/json",
-    )
+    with st.expander("Stage 1 JSON", expanded=False):
+        st.json(stage_one)
+        st.download_button(
+            "Download Stage 1 JSON",
+            json.dumps(stage_one, indent=2),
+            file_name="stage1_extract.json",
+            mime="application/json",
+        )
 
     chunk_count = len(chunk_details)
     if chunk_count > 1:
@@ -1606,9 +1725,18 @@ if st.session_state.get("pipeline_ready"):
 
     if run_inference_from_state and isinstance(stage_two, dict):
         st.subheader("Stage 2 - Inference / enrichment")
-        st.json(stage_two)
-        if stage_two_rounds:
-            st.write("Stage 2 QA rounds", stage_two_rounds)
+        with st.expander("Stage 2 JSON", expanded=False):
+            st.json(stage_two)
+            if stage_two_rounds:
+                st.write("Stage 2 QA rounds", stage_two_rounds)
+            st.download_button(
+                "Download Stage 2 additions",
+                json.dumps(stage_two, indent=2),
+                file_name="stage2_additions.json",
+                mime="application/json",
+            )
+            if qa_hints:
+                st.write("QA hints", qa_hints)
         chunk_count = len(stage_two_chunks)
         if chunk_count > 1:
             st.info(
@@ -1627,24 +1755,17 @@ if st.session_state.get("pipeline_ready"):
                 st.markdown("**Chunk additions JSON**")
                 st.json(chunk["output"])
             render_attempts(f"{chunk_label} attempts", chunk["attempts"])
-        st.download_button(
-            "Download Stage 2 additions",
-            json.dumps(stage_two, indent=2),
-            file_name="stage2_additions.json",
-            mime="application/json",
-        )
-        if qa_hints:
-            st.write("QA hints", qa_hints)
 
     st.subheader("Final merged output")
-    st.json(final_payload)
     st.caption(f"Final QA: {qa_summary_line(final_payload)}")
-    st.download_button(
-        "Download merged JSON",
-        json.dumps(final_payload, indent=2),
-        file_name="pwml_pipeline_output.json",
-        mime="application/json",
-    )
+    with st.expander("Final merged JSON", expanded=False):
+        st.json(final_payload)
+        st.download_button(
+            "Download merged JSON",
+            json.dumps(final_payload, indent=2),
+            file_name="pwml_pipeline_output.json",
+            mime="application/json",
+        )
 
     st.subheader("Draft Graph")
     draft_graph_dict = st.session_state.get("draft_graph", {})
@@ -2073,11 +2194,19 @@ if st.session_state.get("pipeline_ready"):
         )
         st.download_button(
             "Download final.mapped.json",
-            json.dumps(post_artifacts["final_mapped"], indent=2),
+            json.dumps(post_artifacts.get("final_mapped_db", post_artifacts.get("final_mapped", {})), indent=2),
             file_name="final.mapped.json",
             mime="application/json",
             key="dl_final_mapped",
         )
+        if post_artifacts.get("final_export_input") and post_artifacts.get("final_export_input") != post_artifacts.get("final_mapped_db"):
+            st.download_button(
+                "Download final.export_input.json",
+                json.dumps(post_artifacts.get("final_export_input", {}), indent=2),
+                file_name="final.export_input.json",
+                mime="application/json",
+                key="dl_final_export_input",
+            )
         st.download_button(
             "Download mapping_report.json",
             json.dumps(post_artifacts["mapping_report"], indent=2),
@@ -2103,6 +2232,170 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
+    # ── DB Gap Resolution ─────────────────────────────────────────────────────
+    with st.expander("Resolve unmapped entities via DB", expanded=False):
+        st.caption(
+            "Runs every unmapped / ambiguous entity from the last pipeline mapping "
+            "through the DB lookup primitives and shows what resolves. "
+            "Uses the DB connection configured above."
+        )
+
+        _gap_db_host = st.session_state.get("post_db_host", os.getenv("PATHBANK_DB_HOST", ""))
+        _gap_db_port = int(st.session_state.get("post_db_port", int(os.getenv("PATHBANK_DB_PORT", "3306") or 3306)))
+        _gap_db_user = st.session_state.get("post_db_user", os.getenv("PATHBANK_DB_USER", ""))
+        _gap_db_pass = st.session_state.get("post_db_password", os.getenv("PATHBANK_DB_PASSWORD", ""))
+        _gap_db_schema = st.session_state.get("post_db_schema", os.getenv("PATHBANK_DB_SCHEMA", "pathbank"))
+
+        _gap_mr = (post_artifacts or {}).get("mapping_report", {})
+        _gap_entities_log = _gap_mr.get("entities", [])
+        _gap_targets = [
+            e for e in _gap_entities_log
+            if e.get("status") == "unmapped" or e.get("reason") == "ambiguous"
+        ]
+        _gap_payload = (post_artifacts or {}).get("final_mapped")
+
+        if not _gap_targets:
+            st.info("No unmapped or ambiguous entities from the last pipeline run.")
+        elif not _gap_db_host or not _gap_db_user:
+            st.warning("Configure DB host and user in the PathBank DB connection section above first.")
+        else:
+            st.write(f"**{len(_gap_targets)} entities to resolve** "
+                     f"({sum(1 for e in _gap_targets if e.get('status') == 'unmapped')} unmapped, "
+                     f"{sum(1 for e in _gap_targets if e.get('reason') == 'ambiguous')} ambiguous)")
+
+            if st.button("Run DB gap resolution", key="gap_resolve_btn"):
+                _gap_resolver = PathBankDbResolver(
+                    host=_gap_db_host,
+                    port=_gap_db_port,
+                    user=_gap_db_user,
+                    password=_gap_db_pass,
+                    schema=_gap_db_schema,
+                )
+                if not _gap_resolver.available():
+                    st.error(f"pymysql not available: {_gap_resolver.last_error}")
+                else:
+                    from t2pw.mapping.map_ids import _extract_global_organism
+                    _gap_organism = _extract_global_organism(_gap_payload) if isinstance(_gap_payload, dict) else ""
+                    try:
+                        _gap_out = resolve_mapping_gaps(
+                            _gap_payload or {},
+                            _gap_mr,
+                            _gap_resolver,
+                            global_organism=_gap_organism,
+                        )
+                    finally:
+                        _gap_resolver.close()
+
+                    _n_resolved = _gap_out["resolved_count"]
+                    _gap_rows = _gap_out["rows"]
+                    st.success(f"Resolved **{_n_resolved} / {_gap_out['total']}** entities via DB.")
+                    if _gap_resolver.last_error:
+                        st.warning(f"DB last_error: `{_gap_resolver.last_error}`")
+
+                    if _gap_rows:
+                        import pandas as _pd
+                        st.dataframe(
+                            _pd.DataFrame(_gap_rows).sort_values("resolved", ascending=False),
+                            use_container_width=True,
+                        )
+
+                    if _n_resolved > 0:
+                        st.download_button(
+                            f"Download patched payload ({_n_resolved} newly resolved)",
+                            json.dumps(_gap_out["patched_payload"], indent=2, ensure_ascii=False),
+                            file_name="final.mapped.gap_resolved.json",
+                            mime="application/json",
+                            key="dl_gap_resolved_payload",
+                        )
+
+    # ── Contract Audit ────────────────────────────────────────────────────────
+    # Hidden from UI — set _SHOW_CONTRACT_AUDIT = True to restore.
+    _SHOW_CONTRACT_AUDIT = False
+    if _SHOW_CONTRACT_AUDIT:
+        st.subheader("PWML Contract Audit")
+        st.caption(
+            "Run this before export to surface every required-field gap in the hydrated payload. "
+            "Errors block export; warnings are advisory."
+        )
+        _contract_audit_target = st.radio(
+            "Audit target",
+            ["Current payload (pre-IR)", "Last built IR"],
+            key="contract_audit_target",
+            horizontal=True,
+        )
+        if st.button("Run Contract Audit", key="run_contract_audit_btn"):
+            _audit_input: Optional[Dict[str, Any]] = None
+            if _contract_audit_target == "Last built IR":
+                _prev_result = st.session_state.get("pwml_export_result")
+                _audit_input = _safe_dict(_prev_result).get("pwml_ir") if isinstance(_prev_result, dict) else None
+                if not _audit_input:
+                    st.warning("No built IR found in session — run PWML export first, or audit the payload instead.")
+            else:
+                _audit_input = final_payload if isinstance(final_payload, dict) and final_payload else None
+                if not _audit_input:
+                    st.error("No pipeline payload in session. Run the pipeline first.")
+            if _audit_input:
+                _contract_report = validate_required_pwml_contract(_audit_input)
+                st.session_state["contract_audit_report"] = _contract_report
+        _contract_report = st.session_state.get("contract_audit_report")
+        if isinstance(_contract_report, dict):
+            _ca_summary = _safe_dict(_contract_report.get("summary"))
+            _ca_errors = _contract_report.get("errors", [])
+            _ca_warnings = _contract_report.get("warnings", [])
+            _ca_ok = _contract_report.get("ok", True)
+            _ca_checked_as = _ca_summary.get("checked_as", "unknown")
+            if _ca_ok and not _ca_warnings:
+                st.success(f"Contract audit passed ({_ca_checked_as}): no errors or warnings.")
+            elif _ca_ok:
+                st.warning(f"Contract audit passed with {len(_ca_warnings)} warning(s) ({_ca_checked_as}).")
+            else:
+                st.error(f"Contract audit FAILED: {len(_ca_errors)} error(s), {len(_ca_warnings)} warning(s) ({_ca_checked_as}).")
+            _audit_cols = st.columns(2)
+            with _audit_cols[0]:
+                st.markdown(f"**Error codes:** {', '.join(_ca_summary.get('error_codes', [])) or '—'}")
+            with _audit_cols[1]:
+                st.markdown(f"**Warning codes:** {', '.join(_ca_summary.get('warning_codes', [])) or '—'}")
+            if _ca_errors:
+                with st.expander(f"Errors ({len(_ca_errors)})", expanded=False):
+                    _err_by_code: Dict[str, List[Any]] = {}
+                    for _e in _ca_errors:
+                        _err_by_code.setdefault(_e.get("code", "unknown"), []).append(_e)
+                    for _code, _group in sorted(_err_by_code.items()):
+                        st.markdown(f"**{_code}** ({len(_group)})")
+                        for _issue in _group:
+                            _ptr = _issue.get("pointer", "")
+                            _extra = {k: v for k, v in _issue.items() if k not in ("code", "message", "pointer")}
+                            _detail = f"`{_ptr}` — " if _ptr else ""
+                            _detail += _issue.get("message", "")
+                            if _extra:
+                                _detail += f"  \n&nbsp;&nbsp;&nbsp;&nbsp;_{', '.join(f'{k}={v}' for k, v in _extra.items())}_"
+                            st.markdown(f"- {_detail}")
+            if _ca_warnings:
+                with st.expander(f"Warnings ({len(_ca_warnings)})", expanded=False):
+                    _warn_by_code: Dict[str, List[Any]] = {}
+                    for _w in _ca_warnings:
+                        _warn_by_code.setdefault(_w.get("code", "unknown"), []).append(_w)
+                    for _code, _group in sorted(_warn_by_code.items()):
+                        st.markdown(f"**{_code}** ({len(_group)})")
+                        for _issue in _group:
+                            _ptr = _issue.get("pointer", "")
+                            _extra = {k: v for k, v in _issue.items() if k not in ("code", "message", "pointer")}
+                            _detail = f"`{_ptr}` — " if _ptr else ""
+                            _detail += _issue.get("message", "")
+                            if _extra:
+                                _detail += f"  \n&nbsp;&nbsp;&nbsp;&nbsp;_{', '.join(f'{k}={v}' for k, v in _extra.items())}_"
+                            st.markdown(f"- {_detail}")
+            st.download_button(
+                "Download contract audit report",
+                data=json.dumps(_contract_report, indent=2),
+                file_name="contract_audit_report.json",
+                mime="application/json",
+                key="dl_contract_audit",
+            )
+
+    st.divider()
+
+    # ── PWML Export ───────────────────────────────────────────────────────────
     st.subheader("PWML Export")
 
     _project_root_pwml = PROJECT_ROOT
@@ -2189,10 +2482,11 @@ if st.session_state.get("pipeline_ready"):
                     st.session_state["qa_report"] = _pa["post_audit_qa_report"]
                 if _pa.get("post_audit_reaction_summary"):
                     st.session_state["reaction_summary"] = _pa["post_audit_reaction_summary"]
+                _pa["final_payload_snapshot"] = st.session_state.get("final_payload_snapshot", final_payload)
                 if bool(_pa.get("gate_failed", False)):
                     st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
                 else:
-                    _pwml_source_payload = _pa.get("final_mapped") or final_payload
+                    _pwml_source_payload = _pa.get("final_export_input") or _pa.get("final_mapped") or final_payload
                     with st.spinner("Building PWML..."):
                         _pwml_result = run_pwml_export(
                             _pwml_source_payload,
@@ -2218,7 +2512,7 @@ if st.session_state.get("pipeline_ready"):
         _ir_validation = _safe_dict(_pwml_result.get("pwml_ir_validation"))
         if _pwml_result.get("ok"):
             st.success(f"Written to: {_pwml_result.get('output_path')}")
-            with st.expander("PWML IR report", expanded=True):
+            with st.expander("PWML IR report", expanded=False):
                 st.write("IR counts", _ir_report.get("counts", {}))
                 st.write("IR validation", _ir_validation.get("counts", {}))
                 if _ir_report.get("errors"):
@@ -2238,7 +2532,7 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_pwml_ir_inline",
                 )
-            with st.expander("PWML XML validation and QA", expanded=True):
+            with st.expander("PWML XML validation and QA", expanded=False):
                 st.write("Counts", _pwml_result.get("counts", {}))
                 st.write("Structural validation issues", _pwml_result.get("issues", 0))
                 _qa = _pwml_result.get("qa", {})
@@ -2275,7 +2569,7 @@ if st.session_state.get("pipeline_ready"):
         else:
             st.error(f"PWML export failed: {_pwml_result.get('error', 'unknown')}")
             if _ir_report:
-                with st.expander("PWML IR report", expanded=True):
+                with st.expander("PWML IR report", expanded=False):
                     st.write("IR counts", _ir_report.get("counts", {}))
                     if _ir_report.get("errors"):
                         st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _ir_report["errors"]))
@@ -2308,6 +2602,16 @@ if st.session_state.get("pipeline_ready"):
     st.write(stats)
     if run_inference_from_state:
         st.write("Connectivity repair hints used for later rounds", build_qa_feedback(final_payload))
+
+    st.subheader("JSON Artifact Viewer")
+    _viewer_post_artifacts = st.session_state.get("post_pipeline_artifacts")
+    if not isinstance(_viewer_post_artifacts, dict):
+        _viewer_post_artifacts = {"final_payload_snapshot": final_payload}
+    render_json_artifact_compare(
+        _viewer_post_artifacts,
+        st.session_state.get("pwml_export_result"),
+        key_prefix="bottom_artifact_viewer",
+    )
 
     with st.expander("Legacy SBML Export", expanded=False):
         st.caption("SBML is a legacy export path. Use PWML above for primary output.")
