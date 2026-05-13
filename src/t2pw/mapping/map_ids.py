@@ -181,6 +181,41 @@ def _row_external_ids(row: Dict[str, Any], id_keys: List[Tuple[str, Tuple[str, .
     return out
 
 
+def _component_name(value: Any) -> str:
+    if isinstance(value, str):
+        return _canonical_name(value)
+    if not isinstance(value, dict):
+        return ""
+    return _canonical_name(
+        str(
+            value.get("name")
+            or value.get("protein")
+            or value.get("component")
+            or value.get("entity")
+            or value.get("gene")
+            or value.get("gene_name")
+            or ""
+        )
+    )
+
+
+def _component_stoichiometry(value: Any) -> int:
+    if isinstance(value, dict):
+        parsed = _to_positive_int(value.get("stoichiometry") or value.get("coefficient"))
+        if parsed:
+            return parsed
+    return 1
+
+
+def _component_mapped_ids(value: Any) -> Dict[str, Any]:
+    if not isinstance(value, dict):
+        return {}
+    return _merge_mapped_ids(
+        _safe_dict(value.get("mapped_ids")),
+        _row_external_ids(value, [("uniprot", ("uniprot_id",)), ("gene_name", ("gene",))]),
+    )
+
+
 def _with_resolution(
     result: Dict[str, Any],
     resolution_status: str,
@@ -231,12 +266,13 @@ class HttpClient:
 class MappingCache:
     def __init__(self, path: Path) -> None:
         self.path = path
-        self.data: Dict[str, Dict[str, Any]] = {"proteins": {}, "compounds": {}}
+        self.data: Dict[str, Dict[str, Any]] = {"proteins": {}, "compounds": {}, "complexes": {}}
         if path.exists():
             raw = json.loads(path.read_text(encoding="utf-8"))
             if isinstance(raw, dict):
                 self.data["proteins"] = _safe_dict(raw.get("proteins"))
                 self.data["compounds"] = _safe_dict(raw.get("compounds"))
+                self.data["complexes"] = _safe_dict(raw.get("complexes"))
 
     def get(self, section: str, key: str) -> Optional[Dict[str, Any]]:
         value = _safe_dict(self.data.get(section)).get(key)
@@ -504,6 +540,86 @@ class PathBankDbResolver:
             "candidates": candidates or [candidate],
         }
 
+    def _complex_component_rows(self, complex_id: int) -> List[Dict[str, Any]]:
+        if complex_id <= 0:
+            return []
+        rows = self._query(
+            (
+                "SELECT pcp.protein_id, p.name AS protein_name, p.uniprot_id, p.gene_name, p.species_id "
+                "FROM protein_complex_proteins pcp "
+                "JOIN proteins p ON p.id = pcp.protein_id "
+                "WHERE pcp.complex_id=%s"
+            ),
+            (complex_id,),
+        )
+        out: List[Dict[str, Any]] = []
+        for row in rows:
+            protein_id = int(row.get("protein_id") or 0)
+            if protein_id <= 0:
+                continue
+            component: Dict[str, Any] = {
+                "name": str(row.get("protein_name") or ""),
+                "pathbank_protein_id": protein_id,
+                "stoichiometry": 1,
+            }
+            uniprot = str(row.get("uniprot_id") or row.get("uniprot") or "").strip()
+            if uniprot:
+                component["uniprot"] = uniprot
+                component["mapped_ids"] = {"uniprot": uniprot, "pathbank_protein_id": str(protein_id)}
+            else:
+                component["mapped_ids"] = {"pathbank_protein_id": str(protein_id)}
+            gene_name = str(row.get("gene_name") or "").strip()
+            if gene_name:
+                component["gene_name"] = gene_name
+            species_id = _to_positive_int(row.get("species_id"))
+            if species_id:
+                component["species_id"] = species_id
+            out.append(component)
+        return out
+
+    def _complex_result_from_row(
+        self,
+        row: Dict[str, Any],
+        *,
+        confidence: float,
+        chosen_rule: str,
+        candidates: Optional[List[Dict[str, Any]]] = None,
+        components: Optional[List[Dict[str, Any]]] = None,
+    ) -> Dict[str, Any]:
+        cid = int(row.get("id") or row.get("pathbank_complex_id") or row.get("pathbank_protein_complex_id") or 0)
+        species_id = _to_positive_int(row.get("species_id"))
+        hydrated_components = components if components is not None else self._complex_component_rows(cid)
+        candidate = {
+            "pathbank_complex_id": cid,
+            "pathbank_protein_complex_id": cid,
+            "name": str(row.get("name") or ""),
+            "species_id": species_id,
+            "score": round(confidence, 4),
+            "component_count": len(hydrated_components),
+        }
+        issues: List[Dict[str, Any]] = []
+        if not hydrated_components:
+            issues.append(
+                {
+                    "issue": "protein_complex_missing_components",
+                    "reason": "mapped_complex_has_no_components",
+                    "pathbank_protein_complex_id": cid,
+                }
+            )
+        return {
+            "status": "mapped",
+            "provider": "PathBankDB",
+            "source": "db",
+            "pathbank_complex_id": cid,
+            "pathbank_protein_complex_id": cid,
+            "species_id": species_id,
+            "components": hydrated_components,
+            "confidence": float(confidence),
+            "chosen_rule": chosen_rule,
+            "candidates": candidates or [candidate],
+            "issues": issues,
+        }
+
     def _map_compound_by_pathbank_id(self, pathbank_id: str) -> Dict[str, Any]:
         cid_text = str(pathbank_id or "").strip()
         if not cid_text:
@@ -564,6 +680,26 @@ class PathBankDbResolver:
         if not rows:
             return {"status": "unmapped", "reason": "no_db_match", "provider": "PathBankDB", "source": "db", "candidates": []}
         return self._protein_result_from_row(rows[0], confidence=1.0, chosen_rule="pathbank_protein_id")
+
+    def _map_complex_by_pathbank_id(self, pathbank_id: str) -> Dict[str, Any]:
+        cid_text = str(pathbank_id or "").strip()
+        if not cid_text:
+            return {"status": "unmapped", "reason": "no_id_provided", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+        rows = self._query(
+            "SELECT id, name, species_id FROM protein_complexes WHERE id=%s LIMIT 2",
+            (cid_text,),
+        )
+        if not rows:
+            return {
+                "status": "unmapped",
+                "reason": "no_db_match",
+                "provider": "PathBankDB",
+                "source": "db",
+                "candidates": [],
+                "chosen_rule": "pathbank_protein_complex_id",
+                "confidence": 0.0,
+            }
+        return self._complex_result_from_row(rows[0], confidence=1.0, chosen_rule="pathbank_protein_complex_id")
 
     def find_species(
         self,
@@ -1342,6 +1478,8 @@ class PathBankDbResolver:
             return {
                 "status": "unmapped",
                 "reason": "species_required",
+                "provider": "PathBankDB",
+                "source": "db",
                 "candidates": [],
                 "chosen_rule": "",
                 "confidence": 0.0,
@@ -1351,6 +1489,8 @@ class PathBankDbResolver:
             return {
                 "status": "unmapped",
                 "reason": f"species_not_found:{species}",
+                "provider": "PathBankDB",
+                "source": "db",
                 "candidates": [],
                 "chosen_rule": "",
                 "confidence": 0.0,
@@ -1388,29 +1528,41 @@ class PathBankDbResolver:
                     if not existing or score > float(existing.get("score", 0.0)):
                         by_id[cid] = {
                             "pathbank_complex_id": cid,
+                            "pathbank_protein_complex_id": cid,
                             "name": db_name,
                             "species_id": row_sp,
                             "score": score,
                         }
         candidates = sorted(by_id.values(), key=lambda c: c["score"], reverse=True)
         if not candidates:
-            return {"status": "unmapped", "reason": "no_db_match", "candidates": [], "chosen_rule": "", "confidence": 0.0}
+            return {
+                "status": "unmapped",
+                "reason": "no_db_match",
+                "provider": "PathBankDB",
+                "source": "db",
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+            }
         best = candidates[0]
         second = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
         best_score = float(best["score"])
         if best_score >= 0.8 and best_score >= second + 0.05:
-            return {
-                "status": "mapped",
-                "provider": "PathBankDB",
-                "source": "db",
-                "pathbank_complex_id": best["pathbank_complex_id"],
-                "confidence": best_score,
-                "chosen_rule": "top_unique_complex_candidate",
-                "candidates": candidates[:10],
-            }
+            return self._complex_result_from_row(
+                {
+                    "id": best["pathbank_complex_id"],
+                    "name": best.get("name", ""),
+                    "species_id": best.get("species_id"),
+                },
+                confidence=best_score,
+                chosen_rule="top_unique_complex_candidate",
+                candidates=candidates[:10],
+            )
         return {
             "status": "unmapped",
             "reason": "ambiguous" if candidates else "no_db_match",
+            "provider": "PathBankDB",
+            "source": "db",
             "confidence": best_score,
             "chosen_rule": "",
             "candidates": candidates[:10],
@@ -1501,6 +1653,264 @@ class PathBankDbResolver:
             "chosen_rule": "component_join_lookup",
             "confidence": 0.9 if candidates else 0.0,
         }
+
+    def _find_complexes_by_component_protein_id(self, protein_id: int, species_ids: List[int]) -> List[Dict[str, Any]]:
+        if protein_id <= 0 or not species_ids:
+            return []
+        sp_marks = ", ".join(["%s"] * len(species_ids))
+        rows = self._query(
+            (
+                "SELECT pc.id, pc.name, pc.species_id "
+                "FROM protein_complexes pc "
+                "JOIN protein_complex_proteins pcp ON pcp.complex_id = pc.id "
+                f"WHERE pcp.protein_id=%s AND pc.species_id IN ({sp_marks}) "
+                "LIMIT 80"
+            ),
+            (protein_id,) + tuple(species_ids),
+        )
+        candidates: List[Dict[str, Any]] = []
+        for row in rows:
+            cid = int(row.get("id") or 0)
+            if cid <= 0:
+                continue
+            candidates.append(
+                {
+                    "pathbank_complex_id": cid,
+                    "pathbank_protein_complex_id": cid,
+                    "name": str(row.get("name") or ""),
+                    "species_id": int(row.get("species_id") or 0),
+                    "component_protein_id": protein_id,
+                    "score": 0.9,
+                }
+            )
+        return candidates
+
+    def _resolve_complex_components(self, row: Dict[str, Any], species: str) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        resolved: List[Dict[str, Any]] = []
+        issues: List[Dict[str, Any]] = []
+        for idx, raw_component in enumerate(_safe_list(row.get("components"))):
+            name = _component_name(raw_component)
+            if not name:
+                issues.append({"issue": "component_missing_name", "component_index": idx})
+                continue
+            component_row = dict(raw_component) if isinstance(raw_component, dict) else {"name": name}
+            component_row["name"] = name
+            component_ids = _component_mapped_ids(component_row)
+            if component_ids:
+                component_row["mapped_ids"] = component_ids
+            protein_result: Dict[str, Any]
+            pathbank_id = _first_row_value(component_row, "pathbank_protein_id", "pw_protein_id", "pathwhiz_id")
+            if pathbank_id:
+                protein_result = self._map_protein_by_pathbank_id(pathbank_id)
+            elif component_ids.get("uniprot"):
+                protein_result = self.map_protein_by_ids(component_ids, species=species or None)
+            elif species:
+                protein_result = self.map_protein_row(component_row, species)
+            else:
+                protein_result = {
+                    "status": "unmapped",
+                    "reason": "needs_species",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "candidates": [],
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                }
+
+            hydrated: Dict[str, Any] = {
+                "name": name,
+                "stoichiometry": _component_stoichiometry(raw_component),
+                "mapping_status": str(protein_result.get("status") or "unmapped"),
+                "mapping_rule": str(protein_result.get("chosen_rule") or ""),
+            }
+            if protein_result.get("pathbank_protein_id"):
+                hydrated["pathbank_protein_id"] = int(protein_result["pathbank_protein_id"])
+            mapped_ids = _merge_mapped_ids(component_ids, _safe_dict(protein_result.get("mapped_ids")))
+            if mapped_ids:
+                hydrated["mapped_ids"] = mapped_ids
+            if protein_result.get("status") == "mapped":
+                resolved.append(hydrated)
+            else:
+                hydrated["reason"] = str(protein_result.get("reason") or "unmapped_component")
+                issues.append(
+                    {
+                        "issue": "component_protein_unresolved",
+                        "component": name,
+                        "component_index": idx,
+                        "reason": hydrated["reason"],
+                    }
+                )
+                resolved.append(hydrated)
+        return resolved, issues
+
+    def map_protein_complex_row(self, row: Dict[str, Any], species: str) -> Dict[str, Any]:
+        """Complex resolution order: direct ID, name/species, component/species, novel from resolved components."""
+        name = _canonical_name(str(row.get("name") or ""))
+        pathbank_id = _first_row_value(
+            row,
+            "pathbank_protein_complex_id",
+            "pathbank_complex_id",
+            "pw_complex_id",
+            "pathwhiz_id",
+        )
+        input_components, component_issues = self._resolve_complex_components(row, species)
+
+        if pathbank_id:
+            result = self._map_complex_by_pathbank_id(pathbank_id)
+            if result.get("status") == "mapped":
+                if not _safe_list(result.get("components")) and input_components:
+                    result["components"] = input_components
+                    result["issues"] = [i for i in _safe_list(result.get("issues")) if i.get("issue") != "protein_complex_missing_components"]
+                return _with_resolution(result, "matched", order_step="pathbank_protein_complex_id")
+
+        if not species:
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": "needs_species",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                    "candidates": [],
+                    "components": input_components,
+                    "issues": component_issues,
+                },
+                "unresolved",
+                issue="needs_species",
+            )
+
+        species_ids = self._find_species_ids(species)
+        if not species_ids:
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": f"species_not_found:{species}",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                    "candidates": [],
+                    "components": input_components,
+                    "issues": component_issues,
+                },
+                "unresolved",
+                issue="species_not_found",
+            )
+
+        if name:
+            by_name = self.map_protein_complex(name, species)
+            if by_name.get("status") == "mapped":
+                if not _safe_list(by_name.get("components")) and input_components:
+                    by_name["components"] = input_components
+                    by_name["issues"] = [
+                        i for i in _safe_list(by_name.get("issues")) if i.get("issue") != "protein_complex_missing_components"
+                    ]
+                by_name["issues"] = _safe_list(by_name.get("issues")) + component_issues
+                return _with_resolution(by_name, "matched", order_step="complex_name_species")
+            if by_name.get("reason") == "ambiguous":
+                by_name["components"] = input_components
+                by_name["issues"] = component_issues
+                return _with_resolution(by_name, "ambiguous", issue="ambiguous_complex_name_species", order_step="complex_name_species")
+
+        resolved_component_ids = [
+            parsed
+            for parsed in (_to_positive_int(component.get("pathbank_protein_id")) for component in input_components)
+            if parsed
+        ]
+        by_complex_id: Dict[int, Dict[str, Any]] = {}
+        for protein_id in resolved_component_ids:
+            for candidate in self._find_complexes_by_component_protein_id(protein_id, species_ids):
+                cid = int(candidate.get("pathbank_complex_id") or 0)
+                if cid <= 0:
+                    continue
+                score = 0.82
+                if name:
+                    score = max(0.55, min(0.98, 0.35 + 0.55 * _jaccard(name, str(candidate.get("name") or ""))))
+                    if _normalize_name(name) == _normalize_name(str(candidate.get("name") or "")):
+                        score = 0.98
+                candidate["score"] = round(score, 4)
+                existing = by_complex_id.get(cid)
+                if not existing or float(candidate["score"]) > float(existing.get("score", 0.0)):
+                    by_complex_id[cid] = candidate
+        component_candidates = sorted(by_complex_id.values(), key=lambda c: c["score"], reverse=True)
+        if component_candidates:
+            best = component_candidates[0]
+            second = float(component_candidates[1].get("score", 0.0)) if len(component_candidates) > 1 else 0.0
+            best_score = float(best.get("score", 0.0))
+            if len(component_candidates) == 1 or (best_score >= 0.72 and best_score >= second + 0.08):
+                result = self._complex_result_from_row(
+                    {
+                        "id": best["pathbank_complex_id"],
+                        "name": best.get("name", ""),
+                        "species_id": best.get("species_id"),
+                    },
+                    confidence=best_score,
+                    chosen_rule="resolved_component_species",
+                    candidates=component_candidates[:10],
+                )
+                if not _safe_list(result.get("components")) and input_components:
+                    result["components"] = input_components
+                    result["issues"] = [
+                        i for i in _safe_list(result.get("issues")) if i.get("issue") != "protein_complex_missing_components"
+                    ]
+                result["issues"] = _safe_list(result.get("issues")) + component_issues
+                return _with_resolution(result, "matched", order_step="resolved_component_species")
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": "ambiguous",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": float(component_candidates[0].get("score", 0.0)),
+                    "chosen_rule": "resolved_component_species",
+                    "candidates": component_candidates[:10],
+                    "components": input_components,
+                    "issues": component_issues,
+                },
+                "ambiguous",
+                issue="ambiguous_component_complex_species",
+                order_step="resolved_component_species",
+            )
+
+        if resolved_component_ids:
+            species_id = species_ids[0] if species_ids else None
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": "novel_complex",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "novel_complex_from_resolved_components",
+                    "candidates": [],
+                    "species_id": species_id,
+                    "components": input_components,
+                    "issues": component_issues,
+                },
+                "novel",
+                issue="no_db_candidates",
+                order_step="novel_complex_from_resolved_components",
+            )
+
+        issues = component_issues[:]
+        if not _safe_list(row.get("components")):
+            issues.append({"issue": "protein_complex_missing_components", "reason": "no_components_provided"})
+        return _with_resolution(
+            {
+                "status": "unmapped",
+                "reason": "no_components" if not _safe_list(row.get("components")) else "component_proteins_unresolved",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 0.0,
+                "chosen_rule": "",
+                "candidates": [],
+                "components": input_components,
+                "issues": issues,
+            },
+            "unresolved",
+            issue="no_components" if not _safe_list(row.get("components")) else "component_proteins_unresolved",
+        )
 
     def map_compound(self, name: str) -> Dict[str, Any]:
         variants = _name_variants(name, max_variants=4)
@@ -2902,6 +3312,70 @@ def _map_compound_with_strategy(
     )
 
 
+def _map_complex_with_strategy(
+    *,
+    id_source: str,
+    db: Optional[PathBankDbResolver],
+    cache: MappingCache,
+    name: str,
+    organism: str,
+    complex_row: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    row = _safe_dict(complex_row)
+    pathbank_id = _first_row_value(row, "pathbank_protein_complex_id", "pathbank_complex_id", "pw_complex_id", "pathwhiz_id")
+    component_key = json.dumps(
+        [
+            {
+                "name": _component_name(component),
+                "stoichiometry": _component_stoichiometry(component),
+                "ids": _component_mapped_ids(component),
+            }
+            for component in _safe_list(row.get("components"))
+        ],
+        sort_keys=True,
+    )
+    base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}::{pathbank_id}::{component_key}"
+    db_key = f"db::{base_key}"
+
+    if id_source in {"db", "hybrid"}:
+        db_result = cache.get("complexes", db_key)
+        if db_result is None:
+            if db and db.available():
+                db_result = db.map_protein_complex_row(row or {"name": name}, organism)
+            else:
+                db_reason = db.last_error if db else "db_not_configured"
+                db_result = {
+                    "status": "unmapped",
+                    "reason": f"db_unavailable:{db_reason}",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                    "candidates": [],
+                    "components": _safe_list(row.get("components")),
+                    "issues": [],
+                }
+                _with_resolution(db_result, "unresolved", issue="db_unavailable")
+            cache.set("complexes", db_key, db_result)
+        return db_result
+
+    return _with_resolution(
+        {
+            "status": "unmapped",
+            "reason": "complex_db_mapping_disabled",
+            "provider": "none",
+            "source": "none",
+            "confidence": 0.0,
+            "chosen_rule": "",
+            "candidates": [],
+            "components": _safe_list(row.get("components")),
+            "issues": [],
+        },
+        "unresolved",
+        issue="complex_db_mapping_disabled",
+    )
+
+
 def run_mapping(
     input_path: Path,
     output_path: Path,
@@ -2953,6 +3427,8 @@ def run_mapping(
     protein_complexes_skipped = 0
     protein_complexes_mapped = 0
     protein_complexes_ambiguous = 0
+    protein_complexes_novel = 0
+    protein_complexes_gap_issues = 0
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -3055,19 +3531,16 @@ def run_mapping(
             or ""
         )
         organism = organism.strip() if isinstance(organism, str) else ""
-        result: Dict[str, Any] = {
-            "status": "unmapped",
-            "reason": "complex_external_mapping_skipped",
-            "provider": "none",
-            "source": "none",
-            "candidates": [],
-            "confidence": 0.0,
-            "chosen_rule": "skip_external_mapping_for_complex",
-        }
-        if source_mode in {"db", "hybrid"} and db and db.available():
-            result = db.map_protein_complex(name, organism)
-            result.setdefault("provider", "PathBankDB")
-            result.setdefault("source", "db")
+        result = _map_complex_with_strategy(
+            id_source=source_mode,
+            db=db,
+            cache=cache,
+            name=name,
+            organism=organism,
+            complex_row=complex_row,
+        )
+        result.setdefault("provider", "PathBankDB" if result.get("source") == "db" else "none")
+        result.setdefault("source", "db" if result.get("provider") == "PathBankDB" else "none")
         complex_row.setdefault("mapping_meta", {})
         complex_row["mapping_meta"]["route"] = "complex"
         complex_row["mapping_meta"]["query"] = {"name": name, "organism": organism}
@@ -3077,20 +3550,36 @@ def run_mapping(
         complex_row["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0) or 0.0)
         complex_row["mapping_meta"]["candidates"] = result.get("candidates", [])
         complex_row["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
+        complex_row["mapping_meta"]["issues"] = _safe_list(result.get("issues"))
+        if _safe_list(result.get("issues")):
+            protein_complexes_gap_issues += len(_safe_list(result.get("issues")))
+        if result.get("species_id"):
+            complex_row["species_id"] = int(result["species_id"])
+            complex_row["mapping_meta"]["species_id"] = int(result["species_id"])
+        if _safe_list(result.get("components")):
+            complex_row["components"] = result["components"]
 
         if result.get("status") == "mapped":
             protein_complexes_mapped += 1
             if result.get("pathbank_complex_id"):
                 complex_row["pathbank_complex_id"] = int(result["pathbank_complex_id"])
                 complex_row["mapping_meta"]["pathbank_complex_id"] = int(result["pathbank_complex_id"])
+            if result.get("pathbank_protein_complex_id"):
+                complex_row["pathbank_protein_complex_id"] = int(result["pathbank_protein_complex_id"])
+                complex_row["mapping_meta"]["pathbank_protein_complex_id"] = int(result["pathbank_protein_complex_id"])
             complex_status = "mapped"
             complex_reason = ""
         else:
-            if str(result.get("reason") or "") == "ambiguous":
+            resolution_status = str(_safe_dict(result.get("resolution")).get("status") or "")
+            if str(result.get("reason") or "") == "ambiguous" or resolution_status == "ambiguous":
                 protein_complexes_ambiguous += 1
+            if resolution_status == "novel":
+                protein_complexes_novel += 1
+                if result.get("species_id"):
+                    complex_row["species_id"] = int(result["species_id"])
             protein_complexes_skipped += 1
             complex_status = "unmapped"
-            complex_reason = str(result.get("reason") or "complex_external_mapping_skipped")
+            complex_reason = str(result.get("reason") or _safe_dict(result.get("resolution")).get("issue") or "complex_unresolved")
         logs.append(
             {
                 "entity_type": "protein_complex",
@@ -3105,6 +3594,7 @@ def run_mapping(
                 "provider": str(result.get("provider") or "none"),
                 "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
                 "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
+                "gap_issues": _safe_list(result.get("issues")),
             }
         )
 
@@ -3157,11 +3647,12 @@ def run_mapping(
             compounds_skipped_as_complex += 1
             result = {
                 "status": "unmapped",
-                "reason": "complex_external_mapping_skipped",
-                "provider": "none",
-                "source": "none",
+                "reason": "routed_to_complex_entity",
+                "provider": "PathBankDB",
+                "source": "db",
                 "candidates": [],
             }
+            _with_resolution(result, "unresolved", issue="compound_row_is_complex")
 
         compound.setdefault("mapping_meta", {})
         compound["mapping_meta"]["query"] = {"name": name}
@@ -3244,7 +3735,9 @@ def run_mapping(
         "compounds_skipped_as_complex": compounds_skipped_as_complex,
         "protein_complexes_total": protein_complexes_total,
         "protein_complexes_mapped": protein_complexes_mapped,
+        "protein_complexes_novel": protein_complexes_novel,
         "protein_complexes_ambiguous": protein_complexes_ambiguous,
+        "protein_complexes_gap_issues": protein_complexes_gap_issues,
         "protein_complexes_skipped": protein_complexes_skipped,
         "complexes_skipped": compounds_skipped_as_complex + protein_complexes_skipped,
         "species_hydrated": int(species_report.get("hydrated", 0)),
@@ -3332,7 +3825,8 @@ def resolve_mapping_gaps(
             elif etype == "compound":
                 result = db.map_compound_by_name(name)
             elif etype == "protein_complex":
-                result = db.map_protein_complex(name, organism)
+                complex_row = next((pc for pc in protein_complexes_list if isinstance(pc, dict) and pc.get("name") == name), None)
+                result = db.map_protein_complex_row(_safe_dict(complex_row) or {"name": name}, organism)
             else:
                 result = db.map_compound_by_name(name)
         except Exception as exc:  # noqa: BLE001
@@ -3380,9 +3874,18 @@ def resolve_mapping_gaps(
                 if isinstance(pc, dict) and pc.get("name") == name:
                     pc.setdefault("mapping_meta", {})["db_gap_resolved"] = True
                     pc["mapping_meta"]["confidence"] = result.get("confidence")
+                    pc["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
+                    pc["mapping_meta"]["issues"] = _safe_list(result.get("issues"))
+                    if result.get("species_id"):
+                        pc["species_id"] = int(result["species_id"])
                     if result.get("pathbank_complex_id"):
                         pc["pathbank_complex_id"] = int(result["pathbank_complex_id"])
                         pc["mapping_meta"]["pathbank_complex_id"] = int(result["pathbank_complex_id"])
+                    if result.get("pathbank_protein_complex_id"):
+                        pc["pathbank_protein_complex_id"] = int(result["pathbank_protein_complex_id"])
+                        pc["mapping_meta"]["pathbank_protein_complex_id"] = int(result["pathbank_protein_complex_id"])
+                    if _safe_list(result.get("components")):
+                        pc["components"] = result["components"]
 
     return {
         "resolved_count": resolved_count,
