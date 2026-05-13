@@ -1,39 +1,78 @@
 {
   "summary": {
-    "total_species": 6,
+    "total_species": 9,
     "total_reactions": 1,
-    "completeness_score": 0.143
+    "completeness_score": 0.0
   },
   "flags": {
-    "missing_compartments": [],
+    "missing_compartments": [
+      {
+        "entity": "succinate dehydrogenase complex",
+        "reason": "no subcellular location recorded"
+      }
+    ],
     "missing_modifiers": [],
-    "possible_complexes": [],
+    "possible_complexes": [
+      {
+        "entity": "succinate dehydrogenase complex",
+        "reason": "name suggests a complex or subunit"
+      }
+    ],
     "transport_like_reactions": [],
-    "orphan_nodes": [],
+    "orphan_nodes": [
+      {
+        "entity": "SDHA",
+        "degree": 0
+      },
+      {
+        "entity": "SDHB",
+        "degree": 0
+      },
+      {
+        "entity": "SDHC",
+        "degree": 0
+      },
+      {
+        "entity": "SDHD",
+        "degree": 0
+      }
+    ],
     "missing_ids": [
       {
-        "entity": "Glucose",
+        "entity": "succinate",
         "type": "compound"
       },
       {
-        "entity": "ATP",
+        "entity": "fumarate",
         "type": "compound"
       },
       {
-        "entity": "Glucose-6-phosphate",
+        "entity": "ubiquinone",
         "type": "compound"
       },
       {
-        "entity": "ADP",
+        "entity": "ubiquinol",
         "type": "compound"
       },
       {
-        "entity": "H⁺",
-        "type": "compound"
-      },
-      {
-        "entity": "Hexokinase",
+        "entity": "SDHA",
         "type": "protein"
+      },
+      {
+        "entity": "SDHB",
+        "type": "protein"
+      },
+      {
+        "entity": "SDHC",
+        "type": "protein"
+      },
+      {
+        "entity": "SDHD",
+        "type": "protein"
+      },
+      {
+        "entity": "succinate dehydrogenase complex",
+        "type": "protein_complex"
       }
     ],
     "empty_reactions": [],

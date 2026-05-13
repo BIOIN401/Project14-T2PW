@@ -2,108 +2,129 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 7,
-    "edge_count": 6
+    "node_count": 10,
+    "edge_count": 5
   },
   "nodes": [
     {
-      "id": "compound:glucose",
-      "label": "Glucose",
+      "id": "compound:succinate",
+      "label": "succinate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "human mitochondrial inner membrane state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:atp",
-      "label": "ATP",
+      "id": "compound:fumarate",
+      "label": "fumarate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "human mitochondrial inner membrane state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:glucose-6-phosphate",
-      "label": "Glucose-6-phosphate",
+      "id": "compound:ubiquinone",
+      "label": "ubiquinone",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "human mitochondrial inner membrane state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:adp",
-      "label": "ADP",
+      "id": "compound:ubiquinol",
+      "label": "ubiquinol",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "human mitochondrial inner membrane state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:h⁺",
-      "label": "H⁺",
-      "kind": "compound",
-      "cls": "ion",
-      "compartment": "cytosolic state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:hexokinase",
-      "label": "Hexokinase",
+      "id": "protein:sdha",
+      "label": "SDHA",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state",
+      "compartment": "human mitochondrial inner membrane state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:hexokinase reaction",
-      "label": "Hexokinase reaction",
+      "id": "protein:sdhb",
+      "label": "SDHB",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "human mitochondrial inner membrane state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:sdhc",
+      "label": "SDHC",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "human mitochondrial inner membrane state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:sdhd",
+      "label": "SDHD",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "human mitochondrial inner membrane state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein_complex:succinate dehydrogenase complex",
+      "label": "succinate dehydrogenase complex",
+      "kind": "protein_complex",
+      "cls": "protein_complex",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:succinate dehydrogenase complex reaction",
+      "label": "succinate dehydrogenase complex reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "human mitochondrial inner membrane state",
       "confidence": 1.0,
       "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:glucose",
-      "target": "reaction:hexokinase reaction",
+      "source": "compound:succinate",
+      "target": "reaction:succinate dehydrogenase complex reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:atp",
-      "target": "reaction:hexokinase reaction",
+      "source": "compound:ubiquinone",
+      "target": "reaction:succinate dehydrogenase complex reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:glucose-6-phosphate",
+      "source": "reaction:succinate dehydrogenase complex reaction",
+      "target": "compound:fumarate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:adp",
+      "source": "reaction:succinate dehydrogenase complex reaction",
+      "target": "compound:ubiquinol",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:h⁺",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:hexokinase",
-      "target": "reaction:hexokinase reaction",
+      "source": "protein_complex:succinate dehydrogenase complex",
+      "target": "reaction:succinate dehydrogenase complex reaction",
       "role": "catalyst",
       "confidence": 1.0
     }
