@@ -1,28 +1,20 @@
 {
   "summary": {
-    "total_species": 6,
-    "total_reactions": 1,
+    "total_species": 3,
+    "total_reactions": 0,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "MPC complex",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "pyruvate dehydrogenase complex",
+        "entity": "mitochondrial pyruvate carrier complex",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [
       {
-        "entity": "MPC complex",
-        "reason": "name suggests a complex or subunit"
-      },
-      {
-        "entity": "pyruvate dehydrogenase complex",
+        "entity": "mitochondrial pyruvate carrier complex",
         "reason": "name suggests a complex or subunit"
       }
     ],
@@ -30,10 +22,6 @@
     "orphan_nodes": [
       {
         "entity": "MPC1",
-        "degree": 0
-      },
-      {
-        "entity": "MPC2",
         "degree": 0
       }
     ],
@@ -43,23 +31,11 @@
         "type": "compound"
       },
       {
-        "entity": "acetyl-CoA",
-        "type": "compound"
-      },
-      {
         "entity": "MPC1",
         "type": "protein"
       },
       {
-        "entity": "MPC2",
-        "type": "protein"
-      },
-      {
-        "entity": "MPC complex",
-        "type": "protein_complex"
-      },
-      {
-        "entity": "pyruvate dehydrogenase complex",
+        "entity": "mitochondrial pyruvate carrier complex",
         "type": "protein_complex"
       }
     ],

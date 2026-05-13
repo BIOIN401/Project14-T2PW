@@ -1,15 +1,9 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: pyruvate dehydrogenase reaction
-  Reactants: pyruvate [cytosolic state]
-  Products:  acetyl-CoA [mitochondrial matrix state]
-  Modifier:  pyruvate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
-  QA flags:  none
-
-TRANSPORT 1: MPC-mediated pyruvate transport
-  From: cytosolic state
-  To:   mitochondrial matrix state
-  Cargo: pyruvate [cytosolic state]
-  Transporter: MPC complex [unknown] (role=transporter, confidence=1.0)
-  QA flags:  possible_complex — MPC complex not represented as protein_complex
+TRANSPORT 1: pyruvate import into mitochondrion
+  From: human cytosol
+  To:   human mitochondrial matrix
+  Cargo: pyruvate [human cytosol]
+  Transporter: mitochondrial pyruvate carrier complex [unknown] (role=transporter, confidence=1.0)
+  QA flags:  possible_complex — mitochondrial pyruvate carrier complex not represented as protein_complex
