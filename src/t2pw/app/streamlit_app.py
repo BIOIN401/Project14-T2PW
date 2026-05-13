@@ -2649,6 +2649,8 @@ if st.session_state.get("pipeline_ready"):
                 st.success("Legacy SBML export completed.")
             except Exception as exc:
                 st.error(f"Legacy SBML export failed: {exc}")
+        if not isinstance(post_artifacts, dict):
+            post_artifacts = {}
         if post_artifacts.get("sbml_xml_bytes"):
             st.download_button(
                 "Download pathway.sbml",
