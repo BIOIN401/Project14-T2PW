@@ -1255,88 +1255,196 @@ def _get_enrichment_system_prompt() -> str:
 # Agentic enrichment — tool schemas and prompt loader
 # ---------------------------------------------------------------------------
 
+def _function_tool(
+    name: str,
+    description: str,
+    properties: Dict[str, Any],
+    required: List[str],
+) -> Dict[str, Any]:
+    parameters: Dict[str, Any] = {
+        "type": "object",
+        "properties": properties,
+    }
+    if required:
+        parameters["required"] = required
+    return {
+        "type": "function",
+        "function": {
+            "name": name,
+            "description": description,
+            "parameters": parameters,
+        },
+    }
+
+
+_ID_OBJECT_SCHEMA: Dict[str, Any] = {
+    "type": "object",
+    "description": "Known identifiers supplied by the payload. Do not invent IDs.",
+    "additionalProperties": {"type": "string"},
+}
+
+
 _ENRICHMENT_TOOLS: List[Dict[str, Any]] = [
-    {
-        "type": "function",
-        "function": {
-            "name": "lookup_compound",
-            "description": "Look up external database IDs (HMDB, KEGG, ChEBI, PubChem) for a compound by name",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string", "description": "Compound name to look up"},
-                },
-                "required": ["name"],
+    _function_tool(
+        "lookup_species",
+        "Return PathBank species candidates by name and/or taxonomy ID. This lookup returns candidates only.",
+        {
+            "name": {"type": "string", "description": "Species or organism name", "default": ""},
+            "taxonomy_id": {"type": "string", "description": "NCBI taxonomy ID if present", "default": ""},
+        },
+        [],
+    ),
+    _function_tool(
+        "lookup_subcellular_location",
+        "Return PathBank subcellular location candidates by name. This lookup returns candidates only.",
+        {"name": {"type": "string", "description": "Subcellular location name or synonym"}},
+        ["name"],
+    ),
+    _function_tool(
+        "lookup_biological_state",
+        "Return PathBank biological state candidates for species + subcellular location, optionally narrowed by cell type/tissue.",
+        {
+            "species": {"type": "string", "description": "Species name"},
+            "subcellular_location": {"type": "string", "description": "Subcellular location name"},
+            "cell_type": {"type": "string", "description": "Optional cell type", "default": ""},
+            "tissue": {"type": "string", "description": "Optional tissue", "default": ""},
+        },
+        ["species", "subcellular_location"],
+    ),
+    _function_tool(
+        "lookup_compound_db",
+        "Return PathBank compound candidates from DB IDs first, then name/synonym/fuzzy search. This lookup returns candidates only.",
+        {
+            "name": {"type": "string", "description": "Compound name or synonym", "default": ""},
+            "ids": _ID_OBJECT_SCHEMA,
+        },
+        [],
+    ),
+    _function_tool(
+        "lookup_protein_db",
+        "Return PathBank protein candidates from direct IDs or species-aware name/gene search. Name/gene search requires species.",
+        {
+            "name": {"type": "string", "description": "Protein name or gene", "default": ""},
+            "species": {"type": "string", "description": "Species name required for name/gene search", "default": ""},
+            "ids": _ID_OBJECT_SCHEMA,
+        },
+        [],
+    ),
+    _function_tool(
+        "lookup_protein_complex_db",
+        "Return PathBank protein complex candidates by direct complex ID or complex name + species. This lookup returns candidates only.",
+        {
+            "name": {"type": "string", "description": "Protein complex name", "default": ""},
+            "species": {"type": "string", "description": "Species name required for name search", "default": ""},
+            "ids": _ID_OBJECT_SCHEMA,
+        },
+        [],
+    ),
+    _function_tool(
+        "lookup_complex_by_component",
+        "Return PathBank protein complex candidates containing a named protein component, filtered by species.",
+        {
+            "component_name": {"type": "string", "description": "Protein component name or gene"},
+            "species": {"type": "string", "description": "Species name"},
+        },
+        ["component_name", "species"],
+    ),
+    _function_tool(
+        "create_novel_compound",
+        "Create a structured novel compound record for patching when DB lookup candidates are absent or unsafe. Does not create DB IDs.",
+        {
+            "name": {"type": "string", "description": "Compound name"},
+            "compound_class": {"type": "string", "description": "Compound class/type if known", "default": ""},
+            "reason": {"type": "string", "description": "Why this should be treated as novel", "default": ""},
+        },
+        ["name"],
+    ),
+    _function_tool(
+        "create_novel_protein",
+        "Create a structured novel protein record for patching when DB lookup candidates are absent or unsafe. Does not create DB IDs.",
+        {
+            "name": {"type": "string", "description": "Protein name"},
+            "species": {"type": "string", "description": "Species name", "default": ""},
+            "gene_name": {"type": "string", "description": "Gene symbol if known", "default": ""},
+            "reason": {"type": "string", "description": "Why this should be treated as novel", "default": ""},
+        },
+        ["name"],
+    ),
+    _function_tool(
+        "create_novel_complex",
+        "Create a structured novel protein complex record around supplied components. Does not create DB IDs.",
+        {
+            "name": {"type": "string", "description": "Protein complex name"},
+            "species": {"type": "string", "description": "Species name", "default": ""},
+            "components": {
+                "type": "array",
+                "description": "Component records. Use DB IDs only if they came from lookup tools.",
+                "items": {"type": "object"},
+            },
+            "reason": {"type": "string", "description": "Why this should be treated as novel", "default": ""},
+        },
+        ["name"],
+    ),
+    _function_tool(
+        "propose_patch",
+        "Commit a JSON patch operation to the pathway payload. Use this to write decisions based on tool results.",
+        {
+            "op": {
+                "type": "string",
+                "enum": ["add", "replace", "remove"],
+                "description": "JSON patch operation type",
+            },
+            "path": {
+                "type": "string",
+                "description": "JSON Pointer path e.g. /entities/protein_complexes/0/species_id",
+            },
+            "value": {
+                "description": "New value to write. Required for add/replace.",
+            },
+            "evidence": {
+                "type": "string",
+                "description": "One sentence explaining which tool result supports this patch",
+            },
+            "confidence": {
+                "type": "number",
+                "description": "Confidence score from 0.0 to 1.0",
             },
         },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "lookup_protein",
-            "description": "Look up UniProt accession for a protein by name and optional organism",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string", "description": "Protein name to look up"},
-                    "organism": {"type": "string", "description": "Organism name (optional)", "default": ""},
-                },
-                "required": ["name"],
+        ["op", "path", "evidence", "confidence"],
+    ),
+    _function_tool(
+        "lookup_compound",
+        "Compatibility alias for lookup_compound_db. Returns candidates only.",
+        {
+            "name": {"type": "string", "description": "Compound name to look up"},
+            "ids": _ID_OBJECT_SCHEMA,
+        },
+        ["name"],
+    ),
+    _function_tool(
+        "lookup_protein",
+        "Compatibility alias for lookup_protein_db. Returns candidates only.",
+        {
+            "name": {"type": "string", "description": "Protein name to look up"},
+            "organism": {"type": "string", "description": "Organism/species name", "default": ""},
+            "species": {"type": "string", "description": "Organism/species name", "default": ""},
+            "ids": _ID_OBJECT_SCHEMA,
+        },
+        ["name"],
+    ),
+    _function_tool(
+        "lookup_compartment_candidates",
+        "Compatibility alias for lookup_subcellular_location/location evidence. Returns candidates only.",
+        {
+            "entity_name": {"type": "string", "description": "Name of the entity"},
+            "entity_type": {
+                "type": "string",
+                "enum": ["compound", "protein", "protein_complex"],
+                "description": "Entity type",
             },
         },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "lookup_compartment_candidates",
-            "description": "Return known cellular compartment/location candidates for an entity from the PathBank database",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "entity_name": {"type": "string", "description": "Name of the entity"},
-                    "entity_type": {
-                        "type": "string",
-                        "enum": ["compound", "protein"],
-                        "description": "Type of entity: 'compound' or 'protein'",
-                    },
-                },
-                "required": ["entity_name", "entity_type"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "propose_patch",
-            "description": "Commit a JSON patch operation to the pathway payload. Use this to write your decisions.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "op": {
-                        "type": "string",
-                        "enum": ["add", "replace", "remove"],
-                        "description": "JSON patch operation type",
-                    },
-                    "path": {
-                        "type": "string",
-                        "description": "JSON Pointer path e.g. /entities/compounds/3/mapped_ids",
-                    },
-                    "value": {
-                        "description": "New value to write (required for add/replace)",
-                    },
-                    "evidence": {
-                        "type": "string",
-                        "description": "One sentence explaining why this patch is proposed",
-                    },
-                    "confidence": {
-                        "type": "number",
-                        "description": "Confidence score from 0.0 to 1.0",
-                    },
-                },
-                "required": ["op", "path", "evidence", "confidence"],
-            },
-        },
-    },
+        ["entity_name", "entity_type"],
+    ),
 ]
 
 _ENRICHMENT_AGENTIC_SYSTEM_PROMPT: Optional[str] = None
@@ -1354,6 +1462,117 @@ def _get_enrichment_agentic_system_prompt() -> str:
     return _ENRICHMENT_AGENTIC_SYSTEM_PROMPT
 
 
+def _candidate_lookup_response(result: Dict[str, Any], *, max_candidates: int = 10) -> Dict[str, Any]:
+    candidates = [dict(c) for c in _safe_list(result.get("candidates")) if isinstance(c, dict)][:max_candidates]
+    if candidates and _safe_list(result.get("components")):
+        candidates[0].setdefault("components", _safe_list(result.get("components")))
+    if candidates and _safe_list(result.get("issues")):
+        candidates[0].setdefault("issues", _safe_list(result.get("issues")))
+    return {
+        "status": str(result.get("status") or "unmapped"),
+        "reason": str(result.get("reason") or ""),
+        "source": str(result.get("source") or "pathbank_db"),
+        "provider": str(result.get("provider") or "PathBankDB"),
+        "chosen_rule": str(result.get("chosen_rule") or ""),
+        "confidence": float(result.get("confidence", 0.0) or 0.0),
+        "candidates": candidates,
+    }
+
+
+def _db_tool_unavailable(db: Optional[PathBankDbResolver]) -> Dict[str, Any]:
+    return {
+        "status": "unavailable",
+        "reason": "db_unavailable",
+        "source": "pathbank_db",
+        "provider": "PathBankDB",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": [],
+        "last_error": getattr(db, "last_error", "") if db is not None else "db_not_configured",
+    }
+
+
+def _tool_ids(tool_args: Dict[str, Any]) -> Dict[str, str]:
+    ids = _safe_dict(tool_args.get("ids"))
+    out: Dict[str, str] = {}
+    for key, value in ids.items():
+        sval = _canonical(str(value or ""))
+        if sval:
+            out[str(key)] = sval
+    return out
+
+
+def _novel_compound_record(tool_args: Dict[str, Any]) -> Dict[str, Any]:
+    name = _canonical(str(tool_args.get("name") or ""))
+    record: Dict[str, Any] = {
+        "name": name,
+        "mapping_meta": {
+            "provider": "novel",
+            "source": "llm_tool",
+            "resolution": {"status": "novel", "issue": "no_safe_db_candidate"},
+        },
+    }
+    compound_class = _canonical(str(tool_args.get("compound_class") or tool_args.get("class") or tool_args.get("type") or ""))
+    if compound_class:
+        record["class"] = compound_class
+    reason = _canonical(str(tool_args.get("reason") or ""))
+    if reason:
+        record["mapping_meta"]["novel_reason"] = reason
+    return {"status": "novel", "record": record}
+
+
+def _novel_protein_record(tool_args: Dict[str, Any]) -> Dict[str, Any]:
+    name = _canonical(str(tool_args.get("name") or ""))
+    species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or ""))
+    gene_name = _canonical(str(tool_args.get("gene_name") or tool_args.get("gene") or ""))
+    record: Dict[str, Any] = {
+        "name": name,
+        "mapping_meta": {
+            "provider": "novel",
+            "source": "llm_tool",
+            "resolution": {"status": "novel", "issue": "no_safe_db_candidate"},
+        },
+    }
+    if species:
+        record["species"] = species
+    if gene_name:
+        record["gene_name"] = gene_name
+    reason = _canonical(str(tool_args.get("reason") or ""))
+    if reason:
+        record["mapping_meta"]["novel_reason"] = reason
+    return {"status": "novel", "record": record}
+
+
+def _novel_complex_record(tool_args: Dict[str, Any]) -> Dict[str, Any]:
+    name = _canonical(str(tool_args.get("name") or ""))
+    species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or ""))
+    components: List[Dict[str, Any]] = []
+    for raw in _safe_list(tool_args.get("components")):
+        if not isinstance(raw, dict):
+            continue
+        component = dict(raw)
+        component.pop("pathbank_complex_id", None)
+        component.pop("pathbank_protein_complex_id", None)
+        if not _component_has_stoichiometry(component):
+            component["stoichiometry"] = 1
+        components.append(component)
+    record: Dict[str, Any] = {
+        "name": name,
+        "components": components,
+        "mapping_meta": {
+            "provider": "novel",
+            "source": "llm_tool",
+            "resolution": {"status": "novel", "issue": "no_safe_db_candidate"},
+        },
+    }
+    if species:
+        record["species"] = species
+    reason = _canonical(str(tool_args.get("reason") or ""))
+    if reason:
+        record["mapping_meta"]["novel_reason"] = reason
+    return {"status": "novel", "record": record}
+
+
 def _build_entity_index(payload: Dict[str, Any]) -> Dict[str, Tuple[str, int]]:
     """Return {normalized_name: (array_path_prefix, index)} for path construction.
 
@@ -1363,6 +1582,7 @@ def _build_entity_index(payload: Dict[str, Any]) -> Dict[str, Tuple[str, int]]:
     out: Dict[str, Tuple[str, int]] = {}
     entities = _safe_dict(payload.get("entities"))
     for list_key, path_prefix in [
+        ("species", "/entities/species"),
         ("compounds", "/entities/compounds"),
         ("proteins", "/entities/proteins"),
         ("protein_complexes", "/entities/protein_complexes"),
@@ -1374,6 +1594,12 @@ def _build_entity_index(payload: Dict[str, Any]) -> Dict[str, Tuple[str, int]]:
             name = _canonical(str(item.get("name", "")))
             if name:
                 out[_normalize(name)] = (path_prefix, idx)
+    for idx, item in enumerate(_safe_list(payload.get("biological_states"))):
+        if not isinstance(item, dict):
+            continue
+        name = _canonical(str(item.get("name", "")))
+        if name:
+            out[_normalize(name)] = ("/biological_states", idx)
     return out
 
 
@@ -1573,6 +1799,7 @@ def _run_enrichment_agent(
     llm_max_tokens: int,
     max_flags_per_type: int = 20,
     reaction_summary: Optional[str] = None,
+    stage3_issues: Optional[List[Dict[str, Any]]] = None,
 ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     """Agentic enrichment: LLM uses tools to look up IDs/compartments and propose patches.
 
@@ -1590,51 +1817,128 @@ def _run_enrichment_agent(
         if entries:
             flags_for_agent[flag_type] = entries
             total_flag_entries += len(entries)
+    stage3_for_agent = [
+        issue for issue in _safe_list(stage3_issues)
+        if isinstance(issue, dict) and _safe_list(issue.get("reasons"))
+    ][: max(1, max_flags_per_type * 2)]
 
     enrichment_report: Dict[str, Any] = {
         "flags_processed": total_flag_entries,
+        "stage3_issues_processed": len(stage3_for_agent),
     }
 
-    if total_flag_entries == 0:
+    if total_flag_entries == 0 and not stage3_for_agent:
         enrichment_report["patches_proposed"] = 0
         return [], enrichment_report
 
     accumulated_patches: List[Dict[str, Any]] = []
+    tool_calls: List[Dict[str, Any]] = []
 
     def tool_executor(tool_name: str, tool_args: Dict[str, Any]) -> Any:
-        if tool_name == "lookup_compound":
-            name = tool_args.get("name", "")
-            api_result = map_compound_all(client, name)
-            hmdb_result = lookup_hmdb_background(client, name)
-            mapped_ids = _safe_dict(api_result.get("mapped_ids"))
-            candidates = _safe_list(_safe_dict(hmdb_result).get("candidates", []))
-            return {
-                "status": api_result.get("status", "unmapped"),
-                "mapped_ids": mapped_ids,
-                "candidates": candidates,
-            }
+        result: Dict[str, Any]
+        if tool_name in {"lookup_species"}:
+            if db is None or not db.available():
+                result = _db_tool_unavailable(db)
+            else:
+                result = _candidate_lookup_response(
+                    db.find_species(
+                        _canonical(str(tool_args.get("name") or "")),
+                        taxonomy_id=_canonical(str(tool_args.get("taxonomy_id") or "")) or None,
+                    )
+                )
 
-        elif tool_name == "lookup_protein":
-            name = tool_args.get("name", "")
-            organism = tool_args.get("organism", global_organism) or global_organism
-            api_result = map_protein_uniprot(client, name, organism)
-            bg_result = lookup_protein_api_background(client, name, organism)
-            mapped_ids = _safe_dict(api_result.get("mapped_ids"))
-            candidates = _safe_list(_safe_dict(bg_result).get("candidates", []))
-            return {
-                "status": api_result.get("status", "unmapped"),
-                "mapped_ids": mapped_ids,
-                "candidates": candidates,
-            }
+        elif tool_name in {"lookup_subcellular_location"}:
+            if db is None or not db.available():
+                result = _db_tool_unavailable(db)
+            else:
+                result = _candidate_lookup_response(db.find_subcellular_location(_canonical(str(tool_args.get("name") or ""))))
+
+        elif tool_name in {"lookup_biological_state"}:
+            if db is None or not db.available():
+                result = _db_tool_unavailable(db)
+            else:
+                result = _candidate_lookup_response(
+                    db.find_biological_state(
+                        _canonical(str(tool_args.get("species") or "")),
+                        _canonical(str(tool_args.get("subcellular_location") or "")),
+                        cell_type=_canonical(str(tool_args.get("cell_type") or "")) or None,
+                        tissue=_canonical(str(tool_args.get("tissue") or "")) or None,
+                    )
+                )
+
+        elif tool_name in {"lookup_compound_db", "lookup_compound"}:
+            if db is None or not db.available():
+                result = _db_tool_unavailable(db)
+            else:
+                ids = _tool_ids(tool_args)
+                name = _canonical(str(tool_args.get("name") or ""))
+                row = {**ids}
+                if name:
+                    row["name"] = name
+                result = _candidate_lookup_response(db.map_compound_row(row))
+
+        elif tool_name in {"lookup_protein_db", "lookup_protein"}:
+            if db is None or not db.available():
+                result = _db_tool_unavailable(db)
+            else:
+                ids = _tool_ids(tool_args)
+                name = _canonical(str(tool_args.get("name") or ""))
+                species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or global_organism or ""))
+                row = {**ids}
+                if name:
+                    row["name"] = name
+                result = _candidate_lookup_response(db.map_protein_row(row, species))
+
+        elif tool_name in {"lookup_protein_complex_db"}:
+            if db is None or not db.available():
+                result = _db_tool_unavailable(db)
+            else:
+                ids = _tool_ids(tool_args)
+                name = _canonical(str(tool_args.get("name") or ""))
+                species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or global_organism or ""))
+                row = {**ids}
+                if name:
+                    row["name"] = name
+                if isinstance(tool_args.get("components"), list):
+                    row["components"] = _safe_list(tool_args.get("components"))
+                result = _candidate_lookup_response(db.map_protein_complex_row(row, species))
+
+        elif tool_name in {"lookup_complex_by_component"}:
+            if db is None or not db.available():
+                result = _db_tool_unavailable(db)
+            else:
+                result = _candidate_lookup_response(
+                    db.find_complex_by_component(
+                        _canonical(str(tool_args.get("component_name") or "")),
+                        _canonical(str(tool_args.get("species") or tool_args.get("organism") or global_organism or "")),
+                    )
+                )
 
         elif tool_name == "lookup_compartment_candidates":
-            entity_name = tool_args.get("entity_name", "")
-            entity_type = tool_args.get("entity_type", "compound")
             if db is None or not db.available():
-                return {"candidates": [], "source": "db_unavailable"}
-            kind = entity_type if entity_type in {"compound", "protein"} else "compound"
-            candidates = _db_location_candidates(db, kind=kind, name=entity_name)
-            return {"candidates": candidates, "source": "pathbank_db"}
+                result = _db_tool_unavailable(db)
+            else:
+                entity_name = _canonical(str(tool_args.get("entity_name") or ""))
+                entity_type = _canonical(str(tool_args.get("entity_type") or "compound")).lower()
+                kind = entity_type if entity_type in {"compound", "protein"} else "protein"
+                result = {
+                    "status": "mapped",
+                    "reason": "",
+                    "source": "pathbank_db",
+                    "provider": "PathBankDB",
+                    "chosen_rule": "location_frequency",
+                    "confidence": 0.0,
+                    "candidates": _db_location_candidates(db, kind=kind, name=entity_name),
+                }
+
+        elif tool_name == "create_novel_compound":
+            result = _novel_compound_record(tool_args)
+
+        elif tool_name == "create_novel_protein":
+            result = _novel_protein_record(tool_args)
+
+        elif tool_name == "create_novel_complex":
+            result = _novel_complex_record(tool_args)
 
         elif tool_name == "propose_patch":
             patch = {
@@ -1645,16 +1949,33 @@ def _run_enrichment_agent(
                 "confidence": tool_args.get("confidence", 0.7),
             }
             accumulated_patches.append(patch)
-            return {"accepted": True, "patch_index": len(accumulated_patches) - 1}
+            result = {"accepted": True, "patch_index": len(accumulated_patches) - 1}
 
         else:
-            return {"error": f"unknown tool: {tool_name}"}
+            result = {"error": f"unknown tool: {tool_name}"}
+
+        tool_calls.append(
+            {
+                "tool": tool_name,
+                "args": {k: v for k, v in tool_args.items() if k not in {"value", "components"}},
+                "status": result.get("status", "ok") if isinstance(result, dict) else "ok",
+                "candidate_count": len(_safe_list(result.get("candidates"))) if isinstance(result, dict) else 0,
+            }
+        )
+        return result
 
     user_content_dict: Dict[str, Any] = {
-        "task": "Process these QA flags and propose patches.",
+        "task": "Process these QA flags and Stage 3 gap issues. Use DB lookup tools before patching DB-backed IDs.",
         "global_organism": global_organism,
         "entity_index": {k: list(v) for k, v in entity_index.items()},
         "qa_flags": flags_for_agent,
+        "stage3_issues": stage3_for_agent,
+        "rules": [
+            "Lookup tools return candidates only; choose IDs only from returned candidates.",
+            "If candidates are absent or unsafe, use create_novel_* and patch the structured novel record, not a DB ID.",
+            "For protein and complex name searches, resolve or provide species first.",
+            "For complexes, use lookup_species, lookup_protein_db or lookup_complex_by_component, then propose_patch for species/components.",
+        ],
     }
     if reaction_summary and isinstance(reaction_summary, str) and reaction_summary.strip():
         user_content_dict["pathway_reaction_summary"] = reaction_summary.strip()
@@ -1699,6 +2020,7 @@ def _run_enrichment_agent(
         enrichment_report["patches_from_tool_calls"] = len(accumulated_patches)
         enrichment_report["patches_from_final_response"] = len(final_response_patches)
         enrichment_report["patches_proposed"] = len(merged)
+        enrichment_report["tool_calls"] = tool_calls
 
         # Normalize patch format → apply_audit_patch format (action → op, reason → evidence)
         normalized: List[Dict[str, Any]] = []
@@ -1718,6 +2040,7 @@ def _run_enrichment_agent(
         enrichment_report["error"] = str(exc)
         enrichment_report["raw"] = final_text[:400]
         enrichment_report["patches_proposed"] = 0
+        enrichment_report["tool_calls"] = tool_calls
         return [], enrichment_report
 
 
@@ -2007,12 +2330,17 @@ def resolve_gaps(
         report["stage3"]["executions"].append(op_exec)
 
     # -----------------------------------------------------------------------
-    # Step 10: Enrichment agent — uses QA report flags to focus API fetches
+    # Step 10: Enrichment agent - uses QA flags and Stage 3 issues for tool-backed patches
     # -----------------------------------------------------------------------
-    if qa_report is not None and use_llm:
+    agent_issue_types = {"species", "biological_state", "protein_complex", "reaction_modifier"}
+    stage3_agent_issues = [
+        issue for issue in issues
+        if isinstance(issue, dict) and str(issue.get("entity_type") or "") in agent_issue_types
+    ]
+    if use_llm and (qa_report is not None or stage3_agent_issues):
         enrichment_patches, enrichment_report = _run_enrichment_agent(
             working,
-            qa_report,
+            qa_report or {"flags": {}},
             db=db,
             client=client,
             global_organism=global_organism,
@@ -2020,6 +2348,7 @@ def resolve_gaps(
             llm_max_tokens=max(llm_max_tokens, 1200),
             max_flags_per_type=max(1, max_items // 4),
             reaction_summary=reaction_summary,
+            stage3_issues=stage3_agent_issues,
         )
         report["enrichment"] = enrichment_report
 

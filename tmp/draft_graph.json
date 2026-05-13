@@ -2,85 +2,49 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 10,
+    "node_count": 8,
     "edge_count": 5
   },
   "nodes": [
     {
-      "id": "compound:succinate",
-      "label": "succinate",
+      "id": "compound:pyruvate",
+      "label": "pyruvate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "human mitochondrial inner membrane state",
+      "compartment": "cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:fumarate",
-      "label": "fumarate",
+      "id": "compound:acetyl-coa",
+      "label": "acetyl-CoA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "human mitochondrial inner membrane state",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:ubiquinone",
-      "label": "ubiquinone",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "human mitochondrial inner membrane state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:ubiquinol",
-      "label": "ubiquinol",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "human mitochondrial inner membrane state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:sdha",
-      "label": "SDHA",
+      "id": "protein:mpc1",
+      "label": "MPC1",
       "kind": "protein",
-      "cls": "protein",
-      "compartment": "human mitochondrial inner membrane state",
+      "cls": "transporter",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:sdhb",
-      "label": "SDHB",
+      "id": "protein:mpc2",
+      "label": "MPC2",
       "kind": "protein",
-      "cls": "protein",
-      "compartment": "human mitochondrial inner membrane state",
+      "cls": "transporter",
+      "compartment": "mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:sdhc",
-      "label": "SDHC",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "human mitochondrial inner membrane state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:sdhd",
-      "label": "SDHD",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "human mitochondrial inner membrane state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein_complex:succinate dehydrogenase complex",
-      "label": "succinate dehydrogenase complex",
+      "id": "protein_complex:mpc complex",
+      "label": "MPC complex",
       "kind": "protein_complex",
       "cls": "protein_complex",
       "compartment": "",
@@ -88,44 +52,62 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:succinate dehydrogenase complex reaction",
-      "label": "succinate dehydrogenase complex reaction",
+      "id": "protein_complex:pyruvate dehydrogenase complex",
+      "label": "pyruvate dehydrogenase complex",
+      "kind": "protein_complex",
+      "cls": "protein_complex",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:pyruvate dehydrogenase reaction",
+      "label": "pyruvate dehydrogenase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "human mitochondrial inner membrane state",
+      "compartment": "mitochondrial matrix state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:mpc-mediated pyruvate transport",
+      "label": "MPC-mediated pyruvate transport",
+      "kind": "transport",
+      "cls": "",
+      "compartment": "cytosolic state → mitochondrial matrix state",
       "confidence": 1.0,
       "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:succinate",
-      "target": "reaction:succinate dehydrogenase complex reaction",
+      "source": "compound:pyruvate",
+      "target": "reaction:pyruvate dehydrogenase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:ubiquinone",
-      "target": "reaction:succinate dehydrogenase complex reaction",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:succinate dehydrogenase complex reaction",
-      "target": "compound:fumarate",
+      "source": "reaction:pyruvate dehydrogenase reaction",
+      "target": "compound:acetyl-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:succinate dehydrogenase complex reaction",
-      "target": "compound:ubiquinol",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein_complex:succinate dehydrogenase complex",
-      "target": "reaction:succinate dehydrogenase complex reaction",
+      "source": "protein_complex:pyruvate dehydrogenase complex",
+      "target": "reaction:pyruvate dehydrogenase reaction",
       "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:pyruvate",
+      "target": "transport:mpc-mediated pyruvate transport",
+      "role": "cargo",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein_complex:mpc complex",
+      "target": "transport:mpc-mediated pyruvate transport",
+      "role": "transporter",
       "confidence": 1.0
     }
   ]

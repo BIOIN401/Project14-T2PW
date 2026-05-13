@@ -1,12 +1,13 @@
 {
-  "compound:succinate|HMDB0000254": {
+  "compound:pyruvate|HMDB0000243": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Succinate",
+    "primary_name": "Pyruvate",
     "synonyms": [
-      "Succinate",
-      "Succinic acid",
-      "Butanedionic acid",
-      "Ethylenesuccinic acid"
+      "Pyruvate",
+      "Pyruvic acid",
+      "2-Oxopropanoate",
+      "2-Oxopropanoic acid",
+      "Pyroracemic acid"
     ],
     "description": "",
     "taxonomy": {},
@@ -14,39 +15,60 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C4H6O4",
+    "formula": "C3H4O3",
     "charge": 0,
-    "mass_monoisotopic": 118.0266,
-    "mass_average": 118.09,
+    "mass_monoisotopic": 88.016,
+    "mass_average": 88.06,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
       "Compounds with biological roles [BR:br08001]",
       "Organic acids",
       "Carboxylic acids",
-      "Dicarboxylic acids",
-      "C00042 Succinate",
+      "2-Oxocarboxylic acids",
+      "C00022 Pyruvate; 2-Oxopropanoate",
       "Lipids [BR:br08002]",
       "FA Fatty acyls",
       "FA01 Fatty Acids and Conjugates",
-      "FA0117 Dicarboxylic acids",
-      "C00042 Butanedionic acid"
+      "FA0106 Oxo fatty acids",
+      "C00022 2-Oxopropanoic acid"
     ],
     "pathways": [
+      "Glycolysis / Gluconeogenesis",
       "Citrate cycle (TCA cycle)",
-      "Oxidative phosphorylation",
+      "Pentose phosphate pathway",
+      "Pentose and glucuronate interconversions",
+      "Ascorbate and aldarate metabolism",
       "Alanine, aspartate and glutamate metabolism",
-      "Lysine degradation",
+      "Glycine, serine and threonine metabolism",
+      "Monobactam biosynthesis",
+      "Cysteine and methionine metabolism",
+      "Valine, leucine and isoleucine biosynthesis",
+      "Arginine and proline metabolism",
       "Tyrosine metabolism",
       "Phenylalanine metabolism",
-      "Chlorocyclohexane and chlorobenzene degradation",
+      "Benzoate degradation",
+      "Taurine and hypotaurine metabolism",
+      "Phosphonate and phosphinate metabolism",
+      "D-Amino acid metabolism",
+      "Sulfoquinovose metabolism",
       "Pyruvate metabolism",
+      "Dioxin degradation",
+      "Xylene degradation",
       "Glyoxylate and dicarboxylate metabolism",
-      "Propanoate metabolism",
       "Butanoate metabolism",
+      "C5-Branched dibasic acid metabolism",
+      "Methane metabolism",
+      "Carbon fixation by Calvin cycle",
       "Other carbon fixation pathways",
+      "Thiamine metabolism",
       "Nicotinate and nicotinamide metabolism",
-      "Sulfur metabolism",
+      "Pantothenate and CoA biosynthesis",
+      "Lipoic acid metabolism",
+      "Terpenoid backbone biosynthesis",
+      "Steroid degradation",
+      "Biosynthesis of various other secondary metabolites",
+      "Biosynthesis of various antibiotics",
       "Biosynthesis of plant secondary metabolites",
       "Biosynthesis of phenylpropanoids",
       "Biosynthesis of terpenoids and steroids",
@@ -59,56 +81,87 @@
       "Biosynthesis of secondary metabolites",
       "Microbial metabolism in diverse environments",
       "Carbon metabolism",
+      "2-Oxocarboxylic acid metabolism",
       "Degradation of aromatic compounds",
+      "Biosynthesis of amino acids",
+      "Biosynthesis of cofactors",
+      "Vancomycin resistance",
       "Two-component system",
-      "cAMP signaling pathway",
-      "GABAergic synapse",
+      "Phosphotransferase system (PTS)",
+      "HIF-1 signaling pathway",
+      "AMPK signaling pathway",
+      "Insulin secretion",
       "Glucagon signaling pathway",
-      "Central carbon metabolism in cancer"
+      "Type II diabetes mellitus",
+      "Insulin resistance",
+      "Central carbon metabolism in cancer",
+      "Diabetic cardiomyopathy"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000254",
-      "kegg_id": "C00042",
-      "chebi_id": "CHEBI:15741",
-      "pubchem_id": "1110",
-      "cas": "110-15-6",
-      "biocyc": "SUC",
-      "chemspider": "1078",
-      "drugbank_id": "DB00139",
-      "pathbank_compound_id": "174"
+      "hmdb_id": "HMDB0000243",
+      "kegg_id": "C00022",
+      "chebi_id": "CHEBI:32816",
+      "pubchem_id": "1060",
+      "cas": "127-17-3",
+      "biocyc": "PYRUVATE",
+      "chemspider": "1031",
+      "drugbank_id": "DB00119",
+      "pathbank_compound_id": "164"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00042",
-      "primary_name": "Succinate",
+      "id": "C00022",
+      "primary_name": "Pyruvate",
       "synonyms": [
-        "Succinate",
-        "Succinic acid",
-        "Butanedionic acid",
-        "Ethylenesuccinic acid"
+        "Pyruvate",
+        "Pyruvic acid",
+        "2-Oxopropanoate",
+        "2-Oxopropanoic acid",
+        "Pyroracemic acid"
       ],
-      "formula": "C4H6O4",
-      "mass_monoisotopic": 118.0266,
-      "mass_average": 118.09,
+      "formula": "C3H4O3",
+      "mass_monoisotopic": 88.016,
+      "mass_average": 88.06,
       "pathways": [
+        "Glycolysis / Gluconeogenesis",
         "Citrate cycle (TCA cycle)",
-        "Oxidative phosphorylation",
+        "Pentose phosphate pathway",
+        "Pentose and glucuronate interconversions",
+        "Ascorbate and aldarate metabolism",
         "Alanine, aspartate and glutamate metabolism",
-        "Lysine degradation",
+        "Glycine, serine and threonine metabolism",
+        "Monobactam biosynthesis",
+        "Cysteine and methionine metabolism",
+        "Valine, leucine and isoleucine biosynthesis",
+        "Arginine and proline metabolism",
         "Tyrosine metabolism",
         "Phenylalanine metabolism",
-        "Chlorocyclohexane and chlorobenzene degradation",
+        "Benzoate degradation",
+        "Taurine and hypotaurine metabolism",
+        "Phosphonate and phosphinate metabolism",
+        "D-Amino acid metabolism",
+        "Sulfoquinovose metabolism",
         "Pyruvate metabolism",
+        "Dioxin degradation",
+        "Xylene degradation",
         "Glyoxylate and dicarboxylate metabolism",
-        "Propanoate metabolism",
         "Butanoate metabolism",
+        "C5-Branched dibasic acid metabolism",
+        "Methane metabolism",
+        "Carbon fixation by Calvin cycle",
         "Other carbon fixation pathways",
+        "Thiamine metabolism",
         "Nicotinate and nicotinamide metabolism",
-        "Sulfur metabolism",
+        "Pantothenate and CoA biosynthesis",
+        "Lipoic acid metabolism",
+        "Terpenoid backbone biosynthesis",
+        "Steroid degradation",
+        "Biosynthesis of various other secondary metabolites",
+        "Biosynthesis of various antibiotics",
         "Biosynthesis of plant secondary metabolites",
         "Biosynthesis of phenylpropanoids",
         "Biosynthesis of terpenoids and steroids",
@@ -121,35 +174,44 @@
         "Biosynthesis of secondary metabolites",
         "Microbial metabolism in diverse environments",
         "Carbon metabolism",
+        "2-Oxocarboxylic acid metabolism",
         "Degradation of aromatic compounds",
+        "Biosynthesis of amino acids",
+        "Biosynthesis of cofactors",
+        "Vancomycin resistance",
         "Two-component system",
-        "cAMP signaling pathway",
-        "GABAergic synapse",
+        "Phosphotransferase system (PTS)",
+        "HIF-1 signaling pathway",
+        "AMPK signaling pathway",
+        "Insulin secretion",
         "Glucagon signaling pathway",
-        "Central carbon metabolism in cancer"
+        "Type II diabetes mellitus",
+        "Insulin resistance",
+        "Central carbon metabolism in cancer",
+        "Diabetic cardiomyopathy"
       ],
       "kegg_class": [
         "Compounds with biological roles [BR:br08001]",
         "Organic acids",
         "Carboxylic acids",
-        "Dicarboxylic acids",
-        "C00042 Succinate",
+        "2-Oxocarboxylic acids",
+        "C00022 Pyruvate; 2-Oxopropanoate",
         "Lipids [BR:br08002]",
         "FA Fatty acyls",
         "FA01 Fatty Acids and Conjugates",
-        "FA0117 Dicarboxylic acids",
-        "C00042 Butanedionic acid"
+        "FA0106 Oxo fatty acids",
+        "C00022 2-Oxopropanoic acid"
       ],
       "cross_references": {
-        "kegg_id": "C00042",
-        "pubchem_id": "3344",
-        "chebi_id": "15741"
+        "kegg_id": "C00022",
+        "pubchem_id": "3324",
+        "chebi_id": "15361"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00042",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00042",
-        "retrieved_at": "2026-03-24T06:59:40Z",
+        "id": "C00022",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00022",
+        "retrieved_at": "2026-03-20T19:32:15Z",
         "status": "ok"
       }
     },
@@ -158,9 +220,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:15741",
+        "id": "CHEBI:32816",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-24T06:59:39Z"
+        "retrieved_at": "2026-03-20T19:32:15Z"
       }
     },
     "hmdb": {
@@ -168,43 +230,42 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000254",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000254",
-        "retrieved_at": "2026-03-24T06:59:39Z"
+        "id": "HMDB0000243",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000243",
+        "retrieved_at": "2026-03-20T19:32:15Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:15741",
-        "retrieved_at": "2026-03-24T06:59:39Z",
+        "id": "CHEBI:32816",
+        "retrieved_at": "2026-03-20T19:32:15Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000254",
-        "retrieved_at": "2026-03-24T06:59:39Z",
+        "id": "HMDB0000243",
+        "retrieved_at": "2026-03-20T19:32:15Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00042",
-        "retrieved_at": "2026-03-24T06:59:40Z",
+        "id": "C00022",
+        "retrieved_at": "2026-03-20T19:32:15Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:fumarate|HMDB0000134": {
+  "compound:acetyl-CoA|HMDB0001206": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Fumarate",
+    "primary_name": "Acetyl-CoA",
     "synonyms": [
-      "Fumarate",
-      "Fumaric acid",
-      "trans-Butenedioic acid"
+      "Acetyl-CoA",
+      "Acetyl coenzyme A"
     ],
     "description": "",
     "taxonomy": {},
@@ -212,33 +273,58 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C4H4O4",
+    "formula": "C23H38N7O17P3S",
     "charge": 0,
-    "mass_monoisotopic": 116.011,
-    "mass_average": 116.07,
+    "mass_monoisotopic": 809.1258,
+    "mass_average": 809.57,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
-      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D02308)]",
-      "D DERMATOLOGICALS",
-      "D05 ANTIPSORIATICS",
-      "D05A ANTIPSORIATICS FOR TOPICAL USE",
-      "D05AX Other antipsoriatics for topical use",
-      "D05AX01 Fumaric acid",
-      "D02308 Fumaric acid (NF)"
+      "Lipids [BR:br08002]",
+      "FA Fatty acyls",
+      "FA07 Fatty esters",
+      "FA0705 Fatty acyl CoAs",
+      "C00024 Acetyl-CoA"
     ],
     "pathways": [
+      "Glycolysis / Gluconeogenesis",
       "Citrate cycle (TCA cycle)",
-      "Oxidative phosphorylation",
-      "Arginine biosynthesis",
-      "Alanine, aspartate and glutamate metabolism",
-      "Tyrosine metabolism",
+      "Fatty acid biosynthesis",
+      "Fatty acid elongation",
+      "Fatty acid degradation",
+      "Mycolic acid biosynthesis",
+      "Aflatoxin biosynthesis",
+      "Valine, leucine and isoleucine degradation",
+      "Valine, leucine and isoleucine biosynthesis",
+      "Lysine biosynthesis",
+      "Lysine degradation",
       "Phenylalanine metabolism",
+      "Benzoate degradation",
+      "Tryptophan metabolism",
+      "beta-Alanine metabolism",
+      "Taurine and hypotaurine metabolism",
+      "Glutathione metabolism",
+      "Inositol phosphate metabolism",
       "Pyruvate metabolism",
-      "Styrene degradation",
+      "Dioxin degradation",
+      "Xylene degradation",
+      "Chloroalkane and chloroalkene degradation",
+      "Glyoxylate and dicarboxylate metabolism",
+      "Propanoate metabolism",
+      "Ethylbenzene degradation",
       "Butanoate metabolism",
+      "C5-Branched dibasic acid metabolism",
+      "Methane metabolism",
       "Other carbon fixation pathways",
-      "Nicotinate and nicotinamide metabolism",
+      "Lipoic acid metabolism",
+      "Terpenoid backbone biosynthesis",
+      "Pinene, camphor and geraniol degradation",
+      "Steroid degradation",
+      "Biosynthesis of various alkaloids",
+      "Biosynthesis of various other secondary metabolites",
+      "Biosynthesis of various antibiotics",
+      "Biosynthesis of various plant secondary metabolites",
+      "Biosynthesis of type II polyketide backbone",
       "Biosynthesis of plant secondary metabolites",
       "Biosynthesis of phenylpropanoids",
       "Biosynthesis of terpenoids and steroids",
@@ -251,52 +337,86 @@
       "Biosynthesis of secondary metabolites",
       "Microbial metabolism in diverse environments",
       "Carbon metabolism",
+      "2-Oxocarboxylic acid metabolism",
+      "Fatty acid metabolism",
       "Degradation of aromatic compounds",
-      "Two-component system",
+      "Biosynthesis of cofactors",
+      "HIF-1 signaling pathway",
+      "AMPK signaling pathway",
+      "Ferroptosis",
+      "Thermogenesis",
+      "Cholinergic synapse",
       "Glucagon signaling pathway",
-      "Pathways in cancer",
-      "Renal cell carcinoma",
-      "Central carbon metabolism in cancer"
+      "Insulin resistance",
+      "Alcoholic liver disease",
+      "Bile secretion",
+      "Central carbon metabolism in cancer",
+      "Diabetic cardiomyopathy"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000134",
-      "kegg_id": "C00122",
-      "chebi_id": "CHEBI:18012",
-      "pubchem_id": "21883788",
-      "cas": "110-17-8",
-      "biocyc": "FUM",
-      "chemspider": "10197150",
-      "drugbank_id": "DB04299",
-      "pathbank_compound_id": "88"
+      "hmdb_id": "HMDB0001206",
+      "kegg_id": "C00024",
+      "chebi_id": "CHEBI:15351",
+      "pubchem_id": "444493",
+      "cas": "72-89-9",
+      "biocyc": "ACETYL-COA",
+      "chemspider": "392413",
+      "pathbank_compound_id": "940"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00122",
-      "primary_name": "Fumarate",
+      "id": "C00024",
+      "primary_name": "Acetyl-CoA",
       "synonyms": [
-        "Fumarate",
-        "Fumaric acid",
-        "trans-Butenedioic acid"
+        "Acetyl-CoA",
+        "Acetyl coenzyme A"
       ],
-      "formula": "C4H4O4",
-      "mass_monoisotopic": 116.011,
-      "mass_average": 116.07,
+      "formula": "C23H38N7O17P3S",
+      "mass_monoisotopic": 809.1258,
+      "mass_average": 809.57,
       "pathways": [
+        "Glycolysis / Gluconeogenesis",
         "Citrate cycle (TCA cycle)",
-        "Oxidative phosphorylation",
-        "Arginine biosynthesis",
-        "Alanine, aspartate and glutamate metabolism",
-        "Tyrosine metabolism",
+        "Fatty acid biosynthesis",
+        "Fatty acid elongation",
+        "Fatty acid degradation",
+        "Mycolic acid biosynthesis",
+        "Aflatoxin biosynthesis",
+        "Valine, leucine and isoleucine degradation",
+        "Valine, leucine and isoleucine biosynthesis",
+        "Lysine biosynthesis",
+        "Lysine degradation",
         "Phenylalanine metabolism",
+        "Benzoate degradation",
+        "Tryptophan metabolism",
+        "beta-Alanine metabolism",
+        "Taurine and hypotaurine metabolism",
+        "Glutathione metabolism",
+        "Inositol phosphate metabolism",
         "Pyruvate metabolism",
-        "Styrene degradation",
+        "Dioxin degradation",
+        "Xylene degradation",
+        "Chloroalkane and chloroalkene degradation",
+        "Glyoxylate and dicarboxylate metabolism",
+        "Propanoate metabolism",
+        "Ethylbenzene degradation",
         "Butanoate metabolism",
+        "C5-Branched dibasic acid metabolism",
+        "Methane metabolism",
         "Other carbon fixation pathways",
-        "Nicotinate and nicotinamide metabolism",
+        "Lipoic acid metabolism",
+        "Terpenoid backbone biosynthesis",
+        "Pinene, camphor and geraniol degradation",
+        "Steroid degradation",
+        "Biosynthesis of various alkaloids",
+        "Biosynthesis of various other secondary metabolites",
+        "Biosynthesis of various antibiotics",
+        "Biosynthesis of various plant secondary metabolites",
+        "Biosynthesis of type II polyketide backbone",
         "Biosynthesis of plant secondary metabolites",
         "Biosynthesis of phenylpropanoids",
         "Biosynthesis of terpenoids and steroids",
@@ -309,166 +429,39 @@
         "Biosynthesis of secondary metabolites",
         "Microbial metabolism in diverse environments",
         "Carbon metabolism",
+        "2-Oxocarboxylic acid metabolism",
+        "Fatty acid metabolism",
         "Degradation of aromatic compounds",
-        "Two-component system",
-        "Glucagon signaling pathway",
-        "Pathways in cancer",
-        "Renal cell carcinoma",
-        "Central carbon metabolism in cancer"
-      ],
-      "kegg_class": [
-        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D02308)]",
-        "D DERMATOLOGICALS",
-        "D05 ANTIPSORIATICS",
-        "D05A ANTIPSORIATICS FOR TOPICAL USE",
-        "D05AX Other antipsoriatics for topical use",
-        "D05AX01 Fumaric acid",
-        "D02308 Fumaric acid (NF)"
-      ],
-      "cross_references": {
-        "kegg_id": "C00122",
-        "pubchem_id": "3422",
-        "chebi_id": "18012"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00122",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00122",
-        "retrieved_at": "2026-03-24T06:14:46Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:18012",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-24T06:14:46Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000134",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000134",
-        "retrieved_at": "2026-03-24T06:14:46Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:18012",
-        "retrieved_at": "2026-03-24T06:14:46Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0000134",
-        "retrieved_at": "2026-03-24T06:14:46Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00122",
-        "retrieved_at": "2026-03-24T06:14:46Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:ubiquinone|HMDB0002012": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Ubiquinone",
-    "synonyms": [
-      "Ubiquinone",
-      "Coenzyme Q",
-      "CoQ",
-      "Q"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C14H18O4(C5H8)n",
-    "charge": 0,
-    "mass_monoisotopic": 0.0,
-    "mass_average": 0.0,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Lipids [BR:br08002]",
-      "PR Prenol lipids",
-      "PR02 Quinones and hydroquinones",
-      "PR0201 Ubiquinones",
-      "C00399 Ubiquinone"
-    ],
-    "pathways": [
-      "Ubiquinone and other terpenoid-quinone biosynthesis",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Biosynthesis of cofactors",
-      "Two-component system"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C00399",
-      "hmdb_id": "HMDB0002012",
-      "chebi_id": "CHEBI:16389",
-      "pubchem_id": "4462",
-      "cas": "727-81-1",
-      "chemspider": "4307",
-      "drugbank_id": "DB08689",
-      "pathbank_compound_id": "1347"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00399",
-      "primary_name": "Ubiquinone",
-      "synonyms": [
-        "Ubiquinone",
-        "Coenzyme Q",
-        "CoQ",
-        "Q"
-      ],
-      "formula": "C14H18O4(C5H8)n",
-      "mass_monoisotopic": 0.0,
-      "mass_average": 0.0,
-      "pathways": [
-        "Ubiquinone and other terpenoid-quinone biosynthesis",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
         "Biosynthesis of cofactors",
-        "Two-component system"
+        "HIF-1 signaling pathway",
+        "AMPK signaling pathway",
+        "Ferroptosis",
+        "Thermogenesis",
+        "Cholinergic synapse",
+        "Glucagon signaling pathway",
+        "Insulin resistance",
+        "Alcoholic liver disease",
+        "Bile secretion",
+        "Central carbon metabolism in cancer",
+        "Diabetic cardiomyopathy"
       ],
       "kegg_class": [
         "Lipids [BR:br08002]",
-        "PR Prenol lipids",
-        "PR02 Quinones and hydroquinones",
-        "PR0201 Ubiquinones",
-        "C00399 Ubiquinone"
+        "FA Fatty acyls",
+        "FA07 Fatty esters",
+        "FA0705 Fatty acyl CoAs",
+        "C00024 Acetyl-CoA"
       ],
       "cross_references": {
-        "kegg_id": "C00399",
-        "pubchem_id": "3689",
-        "chebi_id": "16389"
+        "kegg_id": "C00024",
+        "pubchem_id": "3326",
+        "chebi_id": "15351"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00399",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00399",
-        "retrieved_at": "2026-03-24T06:14:41Z",
+        "id": "C00024",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00024",
+        "retrieved_at": "2026-03-24T06:13:47Z",
         "status": "ok"
       }
     },
@@ -477,9 +470,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:16389",
+        "id": "CHEBI:15351",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-05-13T20:48:47Z"
+        "retrieved_at": "2026-03-24T06:13:46Z"
       }
     },
     "hmdb": {
@@ -487,549 +480,293 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0002012",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0002012",
-        "retrieved_at": "2026-05-13T20:48:48Z"
+        "id": "HMDB0001206",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001206",
+        "retrieved_at": "2026-03-24T06:13:47Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:16389",
-        "retrieved_at": "2026-05-13T20:48:47Z",
+        "id": "CHEBI:15351",
+        "retrieved_at": "2026-03-24T06:13:46Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0002012",
-        "retrieved_at": "2026-05-13T20:48:48Z",
+        "id": "HMDB0001206",
+        "retrieved_at": "2026-03-24T06:13:47Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00399",
-        "retrieved_at": "2026-03-24T06:14:41Z",
+        "id": "C00024",
+        "retrieved_at": "2026-03-24T06:13:47Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:ubiquinol|HMDB0001304": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Ubiquinol",
-    "synonyms": [
-      "Ubiquinol",
-      "QH2",
-      "CoQH2",
-      "Ubiquinol-n"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C14H20O4(C5H8)n",
-    "charge": 0,
-    "mass_monoisotopic": 0.0,
-    "mass_average": 0.0,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Lipids [BR:br08002]",
-      "PR Prenol lipids",
-      "PR02 Quinones and hydroquinones",
-      "PR0201 Ubiquinones",
-      "C00390 Ubiquinol"
-    ],
-    "pathways": [
-      "Ubiquinone and other terpenoid-quinone biosynthesis",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Biosynthesis of cofactors"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001304",
-      "kegg_id": "C00390",
-      "pubchem_id": "5280344",
-      "cas": "56275-39-9",
-      "biocyc": "QH2",
-      "chemspider": "4444052",
-      "chebi_id": "CHEBI:52970",
-      "drugbank_id": "DB11340",
-      "pathbank_compound_id": "1006"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00390",
-      "primary_name": "Ubiquinol",
-      "synonyms": [
-        "Ubiquinol",
-        "QH2",
-        "CoQH2",
-        "Ubiquinol-n"
-      ],
-      "formula": "C14H20O4(C5H8)n",
-      "mass_monoisotopic": 0.0,
-      "mass_average": 0.0,
-      "pathways": [
-        "Ubiquinone and other terpenoid-quinone biosynthesis",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Biosynthesis of cofactors"
-      ],
-      "kegg_class": [
-        "Lipids [BR:br08002]",
-        "PR Prenol lipids",
-        "PR02 Quinones and hydroquinones",
-        "PR0201 Ubiquinones",
-        "C00390 Ubiquinol"
-      ],
-      "cross_references": {
-        "kegg_id": "C00390",
-        "pubchem_id": "3680",
-        "chebi_id": "17976"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00390",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00390",
-        "retrieved_at": "2026-03-24T06:14:41Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:52970",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-04-05T05:46:01Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001304",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001304",
-        "retrieved_at": "2026-04-05T05:46:01Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:52970",
-        "retrieved_at": "2026-04-05T05:46:01Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001304",
-        "retrieved_at": "2026-04-05T05:46:01Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00390",
-        "retrieved_at": "2026-03-24T06:14:41Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "protein:SDHA|P31040": {
+  "protein:MPC1|Q9Y5U8": {
     "status": "ok",
-    "uniprot_id": "P31040",
-    "recommended_name": "Succinate dehydrogenase [ubiquinone] flavoprotein subunit, mitochondrial",
+    "uniprot_id": "Q9Y5U8",
+    "recommended_name": "Mitochondrial pyruvate carrier 1",
     "alternative_names": [
-      "Flavoprotein subunit of complex II",
-      "Malate dehydrogenase [quinone] flavoprotein subunit"
+      "Brain protein 44-like protein"
     ],
     "gene_names": [
-      "SDHA",
-      "SDH2",
-      "SDHF"
+      "MPC1",
+      "BRP44L"
     ],
     "organism": "Homo sapiens",
     "taxonomy_id": "9606",
-    "function_text": "Flavoprotein (FP) subunit of succinate dehydrogenase (SDH) that is involved in complex II of the mitochondrial electron transport chain and is responsible for transferring electrons from succinate to ubiquinone (coenzyme Q) (PubMed:10746566, PubMed:24781757). SDH also oxidizes malate to the non-canonical enol form of oxaloacetate, enol-oxaloacetate (By similarity). Enol-oxaloacetate, which is a potent inhibitor of the succinate dehydrogenase activity, is further isomerized into keto-oxaloacetate (By similarity). Can act as a tumor suppressor (PubMed:20484225)",
+    "function_text": "Mediates the uptake of pyruvate into mitochondria to maintain the balance between glycolysis and oxidative phosphorylation (PubMed:22628558, PubMed:26253029, PubMed:27317664, PubMed:40044865, PubMed:40101766). Plays an essential role in cellular metabolism (PubMed:40044865, PubMed:40101766)",
     "catalytic_activity": [
-      "a ubiquinone + succinate = a ubiquinol + fumarate",
-      "(R)-malate + a quinone = enol-oxaloacetate + a quinol",
-      "(S)-malate + a quinone = enol-oxaloacetate + a quinol"
+      "pyruvate(out) + H(+)(out) = pyruvate(in) + H(+)(in)"
     ],
-    "enzyme_commission": [
-      "1.3.5.1"
-    ],
-    "pathways": [
-      "Carbohydrate metabolism; tricarboxylic acid cycle; fumarate from succinate (eukaryal route): step 1/1"
-    ],
+    "enzyme_commission": [],
+    "pathways": [],
     "keywords": [
       "3D-structure",
       "Acetylation",
-      "Alternative splicing",
-      "Cardiomyopathy",
-      "Direct protein sequencing",
       "Disease variant",
-      "Electron transport",
-      "FAD",
-      "Flavoprotein",
-      "Leigh syndrome",
       "Membrane",
       "Mitochondrion",
       "Mitochondrion inner membrane",
-      "Neurodegeneration",
-      "Oxidoreductase",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transmembrane",
+      "Transmembrane helix",
+      "Transport"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion inner membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0050833"
+    ],
+    "go_bp_ids": [
+      "GO:0006850"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0098800",
+      "GO:0005743",
+      "GO:0005739",
+      "GO:0097228"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 109,
+    "transmembrane_regions_count": 3,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "8YW6",
+      "8YW8",
+      "8YW9",
+      "9KNW",
+      "9KNX",
+      "9KNY",
+      "9MNW",
+      "9MNX",
+      "9MNY",
+      "9MNZ",
+      "9MO0",
+      "9O9S",
+      "9O9T"
+    ],
+    "reactome_ids": [
+      "R-HSA-70268"
+    ],
+    "string_id": "9606.ENSP00000354223",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Q9Y5U8",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q9Y5U8.json",
+      "retrieved_at": "2026-03-26T20:23:38Z"
+    }
+  },
+  "protein:MPC2|O95563": {
+    "status": "ok",
+    "uniprot_id": "O95563",
+    "recommended_name": "Mitochondrial pyruvate carrier 2",
+    "alternative_names": [
+      "Brain protein 44"
+    ],
+    "gene_names": [
+      "MPC2",
+      "BRP44"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Mediates the uptake of pyruvate into mitochondria to maintain the balance between glycolysis and oxidative phosphorylation (PubMed:22628558, PubMed:26253029, PubMed:27317664, PubMed:29472561, PubMed:40044865, PubMed:40101766, PubMed:35278701). Plays an essential role in cellular metabolism (PubMed:40044865, PubMed:40101766)",
+    "catalytic_activity": [
+      "pyruvate(out) + H(+)(out) = pyruvate(in) + H(+)(in)"
+    ],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Membrane",
+      "Mitochondrion",
+      "Mitochondrion inner membrane",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transmembrane",
+      "Transmembrane helix",
+      "Transport"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion inner membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0042802",
+      "GO:0050833"
+    ],
+    "go_bp_ids": [
+      "GO:0035774",
+      "GO:0006086",
+      "GO:0006850"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0098800",
+      "GO:0005743",
+      "GO:7770001",
+      "GO:0005739",
+      "GO:0005634"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 127,
+    "transmembrane_regions_count": 3,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "8YW6",
+      "8YW8",
+      "8YW9",
+      "9GIV",
+      "9GIW",
+      "9GIX",
+      "9GIY",
+      "9KNW",
+      "9KNX",
+      "9KNY",
+      "9MNW",
+      "9MNX",
+      "9MNY",
+      "9MNZ",
+      "9MO0"
+    ],
+    "reactome_ids": [
+      "R-HSA-70268"
+    ],
+    "string_id": "9606.ENSP00000271373",
+    "provenance": {
+      "source": "UniProt",
+      "query": "O95563",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O95563.json",
+      "retrieved_at": "2026-05-13T21:34:47Z"
+    }
+  },
+  "protein:pyruvate dehydrogenase complex|P10515": {
+    "status": "ok",
+    "uniprot_id": "P10515",
+    "recommended_name": "Dihydrolipoyllysine-residue acetyltransferase component of pyruvate dehydrogenase complex, mitochondrial",
+    "alternative_names": [
+      "70 kDa mitochondrial autoantigen of primary biliary cirrhosis",
+      "Dihydrolipoamide acetyltransferase component of pyruvate dehydrogenase complex",
+      "M2 antigen complex 70 kDa subunit",
+      "Pyruvate dehydrogenase complex component E2"
+    ],
+    "gene_names": [
+      "DLAT",
+      "DLTA"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "The pyruvate dehydrogenase (PDH) complex, catalyzes the overall conversion of pyruvate to acetyl-CoA and CO(2), and thereby links cytoplasmic glycolysis and the mitochondrial tricarboxylic acid (TCA) cycle (Probable). It contains multiple copies of three enzymatic components: pyruvate dehydrogenase (E1), dihydrolipoamide acetyltransferase (E2) and dihydrolipoamide dehydrogenase (E3); (Probable). Within this complex, the catalytic function of this enzyme is to accept, and to transfer to coenzyme A, acetyl groups from acetyl-lipoyl moiety generated by the pyruvate dehydrogenase, leading to acetyl-CoA formation (Probable)",
+    "catalytic_activity": [
+      "N(6)-[(R)-dihydrolipoyl]-L-lysyl-[protein] + acetyl-CoA = N(6)-[(R)-S(8)-acetyldihydrolipoyl]-L-lysyl-[protein] + CoA"
+    ],
+    "enzyme_commission": [
+      "2.3.1.12"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Acyltransferase",
+      "Carbohydrate metabolism",
+      "Glucose metabolism",
+      "Lipoyl",
+      "Mitochondrion",
       "Phosphoprotein",
-      "Primary mitochondrial disease",
       "Proteomics identification",
       "Reference proteome",
+      "Repeat",
+      "Transferase",
       "Transit peptide",
-      "Transport",
-      "Tricarboxylic acid cycle",
-      "Tumor suppressor"
+      "Tricarboxylic acid cycle"
     ],
     "subcellular_locations": [
-      "Mitochondrion inner membrane"
+      "Mitochondrion matrix"
     ],
     "go_mf_ids": [
-      "GO:0009055",
-      "GO:0050660",
-      "GO:0008177"
+      "GO:0004742",
+      "GO:0042802"
     ],
     "go_bp_ids": [
-      "GO:0006121",
-      "GO:0007399",
-      "GO:0042776",
-      "GO:0022904",
-      "GO:0006105",
+      "GO:0006006",
+      "GO:0042867",
+      "GO:0006086",
       "GO:0006099"
     ],
     "go_cellular_component_ids": [
-      "GO:0005743",
       "GO:0005759",
       "GO:0005739",
-      "GO:0005730",
-      "GO:0045273"
+      "GO:0045254",
+      "GO:0120212"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 664,
+    "sequence_length": 647,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "6VAX",
-      "8DYD",
-      "8DYE",
-      "8GS8"
+      "1FYC",
+      "1Y8N",
+      "1Y8O",
+      "1Y8P",
+      "2DNE",
+      "2PNR",
+      "2Q8I",
+      "3B8K",
+      "3CRK",
+      "3CRL",
+      "6CT0",
+      "6H55",
+      "8PIU"
     ],
     "reactome_ids": [
-      "R-HSA-611105",
-      "R-HSA-71403",
-      "R-HSA-9854311"
+      "R-HSA-204174",
+      "R-HSA-5362517",
+      "R-HSA-9857492",
+      "R-HSA-9861559"
     ],
-    "string_id": "9606.ENSP00000264932",
+    "string_id": "9606.ENSP00000280346",
     "provenance": {
       "source": "UniProt",
-      "query": "P31040",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P31040.json",
-      "retrieved_at": "2026-05-13T20:48:40Z"
-    }
-  },
-  "protein:SDHB|P21912": {
-    "status": "ok",
-    "uniprot_id": "P21912",
-    "recommended_name": "Succinate dehydrogenase [ubiquinone] iron-sulfur subunit, mitochondrial",
-    "alternative_names": [
-      "Iron-sulfur subunit of complex II",
-      "Malate dehydrogenase [quinone] iron-sulfur subunit"
-    ],
-    "gene_names": [
-      "SDHB",
-      "SDH",
-      "SDH1"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Iron-sulfur protein (IP) subunit of the succinate dehydrogenase complex (mitochondrial respiratory chain complex II), responsible for transferring electrons from succinate to ubiquinone (coenzyme Q) (PubMed:26925370, PubMed:27604842). SDH also oxidizes malate to the non-canonical enol form of oxaloacetate, enol-oxaloacetate (By similarity). Enol-oxaloacetate, which is a potent inhibitor of the succinate dehydrogenase activity, is further isomerized into keto-oxaloacetate (By similarity)",
-    "catalytic_activity": [
-      "a quinone + succinate = fumarate + a quinol",
-      "(R)-malate + a quinone = enol-oxaloacetate + a quinol",
-      "(S)-malate + a quinone = enol-oxaloacetate + a quinol"
-    ],
-    "enzyme_commission": [
-      "1.3.5.1"
-    ],
-    "pathways": [
-      "Carbohydrate metabolism; tricarboxylic acid cycle; fumarate from succinate (eukaryal route): step 1/1"
-    ],
-    "keywords": [
-      "2Fe-2S",
-      "3D-structure",
-      "3Fe-4S",
-      "4Fe-4S",
-      "Acetylation",
-      "Disease variant",
-      "Electron transport",
-      "Host-virus interaction",
-      "Iron",
-      "Iron-sulfur",
-      "Membrane",
-      "Metal-binding",
-      "Mitochondrion",
-      "Mitochondrion inner membrane",
-      "Oxidoreductase",
-      "Primary mitochondrial disease",
-      "Proteomics identification",
-      "Reference proteome",
-      "Transit peptide",
-      "Transport",
-      "Tricarboxylic acid cycle"
-    ],
-    "subcellular_locations": [
-      "Mitochondrion inner membrane"
-    ],
-    "go_mf_ids": [
-      "GO:0051537",
-      "GO:0051538",
-      "GO:0051539",
-      "GO:0009055",
-      "GO:0046872",
-      "GO:0008177",
-      "GO:0048039"
-    ],
-    "go_bp_ids": [
-      "GO:0009060",
-      "GO:0006121",
-      "GO:0042776",
-      "GO:0022904",
-      "GO:0006105",
-      "GO:0006099"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005743",
-      "GO:0005759",
-      "GO:0031966",
-      "GO:0005739",
-      "GO:0005654",
-      "GO:0005886",
-      "GO:0045273"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 280,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [
-      "7KCL",
-      "7KCM",
-      "7KLU",
-      "7KLV",
-      "8GS8"
-    ],
-    "reactome_ids": [
-      "R-HSA-611105",
-      "R-HSA-71403",
-      "R-HSA-9854311"
-    ],
-    "string_id": "9606.ENSP00000364649",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P21912",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P21912.json",
-      "retrieved_at": "2026-05-13T20:48:41Z"
-    }
-  },
-  "protein:SDHC|Q99643": {
-    "status": "ok",
-    "uniprot_id": "Q99643",
-    "recommended_name": "Succinate dehydrogenase cytochrome b560 subunit, mitochondrial",
-    "alternative_names": [
-      "Integral membrane protein CII-3",
-      "Malate dehydrogenase [quinone] cytochrome b560 subunit",
-      "QPs-1",
-      "Succinate dehydrogenase complex subunit C",
-      "Succinate-ubiquinone oxidoreductase cytochrome B large subunit"
-    ],
-    "gene_names": [
-      "SDHC",
-      "CYB560",
-      "SDH3"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Membrane-anchoring subunit of succinate dehydrogenase (SDH) that is involved in complex II of the mitochondrial electron transport chain and is responsible for transferring electrons from succinate to ubiquinone (coenzyme Q) (PubMed:9533030). SDH also oxidizes malate to the non-canonical enol form of oxaloacetate, enol-oxaloacetate (By similarity). Enol-oxaloacetate, which is a potent inhibitor of the succinate dehydrogenase activity, is further isomerized into keto-oxaloacetate (By similarity)",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
-    "pathways": [
-      "Carbohydrate metabolism; tricarboxylic acid cycle"
-    ],
-    "keywords": [
-      "3D-structure",
-      "Alternative splicing",
-      "Electron transport",
-      "Heme",
-      "Iron",
-      "Membrane",
-      "Metal-binding",
-      "Mitochondrion",
-      "Mitochondrion inner membrane",
-      "Proteomics identification",
-      "Reference proteome",
-      "Transit peptide",
-      "Transmembrane",
-      "Transmembrane helix",
-      "Transport",
-      "Tricarboxylic acid cycle"
-    ],
-    "subcellular_locations": [
-      "Mitochondrion inner membrane"
-    ],
-    "go_mf_ids": [
-      "GO:0009055",
-      "GO:0020037",
-      "GO:0046872"
-    ],
-    "go_bp_ids": [
-      "GO:0009060",
-      "GO:0006121",
-      "GO:0042776",
-      "GO:0006099"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0016020",
-      "GO:0005743",
-      "GO:0005739",
-      "GO:0045273"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 169,
-    "transmembrane_regions_count": 3,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [
-      "8GS8"
-    ],
-    "reactome_ids": [
-      "R-HSA-611105",
-      "R-HSA-71403",
-      "R-HSA-9854311"
-    ],
-    "string_id": "9606.ENSP00000356953",
-    "provenance": {
-      "source": "UniProt",
-      "query": "Q99643",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q99643.json",
-      "retrieved_at": "2026-05-13T20:48:41Z"
-    }
-  },
-  "protein:SDHD|O14521": {
-    "status": "ok",
-    "uniprot_id": "O14521",
-    "recommended_name": "Succinate dehydrogenase [ubiquinone] cytochrome b small subunit, mitochondrial",
-    "alternative_names": [
-      "CII-4",
-      "Malate dehydrogenase [quinone] cytochrome b small subunit",
-      "QPs3",
-      "Succinate dehydrogenase complex subunit D",
-      "Succinate-ubiquinone oxidoreductase cytochrome b small subunit",
-      "Succinate-ubiquinone reductase membrane anchor subunit"
-    ],
-    "gene_names": [
-      "SDHD",
-      "SDH4"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Membrane-anchoring subunit of succinate dehydrogenase (SDH) that is involved in complex II of the mitochondrial electron transport chain and is responsible for transferring electrons from succinate to ubiquinone (coenzyme Q) (PubMed:10482792, PubMed:9533030). SDH also oxidizes malate to the non-canonical enol form of oxaloacetate, enol-oxaloacetate (By similarity). Enol-oxaloacetate, which is a potent inhibitor of the succinate dehydrogenase activity, is further isomerized into keto-oxaloacetate (By similarity)",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
-    "pathways": [
-      "Carbohydrate metabolism; tricarboxylic acid cycle"
-    ],
-    "keywords": [
-      "3D-structure",
-      "Alternative splicing",
-      "Disease variant",
-      "Electron transport",
-      "Heme",
-      "Iron",
-      "Membrane",
-      "Metal-binding",
-      "Mitochondrion",
-      "Mitochondrion inner membrane",
-      "Primary mitochondrial disease",
-      "Proteomics identification",
-      "Reference proteome",
-      "Transit peptide",
-      "Transmembrane",
-      "Transmembrane helix",
-      "Transport",
-      "Tricarboxylic acid cycle"
-    ],
-    "subcellular_locations": [
-      "Mitochondrion inner membrane"
-    ],
-    "go_mf_ids": [
-      "GO:0009055",
-      "GO:0020037",
-      "GO:0046872",
-      "GO:0008177",
-      "GO:0048039"
-    ],
-    "go_bp_ids": [
-      "GO:0071456",
-      "GO:0006121",
-      "GO:0042776",
-      "GO:0050433",
-      "GO:0006099"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005740",
-      "GO:0005743",
-      "GO:0005739",
-      "GO:0045273"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 159,
-    "transmembrane_regions_count": 3,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [
-      "8GS8"
-    ],
-    "reactome_ids": [
-      "R-HSA-611105",
-      "R-HSA-71403",
-      "R-HSA-9854311"
-    ],
-    "string_id": "9606.ENSP00000364699",
-    "provenance": {
-      "source": "UniProt",
-      "query": "O14521",
-      "source_url": "https://rest.uniprot.org/uniprotkb/O14521.json",
-      "retrieved_at": "2026-05-13T20:48:41Z"
+      "query": "P10515",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P10515.json",
+      "retrieved_at": "2026-03-26T20:23:38Z"
     }
   }
 }
