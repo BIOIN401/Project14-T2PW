@@ -1617,10 +1617,10 @@ class DeterministicPwmlBuilder:
                 "pwc-id": f"PW_C{int(rec['id']):06d}",
                 "short-name": rec["name"],
                 "element-states": [],
-                "hmdb-id": rec.get("mapped_ids", {}).get("hmdb") or None,
-                "kegg-id": rec.get("mapped_ids", {}).get("kegg") or None,
-                "chebi-id": rec.get("mapped_ids", {}).get("chebi") or None,
-                "pubchem-cid": rec.get("mapped_ids", {}).get("pubchem") or None,
+                "hmdb-id": (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("hmdb") or None,
+                "kegg-id": (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("kegg") or None,
+                "chebi-id": (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("chebi") or None,
+                "pubchem-cid": (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("pubchem") or None,
             }
             for rec in self.entity_records.get("compounds", [])
         ]
@@ -1653,7 +1653,7 @@ class DeterministicPwmlBuilder:
                 "name": rec["name"],
                 "species-id": default_species_id,
                 "element-states": [],
-                "uniprot-id": rec.get("mapped_ids", {}).get("uniprot") or None,
+                "uniprot-id": (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("uniprot") or None,
                 "ec-numbers": rec.get("ec_numbers", []),
             }
             for rec in self.entity_records.get("proteins", [])
