@@ -1493,13 +1493,154 @@ def _db_tool_unavailable(db: Optional[PathBankDbResolver]) -> Dict[str, Any]:
 
 
 def _tool_ids(tool_args: Dict[str, Any]) -> Dict[str, str]:
-    ids = _safe_dict(tool_args.get("ids"))
+    alias_map = {
+        "pathwhiz_id": "pathwhiz_id",
+        "pathbank_compound_id": "pathbank_compound_id",
+        "pathbank_protein_id": "pathbank_protein_id",
+        "pathbank_complex_id": "pathbank_protein_complex_id",
+        "pathbank_protein_complex_id": "pathbank_protein_complex_id",
+        "pw_compound_id": "pathbank_compound_id",
+        "pw_protein_id": "pathbank_protein_id",
+        "pw_complex_id": "pathbank_protein_complex_id",
+        "pwc_id": "pwc_id",
+        "hmdb_id": "hmdb",
+        "hmdb": "hmdb",
+        "kegg_id": "kegg",
+        "kegg": "kegg",
+        "chebi_id": "chebi",
+        "chebi": "chebi",
+        "pubchem_cid": "pubchem",
+        "pubchem_id": "pubchem",
+        "pubchem": "pubchem",
+        "cas_id": "cas",
+        "cas_number": "cas",
+        "cas": "cas",
+        "drugbank_id": "drugbank",
+        "drugbank": "drugbank",
+        "biocyc_id": "biocyc",
+        "biocyc": "biocyc",
+        "chemspider_id": "chemspider",
+        "chemspider": "chemspider",
+        "uniprot_id": "uniprot",
+        "uniprot": "uniprot",
+        "gene": "gene_name",
+        "gene_name": "gene_name",
+    }
+    ids = dict(_safe_dict(tool_args.get("ids")))
+    for key in alias_map:
+        if key in tool_args and key not in ids:
+            ids[key] = tool_args[key]
     out: Dict[str, str] = {}
     for key, value in ids.items():
         sval = _canonical(str(value or ""))
         if sval:
-            out[str(key)] = sval
+            out[alias_map.get(str(key), str(key))] = sval
     return out
+
+
+def _first_lookup_with_candidates(*results: Dict[str, Any]) -> Dict[str, Any]:
+    fallback: Dict[str, Any] = {
+        "status": "unmapped",
+        "reason": "no_lookup_attempted",
+        "provider": "PathBankDB",
+        "source": "db",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": [],
+    }
+    for result in results:
+        if not isinstance(result, dict):
+            continue
+        fallback = result
+        if _safe_list(result.get("candidates")):
+            return result
+        if result.get("status") == "mapped":
+            return result
+    return fallback
+
+
+def _lookup_compound_db_candidates(db: PathBankDbResolver, tool_args: Dict[str, Any]) -> Dict[str, Any]:
+    ids = _tool_ids(tool_args)
+    name = _canonical(str(tool_args.get("name") or ""))
+    attempts: List[Dict[str, Any]] = []
+
+    pathbank_id = ids.get("pathbank_compound_id") or ids.get("pathwhiz_id")
+    if pathbank_id and hasattr(db, "_map_compound_by_pathbank_id"):
+        attempts.append(db._map_compound_by_pathbank_id(pathbank_id))  # noqa: SLF001
+    if ids.get("pwc_id") and hasattr(db, "_map_compound_by_pwc_id"):
+        attempts.append(db._map_compound_by_pwc_id(ids["pwc_id"]))  # noqa: SLF001
+
+    external_ids = {
+        key: value
+        for key, value in ids.items()
+        if key in {"hmdb", "kegg", "chebi", "pubchem", "cas", "drugbank", "biocyc", "chemspider"}
+    }
+    if external_ids:
+        attempts.append(db.map_compound_by_ids(external_ids))
+    if name:
+        attempts.append(db.map_compound_by_name(name))
+
+    return _first_lookup_with_candidates(*attempts)
+
+
+def _lookup_protein_db_candidates(db: PathBankDbResolver, tool_args: Dict[str, Any]) -> Dict[str, Any]:
+    ids = _tool_ids(tool_args)
+    name = _canonical(str(tool_args.get("name") or ""))
+    species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or ""))
+    attempts: List[Dict[str, Any]] = []
+
+    pathbank_id = ids.get("pathbank_protein_id") or ids.get("pathwhiz_id")
+    if pathbank_id and hasattr(db, "_map_protein_by_pathbank_id"):
+        attempts.append(db._map_protein_by_pathbank_id(pathbank_id))  # noqa: SLF001
+
+    protein_ids = {key: value for key, value in ids.items() if key in {"uniprot", "gene_name"}}
+    if protein_ids:
+        attempts.append(db.map_protein_by_ids(protein_ids, species=species or None))
+    if name:
+        if species:
+            attempts.append(db.map_protein_by_name_species(name, species))
+        else:
+            attempts.append(
+                {
+                    "status": "unmapped",
+                    "reason": "needs_species",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "chosen_rule": "",
+                    "confidence": 0.0,
+                    "candidates": [],
+                }
+            )
+
+    return _first_lookup_with_candidates(*attempts)
+
+
+def _lookup_protein_complex_db_candidates(db: PathBankDbResolver, tool_args: Dict[str, Any]) -> Dict[str, Any]:
+    ids = _tool_ids(tool_args)
+    name = _canonical(str(tool_args.get("name") or ""))
+    species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or ""))
+    attempts: List[Dict[str, Any]] = []
+
+    pathbank_id = ids.get("pathbank_protein_complex_id") or ids.get("pathwhiz_id")
+    if pathbank_id and hasattr(db, "_map_complex_by_pathbank_id"):
+        attempts.append(db._map_complex_by_pathbank_id(pathbank_id))  # noqa: SLF001
+    if name:
+        if species:
+            attempts.append(db.map_protein_complex(name, species))
+        else:
+            attempts.append(
+                {
+                    "status": "unmapped",
+                    "reason": "needs_species",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "chosen_rule": "",
+                    "confidence": 0.0,
+                    "candidates": [],
+                }
+            )
+
+    return _first_lookup_with_candidates(*attempts)
 
 
 def _novel_compound_record(tool_args: Dict[str, Any]) -> Dict[str, Any]:
@@ -1870,38 +2011,19 @@ def _run_enrichment_agent(
             if db is None or not db.available():
                 result = _db_tool_unavailable(db)
             else:
-                ids = _tool_ids(tool_args)
-                name = _canonical(str(tool_args.get("name") or ""))
-                row = {**ids}
-                if name:
-                    row["name"] = name
-                result = _candidate_lookup_response(db.map_compound_row(row))
+                result = _candidate_lookup_response(_lookup_compound_db_candidates(db, tool_args))
 
         elif tool_name in {"lookup_protein_db", "lookup_protein"}:
             if db is None or not db.available():
                 result = _db_tool_unavailable(db)
             else:
-                ids = _tool_ids(tool_args)
-                name = _canonical(str(tool_args.get("name") or ""))
-                species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or global_organism or ""))
-                row = {**ids}
-                if name:
-                    row["name"] = name
-                result = _candidate_lookup_response(db.map_protein_row(row, species))
+                result = _candidate_lookup_response(_lookup_protein_db_candidates(db, tool_args))
 
         elif tool_name in {"lookup_protein_complex_db"}:
             if db is None or not db.available():
                 result = _db_tool_unavailable(db)
             else:
-                ids = _tool_ids(tool_args)
-                name = _canonical(str(tool_args.get("name") or ""))
-                species = _canonical(str(tool_args.get("species") or tool_args.get("organism") or global_organism or ""))
-                row = {**ids}
-                if name:
-                    row["name"] = name
-                if isinstance(tool_args.get("components"), list):
-                    row["components"] = _safe_list(tool_args.get("components"))
-                result = _candidate_lookup_response(db.map_protein_complex_row(row, species))
+                result = _candidate_lookup_response(_lookup_protein_complex_db_candidates(db, tool_args))
 
         elif tool_name in {"lookup_complex_by_component"}:
             if db is None or not db.available():
@@ -1910,7 +2032,7 @@ def _run_enrichment_agent(
                 result = _candidate_lookup_response(
                     db.find_complex_by_component(
                         _canonical(str(tool_args.get("component_name") or "")),
-                        _canonical(str(tool_args.get("species") or tool_args.get("organism") or global_organism or "")),
+                        _canonical(str(tool_args.get("species") or tool_args.get("organism") or "")),
                     )
                 )
 

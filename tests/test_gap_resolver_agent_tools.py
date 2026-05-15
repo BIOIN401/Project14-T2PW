@@ -58,8 +58,8 @@ class FakeDb:
             ],
         }
 
-    def map_protein_row(self, row: Dict[str, Any], species: str) -> Dict[str, Any]:
-        assert row["name"] == "MPC1"
+    def map_protein_by_name_species(self, name: str, species: str) -> Dict[str, Any]:
+        assert name == "MPC1"
         assert species == "Homo sapiens"
         return {
             "status": "mapped",
