@@ -62,6 +62,11 @@ def test_reaction_ir_construction_refs_resolve() -> None:
     assert reaction["enzymes"][0]["entity_type"] == "protein_complex"
     assert reaction["enzymes"][0]["entity_key"] == ir["entities"]["protein_complexes"][0]["key"]
     assert ir["entities"]["protein_complexes"][0]["components"] == [{"protein_key": ir["entities"]["proteins"][0]["key"], "stoichiometry": 1}]
+    complex_viz = ir["protein_complex_visualizations"][0]
+    assert complex_viz["entity_key"] == reaction["enzymes"][0]["entity_key"]
+    assert complex_viz["biological_state_key"] == reaction["biological_state_key"]
+    assert complex_viz["hidden"] is False
+    assert {"x", "y", "zindex", "visualization_template_id"} <= set(complex_viz)
 
     viz = ir["process_visualizations"][0]
     assert viz["type"] == "reaction_visualization"
@@ -252,5 +257,9 @@ def test_ir_writer_integration_validates_and_has_no_fatal_qa_errors() -> None:
     xml_bytes = etree.tostring(repaired.getroot(), encoding="utf-8", xml_declaration=True, pretty_print=True)
     qa = run_pwml_qa(xml_bytes)
 
+    complex_viz_id = builder.section_items["protein-complex-visualizations"][0]["id"]
+    enzyme_viz = builder.section_items["reaction-visualizations"][0]["reaction_enzyme_visualizations"][0]
+    assert enzyme_viz["protein-complex-visualization-id"] == complex_viz_id
+    assert "protein-location-id" not in enzyme_viz
     assert validation["ok"], validation["issues"][:3]
     assert qa["ok"], qa["errors"]

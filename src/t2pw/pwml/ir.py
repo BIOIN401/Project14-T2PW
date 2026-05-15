@@ -1226,8 +1226,9 @@ def build_pwml_ir(
             }
         )
 
-    # Protein complex visualizations are explicit IR artifacts. Build one for
-    # complexes that have member proteins already located in the same state.
+    # Protein complex visualizations are explicit IR artifacts. PWML represents
+    # complexes through visualizations rather than the standard protein-location
+    # model, so these carry the location-like fields needed downstream.
     complex_locs = [loc for loc in ir["locations"] if loc.get("type") == "protein_complex_location"]
     for loc in complex_locs:
         ir["protein_complex_visualizations"].append(
@@ -1235,6 +1236,11 @@ def build_pwml_ir(
                 "key": keys.next("pcv"),
                 "entity_key": loc["entity_key"],
                 "biological_state_key": loc["biological_state_key"],
+                "x": int(loc.get("x") or 0),
+                "y": int(loc.get("y") or 0),
+                "zindex": int(loc.get("zindex") or 10),
+                "hidden": bool(loc.get("hidden", False)),
+                "visualization_template_id": int(loc.get("visualization_template_id") or 4),
                 "location_key": loc["key"],
                 "protein_member_location_keys": [],
                 "compound_member_location_keys": [],
@@ -1763,6 +1769,38 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
                 f"/locations/{idx}",
             )
 
+    protein_complex_viz_by_entity_state: Dict[Tuple[str, str], Dict[str, Any]] = {}
+    for idx, viz in enumerate(_safe_list(ir.get("protein_complex_visualizations"))):
+        if not isinstance(viz, dict):
+            continue
+        pointer = f"/protein_complex_visualizations/{idx}"
+        entity_key = viz.get("entity_key")
+        bs_key = viz.get("biological_state_key")
+        if entity_key not in entity_keys_by_type["protein_complex"]:
+            error(
+                "protein_complex_visualization_unknown_entity",
+                f"Protein complex visualization references unknown entity_key '{entity_key}'.",
+                pointer,
+                entity_key=entity_key,
+            )
+        if bs_key not in biological_state_keys:
+            error(
+                "protein_complex_visualization_unknown_biological_state",
+                f"Protein complex visualization references unknown biological_state_key '{bs_key}'.",
+                pointer,
+                biological_state_key=bs_key,
+            )
+        for field in ["x", "y", "zindex", "hidden", "visualization_template_id"]:
+            if field not in viz:
+                error(
+                    "protein_complex_visualization_missing_location_field",
+                    f"Protein complex visualization is missing required field '{field}'.",
+                    pointer,
+                    field=field,
+                )
+        if entity_key and bs_key:
+            protein_complex_viz_by_entity_state[(str(entity_key), str(bs_key))] = viz
+
     process_keys: set = set()
     process_member_keys: set = set()
     process_bucket_by_key: Dict[str, str] = {}
@@ -1820,6 +1858,26 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
                         f"/processes/reactions/{idx}/enzymes/{midx}",
                         entity_type=member.get("entity_type"),
                     )
+                else:
+                    complex_viz = protein_complex_viz_by_entity_state.get(
+                        (str(member.get("entity_key")), str(reaction.get("biological_state_key")))
+                    )
+                    if complex_viz is None:
+                        error(
+                            "reaction_enzyme_missing_complex_visualization",
+                            "Reaction enzyme protein_complex has no visible complex visualization in the reaction biological state.",
+                            f"/processes/reactions/{idx}/enzymes/{midx}",
+                            entity_key=member.get("entity_key"),
+                            biological_state_key=reaction.get("biological_state_key"),
+                        )
+                    elif complex_viz.get("hidden") is True:
+                        error(
+                            "reaction_enzyme_hidden_complex_visualization",
+                            "Reaction enzyme protein_complex visualization is hidden.",
+                            f"/processes/reactions/{idx}/enzymes/{midx}",
+                            entity_key=member.get("entity_key"),
+                            biological_state_key=reaction.get("biological_state_key"),
+                        )
 
     for idx, transport in enumerate(_safe_list(processes.get("transports"))):
         if not isinstance(transport, dict):

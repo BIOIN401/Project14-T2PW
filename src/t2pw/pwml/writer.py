@@ -1547,6 +1547,7 @@ class DeterministicPwmlBuilder:
 
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
+        protein_complex_viz_by_entity_state: Dict[Tuple[str, str], int] = {}
         for item in ir.get("protein_complex_visualizations", []) if isinstance(ir.get("protein_complex_visualizations"), list) else []:
             if not isinstance(item, dict):
                 continue
@@ -1555,7 +1556,10 @@ class DeterministicPwmlBuilder:
                 continue
             vid = self.ids.next()
             remember("protein_complex_visualizations", item.get("key"), vid)
-            protein_complex_viz_by_entity[str(item.get("entity_key"))] = vid
+            entity_key = str(item.get("entity_key"))
+            biological_state_key = str(item.get("biological_state_key"))
+            protein_complex_viz_by_entity[entity_key] = vid
+            protein_complex_viz_by_entity_state[(entity_key, biological_state_key)] = vid
             self.section_items["protein-complex-visualizations"].append(
                 {
                     "id": vid,
@@ -1620,7 +1624,13 @@ class DeterministicPwmlBuilder:
                     if role == "enzyme":
                         ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
                         entity_key = minfo.get("entity_key")
-                        pcv_id = protein_complex_viz_by_entity.get(str(entity_key)) if entity_key is not None else None
+                        pcv_id = None
+                        if entity_key is not None:
+                            pcv_id = protein_complex_viz_by_entity_state.get(
+                                (str(entity_key), str(viz.get("biological_state_key")))
+                            )
+                            if pcv_id is None:
+                                pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
                         if mtype == "protein_complex" and pcv_id:
                             ev["protein-complex-visualization-id"] = pcv_id
                         elif loc_id is not None:
@@ -1670,7 +1680,13 @@ class DeterministicPwmlBuilder:
                     elif role == "transporter":
                         tv = {"id": self.ids.next(), "transport-transporter-id": int(minfo["id"])}
                         entity_key = minfo.get("entity_key")
-                        pcv_id = protein_complex_viz_by_entity.get(str(entity_key)) if entity_key is not None else None
+                        pcv_id = None
+                        if entity_key is not None:
+                            pcv_id = protein_complex_viz_by_entity_state.get(
+                                (str(entity_key), str(viz.get("biological_state_key")))
+                            )
+                            if pcv_id is None:
+                                pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
                         if mtype == "protein_complex" and pcv_id:
                             tv["protein-complex-visualization-id"] = pcv_id
                         elif loc_id is not None:
