@@ -222,7 +222,27 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
         "source_refs",
         "evidence",
         "organism",
+        "species_id",
+        "pathbank_species_id",
+        "hmdb_id",
+        "kegg_id",
+        "chebi_id",
+        "pubchem_cid",
+        "cas",
+        "biocyc_id",
+        "chemspider_id",
+        "moldb_inchi",
+        "moldb_inchikey",
+        "short_name",
+        "synonyms",
+        "type",
+        "compound_class",
+        "compound_type",
+        "uniprot",
+        "gene_name",
+        "ec_number",
         "ec_numbers",
+        "element_states",
         "components",
     ]:
         if key in raw:
@@ -295,6 +315,31 @@ def _coerce_participants(value: Any) -> List[Dict[str, Any]]:
             stoich = _to_int(item.get("stoichiometry") or item.get("coefficient")) or 1
             out.append({"name": name, "stoichiometry": max(1, stoich)})
     return out
+
+
+def _component_protein_name(component: Any) -> str:
+    if isinstance(component, str):
+        return _canonical(component)
+    if not isinstance(component, dict):
+        return ""
+    return _canonical(
+        component.get("protein")
+        or component.get("protein_name")
+        or component.get("name")
+        or component.get("component")
+        or component.get("entity")
+    )
+
+
+def _component_stoichiometry(component: Any) -> Optional[int]:
+    if isinstance(component, str):
+        return 1
+    if not isinstance(component, dict):
+        return None
+    stoich = _to_int(component.get("stoichiometry") or component.get("coefficient"))
+    if stoich is None or stoich < 1:
+        return None
+    return stoich
 
 
 def _actor_name_and_hint(item: Any) -> Tuple[str, str, str]:
@@ -449,6 +494,118 @@ def build_pwml_ir(
             entity_by_key[typed["key"]] = typed
             entity_by_name[_norm(rec["name"])].append(typed)
 
+    proteins_by_key = {
+        str(protein.get("key")): protein
+        for protein in ir["entities"]["proteins"]
+        if isinstance(protein, dict) and protein.get("key")
+    }
+    proteins_by_name = {
+        _norm(protein.get("name")): protein
+        for protein in ir["entities"]["proteins"]
+        if isinstance(protein, dict) and _norm(protein.get("name"))
+    }
+    proteins_by_db_id: Dict[int, Dict[str, Any]] = {}
+    for protein in ir["entities"]["proteins"]:
+        if not isinstance(protein, dict):
+            continue
+        for db_key in ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id"]:
+            db_id = _to_int(protein.get(db_key))
+            if db_id is not None:
+                proteins_by_db_id[db_id] = protein
+
+    for pc_idx, pc in enumerate(ir["entities"]["protein_complexes"]):
+        raw_components = _safe_list(pc.get("components"))
+        if not raw_components:
+            _add_issue(
+                report,
+                "error",
+                "protein_complex_missing_components",
+                f"Protein complex '{pc.get('name')}' has no protein components.",
+                pointer=f"/entities/protein_complexes/{pc_idx}/components",
+                entity_key=pc.get("key"),
+                entity_name=pc.get("name"),
+            )
+            pc["components"] = []
+            continue
+
+        structured_components: List[Dict[str, Any]] = []
+        for comp_idx, component in enumerate(raw_components):
+            pointer = f"/entities/protein_complexes/{pc_idx}/components/{comp_idx}"
+            protein: Optional[Dict[str, Any]] = None
+            if isinstance(component, dict):
+                protein_key = _canonical(component.get("protein_key") or component.get("entity_key"))
+                if protein_key:
+                    protein = proteins_by_key.get(protein_key)
+                if protein is None:
+                    comp_db_id = _db_id(
+                        component,
+                        ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id", "protein_id"],
+                    )
+                    if comp_db_id is not None:
+                        protein = proteins_by_db_id.get(comp_db_id)
+            comp_name = _component_protein_name(component)
+            if protein is None and comp_name:
+                protein = proteins_by_name.get(_norm(comp_name))
+
+            stoich = _component_stoichiometry(component)
+            if stoich is None:
+                _add_issue(
+                    report,
+                    "error",
+                    "component_missing_stoichiometry",
+                    f"Component[{comp_idx}] in complex '{pc.get('name')}' is missing stoichiometry.",
+                    pointer=pointer,
+                    complex_key=pc.get("key"),
+                    complex_name=pc.get("name"),
+                    component_name=comp_name,
+                )
+                continue
+            if protein is None:
+                _add_issue(
+                    report,
+                    "error",
+                    "component_protein_unresolved",
+                    f"Component '{comp_name or comp_idx}' in complex '{pc.get('name')}' does not reference an existing protein.",
+                    pointer=pointer,
+                    complex_key=pc.get("key"),
+                    complex_name=pc.get("name"),
+                    component_name=comp_name,
+                )
+                continue
+
+            structured_components.append(
+                {
+                    "protein_key": str(protein["key"]),
+                    "stoichiometry": stoich,
+                }
+            )
+
+        pc["components"] = structured_components
+        if not structured_components:
+            _add_issue(
+                report,
+                "error",
+                "protein_complex_missing_components",
+                f"Protein complex '{pc.get('name')}' has no resolved protein components.",
+                pointer=f"/entities/protein_complexes/{pc_idx}/components",
+                entity_key=pc.get("key"),
+                entity_name=pc.get("name"),
+            )
+
+    enzyme_complex_by_protein_key: Dict[str, Dict[str, Any]] = {}
+    for pc in ir["entities"]["protein_complexes"]:
+        if not isinstance(pc, dict):
+            continue
+        components = _safe_list(pc.get("components"))
+        if len(components) != 1 or not isinstance(components[0], dict):
+            continue
+        protein_key = str(components[0].get("protein_key") or "")
+        if not protein_key or protein_key in enzyme_complex_by_protein_key:
+            continue
+        typed_pc = dict(pc)
+        typed_pc["entity_type"] = "protein_complex"
+        enzyme_complex_by_protein_key[protein_key] = typed_pc
+
     def resolve_component(source_key: str, value: Any, pointer: str) -> Optional[str]:
         name = _canonical(value)
         if not name:
@@ -523,6 +680,24 @@ def build_pwml_ir(
             "cell_type_key": cell_type_key,
             "tissue_key": tissue_key,
         }
+        if not species_key:
+            _add_issue(
+                report,
+                "error",
+                "biological_state_missing_species",
+                f"Biological state '{name}' has no resolved species reference.",
+                pointer=f"/biological_states/{idx}",
+                biological_state_key=state_key,
+            )
+        if not subcellular_key:
+            _add_issue(
+                report,
+                "error",
+                "biological_state_missing_subcellular_location",
+                f"Biological state '{name}' has no resolved subcellular location reference.",
+                pointer=f"/biological_states/{idx}",
+                biological_state_key=state_key,
+            )
         if not any([species_key, subcellular_key, cell_type_key, tissue_key]):
             _add_issue(
                 report,
@@ -561,7 +736,7 @@ def build_pwml_ir(
 
     preferred_order = {
         "reaction_member": ["compound", "nucleic_acid", "element_collection", "protein_complex", "protein"],
-        "enzyme": ["protein", "protein_complex"],
+        "enzyme": ["protein_complex", "protein"],
         "transporter": ["protein_complex", "protein"],
         "interaction": ["protein", "protein_complex", "compound", "nucleic_acid", "element_collection"],
     }
@@ -601,6 +776,51 @@ def build_pwml_ir(
             )
         return candidates[0]
 
+    def ensure_enzyme_complex_entity(entity: Dict[str, Any], pointer: str) -> Dict[str, Any]:
+        if entity.get("entity_type") == "protein_complex":
+            return entity
+        if entity.get("entity_type") != "protein":
+            return entity
+        protein_key = str(entity.get("key") or "")
+        if not protein_key:
+            return entity
+        existing = enzyme_complex_by_protein_key.get(protein_key)
+        if existing:
+            return existing
+
+        protein_name = _canonical(entity.get("name")) or protein_key
+        base_name = f"{protein_name} complex"
+        complex_name = base_name
+        suffix = 2
+        while any(candidate.get("entity_type") == "protein_complex" for candidate in entity_by_name.get(_norm(complex_name), [])):
+            complex_name = f"{base_name} {suffix}"
+            suffix += 1
+        complex_record: Dict[str, Any] = {
+            "key": f"pc_{len(ir['entities']['protein_complexes']) + 1}",
+            "name": complex_name,
+            "components": [{"protein_key": protein_key, "stoichiometry": 1}],
+            "mapping_meta": {"resolution": {"status": "novel", "issue": "enzyme_wrapped_direct_protein"}},
+        }
+        if entity.get("species_id"):
+            complex_record["species_id"] = entity.get("species_id")
+        ir["entities"]["protein_complexes"].append(complex_record)
+        typed_pc = dict(complex_record)
+        typed_pc["entity_type"] = "protein_complex"
+        entity_by_key[typed_pc["key"]] = typed_pc
+        entity_by_name[_norm(complex_name)].append(typed_pc)
+        enzyme_complex_by_protein_key[protein_key] = typed_pc
+        _add_issue(
+            report,
+            "warning",
+            "enzyme_protein_wrapped_as_complex",
+            f"Reaction enzyme protein '{protein_name}' was represented as a novel single-component protein complex.",
+            pointer=pointer,
+            protein_key=protein_key,
+            protein_complex_key=complex_record["key"],
+            protein_complex_name=complex_name,
+        )
+        return typed_pc
+
     location_by_tuple: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
 
     def ensure_location(
@@ -622,6 +842,7 @@ def build_pwml_ir(
         location_type = {
             "compound": "compound_location",
             "protein": "protein_location",
+            "protein_complex": "protein_complex_location",
             "nucleic_acid": "nucleic_acid_location",
             "element_collection": "element_collection_location",
         }.get(entity_type)
@@ -630,6 +851,7 @@ def build_pwml_ir(
         prefix = {
             "compound": "cl",
             "protein": "pl",
+            "protein_complex": "pcl",
             "nucleic_acid": "nal",
             "element_collection": "ecl",
         }[entity_type]
@@ -792,6 +1014,7 @@ def build_pwml_ir(
             entity = resolve_entity(name, "enzyme", f"/processes/reactions/{ridx}/enzymes/{eidx}", hint=hint)
             if not entity:
                 continue
+            entity = ensure_enzyme_complex_entity(entity, f"/processes/reactions/{ridx}/enzymes/{eidx}")
             member_key = f"{rx_key}_enzyme_{len(reaction['enzymes']) + 1}"
             reaction["enzymes"].append(
                 {"key": member_key, "entity_type": entity["entity_type"], "entity_key": entity["key"], "role": role or "catalyst"}
@@ -1114,6 +1337,8 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
     entities = _safe_dict(payload_or_ir.get("entities"))
     all_entity_names: set = set()
     all_entity_keys: set = set()
+    protein_names: set = set()
+    protein_keys: set = set()
 
     for bucket in ENTITY_BUCKETS.values():
         for e in _safe_list(entities.get(bucket)):
@@ -1121,9 +1346,13 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                 n = _canonical(e.get("name"))
                 if n:
                     all_entity_names.add(_norm(n))
+                    if bucket == "proteins":
+                        protein_names.add(_norm(n))
                 k = e.get("key")
                 if k:
                     all_entity_keys.add(k)
+                    if bucket == "proteins":
+                        protein_keys.add(k)
 
     # ── PROTEINS ─────────────────────────────────────────────────────────────
     for idx, prot in enumerate(_safe_list(entities.get("proteins"))):
@@ -1172,14 +1401,43 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
             )
         else:
             for cidx, comp in enumerate(components):
-                if not isinstance(comp, dict):
-                    continue
-                stoich = comp.get("stoichiometry") or comp.get("coefficient")
+                pointer = f"/entities/protein_complexes/{idx}/components/{cidx}"
+                protein_key = ""
+                if isinstance(comp, dict):
+                    protein_key = _canonical(comp.get("protein_key") or comp.get("entity_key"))
+                comp_name = _component_protein_name(comp)
+                stoich = _component_stoichiometry(comp)
                 if stoich is None:
                     err(
                         "component_missing_stoichiometry",
                         f"Component[{cidx}] in complex '{pcname}' is missing stoichiometry.",
-                        f"/entities/protein_complexes/{idx}/components/{cidx}",
+                        pointer,
+                        complex_name=pcname,
+                        component_name=comp_name,
+                    )
+                if protein_key:
+                    if protein_key not in protein_keys:
+                        err(
+                            "component_protein_unresolved",
+                            f"Component '{protein_key}' in complex '{pcname}' does not reference an existing protein.",
+                            pointer,
+                            complex_name=pcname,
+                            protein_key=protein_key,
+                        )
+                elif comp_name:
+                    if _norm(comp_name) not in protein_names:
+                        err(
+                            "component_protein_unresolved",
+                            f"Component '{comp_name}' in complex '{pcname}' does not reference an existing protein.",
+                            pointer,
+                            complex_name=pcname,
+                            component_name=comp_name,
+                        )
+                else:
+                    err(
+                        "component_protein_unresolved",
+                        f"Component[{cidx}] in complex '{pcname}' does not reference an existing protein.",
+                        pointer,
                         complex_name=pcname,
                     )
 
@@ -1212,7 +1470,7 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                 state_name=sname,
             )
         if not has_subcell:
-            warn(
+            err(
                 "biological_state_missing_subcellular_location",
                 f"Biological state '{sname}' has no subcellular location.",
                 f"/biological_states/{idx}",
@@ -1420,11 +1678,66 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
             entity_keys_by_type[entity_type].add(key)
             all_entity_keys.add(key)
 
+    for idx, record in enumerate(_safe_list(_safe_dict(ir.get("entities")).get("protein_complexes"))):
+        if not isinstance(record, dict):
+            continue
+        components = _safe_list(record.get("components"))
+        if not components:
+            error(
+                "protein_complex_missing_components",
+                f"Protein complex '{record.get('name') or idx}' has no protein components.",
+                f"/entities/protein_complexes/{idx}/components",
+            )
+            continue
+        for cidx, component in enumerate(components):
+            pointer = f"/entities/protein_complexes/{idx}/components/{cidx}"
+            if not isinstance(component, dict):
+                error(
+                    "protein_complex_component_not_structured",
+                    "Protein complex component must be a structured record.",
+                    pointer,
+                )
+                continue
+            protein_key = component.get("protein_key")
+            stoich = _to_int(component.get("stoichiometry"))
+            if protein_key not in entity_keys_by_type["protein"]:
+                error(
+                    "component_protein_unresolved",
+                    f"Protein complex component references unknown protein_key '{protein_key}'.",
+                    pointer,
+                    protein_key=protein_key,
+                )
+            if stoich is None or stoich < 1:
+                error(
+                    "component_missing_stoichiometry",
+                    "Protein complex component is missing positive stoichiometry.",
+                    pointer,
+                    protein_key=protein_key,
+                )
+
     biological_state_keys = {
         state.get("key")
         for state in _safe_list(ir.get("biological_states"))
         if isinstance(state, dict) and state.get("key")
     }
+    for idx, state in enumerate(_safe_list(ir.get("biological_states"))):
+        if not isinstance(state, dict):
+            continue
+        pointer = f"/biological_states/{idx}"
+        if not state.get("key"):
+            error("missing_biological_state_key", f"biological_states[{idx}] is missing key.", pointer)
+        if not state.get("species_key"):
+            error(
+                "biological_state_missing_species",
+                f"Biological state '{state.get('name') or idx}' is missing species_key.",
+                pointer,
+            )
+        if not state.get("subcellular_location_key"):
+            error(
+                "biological_state_missing_subcellular_location",
+                f"Biological state '{state.get('name') or idx}' is missing subcellular_location_key.",
+                pointer,
+            )
     location_keys = {
         loc.get("key")
         for loc in _safe_list(ir.get("locations"))
@@ -1500,6 +1813,13 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
         for midx, member in enumerate(_safe_list(reaction.get("enzymes"))):
             if isinstance(member, dict):
                 validate_member(member, f"/processes/reactions/{idx}/enzymes/{midx}")
+                if member.get("entity_type") != "protein_complex":
+                    error(
+                        "reaction_enzyme_must_be_protein_complex",
+                        "Reaction enzyme must reference a protein_complex entity.",
+                        f"/processes/reactions/{idx}/enzymes/{midx}",
+                        entity_type=member.get("entity_type"),
+                    )
 
     for idx, transport in enumerate(_safe_list(processes.get("transports"))):
         if not isinstance(transport, dict):

@@ -59,7 +59,9 @@ def test_reaction_ir_construction_refs_resolve() -> None:
     reaction = ir["processes"]["reactions"][0]
     assert reaction["left"][0]["entity_key"] == ir["entities"]["compounds"][0]["key"]
     assert reaction["right"][0]["entity_key"] == ir["entities"]["compounds"][1]["key"]
-    assert reaction["enzymes"][0]["entity_key"] == ir["entities"]["proteins"][0]["key"]
+    assert reaction["enzymes"][0]["entity_type"] == "protein_complex"
+    assert reaction["enzymes"][0]["entity_key"] == ir["entities"]["protein_complexes"][0]["key"]
+    assert ir["entities"]["protein_complexes"][0]["components"] == [{"protein_key": ir["entities"]["proteins"][0]["key"], "stoichiometry": 1}]
 
     viz = ir["process_visualizations"][0]
     assert viz["type"] == "reaction_visualization"
@@ -122,6 +124,78 @@ def test_strict_db_missing_compound_identity_is_error() -> None:
     _ir, report = build_pwml_ir(payload, strict_db=True)
 
     assert any(err["code"] == "missing_db_identity" and err["entity_type"] == "compound" for err in report["errors"])
+
+
+def test_name_only_biological_state_is_not_exportable() -> None:
+    payload = _base_payload()
+    payload["biological_states"] = [{"name": "Generic state"}]
+    payload["processes"]["reactions"][0]["biological_state"] = "Generic state"
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    error_codes = {err["code"] for err in report["errors"]}
+    assert "biological_state_missing_species" in error_codes
+    assert "biological_state_missing_subcellular_location" in error_codes
+    assert not validation["ok"]
+
+
+def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None:
+    payload = _base_payload()
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "Hexokinase complex",
+            "pathbank_complex_id": 401,
+            "species": "Homo sapiens",
+            "components": ["Hexokinase"],
+        }
+    ]
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert not report["errors"]
+    assert validation["ok"], validation["errors"]
+    complex_record = ir["entities"]["protein_complexes"][0]
+    assert complex_record["components"] == [{"protein_key": "prot_1", "stoichiometry": 1}]
+
+    ref_path = ROOT / "reference" / "PW000001.pwml"
+    signature = discover_structure_signature(ref_path)
+    args = SimpleNamespace(
+        name="Generated Pathway",
+        description="",
+        subject="Metabolic",
+        pw_id="PW000000",
+        height=1400,
+        width=3200,
+        background_color="#FFFFFF",
+        ref=str(ref_path),
+    )
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args)
+    builder.build()
+
+    protein_id = builder.section_items["proteins"][0]["id"]
+    complex_members = builder.section_items["protein-complexes"][0]["protein_complex-proteins"]
+    assert complex_members == [{"id": complex_members[0]["id"], "protein-id": protein_id, "stoichiometry": 1}]
+
+
+def test_protein_complex_unresolved_component_is_not_exportable() -> None:
+    payload = _base_payload()
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "Broken complex",
+            "pathbank_complex_id": 401,
+            "species": "Homo sapiens",
+            "components": ["Missing protein"],
+        }
+    ]
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert any(err["code"] == "component_protein_unresolved" for err in report["errors"])
+    assert any(err["code"] == "protein_complex_missing_components" for err in validation["errors"])
+    assert not validation["ok"]
 
 
 def test_same_compound_two_states_is_one_entity_two_locations() -> None:

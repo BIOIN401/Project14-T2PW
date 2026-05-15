@@ -212,9 +212,24 @@ def _index_locations(payload: Dict[str, Any], *, key: str, field: str) -> Dict[s
     return out
 
 
-def _state_maps(payload: Dict[str, Any]) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, str]]:
+def _state_context_key(
+    *,
+    species: str = "",
+    subcellular_location: str = "",
+    cell_type: str = "",
+    tissue: str = "",
+) -> Tuple[str, str, str, str]:
+    return (
+        _normalize(species),
+        _normalize(subcellular_location),
+        _normalize(cell_type),
+        _normalize(tissue),
+    )
+
+
+def _state_maps(payload: Dict[str, Any]) -> Tuple[Dict[str, Dict[str, Any]], Dict[Tuple[str, str, str, str], str]]:
     by_name: Dict[str, Dict[str, Any]] = {}
-    by_loc_norm: Dict[str, str] = {}
+    by_context: Dict[Tuple[str, str, str, str], str] = {}
     for state in _safe_list(payload.get("biological_states")):
         if not isinstance(state, dict):
             continue
@@ -223,9 +238,20 @@ def _state_maps(payload: Dict[str, Any]) -> Tuple[Dict[str, Dict[str, Any]], Dic
             continue
         by_name[name] = state
         location = (state.get("subcellular_location") or "").strip() if isinstance(state.get("subcellular_location"), str) else ""
-        if location:
-            by_loc_norm.setdefault(_normalize(location), name)
-    return by_name, by_loc_norm
+        species = (state.get("species") or state.get("organism") or "").strip() if isinstance(state.get("species") or state.get("organism"), str) else ""
+        cell_type = (state.get("cell_type") or "").strip() if isinstance(state.get("cell_type"), str) else ""
+        tissue = (state.get("tissue") or "").strip() if isinstance(state.get("tissue"), str) else ""
+        if species and location:
+            by_context.setdefault(
+                _state_context_key(
+                    species=species,
+                    subcellular_location=location,
+                    cell_type=cell_type,
+                    tissue=tissue,
+                ),
+                name,
+            )
+    return by_name, by_context
 
 
 _CANONICAL_COMPARTMENT_VOCAB = {
@@ -274,17 +300,32 @@ def _resolve_canonical_compartment(location: str) -> str:
     return ""
 
 
-def _ensure_biological_state(payload: Dict[str, Any], location: str, species: str) -> str:
+def _ensure_biological_state(
+    payload: Dict[str, Any],
+    location: str,
+    species: str,
+    *,
+    cell_type: str = "",
+    tissue: str = "",
+) -> str:
     states = payload.setdefault("biological_states", [])
     if not isinstance(states, list):
         states = []
         payload["biological_states"] = states
-    by_name, by_loc_norm = _state_maps(payload)
-    loc_norm = _normalize(location)
-    existing_name = by_loc_norm.get(loc_norm)
+    by_name, by_context = _state_maps(payload)
+    context_key = _state_context_key(
+        species=species,
+        subcellular_location=location,
+        cell_type=cell_type,
+        tissue=tissue,
+    )
+    existing_name = by_context.get(context_key)
     if existing_name:
         return existing_name
-    candidate_name = f"AutoState_{_slug(location)}"
+    if not _canonical(species) or not _canonical(location):
+        return ""
+    name_parts = [species, location, cell_type, tissue]
+    candidate_name = f"AutoState_{_slug('_'.join(part for part in name_parts if _canonical(part)))}"
     used = set(by_name.keys())
     if candidate_name in used:
         i = 2
@@ -297,6 +338,10 @@ def _ensure_biological_state(payload: Dict[str, Any], location: str, species: st
         state_obj["compartment_canonical"] = canonical
     if species:
         state_obj["species"] = species
+    if cell_type:
+        state_obj["cell_type"] = cell_type
+    if tissue:
+        state_obj["tissue"] = tissue
     states.append(state_obj)
     return candidate_name
 
@@ -2411,8 +2456,19 @@ def resolve_gaps(
             op_exec["location_decision"] = loc_decision
             op_exec["chosen_location"] = chosen_loc
             op_exec["chosen_state"] = state_name
+            if not state_name:
+                report["actions"].append(
+                    {
+                        "type": "biological_state_not_created",
+                        "entity_type": kind,
+                        "name": name,
+                        "chosen_location": chosen_loc,
+                        "reason": "missing_species_or_location",
+                        "stage": "stage3",
+                    }
+                )
 
-            if need_fill_state:
+            if need_fill_state and state_name:
                 for row_wrap in rows:
                     row = _safe_dict(row_wrap.get("row"))
                     if _canonical(str(row.get("biological_state", ""))):
@@ -2432,7 +2488,7 @@ def resolve_gaps(
                         }
                     )
 
-            if need_add_row:
+            if need_add_row and state_name:
                 new_row = {name_key: name, "biological_state": state_name}
                 _safe_list(elem_locs.get(loc_key)).append(new_row)
                 report["summary"]["locations_added"] += 1
