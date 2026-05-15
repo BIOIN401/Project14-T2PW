@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -12,7 +13,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir  # noqa: E402
+from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract  # noqa: E402
 from t2pw.pwml.qa import run_pwml_qa  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree  # noqa: E402
 from t2pw.pwml.writer import DeterministicPwmlBuilder  # noqa: E402
@@ -145,6 +146,16 @@ def test_name_only_biological_state_is_not_exportable() -> None:
     assert not validation["ok"]
 
 
+def test_required_contract_validator_does_not_mutate_payload() -> None:
+    payload = _base_payload()
+    before = deepcopy(payload)
+
+    report = validate_required_pwml_contract(payload, strict_db=True)
+
+    assert payload == before
+    assert report["summary"]["checked_as"] == "payload"
+
+
 def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None:
     payload = _base_payload()
     payload["entities"]["protein_complexes"] = [
@@ -200,6 +211,21 @@ def test_protein_complex_unresolved_component_is_not_exportable() -> None:
 
     assert any(err["code"] == "component_protein_unresolved" for err in report["errors"])
     assert any(err["code"] == "protein_complex_missing_components" for err in validation["errors"])
+    assert not validation["ok"]
+
+
+def test_dangling_process_visualization_references_fail_validation() -> None:
+    ir, report = build_pwml_ir(_base_payload(), strict_db=True)
+    assert not report["errors"]
+
+    ir["process_visualizations"][0]["process_key"] = "missing_process"
+    ir["process_visualizations"][0]["members"][0]["location_key"] = "missing_location"
+
+    validation = validate_pwml_ir(ir)
+    codes = {err["code"] for err in validation["errors"]}
+
+    assert "visualization_unknown_process" in codes
+    assert "visualization_unknown_location" in codes
     assert not validation["ok"]
 
 
