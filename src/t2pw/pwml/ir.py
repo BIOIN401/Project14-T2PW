@@ -1273,7 +1273,7 @@ def build_pwml_ir(
     return ir, report
 
 
-def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
+def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = True) -> Dict[str, Any]:
     """
     Pre-export contract validator for the hydrated payload or built IR.
 
@@ -1303,6 +1303,73 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
         return {"ok": False, "errors": errors, "warnings": warnings, "summary": {}}
 
     is_ir = is_pwml_ir(payload_or_ir)
+
+    def db_id(row: Any, keys: Sequence[str]) -> Optional[int]:
+        if not isinstance(row, dict):
+            return None
+        return _db_id(row, keys)
+
+    def resolution_status(row: Any) -> str:
+        if not isinstance(row, dict):
+            return ""
+        status = _safe_dict(row.get("resolution")).get("status")
+        if not status:
+            status = _safe_dict(_safe_dict(row.get("mapping_meta")).get("resolution")).get("status")
+        return _canonical(status).casefold()
+
+    def require_db_identity(
+        row: Dict[str, Any],
+        keys: Sequence[str],
+        *,
+        code: str,
+        message: str,
+        pointer: str,
+        **extra: Any,
+    ) -> None:
+        if not strict_db:
+            return
+        if db_id(row, keys) is not None:
+            return
+        err(
+            code,
+            message,
+            pointer,
+            required_fields=list(keys),
+            resolution_status=resolution_status(row),
+            **extra,
+        )
+
+    def component_index(bucket: str, keys: Sequence[str]) -> Dict[str, Dict[str, Any]]:
+        out: Dict[str, Dict[str, Any]] = {}
+        for row in _safe_list(payload_or_ir.get(bucket)):
+            if not isinstance(row, dict):
+                continue
+            for value in [row.get("key"), row.get("name"), row.get("display_name")]:
+                norm = _norm(value)
+                if norm:
+                    out[norm] = row
+            ident = db_id(row, keys)
+            if ident is not None:
+                out[str(ident)] = row
+        return out
+
+    species_by_ref = component_index("species", ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"])
+    subcell_by_ref = component_index(
+        "subcellular_locations",
+        ["pathbank_subcellular_location_id", "pw_subcellular_location_id", "pathwhiz_id", "subcellular_location_id"],
+    )
+
+    def referenced_component_has_db_id(value: Any, index: Dict[str, Dict[str, Any]], keys: Sequence[str]) -> bool:
+        if isinstance(value, dict):
+            if db_id(value, keys) is not None:
+                return True
+            for ref in [value.get("key"), value.get("name"), value.get("display_name")]:
+                row = index.get(_norm(ref))
+                if row and db_id(row, keys) is not None:
+                    return True
+            return False
+        row = index.get(_norm(value)) or index.get(str(value or "").strip())
+        return bool(row and db_id(row, keys) is not None)
 
     # ── PATHWAY ──────────────────────────────────────────────────────────────
     if is_ir:
@@ -1345,6 +1412,7 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
     all_entity_keys: set = set()
     protein_names: set = set()
     protein_keys: set = set()
+    protein_complex_names: set = set()
 
     for bucket in ENTITY_BUCKETS.values():
         for e in _safe_list(entities.get(bucket)):
@@ -1354,6 +1422,8 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                     all_entity_names.add(_norm(n))
                     if bucket == "proteins":
                         protein_names.add(_norm(n))
+                    if bucket == "protein_complexes":
+                        protein_complex_names.add(_norm(n))
                 k = e.get("key")
                 if k:
                     all_entity_keys.add(k)
@@ -1361,15 +1431,55 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                         protein_keys.add(k)
 
     # ── PROTEINS ─────────────────────────────────────────────────────────────
+    for idx, comp in enumerate(_safe_list(entities.get("compounds"))):
+        if not isinstance(comp, dict):
+            continue
+        cname = _canonical(comp.get("name"))
+        require_db_identity(
+            comp,
+            ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"],
+            code="compound_missing_db_identity",
+            message=f"Compound '{cname}' has no required DB-backed PWML identity.",
+            pointer=f"/entities/compounds/{idx}",
+            entity_name=cname,
+        )
+        if not (comp.get("class") or comp.get("compound_class")):
+            err(
+                "compound_missing_class",
+                f"Compound '{cname}' is missing class/compound_class.",
+                f"/entities/compounds/{idx}/class",
+                entity_name=cname,
+            )
+        if not (comp.get("type") or comp.get("compound_type")):
+            err(
+                "compound_missing_type",
+                f"Compound '{cname}' is missing type/compound_type.",
+                f"/entities/compounds/{idx}/type",
+                entity_name=cname,
+            )
+
     for idx, prot in enumerate(_safe_list(entities.get("proteins"))):
         if not isinstance(prot, dict):
             continue
         pname = _canonical(prot.get("name"))
+        require_db_identity(
+            prot,
+            ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id"],
+            code="protein_missing_db_identity",
+            message=f"Protein '{pname}' has no required DB-backed PWML identity.",
+            pointer=f"/entities/proteins/{idx}",
+            entity_name=pname,
+        )
         species = (
             prot.get("species")
             or prot.get("organism")
             or prot.get("taxonomy_id")
+            or prot.get("species_id")
+            or prot.get("pathbank_species_id")
+            or _safe_dict(prot.get("species_ref")).get("pathbank_species_id")
+            or _safe_dict(prot.get("species_ref")).get("name")
             or _safe_dict(prot.get("mapping_meta")).get("species")
+            or _safe_dict(prot.get("mapping_meta")).get("species_id")
         )
         if not species:
             err(
@@ -1378,17 +1488,46 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                 f"/entities/proteins/{idx}",
                 entity_name=pname,
             )
+        elif strict_db and not (
+            db_id(prot, ["pathbank_species_id", "pw_species_id", "species_id"]) is not None
+            or db_id(_safe_dict(prot.get("species_ref")), ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"]) is not None
+            or referenced_component_has_db_id(
+                species,
+                species_by_ref,
+                ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"],
+            )
+        ):
+            err(
+                "protein_species_missing_db_identity",
+                f"Protein '{pname}' species is not backed by a PathBank species identity.",
+                f"/entities/proteins/{idx}/species",
+                entity_name=pname,
+                species=species,
+            )
 
     # ── PROTEIN COMPLEXES ────────────────────────────────────────────────────
     for idx, pc in enumerate(_safe_list(entities.get("protein_complexes"))):
         if not isinstance(pc, dict):
             continue
         pcname = _canonical(pc.get("name"))
+        require_db_identity(
+            pc,
+            ["pathbank_complex_id", "pathbank_protein_complex_id", "pw_complex_id", "pathwhiz_id"],
+            code="protein_complex_missing_db_identity",
+            message=f"Protein complex '{pcname}' has no required DB-backed PWML identity.",
+            pointer=f"/entities/protein_complexes/{idx}",
+            entity_name=pcname,
+        )
         species = (
             pc.get("species")
             or pc.get("organism")
             or pc.get("taxonomy_id")
+            or pc.get("species_id")
+            or pc.get("pathbank_species_id")
+            or _safe_dict(pc.get("species_ref")).get("pathbank_species_id")
+            or _safe_dict(pc.get("species_ref")).get("name")
             or _safe_dict(pc.get("mapping_meta")).get("species")
+            or _safe_dict(pc.get("mapping_meta")).get("species_id")
         )
         if not species:
             err(
@@ -1396,6 +1535,22 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                 f"Protein complex '{pcname}' is missing species.",
                 f"/entities/protein_complexes/{idx}",
                 entity_name=pcname,
+            )
+        elif strict_db and not (
+            db_id(pc, ["pathbank_species_id", "pw_species_id", "species_id"]) is not None
+            or db_id(_safe_dict(pc.get("species_ref")), ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"]) is not None
+            or referenced_component_has_db_id(
+                species,
+                species_by_ref,
+                ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"],
+            )
+        ):
+            err(
+                "protein_complex_species_missing_db_identity",
+                f"Protein complex '{pcname}' species is not backed by a PathBank species identity.",
+                f"/entities/protein_complexes/{idx}/species",
+                entity_name=pcname,
+                species=species,
             )
         components = _safe_list(pc.get("components"))
         if not components:
@@ -1450,7 +1605,7 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
     # ── BIOLOGICAL STATES ────────────────────────────────────────────────────
     bio_states = _safe_list(payload_or_ir.get("biological_states"))
     if not bio_states:
-        warn("no_biological_states", "No biological_states defined; a default will be generated.")
+        err("no_biological_states", "No biological_states defined; export requires an explicit state.")
     for idx, state in enumerate(bio_states):
         if not isinstance(state, dict):
             continue
@@ -1458,15 +1613,25 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
         if is_ir:
             has_species = bool(state.get("species_key"))
             has_subcell = bool(state.get("subcellular_location_key"))
+            species_ref = state.get("species_key")
+            subcell_ref = state.get("subcellular_location_key")
         else:
-            has_species = bool(
-                state.get("species") or state.get("organism") or state.get("taxonomy_id")
-            )
-            has_subcell = bool(
+            species_ref = state.get("species") or state.get("organism") or state.get("taxonomy_id")
+            subcell_ref = (
                 state.get("subcellular_location")
                 or state.get("subcellular-location")
                 or state.get("compartment")
                 or state.get("compartment_canonical")
+            )
+            has_species = bool(
+                species_ref
+                or state.get("species_id")
+                or state.get("pathbank_species_id")
+            )
+            has_subcell = bool(
+                subcell_ref
+                or state.get("subcellular_location_id")
+                or state.get("pathbank_subcellular_location_id")
             )
         if not has_species:
             err(
@@ -1475,12 +1640,46 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                 f"/biological_states/{idx}",
                 state_name=sname,
             )
+        elif strict_db and not is_ir and not (
+            db_id(state, ["pathbank_species_id", "pw_species_id", "species_id"]) is not None
+            or referenced_component_has_db_id(
+                species_ref,
+                species_by_ref,
+                ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"],
+            )
+        ):
+            err(
+                "biological_state_species_missing_db_identity",
+                f"Biological state '{sname}' species is not backed by a PathBank species identity.",
+                f"/biological_states/{idx}/species",
+                state_name=sname,
+                species=species_ref,
+            )
         if not has_subcell:
             err(
                 "biological_state_missing_subcellular_location",
                 f"Biological state '{sname}' has no subcellular location.",
                 f"/biological_states/{idx}",
                 state_name=sname,
+            )
+        elif strict_db and not is_ir and not (
+            db_id(
+                state,
+                ["pathbank_subcellular_location_id", "pw_subcellular_location_id", "subcellular_location_id"],
+            )
+            is not None
+            or referenced_component_has_db_id(
+                subcell_ref,
+                subcell_by_ref,
+                ["pathbank_subcellular_location_id", "pw_subcellular_location_id", "pathwhiz_id", "subcellular_location_id"],
+            )
+        ):
+            err(
+                "biological_state_subcellular_location_missing_db_identity",
+                f"Biological state '{sname}' subcellular location is not backed by a PathBank location identity.",
+                f"/biological_states/{idx}/subcellular_location",
+                state_name=sname,
+                subcellular_location=subcell_ref,
             )
 
     # ── REACTIONS ─────────────────────────────────────────────────────────────
@@ -1561,8 +1760,34 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                         or actor.get("protein_complex")
                         or actor.get("entity")
                     )
+                    actor_type = _canonical(actor.get("entity_type") or actor.get("type")).casefold()
+                    if actor_type == "protein":
+                        err(
+                            "reaction_enzyme_must_be_protein_complex",
+                            f"Reaction '{rname}' enzyme '{ename}' is still represented as a direct protein.",
+                            f"/processes/reactions/{idx}/enzymes/{eidx}",
+                            reaction_name=rname,
+                            enzyme_name=ename,
+                            entity_type=actor_type,
+                        )
+                    elif actor_type == "protein_complex" and ename and _norm(ename) not in protein_complex_names:
+                        err(
+                            "enzyme_reference_not_found",
+                            f"Reaction '{rname}' enzyme protein complex '{ename}' not found in entity registries.",
+                            f"/processes/reactions/{idx}/enzymes/{eidx}",
+                            reaction_name=rname,
+                            enzyme_name=ename,
+                        )
                 else:
                     continue
+                if ename and _norm(ename) in protein_names and _norm(ename) not in protein_complex_names:
+                    err(
+                        "reaction_enzyme_must_be_protein_complex",
+                        f"Reaction '{rname}' enzyme '{ename}' is still represented as a direct protein.",
+                        f"/processes/reactions/{idx}/enzymes/{eidx}",
+                        reaction_name=rname,
+                        enzyme_name=ename,
+                    )
                 if ename and _norm(ename) not in all_entity_names:
                     err(
                         "enzyme_reference_not_found",
@@ -1573,6 +1798,34 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
                     )
 
     # ── LOCATION / VISUALIZATION REFERENCES (IR only) ────────────────────────
+    if not is_ir:
+        element_locations = _safe_dict(payload_or_ir.get("element_locations"))
+        location_fields = {
+            "compound_locations": "compound",
+            "protein_locations": "protein",
+            "nucleic_acid_locations": "nucleic_acid",
+            "element_collection_locations": "element_collection",
+        }
+        for bucket, name_field in location_fields.items():
+            for lidx, loc in enumerate(_safe_list(element_locations.get(bucket))):
+                if not isinstance(loc, dict):
+                    continue
+                entity_name = _canonical(loc.get(name_field) or loc.get("entity"))
+                if entity_name and _norm(entity_name) not in all_entity_names:
+                    err(
+                        "location_entity_not_found",
+                        f"Location for '{entity_name}' does not reference an existing entity.",
+                        f"/element_locations/{bucket}/{lidx}/{name_field}",
+                        entity_name=entity_name,
+                    )
+                if not loc.get("biological_state"):
+                    err(
+                        "visible_entity_missing_location_state",
+                        f"Visible entity '{entity_name or lidx}' has no biological_state location.",
+                        f"/element_locations/{bucket}/{lidx}/biological_state",
+                        entity_name=entity_name,
+                    )
+
     if is_ir:
         bio_state_keys = {
             s.get("key")
@@ -1643,6 +1896,7 @@ def validate_required_pwml_contract(payload_or_ir: Any) -> Dict[str, Any]:
             "error_codes": error_codes,
             "warning_codes": warning_codes,
             "checked_as": "ir" if is_ir else "payload",
+            "strict_db": bool(strict_db),
         },
     }
 
