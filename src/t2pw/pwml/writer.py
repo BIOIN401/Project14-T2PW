@@ -1289,13 +1289,28 @@ class DeterministicPwmlBuilder:
                 if db_id is not None:
                     protein_id_by_db_id[db_id] = rid
             mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            uniprot_id = (
+                mapped_ids.get("uniprot")
+                or record.get("uniprot")
+                or record.get("uniprot_id")
+                or record.get("uniprot-id")
+                or None
+            )
+            drugbank_id = (
+                mapped_ids.get("drugbank")
+                or record.get("drugbank")
+                or record.get("drugbank_id")
+                or record.get("drugbank-id")
+                or None
+            )
             self.section_items["proteins"].append(
                 {
                     "id": rid,
                     "name": record.get("name", ""),
                     "species-id": default_species_id,
                     "element-states": [],
-                    "uniprot-id": mapped_ids.get("uniprot") or None,
+                    "uniprot-id": uniprot_id,
+                    "drugbank-id": drugbank_id,
                     "ec-numbers": record.get("ec_numbers", []),
                 }
             )
@@ -1796,7 +1811,20 @@ class DeterministicPwmlBuilder:
                 "name": rec["name"],
                 "species-id": default_species_id,
                 "element-states": [],
-                "uniprot-id": (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("uniprot") or None,
+                "uniprot-id": (
+                    (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("uniprot")
+                    or rec.get("uniprot")
+                    or rec.get("uniprot_id")
+                    or rec.get("uniprot-id")
+                    or None
+                ),
+                "drugbank-id": (
+                    (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("drugbank")
+                    or rec.get("drugbank")
+                    or rec.get("drugbank_id")
+                    or rec.get("drugbank-id")
+                    or None
+                ),
                 "ec-numbers": rec.get("ec_numbers", []),
             }
             for rec in self.entity_records.get("proteins", [])

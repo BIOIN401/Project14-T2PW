@@ -123,13 +123,45 @@ def test_transport_ir_construction_has_state_and_visual_refs() -> None:
     assert all(m["location_key"] and m["edge_key"] for m in cargo_members)
 
 
-def test_strict_db_missing_compound_identity_is_error() -> None:
+def test_name_only_compound_is_exportable_without_db_identity_class_or_type() -> None:
     payload = _base_payload()
     payload["entities"]["compounds"][0].pop("pathbank_compound_id")
+    payload["entities"]["compounds"][0].pop("mapped_ids")
 
-    _ir, report = build_pwml_ir(payload, strict_db=True)
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
 
-    assert any(err["code"] == "missing_db_identity" and err["entity_type"] == "compound" for err in report["errors"])
+    assert not any(err["code"] == "missing_db_identity" and err.get("entity_type") == "compound" for err in report["errors"])
+    assert validation["ok"], validation["errors"]
+
+
+def test_required_contract_protein_needs_species_and_uniprot_or_drugbank() -> None:
+    payload = _base_payload()
+    payload["entities"]["proteins"][0].pop("pathbank_protein_id")
+    payload["entities"]["proteins"][0].pop("mapped_ids")
+    payload["entities"]["proteins"][0]["species"] = "Homo sapiens"
+
+    report = validate_required_pwml_contract(payload, strict_db=True)
+
+    codes = {err["code"] for err in report["errors"]}
+    assert "protein_missing_db_identity" not in codes
+    assert "protein_species_missing_db_identity" not in codes
+    assert "protein_missing_external_identity" in codes
+
+
+def test_required_contract_accepts_protein_with_species_and_drugbank() -> None:
+    payload = _base_payload()
+    payload["entities"]["proteins"][0].pop("pathbank_protein_id")
+    payload["entities"]["proteins"][0].pop("mapped_ids")
+    payload["entities"]["proteins"][0]["species"] = "Homo sapiens"
+    payload["entities"]["proteins"][0]["drugbank_id"] = "DB00000"
+
+    report = validate_required_pwml_contract(payload, strict_db=True)
+
+    codes = {err["code"] for err in report["errors"]}
+    assert "protein_missing_db_identity" not in codes
+    assert "protein_species_missing_db_identity" not in codes
+    assert "protein_missing_external_identity" not in codes
 
 
 def test_name_only_biological_state_is_not_exportable() -> None:
@@ -164,6 +196,45 @@ def test_required_contract_validator_indexes_raw_payload_entity_reference_tables
     codes = {err["code"] for err in report["errors"]}
     assert "biological_state_species_missing_db_identity" not in codes
     assert "biological_state_subcellular_location_missing_db_identity" not in codes
+
+
+def test_required_contract_allows_named_biological_state_context_without_db_ids() -> None:
+    payload = _base_payload()
+    payload["entities"]["species"] = [{"name": "Homo sapiens"}]
+    payload["entities"]["subcellular_locations"] = [{"name": "cytosol"}]
+    payload["entities"]["proteins"][0]["species"] = "Homo sapiens"
+    payload["entities"]["proteins"][0]["pathbank_species_id"] = 1
+
+    report = validate_required_pwml_contract(payload, strict_db=True)
+
+    codes = {err["code"] for err in report["errors"]}
+    assert "biological_state_species_missing_db_identity" not in codes
+    assert "biological_state_subcellular_location_missing_db_identity" not in codes
+
+
+def test_novel_protein_complex_with_resolved_components_does_not_need_db_identity() -> None:
+    payload = _base_payload()
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "Hexokinase complex",
+            "species": "Homo sapiens",
+            "components": ["Hexokinase"],
+        }
+    ]
+    payload["processes"]["reactions"][0]["enzymes"] = [
+        {"entity": "Hexokinase complex", "entity_type": "protein_complex"}
+    ]
+
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert "protein_complex_missing_db_identity" not in {err["code"] for err in contract["errors"]}
+    assert not any(
+        err["code"] == "missing_db_identity" and err.get("entity_type") == "protein_complex"
+        for err in report["errors"]
+    )
+    assert validation["ok"], validation["errors"]
 
 
 def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None:

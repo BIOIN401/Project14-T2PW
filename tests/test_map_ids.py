@@ -11,7 +11,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.mapping.map_ids import PathBankDbResolver  # noqa: E402
+from t2pw.mapping.map_ids import PathBankDbResolver, _map_protein_with_strategy  # noqa: E402
 
 
 def _make_resolver() -> PathBankDbResolver:
@@ -40,6 +40,34 @@ def _unmapped(reason: str = "no_db_match") -> Dict[str, Any]:
         "chosen_rule": "",
         "candidates": [],
     }
+
+
+class _MemoryCache:
+    def __init__(self) -> None:
+        self.rows: Dict[tuple[str, str], Dict[str, Any]] = {}
+
+    def get(self, namespace: str, key: str) -> Dict[str, Any] | None:
+        return self.rows.get((namespace, key))
+
+    def set(self, namespace: str, key: str, value: Dict[str, Any]) -> None:
+        self.rows[(namespace, key)] = value
+
+
+class _AvailableDb:
+    last_error = ""
+
+    def available(self) -> bool:
+        return True
+
+    def map_protein_row(self, row: Dict[str, Any], species: str) -> Dict[str, Any]:
+        return {
+            "status": "unmapped",
+            "reason": "novel_protein",
+            "provider": "PathBankDB",
+            "source": "db",
+            "candidates": [],
+            "resolution": {"status": "novel", "issue": "no_db_candidates"},
+        }
 
 
 def test_compound_resolves_by_hmdb_before_fuzzy_name() -> None:
@@ -106,6 +134,31 @@ def test_protein_with_uniprot_resolves_directly_without_species() -> None:
     assert result["pathbank_protein_id"] == 500
     assert result["mapped_ids"]["uniprot"] == "P02768"
     assert result["resolution"]["order_step"] == "uniprot"
+
+
+def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
+    api_result = {
+        "status": "mapped",
+        "mapped_ids": {"uniprot": "P19367"},
+        "confidence": 0.91,
+        "candidates": [{"uniprot": "P19367"}],
+    }
+
+    with patch("t2pw.mapping.map_ids.map_protein_uniprot", return_value=api_result) as api_lookup:
+        result = _map_protein_with_strategy(
+            id_source="hybrid",
+            db=_AvailableDb(),  # type: ignore[arg-type]
+            client=object(),  # type: ignore[arg-type]
+            cache=_MemoryCache(),  # type: ignore[arg-type]
+            name="Hexokinase",
+            organism="Homo sapiens",
+            protein_row={"name": "Hexokinase", "species": "Homo sapiens"},
+        )
+
+    assert result["status"] == "mapped"
+    assert result["source"] == "api"
+    assert result["mapped_ids"]["uniprot"] == "P19367"
+    api_lookup.assert_called_once()
 
 
 def test_complex_maps_by_name_and_species() -> None:

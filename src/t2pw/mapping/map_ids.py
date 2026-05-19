@@ -3316,7 +3316,7 @@ def _map_protein_with_strategy(
                 _with_resolution(db_result, "unresolved", issue="db_unavailable")
             cache.set("proteins", db_key, db_result)
         db_resolution = _safe_dict(db_result.get("resolution")).get("status")
-        if db_result.get("status") == "mapped" or id_source == "db" or db_resolution in {"ambiguous", "novel", "unresolved"}:
+        if db_result.get("status") == "mapped" or id_source == "db" or db_resolution == "ambiguous":
             return db_result
 
     if id_source in {"api", "hybrid"}:
