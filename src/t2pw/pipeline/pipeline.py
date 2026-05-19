@@ -1407,6 +1407,43 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
     return cleaned
 
 
+def propagate_context_organism(
+    payload: Dict[str, Any],
+    pathway_context: Optional[Dict[str, Any]],
+) -> Dict[str, Any]:
+    """
+    Inject the pathway-level organism from the preprocessor context into
+    entities that the LLM didn't populate.  Only fills missing/empty fields.
+    """
+    if not isinstance(pathway_context, dict):
+        return payload
+    organism = (pathway_context.get("likely_organism") or "").strip()
+    if not organism:
+        return payload
+
+    entities = payload.get("entities")
+    if isinstance(entities, dict):
+        species_list = entities.setdefault("species", [])
+        if isinstance(species_list, list):
+            existing = {(s.get("name") or "").strip().lower() for s in species_list if isinstance(s, dict)}
+            if organism.lower() not in existing:
+                species_list.append({"name": organism})
+
+        for protein in _safe_list(entities.get("proteins")):
+            if not isinstance(protein, dict):
+                continue
+            if not (protein.get("organism") or protein.get("species") or "").strip():
+                protein["organism"] = organism
+
+    for state in _safe_list(payload.get("biological_states")):
+        if not isinstance(state, dict):
+            continue
+        if not (state.get("species") or state.get("organism") or "").strip():
+            state["species"] = organism
+
+    return payload
+
+
 def clean_stage_one(payload: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(payload, dict):
         return {}

@@ -57,6 +57,7 @@ from t2pw.pipeline.pipeline import (
     build_qa_feedback,
     build_and_save_draft_graph,
     merge_additions,
+    propagate_context_organism,
     run_stage_two_with_feedback_loop,
     run_stage_one_with_chunking,
 )
@@ -2493,6 +2494,10 @@ if st.session_state.get("pipeline_ready"):
         else:
             try:
                 with st.spinner("Running audit, DB mapping, and PWML export..."):
+                    final_payload = propagate_context_organism(
+                        final_payload,
+                        st.session_state.get("pathway_context"),
+                    )
                     artifacts = run_post_pipeline_sbml_artifacts(
                         final_payload,
                         build_legacy_sbml=False,
