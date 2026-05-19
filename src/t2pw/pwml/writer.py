@@ -1251,8 +1251,8 @@ class DeterministicPwmlBuilder:
                 continue
             rid = document_id_for(
                 record,
-                pw_keys=["pw_compound_id"],
-                pathbank_keys=["pathbank_compound_id"],
+                pw_keys=["pw_compound_id", "pathbank_compound_id"],
+                pathbank_keys=[],
                 fallback=self.compound_ids,
             )
             remember("entities", record.get("key"), rid)

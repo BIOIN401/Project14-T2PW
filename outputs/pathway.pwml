@@ -50,13 +50,13 @@
             <species-id type="integer">1</species-id>
             <cell-type-id nil="true" type="integer"/>
             <pwbs-id>PW_BS000002</pwbs-id>
-            <name>cytosolic state (H. sapiens)</name>
+            <name>Cytosolic state (H. sapiens)</name>
           </biological-state>
         </biological-states>
         <bounds/>
         <compounds>
           <compound>
-            <id type="integer">77</id>
+            <id type="integer">20000</id>
             <name>Glucose</name>
             <hmdb-id>HMDB0000122</hmdb-id>
             <description/>
@@ -82,12 +82,12 @@
             <drugbank-metabolite-id nil="true"/>
             <foodb-id/>
             <synonyms/>
-            <pwc-id>PW_C000077</pwc-id>
+            <pwc-id>PW_C020000</pwc-id>
             <short-name>Glucose</short-name>
             <element-states/>
           </compound>
           <compound>
-            <id type="integer">414</id>
+            <id type="integer">20001</id>
             <name>ATP</name>
             <hmdb-id>HMDB0000538</hmdb-id>
             <description/>
@@ -113,12 +113,12 @@
             <drugbank-metabolite-id nil="true"/>
             <foodb-id/>
             <synonyms/>
-            <pwc-id>PW_C000414</pwc-id>
+            <pwc-id>PW_C020001</pwc-id>
             <short-name>ATP</short-name>
             <element-states/>
           </compound>
           <compound>
-            <id type="integer">1083</id>
+            <id type="integer">20002</id>
             <name>Glucose-6-phosphate</name>
             <hmdb-id>HMDB0001401</hmdb-id>
             <description/>
@@ -144,12 +144,12 @@
             <drugbank-metabolite-id nil="true"/>
             <foodb-id/>
             <synonyms/>
-            <pwc-id>PW_C001083</pwc-id>
+            <pwc-id>PW_C020002</pwc-id>
             <short-name>Glucose-6-phosphate</short-name>
             <element-states/>
           </compound>
           <compound>
-            <id type="integer">1034</id>
+            <id type="integer">20003</id>
             <name>ADP</name>
             <hmdb-id>HMDB0001341</hmdb-id>
             <description/>
@@ -175,12 +175,12 @@
             <drugbank-metabolite-id nil="true"/>
             <foodb-id/>
             <synonyms/>
-            <pwc-id>PW_C001034</pwc-id>
+            <pwc-id>PW_C020003</pwc-id>
             <short-name>ADP</short-name>
             <element-states/>
           </compound>
           <compound>
-            <id type="integer">40034</id>
+            <id type="integer">20004</id>
             <name>H⁺</name>
             <hmdb-id>HMDB0059597</hmdb-id>
             <description/>
@@ -206,7 +206,7 @@
             <drugbank-metabolite-id nil="true"/>
             <foodb-id/>
             <synonyms/>
-            <pwc-id>PW_C040034</pwc-id>
+            <pwc-id>PW_C020004</pwc-id>
             <short-name>H⁺</short-name>
             <element-states/>
           </compound>
@@ -215,7 +215,7 @@
         <nucleic-acids/>
         <proteins>
           <protein>
-            <id type="integer">206</id>
+            <id type="integer">30000</id>
             <name>Hexokinase</name>
             <uniprot-id>P52790</uniprot-id>
             <description/>
@@ -241,7 +241,7 @@
             <protein_complex-proteins>
               <protein_complex-protein>
                 <id type="integer">3</id>
-                <protein-id type="integer">206</protein-id>
+                <protein-id type="integer">30000</protein-id>
                 <stoichiometry type="integer">1</stoichiometry>
               </protein_complex-protein>
             </protein_complex-proteins>
@@ -258,14 +258,14 @@
             <reaction-left-elements>
               <reaction-left-element>
                 <id type="integer">4</id>
-                <element-id type="integer">77</element-id>
+                <element-id type="integer">20000</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
               </reaction-left-element>
               <reaction-left-element>
                 <id type="integer">5</id>
-                <element-id type="integer">414</element-id>
+                <element-id type="integer">20001</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
@@ -274,21 +274,21 @@
             <reaction-right-elements>
               <reaction-right-element>
                 <id type="integer">6</id>
-                <element-id type="integer">1083</element-id>
+                <element-id type="integer">20002</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
               </reaction-right-element>
               <reaction-right-element>
                 <id type="integer">7</id>
-                <element-id type="integer">1034</element-id>
+                <element-id type="integer">20003</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
               </reaction-right-element>
               <reaction-right-element>
                 <id type="integer">8</id>
-                <element-id type="integer">40034</element-id>
+                <element-id type="integer">20004</element-id>
                 <stoichiometry type="integer">1</stoichiometry>
                 <element-type>Compound</element-type>
                 <currency type="boolean">false</currency>
@@ -321,7 +321,7 @@
         <compound-locations>
           <compound-location>
             <id type="integer">11</id>
-            <compound-id type="integer">77</compound-id>
+            <compound-id type="integer">20000</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
@@ -334,7 +334,7 @@
           </compound-location>
           <compound-location>
             <id type="integer">12</id>
-            <compound-id type="integer">414</compound-id>
+            <compound-id type="integer">20001</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
@@ -347,7 +347,7 @@
           </compound-location>
           <compound-location>
             <id type="integer">13</id>
-            <compound-id type="integer">1083</compound-id>
+            <compound-id type="integer">20002</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
@@ -360,7 +360,7 @@
           </compound-location>
           <compound-location>
             <id type="integer">14</id>
-            <compound-id type="integer">1034</compound-id>
+            <compound-id type="integer">20003</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
@@ -373,7 +373,7 @@
           </compound-location>
           <compound-location>
             <id type="integer">15</id>
-            <compound-id type="integer">40034</compound-id>
+            <compound-id type="integer">20004</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
             <hidden type="boolean">false</hidden>
@@ -390,17 +390,17 @@
         <protein-locations>
           <protein-location>
             <id type="integer">16</id>
-            <protein-id type="integer">206</protein-id>
+            <protein-id type="integer">30000</protein-id>
             <biological-state-id type="integer">2</biological-state-id>
-            <visualization-template-id type="integer">4</visualization-template-id>
+            <visualization-template-id type="integer">2</visualization-template-id>
             <hidden type="boolean">false</hidden>
             <x type="integer">1120</x>
             <y type="integer">80</y>
-            <zindex type="integer">10</zindex>
-            <label-type/>
+            <zindex type="integer">8</zindex>
+            <label-type>subunit</label-type>
             <font-size>regular</font-size>
-            <width>160</width>
-            <height>60</height>
+            <width>150</width>
+            <height>70</height>
           </protein-location>
         </protein-locations>
         <protein-complex-visualizations>
