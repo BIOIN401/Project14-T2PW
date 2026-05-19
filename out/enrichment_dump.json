@@ -964,27 +964,24 @@
       }
     ]
   },
-  "protein:Hexokinase|P19367": {
+  "protein:Hexokinase|P52790": {
     "status": "ok",
-    "uniprot_id": "P19367",
-    "recommended_name": "Hexokinase-1",
+    "uniprot_id": "P52790",
+    "recommended_name": "Hexokinase-3",
     "alternative_names": [
-      "Brain form hexokinase",
-      "Hexokinase type I",
-      "Hexokinase-A"
+      "Hexokinase type III",
+      "Hexokinase-C"
     ],
     "gene_names": [
-      "HK1"
+      "HK3"
     ],
     "organism": "Homo sapiens",
     "taxonomy_id": "9606",
-    "function_text": "Catalyzes the phosphorylation of various hexoses, such as D-glucose, D-glucosamine, D-fructose, D-mannose and 2-deoxy-D-glucose, to hexose 6-phosphate (D-glucose 6-phosphate, D-glucosamine 6-phosphate, D-fructose 6-phosphate, D-mannose 6-phosphate and 2-deoxy-D-glucose 6-phosphate, respectively) (PubMed:1637300, PubMed:25316723, PubMed:27374331). Does not phosphorylate N-acetyl-D-glucosamine (PubMed:27374331). Mediates the initial step of glycolysis by catalyzing phosphorylation of D-glucose to D-glucose 6-phosphate (By similarity). Involved in innate immunity and inflammation by acting as a pattern recognition receptor for bacterial peptidoglycan (PubMed:27374331). When released in the cytosol, N-acetyl-D-glucosamine component of bacterial peptidoglycan inhibits the hexokinase activity of HK1 and causes its dissociation from mitochondrial outer membrane, thereby activating the NLRP3 inflammasome (PubMed:27374331)",
+    "function_text": "Catalyzes the phosphorylation of hexose, such as D-glucose and D-fructose, to hexose 6-phosphate (D-glucose 6-phosphate and D-fructose 6-phosphate, respectively) (PubMed:8717435). Mediates the initial step of glycolysis by catalyzing phosphorylation of D-glucose to D-glucose 6-phosphate (PubMed:8717435)",
     "catalytic_activity": [
       "a D-hexose + ATP = a D-hexose 6-phosphate + ADP + H(+)",
       "D-fructose + ATP = D-fructose 6-phosphate + ADP + H(+)",
-      "D-glucose + ATP = D-glucose 6-phosphate + ADP + H(+)",
-      "D-mannose + ATP = D-mannose 6-phosphate + ADP + H(+)",
-      "D-glucosamine + ATP = D-glucosamine 6-phosphate + ADP + H(+)"
+      "D-glucose + ATP = D-glucose 6-phosphate + ADP + H(+)"
     ],
     "enzyme_commission": [
       "2.7.1.1"
@@ -995,102 +992,60 @@
     ],
     "keywords": [
       "3D-structure",
-      "Acetylation",
       "Allosteric enzyme",
-      "Alternative splicing",
       "ATP-binding",
-      "Charcot-Marie-Tooth disease",
-      "Cytoplasm",
-      "Direct protein sequencing",
-      "Disease variant",
       "Glycolysis",
-      "Hereditary hemolytic anemia",
-      "Immunity",
-      "Inflammatory response",
-      "Innate immunity",
-      "Intellectual disability",
       "Kinase",
-      "Membrane",
-      "Mitochondrion",
-      "Mitochondrion outer membrane",
-      "Neurodegeneration",
-      "Neuropathy",
       "Nucleotide-binding",
-      "Phosphoprotein",
       "Proteomics identification",
       "Reference proteome",
       "Repeat",
-      "Retinitis pigmentosa",
       "Transferase"
     ],
-    "subcellular_locations": [
-      "Mitochondrion outer membrane",
-      "Cytoplasm, cytosol"
-    ],
+    "subcellular_locations": [],
     "go_mf_ids": [
       "GO:0005524",
       "GO:0005536",
       "GO:0008865",
       "GO:0004340",
-      "GO:0047931",
       "GO:0004396",
-      "GO:0019158",
-      "GO:0042834"
+      "GO:0019158"
     ],
     "go_bp_ids": [
       "GO:0061621",
-      "GO:0046835",
-      "GO:0072655",
       "GO:0006002",
-      "GO:0009298",
-      "GO:0061728",
       "GO:0051156",
       "GO:0006006",
       "GO:0006096",
-      "GO:0006954",
-      "GO:0045087",
-      "GO:0001678",
-      "GO:0072656",
-      "GO:0006013",
-      "GO:0002720",
-      "GO:0032731"
+      "GO:0001678"
     ],
     "go_cellular_component_ids": [
       "GO:0005829",
-      "GO:0045121",
-      "GO:0005741",
-      "GO:0005739"
+      "GO:0005576",
+      "GO:1904813",
+      "GO:0005739",
+      "GO:0034774"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 917,
+    "sequence_length": 923,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "1CZA",
-      "1DGK",
-      "1HKB",
-      "1HKC",
-      "1QHA",
-      "4F9O",
-      "4FOE",
-      "4FOI",
-      "4FPA",
-      "4FPB"
+      "3HM8"
     ],
     "reactome_ids": [
-      "R-HSA-446205",
-      "R-HSA-5619056",
+      "R-HSA-6798695",
       "R-HSA-70171"
     ],
-    "string_id": "9606.ENSP00000494664",
+    "string_id": "9606.ENSP00000292432",
     "provenance": {
       "source": "UniProt",
-      "query": "P19367",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P19367.json",
-      "retrieved_at": "2026-05-12T18:25:46Z"
+      "query": "P52790",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P52790.json",
+      "retrieved_at": "2026-05-12T21:00:53Z"
     }
   }
 }

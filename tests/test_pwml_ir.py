@@ -156,6 +156,16 @@ def test_required_contract_validator_does_not_mutate_payload() -> None:
     assert report["summary"]["checked_as"] == "payload"
 
 
+def test_required_contract_validator_indexes_raw_payload_entity_reference_tables() -> None:
+    payload = _base_payload()
+
+    report = validate_required_pwml_contract(payload, strict_db=True)
+
+    codes = {err["code"] for err in report["errors"]}
+    assert "biological_state_species_missing_db_identity" not in codes
+    assert "biological_state_subcellular_location_missing_db_identity" not in codes
+
+
 def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None:
     payload = _base_payload()
     payload["entities"]["protein_complexes"] = [

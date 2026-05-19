@@ -548,7 +548,7 @@ class PathBankDbResolver:
                 "SELECT pcp.protein_id, p.name AS protein_name, p.uniprot_id, p.gene_name, p.species_id "
                 "FROM protein_complex_proteins pcp "
                 "JOIN proteins p ON p.id = pcp.protein_id "
-                "WHERE pcp.complex_id=%s"
+                "WHERE pcp.protein_complex_id=%s"
             ),
             (complex_id,),
         )
@@ -1626,7 +1626,7 @@ class PathBankDbResolver:
             (
                 "SELECT pc.id, pc.name, pc.species_id "
                 "FROM protein_complexes pc "
-                "JOIN protein_complex_proteins pcp ON pcp.complex_id = pc.id "
+                "JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id "
                 f"WHERE pcp.protein_id=%s AND pc.species_id IN ({sp_marks}) "
                 "LIMIT 40"
             ),
@@ -1668,7 +1668,7 @@ class PathBankDbResolver:
             (
                 "SELECT pc.id, pc.name, pc.species_id "
                 "FROM protein_complexes pc "
-                "JOIN protein_complex_proteins pcp ON pcp.complex_id = pc.id "
+                "JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id "
                 f"WHERE pcp.protein_id=%s AND pc.species_id IN ({sp_marks}) "
                 "LIMIT 80"
             ),

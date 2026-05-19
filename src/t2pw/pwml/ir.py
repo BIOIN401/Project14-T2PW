@@ -1341,7 +1341,12 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
 
     def component_index(bucket: str, keys: Sequence[str]) -> Dict[str, Dict[str, Any]]:
         out: Dict[str, Dict[str, Any]] = {}
-        for row in _safe_list(payload_or_ir.get(bucket)):
+        rows = (
+            _safe_list(payload_or_ir.get(bucket))
+            if is_ir
+            else _safe_list(_safe_dict(payload_or_ir.get("entities")).get(bucket))
+        )
+        for row in rows:
             if not isinstance(row, dict):
                 continue
             for value in [row.get("key"), row.get("name"), row.get("display_name")]:
