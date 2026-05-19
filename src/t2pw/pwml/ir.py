@@ -866,8 +866,8 @@ def build_pwml_ir(
             "biological_state_key": biological_state_key,
             "x": int(x),
             "y": int(y),
-            "zindex": 10,
-            "visualization_template_id": 3 if entity_type == "compound" else 4,
+            "zindex": 10 if entity_type == "compound" else 8,
+            "visualization_template_id": 3 if entity_type == "compound" else 2,
             "hidden": False,
         }
         ir["locations"].append(loc)
@@ -1243,7 +1243,7 @@ def build_pwml_ir(
                 "y": int(loc.get("y") or 0),
                 "zindex": int(loc.get("zindex") or 10),
                 "hidden": bool(loc.get("hidden", False)),
-                "visualization_template_id": int(loc.get("visualization_template_id") or 4),
+                "visualization_template_id": int(loc.get("visualization_template_id") or 2),
                 "location_key": loc["key"],
                 "protein_member_location_keys": [],
                 "compound_member_location_keys": [],

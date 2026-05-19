@@ -50,7 +50,7 @@
             <species-id type="integer">1</species-id>
             <cell-type-id nil="true" type="integer"/>
             <pwbs-id>PW_BS000002</pwbs-id>
-            <name>cytosolic state</name>
+            <name>cytosolic state (H. sapiens)</name>
           </biological-state>
         </biological-states>
         <bounds/>
@@ -252,7 +252,7 @@
         <reactions>
           <reaction>
             <id type="integer">50000</id>
-            <spontaneous nil="true" type="boolean"/>
+            <spontaneous type="boolean">false</spontaneous>
             <pwr-id>PW_R050000</pwr-id>
             <direction>Right</direction>
             <reaction-left-elements>
@@ -298,10 +298,7 @@
               <reaction-enzyme>
                 <id type="integer">9</id>
                 <protein-complex-id type="integer">40000</protein-complex-id>
-              </reaction-enzyme>
-              <reaction-enzyme>
-                <id type="integer">10</id>
-                <protein-complex-id type="integer">40000</protein-complex-id>
+                <enzyme-class nil="true"/>
               </reaction-enzyme>
             </reaction-enzymes>
           </reaction>
@@ -311,7 +308,7 @@
         <interactions/>
         <bound-visualizations>
           <bound-visualization>
-            <id>11</id>
+            <id>10</id>
             <biological-state-id>2</biological-state-id>
             <x>0</x>
             <y>0</y>
@@ -323,7 +320,7 @@
         </bound-visualizations>
         <compound-locations>
           <compound-location>
-            <id type="integer">12</id>
+            <id type="integer">11</id>
             <compound-id type="integer">77</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
@@ -336,7 +333,7 @@
             <height>60</height>
           </compound-location>
           <compound-location>
-            <id type="integer">13</id>
+            <id type="integer">12</id>
             <compound-id type="integer">414</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
@@ -349,7 +346,7 @@
             <height>60</height>
           </compound-location>
           <compound-location>
-            <id type="integer">14</id>
+            <id type="integer">13</id>
             <compound-id type="integer">1083</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
@@ -362,7 +359,7 @@
             <height>60</height>
           </compound-location>
           <compound-location>
-            <id type="integer">15</id>
+            <id type="integer">14</id>
             <compound-id type="integer">1034</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
@@ -375,7 +372,7 @@
             <height>60</height>
           </compound-location>
           <compound-location>
-            <id type="integer">16</id>
+            <id type="integer">15</id>
             <compound-id type="integer">40034</compound-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">3</visualization-template-id>
@@ -392,7 +389,7 @@
         <nucleic-acid-locations/>
         <protein-locations>
           <protein-location>
-            <id type="integer">17</id>
+            <id type="integer">16</id>
             <protein-id type="integer">206</protein-id>
             <biological-state-id type="integer">2</biological-state-id>
             <visualization-template-id type="integer">4</visualization-template-id>
@@ -408,11 +405,16 @@
         </protein-locations>
         <protein-complex-visualizations>
           <protein-complex-visualization>
-            <id type="integer">18</id>
+            <id type="integer">17</id>
             <protein-complex-id type="integer">40000</protein-complex-id>
             <pathway-visualization-id type="integer">1</pathway-visualization-id>
             <biological-state-id type="integer">2</biological-state-id>
-            <protein_complex_protein_visualizations/>
+            <protein_complex_protein_visualizations>
+              <protein-complex-protein-visualization>
+                <id type="integer">18</id>
+                <protein-location-id type="integer">16</protein-location-id>
+              </protein-complex-protein-visualization>
+            </protein_complex_protein_visualizations>
             <protein_complex_compound_visualizations/>
           </protein-complex-visualization>
         </protein-complex-visualizations>
@@ -462,31 +464,31 @@
             <reaction_compound_visualizations>
               <reaction-compound-visualization>
                 <id type="integer">25</id>
-                <compound-location-id type="integer">12</compound-location-id>
+                <compound-location-id type="integer">11</compound-location-id>
                 <edge-id type="integer">19</edge-id>
                 <side>Left</side>
               </reaction-compound-visualization>
               <reaction-compound-visualization>
                 <id type="integer">26</id>
-                <compound-location-id type="integer">13</compound-location-id>
+                <compound-location-id type="integer">12</compound-location-id>
                 <edge-id type="integer">20</edge-id>
                 <side>Left</side>
               </reaction-compound-visualization>
               <reaction-compound-visualization>
                 <id type="integer">27</id>
-                <compound-location-id type="integer">14</compound-location-id>
+                <compound-location-id type="integer">13</compound-location-id>
                 <edge-id type="integer">21</edge-id>
                 <side>Right</side>
               </reaction-compound-visualization>
               <reaction-compound-visualization>
                 <id type="integer">28</id>
-                <compound-location-id type="integer">15</compound-location-id>
+                <compound-location-id type="integer">14</compound-location-id>
                 <edge-id type="integer">22</edge-id>
                 <side>Right</side>
               </reaction-compound-visualization>
               <reaction-compound-visualization>
                 <id type="integer">29</id>
-                <compound-location-id type="integer">16</compound-location-id>
+                <compound-location-id type="integer">15</compound-location-id>
                 <edge-id type="integer">23</edge-id>
                 <side>Right</side>
               </reaction-compound-visualization>
@@ -496,12 +498,7 @@
               <reaction-enzyme-visualization>
                 <id type="integer">30</id>
                 <reaction-enzyme-id type="integer">9</reaction-enzyme-id>
-                <protein-complex-visualization-id type="integer">18</protein-complex-visualization-id>
-              </reaction-enzyme-visualization>
-              <reaction-enzyme-visualization>
-                <id type="integer">31</id>
-                <reaction-enzyme-id type="integer">10</reaction-enzyme-id>
-                <protein-complex-visualization-id type="integer">18</protein-complex-visualization-id>
+                <protein-complex-visualization-id type="integer">17</protein-complex-visualization-id>
               </reaction-enzyme-visualization>
             </reaction_enzyme_visualizations>
             <reaction_element_collection_visualizations/>

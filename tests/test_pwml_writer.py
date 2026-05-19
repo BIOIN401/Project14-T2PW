@@ -65,6 +65,9 @@ def test_writer_emits_visible_complex_and_reaction_enzyme_visualization() -> Non
     reaction_visualizations = builder.section_items["reaction-visualizations"]
 
     assert len(complex_visualizations) == 1
+    assert builder.section_items["proteins"][0]["id"] != 201
+    assert builder.section_items["protein-locations"][0]["visualization-template-id"] == 2
+    assert builder.section_items["protein-locations"][0]["label-type"] == "subunit"
     enzyme_viz = reaction_visualizations[0]["reaction_enzyme_visualizations"][0]
     assert enzyme_viz["protein-complex-visualization-id"] == complex_visualizations[0]["id"]
     assert "protein-location-id" not in enzyme_viz

@@ -1098,6 +1098,29 @@ class DeterministicPwmlBuilder:
         def id_for(record: Dict[str, Any], keys: Sequence[str], fallback: IdFactory) -> int:
             return first_int(record, keys) or fallback.next()
 
+        def document_id_for(
+            record: Dict[str, Any],
+            *,
+            pw_keys: Sequence[str],
+            pathbank_keys: Sequence[str],
+            fallback: IdFactory,
+        ) -> int:
+            explicit = first_int(record, pw_keys)
+            if explicit is not None:
+                return explicit
+            pathwhiz = first_int(record, ["pathwhiz_id"])
+            pathbank_values = {first_int(record, [key]) for key in pathbank_keys}
+            pathbank_values.discard(None)
+            if pathwhiz is not None and pathwhiz not in pathbank_values:
+                return pathwhiz
+            return fallback.next()
+
+        def protein_template_id(value: Any) -> int:
+            template_id = _to_positive_int(value)
+            if template_id is None or template_id == 4:
+                return 2
+            return template_id
+
         def direction_for(value: Any) -> str:
             text = str(value or "").strip().casefold()
             if text in {"<", "left", "reverse"}:
@@ -1226,7 +1249,12 @@ class DeterministicPwmlBuilder:
         for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
             if not isinstance(record, dict):
                 continue
-            rid = id_for(record, ["pathwhiz_id", "pathbank_compound_id", "pw_compound_id"], self.compound_ids)
+            rid = document_id_for(
+                record,
+                pw_keys=["pw_compound_id"],
+                pathbank_keys=["pathbank_compound_id"],
+                fallback=self.compound_ids,
+            )
             remember("entities", record.get("key"), rid)
             self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Compound", "entity_type": "compound"}
             mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
@@ -1296,7 +1324,12 @@ class DeterministicPwmlBuilder:
         for record in entities.get("proteins", []) if isinstance(entities.get("proteins"), list) else []:
             if not isinstance(record, dict):
                 continue
-            rid = id_for(record, ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id"], self.protein_ids)
+            rid = document_id_for(
+                record,
+                pw_keys=["pw_protein_id"],
+                pathbank_keys=["pathbank_protein_id"],
+                fallback=self.protein_ids,
+            )
             remember("entities", record.get("key"), rid)
             self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Protein", "entity_type": "protein"}
             if record.get("key"):
@@ -1338,10 +1371,11 @@ class DeterministicPwmlBuilder:
         for record in entities.get("protein_complexes", []) if isinstance(entities.get("protein_complexes"), list) else []:
             if not isinstance(record, dict):
                 continue
-            rid = id_for(
+            rid = document_id_for(
                 record,
-                ["pathwhiz_id", "pathbank_protein_complex_id", "pathbank_complex_id", "pw_complex_id"],
-                self.complex_ids,
+                pw_keys=["pw_complex_id"],
+                pathbank_keys=["pathbank_protein_complex_id", "pathbank_complex_id"],
+                fallback=self.complex_ids,
             )
             remember("entities", record.get("key"), rid)
             self._ir_entity_info[str(record.get("key"))] = {
@@ -1574,8 +1608,7 @@ class DeterministicPwmlBuilder:
                 protein_location_by_entity_state[
                     (str(loc.get("entity_key") or ""), str(loc.get("biological_state_key") or ""))
                 ] = lid
-            self.section_items[section].append(
-                {
+            item = {
                     "id": lid,
                     entity_field: int(info["id"]),
                     "biological-state-id": lookup("biological_states", loc.get("biological_state_key")),
@@ -1588,7 +1621,13 @@ class DeterministicPwmlBuilder:
                     "width": str(loc.get("width") or 160),
                     "height": str(loc.get("height") or 60),
                 }
-            )
+            if str(loc.get("type") or "") == "protein_location":
+                item["visualization-template-id"] = protein_template_id(loc.get("visualization_template_id"))
+                item["zindex"] = int(loc.get("zindex") or 8)
+                item["label-type"] = str(loc.get("label_type") or loc.get("label-type") or "subunit")
+                item["width"] = str(loc.get("width") or 150)
+                item["height"] = str(loc.get("height") or 70)
+            self.section_items[section].append(item)
 
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
@@ -1632,15 +1671,15 @@ class DeterministicPwmlBuilder:
                                 "id": protein_location_id,
                                 "protein-id": int(protein_info["id"]),
                                 "biological-state-id": biological_state_id,
-                                "visualization-template-id": int(item.get("visualization_template_id") or 4),
+                                "visualization-template-id": protein_template_id(item.get("visualization_template_id")),
                                 "hidden": bool(item.get("hidden", False)),
                                 "x": int(item.get("x") or 0),
                                 "y": int(item.get("y") or 0),
-                                "zindex": int(item.get("zindex") or 10),
-                                "label-type": "text",
+                                "zindex": int(item.get("zindex") or 8),
+                                "label-type": "subunit",
                                 "font-size": "regular",
-                                "width": "160",
-                                "height": "60",
+                                "width": "150",
+                                "height": "70",
                             }
                         )
                 if protein_location_id is not None:
