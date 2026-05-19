@@ -40,7 +40,7 @@ def _singularize(tag: str) -> str:
         "protein-locations": "protein-location",
         "protein-complex-visualizations": "protein-complex-visualization",
         "reaction-visualizations": "reaction-visualization",
-        "reaction-coupled-transport_visualizations": "reaction-coupled-transport-visualization",
+        "reaction-coupled-transport-visualizations": "reaction-coupled-transport-visualization",
         "transport-visualizations": "transport-visualization",
         "interaction-visualizations": "interaction-visualization",
         "sub-pathway-visualizations": "sub-pathway-visualization",
@@ -1203,6 +1203,25 @@ class DeterministicPwmlBuilder:
 
         entities = ir.get("entities") if isinstance(ir.get("entities"), dict) else {}
         self.section_items["bounds"] = []
+        raw_entity_by_key: Dict[str, Dict[str, Any]] = {}
+        protein_key_by_name: Dict[str, str] = {}
+        protein_key_by_db_id: Dict[int, str] = {}
+        for bucket_name, bucket in entities.items():
+            for record in bucket if isinstance(bucket, list) else []:
+                if not isinstance(record, dict):
+                    continue
+                key = str(record.get("key") or "")
+                if key:
+                    raw_entity_by_key[key] = record
+                if bucket_name == "proteins" and key:
+                    name = str(record.get("name") or "").strip()
+                    if name:
+                        protein_key_by_name[_normalize_key(name)] = key
+                    for db_key in ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id", "protein_id"]:
+                        db_id = _to_positive_int(record.get(db_key))
+                        if db_id is not None:
+                            protein_key_by_db_id[db_id] = key
+
         self.section_items["compounds"] = []
         for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
             if not isinstance(record, dict):
@@ -1381,12 +1400,17 @@ class DeterministicPwmlBuilder:
                         }
                     )
             enzymes: List[Dict[str, Any]] = []
+            seen_enzyme_targets: Set[Tuple[str, int]] = set()
             for member in reaction.get("enzymes", []) if isinstance(reaction.get("enzymes"), list) else []:
                 if not isinstance(member, dict):
                     continue
                 info = entity_info(member.get("entity_key"))
                 if not info:
                     continue
+                enzyme_target = (str(info["entity_type"]), int(info["id"]))
+                if enzyme_target in seen_enzyme_targets:
+                    continue
+                seen_enzyme_targets.add(enzyme_target)
                 mid = self.ids.next()
                 member_ids[str(member.get("key"))] = {
                     "id": mid,
@@ -1401,11 +1425,12 @@ class DeterministicPwmlBuilder:
                     item["protein-id"] = int(info["id"])
                 if str(member.get("role") or "").casefold() == "inhibitor":
                     item["inhibitor"] = True
+                item["enzyme-class"] = member.get("enzyme_class") or member.get("enzyme-class")
                 enzymes.append(item)
             reactions.append(
                 {
                     "id": rid,
-                    "spontaneous": reaction.get("spontaneous"),
+                    "spontaneous": bool(reaction.get("spontaneous", False)),
                     "pwr-id": f"PW_R{rid:06d}",
                     "direction": direction_for(reaction.get("direction")),
                     "reaction-left-elements": left,
@@ -1534,6 +1559,7 @@ class DeterministicPwmlBuilder:
             "element-collection-locations",
         ]:
             self.section_items[section] = []
+        protein_location_by_entity_state: Dict[Tuple[str, str], int] = {}
         for loc in ir.get("locations", []) if isinstance(ir.get("locations"), list) else []:
             if not isinstance(loc, dict):
                 continue
@@ -1544,6 +1570,10 @@ class DeterministicPwmlBuilder:
             section, entity_field = section_info
             lid = self.ids.next()
             remember("locations", loc.get("key"), lid)
+            if str(loc.get("type") or "") == "protein_location":
+                protein_location_by_entity_state[
+                    (str(loc.get("entity_key") or ""), str(loc.get("biological_state_key") or ""))
+                ] = lid
             self.section_items[section].append(
                 {
                     "id": lid,
@@ -1575,13 +1605,54 @@ class DeterministicPwmlBuilder:
             biological_state_key = str(item.get("biological_state_key"))
             protein_complex_viz_by_entity[entity_key] = vid
             protein_complex_viz_by_entity_state[(entity_key, biological_state_key)] = vid
+            pc_protein_vis: List[Dict[str, Any]] = []
+            raw_pc = raw_entity_by_key.get(entity_key, {})
+            for component in raw_pc.get("components", []) if isinstance(raw_pc.get("components"), list) else []:
+                protein_key = ""
+                if isinstance(component, dict):
+                    protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
+                    if not protein_key:
+                        for db_key in ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id", "protein_id"]:
+                            db_id = _to_positive_int(component.get(db_key))
+                            if db_id is not None and db_id in protein_key_by_db_id:
+                                protein_key = protein_key_by_db_id[db_id]
+                                break
+                comp_name = _component_name(component)
+                if not protein_key and comp_name:
+                    protein_key = protein_key_by_name.get(_normalize_key(comp_name), "")
+                protein_location_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
+                if protein_location_id is None and protein_key:
+                    protein_info = entity_info(protein_key)
+                    biological_state_id = lookup("biological_states", item.get("biological_state_key"))
+                    if protein_info is not None and biological_state_id is not None:
+                        protein_location_id = self.ids.next()
+                        protein_location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
+                        self.section_items["protein-locations"].append(
+                            {
+                                "id": protein_location_id,
+                                "protein-id": int(protein_info["id"]),
+                                "biological-state-id": biological_state_id,
+                                "visualization-template-id": int(item.get("visualization_template_id") or 4),
+                                "hidden": bool(item.get("hidden", False)),
+                                "x": int(item.get("x") or 0),
+                                "y": int(item.get("y") or 0),
+                                "zindex": int(item.get("zindex") or 10),
+                                "label-type": "text",
+                                "font-size": "regular",
+                                "width": "160",
+                                "height": "60",
+                            }
+                        )
+                if protein_location_id is not None:
+                    pc_protein_vis.append({"id": self.ids.next(), "protein-location-id": protein_location_id})
             self.section_items["protein-complex-visualizations"].append(
                 {
                     "id": vid,
                     "protein-complex-id": int(info["id"]),
                     "pathway-visualization-id": self.pathway_visualization_id_int,
                     "biological-state-id": lookup("biological_states", item.get("biological_state_key")),
-                    "protein_complex_protein_visualizations": [],
+                    "protein_complex_protein_visualizations": pc_protein_vis,
+                    "protein_complex_compound_visualizations": [],
                 }
             )
 
@@ -1603,7 +1674,7 @@ class DeterministicPwmlBuilder:
 
         self.section_items["reaction-visualizations"] = []
         self.section_items["transport-visualizations"] = []
-        self.section_items["reaction-coupled-transport_visualizations"] = []
+        self.section_items["reaction-coupled-transport-visualizations"] = []
         self.section_items["interaction-visualizations"] = []
         self.section_items["sub-pathway-visualizations"] = []
 
@@ -1881,7 +1952,7 @@ class DeterministicPwmlBuilder:
         viz = self._build_locations_and_visualizations(default_state_id, reactions, transports)
         self.section_items.update(viz)
 
-        self.section_items["reaction-coupled-transport_visualizations"] = []
+        self.section_items["reaction-coupled-transport-visualizations"] = []
         self.section_items["interaction-visualizations"] = []
         self.section_items["sub-pathway-visualizations"] = []
 

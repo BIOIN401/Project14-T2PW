@@ -40,7 +40,7 @@ def _singularize(tag: str) -> str:
         "protein-locations": "protein-location",
         "protein-complex-visualizations": "protein-complex-visualization",
         "reaction-visualizations": "reaction-visualization",
-        "reaction-coupled-transport_visualizations": "reaction-coupled-transport-visualization",
+        "reaction-coupled-transport-visualizations": "reaction-coupled-transport-visualization",
         "transport-visualizations": "transport-visualization",
         "interaction-visualizations": "interaction-visualization",
         "sub-pathway-visualizations": "sub-pathway-visualization",

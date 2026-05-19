@@ -365,7 +365,11 @@ def test_ir_writer_integration_validates_and_has_no_fatal_qa_errors() -> None:
     qa = run_pwml_qa(xml_bytes)
 
     complex_viz_id = builder.section_items["protein-complex-visualizations"][0]["id"]
+    complex_member_viz = builder.section_items["protein-complex-visualizations"][0]["protein_complex_protein_visualizations"]
     enzyme_viz = builder.section_items["reaction-visualizations"][0]["reaction_enzyme_visualizations"][0]
+    assert len(builder.section_items["reactions"][0]["reaction-enzymes"]) == 1
+    assert complex_member_viz
+    assert "protein-location-id" in complex_member_viz[0]
     assert enzyme_viz["protein-complex-visualization-id"] == complex_viz_id
     assert "protein-location-id" not in enzyme_viz
     assert validation["ok"], validation["issues"][:3]
