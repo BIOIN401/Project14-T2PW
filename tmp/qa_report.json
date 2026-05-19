@@ -1,42 +1,39 @@
 {
   "summary": {
-    "total_species": 3,
-    "total_reactions": 0,
-    "completeness_score": 0.0
+    "total_species": 6,
+    "total_reactions": 1,
+    "completeness_score": 0.143
   },
   "flags": {
-    "missing_compartments": [
-      {
-        "entity": "mitochondrial pyruvate carrier complex",
-        "reason": "no subcellular location recorded"
-      }
-    ],
+    "missing_compartments": [],
     "missing_modifiers": [],
-    "possible_complexes": [
-      {
-        "entity": "mitochondrial pyruvate carrier complex",
-        "reason": "name suggests a complex or subunit"
-      }
-    ],
+    "possible_complexes": [],
     "transport_like_reactions": [],
-    "orphan_nodes": [
-      {
-        "entity": "MPC1",
-        "degree": 0
-      }
-    ],
+    "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "pyruvate",
+        "entity": "Glucose",
         "type": "compound"
       },
       {
-        "entity": "MPC1",
-        "type": "protein"
+        "entity": "ATP",
+        "type": "compound"
       },
       {
-        "entity": "mitochondrial pyruvate carrier complex",
-        "type": "protein_complex"
+        "entity": "Glucose-6-phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "ADP",
+        "type": "compound"
+      },
+      {
+        "entity": "H⁺",
+        "type": "compound"
+      },
+      {
+        "entity": "Hexokinase",
+        "type": "protein"
       }
     ],
     "empty_reactions": [],

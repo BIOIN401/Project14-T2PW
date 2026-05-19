@@ -754,10 +754,16 @@ class PathBankDbResolver:
             score = 0.0
             if tid and row_tid == tid:
                 score = max(score, 0.98)
-            if norm_text and norm_text == _normalize_name(name_db):
+            norm_name_db = _normalize_name(name_db)
+            norm_common = _normalize_name(common_name)
+            if norm_text and norm_text == norm_name_db:
                 score = max(score, 1.0)
-            if norm_text and norm_text == _normalize_name(common_name):
+            if norm_text and norm_text == norm_common:
                 score = max(score, 0.95)
+            if norm_text and (norm_text + "s" == norm_name_db or norm_name_db + "s" == norm_text):
+                score = max(score, 0.92)
+            if norm_text and (norm_text + "s" == norm_common or norm_common + "s" == norm_text):
+                score = max(score, 0.92)
             score = max(score, 0.45 + 0.5 * _jaccard(text, name_db), 0.42 + 0.5 * _jaccard(text, common_name))
             candidates.append({
                 "pathbank_species_id": sid,

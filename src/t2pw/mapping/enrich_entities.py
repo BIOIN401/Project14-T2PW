@@ -1185,8 +1185,7 @@ def _promote_compound_fields(compound: Dict[str, Any], element_states_by_name: D
     compound_type = _first_non_empty(
         compound.get("type"),
         compound.get("compound_type"),
-        _first_list_item(enrichment.get("chebi_roles")),
-        "generic_class" if bool(enrichment.get("is_generic_class")) else "",
+        "Compound",
     )
     if compound_type:
         compound["type"] = compound_type

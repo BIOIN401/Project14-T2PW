@@ -2,58 +2,109 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 4,
-    "edge_count": 2
+    "node_count": 7,
+    "edge_count": 6
   },
   "nodes": [
     {
-      "id": "compound:pyruvate",
-      "label": "pyruvate",
+      "id": "compound:glucose",
+      "label": "Glucose",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "human cytosol",
+      "compartment": "Cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:mpc1",
-      "label": "MPC1",
+      "id": "compound:atp",
+      "label": "ATP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "Cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:glucose-6-phosphate",
+      "label": "Glucose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "Cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:adp",
+      "label": "ADP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "Cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:h⁺",
+      "label": "H⁺",
+      "kind": "compound",
+      "cls": "ion",
+      "compartment": "Cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:hexokinase",
+      "label": "Hexokinase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "human mitochondrial matrix",
+      "compartment": "Cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein_complex:mitochondrial pyruvate carrier complex",
-      "label": "mitochondrial pyruvate carrier complex",
-      "kind": "protein_complex",
-      "cls": "protein_complex",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "transport:pyruvate import into mitochondrion",
-      "label": "pyruvate import into mitochondrion",
-      "kind": "transport",
+      "id": "reaction:hexokinase reaction",
+      "label": "Hexokinase reaction",
+      "kind": "reaction",
       "cls": "",
-      "compartment": "human cytosol → human mitochondrial matrix",
+      "compartment": "Cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:pyruvate",
-      "target": "transport:pyruvate import into mitochondrion",
-      "role": "cargo",
+      "source": "compound:glucose",
+      "target": "reaction:hexokinase reaction",
+      "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "protein_complex:mitochondrial pyruvate carrier complex",
-      "target": "transport:pyruvate import into mitochondrion",
-      "role": "transporter",
+      "source": "compound:atp",
+      "target": "reaction:hexokinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:glucose-6-phosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:adp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:h⁺",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:hexokinase",
+      "target": "reaction:hexokinase reaction",
+      "role": "catalyst",
       "confidence": 1.0
     }
   ]
