@@ -9001,6 +9001,33 @@
         "status": "matched",
         "order_step": "uniprot"
       }
+    },
+    "db::phosphoglucose isomerase::homo sapiens::::{\"uniprot\": \"P06744\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P06744",
+        "pathbank_protein_id": "751"
+      },
+      "pathbank_protein_id": 751,
+      "confidence": 1.08,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 751,
+          "name": "Glucose-6-phosphate isomerase",
+          "uniprot": "P06744",
+          "gene_name": "GPI",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.08
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
     }
   },
   "compounds": {
@@ -22663,6 +22690,46 @@
         "status": "matched",
         "order_step": "pathbank_compound_id"
       }
+    },
+    "db::fructose6phosphate::79::{\"cas\": \"643-13-0\", \"chebi\": \"CHEBI:15946\", \"hmdb\": \"HMDB0000124\", \"kegg\": \"C00085\", \"pubchem\": \"69507\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000124",
+        "kegg": "C00085",
+        "chebi": "CHEBI:15946",
+        "pubchem": "69507",
+        "cas": "643-13-0",
+        "biocyc": "FRUCTOSE-6P",
+        "chemspider": "62713",
+        "pathbank_compound_id": "79"
+      },
+      "pathbank_compound_id": 79,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 79,
+          "name": "Fructose 6-phosphate",
+          "short_name": "Fru6P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000124",
+            "kegg": "C00085",
+            "chebi": "CHEBI:15946",
+            "pubchem": "69507",
+            "cas": "643-13-0",
+            "biocyc": "FRUCTOSE-6P",
+            "chemspider": "62713",
+            "pathbank_compound_id": "79"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
     }
   },
   "complexes": {
@@ -22828,6 +22895,83 @@
         "issue": "no_db_candidates",
         "order_step": "novel_complex_from_resolved_components"
       }
+    },
+    "db::hexokinase complex::homo sapiens::::[{\"ids\": {\"gene_name\": \"HK3\", \"pathbank_protein_id\": \"206\", \"uniprot\": \"P52790\"}, \"name\": \"hexokinase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431773,
+      "pathbank_protein_complex_id": 431773,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Hexokinase-3",
+          "pathbank_protein_id": 161288,
+          "stoichiometry": 1,
+          "uniprot": "P52790",
+          "mapped_ids": {
+            "uniprot": "P52790",
+            "pathbank_protein_id": "161288"
+          },
+          "gene_name": "HK3",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_complex_candidate",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431773,
+          "pathbank_protein_complex_id": 431773,
+          "name": "Hexokinase complex",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "complex_name_species"
+      }
+    },
+    "db::glucose6phosphate isomerase::homo sapiens::3607::[{\"ids\": {\"gene_name\": \"GPI\", \"pathbank_protein_id\": \"751\", \"uniprot\": \"P06744\"}, \"name\": \"Glucose-6-phosphate isomerase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 3607,
+      "pathbank_protein_complex_id": 3607,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Glucose-6-phosphate isomerase",
+          "pathbank_protein_id": 751,
+          "stoichiometry": 1,
+          "uniprot": "P06744",
+          "mapped_ids": {
+            "uniprot": "P06744",
+            "pathbank_protein_id": "751"
+          },
+          "gene_name": "GPI",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 3607,
+          "pathbank_protein_complex_id": 3607,
+          "name": "phosphoglucose isomerase",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
     }
   },
   "enzyme_complexes": {
@@ -22839,11 +22983,11 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "Hexokinase complex",
+      "name": "hexokinase complex",
       "species_id": 1,
       "components": [
         {
-          "name": "Hexokinase",
+          "name": "hexokinase",
           "stoichiometry": 1,
           "pathbank_protein_id": 206,
           "mapped_ids": {
@@ -22858,6 +23002,61 @@
         "status": "novel",
         "issue": "no_db_candidates",
         "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "phosphoglucose isomerase::751::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 3607,
+      "pathbank_protein_complex_id": 3607,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Glucose-6-phosphate isomerase",
+          "pathbank_protein_id": 751,
+          "stoichiometry": 1,
+          "uniprot": "P06744",
+          "mapped_ids": {
+            "uniprot": "P06744",
+            "pathbank_protein_id": "751"
+          },
+          "gene_name": "GPI",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 495,
+          "pathbank_protein_complex_id": 495,
+          "name": "Glucose-6-phosphate isomerase",
+          "species_id": 1,
+          "component_protein_id": 751,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 3607,
+          "pathbank_protein_complex_id": 3607,
+          "name": "phosphoglucose isomerase",
+          "species_id": 1,
+          "component_protein_id": 751,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 14773,
+          "pathbank_protein_complex_id": 14773,
+          "name": "Phosphohexose isomerase",
+          "species_id": 1,
+          "component_protein_id": 751,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
       }
     }
   }
