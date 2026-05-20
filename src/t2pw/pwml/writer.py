@@ -758,7 +758,7 @@ class DeterministicPwmlBuilder:
                     "id": self.ids.next(),
                     "compound-id": int(rec["id"]),
                     "biological-state-id": bs_id,
-                    "visualization-template-id": 0,
+                    "visualization-template-id": 3,
                     "hidden": False,
                     "x": x,
                     "y": y,
@@ -1249,6 +1249,7 @@ class DeterministicPwmlBuilder:
         for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
             if not isinstance(record, dict):
                 continue
+            db_row = record.get("db_row") if isinstance(record.get("db_row"), dict) else {}
             rid = document_id_for(
                 record,
                 pw_keys=["pw_compound_id", "pathbank_compound_id"],
@@ -1258,17 +1259,32 @@ class DeterministicPwmlBuilder:
             remember("entities", record.get("key"), rid)
             self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Compound", "entity_type": "compound"}
             mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            chebi_id = (
+                db_row.get("chebi_id")
+                or record.get("chebi_id")
+                or mapped_ids.get("chebi")
+                or None
+            )
+            if chebi_id is not None:
+                chebi_id = str(chebi_id).replace("CHEBI:", "").strip()
             self.section_items["compounds"].append(
                 {
                     "id": rid,
-                    "name": record.get("name", ""),
-                    "pwc-id": f"PW_C{rid:06d}",
-                    "short-name": record.get("name", ""),
+                    "name": db_row.get("name") or record.get("name", ""),
+                    "description": db_row.get("description") or record.get("description"),
+                    "cas": db_row.get("cas") or record.get("cas"),
+                    "pwc-id": db_row.get("pwc_id") or record.get("pwc_id") or mapped_ids.get("pwc_id") or f"PW_C{rid:06d}",
+                    "short-name": db_row.get("short_name") or record.get("short_name") or record.get("name", ""),
                     "element-states": [],
-                    "hmdb-id": mapped_ids.get("hmdb") or None,
-                    "kegg-id": mapped_ids.get("kegg") or None,
-                    "chebi-id": mapped_ids.get("chebi") or None,
-                    "pubchem-cid": mapped_ids.get("pubchem") or None,
+                    "hmdb-id": db_row.get("hmdb_id") or record.get("hmdb_id") or mapped_ids.get("hmdb") or None,
+                    "kegg-id": db_row.get("kegg_id") or record.get("kegg_id") or mapped_ids.get("kegg") or None,
+                    "chebi-id": chebi_id or None,
+                    "pubchem-cid": db_row.get("pubchem_cid") or record.get("pubchem_cid") or mapped_ids.get("pubchem") or None,
+                    "biocyc-id": db_row.get("biocyc_id") or record.get("biocyc_id") or mapped_ids.get("biocyc") or None,
+                    "chemspider-id": (
+                        db_row.get("chemspider_id") or record.get("chemspider_id") or mapped_ids.get("chemspider") or None
+                    ),
+                    "drugbank-id": db_row.get("drugbank_id") or record.get("drugbank_id") or mapped_ids.get("drugbank") or None,
                 }
             )
 
@@ -1612,7 +1628,7 @@ class DeterministicPwmlBuilder:
                     "id": lid,
                     entity_field: int(info["id"]),
                     "biological-state-id": lookup("biological_states", loc.get("biological_state_key")),
-                    "visualization-template-id": int(loc.get("visualization_template_id") or 0),
+                    "visualization-template-id": int(loc.get("visualization_template_id") or (3 if section == "compound-locations" else 0)),
                     "hidden": bool(loc.get("hidden", False)),
                     "x": int(loc.get("x") or 0),
                     "y": int(loc.get("y") or 0),

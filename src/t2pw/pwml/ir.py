@@ -4,6 +4,8 @@ import re
 from collections import defaultdict
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
+
 
 ENTITY_BUCKETS = {
     "compound": "compounds",
@@ -84,6 +86,7 @@ def _new_report() -> Dict[str, Any]:
         "ok": True,
         "errors": [],
         "warnings": [],
+        "db_resolution": {"compounds": []},
         "unresolved": {
             "db_identities": [],
             "entity_references": [],
@@ -216,6 +219,12 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
     for key in [
         "mapped_ids",
         "mapping_meta",
+        "raw_name",
+        "db_status",
+        "db_id",
+        "db_row",
+        "db_match",
+        "chosen_rule",
         "class",
         "confidence",
         "provenance",
@@ -372,12 +381,132 @@ def _entity_type_from_location_bucket(bucket: str) -> Tuple[str, str]:
     }.get(bucket, ("", ""))
 
 
+def _normalize_compound_external_ids(row: Dict[str, Any]) -> Dict[str, Any]:
+    out = dict(row)
+    mapped = dict(_safe_dict(out.get("mapped_ids")))
+
+    chebi = normalize_chebi_id(out.get("chebi_id") or mapped.get("chebi"))
+    if chebi:
+        out["chebi_id"] = chebi
+        mapped["chebi"] = chebi
+
+    for direct_key, mapped_key in [
+        ("hmdb_id", "hmdb"),
+        ("kegg_id", "kegg"),
+        ("pubchem_cid", "pubchem"),
+        ("pwc_id", "pwc_id"),
+    ]:
+        value = _first_nonempty(out, [direct_key, mapped_key])
+        if value not in (None, ""):
+            text = str(value).strip()
+            if direct_key == "kegg_id":
+                text = text.removeprefix("cpd:").removeprefix("CPD:")
+            out[direct_key] = text
+            mapped[mapped_key] = text
+
+    if mapped:
+        out["mapped_ids"] = {key: value for key, value in mapped.items() if value not in (None, "")}
+    return out
+
+
+def _resolve_compound_rows(
+    rows: List[Dict[str, Any]],
+    *,
+    db_resolver: Any,
+    strict_db: bool,
+    report: Dict[str, Any],
+    pointer_prefix: str,
+) -> List[Dict[str, Any]]:
+    normalized = [_normalize_compound_external_ids(row) for row in rows]
+    resolver: Optional[PathWhizCompoundResolver] = None
+    db_reason = ""
+
+    if db_resolver is None:
+        try:
+            from t2pw.mapping.map_ids import PathBankDbResolver
+
+            db_resolver = PathBankDbResolver.from_env()
+        except Exception as exc:  # noqa: BLE001
+            db_reason = f"db_resolver_unavailable:{exc}"
+            db_resolver = None
+
+    available = bool(db_resolver is not None and getattr(db_resolver, "available", lambda: True)())
+    if db_resolver is not None and available:
+        resolver = PathWhizCompoundResolver(db_resolver)
+    elif db_resolver is not None and not db_reason:
+        db_reason = str(getattr(db_resolver, "last_error", "") or "db_unavailable")
+    elif not db_reason:
+        db_reason = "db_not_configured"
+
+    resolved: List[Dict[str, Any]] = []
+    for idx, row in enumerate(normalized):
+        raw_name = _canonical(row.get("raw_name") or row.get("name"))
+        if resolver is None:
+            legacy_id = _db_id(row, ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"])
+            if legacy_id is not None:
+                fallback = dict(row)
+                fallback["db_status"] = "legacy_id_unverified"
+                fallback["db_id"] = legacy_id
+                fallback["chosen_rule"] = "legacy_pathwhiz_id_unverified"
+                fallback["confidence"] = max(float(fallback.get("confidence") or 0.0), 0.85)
+                report["db_resolution"]["compounds"].append(
+                    {
+                        "raw_name": raw_name,
+                        "status": "legacy_id_unverified",
+                        "db_id": legacy_id,
+                        "chosen_rule": "legacy_pathwhiz_id_unverified",
+                        "confidence": fallback["confidence"],
+                        "reason": db_reason,
+                    }
+                )
+                resolved.append(fallback)
+                continue
+            match = {
+                "status": "unmatched",
+                "raw_name": raw_name,
+                "chosen": None,
+                "candidates": [],
+                "chosen_rule": "",
+                "confidence": 0.0,
+                "reason": db_reason,
+            }
+        else:
+            match = resolver.resolve(row)
+
+        report["db_resolution"]["compounds"].append(match)
+        if match.get("status") == "matched" and float(match.get("confidence") or 0.0) >= 0.85:
+            resolved.append(apply_compound_db_resolution(row, match))
+            continue
+
+        issue = {
+            "entity_type": "compound",
+            "raw_name": raw_name,
+            "status": match.get("status"),
+            "reason": match.get("reason") or "low_confidence_db_match",
+            "chosen_rule": match.get("chosen_rule"),
+            "confidence": match.get("confidence", 0.0),
+            "candidates": match.get("candidates", []),
+        }
+        report["unresolved"]["db_identities"].append(issue)
+        _add_issue(
+            report,
+            "error" if strict_db else "warning",
+            "compound_db_resolution_failed",
+            f"Compound '{raw_name or idx}' did not resolve to a confident PathWhiz DB row.",
+            pointer=f"{pointer_prefix}/{idx}",
+            **issue,
+        )
+        resolved.append(apply_compound_db_resolution(row, match))
+    return resolved
+
+
 def build_pwml_ir(
     payload: dict,
     *,
     pathway_name: str = "Generated Pathway",
     pathway_subject: str = "Metabolic",
     strict_db: bool = True,
+    db_resolver: Any = None,
     width: int = 3200,
     height: int = 1400,
 ) -> tuple[dict, dict]:
@@ -472,6 +601,14 @@ def build_pwml_ir(
             report=report,
             pointer_prefix=f"/entities/{source_key}",
         )
+        if source_key == "compounds":
+            rows = _resolve_compound_rows(
+                rows,
+                db_resolver=db_resolver,
+                strict_db=strict_db,
+                report=report,
+                pointer_prefix=f"/entities/{source_key}",
+            )
         bucket = ENTITY_BUCKETS[entity_type]
         for row in rows:
             rec = _entity_record(row, row["key"], db_keys, db_field)
@@ -495,7 +632,19 @@ def build_pwml_ir(
             typed = dict(rec)
             typed["entity_type"] = entity_type
             entity_by_key[typed["key"]] = typed
-            entity_by_name[_norm(rec["name"])].append(typed)
+            for alias in [
+                rec.get("name"),
+                rec.get("raw_name"),
+                rec.get("short_name"),
+                rec.get("common_name"),
+            ]:
+                alias_norm = _norm(alias)
+                if alias_norm:
+                    entity_by_name[alias_norm].append(typed)
+            for alias in _safe_list(rec.get("synonyms")):
+                alias_norm = _norm(alias)
+                if alias_norm:
+                    entity_by_name[alias_norm].append(typed)
 
     proteins_by_key = {
         str(protein.get("key")): protein
@@ -1360,24 +1509,6 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
             if ident is not None:
                 out[str(ident)] = row
         return out
-
-    species_by_ref = component_index("species", ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"])
-    subcell_by_ref = component_index(
-        "subcellular_locations",
-        ["pathbank_subcellular_location_id", "pw_subcellular_location_id", "pathwhiz_id", "subcellular_location_id"],
-    )
-
-    def referenced_component_has_db_id(value: Any, index: Dict[str, Dict[str, Any]], keys: Sequence[str]) -> bool:
-        if isinstance(value, dict):
-            if db_id(value, keys) is not None:
-                return True
-            for ref in [value.get("key"), value.get("name"), value.get("display_name")]:
-                row = index.get(_norm(ref))
-                if row and db_id(row, keys) is not None:
-                    return True
-            return False
-        row = index.get(_norm(value)) or index.get(str(value or "").strip())
-        return bool(row and db_id(row, keys) is not None)
 
     def protein_external_id(row: Dict[str, Any]) -> str:
         value = _first_nonempty(
