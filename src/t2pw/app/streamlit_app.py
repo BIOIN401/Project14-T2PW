@@ -57,6 +57,7 @@ from t2pw.pipeline.pipeline import (
     build_qa_feedback,
     build_and_save_draft_graph,
     merge_additions,
+    propagate_context_organism,
     run_stage_two_with_feedback_loop,
     run_stage_one_with_chunking,
 )
@@ -1283,10 +1284,53 @@ def run_pwml_export(
     strict_db: bool = True,
 ) -> Dict[str, Any]:
     try:
-        payload = final_payload
+        payload = deepcopy(final_payload)
         grounding_report: Dict[str, Any] = {}
         if grounding_dict:
             payload, grounding_report = apply_grounding(payload, grounding_dict)
+
+        outputs_dir = project_root / "outputs"
+        outputs_dir.mkdir(parents=True, exist_ok=True)
+        required_gate_path = outputs_dir / "pwml_required_field_gate_report.json"
+        gate_payload = deepcopy(payload)
+        metadata = gate_payload.setdefault("metadata", {})
+        if isinstance(metadata, dict):
+            metadata.setdefault("pathway_name", pathway_name)
+            metadata.setdefault("name", pathway_name)
+            metadata.setdefault("pathway_subject", pathway_subject)
+            metadata.setdefault("subject", pathway_subject)
+            metadata.setdefault("description", pathway_description)
+            metadata.setdefault("width", int(vis_width))
+            metadata.setdefault("height", int(vis_height))
+        required_gate_report = validate_required_pwml_contract(gate_payload, strict_db=bool(strict_db))
+        required_gate_report["stage"] = "required_field_gate"
+        required_gate_report["pipeline_order"] = [
+            "audit_normalize",
+            "db_hydration",
+            "api_enrichment",
+            "llm_gap_resolver_with_tools",
+            "required_field_gate",
+            "pwml_ir_build",
+            "pwml_writer",
+            "pwml_qa",
+        ]
+        required_gate_path.write_text(
+            json.dumps(required_gate_report, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        if not required_gate_report.get("ok", False):
+            return {
+                "ok": False,
+                "error": "PWML required-field gate failed.",
+                "counts": {},
+                "issues": int(_safe_dict(required_gate_report.get("summary")).get("error_count", 0)),
+                "output_path": "",
+                "qa": {},
+                "grounding_report": grounding_report,
+                "required_gate_report": required_gate_report,
+                "required_gate_report_path": str(required_gate_path),
+            }
+
         pwml_ir, ir_report = build_pwml_ir(
             payload,
             pathway_name=pathway_name,
@@ -1306,6 +1350,8 @@ def run_pwml_export(
                 "output_path": "",
                 "qa": {},
                 "grounding_report": grounding_report,
+                "required_gate_report": required_gate_report,
+                "required_gate_report_path": str(required_gate_path),
                 "pwml_ir": pwml_ir,
                 "pwml_ir_report": ir_report,
                 "pwml_ir_validation": ir_validation,
@@ -1342,6 +1388,8 @@ def run_pwml_export(
             "validation_report": report,
             "qa": qa_report,
             "grounding_report": grounding_report,
+            "required_gate_report": required_gate_report,
+            "required_gate_report_path": str(required_gate_path),
             "pwml_ir": pwml_ir,
             "pwml_ir_report": ir_report,
             "pwml_ir_validation": ir_validation,
@@ -2446,6 +2494,10 @@ if st.session_state.get("pipeline_ready"):
         else:
             try:
                 with st.spinner("Running audit, DB mapping, and PWML export..."):
+                    final_payload = propagate_context_organism(
+                        final_payload,
+                        st.session_state.get("pathway_context"),
+                    )
                     artifacts = run_post_pipeline_sbml_artifacts(
                         final_payload,
                         build_legacy_sbml=False,
@@ -2568,6 +2620,31 @@ if st.session_state.get("pipeline_ready"):
             )
         else:
             st.error(f"PWML export failed: {_pwml_result.get('error', 'unknown')}")
+            _gate_report = _safe_dict(_pwml_result.get("required_gate_report"))
+            if _gate_report:
+                _gate_summary = _safe_dict(_gate_report.get("summary"))
+                _gate_errors = _safe_list(_gate_report.get("errors"))
+                _gate_warnings = _safe_list(_gate_report.get("warnings"))
+                st.error(
+                    "Required-field gate errors: "
+                    f"{_gate_summary.get('error_count', len(_gate_errors))}; "
+                    f"warnings: {_gate_summary.get('warning_count', len(_gate_warnings))}."
+                )
+                if _gate_errors:
+                    with st.expander("Required-field gate errors", expanded=True):
+                        for _issue in _gate_errors[:100]:
+                            if not isinstance(_issue, dict):
+                                continue
+                            _ptr = _issue.get("pointer", "")
+                            _msg = _issue.get("message", "")
+                            st.markdown(f"- `{_ptr}` - {_msg}" if _ptr else f"- {_msg}")
+                st.download_button(
+                    "Download required-field gate report",
+                    data=json.dumps(_gate_report, indent=2),
+                    file_name="pwml_required_field_gate_report.json",
+                    mime="application/json",
+                    key="dl_pwml_required_gate_failed",
+                )
             if _ir_report:
                 with st.expander("PWML IR report", expanded=False):
                     st.write("IR counts", _ir_report.get("counts", {}))

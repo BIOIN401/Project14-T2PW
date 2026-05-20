@@ -41,6 +41,38 @@ def _patch_query(resolver: PathBankDbResolver, return_value: List[Dict[str, Any]
     return patch.object(resolver, "_query", return_value=return_value)
 
 
+def test_complex_component_queries_use_protein_complex_id_join_column():
+    r = _make_resolver()
+
+    with patch.object(r, "_query", return_value=[]) as query:
+        r._complex_component_rows(301)
+        r._find_complexes_by_component_protein_id(500, [1])
+
+    sql = "\n".join(call.args[0] for call in query.call_args_list)
+    assert "pcp.protein_complex_id" in sql
+    assert "pcp.complex_id" not in sql
+
+
+def test_find_complex_by_component_uses_protein_complex_id_join_column():
+    r = _make_resolver()
+    protein_result = {
+        "status": "mapped",
+        "pathbank_protein_id": 500,
+        "candidates": [],
+        "confidence": 0.9,
+        "chosen_rule": "db_top_candidate_relaxed",
+    }
+
+    with patch.object(r, "_find_species_ids", return_value=[1]), \
+            patch.object(r, "map_protein_by_name_species", return_value=protein_result), \
+            patch.object(r, "_query", return_value=[]) as query:
+        r.find_complex_by_component("Albumin", "Homo sapiens")
+
+    sql = "\n".join(call.args[0] for call in query.call_args_list)
+    assert "pcp.protein_complex_id" in sql
+    assert "pcp.complex_id" not in sql
+
+
 # ---------------------------------------------------------------------------
 # find_species
 # ---------------------------------------------------------------------------

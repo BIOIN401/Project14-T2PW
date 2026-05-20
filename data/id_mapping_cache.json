@@ -8848,6 +8848,159 @@
         "status": "matched",
         "order_step": "pathbank_protein_id"
       }
+    },
+    "db::mpc1::unknown species::::{\"uniprot\": \"Q9Y5U8\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9Y5U8",
+        "pathbank_protein_id": "5479"
+      },
+      "pathbank_protein_id": 5479,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 5479,
+          "name": "Mitochondrial pyruvate carrier 1",
+          "uniprot": "Q9Y5U8",
+          "gene_name": "MPC1",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 23923,
+          "name": "Mitochondrial pyruvate carrier 1",
+          "uniprot": "Q9Y5U8",
+          "gene_name": "MPC1",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::mpc2::unknown species::::{\"uniprot\": \"O95563\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O95563",
+        "pathbank_protein_id": "5480"
+      },
+      "pathbank_protein_id": 5480,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 5480,
+          "name": "Mitochondrial pyruvate carrier 2",
+          "uniprot": "O95563",
+          "gene_name": "MPC2",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 23922,
+          "name": "Mitochondrial pyruvate carrier 2",
+          "uniprot": "O95563",
+          "gene_name": "MPC2",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::pyruvate dehydrogenase complex::unknown species::::{\"uniprot\": \"P10515\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P10515",
+        "pathbank_protein_id": "53"
+      },
+      "pathbank_protein_id": 53,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 53,
+          "name": "Dihydrolipoyllysine-residue acetyltransferase component of pyruvate dehydrogenase complex, mitochondrial",
+          "uniprot": "P10515",
+          "gene_name": "DLAT",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::mpc1::homo sapiens::5479::{\"uniprot\": \"Q9Y5U8\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9Y5U8",
+        "pathbank_protein_id": "5479",
+        "gene_name": "MPC1"
+      },
+      "pathbank_protein_id": 5479,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 5479,
+          "name": "Mitochondrial pyruvate carrier 1",
+          "uniprot": "Q9Y5U8",
+          "gene_name": "MPC1",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::hexokinase::unknown species::::{\"uniprot\": \"P19367\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P19367",
+        "pathbank_protein_id": "209"
+      },
+      "pathbank_protein_id": 209,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 209,
+          "name": "Hexokinase-1",
+          "uniprot": "P19367",
+          "gene_name": "HK1",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
     }
   },
   "compounds": {
@@ -22428,6 +22581,88 @@
         "status": "matched",
         "order_step": "pathbank_compound_id"
       }
+    },
+    "db::pyruvate::164::{\"cas\": \"127-17-3\", \"chebi\": \"CHEBI:32816\", \"hmdb\": \"HMDB0000243\", \"kegg\": \"C00022\", \"pubchem\": \"1060\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000243",
+        "kegg": "C00022",
+        "chebi": "CHEBI:32816",
+        "pubchem": "1060",
+        "cas": "127-17-3",
+        "biocyc": "PYRUVATE",
+        "chemspider": "1031",
+        "drugbank": "DB00119",
+        "pathbank_compound_id": "164"
+      },
+      "pathbank_compound_id": 164,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 164,
+          "name": "Pyruvic acid",
+          "short_name": "Pyr",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000243",
+            "kegg": "C00022",
+            "chebi": "CHEBI:32816",
+            "pubchem": "1060",
+            "cas": "127-17-3",
+            "biocyc": "PYRUVATE",
+            "chemspider": "1031",
+            "drugbank": "DB00119",
+            "pathbank_compound_id": "164"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::acetylcoa::940::{\"cas\": \"72-89-9\", \"chebi\": \"CHEBI:15351\", \"hmdb\": \"HMDB0001206\", \"kegg\": \"C00024\", \"pubchem\": \"444493\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001206",
+        "kegg": "C00024",
+        "chebi": "CHEBI:15351",
+        "pubchem": "444493",
+        "cas": "72-89-9",
+        "biocyc": "ACETYL-COA",
+        "chemspider": "392413",
+        "pathbank_compound_id": "940"
+      },
+      "pathbank_compound_id": 940,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 940,
+          "name": "Acetyl-CoA",
+          "short_name": "Ac-CoA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001206",
+            "kegg": "C00024",
+            "chebi": "CHEBI:15351",
+            "pubchem": "444493",
+            "cas": "72-89-9",
+            "biocyc": "ACETYL-COA",
+            "chemspider": "392413",
+            "pathbank_compound_id": "940"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
     }
   },
   "complexes": {
@@ -22491,6 +22726,138 @@
         "status": "novel",
         "issue": "no_db_candidates",
         "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::mpc complex::unknown species::::[{\"ids\": {}, \"name\": \"MPC1\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"MPC2\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "MPC1",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "MPC2",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "MPC1",
+          "component_index": 0,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "MPC2",
+          "component_index": 1,
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::hexokinase complex::unknown species::::[{\"ids\": {\"gene_name\": \"HK1\", \"pathbank_protein_id\": \"209\", \"uniprot\": \"P19367\"}, \"name\": \"Hexokinase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "Hexokinase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 209,
+          "mapped_ids": {
+            "uniprot": "P19367",
+            "pathbank_protein_id": "209",
+            "gene_name": "HK1"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::hexokinase complex::homo sapiens::::[{\"ids\": {\"gene_name\": \"HK3\", \"pathbank_protein_id\": \"206\", \"uniprot\": \"P52790\"}, \"name\": \"Hexokinase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Hexokinase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 206,
+          "mapped_ids": {
+            "uniprot": "P52790",
+            "pathbank_protein_id": "206",
+            "gene_name": "HK3"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
+      }
+    }
+  },
+  "enzyme_complexes": {
+    "hexokinase::206::homo sapiens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "Hexokinase complex",
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Hexokinase",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 206,
+          "mapped_ids": {
+            "uniprot": "P52790",
+            "pathbank_protein_id": "206",
+            "gene_name": "HK3"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
       }
     }
   }

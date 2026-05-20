@@ -548,7 +548,7 @@ class PathBankDbResolver:
                 "SELECT pcp.protein_id, p.name AS protein_name, p.uniprot_id, p.gene_name, p.species_id "
                 "FROM protein_complex_proteins pcp "
                 "JOIN proteins p ON p.id = pcp.protein_id "
-                "WHERE pcp.complex_id=%s"
+                "WHERE pcp.protein_complex_id=%s"
             ),
             (complex_id,),
         )
@@ -754,10 +754,16 @@ class PathBankDbResolver:
             score = 0.0
             if tid and row_tid == tid:
                 score = max(score, 0.98)
-            if norm_text and norm_text == _normalize_name(name_db):
+            norm_name_db = _normalize_name(name_db)
+            norm_common = _normalize_name(common_name)
+            if norm_text and norm_text == norm_name_db:
                 score = max(score, 1.0)
-            if norm_text and norm_text == _normalize_name(common_name):
+            if norm_text and norm_text == norm_common:
                 score = max(score, 0.95)
+            if norm_text and (norm_text + "s" == norm_name_db or norm_name_db + "s" == norm_text):
+                score = max(score, 0.92)
+            if norm_text and (norm_text + "s" == norm_common or norm_common + "s" == norm_text):
+                score = max(score, 0.92)
             score = max(score, 0.45 + 0.5 * _jaccard(text, name_db), 0.42 + 0.5 * _jaccard(text, common_name))
             candidates.append({
                 "pathbank_species_id": sid,
@@ -1620,7 +1626,7 @@ class PathBankDbResolver:
             (
                 "SELECT pc.id, pc.name, pc.species_id "
                 "FROM protein_complexes pc "
-                "JOIN protein_complex_proteins pcp ON pcp.complex_id = pc.id "
+                "JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id "
                 f"WHERE pcp.protein_id=%s AND pc.species_id IN ({sp_marks}) "
                 "LIMIT 40"
             ),
@@ -1662,7 +1668,7 @@ class PathBankDbResolver:
             (
                 "SELECT pc.id, pc.name, pc.species_id "
                 "FROM protein_complexes pc "
-                "JOIN protein_complex_proteins pcp ON pcp.complex_id = pc.id "
+                "JOIN protein_complex_proteins pcp ON pcp.protein_complex_id = pc.id "
                 f"WHERE pcp.protein_id=%s AND pc.species_id IN ({sp_marks}) "
                 "LIMIT 80"
             ),
@@ -1910,6 +1916,105 @@ class PathBankDbResolver:
             },
             "unresolved",
             issue="no_components" if not _safe_list(row.get("components")) else "component_proteins_unresolved",
+        )
+
+    def map_enzyme_protein_to_complex(self, protein_row: Dict[str, Any], species: str) -> Dict[str, Any]:
+        """Resolve a reaction enzyme protein to a protein complex for the same species."""
+        row = _safe_dict(protein_row)
+        protein_name = _canonical_name(str(row.get("name") or row.get("protein") or row.get("entity") or ""))
+        if not protein_name:
+            return _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": "missing_protein_name",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": "",
+                    "candidates": [],
+                    "components": [],
+                    "issues": [{"issue": "component_missing_name"}],
+                },
+                "unresolved",
+                issue="missing_protein_name",
+            )
+
+        component_ids = _component_mapped_ids(row)
+        protein_result: Dict[str, Any]
+        pathbank_id = _first_row_value(row, "pathbank_protein_id", "pw_protein_id", "pathwhiz_id")
+        if pathbank_id:
+            protein_result = self._map_protein_by_pathbank_id(pathbank_id)
+        elif component_ids.get("uniprot"):
+            protein_result = self.map_protein_by_ids(component_ids, species=species or None)
+        elif species:
+            protein_result = self.map_protein_row({**row, "name": protein_name}, species)
+        else:
+            protein_result = {
+                "status": "unmapped",
+                "reason": "needs_species",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 0.0,
+                "chosen_rule": "",
+                "candidates": [],
+            }
+
+        protein_id = _to_positive_int(protein_result.get("pathbank_protein_id")) or _to_positive_int(pathbank_id)
+        species_ids = self._find_species_ids(species) if species else []
+        if protein_id and species_ids:
+            candidates = self._find_complexes_by_component_protein_id(protein_id, species_ids)
+            if candidates:
+                best = sorted(candidates, key=lambda c: (float(c.get("score") or 0.0), str(c.get("name") or "")), reverse=True)[0]
+                result = self._complex_result_from_row(
+                    {
+                        "id": best["pathbank_complex_id"],
+                        "name": best.get("name", ""),
+                        "species_id": best.get("species_id"),
+                    },
+                    confidence=float(best.get("score") or 0.9),
+                    chosen_rule="enzyme_component_species",
+                    candidates=candidates[:10],
+                )
+                return _with_resolution(result, "matched", order_step="enzyme_component_species")
+
+        merged_ids = _merge_mapped_ids(component_ids, _safe_dict(protein_result.get("mapped_ids")))
+        if protein_id:
+            merged_ids["pathbank_protein_id"] = str(protein_id)
+        component: Dict[str, Any] = {"name": protein_name, "stoichiometry": 1}
+        if protein_id:
+            component["pathbank_protein_id"] = protein_id
+        if merged_ids:
+            component["mapped_ids"] = merged_ids
+        species_id = _to_positive_int(row.get("species_id")) or (species_ids[0] if species_ids else None)
+        issues: List[Dict[str, Any]] = []
+        if protein_result.get("status") != "mapped" and not protein_id:
+            issues.append(
+                {
+                    "issue": "component_protein_unresolved",
+                    "component": protein_name,
+                    "reason": str(protein_result.get("reason") or "unmapped_component"),
+                }
+            )
+        if not species_id:
+            issues.append({"issue": "protein_complex_missing_species", "reason": "enzyme_protein_species_missing"})
+
+        return _with_resolution(
+            {
+                "status": "unmapped",
+                "reason": "novel_complex",
+                "provider": "PathBankDB",
+                "source": "db",
+                "confidence": 0.0,
+                "chosen_rule": "novel_enzyme_single_component_complex",
+                "candidates": [],
+                "name": f"{protein_name} complex",
+                "species_id": species_id,
+                "components": [component],
+                "issues": issues,
+            },
+            "novel",
+            issue="no_db_candidates",
+            order_step="novel_enzyme_single_component_complex",
         )
 
     def map_compound(self, name: str) -> Dict[str, Any]:
@@ -3211,7 +3316,7 @@ def _map_protein_with_strategy(
                 _with_resolution(db_result, "unresolved", issue="db_unavailable")
             cache.set("proteins", db_key, db_result)
         db_resolution = _safe_dict(db_result.get("resolution")).get("status")
-        if db_result.get("status") == "mapped" or id_source == "db" or db_resolution in {"ambiguous", "novel", "unresolved"}:
+        if db_result.get("status") == "mapped" or id_source == "db" or db_resolution == "ambiguous":
             return db_result
 
     if id_source in {"api", "hybrid"}:
@@ -3376,6 +3481,221 @@ def _map_complex_with_strategy(
     )
 
 
+def _reaction_actor_name_and_type(row: Any) -> Tuple[str, str, str]:
+    if isinstance(row, str):
+        return _canonical_name(row), "protein", "catalyst"
+    if not isinstance(row, dict):
+        return "", "", ""
+    role = _canonical_name(str(row.get("role") or "catalyst")).lower() or "catalyst"
+    for field, implied_type in [
+        ("protein_complex", "protein_complex"),
+        ("protein-complex", "protein_complex"),
+        ("protein", "protein"),
+        ("entity", str(row.get("entity_type") or "")),
+        ("name", str(row.get("entity_type") or "")),
+    ]:
+        value = _canonical_name(str(row.get(field) or ""))
+        if value:
+            return value, _canonical_name(implied_type).lower(), role
+    return "", "", role
+
+
+def _merge_complex_resolution_into_row(
+    complex_row: Dict[str, Any],
+    result: Dict[str, Any],
+    *,
+    species_name: str = "",
+) -> None:
+    complex_row.setdefault("mapping_meta", {})
+    if result.get("pathbank_complex_id"):
+        complex_row["pathbank_complex_id"] = int(result["pathbank_complex_id"])
+        complex_row["mapping_meta"]["pathbank_complex_id"] = int(result["pathbank_complex_id"])
+    if result.get("pathbank_protein_complex_id"):
+        complex_row["pathbank_protein_complex_id"] = int(result["pathbank_protein_complex_id"])
+        complex_row["mapping_meta"]["pathbank_protein_complex_id"] = int(result["pathbank_protein_complex_id"])
+    if result.get("species_id"):
+        complex_row["species_id"] = int(result["species_id"])
+        complex_row["mapping_meta"]["species_id"] = int(result["species_id"])
+    if species_name and not _canonical_name(str(complex_row.get("species") or complex_row.get("organism") or "")):
+        complex_row["species"] = species_name
+    if _safe_list(result.get("components")):
+        complex_row["components"] = result["components"]
+    complex_row["mapping_meta"]["provider"] = str(result.get("provider") or "PathBankDB")
+    complex_row["mapping_meta"]["source"] = str(result.get("source") or "db")
+    complex_row["mapping_meta"]["chosen_rule"] = str(result.get("chosen_rule") or "")
+    complex_row["mapping_meta"]["confidence"] = float(result.get("confidence") or 0.0)
+    complex_row["mapping_meta"]["candidates"] = _safe_list(result.get("candidates"))
+    complex_row["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
+    if _safe_list(result.get("issues")):
+        complex_row["mapping_meta"]["issues"] = _safe_list(result.get("issues"))
+
+
+def _protein_component_from_row(protein_row: Dict[str, Any], protein_name: str) -> Dict[str, Any]:
+    component: Dict[str, Any] = {"name": protein_name, "stoichiometry": 1}
+    protein_id = _to_positive_int(protein_row.get("pathbank_protein_id"))
+    if protein_id:
+        component["pathbank_protein_id"] = protein_id
+    mapped_ids = _safe_dict(protein_row.get("mapped_ids"))
+    if mapped_ids:
+        component["mapped_ids"] = dict(mapped_ids)
+    return component
+
+
+def _rewrite_reaction_protein_enzymes_to_complexes(
+    mapped: Dict[str, Any],
+    *,
+    db: Optional[PathBankDbResolver],
+    cache: MappingCache,
+    global_organism: str,
+) -> Dict[str, Any]:
+    """Rewrite protein enzyme/modifier references to protein_complex references."""
+    entities = _safe_dict(mapped.setdefault("entities", {}))
+    proteins = _safe_list(entities.setdefault("proteins", []))
+    complexes = _safe_list(entities.setdefault("protein_complexes", []))
+    processes = _safe_dict(mapped.setdefault("processes", {}))
+    reactions = _safe_list(processes.get("reactions"))
+
+    proteins_by_norm = {
+        _normalize_name(str(row.get("name") or "")): row
+        for row in proteins
+        if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))
+    }
+    complexes_by_norm = {
+        _normalize_name(str(row.get("name") or "")): row
+        for row in complexes
+        if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))
+    }
+    cache_key_to_name: Dict[str, str] = {}
+    summary = {
+        "reaction_protein_enzymes_rewritten_to_complexes": 0,
+        "reaction_enzyme_complexes_db_matched": 0,
+        "reaction_enzyme_complexes_novel": 0,
+        "reaction_enzyme_complexes_unresolved": 0,
+    }
+    actions: List[Dict[str, Any]] = []
+
+    def _species_for(protein_row: Dict[str, Any], actor: Dict[str, Any], reaction: Dict[str, Any]) -> str:
+        for source in [actor, protein_row]:
+            hint = _species_hint_from_row(source)
+            if hint.get("name"):
+                return str(hint["name"])
+        return _canonical_name(str(global_organism or reaction.get("species") or reaction.get("organism") or ""))
+
+    def _resolve_complex_name(protein_name: str, protein_row: Dict[str, Any], actor: Dict[str, Any], reaction: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+        species = _species_for(protein_row, actor, reaction)
+        protein_id = _to_positive_int(protein_row.get("pathbank_protein_id"))
+        cache_key = f"{_normalize_name(protein_name)}::{protein_id or ''}::{_normalize_name(species)}"
+        if cache_key in cache_key_to_name:
+            return cache_key_to_name[cache_key], {}
+
+        cached = cache.get("enzyme_complexes", cache_key)
+        if cached is None:
+            if db and db.available():
+                cached = db.map_enzyme_protein_to_complex({**protein_row, "name": protein_name}, species)
+            else:
+                component = _protein_component_from_row(protein_row, protein_name)
+                species_id = _to_positive_int(protein_row.get("species_id"))
+                cached = _with_resolution(
+                    {
+                        "status": "unmapped",
+                        "reason": "novel_complex",
+                        "provider": "none",
+                        "source": "none",
+                        "confidence": 0.0,
+                        "chosen_rule": "novel_enzyme_single_component_complex",
+                        "candidates": [],
+                        "name": f"{protein_name} complex",
+                        "species_id": species_id,
+                        "components": [component],
+                        "issues": ([] if species_id else [{"issue": "protein_complex_missing_species", "reason": "db_unavailable"}]),
+                    },
+                    "novel",
+                    issue="db_unavailable",
+                    order_step="novel_enzyme_single_component_complex",
+                )
+            cache.set("enzyme_complexes", cache_key, cached)
+
+        result = _safe_dict(cached)
+        complex_name = _canonical_name(str(result.get("name") or ""))
+        if not complex_name:
+            candidates = _safe_list(result.get("candidates"))
+            if candidates and isinstance(candidates[0], dict):
+                complex_name = _canonical_name(str(candidates[0].get("name") or ""))
+        if not complex_name:
+            complex_name = f"{protein_name} complex"
+
+        norm = _normalize_name(complex_name)
+        complex_row = complexes_by_norm.get(norm)
+        if complex_row is None:
+            complex_row = {"name": complex_name}
+            if species:
+                complex_row["species"] = species
+            complexes.append(complex_row)
+            complexes_by_norm[norm] = complex_row
+        if not _safe_list(result.get("components")) and not _safe_list(complex_row.get("components")):
+            result["components"] = [_protein_component_from_row(protein_row, protein_name)]
+        _merge_complex_resolution_into_row(complex_row, result, species_name=species)
+        cache_key_to_name[cache_key] = complex_name
+        return complex_name, result
+
+    def _rewrite_rows(rows: List[Any], pointer_prefix: str, reaction: Dict[str, Any]) -> List[Dict[str, Any]]:
+        rewritten: List[Dict[str, Any]] = []
+        for idx, actor in enumerate(rows):
+            actor_dict = actor if isinstance(actor, dict) else {"entity": actor}
+            if not isinstance(actor_dict, dict):
+                continue
+            name, actor_type, role = _reaction_actor_name_and_type(actor_dict)
+            if not name:
+                continue
+            name_norm = _normalize_name(name)
+            if actor_type == "protein_complex" or name_norm in complexes_by_norm:
+                rewritten.append({"entity": complexes_by_norm.get(name_norm, {}).get("name", name), "entity_type": "protein_complex", "role": role or "catalyst"})
+                continue
+            protein_row = proteins_by_norm.get(name_norm)
+            if actor_type not in {"protein", ""} or protein_row is None:
+                rewritten.append(dict(actor_dict))
+                continue
+            complex_name, result = _resolve_complex_name(name, protein_row, actor_dict, reaction)
+            updated = {
+                "entity": complex_name,
+                "entity_type": "protein_complex",
+                "role": role or "catalyst",
+            }
+            for keep_key in ["evidence", "confidence", "provenance", "biological_state"]:
+                if keep_key in actor_dict:
+                    updated[keep_key] = actor_dict[keep_key]
+            rewritten.append(updated)
+            summary["reaction_protein_enzymes_rewritten_to_complexes"] += 1
+            resolution_status = str(_safe_dict(result.get("resolution")).get("status") or "")
+            if result.get("status") == "mapped":
+                summary["reaction_enzyme_complexes_db_matched"] += 1
+            elif resolution_status == "novel":
+                summary["reaction_enzyme_complexes_novel"] += 1
+            else:
+                summary["reaction_enzyme_complexes_unresolved"] += 1
+            actions.append(
+                {
+                    "type": "reaction_enzyme_protein_rewritten_to_complex",
+                    "json_pointer": f"{pointer_prefix}/{idx}",
+                    "protein": name,
+                    "protein_complex": complex_name,
+                    "resolution_status": resolution_status or str(result.get("status") or ""),
+                }
+            )
+        return rewritten
+
+    for ridx, reaction in enumerate(reactions):
+        if not isinstance(reaction, dict):
+            continue
+        for key in ["modifiers", "enzymes"]:
+            rows = _safe_list(reaction.get(key))
+            if not rows:
+                continue
+            reaction[key] = _rewrite_rows(rows, f"/processes/reactions/{ridx}/{key}", reaction)
+
+    return {"summary": summary, "actions": actions}
+
+
 def run_mapping(
     input_path: Path,
     output_path: Path,
@@ -3516,6 +3836,14 @@ def run_mapping(
                 "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
             }
         )
+
+    enzyme_complex_report = _rewrite_reaction_protein_enzymes_to_complexes(
+        mapped,
+        db=db,
+        cache=cache,
+        global_organism=global_organism,
+    )
+    protein_complexes = _safe_list(entities.get("protein_complexes"))
 
     for idx, complex_row in enumerate(protein_complexes):
         if not isinstance(complex_row, dict):
@@ -3744,8 +4072,14 @@ def run_mapping(
         "species_matched": int(species_report.get("matched", 0)),
         "species_novel": int(species_report.get("novel", 0)),
     }
+    summary.update(_safe_dict(enzyme_complex_report.get("summary")))
 
-    report = {"summary": summary, "species": species_report, "entities": logs}
+    report = {
+        "summary": summary,
+        "species": species_report,
+        "entities": logs,
+        "enzyme_complex_conversion": enzyme_complex_report,
+    }
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     return report
 

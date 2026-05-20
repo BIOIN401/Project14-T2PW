@@ -40,7 +40,7 @@ def _singularize(tag: str) -> str:
         "protein-locations": "protein-location",
         "protein-complex-visualizations": "protein-complex-visualization",
         "reaction-visualizations": "reaction-visualization",
-        "reaction-coupled-transport_visualizations": "reaction-coupled-transport-visualization",
+        "reaction-coupled-transport-visualizations": "reaction-coupled-transport-visualization",
         "transport-visualizations": "transport-visualization",
         "interaction-visualizations": "interaction-visualization",
         "sub-pathway-visualizations": "sub-pathway-visualization",
@@ -146,6 +146,39 @@ def _as_string_list(values: Any) -> List[str]:
         if s:
             out.append(s)
     return out
+
+
+def _to_positive_int(value: Any) -> Optional[int]:
+    if value is None or isinstance(value, bool):
+        return None
+    try:
+        parsed = int(float(str(value).strip()))
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed > 0 else None
+
+
+def _component_name(component: Any) -> str:
+    if isinstance(component, str):
+        return component.strip()
+    if not isinstance(component, dict):
+        return ""
+    return str(
+        component.get("protein")
+        or component.get("protein_name")
+        or component.get("name")
+        or component.get("component")
+        or component.get("entity")
+        or ""
+    ).strip()
+
+
+def _component_stoichiometry(component: Any) -> Optional[int]:
+    if isinstance(component, str):
+        return 1
+    if not isinstance(component, dict):
+        return None
+    return _to_positive_int(component.get("stoichiometry") or component.get("coefficient"))
 
 
 def _grid_positions(
@@ -290,7 +323,7 @@ class DeterministicPwmlBuilder:
                     record["id"] = pw_id if pw_id is not None else self.protein_ids.next()
                 elif key == "protein_complexes":
                     pw_id = None
-                    for k in ["pathbank_complex_id", "pw_complex_id"]:
+                    for k in ["pathbank_protein_complex_id", "pathbank_complex_id", "pw_complex_id"]:
                         v = record.get(k) or (record.get("mapping_meta") or {}).get(k)
                         if v:
                             try:
@@ -323,6 +356,64 @@ class DeterministicPwmlBuilder:
         if fallback and lookup:
             return int(next(iter(lookup.values()))["id"])
         return None
+
+    def _protein_complex_members(
+        self,
+        components: Any,
+        *,
+        complex_name: str,
+        protein_id_by_key: Optional[Dict[str, int]] = None,
+        protein_id_by_name: Optional[Dict[str, int]] = None,
+        protein_id_by_db_id: Optional[Dict[int, int]] = None,
+    ) -> List[Dict[str, Any]]:
+        members: List[Dict[str, Any]] = []
+        for idx, component in enumerate(components if isinstance(components, list) else []):
+            stoich = _component_stoichiometry(component)
+            if stoich is None:
+                raise ValueError(f"Protein complex '{complex_name}' component[{idx}] is missing stoichiometry.")
+
+            protein_id: Optional[int] = None
+            if isinstance(component, dict):
+                protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
+                if protein_key and protein_id_by_key:
+                    protein_id = protein_id_by_key.get(protein_key)
+                if protein_id is None and protein_key:
+                    for rec in self.entity_records.get("proteins", []):
+                        if str(rec.get("key") or "") == protein_key:
+                            protein_id = int(rec["id"])
+                            break
+                if protein_id is None:
+                    for db_key in ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id", "protein_id"]:
+                        db_id = _to_positive_int(component.get(db_key))
+                        if db_id is not None and protein_id_by_db_id:
+                            protein_id = protein_id_by_db_id.get(db_id)
+                        if protein_id is not None:
+                            break
+
+            name = _component_name(component)
+            if protein_id is None and name:
+                if protein_id_by_name:
+                    protein_id = protein_id_by_name.get(_normalize_key(name))
+                if protein_id is None:
+                    prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(name))
+                    if prot:
+                        protein_id = int(prot["id"])
+
+            if protein_id is None:
+                label = name or (
+                    str(component.get("protein_key") or component.get("entity_key"))
+                    if isinstance(component, dict)
+                    else f"component[{idx}]"
+                )
+                raise ValueError(
+                    f"Protein complex '{complex_name}' component '{label}' does not reference an existing protein."
+                )
+
+            members.append({"id": self.ids.next(), "protein-id": int(protein_id), "stoichiometry": stoich})
+
+        if not members:
+            raise ValueError(f"Protein complex '{complex_name}' has no protein_complex-proteins to export.")
+        return members
 
     def _build_biological_states(self) -> Tuple[List[Dict[str, Any]], int]:
         raw_states = self.extraction.get("biological_states", [])
@@ -667,7 +758,7 @@ class DeterministicPwmlBuilder:
                     "id": self.ids.next(),
                     "compound-id": int(rec["id"]),
                     "biological-state-id": bs_id,
-                    "visualization-template-id": 0,
+                    "visualization-template-id": 3,
                     "hidden": False,
                     "x": x,
                     "y": y,
@@ -742,8 +833,22 @@ class DeterministicPwmlBuilder:
 
         for rec in self.entity_records.get("protein-complexes", []):
             pc_protein_vis: List[Dict[str, Any]] = []
-            for comp_name in _as_string_list(rec.get("components", [])):
-                prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
+            for component in rec.get("components", []) if isinstance(rec.get("components"), list) else []:
+                prot: Optional[Dict[str, Any]] = None
+                if isinstance(component, dict):
+                    protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
+                    if protein_key:
+                        prot = next(
+                            (
+                                p
+                                for p in self.entity_records.get("proteins", [])
+                                if str(p.get("key") or "") == protein_key
+                            ),
+                            None,
+                        )
+                comp_name = _component_name(component)
+                if prot is None and comp_name:
+                    prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
                 if prot:
                     prot_loc = protein_loc_by_id.get(int(prot["id"]))
                     if prot_loc:
@@ -993,6 +1098,29 @@ class DeterministicPwmlBuilder:
         def id_for(record: Dict[str, Any], keys: Sequence[str], fallback: IdFactory) -> int:
             return first_int(record, keys) or fallback.next()
 
+        def document_id_for(
+            record: Dict[str, Any],
+            *,
+            pw_keys: Sequence[str],
+            pathbank_keys: Sequence[str],
+            fallback: IdFactory,
+        ) -> int:
+            explicit = first_int(record, pw_keys)
+            if explicit is not None:
+                return explicit
+            pathwhiz = first_int(record, ["pathwhiz_id"])
+            pathbank_values = {first_int(record, [key]) for key in pathbank_keys}
+            pathbank_values.discard(None)
+            if pathwhiz is not None and pathwhiz not in pathbank_values:
+                return pathwhiz
+            return fallback.next()
+
+        def protein_template_id(value: Any) -> int:
+            template_id = _to_positive_int(value)
+            if template_id is None or template_id == 4:
+                return 2
+            return template_id
+
         def direction_for(value: Any) -> str:
             text = str(value or "").strip().casefold()
             if text in {"<", "left", "reverse"}:
@@ -1098,25 +1226,65 @@ class DeterministicPwmlBuilder:
 
         entities = ir.get("entities") if isinstance(ir.get("entities"), dict) else {}
         self.section_items["bounds"] = []
+        raw_entity_by_key: Dict[str, Dict[str, Any]] = {}
+        protein_key_by_name: Dict[str, str] = {}
+        protein_key_by_db_id: Dict[int, str] = {}
+        for bucket_name, bucket in entities.items():
+            for record in bucket if isinstance(bucket, list) else []:
+                if not isinstance(record, dict):
+                    continue
+                key = str(record.get("key") or "")
+                if key:
+                    raw_entity_by_key[key] = record
+                if bucket_name == "proteins" and key:
+                    name = str(record.get("name") or "").strip()
+                    if name:
+                        protein_key_by_name[_normalize_key(name)] = key
+                    for db_key in ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id", "protein_id"]:
+                        db_id = _to_positive_int(record.get(db_key))
+                        if db_id is not None:
+                            protein_key_by_db_id[db_id] = key
+
         self.section_items["compounds"] = []
         for record in entities.get("compounds", []) if isinstance(entities.get("compounds"), list) else []:
             if not isinstance(record, dict):
                 continue
-            rid = id_for(record, ["pathwhiz_id", "pathbank_compound_id", "pw_compound_id"], self.compound_ids)
+            db_row = record.get("db_row") if isinstance(record.get("db_row"), dict) else {}
+            rid = document_id_for(
+                record,
+                pw_keys=["pw_compound_id", "pathbank_compound_id"],
+                pathbank_keys=[],
+                fallback=self.compound_ids,
+            )
             remember("entities", record.get("key"), rid)
             self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Compound", "entity_type": "compound"}
             mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            chebi_id = (
+                db_row.get("chebi_id")
+                or record.get("chebi_id")
+                or mapped_ids.get("chebi")
+                or None
+            )
+            if chebi_id is not None:
+                chebi_id = str(chebi_id).replace("CHEBI:", "").strip()
             self.section_items["compounds"].append(
                 {
                     "id": rid,
-                    "name": record.get("name", ""),
-                    "pwc-id": f"PW_C{rid:06d}",
-                    "short-name": record.get("name", ""),
+                    "name": db_row.get("name") or record.get("name", ""),
+                    "description": db_row.get("description") or record.get("description"),
+                    "cas": db_row.get("cas") or record.get("cas"),
+                    "pwc-id": db_row.get("pwc_id") or record.get("pwc_id") or mapped_ids.get("pwc_id") or f"PW_C{rid:06d}",
+                    "short-name": db_row.get("short_name") or record.get("short_name") or record.get("name", ""),
                     "element-states": [],
-                    "hmdb-id": mapped_ids.get("hmdb") or None,
-                    "kegg-id": mapped_ids.get("kegg") or None,
-                    "chebi-id": mapped_ids.get("chebi") or None,
-                    "pubchem-cid": mapped_ids.get("pubchem") or None,
+                    "hmdb-id": db_row.get("hmdb_id") or record.get("hmdb_id") or mapped_ids.get("hmdb") or None,
+                    "kegg-id": db_row.get("kegg_id") or record.get("kegg_id") or mapped_ids.get("kegg") or None,
+                    "chebi-id": chebi_id or None,
+                    "pubchem-cid": db_row.get("pubchem_cid") or record.get("pubchem_cid") or mapped_ids.get("pubchem") or None,
+                    "biocyc-id": db_row.get("biocyc_id") or record.get("biocyc_id") or mapped_ids.get("biocyc") or None,
+                    "chemspider-id": (
+                        db_row.get("chemspider_id") or record.get("chemspider_id") or mapped_ids.get("chemspider") or None
+                    ),
+                    "drugbank-id": db_row.get("drugbank_id") or record.get("drugbank_id") or mapped_ids.get("drugbank") or None,
                 }
             )
 
@@ -1166,20 +1334,51 @@ class DeterministicPwmlBuilder:
 
         default_species_id = self._ir_pathway_species_id
         self.section_items["proteins"] = []
+        protein_id_by_key: Dict[str, int] = {}
+        protein_id_by_name: Dict[str, int] = {}
+        protein_id_by_db_id: Dict[int, int] = {}
         for record in entities.get("proteins", []) if isinstance(entities.get("proteins"), list) else []:
             if not isinstance(record, dict):
                 continue
-            rid = id_for(record, ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id"], self.protein_ids)
+            rid = document_id_for(
+                record,
+                pw_keys=["pw_protein_id"],
+                pathbank_keys=["pathbank_protein_id"],
+                fallback=self.protein_ids,
+            )
             remember("entities", record.get("key"), rid)
             self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Protein", "entity_type": "protein"}
+            if record.get("key"):
+                protein_id_by_key[str(record.get("key"))] = rid
+            if record.get("name"):
+                protein_id_by_name[_normalize_key(str(record.get("name")))] = rid
+            for db_key in ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id"]:
+                db_id = _to_positive_int(record.get(db_key))
+                if db_id is not None:
+                    protein_id_by_db_id[db_id] = rid
             mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            uniprot_id = (
+                mapped_ids.get("uniprot")
+                or record.get("uniprot")
+                or record.get("uniprot_id")
+                or record.get("uniprot-id")
+                or None
+            )
+            drugbank_id = (
+                mapped_ids.get("drugbank")
+                or record.get("drugbank")
+                or record.get("drugbank_id")
+                or record.get("drugbank-id")
+                or None
+            )
             self.section_items["proteins"].append(
                 {
                     "id": rid,
                     "name": record.get("name", ""),
                     "species-id": default_species_id,
                     "element-states": [],
-                    "uniprot-id": mapped_ids.get("uniprot") or None,
+                    "uniprot-id": uniprot_id,
+                    "drugbank-id": drugbank_id,
                     "ec-numbers": record.get("ec_numbers", []),
                 }
             )
@@ -1188,20 +1387,32 @@ class DeterministicPwmlBuilder:
         for record in entities.get("protein_complexes", []) if isinstance(entities.get("protein_complexes"), list) else []:
             if not isinstance(record, dict):
                 continue
-            rid = id_for(record, ["pathwhiz_id", "pathbank_complex_id", "pw_complex_id"], self.complex_ids)
+            rid = document_id_for(
+                record,
+                pw_keys=["pw_complex_id"],
+                pathbank_keys=["pathbank_protein_complex_id", "pathbank_complex_id"],
+                fallback=self.complex_ids,
+            )
             remember("entities", record.get("key"), rid)
             self._ir_entity_info[str(record.get("key"))] = {
                 "id": rid,
                 "type": "ProteinComplex",
                 "entity_type": "protein_complex",
             }
+            members = self._protein_complex_members(
+                record.get("components"),
+                complex_name=str(record.get("name") or rid),
+                protein_id_by_key=protein_id_by_key,
+                protein_id_by_name=protein_id_by_name,
+                protein_id_by_db_id=protein_id_by_db_id,
+            )
             self.section_items["protein-complexes"].append(
                 {
                     "id": rid,
                     "name": record.get("name", ""),
                     "species-id": default_species_id,
                     "pwp-id": f"PW_P{rid:06d}",
-                    "protein_complex-proteins": [],
+                    "protein_complex-proteins": members,
                     "element-states": [],
                 }
             )
@@ -1239,12 +1450,17 @@ class DeterministicPwmlBuilder:
                         }
                     )
             enzymes: List[Dict[str, Any]] = []
+            seen_enzyme_targets: Set[Tuple[str, int]] = set()
             for member in reaction.get("enzymes", []) if isinstance(reaction.get("enzymes"), list) else []:
                 if not isinstance(member, dict):
                     continue
                 info = entity_info(member.get("entity_key"))
                 if not info:
                     continue
+                enzyme_target = (str(info["entity_type"]), int(info["id"]))
+                if enzyme_target in seen_enzyme_targets:
+                    continue
+                seen_enzyme_targets.add(enzyme_target)
                 mid = self.ids.next()
                 member_ids[str(member.get("key"))] = {
                     "id": mid,
@@ -1259,11 +1475,12 @@ class DeterministicPwmlBuilder:
                     item["protein-id"] = int(info["id"])
                 if str(member.get("role") or "").casefold() == "inhibitor":
                     item["inhibitor"] = True
+                item["enzyme-class"] = member.get("enzyme_class") or member.get("enzyme-class")
                 enzymes.append(item)
             reactions.append(
                 {
                     "id": rid,
-                    "spontaneous": reaction.get("spontaneous"),
+                    "spontaneous": bool(reaction.get("spontaneous", False)),
                     "pwr-id": f"PW_R{rid:06d}",
                     "direction": direction_for(reaction.get("direction")),
                     "reaction-left-elements": left,
@@ -1392,6 +1609,7 @@ class DeterministicPwmlBuilder:
             "element-collection-locations",
         ]:
             self.section_items[section] = []
+        protein_location_by_entity_state: Dict[Tuple[str, str], int] = {}
         for loc in ir.get("locations", []) if isinstance(ir.get("locations"), list) else []:
             if not isinstance(loc, dict):
                 continue
@@ -1402,12 +1620,15 @@ class DeterministicPwmlBuilder:
             section, entity_field = section_info
             lid = self.ids.next()
             remember("locations", loc.get("key"), lid)
-            self.section_items[section].append(
-                {
+            if str(loc.get("type") or "") == "protein_location":
+                protein_location_by_entity_state[
+                    (str(loc.get("entity_key") or ""), str(loc.get("biological_state_key") or ""))
+                ] = lid
+            item = {
                     "id": lid,
                     entity_field: int(info["id"]),
                     "biological-state-id": lookup("biological_states", loc.get("biological_state_key")),
-                    "visualization-template-id": int(loc.get("visualization_template_id") or 0),
+                    "visualization-template-id": int(loc.get("visualization_template_id") or (3 if section == "compound-locations" else 0)),
                     "hidden": bool(loc.get("hidden", False)),
                     "x": int(loc.get("x") or 0),
                     "y": int(loc.get("y") or 0),
@@ -1416,10 +1637,17 @@ class DeterministicPwmlBuilder:
                     "width": str(loc.get("width") or 160),
                     "height": str(loc.get("height") or 60),
                 }
-            )
+            if str(loc.get("type") or "") == "protein_location":
+                item["visualization-template-id"] = protein_template_id(loc.get("visualization_template_id"))
+                item["zindex"] = int(loc.get("zindex") or 8)
+                item["label-type"] = str(loc.get("label_type") or loc.get("label-type") or "subunit")
+                item["width"] = str(loc.get("width") or 150)
+                item["height"] = str(loc.get("height") or 70)
+            self.section_items[section].append(item)
 
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
+        protein_complex_viz_by_entity_state: Dict[Tuple[str, str], int] = {}
         for item in ir.get("protein_complex_visualizations", []) if isinstance(ir.get("protein_complex_visualizations"), list) else []:
             if not isinstance(item, dict):
                 continue
@@ -1428,14 +1656,58 @@ class DeterministicPwmlBuilder:
                 continue
             vid = self.ids.next()
             remember("protein_complex_visualizations", item.get("key"), vid)
-            protein_complex_viz_by_entity[str(item.get("entity_key"))] = vid
+            entity_key = str(item.get("entity_key"))
+            biological_state_key = str(item.get("biological_state_key"))
+            protein_complex_viz_by_entity[entity_key] = vid
+            protein_complex_viz_by_entity_state[(entity_key, biological_state_key)] = vid
+            pc_protein_vis: List[Dict[str, Any]] = []
+            raw_pc = raw_entity_by_key.get(entity_key, {})
+            for component in raw_pc.get("components", []) if isinstance(raw_pc.get("components"), list) else []:
+                protein_key = ""
+                if isinstance(component, dict):
+                    protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
+                    if not protein_key:
+                        for db_key in ["pathwhiz_id", "pathbank_protein_id", "pw_protein_id", "protein_id"]:
+                            db_id = _to_positive_int(component.get(db_key))
+                            if db_id is not None and db_id in protein_key_by_db_id:
+                                protein_key = protein_key_by_db_id[db_id]
+                                break
+                comp_name = _component_name(component)
+                if not protein_key and comp_name:
+                    protein_key = protein_key_by_name.get(_normalize_key(comp_name), "")
+                protein_location_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
+                if protein_location_id is None and protein_key:
+                    protein_info = entity_info(protein_key)
+                    biological_state_id = lookup("biological_states", item.get("biological_state_key"))
+                    if protein_info is not None and biological_state_id is not None:
+                        protein_location_id = self.ids.next()
+                        protein_location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
+                        self.section_items["protein-locations"].append(
+                            {
+                                "id": protein_location_id,
+                                "protein-id": int(protein_info["id"]),
+                                "biological-state-id": biological_state_id,
+                                "visualization-template-id": protein_template_id(item.get("visualization_template_id")),
+                                "hidden": bool(item.get("hidden", False)),
+                                "x": int(item.get("x") or 0),
+                                "y": int(item.get("y") or 0),
+                                "zindex": int(item.get("zindex") or 8),
+                                "label-type": "subunit",
+                                "font-size": "regular",
+                                "width": "150",
+                                "height": "70",
+                            }
+                        )
+                if protein_location_id is not None:
+                    pc_protein_vis.append({"id": self.ids.next(), "protein-location-id": protein_location_id})
             self.section_items["protein-complex-visualizations"].append(
                 {
                     "id": vid,
                     "protein-complex-id": int(info["id"]),
                     "pathway-visualization-id": self.pathway_visualization_id_int,
                     "biological-state-id": lookup("biological_states", item.get("biological_state_key")),
-                    "protein_complex_protein_visualizations": [],
+                    "protein_complex_protein_visualizations": pc_protein_vis,
+                    "protein_complex_compound_visualizations": [],
                 }
             )
 
@@ -1457,7 +1729,7 @@ class DeterministicPwmlBuilder:
 
         self.section_items["reaction-visualizations"] = []
         self.section_items["transport-visualizations"] = []
-        self.section_items["reaction-coupled-transport_visualizations"] = []
+        self.section_items["reaction-coupled-transport-visualizations"] = []
         self.section_items["interaction-visualizations"] = []
         self.section_items["sub-pathway-visualizations"] = []
 
@@ -1493,7 +1765,13 @@ class DeterministicPwmlBuilder:
                     if role == "enzyme":
                         ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
                         entity_key = minfo.get("entity_key")
-                        pcv_id = protein_complex_viz_by_entity.get(str(entity_key)) if entity_key is not None else None
+                        pcv_id = None
+                        if entity_key is not None:
+                            pcv_id = protein_complex_viz_by_entity_state.get(
+                                (str(entity_key), str(viz.get("biological_state_key")))
+                            )
+                            if pcv_id is None:
+                                pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
                         if mtype == "protein_complex" and pcv_id:
                             ev["protein-complex-visualization-id"] = pcv_id
                         elif loc_id is not None:
@@ -1543,7 +1821,13 @@ class DeterministicPwmlBuilder:
                     elif role == "transporter":
                         tv = {"id": self.ids.next(), "transport-transporter-id": int(minfo["id"])}
                         entity_key = minfo.get("entity_key")
-                        pcv_id = protein_complex_viz_by_entity.get(str(entity_key)) if entity_key is not None else None
+                        pcv_id = None
+                        if entity_key is not None:
+                            pcv_id = protein_complex_viz_by_entity_state.get(
+                                (str(entity_key), str(viz.get("biological_state_key")))
+                            )
+                            if pcv_id is None:
+                                pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
                         if mtype == "protein_complex" and pcv_id:
                             tv["protein-complex-visualization-id"] = pcv_id
                         elif loc_id is not None:
@@ -1653,18 +1937,49 @@ class DeterministicPwmlBuilder:
                 "name": rec["name"],
                 "species-id": default_species_id,
                 "element-states": [],
-                "uniprot-id": (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("uniprot") or None,
+                "uniprot-id": (
+                    (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("uniprot")
+                    or rec.get("uniprot")
+                    or rec.get("uniprot_id")
+                    or rec.get("uniprot-id")
+                    or None
+                ),
+                "drugbank-id": (
+                    (rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}).get("drugbank")
+                    or rec.get("drugbank")
+                    or rec.get("drugbank_id")
+                    or rec.get("drugbank-id")
+                    or None
+                ),
                 "ec-numbers": rec.get("ec_numbers", []),
             }
             for rec in self.entity_records.get("proteins", [])
         ]
+        protein_id_by_key = {
+            str(rec.get("key")): int(rec["id"])
+            for rec in self.entity_records.get("proteins", [])
+            if rec.get("key")
+        }
+        protein_id_by_name = {
+            _normalize_key(str(rec.get("name"))): int(rec["id"])
+            for rec in self.entity_records.get("proteins", [])
+            if rec.get("name")
+        }
+        protein_id_by_db_id: Dict[int, int] = {}
+        for rec in self.entity_records.get("proteins", []):
+            for db_key in ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id"]:
+                db_id = _to_positive_int(rec.get(db_key))
+                if db_id is not None:
+                    protein_id_by_db_id[db_id] = int(rec["id"])
         protein_complex_items: List[Dict[str, Any]] = []
         for rec in self.entity_records.get("protein-complexes", []):
-            members: List[Dict[str, Any]] = []
-            for comp_name in _as_string_list(rec.get("components", [])):
-                prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
-                if prot:
-                    members.append({"id": self.ids.next(), "protein-id": int(prot["id"])})
+            members = self._protein_complex_members(
+                rec.get("components"),
+                complex_name=str(rec.get("name") or rec.get("id")),
+                protein_id_by_key=protein_id_by_key,
+                protein_id_by_name=protein_id_by_name,
+                protein_id_by_db_id=protein_id_by_db_id,
+            )
             protein_complex_items.append(
                 {
                     "id": int(rec["id"]),
@@ -1692,7 +2007,7 @@ class DeterministicPwmlBuilder:
         viz = self._build_locations_and_visualizations(default_state_id, reactions, transports)
         self.section_items.update(viz)
 
-        self.section_items["reaction-coupled-transport_visualizations"] = []
+        self.section_items["reaction-coupled-transport-visualizations"] = []
         self.section_items["interaction-visualizations"] = []
         self.section_items["sub-pathway-visualizations"] = []
 

@@ -1317,6 +1317,18 @@ def _actor_name_from_row(row: Any) -> str:
     return ""
 
 
+def _component_name_from_row(row: Any) -> str:
+    if isinstance(row, str):
+        return _canonical(row)
+    if not isinstance(row, dict):
+        return ""
+    for field in ["name", "protein", "entity", "protein_name"]:
+        value = _canonical(str(row.get(field, "")))
+        if value:
+            return value
+    return ""
+
+
 def _token_parts_for_aliasing(token: str) -> List[str]:
     text = _canonical(token)
     if not text:
@@ -1395,42 +1407,30 @@ def canonicalize_same_as_aliases(
         counter[norm] = counter.get(norm, 0) + 1
         _remember_display(cname)
 
-    # Remove single-protein complexes up-front and rewrite references back to direct protein names.
+    # Preserve single-protein complexes: reaction enzymes are represented as
+    # complexes even when the complex has one protein component.
     kept_complexes: List[Dict[str, Any]] = []
-    removed_single_complexes = 0
     for idx, row in enumerate(complexes):
         if not isinstance(row, dict):
             continue
         complex_name = _canonical(str(row.get("name", "")))
         components = _dedupe_preserve(
-            [_canonical(str(part)) for part in _safe_list(row.get("components")) if _canonical(str(part))]
+            [
+                component
+                for component in (_component_name_from_row(part) for part in _safe_list(row.get("components")))
+                if component
+            ]
         )
         if not components and complex_name and ":" not in complex_name:
             components = [complex_name]
         if len(components) == 1:
-            component = _canonical(components[0])
-            if component:
-                _ensure_protein(component, payload, rep)
-                if _normalize(complex_name) != _normalize(component):
-                    single_complex_map[_normalize(complex_name)] = component
-                    _remember_display(complex_name)
-                    _remember_display(component)
-            removed_single_complexes += 1
-            rep["actions"].append(
-                {
-                    "type": "single_protein_complex_removed",
-                    "json_pointer": f"/entities/protein_complexes/{idx}",
-                    "complex": complex_name,
-                    "protein": component,
-                }
-            )
-            continue
+            _ensure_protein(components[0], payload, rep)
         row["name"] = complex_name
         if components:
             row["components"] = components
         kept_complexes.append(row)
     complexes[:] = kept_complexes
-    summary["n_single_protein_complexes_removed"] = int(summary.get("n_single_protein_complexes_removed", 0)) + removed_single_complexes
+    removed_single_complexes = 0
 
     # Gather registry names.
     for rows in [proteins, compounds, complexes]:
@@ -1613,10 +1613,6 @@ def canonicalize_same_as_aliases(
             for field in ["protein", "protein_name", "protein_complex", "enzyme", "modifier", "name"]:
                 if isinstance(updated.get(field), str):
                     updated[field] = _rewrite_token(str(updated.get(field)))
-            if isinstance(updated.get("protein_complex"), str) and ":" not in _canonical(str(updated.get("protein_complex"))):
-                complex_value = _canonical(str(updated.pop("protein_complex")))
-                if complex_value and not _canonical(str(updated.get("protein", ""))):
-                    updated["protein"] = complex_value
             out.append(updated)
         return out
 
@@ -1636,24 +1632,12 @@ def canonicalize_same_as_aliases(
         updated["components"] = _dedupe_preserve(
             [
                 rewritten_part
-                for rewritten_part in [_rewrite_name(str(part)) for part in comps]
+                for rewritten_part in [_rewrite_name(_component_name_from_row(part)) for part in comps]
                 if rewritten_part
             ]
         )
         if len(updated["components"]) == 1:
-            component = _canonical(str(updated["components"][0]))
-            if component:
-                _ensure_protein(component, payload, rep)
-                removed_single_complexes += 1
-                summary["n_single_protein_complexes_removed"] = int(summary.get("n_single_protein_complexes_removed", 0)) + 1
-                rep["actions"].append(
-                    {
-                        "type": "single_protein_complex_removed_after_alias_rewrite",
-                        "complex": _canonical(str(updated.get("name", ""))),
-                        "protein": component,
-                    }
-                )
-            continue
+            _ensure_protein(updated["components"][0], payload, rep)
         rewritten_complexes.append(updated)
     complexes[:] = rewritten_complexes
 
@@ -1808,10 +1792,10 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
         deduped_candidates = _dedupe_preserve([c for c in candidates if _canonical(c)])
         for candidate in deduped_candidates:
             norm = _normalize(_canonical_complex_name(candidate))
-            if norm in protein_by_norm:
-                return "protein", protein_by_norm[norm]
             if norm in complex_by_norm:
                 return "protein_complex", complex_by_norm[norm]
+            if norm in protein_by_norm:
+                return "protein", protein_by_norm[norm]
         return None
 
     def _rewrite_actor_rows(rows: List[Any], pointer_prefix: str, *, drop_unknown: bool = True) -> List[Dict[str, Any]]:
@@ -1899,6 +1883,8 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                         break
             if not updated_mod.get("entity_type") and updated_mod.get("entity"):
                 updated_mod["entity_type"] = "protein"
+            for old_key in ["protein", "protein_complex", "name", "protein_name"]:
+                updated_mod.pop(old_key, None)
             updated_mod.setdefault("role", "catalyst")
             if updated_mod.get("entity"):
                 new_modifiers.append(updated_mod)
@@ -2706,7 +2692,7 @@ def validate_no_scaffold_modifiers(payload: Dict[str, Any], *, report: Optional[
                 if not isinstance(row, dict):
                     continue
                 name = ""
-                for field in ["protein", "protein_complex", "name"]:
+                for field in ["entity", "protein", "protein_complex", "name"]:
                     candidate = _canonical(str(row.get(field, "")))
                     if candidate:
                         name = candidate
@@ -2898,7 +2884,7 @@ def run_strict_post_normalization_gates(
             if not isinstance(actor, dict):
                 continue
             actor_name = ""
-            for field in ["protein", "protein_complex", "name"]:
+            for field in ["entity", "protein", "protein_complex", "name"]:
                 value = _canonical(str(actor.get(field, "")))
                 if value:
                     actor_name = value

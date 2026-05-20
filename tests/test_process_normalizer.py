@@ -424,7 +424,7 @@ def test_reverse_alias_direction_still_attaches() -> None:
     assert _proteins_degree0(normalized) == 0
 
 
-def test_single_protein_complex_removed_and_rewritten() -> None:
+def test_single_protein_complex_preserved_for_enzyme() -> None:
     payload = _alias_payload(
         proteins=["pendrin"],
         reaction_enzyme_row={"protein_complex": "pendrin_complex"},
@@ -438,18 +438,17 @@ def test_single_protein_complex_removed_and_rewritten() -> None:
         for row in normalized.get("entities", {}).get("protein_complexes", [])
         if isinstance(row, dict)
     ]
-    assert all(len([c for c in row.get("components", []) if str(c).strip()]) != 1 for row in complexes)
-    assert "pendrin_complex" not in {
+    assert "pendrin_complex" in {
         str(row.get("name") or "").strip().casefold()
         for row in complexes
     }
     reaction_enzymes = normalized["processes"]["reactions"][0]["enzymes"]
     assert reaction_enzymes
-    assert str(reaction_enzymes[0].get("protein") or "").strip().casefold() == "pendrin"
-    assert "protein_complex" not in reaction_enzymes[0]
+    assert str(reaction_enzymes[0].get("protein_complex") or "").strip().casefold() == "pendrin_complex"
+    assert "protein" not in reaction_enzymes[0]
     assert _proteins_degree0(normalized) == 0
     alias_stats = report.get("summary", {}).get("alias_canonicalization", {})
-    assert int(alias_stats.get("n_single_protein_complexes_removed", 0)) >= 1
+    assert int(alias_stats.get("n_single_protein_complexes_removed", 0)) == 0
 
 
 def test_mapping_route_and_species_id_helpers() -> None:

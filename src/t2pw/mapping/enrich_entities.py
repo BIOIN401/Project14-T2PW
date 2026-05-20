@@ -84,6 +84,14 @@ def _first_non_empty(*values: Any) -> str:
     return ""
 
 
+def _first_list_item(values: Any) -> str:
+    for value in _safe_list(values):
+        text = _canonical(value)
+        if text:
+            return text
+    return ""
+
+
 class EnrichmentCache:
     def __init__(self, path: Path) -> None:
         self.path = path
@@ -1028,6 +1036,229 @@ def _best_id_for_compound_dump(enrichment: Dict[str, Any]) -> str:
     return "unmapped"
 
 
+def _first_text_from_containers(containers: List[Dict[str, Any]], aliases: List[str]) -> str:
+    for container in containers:
+        if not isinstance(container, dict):
+            continue
+        for alias in aliases:
+            text = _canonical(container.get(alias))
+            if text:
+                return text
+    return ""
+
+
+def _compound_source_containers(compound: Dict[str, Any], enrichment: Dict[str, Any]) -> List[Dict[str, Any]]:
+    containers: List[Dict[str, Any]] = [
+        compound,
+        _safe_dict(compound.get("mapped_ids")),
+        enrichment,
+        _safe_dict(enrichment.get("cross_references")),
+    ]
+    for source_name in ["chebi", "hmdb", "kegg", "pubchem"]:
+        block = _safe_dict(enrichment.get(source_name))
+        if block:
+            containers.append(block)
+            containers.append(_safe_dict(block.get("cross_references")))
+    return containers
+
+
+def _normalize_promoted_compound_id(key: str, value: str) -> str:
+    if key == "hmdb_id":
+        return _normalize_hmdb_id(value)
+    if key == "kegg_id":
+        return _normalize_kegg_id(value)
+    if key == "chebi_id":
+        return _normalize_chebi_id(value)
+    return _canonical(value)
+
+
+def _collect_entity_element_states(
+    payload: Dict[str, Any],
+    *,
+    location_key: str,
+    name_keys: List[str],
+) -> Dict[str, List[Dict[str, Any]]]:
+    out: Dict[str, List[Dict[str, Any]]] = {}
+    locations = _safe_dict(payload.get("element_locations"))
+    for row in _safe_list(locations.get(location_key)):
+        if not isinstance(row, dict):
+            continue
+        entity_name = _first_non_empty(*(row.get(key) for key in name_keys))
+        if not entity_name:
+            continue
+        state: Dict[str, Any] = {}
+        for src, dst in [
+            ("biological_state", "biological_state"),
+            ("state", "biological_state"),
+            ("biological_state_id", "biological_state_id"),
+            ("pathbank_biological_state_id", "pathbank_biological_state_id"),
+            ("pw_biological_state_id", "pw_biological_state_id"),
+            ("subcellular_location", "subcellular_location"),
+            ("species", "species"),
+            ("species_id", "species_id"),
+            ("pathbank_species_id", "pathbank_species_id"),
+        ]:
+            value = row.get(src)
+            if isinstance(value, (int, float)) and value:
+                state[dst] = int(value) if float(value).is_integer() else value
+            else:
+                text = _canonical(value)
+                if text:
+                    state[dst] = text
+        if state:
+            out.setdefault(_canonical(entity_name).casefold(), []).append(state)
+    return out
+
+
+def _merge_state_lists(existing: Any, discovered: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    merged: List[Dict[str, Any]] = []
+    seen: set = set()
+    for item in _safe_list(existing) + discovered:
+        if not isinstance(item, dict):
+            continue
+        normalized = {k: v for k, v in item.items() if _canonical(v)}
+        if not normalized:
+            continue
+        key = json.dumps(normalized, sort_keys=True)
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(normalized)
+    return merged
+
+
+def _promote_compound_fields(compound: Dict[str, Any], element_states_by_name: Dict[str, List[Dict[str, Any]]]) -> None:
+    enrichment = _safe_dict(_safe_dict(compound.get("enrichment")).get("compound"))
+    containers = _compound_source_containers(compound, enrichment)
+
+    id_aliases = {
+        "hmdb_id": ["hmdb_id", "hmdb"],
+        "kegg_id": ["kegg_id", "kegg"],
+        "chebi_id": ["chebi_id", "chebi"],
+        "pubchem_cid": ["pubchem_cid", "pubchem_id", "pubchem"],
+        "cas": ["cas", "cas_number"],
+        "biocyc_id": ["biocyc_id", "biocyc"],
+        "chemspider_id": ["chemspider_id", "chemspider"],
+    }
+    for out_key, aliases in id_aliases.items():
+        value = _first_text_from_containers(containers, aliases)
+        value = _normalize_promoted_compound_id(out_key, value)
+        if value:
+            compound[out_key] = value
+
+    inchi = _first_text_from_containers(containers, ["moldb_inchi", "inchi"])
+    inchikey = _first_text_from_containers(containers, ["moldb_inchikey", "inchikey", "inchi_key"])
+    if inchi:
+        compound["moldb_inchi"] = inchi
+    if inchikey:
+        compound["moldb_inchikey"] = inchikey
+
+    short_name = _first_non_empty(
+        compound.get("short_name"),
+        _first_text_from_containers(_safe_list(_safe_dict(compound.get("mapping_meta")).get("candidates")), ["short_name"]),
+        enrichment.get("primary_name"),
+    )
+    if short_name:
+        compound["short_name"] = short_name
+
+    synonyms: List[str] = []
+    synonyms.extend(_split_text_list(compound.get("synonyms")))
+    synonyms.extend(_clean_list_of_strings(enrichment.get("synonyms")))
+    for source_name in ["chebi", "hmdb", "kegg"]:
+        synonyms.extend(_clean_list_of_strings(_safe_dict(enrichment.get(source_name)).get("synonyms")))
+    compound["synonyms"] = _dedupe_preserve(synonyms)
+
+    taxonomy = _safe_dict(enrichment.get("taxonomy")) or _safe_dict(enrichment.get("ontology_classification"))
+    compound_class = _first_non_empty(
+        compound.get("class"),
+        compound.get("compound_class"),
+        taxonomy.get("class"),
+        taxonomy.get("direct_parent"),
+        taxonomy.get("super_class"),
+        _first_list_item(enrichment.get("kegg_class")),
+        _first_list_item(enrichment.get("ontology_parents")),
+    )
+    if compound_class:
+        compound["class"] = compound_class
+        compound["compound_class"] = compound_class
+
+    compound_type = _first_non_empty(
+        compound.get("type"),
+        compound.get("compound_type"),
+        "Compound",
+    )
+    if compound_type:
+        compound["type"] = compound_type
+        compound["compound_type"] = compound_type
+
+    name_key = _canonical(compound.get("name")).casefold()
+    states = _merge_state_lists(compound.get("element_states"), element_states_by_name.get(name_key, []))
+    if states:
+        compound["element_states"] = states
+
+
+def _promote_protein_fields(protein: Dict[str, Any]) -> None:
+    enrichment = _safe_dict(_safe_dict(_safe_dict(protein.get("enrichment")).get("protein")).get("uniprot"))
+    mapped_ids = _safe_dict(protein.get("mapped_ids"))
+
+    uniprot = _first_non_empty(protein.get("uniprot"), protein.get("uniprot_id"), mapped_ids.get("uniprot"), enrichment.get("uniprot_id"))
+    if uniprot:
+        protein["uniprot"] = uniprot.upper()
+
+    gene_name = _first_non_empty(
+        protein.get("gene_name"),
+        protein.get("gene"),
+        mapped_ids.get("gene_name"),
+        _first_list_item(enrichment.get("gene_names")),
+    )
+    if gene_name:
+        protein["gene_name"] = gene_name
+
+    ec_numbers = _dedupe_preserve(
+        _split_text_list(protein.get("ec_number"))
+        + _clean_list_of_strings(protein.get("ec_numbers"))
+        + _clean_list_of_strings(enrichment.get("enzyme_commission"))
+        + _clean_list_of_strings(enrichment.get("ec_numbers"))
+    )
+    if ec_numbers:
+        protein["ec_number"] = ec_numbers[0]
+        protein["ec_numbers"] = ec_numbers
+
+    species_id = (
+        _to_int(protein.get("species_id"))
+        or _to_int(protein.get("pathbank_species_id"))
+        or _to_int(_safe_dict(protein.get("species_ref")).get("species_id"))
+        or _to_int(_safe_dict(protein.get("species_ref")).get("pathbank_species_id"))
+        or _to_int(_safe_dict(protein.get("mapping_meta")).get("species_id"))
+    )
+    if species_id:
+        protein["species_id"] = species_id
+
+    synonyms: List[str] = []
+    synonyms.extend(_split_text_list(protein.get("synonyms")))
+    synonyms.extend(_clean_list_of_strings(enrichment.get("alternative_names")))
+    synonyms.extend(_clean_list_of_strings(enrichment.get("gene_names")))
+    recommended_name = _canonical(enrichment.get("recommended_name"))
+    if recommended_name and recommended_name != _canonical(protein.get("name")):
+        synonyms.append(recommended_name)
+    protein["synonyms"] = _dedupe_preserve(synonyms)
+
+
+def _promote_enriched_fields(payload: Dict[str, Any]) -> None:
+    entities = _safe_dict(payload.get("entities"))
+    compound_states = _collect_entity_element_states(
+        payload,
+        location_key="compound_locations",
+        name_keys=["compound", "name", "entity", "element"],
+    )
+    for compound in _safe_list(entities.get("compounds")):
+        if isinstance(compound, dict):
+            _promote_compound_fields(compound, compound_states)
+    for protein in _safe_list(entities.get("proteins")):
+        if isinstance(protein, dict):
+            _promote_protein_fields(protein)
+
+
 def _build_enrichment_dump(payload: Dict[str, Any]) -> Dict[str, Any]:
     out: Dict[str, Any] = {}
     entities = _safe_dict(payload.get("entities"))
@@ -1224,6 +1455,7 @@ def enrich_payload(
             }
         )
 
+    _promote_enriched_fields(working)
     cache.save()
     return {"payload": working, "report": report}
 
