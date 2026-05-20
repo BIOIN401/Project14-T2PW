@@ -45,6 +45,30 @@ def _safe_dict(value: Any) -> Dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _alias_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", value.casefold()).strip("_")
+
+
+def _first_alias_value(row: Dict[str, Any], mapped_ids: Dict[str, Any], aliases: Sequence[str]) -> Optional[str]:
+    sources = [row, mapped_ids]
+    normalized_sources = [
+        {_alias_key(str(key)): value for key, value in source.items()}
+        for source in sources
+    ]
+    for alias in aliases:
+        for source in sources:
+            value = source.get(alias)
+            text = normalize_empty(value)
+            if text:
+                return text
+        alias_key = _alias_key(alias)
+        for source in normalized_sources:
+            text = normalize_empty(source.get(alias_key))
+            if text:
+                return text
+    return None
+
+
 def _canonical_name(value: Any) -> str:
     text = str(value or "").strip()
     return re.sub(r"\s+", " ", text)
@@ -128,6 +152,21 @@ def _mapped_ids_from_row(row: Dict[str, Any]) -> Dict[str, str]:
         "pathbank_compound_id": str(db_row["id"]) if db_row.get("id") is not None else None,
     }
     return {key: str(value) for key, value in out.items() if value not in (None, "")}
+
+
+def _identifier_candidate_score(rules: Sequence[Tuple[str, float]]) -> Tuple[str, float]:
+    unique = {rule: confidence for rule, confidence in rules}
+    unique_rules = list(unique)
+    if "pathbank_compound_id" in unique_rules:
+        return "pathbank_compound_id", 1.0
+    if "pwc_id_exact" in unique_rules:
+        return "pwc_id_exact", min(0.999, 0.99 + max(0, len(unique_rules) - 1) * 0.001)
+    if len(unique_rules) >= 2:
+        strength_bonus = sum(unique.values()) / 10000.0
+        return "multiple_strong_ids_exact", min(0.989, 0.98 + (len(unique_rules) - 2) * 0.001 + strength_bonus)
+    if not rules:
+        return "strong_id_exact", 0.85
+    return max(rules, key=lambda item: item[1])
 
 
 class PathWhizCompoundResolver:
@@ -241,15 +280,26 @@ class PathWhizCompoundResolver:
         mapped_ids = _safe_dict(row.get("mapped_ids"))
 
         id_values = [
-            ("pathbank_compound_id", "id", normalize_empty(row.get("pathbank_compound_id") or row.get("pw_compound_id") or row.get("pathwhiz_id")), 1.0),
-            ("pwc_id_exact", "pwc_id", normalize_empty(row.get("pwc_id") or mapped_ids.get("pwc_id")), 1.0),
-            ("hmdb_id_exact", "hmdb_id", normalize_hmdb_id(row.get("hmdb_id") or mapped_ids.get("hmdb")), 0.95),
-            ("kegg_id_exact", "kegg_id", normalize_kegg_id(row.get("kegg_id") or mapped_ids.get("kegg")), 0.95),
-            ("chebi_id_exact", "chebi_id", normalize_chebi_id(row.get("chebi_id") or mapped_ids.get("chebi")), 0.90),
+            (
+                "pathbank_compound_id",
+                "id",
+                normalize_empty(
+                    _first_alias_value(
+                        row,
+                        mapped_ids,
+                        ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id", "pathbank id", "pathbank_id", "db_id", "id"],
+                    )
+                ),
+                1.0,
+            ),
+            ("pwc_id_exact", "pwc_id", normalize_empty(_first_alias_value(row, mapped_ids, ["pwc_id"])), 0.99),
+            ("hmdb_id_exact", "hmdb_id", normalize_hmdb_id(_first_alias_value(row, mapped_ids, ["hmdb_id", "hmdb"])), 0.95),
+            ("kegg_id_exact", "kegg_id", normalize_kegg_id(_first_alias_value(row, mapped_ids, ["kegg_id", "kegg"])), 0.95),
+            ("chebi_id_exact", "chebi_id", normalize_chebi_id(_first_alias_value(row, mapped_ids, ["chebi_id", "chebi"])), 0.90),
             (
                 "pubchem_cid_exact",
                 "pubchem_cid",
-                normalize_pubchem_cid(row.get("pubchem_cid") or row.get("pubchem_id") or mapped_ids.get("pubchem")),
+                normalize_pubchem_cid(_first_alias_value(row, mapped_ids, ["pubchem_cid", "pubchem_id", "pubchem"])),
                 0.85,
             ),
         ]
@@ -260,57 +310,53 @@ class PathWhizCompoundResolver:
             if not value:
                 continue
             rows = self._find_by_id(value) if column == "id" else self._find_by_column(column, value)
-            if len(rows) > 1:
-                candidates = [_candidate_from_row(candidate, rule=rule, confidence=confidence) for candidate in rows]
+            if not rows:
+                continue
+            for hit in rows:
+                db_id = _row_id(hit)
+                if db_id is None:
+                    continue
+                strong_hits.setdefault(db_id, hit)
+                rules = hit_rules.setdefault(db_id, [])
+                if rule not in {existing_rule for existing_rule, _ in rules}:
+                    rules.append((rule, confidence))
+
+        if strong_hits:
+            candidates = []
+            for db_id, hit in strong_hits.items():
+                rules = hit_rules.get(db_id) or [("strong_id_exact", 0.85)]
+                top_rule, top_confidence = _identifier_candidate_score(rules)
+                candidate = _candidate_from_row(hit, rule=top_rule, confidence=top_confidence)
+                candidate["matched_rules"] = [rule for rule, _ in rules]
+                candidates.append(candidate)
+            candidates.sort(
+                key=lambda candidate: (
+                    -float(candidate.get("confidence") or 0.0),
+                    -len(candidate.get("matched_rules") or []),
+                    int(candidate.get("id") or 0),
+                )
+            )
+            top_confidence = float(candidates[0]["confidence"])
+            top_candidates = [candidate for candidate in candidates if float(candidate.get("confidence") or 0.0) == top_confidence]
+            if len(top_candidates) > 1:
+                matched_rules = sorted({rule for candidate in top_candidates for rule in candidate.get("matched_rules", [])})
                 return self._result(
                     status="ambiguous",
                     raw_name=name,
                     chosen=None,
                     candidates=candidates,
-                    chosen_rule=rule,
-                    confidence=confidence,
-                    reason=f"multiple_rows_for_{rule}",
+                    chosen_rule="conflicting_strong_ids",
+                    confidence=top_confidence,
+                    reason=f"multiple_candidates_for_{'_'.join(matched_rules) or 'strong_ids'}",
                 )
-            if not rows:
-                continue
-            db_id = _row_id(rows[0])
-            if db_id is None:
-                continue
-            strong_hits[db_id] = rows[0]
-            hit_rules.setdefault(db_id, []).append((rule, confidence))
-
-        if len(strong_hits) > 1:
-            candidates: List[Dict[str, Any]] = []
-            for db_id, hit in strong_hits.items():
-                rules = hit_rules.get(db_id) or [("strong_id_exact", 0.85)]
-                top_rule, top_confidence = max(rules, key=lambda item: item[1])
-                candidates.append(_candidate_from_row(hit, rule=top_rule, confidence=top_confidence))
-            return self._result(
-                status="ambiguous",
-                raw_name=name,
-                chosen=None,
-                candidates=candidates,
-                chosen_rule="conflicting_strong_ids",
-                confidence=max((c["confidence"] for c in candidates), default=0.0),
-                reason="strong_ids_resolve_to_different_compounds",
-            )
-
-        if len(strong_hits) == 1:
-            hit = next(iter(strong_hits.values()))
-            rules = next(iter(hit_rules.values()))
-            if len(rules) >= 2:
-                chosen_rule = "multiple_strong_ids_exact"
-                confidence = 0.98
-            else:
-                chosen_rule, confidence = rules[0]
-            chosen = compound_db_row(hit)
+            chosen = compound_db_row(strong_hits[int(candidates[0]["id"])])
             return self._result(
                 status="matched",
                 raw_name=name,
                 chosen=chosen,
-                candidates=[],
-                chosen_rule=chosen_rule,
-                confidence=confidence,
+                candidates=candidates[1:],
+                chosen_rule=str(candidates[0]["chosen_rule"]),
+                confidence=top_confidence,
             )
 
         for rule, confidence, finder in [
