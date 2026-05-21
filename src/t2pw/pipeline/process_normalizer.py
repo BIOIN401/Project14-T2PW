@@ -4,7 +4,10 @@ from __future__ import annotations
 import json
 import re
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Set, Tuple
+
+if TYPE_CHECKING:
+    from t2pw.pipeline.draft_graph import DraftGraph
 
 
 # ---------------------------------------------------------------------------
@@ -3018,7 +3021,7 @@ def _norm_label(label: str) -> str:
     return re.sub(r"\s+", " ", (label or "").strip().casefold())
 
 
-def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F821
+def normalize_draft_graph(draft_graph: DraftGraph) -> DraftGraph:
     """
     Normalise a DraftGraph in-place and return it.
 
