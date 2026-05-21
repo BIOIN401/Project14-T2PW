@@ -11,7 +11,12 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.mapping.map_ids import PathBankDbResolver, _map_protein_with_strategy  # noqa: E402
+from t2pw.mapping.map_ids import (  # noqa: E402
+    PathBankDbResolver,
+    _map_protein_with_strategy,
+    _reconcile_components_against_local_proteins,
+    _rewrite_reaction_protein_enzymes_to_complexes,
+)
 
 
 def _make_resolver() -> PathBankDbResolver:
@@ -68,6 +73,86 @@ class _AvailableDb:
             "candidates": [],
             "resolution": {"status": "novel", "issue": "no_db_candidates"},
         }
+
+
+def _glycolysis_complex_result(protein_row: Dict[str, Any], species: str) -> Dict[str, Any]:
+    assert species == "Homo sapiens"
+    name = str(protein_row.get("name") or "")
+    if name == "hexokinase":
+        complex_name = "hexokinase complex"
+        complex_id = 431773
+        component = {"name": "Hexokinase-3", "uniprot": "P52790", "pathbank_protein_id": 161288, "stoichiometry": 1}
+    elif name == "phosphoglucose isomerase":
+        complex_name = "Glucose-6-phosphate isomerase"
+        complex_id = 3607
+        component = {
+            "name": "Glucose-6-phosphate isomerase",
+            "uniprot": "P06744",
+            "pathbank_protein_id": 751,
+            "stoichiometry": 1,
+        }
+    else:
+        raise AssertionError(f"unexpected enzyme lookup for {name}")
+    return {
+        "status": "mapped",
+        "provider": "PathBankDB",
+        "source": "db",
+        "name": complex_name,
+        "pathbank_complex_id": complex_id,
+        "pathbank_protein_complex_id": complex_id,
+        "species_id": 1,
+        "components": [component],
+        "confidence": 0.9,
+        "chosen_rule": "enzyme_component_species",
+        "candidates": [],
+        "issues": [],
+        "resolution": {"status": "matched"},
+    }
+
+
+def test_complex_component_reconciles_by_uniprot_without_replacing_db_ids() -> None:
+    components = [{"name": "Hexokinase-3", "uniprot": "P52790", "pathbank_protein_id": 161288}]
+    local_proteins = [
+        {
+            "key": "prot_hexokinase",
+            "name": "hexokinase",
+            "mapped_ids": {"uniprot": "P52790", "pathbank_protein_id": "206"},
+        }
+    ]
+
+    reconciled = _reconcile_components_against_local_proteins(components, local_proteins)
+
+    assert reconciled == [
+        {
+            "name": "hexokinase",
+            "uniprot": "P52790",
+            "pathbank_protein_id": 161288,
+            "protein_key": "prot_hexokinase",
+        }
+    ]
+    assert components == [{"name": "Hexokinase-3", "uniprot": "P52790", "pathbank_protein_id": 161288}]
+
+
+def test_complex_component_reconciles_by_pathbank_protein_id() -> None:
+    reconciled = _reconcile_components_against_local_proteins(
+        [{"name": "DB display name", "mapped_ids": {"pathbank_protein_id": "751"}}],
+        [{"name": "phosphoglucose isomerase", "mapping_meta": {"pathbank_protein_id": 751}}],
+    )
+
+    assert reconciled[0]["name"] == "phosphoglucose isomerase"
+    assert reconciled[0]["mapped_ids"] == {"pathbank_protein_id": "751"}
+
+
+def test_complex_component_without_local_protein_match_is_unchanged() -> None:
+    components = [{"name": "Missing protein", "uniprot": "Q00000", "pathbank_protein_id": 99}]
+
+    reconciled = _reconcile_components_against_local_proteins(
+        components,
+        [{"name": "different protein", "mapped_ids": {"uniprot": "P00001"}}],
+    )
+
+    assert reconciled == components
+    assert reconciled[0] is not components[0]
 
 
 def test_compound_resolves_by_hmdb_before_fuzzy_name() -> None:
@@ -233,3 +318,54 @@ def test_enzyme_protein_becomes_single_component_complex_when_no_db_complex_exis
     assert result["name"] == "MPC1 complex"
     assert result["species_id"] == 1
     assert result["components"] == [{"name": "MPC1", "stoichiometry": 1, "pathbank_protein_id": 11, "mapped_ids": protein_result["mapped_ids"]}]
+
+
+def test_glycolysis_reaction_enzyme_complex_components_reconcile_to_local_proteins() -> None:
+    resolver = _make_resolver()
+    mapped = {
+        "entities": {
+            "proteins": [
+                {
+                    "name": "hexokinase",
+                    "pathbank_protein_id": 206,
+                    "mapped_ids": {"uniprot": "P52790", "pathbank_protein_id": "206"},
+                },
+                {
+                    "name": "phosphoglucose isomerase",
+                    "pathbank_protein_id": 751,
+                    "mapped_ids": {"uniprot": "P06744", "pathbank_protein_id": "751"},
+                },
+            ],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "hexokinase reaction", "enzymes": [{"protein": "hexokinase"}]},
+                {
+                    "name": "phosphoglucose isomerase reaction",
+                    "enzymes": [{"protein": "phosphoglucose isomerase"}],
+                },
+            ]
+        },
+    }
+
+    with patch.object(resolver, "map_enzyme_protein_to_complex", side_effect=_glycolysis_complex_result):
+        _rewrite_reaction_protein_enzymes_to_complexes(
+            mapped,
+            db=resolver,
+            cache=_MemoryCache(),  # type: ignore[arg-type]
+            global_organism="Homo sapiens",
+        )
+
+    complexes = {
+        complex_row["pathbank_protein_complex_id"]: complex_row
+        for complex_row in mapped["entities"]["protein_complexes"]
+    }
+    assert complexes[431773]["components"][0]["name"] == "hexokinase"
+    assert complexes[431773]["components"][0]["pathbank_protein_id"] == 161288
+    assert complexes[3607]["components"][0]["name"] == "phosphoglucose isomerase"
+    assert complexes[3607]["components"][0]["pathbank_protein_id"] == 751
+    assert all(
+        reaction["enzymes"][0]["entity_type"] == "protein_complex"
+        for reaction in mapped["processes"]["reactions"]
+    )

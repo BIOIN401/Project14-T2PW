@@ -169,7 +169,10 @@ class TestHydrateSpeciesReferences:
         r = _make_resolver()
         payload = {"entities": {"proteins": [{"name": "Albumin"}], "protein_complexes": [], "species": []}}
         rows = [{"id": 3, "name": "Rattus norvegicus", "common_name": "Rat", "taxonomy_id": "10116"}]
-        with patch("t2pw.curation.gap_resolver.infer_entity_species", return_value={"name": "Rattus norvegicus", "confidence": 0.8}):
+        with patch(
+            "t2pw.mapping.map_ids._infer_species_with_gap_resolver",
+            return_value={"name": "Rattus norvegicus", "confidence": 0.8},
+        ):
             with _patch_query(r, rows):
                 hydrate_species_references(payload, db=r, use_llm=True)
 
