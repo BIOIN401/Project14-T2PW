@@ -683,8 +683,20 @@ class DeterministicPwmlBuilder:
         canvas_w: int = self.args.width
         canvas_h: int = self.args.height
         pad = 30
-        dx_left, dy_left = 200, 100
-        dx_right, dy_right = 220, 110
+
+        # Per-entity-type box dimensions (kept consistent with prior writer output)
+        DIMS: Dict[str, Tuple[int, int]] = {
+            "Compound":          (160, 60),
+            "ElementCollection": (180, 70),
+            "NucleicAcid":       (190, 60),
+            "Protein":           (200, 60),
+        }
+        REACTANT_OFFSET = 220
+        PRODUCT_OFFSET  = 220
+        ENZYME_ABOVE    = 150
+        NODE_SPACING_Y  = 90
+        RXN_STEP_X      = 520
+        ORPHAN_DX, ORPHAN_DY = 200, 100
 
         raw_bio_states = _as_named_records(self.extraction.get("biological_states", []))
         compartment_regions = self._assign_compartment_regions(raw_bio_states, canvas_w, canvas_h)
@@ -696,19 +708,95 @@ class DeterministicPwmlBuilder:
             key = bs_id_to_region_key.get(bs_id, "")
             return compartment_regions.get(key, fallback_region)
 
-        def sub_grid_left(region: Dict[str, Any], n: int) -> List[Tuple[int, int]]:
-            x0 = region["x"] + pad
-            y0 = region["y"] + pad
-            w = max(region["w"] // 2 - 2 * pad, 100)
-            cols = max(1, w // dx_left)
-            return _grid_positions(n, x0, y0, dx_left, dy_left, cols)
+        # ---- Determine each reaction's biological state and assign it a center point ----
+        raw_reactions = _as_process_list(self.processes, "reactions")
+        rxn_bs_ids: List[int] = []
+        for raw_rx in raw_reactions:
+            bs_name = str(raw_rx.get("biological_state", "")).strip()
+            rxn_bs_ids.append(self._state_id_map.get(bs_name.casefold(), default_state_id))
+        # Pad shorter list if needed (defensive — reactions and raw_reactions should align)
+        while len(rxn_bs_ids) < len(reactions):
+            rxn_bs_ids.append(default_state_id)
 
-        def sub_grid_right(region: Dict[str, Any], n: int) -> List[Tuple[int, int]]:
-            x0 = region["x"] + region["w"] // 2 + pad
-            y0 = region["y"] + pad
-            w = max(region["w"] // 2 - 2 * pad, 100)
-            cols = max(1, w // dx_right)
-            return _grid_positions(n, x0, y0, dx_right, dy_right, cols)
+        rxn_centers: List[Tuple[int, int]] = [(0, 0)] * len(reactions)
+        by_state: Dict[int, List[int]] = defaultdict(list)
+        for i, bs_id in enumerate(rxn_bs_ids[: len(reactions)]):
+            by_state[bs_id].append(i)
+        for bs_id, idxs in by_state.items():
+            region = region_for(bs_id)
+            n = len(idxs)
+            total_w = (n - 1) * RXN_STEP_X
+            rx0 = region["x"] + region["w"] // 2 - total_w // 2
+            ry = region["y"] + region["h"] // 2
+            for k, ridx in enumerate(idxs):
+                rxn_centers[ridx] = (rx0 + k * RXN_STEP_X, ry)
+
+        # ---- Resolve protein-complex member proteins (needed so PC-as-enzyme can place its proteins) ----
+        pc_member_protein_ids: Dict[int, List[int]] = {}
+        for rec in self.entity_records.get("protein-complexes", []):
+            member_ids: List[int] = []
+            for component in rec.get("components", []) if isinstance(rec.get("components"), list) else []:
+                prot: Optional[Dict[str, Any]] = None
+                if isinstance(component, dict):
+                    protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
+                    if protein_key:
+                        prot = next(
+                            (
+                                p
+                                for p in self.entity_records.get("proteins", [])
+                                if str(p.get("key") or "") == protein_key
+                            ),
+                            None,
+                        )
+                comp_name = _component_name(component)
+                if prot is None and comp_name:
+                    prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
+                if prot:
+                    member_ids.append(int(prot["id"]))
+            pc_member_protein_ids[int(rec["id"])] = member_ids
+
+        # ---- Reserve reaction-aware positions for each entity that appears in a reaction ----
+        placed: Dict[Tuple[str, int], Tuple[int, int, int]] = {}
+
+        def reserve(etype: str, eid: int, x: int, y: int, bs_id: int) -> None:
+            placed.setdefault((etype, eid), (x, y, bs_id))
+
+        for i, reaction in enumerate(reactions):
+            rx, ry = rxn_centers[i]
+            bs_id = rxn_bs_ids[i] if i < len(rxn_bs_ids) else default_state_id
+
+            for side_key, x_sign in (("reaction-left-elements", -1), ("reaction-right-elements", +1)):
+                items = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                n = len(items)
+                y_top = ry - ((n - 1) * NODE_SPACING_Y) // 2
+                for j, rel in enumerate(items):
+                    etype = str(rel.get("element-type") or "")
+                    eid = int(rel.get("element-id") or 0)
+                    w, h = DIMS.get(etype, (160, 60))
+                    offset = REACTANT_OFFSET if x_sign < 0 else PRODUCT_OFFSET
+                    x = rx + x_sign * offset - w // 2
+                    y = y_top + j * NODE_SPACING_Y - h // 2
+                    reserve(etype, eid, x, y, bs_id)
+
+            enzymes = reaction.get("reaction-enzymes", []) if isinstance(reaction.get("reaction-enzymes"), list) else []
+            enzyme_protein_ids: List[int] = []
+            for enzyme in enzymes:
+                pc_id = enzyme.get("protein-complex-id")
+                prot_id = enzyme.get("protein-id")
+                if pc_id is not None:
+                    enzyme_protein_ids.extend(pc_member_protein_ids.get(int(pc_id), []))
+                elif prot_id is not None:
+                    enzyme_protein_ids.append(int(prot_id))
+
+            if enzyme_protein_ids:
+                ew, eh = DIMS["Protein"]
+                ne = len(enzyme_protein_ids)
+                ex_step = ew + 40
+                x0 = rx - ((ne - 1) * ex_step) // 2
+                ey = ry - ENZYME_ABOVE - eh // 2
+                for j, pid in enumerate(enzyme_protein_ids):
+                    ex = x0 + j * ex_step - ew // 2
+                    reserve("Protein", pid, ex, ey, bs_id)
 
         compound_locations: List[Dict[str, Any]] = []
         element_collection_locations: List[Dict[str, Any]] = []
@@ -741,121 +829,83 @@ class DeterministicPwmlBuilder:
                 "hidden": False,
             })
 
-        # Helper: group entity records by their biological state id
-        def group_by_bs(section_key: str) -> Dict[int, List[Dict[str, Any]]]:
-            groups: Dict[int, List[Dict[str, Any]]] = defaultdict(list)
+        # Orphan placement: entities not used by any reaction get a fallback grid slot
+        orphan_count: Dict[int, int] = defaultdict(int)
+
+        def orphan_xy(bs_id: int) -> Tuple[int, int]:
+            region = region_for(bs_id)
+            n = orphan_count[bs_id]
+            orphan_count[bs_id] += 1
+            x_avail = max(region["w"] - 2 * pad, ORPHAN_DX)
+            cols = max(1, min(8, x_avail // ORPHAN_DX))
+            col = n % cols
+            row = n // cols
+            x = region["x"] + pad + col * ORPHAN_DX
+            y = region["y"] + max(region["h"] - 3 * ORPHAN_DY, pad) + row * ORPHAN_DY
+            return x, y
+
+        def entity_bs_id(rec: Dict[str, Any]) -> int:
+            return self._state_id_map.get(
+                str(rec.get("biological_state", "")).strip().casefold(), default_state_id
+            )
+
+        def emit_location(
+            section_key: str,
+            entity_key: str,
+            entity_type: str,
+            extras: Optional[Dict[str, Any]] = None,
+        ) -> Tuple[List[Dict[str, Any]], Dict[int, Dict[str, Any]]]:
+            out: List[Dict[str, Any]] = []
+            index: Dict[int, Dict[str, Any]] = {}
+            w, h = DIMS[entity_type]
             for rec in self.entity_records.get(section_key, []):
-                entity_state_name = rec.get("biological_state", "")
-                bsid = self._state_id_map.get(entity_state_name.strip().casefold(), default_state_id)
-                groups[bsid].append(rec)
-            return groups
-
-        # Compound locations — left half of each compartment region
-        for bs_id, group_recs in sorted(group_by_bs("compounds").items()):
-            region = region_for(bs_id)
-            for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
+                eid = int(rec["id"])
+                bs_id = entity_bs_id(rec)
+                if (entity_type, eid) in placed:
+                    x, y, bs_id = placed[(entity_type, eid)]
+                else:
+                    x, y = orphan_xy(bs_id)
                 loc = {
                     "id": self.ids.next(),
-                    "compound-id": int(rec["id"]),
+                    entity_key: eid,
                     "biological-state-id": bs_id,
-                    "visualization-template-id": 3,
+                    "visualization-template-id": 3 if entity_type == "Compound" else 0,
                     "hidden": False,
                     "x": x,
                     "y": y,
                     "zindex": 10,
                     "font-size": "regular",
-                    "width": "160",
-                    "height": "60",
+                    "width": str(w),
+                    "height": str(h),
                 }
-                compound_locations.append(loc)
-                compound_loc_by_id[int(rec["id"])] = loc
+                if extras:
+                    loc.update(extras)
+                out.append(loc)
+                index[eid] = loc
+            return out, index
 
-        # Element-collection locations — left half of each compartment region
-        for bs_id, group_recs in sorted(group_by_bs("element-collections").items()):
-            region = region_for(bs_id)
-            for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
-                loc = {
-                    "id": self.ids.next(),
-                    "element-collection-id": int(rec["id"]),
-                    "visualization-template-id": 0,
-                    "biological-state-id": bs_id,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "font-size": "regular",
-                    "width": "180",
-                    "height": "70",
-                }
-                element_collection_locations.append(loc)
-                element_collection_loc_by_id[int(rec["id"])] = loc
-
-        # Nucleic-acid locations — left half of each compartment region
-        for bs_id, group_recs in sorted(group_by_bs("nucleic-acids").items()):
-            region = region_for(bs_id)
-            for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
-                loc = {
-                    "id": self.ids.next(),
-                    "nucleic-acid-id": int(rec["id"]),
-                    "biological-state-id": bs_id,
-                    "visualization-template-id": 0,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "font-size": "regular",
-                    "width": "190",
-                    "height": "60",
-                }
-                nucleic_acid_locations.append(loc)
-                nucleic_acid_loc_by_id[int(rec["id"])] = loc
-
-        # Protein locations — right half of each compartment region
-        for bs_id, group_recs in sorted(group_by_bs("proteins").items()):
-            region = region_for(bs_id)
-            for rec, (x, y) in zip(group_recs, sub_grid_right(region, len(group_recs))):
-                loc = {
-                    "id": self.ids.next(),
-                    "protein-id": int(rec["id"]),
-                    "biological-state-id": bs_id,
-                    "visualization-template-id": 0,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "label-type": "text",
-                    "font-size": "regular",
-                    "width": "200",
-                    "height": "60",
-                }
-                protein_locations.append(loc)
-                protein_loc_by_id[int(rec["id"])] = loc
+        compound_locations, compound_loc_by_id = emit_location(
+            "compounds", "compound-id", "Compound"
+        )
+        element_collection_locations, element_collection_loc_by_id = emit_location(
+            "element-collections", "element-collection-id", "ElementCollection"
+        )
+        nucleic_acid_locations, nucleic_acid_loc_by_id = emit_location(
+            "nucleic-acids", "nucleic-acid-id", "NucleicAcid"
+        )
+        protein_locations, protein_loc_by_id = emit_location(
+            "proteins", "protein-id", "Protein", extras={"label-type": "text"}
+        )
 
         for rec in self.entity_records.get("protein-complexes", []):
             pc_protein_vis: List[Dict[str, Any]] = []
-            for component in rec.get("components", []) if isinstance(rec.get("components"), list) else []:
-                prot: Optional[Dict[str, Any]] = None
-                if isinstance(component, dict):
-                    protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
-                    if protein_key:
-                        prot = next(
-                            (
-                                p
-                                for p in self.entity_records.get("proteins", [])
-                                if str(p.get("key") or "") == protein_key
-                            ),
-                            None,
-                        )
-                comp_name = _component_name(component)
-                if prot is None and comp_name:
-                    prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
-                if prot:
-                    prot_loc = protein_loc_by_id.get(int(prot["id"]))
-                    if prot_loc:
-                        pc_protein_vis.append({
-                            "id": self.ids.next(),
-                            "protein-location-id": int(prot_loc["id"]),
-                        })
+            for pid in pc_member_protein_ids.get(int(rec["id"]), []):
+                prot_loc = protein_loc_by_id.get(pid)
+                if prot_loc:
+                    pc_protein_vis.append({
+                        "id": self.ids.next(),
+                        "protein-location-id": int(prot_loc["id"]),
+                    })
             visualization = {
                 "id": self.ids.next(),
                 "protein-complex-id": int(rec["id"]),
@@ -866,33 +916,29 @@ class DeterministicPwmlBuilder:
             protein_complex_visualizations.append(visualization)
             pc_vis_by_pc_id[int(rec["id"])] = visualization
 
-        def location_info(element_type: str, element_id: int) -> Optional[Tuple[int, int, int]]:
+        # Side-aware anchor: 'Left' (reactant) exits the node's right edge;
+        # 'Right' (product) enters the node's left edge.
+        def anchor(loc: Dict[str, Any], side: str) -> Tuple[int, int]:
+            x = int(loc["x"]); y = int(loc["y"])
+            w = int(loc["width"]); h = int(loc["height"])
+            if side == "Left":
+                return x + w, y + h // 2
+            return x, y + h // 2
+
+        def loc_for(element_type: str, element_id: int) -> Optional[Dict[str, Any]]:
             if element_type == "Compound":
-                loc = compound_loc_by_id.get(element_id)
-                if loc:
-                    return int(loc["id"]), int(loc["x"]) + 80, int(loc["y"]) + 30
-            elif element_type == "ElementCollection":
-                loc = element_collection_loc_by_id.get(element_id)
-                if loc:
-                    return int(loc["id"]), int(loc["x"]) + 90, int(loc["y"]) + 35
-            elif element_type == "NucleicAcid":
-                loc = nucleic_acid_loc_by_id.get(element_id)
-                if loc:
-                    return int(loc["id"]), int(loc["x"]) + 95, int(loc["y"]) + 30
-            elif element_type == "Protein":
-                loc = protein_loc_by_id.get(element_id)
-                if loc:
-                    return int(loc["id"]), int(loc["x"]) + 100, int(loc["y"]) + 30
+                return compound_loc_by_id.get(element_id)
+            if element_type == "ElementCollection":
+                return element_collection_loc_by_id.get(element_id)
+            if element_type == "NucleicAcid":
+                return nucleic_acid_loc_by_id.get(element_id)
+            if element_type == "Protein":
+                return protein_loc_by_id.get(element_id)
             return None
 
-        # Reaction visualizations — positioned at compartment region centroid
-        raw_reactions = _as_process_list(self.processes, "reactions")
-        for reaction, raw_rx in zip(reactions, raw_reactions):
-            bs_name = str(raw_rx.get("biological_state", "")).strip()
-            rx_bs_id = self._state_id_map.get(bs_name.casefold(), default_state_id)
-            rx_region = region_for(rx_bs_id)
-            rx = rx_region["x"] + rx_region["w"] // 2
-            ry = rx_region["y"] + rx_region["h"] // 2
+        for i, reaction in enumerate(reactions):
+            rx, ry = rxn_centers[i]
+            rx_bs_id = rxn_bs_ids[i] if i < len(rxn_bs_ids) else default_state_id
 
             reaction_compound_visualizations: List[Dict[str, Any]] = []
             reaction_element_collection_visualizations: List[Dict[str, Any]] = []
@@ -902,15 +948,15 @@ class DeterministicPwmlBuilder:
                 for rel in reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []:
                     etype = str(rel.get("element-type") or "")
                     eid = int(rel.get("element-id") or 0)
-                    loc = location_info(etype, eid)
+                    loc = loc_for(etype, eid)
                     if not loc:
                         continue
-                    location_id, lx, ly = loc
+                    ax, ay = anchor(loc, side)
                     edge_id = self.ids.next()
                     if side == "Left":
-                        path = f"M{lx} {ly} L{rx} {ry}"
+                        path = f"M{ax} {ay} L{rx} {ry}"
                     else:
-                        path = f"M{rx} {ry} L{lx} {ly}"
+                        path = f"M{rx} {ry} L{ax} {ay}"
                     edges.append({
                         "id": edge_id,
                         "path": path,
@@ -921,14 +967,14 @@ class DeterministicPwmlBuilder:
                     if etype == "Compound":
                         reaction_compound_visualizations.append({
                             "id": self.ids.next(),
-                            "compound-location-id": location_id,
+                            "compound-location-id": int(loc["id"]),
                             "edge-id": edge_id,
                             "side": side,
                         })
                     elif etype == "ElementCollection":
                         reaction_element_collection_visualizations.append({
                             "id": self.ids.next(),
-                            "element-collection-location-id": location_id,
+                            "element-collection-location-id": int(loc["id"]),
                             "edge-id": edge_id,
                             "side": side,
                         })
@@ -940,19 +986,45 @@ class DeterministicPwmlBuilder:
                     pc_vis = pc_vis_by_pc_id.get(int(pc_id))
                     if not pc_vis:
                         continue
-                    reaction_enzyme_visualizations.append({
+                    entry: Dict[str, Any] = {
                         "id": self.ids.next(),
                         "reaction-enzyme-id": int(enzyme["id"]),
                         "protein-complex-visualization-id": int(pc_vis["id"]),
-                    })
+                    }
+                    members = pc_member_protein_ids.get(int(pc_id), [])
+                    anchor_loc = next((protein_loc_by_id.get(m) for m in members if protein_loc_by_id.get(m)), None)
+                    if anchor_loc is not None:
+                        ex = int(anchor_loc["x"]) + int(anchor_loc["width"]) // 2
+                        ey = int(anchor_loc["y"]) + int(anchor_loc["height"])
+                        edge_id_e = self.ids.next()
+                        edges.append({
+                            "id": edge_id_e,
+                            "path": f"M{ex} {ey} L{rx} {ry}",
+                            "visualization-template-id": 83,
+                            "hidden": False,
+                            "zindex": 18,
+                        })
+                        entry["edge-id"] = edge_id_e
+                    reaction_enzyme_visualizations.append(entry)
                 elif prot_id is not None:
                     prot_loc = protein_loc_by_id.get(int(prot_id))
                     if not prot_loc:
                         continue
+                    ex = int(prot_loc["x"]) + int(prot_loc["width"]) // 2
+                    ey = int(prot_loc["y"]) + int(prot_loc["height"])
+                    edge_id_e = self.ids.next()
+                    edges.append({
+                        "id": edge_id_e,
+                        "path": f"M{ex} {ey} L{rx} {ry}",
+                        "visualization-template-id": 83,
+                        "hidden": False,
+                        "zindex": 18,
+                    })
                     reaction_enzyme_visualizations.append({
                         "id": self.ids.next(),
                         "reaction-enzyme-id": int(enzyme["id"]),
                         "protein-location-id": int(prot_loc["id"]),
+                        "edge-id": edge_id_e,
                     })
 
             reaction_visualizations.append({
