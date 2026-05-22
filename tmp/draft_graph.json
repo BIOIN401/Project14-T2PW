@@ -2,16 +2,25 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 7,
-    "edge_count": 6
+    "node_count": 36,
+    "edge_count": 42
   },
   "nodes": [
     {
       "id": "compound:glucose",
-      "label": "Glucose",
+      "label": "glucose",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:pyruvate",
+      "label": "pyruvate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -20,16 +29,79 @@
       "label": "ATP",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nadh",
+      "label": "NADH",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "compound:glucose-6-phosphate",
-      "label": "Glucose-6-phosphate",
+      "label": "glucose-6-phosphate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-6-phosphate",
+      "label": "fructose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-1,6-bisphosphate",
+      "label": "fructose-1,6-bisphosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:glyceraldehyde-3-phosphate",
+      "label": "glyceraldehyde-3-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dihydroxyacetone phosphate",
+      "label": "dihydroxyacetone phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:1,3-bisphosphoglycerate",
+      "label": "1,3-bisphosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nad⁺",
+      "label": "NAD⁺",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -38,34 +110,223 @@
       "label": "ADP",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:h⁺",
-      "label": "H⁺",
+      "id": "compound:3-phosphoglycerate",
+      "label": "3-phosphoglycerate",
       "kind": "compound",
-      "cls": "ion",
-      "compartment": "cytosolic state",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:2-phosphoglycerate",
+      "label": "2-phosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:water",
+      "label": "water",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:phosphoenolpyruvate",
+      "label": "phosphoenolpyruvate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "protein:hexokinase",
-      "label": "Hexokinase",
+      "label": "hexokinase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoglucose isomerase",
+      "label": "phosphoglucose isomerase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphofructokinase-1",
+      "label": "phosphofructokinase-1",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:aldolase",
+      "label": "aldolase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:triose phosphate isomerase",
+      "label": "triose phosphate isomerase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:glyceraldehyde-3-phosphate dehydrogenase",
+      "label": "glyceraldehyde-3-phosphate dehydrogenase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoglycerate kinase",
+      "label": "phosphoglycerate kinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoglycerate mutase",
+      "label": "phosphoglycerate mutase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:enolase",
+      "label": "enolase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:pyruvate kinase",
+      "label": "pyruvate kinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "reaction:hexokinase reaction",
-      "label": "Hexokinase reaction",
+      "label": "hexokinase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphoglucose isomerase reaction",
+      "label": "phosphoglucose isomerase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphofructokinase-1 reaction",
+      "label": "phosphofructokinase-1 reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:aldolase reaction",
+      "label": "aldolase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:triose phosphate isomerase reaction",
+      "label": "triose phosphate isomerase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "label": "glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphoglycerate kinase reaction",
+      "label": "phosphoglycerate kinase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphoglycerate mutase reaction",
+      "label": "phosphoglycerate mutase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:enolase reaction",
+      "label": "enolase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:pyruvate kinase reaction",
+      "label": "pyruvate kinase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     }
@@ -96,14 +357,230 @@
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:h⁺",
+      "source": "protein:hexokinase",
+      "target": "reaction:hexokinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:glucose-6-phosphate",
+      "target": "reaction:phosphoglucose isomerase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglucose isomerase reaction",
+      "target": "compound:fructose-6-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:hexokinase",
-      "target": "reaction:hexokinase reaction",
+      "source": "protein:phosphoglucose isomerase",
+      "target": "reaction:phosphoglucose isomerase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:fructose-6-phosphate",
+      "target": "reaction:phosphofructokinase-1 reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:atp",
+      "target": "reaction:phosphofructokinase-1 reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphofructokinase-1 reaction",
+      "target": "compound:fructose-1,6-bisphosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphofructokinase-1 reaction",
+      "target": "compound:adp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphofructokinase-1",
+      "target": "reaction:phosphofructokinase-1 reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:fructose-1,6-bisphosphate",
+      "target": "reaction:aldolase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aldolase reaction",
+      "target": "compound:glyceraldehyde-3-phosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aldolase reaction",
+      "target": "compound:dihydroxyacetone phosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aldolase",
+      "target": "reaction:aldolase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:dihydroxyacetone phosphate",
+      "target": "reaction:triose phosphate isomerase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:triose phosphate isomerase reaction",
+      "target": "compound:glyceraldehyde-3-phosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:triose phosphate isomerase",
+      "target": "reaction:triose phosphate isomerase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:glyceraldehyde-3-phosphate",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:nad⁺",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "target": "compound:1,3-bisphosphoglycerate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "target": "compound:nadh",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:glyceraldehyde-3-phosphate dehydrogenase",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:1,3-bisphosphoglycerate",
+      "target": "reaction:phosphoglycerate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:adp",
+      "target": "reaction:phosphoglycerate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglycerate kinase reaction",
+      "target": "compound:3-phosphoglycerate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglycerate kinase reaction",
+      "target": "compound:atp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphoglycerate kinase",
+      "target": "reaction:phosphoglycerate kinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:3-phosphoglycerate",
+      "target": "reaction:phosphoglycerate mutase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglycerate mutase reaction",
+      "target": "compound:2-phosphoglycerate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphoglycerate mutase",
+      "target": "reaction:phosphoglycerate mutase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:2-phosphoglycerate",
+      "target": "reaction:enolase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:enolase reaction",
+      "target": "compound:phosphoenolpyruvate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:enolase reaction",
+      "target": "compound:water",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:enolase",
+      "target": "reaction:enolase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:phosphoenolpyruvate",
+      "target": "reaction:pyruvate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:adp",
+      "target": "reaction:pyruvate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate kinase reaction",
+      "target": "compound:pyruvate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate kinase reaction",
+      "target": "compound:atp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:pyruvate kinase",
+      "target": "reaction:pyruvate kinase reaction",
       "role": "catalyst",
       "confidence": 1.0
     }

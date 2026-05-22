@@ -26,6 +26,7 @@ Layout algorithm:
 
 from __future__ import annotations
 
+import json
 import math
 import re
 import xml.etree.ElementTree as ET
@@ -432,6 +433,16 @@ def _path_circ(x1: float, y1: float, x2: float, y2: float) -> str:
             f"{x2:.1f} {y2:.1f}")
 
 
+def _edge_options(role: str) -> Optional[str]:
+    if role == "reactant":
+        options = {"end_arrow": False, "end_flat_arrow": True}
+    elif role == "product":
+        options = {"start_arrow": True, "start_flat_arrow": False}
+    else:
+        return None
+    return json.dumps(options, separators=(",", ":"))
+
+
 def _make_specref_ann(nd: CanonNode, sid: str, edge_path: str,
                       role: str) -> ET.Element:
     loc_type  = "protein" if nd.is_protein else "compound"
@@ -460,13 +471,17 @@ def _make_specref_ann(nd: CanonNode, sid: str, edge_path: str,
     ele.set(f"{{{PW_NS}}}element_type", "edge")
     ele.set(f"{{{PW_NS}}}path", edge_path)
     ele.set(f"{{{PW_NS}}}visualization_template_id", edge_tmpl)
+    options = _edge_options(role)
+    if options:
+        ele.set(f"{{{PW_NS}}}options", options)
     ele.set(f"{{{PW_NS}}}zindex", str(Z_EDGE))
     ele.set(f"{{{PW_NS}}}hidden", "false")
 
     return ann
 
 
-def _add_edge_le(parent: ET.Element, eid: str, path: str, tmpl: str) -> None:
+def _add_edge_le(parent: ET.Element, eid: str, path: str, tmpl: str,
+                 role: str) -> None:
     le = ET.SubElement(parent, _q("location_element", PW_NS))
     le.set(f"{{{PW_NS}}}element_type", "edge")
     le.set(f"{{{PW_NS}}}element_id", eid)
@@ -478,6 +493,9 @@ def _add_edge_le(parent: ET.Element, eid: str, path: str, tmpl: str) -> None:
     le.set(f"{{{PW_NS}}}hidden", "false")
     le.set(f"{{{PW_NS}}}path", path)
     le.set(f"{{{PW_NS}}}visualization_template_id", tmpl)
+    options = _edge_options(role)
+    if options:
+        le.set(f"{{{PW_NS}}}options", options)
 
 
 def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
@@ -750,17 +768,20 @@ def add_pathwhiz_layout(in_path: str, out_path: str) -> None:
             nd = canon_nodes.get(sid_to_canon.get(sid, ""))
             if nd:
                 _add_edge_le(model_ann, f"{sid}__to__{r.rid}",
-                             _edge_path(nd, r, "reactant"), TMPL_EDGE)
+                             _edge_path(nd, r, "reactant"), TMPL_EDGE,
+                             "reactant")
         for sid in r.product_sids:
             nd = canon_nodes.get(sid_to_canon.get(sid, ""))
             if nd:
                 _add_edge_le(model_ann, f"{r.rid}__to__{sid}",
-                             _edge_path(nd, r, "product"), TMPL_EDGE)
+                             _edge_path(nd, r, "product"), TMPL_EDGE,
+                             "product")
         for sid in r.modifier_sids:
             nd = canon_nodes.get(sid_to_canon.get(sid, ""))
             if nd:
                 _add_edge_le(model_ann, f"{sid}__mod__{r.rid}",
-                             _edge_path(nd, r, "modifier"), TMPL_EDGE_MOD)
+                             _edge_path(nd, r, "modifier"), TMPL_EDGE_MOD,
+                             "modifier")
 
     tree.write(out_path, encoding="utf-8", xml_declaration=True)
 

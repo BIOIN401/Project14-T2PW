@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import sys
 import xml.etree.ElementTree as ET
@@ -62,6 +63,16 @@ def test_add_pathwhiz_layout_creates_location_elements() -> None:
         location_elements = root.findall(".//pathwhiz:location_element", PW_NS_MAP)
         assert location_elements
         assert any(elem.get("{http://www.spmdb.ca/pathwhiz}element_type") == "edge" for elem in location_elements)
+
+        edge_options = [
+            json.loads(options)
+            for elem in location_elements
+            if elem.get("{http://www.spmdb.ca/pathwhiz}element_type") == "edge"
+            for options in [elem.get("{http://www.spmdb.ca/pathwhiz}options")]
+            if options
+        ]
+        assert {"end_arrow": False, "end_flat_arrow": True} in edge_options
+        assert {"start_arrow": True, "start_flat_arrow": False} in edge_options
     finally:
         shutil.rmtree(case_dir, ignore_errors=True)
 

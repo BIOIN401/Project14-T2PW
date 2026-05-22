@@ -23975,6 +23975,83 @@
         "issue": "no_db_candidates",
         "order_step": "novel_complex_from_resolved_components"
       }
+    },
+    "db::phosphoglycerate mutase complex::homo sapiens::431777::[{\"ids\": {\"gene_name\": \"PGAM2\", \"pathbank_protein_id\": \"4356\", \"uniprot\": \"A4D2J6\"}, \"name\": \"phosphoglycerate mutase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431777,
+      "pathbank_protein_complex_id": 431777,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphoglycerate mutase",
+          "pathbank_protein_id": 4356,
+          "stoichiometry": 1,
+          "uniprot": "A4D2J6",
+          "mapped_ids": {
+            "uniprot": "A4D2J6",
+            "pathbank_protein_id": "4356"
+          },
+          "gene_name": "PGAM2",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431777,
+          "pathbank_protein_complex_id": 431777,
+          "name": "phosphoglycerate mutase complex",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::pyruvate kinase complex::homo sapiens::431779::[{\"ids\": {\"pathbank_protein_id\": \"4176\", \"uniprot\": \"Q16715\"}, \"name\": \"pyruvate kinase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431779,
+      "pathbank_protein_complex_id": 431779,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "pyruvate kinase",
+          "pathbank_protein_id": 4176,
+          "stoichiometry": 1,
+          "uniprot": "Q16715",
+          "mapped_ids": {
+            "uniprot": "Q16715",
+            "pathbank_protein_id": "4176"
+          },
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431779,
+          "pathbank_protein_complex_id": 431779,
+          "name": "pyruvate kinase complex",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
     }
   },
   "enzyme_complexes": {
@@ -23986,11 +24063,11 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "Hexokinase complex",
+      "name": "hexokinase complex",
       "species_id": 1,
       "components": [
         {
-          "name": "Hexokinase",
+          "name": "hexokinase",
           "stoichiometry": 1,
           "pathbank_protein_id": 206,
           "mapped_ids": {
@@ -24005,6 +24082,366 @@
         "status": "novel",
         "issue": "no_db_candidates",
         "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "phosphoglucose isomerase::751::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 3607,
+      "pathbank_protein_complex_id": 3607,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphoglucose isomerase",
+          "pathbank_protein_id": 751,
+          "stoichiometry": 1,
+          "uniprot": "P06744",
+          "mapped_ids": {
+            "uniprot": "P06744",
+            "pathbank_protein_id": "751"
+          },
+          "gene_name": "GPI",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 495,
+          "pathbank_protein_complex_id": 495,
+          "name": "Glucose-6-phosphate isomerase",
+          "species_id": 1,
+          "component_protein_id": 751,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 3607,
+          "pathbank_protein_complex_id": 3607,
+          "name": "phosphoglucose isomerase",
+          "species_id": 1,
+          "component_protein_id": 751,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 14773,
+          "pathbank_protein_complex_id": 14773,
+          "name": "Phosphohexose isomerase",
+          "species_id": 1,
+          "component_protein_id": 751,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "phosphofructokinase1::::homo sapiens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "phosphofructokinase-1 complex",
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphofructokinase-1",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "P21777"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "phosphofructokinase-1",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "aldolase::4743::homo sapiens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "aldolase complex",
+      "species_id": 1,
+      "components": [
+        {
+          "name": "aldolase",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 4743,
+          "mapped_ids": {
+            "uniprot": "Q8NHT3",
+            "pathbank_protein_id": "4743"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "triose phosphate isomerase::1472::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 290,
+      "pathbank_protein_complex_id": 290,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "triose phosphate isomerase",
+          "pathbank_protein_id": 1472,
+          "stoichiometry": 1,
+          "uniprot": "P60174",
+          "mapped_ids": {
+            "uniprot": "P60174",
+            "pathbank_protein_id": "1472"
+          },
+          "gene_name": "TPI1",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 290,
+          "pathbank_protein_complex_id": 290,
+          "name": "Triosephosphate isomerase",
+          "species_id": 1,
+          "component_protein_id": 1472,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "glyceraldehyde3phosphate dehydrogenase::659::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 15373,
+      "pathbank_protein_complex_id": 15373,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "glyceraldehyde-3-phosphate dehydrogenase",
+          "pathbank_protein_id": 659,
+          "stoichiometry": 1,
+          "uniprot": "P04406",
+          "mapped_ids": {
+            "uniprot": "P04406",
+            "pathbank_protein_id": "659"
+          },
+          "gene_name": "GAPDH",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 291,
+          "pathbank_protein_complex_id": 291,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "species_id": 1,
+          "component_protein_id": 659,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 2139,
+          "pathbank_protein_complex_id": 2139,
+          "name": "Ecsit complex (ECSIT, MT-CO2, GAPDH, TRAF6, NDUFAF1)",
+          "species_id": 1,
+          "component_protein_id": 659,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 2266,
+          "pathbank_protein_complex_id": 2266,
+          "name": "GAIT complex",
+          "species_id": 1,
+          "component_protein_id": 659,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 2323,
+          "pathbank_protein_complex_id": 2323,
+          "name": "HMGB1-HMGB2-HSC70-ERP60-GAPDH complex",
+          "species_id": 1,
+          "component_protein_id": 659,
+          "score": 0.9
+        },
+        {
+          "pathbank_complex_id": 15373,
+          "pathbank_protein_complex_id": 15373,
+          "name": "Malonylated Glyceraldehyde-3-phosphate dehydrogenase",
+          "species_id": 1,
+          "component_protein_id": 659,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "phosphoglycerate kinase::1395::homo sapiens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "phosphoglycerate kinase complex",
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphoglycerate kinase",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 1395,
+          "mapped_ids": {
+            "uniprot": "P07205",
+            "pathbank_protein_id": "1395",
+            "gene_name": "PGK2"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "phosphoglycerate mutase::4356::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431777,
+      "pathbank_protein_complex_id": 431777,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphoglycerate mutase",
+          "pathbank_protein_id": 4356,
+          "stoichiometry": 1,
+          "uniprot": "A4D2J6",
+          "mapped_ids": {
+            "uniprot": "A4D2J6",
+            "pathbank_protein_id": "4356"
+          },
+          "gene_name": "PGAM2",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431777,
+          "pathbank_protein_complex_id": 431777,
+          "name": "phosphoglycerate mutase complex",
+          "species_id": 1,
+          "component_protein_id": 4356,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "enolase::1019::homo sapiens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "enolase complex",
+      "species_id": 1,
+      "components": [
+        {
+          "name": "enolase",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 1019,
+          "mapped_ids": {
+            "uniprot": "P13929",
+            "pathbank_protein_id": "1019",
+            "gene_name": "ENO3"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "pyruvate kinase::4176::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431779,
+      "pathbank_protein_complex_id": 431779,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "pyruvate kinase",
+          "pathbank_protein_id": 4176,
+          "stoichiometry": 1,
+          "uniprot": "Q16715",
+          "mapped_ids": {
+            "uniprot": "Q16715",
+            "pathbank_protein_id": "4176"
+          },
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431779,
+          "pathbank_protein_complex_id": 431779,
+          "name": "pyruvate kinase complex",
+          "species_id": 1,
+          "component_protein_id": 4176,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
       }
     }
   }

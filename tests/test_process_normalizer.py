@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
@@ -462,6 +463,55 @@ def test_mapping_route_and_species_id_helpers() -> None:
     assert p_id.startswith("p_")
     assert m_id.startswith("m_")
     assert p_id == sbml_species_id({"kind": "protein", "name": "thyroglobulin", "mapped_ids": {}}, "c_cell")
+
+
+def test_sbml_reaction_edges_encode_pathwhiz_arrow_options(tmp_path: Path) -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "substrate"}, {"name": "product"}],
+            "proteins": [{"name": "enzyme"}],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cell"}],
+        },
+        "biological_states": [{"name": "cell_state", "subcellular_location": "cell"}],
+        "element_locations": {"compound_locations": [], "protein_locations": []},
+        "processes": {
+            "reactions": [
+                {
+                    "name": "enzyme reaction",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "biological_state": "cell_state",
+                    "enzymes": [{"protein": "enzyme"}],
+                }
+            ],
+            "transports": [],
+        },
+    }
+    in_path = tmp_path / "in.json"
+    sbml_path = tmp_path / "model.sbml"
+    report_json = tmp_path / "report.json"
+    report_txt = tmp_path / "report.txt"
+    in_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    build_sbml(in_path, sbml_path, report_json, report_txt, default_compartment_name="cell")
+
+    root = ET.fromstring(sbml_path.read_text(encoding="utf-8"))
+    namespaces = {"pathwhiz": "http://www.spmdb.ca/pathwhiz"}
+    edge_options = [
+        json.loads(options)
+        for elem in root.findall(".//pathwhiz:location_element", namespaces)
+        if elem.get("{http://www.spmdb.ca/pathwhiz}element_type") == "edge"
+        for options in [elem.get("{http://www.spmdb.ca/pathwhiz}options")]
+        if options
+    ]
+
+    assert {"end_arrow": False, "end_flat_arrow": True} in edge_options
+    assert any(
+        options.get("start_arrow") is True
+        and options.get("start_flat_arrow") is False
+        for options in edge_options
+    )
 
 
 @pytest.mark.skipif(libsbml is None, reason="python-libsbml not installed")
