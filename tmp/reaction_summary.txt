@@ -2,13 +2,61 @@
 Organism: Unknown Organism
 
 REACTION 1: hexokinase reaction
-  Reactants: glucose [cytosolic state (H. sapiens)], ATP [cytosolic state (H. sapiens)]
-  Products:  glucose-6-phosphate [cytosolic state (H. sapiens)], ADP [cytosolic state (H. sapiens)], H⁺ [cytosolic state (H. sapiens)]
-  Modifier:  hexokinase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+  Reactants: glucose [cytosolic state (Homo sapiens)], ATP [cytosolic state (Homo sapiens)]
+  Products:  glucose-6-phosphate [cytosolic state (Homo sapiens)], ADP [cytosolic state (Homo sapiens)]
+  Modifier:  hexokinase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 REACTION 2: phosphoglucose isomerase reaction
-  Reactants: glucose-6-phosphate [cytosolic state (H. sapiens)]
-  Products:  fructose-6-phosphate [cytosolic state (H. sapiens)]
-  Modifier:  phosphoglucose isomerase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+  Reactants: glucose-6-phosphate [cytosolic state (Homo sapiens)]
+  Products:  fructose-6-phosphate [cytosolic state (Homo sapiens)]
+  Modifier:  phosphoglucose isomerase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 3: phosphofructokinase-1 reaction
+  Reactants: fructose-6-phosphate [cytosolic state (Homo sapiens)], ATP [cytosolic state (Homo sapiens)]
+  Products:  fructose-1,6-bisphosphate [cytosolic state (Homo sapiens)], ADP [cytosolic state (Homo sapiens)]
+  Modifier:  phosphofructokinase-1 [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 4: aldolase reaction
+  Reactants: fructose-1,6-bisphosphate [cytosolic state (Homo sapiens)]
+  Products:  glyceraldehyde-3-phosphate [cytosolic state (Homo sapiens)], dihydroxyacetone phosphate [cytosolic state (Homo sapiens)]
+  Modifier:  aldolase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 5: triose phosphate isomerase reaction
+  Reactants: dihydroxyacetone phosphate [cytosolic state (Homo sapiens)]
+  Products:  glyceraldehyde-3-phosphate [cytosolic state (Homo sapiens)]
+  Modifier:  triose phosphate isomerase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 6: glyceraldehyde-3-phosphate dehydrogenase reaction
+  Reactants: glyceraldehyde-3-phosphate [cytosolic state (Homo sapiens)], NAD⁺ [cytosolic state (Homo sapiens)]
+  Products:  1,3-bisphosphoglycerate [cytosolic state (Homo sapiens)], NADH [cytosolic state (Homo sapiens)]
+  Modifier:  glyceraldehyde-3-phosphate dehydrogenase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 7: phosphoglycerate kinase reaction
+  Reactants: 1,3-bisphosphoglycerate [cytosolic state (Homo sapiens)], ADP [cytosolic state (Homo sapiens)]
+  Products:  3-phosphoglycerate [cytosolic state (Homo sapiens)], ATP [cytosolic state (Homo sapiens)]
+  Modifier:  phosphoglycerate kinase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 8: phosphoglycerate mutase reaction
+  Reactants: 3-phosphoglycerate [cytosolic state (Homo sapiens)]
+  Products:  2-phosphoglycerate [cytosolic state (Homo sapiens)]
+  Modifier:  phosphoglycerate mutase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 9: enolase reaction
+  Reactants: 2-phosphoglycerate [cytosolic state (Homo sapiens)]
+  Products:  phosphoenolpyruvate [cytosolic state (Homo sapiens)], water [cytosolic state (Homo sapiens)]
+  Modifier:  enolase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 10: pyruvate kinase reaction
+  Reactants: phosphoenolpyruvate [cytosolic state (Homo sapiens)], ADP [cytosolic state (Homo sapiens)]
+  Products:  pyruvate [cytosolic state (Homo sapiens)], ATP [cytosolic state (Homo sapiens)]
+  Modifier:  pyruvate kinase [cytosolic state (Homo sapiens)] (role=catalyst, confidence=1.0)
   QA flags:  none
