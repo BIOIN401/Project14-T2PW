@@ -4,6 +4,7 @@ import re
 from collections import defaultdict
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
 
 
@@ -1016,7 +1017,11 @@ def build_pwml_ir(
             "x": int(x),
             "y": int(y),
             "zindex": 10 if entity_type == "compound" else 8,
-            "visualization_template_id": 3 if entity_type == "compound" else 2,
+            "visualization_template_id": (
+                select_compound_template_id(entity)
+                if entity_type == "compound"
+                else 2
+            ),
             "hidden": False,
         }
         ir["locations"].append(loc)

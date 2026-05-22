@@ -244,7 +244,11 @@ def test_pwml_uses_db_exact_compound_rows_and_ids_for_hexokinase() -> None:
     }
     assert element_ids == {77, 414, 1083, 1034, 40034}
     assert {loc["compound-id"] for loc in builder.section_items["compound-locations"]} == element_ids
-    assert all(loc["visualization-template-id"] == 3 for loc in builder.section_items["compound-locations"])
+    assert all(
+        isinstance(loc["visualization-template-id"], int)
+        and loc["visualization-template-id"] > 0
+        for loc in builder.section_items["compound-locations"]
+    )
     reaction_viz = builder.section_items["reaction-visualizations"][0]
     location_ids = {loc["id"] for loc in builder.section_items["compound-locations"]}
     edge_ids = {edge["id"] for edge in builder.section_items["edges"]}

@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 from lxml import etree
 
 from t2pw.paths import PROJECT_ROOT
+from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.pwml.validate import (
@@ -758,7 +759,7 @@ class DeterministicPwmlBuilder:
                     "id": self.ids.next(),
                     "compound-id": int(rec["id"]),
                     "biological-state-id": bs_id,
-                    "visualization-template-id": 3,
+                    "visualization-template-id": select_compound_template_id(rec),
                     "hidden": False,
                     "x": x,
                     "y": y,
