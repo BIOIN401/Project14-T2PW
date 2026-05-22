@@ -1,5 +1,5 @@
 {
-  "compound:Glucose|HMDB0000122": {
+  "compound:glucose|HMDB0000122": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "D-Glucose",
     "synonyms": [
@@ -494,7 +494,7 @@
       }
     ]
   },
-  "compound:Glucose-6-phosphate|HMDB0001401": {
+  "compound:glucose-6-phosphate|HMDB0001401": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "D-Glucose 6-phosphate",
     "synonyms": [
@@ -964,7 +964,177 @@
       }
     ]
   },
-  "protein:Hexokinase|P52790": {
+  "compound:fructose-6-phosphate|HMDB0000124": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "D-Fructose 6-phosphate",
+    "synonyms": [
+      "D-Fructose 6-phosphate",
+      "D-Fructose 6-phosphoric acid",
+      "Neuberg ester"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C6H13O9P",
+    "charge": 0,
+    "mass_monoisotopic": 260.0297,
+    "mass_average": 260.14,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Glycolysis / Gluconeogenesis",
+      "Pentose phosphate pathway",
+      "Fructose and mannose metabolism",
+      "Galactose metabolism",
+      "Starch and sucrose metabolism",
+      "Amino sugar and nucleotide sugar metabolism",
+      "Methane metabolism",
+      "Carbon fixation by Calvin cycle",
+      "Biosynthesis of various other secondary metabolites",
+      "Biosynthesis of various antibiotics",
+      "Biosynthesis of plant secondary metabolites",
+      "Biosynthesis of phenylpropanoids",
+      "Biosynthesis of terpenoids and steroids",
+      "Biosynthesis of alkaloids derived from shikimate pathway",
+      "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+      "Biosynthesis of alkaloids derived from histidine and purine",
+      "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+      "Biosynthesis of plant hormones",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "Biosynthesis of amino acids",
+      "Biosynthesis of cofactors",
+      "Biosynthesis of nucleotide sugars",
+      "AMPK signaling pathway",
+      "Glucagon signaling pathway",
+      "Insulin resistance",
+      "Central carbon metabolism in cancer",
+      "Diabetic cardiomyopathy"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000124",
+      "kegg_id": "C00085",
+      "chebi_id": "CHEBI:15946",
+      "pubchem_id": "69507",
+      "cas": "643-13-0",
+      "biocyc": "FRUCTOSE-6P",
+      "chemspider": "62713",
+      "pathbank_compound_id": "79"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00085",
+      "primary_name": "D-Fructose 6-phosphate",
+      "synonyms": [
+        "D-Fructose 6-phosphate",
+        "D-Fructose 6-phosphoric acid",
+        "Neuberg ester"
+      ],
+      "formula": "C6H13O9P",
+      "mass_monoisotopic": 260.0297,
+      "mass_average": 260.14,
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Pentose phosphate pathway",
+        "Fructose and mannose metabolism",
+        "Galactose metabolism",
+        "Starch and sucrose metabolism",
+        "Amino sugar and nucleotide sugar metabolism",
+        "Methane metabolism",
+        "Carbon fixation by Calvin cycle",
+        "Biosynthesis of various other secondary metabolites",
+        "Biosynthesis of various antibiotics",
+        "Biosynthesis of plant secondary metabolites",
+        "Biosynthesis of phenylpropanoids",
+        "Biosynthesis of terpenoids and steroids",
+        "Biosynthesis of alkaloids derived from shikimate pathway",
+        "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+        "Biosynthesis of alkaloids derived from histidine and purine",
+        "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+        "Biosynthesis of plant hormones",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Biosynthesis of amino acids",
+        "Biosynthesis of cofactors",
+        "Biosynthesis of nucleotide sugars",
+        "AMPK signaling pathway",
+        "Glucagon signaling pathway",
+        "Insulin resistance",
+        "Central carbon metabolism in cancer",
+        "Diabetic cardiomyopathy"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00085",
+        "pubchem_id": "3385",
+        "chebi_id": "15946"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00085",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00085",
+        "retrieved_at": "2026-03-20T19:31:36Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15946",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-20T19:31:36Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000124",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000124",
+        "retrieved_at": "2026-03-20T19:31:36Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:15946",
+        "retrieved_at": "2026-03-20T19:31:36Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000124",
+        "retrieved_at": "2026-03-20T19:31:36Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00085",
+        "retrieved_at": "2026-03-20T19:31:36Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "protein:hexokinase|P52790": {
     "status": "ok",
     "uniprot_id": "P52790",
     "recommended_name": "Hexokinase-3",
@@ -1046,6 +1216,141 @@
       "query": "P52790",
       "source_url": "https://rest.uniprot.org/uniprotkb/P52790.json",
       "retrieved_at": "2026-05-12T21:00:53Z"
+    }
+  },
+  "protein:phosphoglucose isomerase|P06744": {
+    "status": "ok",
+    "uniprot_id": "P06744",
+    "recommended_name": "Glucose-6-phosphate isomerase",
+    "alternative_names": [
+      "Autocrine motility factor",
+      "D-hexose-6-phosphate anomerase",
+      "Glucose-6-phosphate C2-epimerase",
+      "Neuroleukin",
+      "Phosphoglucose isomerase",
+      "Phosphohexose isomerase",
+      "Sperm antigen 36"
+    ],
+    "gene_names": [
+      "GPI"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Isomerase that catalyzes the conversion of alpha-D-glucose-6-phosphate to beta-D-fructose-6-phosphate, the second step in glycolysis, and the reverse reaction in gluconeogenesis, within the cytoplasm (PubMed:28803808). Also shows C2-epimerase activity, interconverting D-glucose-6-phosphate (G6P) and D-mannose-6-phosphate (M6P) (By similarity). Also displays anomerase activity, interconverting alpha and beta-anomeric forms of G6P, D-fructose-6-phosphate and M6P (By similarity). In addition to its metabolic role, this enzyme functions extracellularly as a cytokine: acts as autocrine motility factor (AMF), a secreted angiogenic factor that enhances endothelial cell motility (PubMed:11437381). Functions as neuroleukin, a neurotrophic factor supporting the survival of spinal and sensory neurons (PubMed:11004567, PubMed:3352745). Released by lectin-stimulated T-cells to induce immunoglobulin secretion (PubMed:11004567, PubMed:3352745)",
+    "catalytic_activity": [
+      "alpha-D-glucose 6-phosphate = beta-D-fructose 6-phosphate",
+      "alpha-D-glucose 6-phosphate = beta-D-glucose 6-phosphate",
+      "alpha-D-fructose 6-phosphate = beta-D-fructose 6-phosphate",
+      "alpha-D-mannose 6-phosphate = beta-D-mannose 6-phosphate",
+      "D-glucose 6-phosphate = D-mannose 6-phosphate"
+    ],
+    "enzyme_commission": [
+      "5.3.1.9"
+    ],
+    "pathways": [
+      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 2/4"
+    ],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Cytokine",
+      "Cytoplasm",
+      "Direct protein sequencing",
+      "Disease variant",
+      "Gluconeogenesis",
+      "Glycolysis",
+      "Growth factor",
+      "Hereditary hemolytic anemia",
+      "Hydroxylation",
+      "Isomerase",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
+      "Secreted",
+      "Ubl conjugation"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm",
+      "Secreted"
+    ],
+    "go_mf_ids": [
+      "GO:0097367",
+      "GO:0005125",
+      "GO:0004347",
+      "GO:0008083",
+      "GO:0048029",
+      "GO:0016857",
+      "GO:0031625"
+    ],
+    "go_bp_ids": [
+      "GO:0061621",
+      "GO:0005975",
+      "GO:0034101",
+      "GO:0006002",
+      "GO:0006094",
+      "GO:0051156",
+      "GO:0042593",
+      "GO:0006096",
+      "GO:0007599",
+      "GO:0006959",
+      "GO:0001701",
+      "GO:0007611",
+      "GO:0001707",
+      "GO:0043066",
+      "GO:1904539",
+      "GO:0010595",
+      "GO:0002639",
+      "GO:0046686",
+      "GO:0032355",
+      "GO:0035902",
+      "GO:0035994",
+      "GO:0032570",
+      "GO:0033574"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0060170",
+      "GO:0005829",
+      "GO:0070062",
+      "GO:0005576",
+      "GO:1904813",
+      "GO:0016020",
+      "GO:0034774"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 558,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "1IAT",
+      "1IRI",
+      "1JIQ",
+      "1JLH",
+      "1NUH",
+      "6XUH",
+      "6XUI",
+      "8BBH",
+      "8P2K",
+      "9FCW",
+      "9FHF",
+      "9FKC",
+      "9FKF"
+    ],
+    "reactome_ids": [
+      "R-HSA-5628897",
+      "R-HSA-6798695",
+      "R-HSA-70171",
+      "R-HSA-70263"
+    ],
+    "string_id": "9606.ENSP00000405573",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P06744",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P06744.json",
+      "retrieved_at": "2026-03-21T01:12:07Z"
     }
   }
 }

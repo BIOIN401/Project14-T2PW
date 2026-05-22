@@ -2,16 +2,16 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 7,
-    "edge_count": 6
+    "node_count": 10,
+    "edge_count": 9
   },
   "nodes": [
     {
       "id": "compound:glucose",
-      "label": "Glucose",
+      "label": "glucose",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -19,17 +19,17 @@
       "id": "compound:atp",
       "label": "ATP",
       "kind": "compound",
-      "cls": "cofactor",
-      "compartment": "cytosolic state",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "compound:glucose-6-phosphate",
-      "label": "Glucose-6-phosphate",
+      "label": "glucose-6-phosphate",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -37,8 +37,8 @@
       "id": "compound:adp",
       "label": "ADP",
       "kind": "compound",
-      "cls": "cofactor",
-      "compartment": "cytosolic state",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -47,25 +47,52 @@
       "label": "H⁺",
       "kind": "compound",
       "cls": "ion",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-6-phosphate",
+      "label": "fructose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "protein:hexokinase",
-      "label": "Hexokinase",
+      "label": "hexokinase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoglucose isomerase",
+      "label": "phosphoglucose isomerase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
       "id": "reaction:hexokinase reaction",
-      "label": "Hexokinase reaction",
+      "label": "hexokinase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic state (H. sapiens)",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphoglucose isomerase reaction",
+      "label": "phosphoglucose isomerase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic state (H. sapiens)",
       "confidence": 1.0,
       "provenance": "extracted"
     }
@@ -104,6 +131,24 @@
     {
       "source": "protein:hexokinase",
       "target": "reaction:hexokinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:glucose-6-phosphate",
+      "target": "reaction:phosphoglucose isomerase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglucose isomerase reaction",
+      "target": "compound:fructose-6-phosphate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphoglucose isomerase",
+      "target": "reaction:phosphoglucose isomerase reaction",
       "role": "catalyst",
       "confidence": 1.0
     }

@@ -3541,6 +3541,102 @@ def _protein_component_from_row(protein_row: Dict[str, Any], protein_name: str) 
     return component
 
 
+def _reconcile_components_against_local_proteins(
+    components: List[Dict[str, Any]],
+    local_proteins: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    def _casefold_id(*values: Any) -> str:
+        for value in values:
+            text = str(value or "").strip()
+            if text:
+                return text.casefold()
+        return ""
+
+    def _local_name_aliases(protein: Dict[str, Any]) -> List[str]:
+        values: List[str] = []
+        name = _canonical_name(str(protein.get("name") or ""))
+        if name:
+            values.append(name)
+        for field in ["aliases", "alias", "synonyms", "synonym"]:
+            raw = protein.get(field)
+            if isinstance(raw, str):
+                values.extend(_split_synonyms(raw))
+            elif isinstance(raw, list):
+                for item in raw:
+                    canonical = _canonical_name(str(item or ""))
+                    if canonical:
+                        values.append(canonical)
+        return values
+
+    local_by_uniprot: Dict[str, Dict[str, Any]] = {}
+    local_by_pathbank_id: Dict[int, Dict[str, Any]] = {}
+    local_by_name: Dict[str, Dict[str, Any]] = {}
+    for protein in local_proteins:
+        if not isinstance(protein, dict):
+            continue
+        mapped_ids = _safe_dict(protein.get("mapped_ids"))
+        mapping_meta = _safe_dict(protein.get("mapping_meta"))
+        uniprot = _casefold_id(
+            protein.get("uniprot"),
+            protein.get("uniprot_id"),
+            mapped_ids.get("uniprot"),
+            mapped_ids.get("uniprot_id"),
+        )
+        if uniprot:
+            local_by_uniprot.setdefault(uniprot, protein)
+        pathbank_id = _to_positive_int(
+            protein.get("pathbank_protein_id")
+            or mapped_ids.get("pathbank_protein_id")
+            or mapping_meta.get("pathbank_protein_id")
+        )
+        if pathbank_id:
+            local_by_pathbank_id.setdefault(pathbank_id, protein)
+        for local_name in _local_name_aliases(protein):
+            name_norm = _normalize_name(local_name)
+            if name_norm:
+                local_by_name.setdefault(name_norm, protein)
+
+    reconciled: List[Dict[str, Any]] = []
+    for component in components:
+        if not isinstance(component, dict):
+            reconciled.append(component)
+            continue
+        updated = dict(component)
+        mapped_ids = _safe_dict(component.get("mapped_ids"))
+        match: Optional[Dict[str, Any]] = None
+
+        component_uniprot = _casefold_id(
+            component.get("uniprot"),
+            component.get("uniprot_id"),
+            mapped_ids.get("uniprot"),
+        )
+        if component_uniprot:
+            match = local_by_uniprot.get(component_uniprot)
+
+        if match is None:
+            component_pathbank_id = _to_positive_int(
+                component.get("pathbank_protein_id")
+                or mapped_ids.get("pathbank_protein_id")
+            )
+            if component_pathbank_id:
+                match = local_by_pathbank_id.get(component_pathbank_id)
+
+        if match is None:
+            component_name = _normalize_name(_component_name(component))
+            if component_name:
+                match = local_by_name.get(component_name)
+
+        if match is not None:
+            local_name = _canonical_name(str(match.get("name") or ""))
+            if local_name:
+                updated["name"] = local_name
+            protein_key = str(match.get("key") or "").strip()
+            if protein_key:
+                updated["protein_key"] = protein_key
+        reconciled.append(updated)
+    return reconciled
+
+
 def _rewrite_reaction_protein_enzymes_to_complexes(
     mapped: Dict[str, Any],
     *,
@@ -3616,6 +3712,10 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             cache.set("enzyme_complexes", cache_key, cached)
 
         result = _safe_dict(cached)
+        result["components"] = _reconcile_components_against_local_proteins(
+            _safe_list(result.get("components")),
+            proteins,
+        )
         complex_name = _canonical_name(str(result.get("name") or ""))
         if not complex_name:
             candidates = _safe_list(result.get("candidates"))
@@ -3869,6 +3969,10 @@ def run_mapping(
         )
         result.setdefault("provider", "PathBankDB" if result.get("source") == "db" else "none")
         result.setdefault("source", "db" if result.get("provider") == "PathBankDB" else "none")
+        result["components"] = _reconcile_components_against_local_proteins(
+            _safe_list(result.get("components")),
+            proteins,
+        )
         complex_row.setdefault("mapping_meta", {})
         complex_row["mapping_meta"]["route"] = "complex"
         complex_row["mapping_meta"]["query"] = {"name": name, "organism": organism}
@@ -3884,7 +3988,12 @@ def run_mapping(
         if result.get("species_id"):
             complex_row["species_id"] = int(result["species_id"])
             complex_row["mapping_meta"]["species_id"] = int(result["species_id"])
-        if _safe_list(result.get("components")):
+        if _safe_list(complex_row.get("components")):
+            complex_row["components"] = _reconcile_components_against_local_proteins(
+                _safe_list(complex_row.get("components")),
+                proteins,
+            )
+        elif _safe_list(result.get("components")):
             complex_row["components"] = result["components"]
 
         if result.get("status") == "mapped":
