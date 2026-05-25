@@ -24,6 +24,23 @@ from t2pw.pwml.validate import (
 )
 
 
+def is_non_blocking_pwml_ir_error(issue: Any) -> bool:
+    if not isinstance(issue, dict):
+        return False
+    return (
+        issue.get("code") == "compound_db_resolution_failed"
+        and issue.get("entity_type") == "compound"
+    )
+
+
+def blocking_pwml_ir_errors(ir_report: Dict[str, Any]) -> List[Dict[str, Any]]:
+    return [
+        issue
+        for issue in ir_report.get("errors", [])
+        if not is_non_blocking_pwml_ir_error(issue)
+    ]
+
+
 def _singularize(tag: str) -> str:
     overrides = {
         "species": "species",
@@ -2321,7 +2338,8 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
     _write_json(ir_report_path, ir_report)
     _write_json(ir_validation_path, ir_validation)
 
-    if ir_report.get("errors") or ir_validation.get("errors"):
+    blocking_ir_errors = blocking_pwml_ir_errors(ir_report)
+    if blocking_ir_errors or ir_validation.get("errors"):
         return {
             "ok": False,
             "pwml_ir": str(ir_path),

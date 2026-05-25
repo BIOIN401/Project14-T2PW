@@ -67,7 +67,11 @@ from t2pw.pipeline.reaction_summary import generate_reaction_summary
 from t2pw.pipeline.preprocessor import preprocess
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
-from t2pw.pwml.writer import DeterministicPwmlBuilder
+from t2pw.pwml.writer import (
+    DeterministicPwmlBuilder,
+    blocking_pwml_ir_errors,
+    is_non_blocking_pwml_ir_error,
+)
 from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, get_entities, node
@@ -1341,7 +1345,8 @@ def run_pwml_export(
         )
         pwml_ir.setdefault("pathway", {})["description"] = pathway_description
         ir_validation = validate_pwml_ir(pwml_ir)
-        if ir_report.get("errors") or ir_validation.get("errors"):
+        blocking_ir_errors = blocking_pwml_ir_errors(ir_report)
+        if blocking_ir_errors or ir_validation.get("errors"):
             return {
                 "ok": False,
                 "error": "PWML IR validation failed.",
@@ -2567,8 +2572,18 @@ if st.session_state.get("pipeline_ready"):
             with st.expander("PWML IR report", expanded=False):
                 st.write("IR counts", _ir_report.get("counts", {}))
                 st.write("IR validation", _ir_validation.get("counts", {}))
-                if _ir_report.get("errors"):
-                    st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _ir_report["errors"]))
+                _ir_errors = _safe_list(_ir_report.get("errors"))
+                _blocking_ir_errors = blocking_pwml_ir_errors(_ir_report)
+                _non_blocking_ir_errors = [
+                    e for e in _ir_errors if is_non_blocking_pwml_ir_error(e)
+                ]
+                if _blocking_ir_errors:
+                    st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _blocking_ir_errors))
+                if _non_blocking_ir_errors:
+                    st.warning(
+                        "Non-blocking PathWhiz DB row matching misses:\n"
+                        + "\n".join(str(e.get("message", e)) for e in _non_blocking_ir_errors)
+                    )
                 if _ir_report.get("warnings"):
                     st.warning("IR warnings:\n" + "\n".join(str(w.get("message", w)) for w in _ir_report["warnings"]))
                 unresolved = _safe_dict(_ir_report.get("unresolved"))
@@ -2648,8 +2663,18 @@ if st.session_state.get("pipeline_ready"):
             if _ir_report:
                 with st.expander("PWML IR report", expanded=False):
                     st.write("IR counts", _ir_report.get("counts", {}))
-                    if _ir_report.get("errors"):
-                        st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _ir_report["errors"]))
+                    _ir_errors = _safe_list(_ir_report.get("errors"))
+                    _blocking_ir_errors = blocking_pwml_ir_errors(_ir_report)
+                    _non_blocking_ir_errors = [
+                        e for e in _ir_errors if is_non_blocking_pwml_ir_error(e)
+                    ]
+                    if _blocking_ir_errors:
+                        st.error("IR errors:\n" + "\n".join(str(e.get("message", e)) for e in _blocking_ir_errors))
+                    if _non_blocking_ir_errors:
+                        st.warning(
+                            "Non-blocking PathWhiz DB row matching misses:\n"
+                            + "\n".join(str(e.get("message", e)) for e in _non_blocking_ir_errors)
+                        )
                     if _ir_report.get("warnings"):
                         st.warning("IR warnings:\n" + "\n".join(str(w.get("message", w)) for w in _ir_report["warnings"]))
                     st.write("Unresolved references", _safe_dict(_ir_report.get("unresolved")))

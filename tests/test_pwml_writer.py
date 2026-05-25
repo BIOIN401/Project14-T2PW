@@ -12,7 +12,7 @@ if str(SRC) not in sys.path:
 
 from t2pw.pwml.ir import build_pwml_ir  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature  # noqa: E402
-from t2pw.pwml.writer import DeterministicPwmlBuilder  # noqa: E402
+from t2pw.pwml.writer import DeterministicPwmlBuilder, blocking_pwml_ir_errors  # noqa: E402
 
 
 HEXOKINASE_COMPOUND_ROWS = [
@@ -112,6 +112,14 @@ class _CompoundDb:
         return []
 
 
+class _EmptyCompoundDb:
+    def available(self) -> bool:
+        return True
+
+    def _query(self, sql: str, params: tuple) -> list[dict]:
+        return []
+
+
 def _payload_with_complex_enzyme() -> dict:
     return {
         "entities": {
@@ -138,6 +146,54 @@ def _payload_with_complex_enzyme() -> dict:
             "interactions": [],
         },
     }
+
+
+def test_compound_db_resolution_failures_are_non_blocking_for_pwml_build() -> None:
+    payload = _payload_with_complex_enzyme()
+    payload["entities"]["compounds"] = [
+        {"name": "norbelladine"},
+        {"name": "Schiff-base intermediate"},
+    ]
+    payload["processes"]["reactions"][0]["inputs"] = ["norbelladine"]
+    payload["processes"]["reactions"][0]["outputs"] = ["Schiff-base intermediate"]
+
+    ir, report = build_pwml_ir(payload, strict_db=True, db_resolver=_EmptyCompoundDb())
+
+    assert report["errors"]
+    assert {err["code"] for err in report["errors"]} == {"compound_db_resolution_failed"}
+    assert blocking_pwml_ir_errors(report) == []
+
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    args = SimpleNamespace(
+        name="Generated Pathway",
+        description="",
+        subject="Metabolic",
+        pw_id="PW000000",
+        height=1400,
+        width=3200,
+        background_color="#FFFFFF",
+        ref=str(ROOT / "reference" / "PW000001.pwml"),
+    )
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args)
+    builder.build()
+
+    assert {item["name"] for item in builder.section_items["compounds"]} == {
+        "norbelladine",
+        "Schiff-base intermediate",
+    }
+
+
+def test_structural_ir_errors_still_block_pwml_export_policy() -> None:
+    report = {
+        "errors": [
+            {
+                "code": "biological_state_missing_species",
+                "message": "Biological state has no resolved species reference.",
+            }
+        ]
+    }
+
+    assert blocking_pwml_ir_errors(report) == report["errors"]
 
 
 def test_writer_emits_visible_complex_and_reaction_enzyme_visualization() -> None:
