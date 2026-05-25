@@ -2,10 +2,73 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 15,
-    "edge_count": 14
+    "node_count": 26,
+    "edge_count": 25
   },
   "nodes": [
+    {
+      "id": "compound:phenylalanine",
+      "label": "phenylalanine",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:trans-cinnamic acid",
+      "label": "trans-cinnamic acid",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:4-hydroxycinnamic acid",
+      "label": "4-hydroxycinnamic acid",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:3,4-dihydroxycinnamic acid",
+      "label": "3,4-dihydroxycinnamic acid",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:3,4-dihydroxybenzaldehyde",
+      "label": "3,4-dihydroxybenzaldehyde",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:tyrosine",
+      "label": "tyrosine",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:tyramine",
+      "label": "tyramine",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
     {
       "id": "compound:norbelladine",
       "label": "norbelladine",
@@ -25,26 +88,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:3,4-dihydroxybenzaldehyde",
-      "label": "3,4-dihydroxybenzaldehyde",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:tyramine",
-      "label": "tyramine",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:schiff-base intermediate",
-      "label": "Schiff-base intermediate",
+      "id": "compound:schiff-base",
+      "label": "Schiff-base",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -61,19 +106,46 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:n-demethylgalanthamine",
-      "label": "N-demethylgalanthamine",
-      "kind": "compound",
-      "cls": "compound",
+      "id": "protein:phenylalanine ammonia-lyase (pal)",
+      "label": "phenylalanine ammonia-lyase (PAL)",
+      "kind": "protein",
+      "cls": "protein",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:n-demethylnarwedine",
-      "label": "N-demethylnarwedine",
-      "kind": "compound",
-      "cls": "compound",
+      "id": "protein:cinnamate 4-hydroxylase (cyp73a1)",
+      "label": "cinnamate 4-hydroxylase (CYP73A1)",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:cyp98a3",
+      "label": "CYP98A3",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:vanillin synthase (vpvan)",
+      "label": "vanillin synthase (VpVAN)",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:tyrosine decarboxylase",
+      "label": "tyrosine decarboxylase",
+      "kind": "protein",
+      "cls": "protein",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
@@ -83,13 +155,13 @@
       "label": "N4OMT",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "Narcissus sp. aff. pseudonarcissus state",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
-      "label": "condensation of tyramine and 3,4-dihydroxybenzaldehyde to Schiff-base",
+      "id": "reaction:phenylalanine deamination",
+      "label": "phenylalanine deamination",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -97,8 +169,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:reduction of schiff-base to norbelladine",
-      "label": "reduction of Schiff-base to norbelladine",
+      "id": "reaction:trans-cinnamic acid 4-hydroxylation",
+      "label": "trans-cinnamic acid 4-hydroxylation",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -106,17 +178,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:n4omt methylation of norbelladine",
-      "label": "N4OMT methylation of norbelladine",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "Narcissus sp. aff. pseudonarcissus state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:para-ortho′ phenol coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
-      "label": "para-ortho′ phenol coupling of 4′-O-methylnorbelladine toward galanthamine skeleton",
+      "id": "reaction:4-hydroxycinnamic acid 3-hydroxylation",
+      "label": "4-hydroxycinnamic acid 3-hydroxylation",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -124,8 +187,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:reduction of n-demethylnarwedine to n-demethylgalanthamine",
-      "label": "reduction of N-demethylnarwedine to N-demethylgalanthamine",
+      "id": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde conversion",
+      "label": "3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde conversion",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -133,8 +196,44 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:n-methylation of n-demethylgalanthamine to galanthamine",
-      "label": "N-methylation of N-demethylgalanthamine to galanthamine",
+      "id": "reaction:tyrosine decarboxylation",
+      "label": "tyrosine decarboxylation",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:schiff-base formation from tyramine and 3,4-dihydroxybenzaldehyde",
+      "label": "Schiff-base formation from tyramine and 3,4-dihydroxybenzaldehyde",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:schiff-base reduction to norbelladine",
+      "label": "Schiff-base reduction to norbelladine",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:norbelladine 4'-o-methylation",
+      "label": "norbelladine 4'-O-methylation",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:4′-o-methylnorbelladine para-ortho' phenol-phenol' coupling to galanthamine skeleton",
+      "label": "4′-O-methylnorbelladine para-ortho' phenol-phenol' coupling to galanthamine skeleton",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -144,85 +243,151 @@
   ],
   "edges": [
     {
+      "source": "compound:phenylalanine",
+      "target": "reaction:phenylalanine deamination",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phenylalanine deamination",
+      "target": "compound:trans-cinnamic acid",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phenylalanine ammonia-lyase (pal)",
+      "target": "reaction:phenylalanine deamination",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:trans-cinnamic acid",
+      "target": "reaction:trans-cinnamic acid 4-hydroxylation",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:trans-cinnamic acid 4-hydroxylation",
+      "target": "compound:4-hydroxycinnamic acid",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:cinnamate 4-hydroxylase (cyp73a1)",
+      "target": "reaction:trans-cinnamic acid 4-hydroxylation",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:4-hydroxycinnamic acid",
+      "target": "reaction:4-hydroxycinnamic acid 3-hydroxylation",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:4-hydroxycinnamic acid 3-hydroxylation",
+      "target": "compound:3,4-dihydroxycinnamic acid",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:cyp98a3",
+      "target": "reaction:4-hydroxycinnamic acid 3-hydroxylation",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:3,4-dihydroxycinnamic acid",
+      "target": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde conversion",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde conversion",
+      "target": "compound:3,4-dihydroxybenzaldehyde",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:vanillin synthase (vpvan)",
+      "target": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde conversion",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:tyrosine",
+      "target": "reaction:tyrosine decarboxylation",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:tyrosine decarboxylation",
+      "target": "compound:tyramine",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:tyrosine decarboxylase",
+      "target": "reaction:tyrosine decarboxylation",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
       "source": "compound:tyramine",
-      "target": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
+      "target": "reaction:schiff-base formation from tyramine and 3,4-dihydroxybenzaldehyde",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:3,4-dihydroxybenzaldehyde",
-      "target": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
+      "target": "reaction:schiff-base formation from tyramine and 3,4-dihydroxybenzaldehyde",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
-      "target": "compound:schiff-base intermediate",
+      "source": "reaction:schiff-base formation from tyramine and 3,4-dihydroxybenzaldehyde",
+      "target": "compound:schiff-base",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:schiff-base intermediate",
-      "target": "reaction:reduction of schiff-base to norbelladine",
+      "source": "compound:schiff-base",
+      "target": "reaction:schiff-base reduction to norbelladine",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:reduction of schiff-base to norbelladine",
+      "source": "reaction:schiff-base reduction to norbelladine",
       "target": "compound:norbelladine",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "compound:norbelladine",
-      "target": "reaction:n4omt methylation of norbelladine",
+      "target": "reaction:norbelladine 4'-o-methylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:n4omt methylation of norbelladine",
+      "source": "reaction:norbelladine 4'-o-methylation",
       "target": "compound:4′-o-methylnorbelladine",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:n4omt",
-      "target": "reaction:n4omt methylation of norbelladine",
+      "target": "reaction:norbelladine 4'-o-methylation",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:4′-o-methylnorbelladine",
-      "target": "reaction:para-ortho′ phenol coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
+      "target": "reaction:4′-o-methylnorbelladine para-ortho' phenol-phenol' coupling to galanthamine skeleton",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:para-ortho′ phenol coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
-      "target": "compound:n-demethylnarwedine",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:n-demethylnarwedine",
-      "target": "reaction:reduction of n-demethylnarwedine to n-demethylgalanthamine",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:reduction of n-demethylnarwedine to n-demethylgalanthamine",
-      "target": "compound:n-demethylgalanthamine",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:n-demethylgalanthamine",
-      "target": "reaction:n-methylation of n-demethylgalanthamine to galanthamine",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:n-methylation of n-demethylgalanthamine to galanthamine",
+      "source": "reaction:4′-o-methylnorbelladine para-ortho' phenol-phenol' coupling to galanthamine skeleton",
       "target": "compound:galanthamine",
       "role": "product",
       "confidence": 1.0

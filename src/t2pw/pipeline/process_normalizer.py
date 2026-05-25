@@ -1995,18 +1995,40 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     subcellular_locations = _safe_list(entities.get("subcellular_locations"))
     if _find_entity_row(subcellular_locations, auto_location_name) is None:
         subcellular_locations.append({"name": auto_location_name})
+    species_names: List[str] = []
+    seen_species: Set[str] = set()
+    for row in _safe_list(entities.get("species")):
+        if not isinstance(row, dict) or not isinstance(row.get("name"), str):
+            continue
+        name = _canonical(row["name"])
+        norm = _normalize(name)
+        if not name or not norm or norm in seen_species:
+            continue
+        seen_species.add(norm)
+        species_names.append(name)
+    auto_species_name = species_names[0] if len(species_names) == 1 else ""
 
     if not isinstance(payload.get("biological_states"), list):
         payload["biological_states"] = []
     biological_states = _safe_list(payload.get("biological_states"))
-    existing_states = {
-        _normalize(str(row.get("name", "")))
-        for row in biological_states
-        if isinstance(row, dict) and isinstance(row.get("name"), str)
-    }
-    if _normalize(auto_state_name) not in existing_states:
-        biological_states.append({"name": auto_state_name, "subcellular_location": auto_location_name})
+    auto_state = None
+    for row in biological_states:
+        if not isinstance(row, dict) or not isinstance(row.get("name"), str):
+            continue
+        if _normalize(row["name"]) == _normalize(auto_state_name):
+            auto_state = row
+            break
+    if auto_state is None:
+        auto_state = {"name": auto_state_name, "subcellular_location": auto_location_name}
+        if auto_species_name:
+            auto_state["species"] = auto_species_name
+        biological_states.append(auto_state)
         rep["summary"]["n_autostate_created"] += 1
+    else:
+        if not _canonical(str(auto_state.get("subcellular_location", ""))):
+            auto_state["subcellular_location"] = auto_location_name
+        if auto_species_name and not _canonical(str(auto_state.get("species") or auto_state.get("organism") or "")):
+            auto_state["species"] = auto_species_name
 
     element_locations = _safe_dict(payload.setdefault("element_locations", {}))
     for list_key in ["compound_locations", "protein_locations"]:

@@ -215,6 +215,39 @@ def test_autostate_adds_matching_cell_subcellular_location_entity() -> None:
     ]
 
 
+def test_autostate_uses_single_declared_species() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Narcissus sp. aff. pseudonarcissus"}],
+            "subcellular_locations": [],
+        },
+        "biological_states": [],
+        "element_locations": {
+            "compound_locations": [{"compound": "substrate"}],
+            "protein_locations": [],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+    report = {
+        "summary": {
+            "n_autostate_created": 0,
+            "n_entities_assigned_to_autostate": 0,
+        },
+        "actions": [],
+        "rewrite_map": {},
+    }
+
+    ensure_autostates(payload, report=report)
+
+    assert payload["biological_states"] == [
+        {
+            "name": "__auto_state__",
+            "subcellular_location": "cell",
+            "species": "Narcissus sp. aff. pseudonarcissus",
+        }
+    ]
+
+
 def test_thyroid_normalization_and_dedupe() -> None:
     normalized, report = _run_normalization(_thyroid_payload())
     summary = report.get("summary", {})
