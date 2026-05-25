@@ -188,6 +188,33 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     return data, report
 
 
+def test_autostate_adds_matching_cell_subcellular_location_entity() -> None:
+    payload = {
+        "entities": {"subcellular_locations": []},
+        "biological_states": [],
+        "element_locations": {
+            "compound_locations": [{"compound": "substrate"}],
+            "protein_locations": [],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+    report = {
+        "summary": {
+            "n_autostate_created": 0,
+            "n_entities_assigned_to_autostate": 0,
+        },
+        "actions": [],
+        "rewrite_map": {},
+    }
+
+    ensure_autostates(payload, report=report)
+
+    assert payload["entities"]["subcellular_locations"] == [{"name": "cell"}]
+    assert payload["biological_states"] == [
+        {"name": "__auto_state__", "subcellular_location": "cell"}
+    ]
+
+
 def test_thyroid_normalization_and_dedupe() -> None:
     normalized, report = _run_normalization(_thyroid_payload())
     summary = report.get("summary", {})

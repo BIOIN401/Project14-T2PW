@@ -1987,6 +1987,15 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     auto_state_name = "__auto_state__"
     auto_location_name = "cell"
 
+    if not isinstance(payload.get("entities"), dict):
+        payload["entities"] = {}
+    entities = _safe_dict(payload.get("entities"))
+    if not isinstance(entities.get("subcellular_locations"), list):
+        entities["subcellular_locations"] = []
+    subcellular_locations = _safe_list(entities.get("subcellular_locations"))
+    if _find_entity_row(subcellular_locations, auto_location_name) is None:
+        subcellular_locations.append({"name": auto_location_name})
+
     if not isinstance(payload.get("biological_states"), list):
         payload["biological_states"] = []
     biological_states = _safe_list(payload.get("biological_states"))

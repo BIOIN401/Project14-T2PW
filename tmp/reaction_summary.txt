@@ -1,62 +1,38 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: hexokinase reaction
-  Reactants: glucose [cytosolic state (H. sapiens)], ATP [cytosolic state (H. sapiens)]
-  Products:  glucose-6-phosphate [cytosolic state (H. sapiens)], ADP [cytosolic state (H. sapiens)]
-  Modifier:  hexokinase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 1: condensation of tyramine and 3,4-dihydroxybenzaldehyde to Schiff-base
+  Reactants: tyramine [unknown], 3,4-dihydroxybenzaldehyde [unknown]
+  Products:  Schiff-base intermediate [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 2: phosphoglucose isomerase reaction
-  Reactants: glucose-6-phosphate [cytosolic state (H. sapiens)]
-  Products:  fructose-6-phosphate [cytosolic state (H. sapiens)]
-  Modifier:  phosphoglucose isomerase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 2: reduction of Schiff-base to norbelladine
+  Reactants: Schiff-base intermediate [unknown]
+  Products:  norbelladine [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 3: phosphofructokinase-1 reaction
-  Reactants: fructose-6-phosphate [cytosolic state (H. sapiens)], ATP [cytosolic state (H. sapiens)]
-  Products:  fructose-1,6-bisphosphate [cytosolic state (H. sapiens)], ADP [cytosolic state (H. sapiens)]
-  Modifier:  phosphofructokinase-1 [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 3: N4OMT methylation of norbelladine
+  Reactants: norbelladine [unknown]
+  Products:  4′-O-methylnorbelladine [unknown]
+  Modifier:  N4OMT [Narcissus sp. aff. pseudonarcissus state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: aldolase reaction
-  Reactants: fructose-1,6-bisphosphate [cytosolic state (H. sapiens)]
-  Products:  glyceraldehyde-3-phosphate [cytosolic state (H. sapiens)], dihydroxyacetone phosphate [cytosolic state (H. sapiens)]
-  Modifier:  aldolase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 4: para-ortho′ phenol coupling of 4′-O-methylnorbelladine toward galanthamine skeleton
+  Reactants: 4′-O-methylnorbelladine [unknown]
+  Products:  N-demethylnarwedine [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 5: triose phosphate isomerase reaction
-  Reactants: dihydroxyacetone phosphate [cytosolic state (H. sapiens)]
-  Products:  glyceraldehyde-3-phosphate [cytosolic state (H. sapiens)]
-  Modifier:  triose phosphate isomerase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 5: reduction of N-demethylnarwedine to N-demethylgalanthamine
+  Reactants: N-demethylnarwedine [unknown]
+  Products:  N-demethylgalanthamine [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 6: glyceraldehyde-3-phosphate dehydrogenase reaction
-  Reactants: glyceraldehyde-3-phosphate [cytosolic state (H. sapiens)], NAD⁺ [cytosolic state (H. sapiens)]
-  Products:  1,3-bisphosphoglycerate [cytosolic state (H. sapiens)], NADH [cytosolic state (H. sapiens)]
-  Modifier:  glyceraldehyde-3-phosphate dehydrogenase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 7: phosphoglycerate kinase reaction
-  Reactants: 1,3-bisphosphoglycerate [cytosolic state (H. sapiens)], ADP [cytosolic state (H. sapiens)]
-  Products:  3-phosphoglycerate [cytosolic state (H. sapiens)], ATP [cytosolic state (H. sapiens)]
-  Modifier:  phosphoglycerate kinase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 8: phosphoglycerate mutase reaction
-  Reactants: 3-phosphoglycerate [cytosolic state (H. sapiens)]
-  Products:  2-phosphoglycerate [cytosolic state (H. sapiens)]
-  Modifier:  phosphoglycerate mutase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 9: enolase reaction
-  Reactants: 2-phosphoglycerate [cytosolic state (H. sapiens)]
-  Products:  phosphoenolpyruvate [cytosolic state (H. sapiens)], water [cytosolic state (H. sapiens)]
-  Modifier:  enolase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 10: pyruvate kinase reaction
-  Reactants: phosphoenolpyruvate [cytosolic state (H. sapiens)], ADP [cytosolic state (H. sapiens)]
-  Products:  pyruvate [cytosolic state (H. sapiens)], ATP [cytosolic state (H. sapiens)]
-  Modifier:  pyruvate kinase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 6: N-methylation of N-demethylgalanthamine to galanthamine
+  Reactants: N-demethylgalanthamine [unknown]
+  Products:  galanthamine [unknown]
+  Modifier:  MISSING
   QA flags:  none
