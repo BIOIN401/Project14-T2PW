@@ -161,6 +161,13 @@ def _canonical(value: str) -> str:
     return re.sub(r"\s+", " ", (value or "").strip())
 
 
+def _to_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _has_plus_token(value: str) -> bool:
     # Strip trailing charge notation (e.g. NAD+, H+, Ca2+) before checking
     # for a composite "+" separator so chemical names aren't mis-parsed.
@@ -251,6 +258,61 @@ def _new_report() -> Dict[str, Any]:
         "rewrite_map": {},
         "actions": [],
     }
+
+
+def _species_confidence(row: Dict[str, Any]) -> float:
+    meta = _safe_dict(row.get("mapping_meta"))
+    species_resolution = _safe_dict(meta.get("species_resolution"))
+    mapping_resolution = _safe_dict(meta.get("resolution"))
+    return max(
+        _to_float(row.get("confidence")),
+        _to_float(species_resolution.get("confidence")),
+        _to_float(mapping_resolution.get("confidence")),
+    )
+
+
+def _select_default_species_name(entities: Dict[str, Any]) -> str:
+    species_rows: List[Tuple[str, Dict[str, Any], int]] = []
+    seen_species: Set[str] = set()
+    for index, row in enumerate(_safe_list(entities.get("species"))):
+        if not isinstance(row, dict) or not isinstance(row.get("name"), str):
+            continue
+        name = _canonical(row["name"])
+        norm = _normalize(name)
+        if not name or not norm or norm in seen_species:
+            continue
+        seen_species.add(norm)
+        species_rows.append((name, row, index))
+    if not species_rows:
+        return ""
+    if len(species_rows) == 1:
+        return species_rows[0][0]
+
+    usage_counts: Dict[str, int] = {}
+    for bucket in ("proteins", "protein_complexes"):
+        for item in _safe_list(entities.get(bucket)):
+            if not isinstance(item, dict):
+                continue
+            species = (
+                item.get("species")
+                or item.get("organism")
+                or item.get("species_name")
+                or _safe_dict(item.get("species_ref")).get("name")
+                or ""
+            )
+            if not isinstance(species, str):
+                continue
+            norm = _normalize(species)
+            if norm:
+                usage_counts[norm] = usage_counts.get(norm, 0) + 1
+
+    def score(entry: Tuple[str, Dict[str, Any], int]) -> Tuple[float, int, int, int]:
+        name, row, index = entry
+        norm = _normalize(name)
+        has_db_id = int(bool(row.get("pathbank_species_id") or row.get("species_id") or row.get("taxonomy_id")))
+        return (_species_confidence(row), usage_counts.get(norm, 0), has_db_id, -index)
+
+    return max(species_rows, key=score)[0]
 
 
 def _entity_name_norms(rows: Sequence[Any]) -> Set[str]:
@@ -1995,18 +2057,7 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     subcellular_locations = _safe_list(entities.get("subcellular_locations"))
     if _find_entity_row(subcellular_locations, auto_location_name) is None:
         subcellular_locations.append({"name": auto_location_name})
-    species_names: List[str] = []
-    seen_species: Set[str] = set()
-    for row in _safe_list(entities.get("species")):
-        if not isinstance(row, dict) or not isinstance(row.get("name"), str):
-            continue
-        name = _canonical(row["name"])
-        norm = _normalize(name)
-        if not name or not norm or norm in seen_species:
-            continue
-        seen_species.add(norm)
-        species_names.append(name)
-    auto_species_name = species_names[0] if len(species_names) == 1 else ""
+    auto_species_name = _select_default_species_name(entities)
 
     if not isinstance(payload.get("biological_states"), list):
         payload["biological_states"] = []

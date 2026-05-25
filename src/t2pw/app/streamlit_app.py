@@ -1292,6 +1292,7 @@ def run_pwml_export(
         grounding_report: Dict[str, Any] = {}
         if grounding_dict:
             payload, grounding_report = apply_grounding(payload, grounding_dict)
+        ensure_autostates(payload)
 
         outputs_dir = project_root / "outputs"
         outputs_dir.mkdir(parents=True, exist_ok=True)

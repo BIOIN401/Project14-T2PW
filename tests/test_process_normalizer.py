@@ -248,6 +248,44 @@ def test_autostate_uses_single_declared_species() -> None:
     ]
 
 
+def test_autostate_chooses_best_species_when_multiple_are_declared() -> None:
+    payload = {
+        "entities": {
+            "species": [
+                {
+                    "name": "Narcissus sp. aff. pseudonarcissus",
+                    "confidence": 1.0,
+                    "mapping_meta": {"species_resolution": {"confidence": 0.85}},
+                },
+                {"name": "Lycoris radiata", "confidence": 1.0},
+                {
+                    "name": "Arabidopsis thaliana",
+                    "pathbank_species_id": 4,
+                    "mapping_meta": {"species_resolution": {"confidence": 1.0}},
+                },
+            ],
+            "proteins": [
+                {"name": "N4OMT", "species": "Narcissus sp. aff. pseudonarcissus"},
+                {"name": "PAL", "species": "Narcissus sp. aff. pseudonarcissus"},
+                {"name": "CYP98A3", "species": "Arabidopsis thaliana"},
+            ],
+            "subcellular_locations": [],
+        },
+        "biological_states": [{"name": "__auto_state__", "subcellular_location": "cell"}],
+        "element_locations": {
+            "compound_locations": [{"compound": "phenylalanine", "location": "cell"}],
+            "protein_locations": [{"protein": "N4OMT", "location": "cell"}],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+
+    ensure_autostates(payload)
+
+    assert payload["biological_states"][0]["species"] == "Narcissus sp. aff. pseudonarcissus"
+    assert payload["element_locations"]["compound_locations"][0]["biological_state"] == "__auto_state__"
+    assert payload["element_locations"]["protein_locations"][0]["biological_state"] == "__auto_state__"
+
+
 def test_thyroid_normalization_and_dedupe() -> None:
     normalized, report = _run_normalization(_thyroid_payload())
     summary = report.get("summary", {})
