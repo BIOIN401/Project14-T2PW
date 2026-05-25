@@ -78,6 +78,49 @@ def test_reaction_ir_construction_refs_resolve() -> None:
     }
 
 
+def test_create_defaults_fill_unmatched_species_and_cell_location() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Narcissus sp. aff. pseudonarcissus"}],
+            "subcellular_locations": [{"name": "cell"}],
+            "compounds": [],
+            "proteins": [],
+        },
+        "biological_states": [
+            {
+                "name": "__auto_state__",
+                "species": "Narcissus sp. aff. pseudonarcissus",
+                "subcellular_location": "cell",
+            }
+        ],
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert not report["errors"]
+    assert validation["ok"], validation["errors"]
+    assert ir["species"] == [
+        {
+            "key": "sp_1",
+            "name": "Narcissus aff. pseudonarcissus MK-2014",
+            "aliases": [
+                "Narcissus sp. aff. pseudonarcissus",
+                "Narcissus aff. pseudonarcissus MK-2014",
+            ],
+            "taxonomy_id": "1540222",
+            "classification": "Eukaryote",
+            "common_name": "Daffodil",
+        }
+    ]
+    assert ir["subcellular_locations"] == [
+        {"key": "scl_1", "name": "cell", "aliases": ["cell"], "ontology_id": "GO:0005623"}
+    ]
+    assert ir["biological_states"][0]["species_key"] == "sp_1"
+    assert ir["biological_states"][0]["subcellular_location_key"] == "scl_1"
+
+
 def test_transport_ir_construction_has_state_and_visual_refs() -> None:
     payload = {
         "entities": {

@@ -115,28 +115,28 @@
       "provenance": "extracted"
     },
     {
-      "id": "interaction:4′-o-methylnorbelladine precursor of galanthamine",
-      "label": "4′-O-methylnorbelladine precursor of galanthamine",
-      "kind": "interaction",
-      "cls": "precursor_of",
+      "id": "reaction:para-ortho' phenol-phenol' coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
+      "label": "para-ortho' phenol-phenol' coupling of 4′-O-methylnorbelladine toward galanthamine skeleton",
+      "kind": "reaction",
+      "cls": "",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "interaction:4′-o-methylnorbelladine precursor of n-demethylgalanthamine",
-      "label": "4′-O-methylnorbelladine precursor of N-demethylgalanthamine",
-      "kind": "interaction",
-      "cls": "precursor_of",
+      "id": "reaction:reduction of n-demethylnarwedine to n-demethylgalanthamine",
+      "label": "reduction of N-demethylnarwedine to N-demethylgalanthamine",
+      "kind": "reaction",
+      "cls": "",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "interaction:4′-o-methylnorbelladine precursor of n-demethylnarwedine",
-      "label": "4′-O-methylnorbelladine precursor of N-demethylnarwedine",
-      "kind": "interaction",
-      "cls": "precursor_of",
+      "id": "reaction:n-methylation of n-demethylgalanthamine to galanthamine",
+      "label": "N-methylation of N-demethylgalanthamine to galanthamine",
+      "kind": "reaction",
+      "cls": "",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
@@ -193,38 +193,38 @@
     },
     {
       "source": "compound:4′-o-methylnorbelladine",
-      "target": "interaction:4′-o-methylnorbelladine precursor of galanthamine",
-      "role": "participant",
+      "target": "reaction:para-ortho' phenol-phenol' coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
+      "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "interaction:4′-o-methylnorbelladine precursor of galanthamine",
-      "target": "compound:galanthamine",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:4′-o-methylnorbelladine",
-      "target": "interaction:4′-o-methylnorbelladine precursor of n-demethylgalanthamine",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "interaction:4′-o-methylnorbelladine precursor of n-demethylgalanthamine",
-      "target": "compound:n-demethylgalanthamine",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:4′-o-methylnorbelladine",
-      "target": "interaction:4′-o-methylnorbelladine precursor of n-demethylnarwedine",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "interaction:4′-o-methylnorbelladine precursor of n-demethylnarwedine",
+      "source": "reaction:para-ortho' phenol-phenol' coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
       "target": "compound:n-demethylnarwedine",
-      "role": "participant",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:n-demethylnarwedine",
+      "target": "reaction:reduction of n-demethylnarwedine to n-demethylgalanthamine",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:reduction of n-demethylnarwedine to n-demethylgalanthamine",
+      "target": "compound:n-demethylgalanthamine",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:n-demethylgalanthamine",
+      "target": "reaction:n-methylation of n-demethylgalanthamine to galanthamine",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:n-methylation of n-demethylgalanthamine to galanthamine",
+      "target": "compound:galanthamine",
+      "role": "product",
       "confidence": 1.0
     }
   ]
