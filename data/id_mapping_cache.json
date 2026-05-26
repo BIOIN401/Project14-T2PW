@@ -10389,6 +10389,166 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "db::cyp98a3::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"O22203\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O22203",
+        "pathbank_protein_id": "13561"
+      },
+      "pathbank_protein_id": 13561,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 13561,
+          "name": "Cytochrome P450 98A3",
+          "uniprot": "O22203",
+          "gene_name": "CYP98A3",
+          "species_id": 4,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::vanillin synthase vpvan::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::vanillin synthase vpvan::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")",
+      "confidence": 0.2433,
+      "candidates": [
+        {
+          "accession": "A0A068CNX1",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Glechoma hederacea",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A0F7G352",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Vanilla planifolia",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "O69762",
+          "protein_name": "Hydroxycinnamoyl-CoA hydratase-lyase",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.0975
+        },
+        {
+          "accession": "A0A7W9PIY2",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Nocardia transvalensis",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2U9K4U5",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Decalepis hamiltonii",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6P6SI29",
+          "protein_name": "",
+          "gene_names": [
+            "LOC113691700"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0ABM4UNW9",
+          "protein_name": "",
+          "gene_names": [
+            "LOC140008450"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1I4VUH7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Saccharopolyspora antimicrobica",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\")",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tyrosine decarboxylase::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"O82415\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O82415",
+        "pathbank_protein_id": "161086"
+      },
+      "pathbank_protein_id": 161086,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 161086,
+          "name": "Tyrosine decarboxylase",
+          "uniprot": "O82415",
+          "gene_name": "TYDC",
+          "species_id": 12186,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
     }
   },
   "compounds": {
@@ -25900,6 +26060,95 @@
         "status": "unresolved",
         "issue": "species_not_found"
       }
+    },
+    "db::cyp98a3 complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"gene_name\": \"CYP98A3\", \"pathbank_protein_id\": \"13561\", \"uniprot\": \"O22203\"}, \"name\": \"CYP98A3\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "CYP98A3",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 13561,
+          "mapped_ids": {
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561",
+            "gene_name": "CYP98A3"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::vanillin synthase vpvan complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A0F7G352\"}, \"name\": \"vanillin synthase (VpVAN)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "vanillin synthase (VpVAN)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0F7G352"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "vanillin synthase (VpVAN)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::tyrosine decarboxylase complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"gene_name\": \"TYDC\", \"pathbank_protein_id\": \"161086\", \"uniprot\": \"O82415\"}, \"name\": \"tyrosine decarboxylase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "tyrosine decarboxylase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 161086,
+          "mapped_ids": {
+            "uniprot": "O82415",
+            "pathbank_protein_id": "161086",
+            "gene_name": "TYDC"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
     }
   },
   "enzyme_complexes": {
@@ -25975,46 +26224,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "cyp98a3::13561::arabidopsis thaliana": {
-      "status": "mapped",
-      "provider": "PathBankDB",
-      "source": "db",
-      "pathbank_complex_id": 6646,
-      "pathbank_protein_complex_id": 6646,
-      "species_id": 4,
-      "components": [
-        {
-          "name": "CYP98A3",
-          "pathbank_protein_id": 13561,
-          "stoichiometry": 1,
-          "uniprot": "O22203",
-          "mapped_ids": {
-            "uniprot": "O22203",
-            "pathbank_protein_id": "13561"
-          },
-          "gene_name": "CYP98A3",
-          "species_id": 4
-        }
-      ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
-        {
-          "pathbank_complex_id": 6646,
-          "pathbank_protein_complex_id": 6646,
-          "name": "Cytochrome P450 98A3",
-          "species_id": 4,
-          "component_protein_id": 13561,
-          "score": 0.9
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
-      }
-    },
-    "tyrosine decarboxylase::::narcissus sp aff pseudonarcissus": {
+    "cyp98a3::13561::narcissus sp aff pseudonarcissus": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -26022,21 +26232,55 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "tyrosine decarboxylase complex",
+      "name": "CYP98A3 complex",
       "species_id": null,
       "components": [
         {
-          "name": "tyrosine decarboxylase",
+          "name": "CYP98A3",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 13561,
+          "mapped_ids": {
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561",
+            "gene_name": "CYP98A3"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "vanillin synthase vpvan::::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "vanillin synthase (VpVAN) complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "vanillin synthase (VpVAN)",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "Q95ZS2"
+            "uniprot": "A0A0F7G352"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "tyrosine decarboxylase",
+          "component": "vanillin synthase (VpVAN)",
           "reason": "no_db_match"
         },
         {
@@ -26050,7 +26294,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "norbelladine 4omethyltransferase n4omt::::narcissus sp aff pseudonarcissus": {
+    "tyrosine decarboxylase::161086::narcissus sp aff pseudonarcissus": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -26058,21 +26302,55 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "norbelladine 4′-O-methyltransferase (N4OMT) complex",
+      "name": "tyrosine decarboxylase complex",
       "species_id": null,
       "components": [
         {
-          "name": "norbelladine 4′-O-methyltransferase (N4OMT)",
+          "name": "tyrosine decarboxylase",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 161086,
+          "mapped_ids": {
+            "uniprot": "O82415",
+            "pathbank_protein_id": "161086",
+            "gene_name": "TYDC"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "n4omt::::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "N4OMT complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "N4OMT",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "A0A2H5AIZ6"
+            "uniprot": "A0A077EWA5"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "norbelladine 4′-O-methyltransferase (N4OMT)",
+          "component": "N4OMT",
           "reason": "no_db_match"
         },
         {
