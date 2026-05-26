@@ -127,6 +127,11 @@ def _html_name(name: str) -> str:
     return name.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
+def _pathwhiz_edge_options_attr(options: Dict[str, Any]) -> str:
+    """Return JSON options escaped for a PathWhiz XML attribute."""
+    return json.dumps(options, separators=(",", ":")).replace('"', "&quot;")
+
+
 # ---------------------------------------------------------------------------
 # ID allocation — PathWhiz-style numeric IDs
 # ---------------------------------------------------------------------------
@@ -1019,6 +1024,9 @@ def build_sbml(
                 edge_path = _edge_path_reactant(node_cx, node_cy, cx, cy)
                 loc_id = location_id_ctr.next()
                 loc_type = "protein_complex" if kind2 == "complex" else ("protein" if kind2 == "protein" else "compound")
+                reactant_edge_options = _pathwhiz_edge_options_attr(
+                    {"end_arrow": False, "end_flat_arrow": True}
+                )
 
                 a(f'          <speciesReference stoichiometry="1" constant="false"'
                   f' species="{rec2["sbml_id"]}" sboTerm="SBO:0000015">')
@@ -1036,7 +1044,7 @@ def build_sbml(
                   f'<pathwhiz:location_element pathwhiz:element_type="edge"'
                   f' pathwhiz:path="{edge_path}"'
                   f' pathwhiz:visualization_template_id="{_TMPL_EDGE}"'
-                  f' pathwhiz:options="{{}}"'
+                  f' pathwhiz:options="{reactant_edge_options}"'
                   f' pathwhiz:zindex="18" pathwhiz:hidden="false"/>'
                   f'</pathwhiz:location>')
                 a('            </annotation>')
@@ -1063,10 +1071,14 @@ def build_sbml(
                 loc_type = "protein_complex" if kind2 == "complex" else ("protein" if kind2 == "protein" else "compound")
 
                 # Product edges include start_arrow in the reference
-                arrow_opt = ('{"start_arrow":true,'
-                             '"start_arrow_path":"M 25.9 13.3 L 11 12 L 17.4 25.6",'
-                             '"start_flat_arrow":false,"start_flat_arrow_path":null}')
-                arrow_opt_escaped = arrow_opt.replace('"', "&quot;")
+                arrow_opt_escaped = _pathwhiz_edge_options_attr(
+                    {
+                        "start_arrow": True,
+                        "start_arrow_path": "M 25.9 13.3 L 11 12 L 17.4 25.6",
+                        "start_flat_arrow": False,
+                        "start_flat_arrow_path": None,
+                    }
+                )
 
                 a(f'          <speciesReference stoichiometry="1" constant="false"'
                   f' species="{rec2["sbml_id"]}" sboTerm="SBO:0000011">')

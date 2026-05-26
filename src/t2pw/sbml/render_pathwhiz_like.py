@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import math
 import re
 import shutil
 import textwrap
@@ -117,6 +118,39 @@ def _arrowhead_patch(verts: list, path_cls: Any, patch_cls: Any, size: float = 1
     arrow_codes = [path_cls.MOVETO, path_cls.LINETO, path_cls.LINETO, path_cls.CLOSEPOLY]
     arrow_path  = path_cls(arrow_verts, arrow_codes)
     return patch_cls(arrow_path, fill=True, facecolor="black", edgecolor="black", linewidth=0.5, zorder=zorder)
+
+
+def _flat_bar_patch(verts: list, path_cls: Any, patch_cls: Any, size: float = 10.0, zorder: int = 5) -> Any:
+    """Build a flat endpoint bar perpendicular to the last edge segment."""
+    tip = None
+    base_pt = None
+    for v in reversed(verts):
+        if tip is None:
+            tip = v
+            continue
+        dx, dy = v[0] - tip[0], v[1] - tip[1]
+        if math.hypot(dx, dy) > 1e-3:
+            base_pt = v
+            break
+    if tip is None or base_pt is None:
+        return None
+
+    dx = tip[0] - base_pt[0]
+    dy = tip[1] - base_pt[1]
+    length = math.hypot(dx, dy)
+    if length < 1e-9:
+        return None
+    px, py = -dy / length, dx / length
+    half_w = size * 0.65
+
+    bar_path = path_cls(
+        [
+            (tip[0] + px * half_w, tip[1] + py * half_w),
+            (tip[0] - px * half_w, tip[1] - py * half_w),
+        ],
+        [path_cls.MOVETO, path_cls.LINETO],
+    )
+    return patch_cls(bar_path, fill=False, edgecolor="black", linewidth=2.0, zorder=zorder)
 
 
 def _parse_svg_path(d: str, path_cls: Any) -> Any:
@@ -481,12 +515,20 @@ def _render_prepared_input(render_input: str, out_png: str, dpi: int = 180, show
         )
         ax.add_patch(patch)
 
-        # Draw a geometric arrowhead on solid (non-modifier) edges regardless of
-        # whether e.options carries pre-built SVG arrow paths.
+        # Draw a geometric head for generated solid edges even when PathWhiz did
+        # not provide a pre-built SVG path for the requested endpoint marker.
         if not is_dotted:
-            arrow_patch = _arrowhead_patch(path.vertices.tolist(), MplPath, PathPatch, size=10.0, zorder=e.z + 1)
-            if arrow_patch is not None:
-                ax.add_patch(arrow_patch)
+            verts = path.vertices.tolist()
+            end_flat = bool(e.options and e.options.get("end_flat_arrow"))
+            start_flat = bool(e.options and e.options.get("start_flat_arrow"))
+            if end_flat:
+                marker_patch = _flat_bar_patch(verts, MplPath, PathPatch, size=10.0, zorder=e.z + 1)
+            elif start_flat:
+                marker_patch = _flat_bar_patch(list(reversed(verts)), MplPath, PathPatch, size=10.0, zorder=e.z + 1)
+            else:
+                marker_patch = _arrowhead_patch(verts, MplPath, PathPatch, size=10.0, zorder=e.z + 1)
+            if marker_patch is not None:
+                ax.add_patch(marker_patch)
 
         if e.options:
             for key in ("end_arrow_path", "start_arrow_path", "end_flat_arrow_path", "start_flat_arrow_path"):

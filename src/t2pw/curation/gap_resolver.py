@@ -46,19 +46,73 @@ def _canonical(value: str) -> str:
     return re.sub(r"\s+", " ", (value or "").strip())
 
 
+def _to_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _slug(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", _normalize(value)).strip("_") or "state"
 
 
+def _species_confidence(row: Dict[str, Any]) -> float:
+    meta = _safe_dict(row.get("mapping_meta"))
+    species_resolution = _safe_dict(meta.get("species_resolution"))
+    mapping_resolution = _safe_dict(meta.get("resolution"))
+    return max(
+        _to_float(row.get("confidence")),
+        _to_float(species_resolution.get("confidence")),
+        _to_float(mapping_resolution.get("confidence")),
+    )
+
+
+def _species_usage_counts(entities: Dict[str, Any]) -> Dict[str, int]:
+    counts: Dict[str, int] = {}
+    for bucket in ("proteins", "protein_complexes"):
+        for item in _safe_list(entities.get(bucket)):
+            if not isinstance(item, dict):
+                continue
+            species = (
+                item.get("species")
+                or item.get("organism")
+                or item.get("species_name")
+                or _safe_dict(item.get("species_ref")).get("name")
+                or ""
+            )
+            if not isinstance(species, str):
+                continue
+            norm = _normalize(species)
+            if norm:
+                counts[norm] = counts.get(norm, 0) + 1
+    return counts
+
+
 def _extract_global_organism(payload: Dict[str, Any]) -> str:
     entities = _safe_dict(payload.get("entities"))
-    species_names = [
-        (item.get("name") or "").strip()
-        for item in _safe_list(entities.get("species"))
-        if isinstance(item, dict) and isinstance(item.get("name"), str) and item.get("name").strip()
-    ]
-    if len(species_names) == 1:
-        return species_names[0]
+    species_rows: List[Tuple[str, Dict[str, Any], int]] = []
+    seen_species = set()
+    for index, item in enumerate(_safe_list(entities.get("species"))):
+        if not isinstance(item, dict) or not isinstance(item.get("name"), str):
+            continue
+        name = _canonical(item["name"])
+        norm = _normalize(name)
+        if not name or not norm or norm in seen_species:
+            continue
+        seen_species.add(norm)
+        species_rows.append((name, item, index))
+    if len(species_rows) == 1:
+        return species_rows[0][0]
+    if len(species_rows) > 1:
+        usage_counts = _species_usage_counts(entities)
+
+        def score(entry: Tuple[str, Dict[str, Any], int]) -> Tuple[float, int, int, int]:
+            name, row, index = entry
+            has_db_id = int(bool(row.get("pathbank_species_id") or row.get("species_id") or row.get("taxonomy_id")))
+            return (_species_confidence(row), usage_counts.get(_normalize(name), 0), has_db_id, -index)
+
+        return max(species_rows, key=score)[0]
     biological_states = _safe_list(payload.get("biological_states"))
     state_species = {
         (state.get("species") or "").strip()

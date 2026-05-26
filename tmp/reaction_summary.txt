@@ -1,14 +1,68 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: hexokinase reaction
-  Reactants: glucose [cytosolic state (H. sapiens)], ATP [cytosolic state (H. sapiens)]
-  Products:  glucose-6-phosphate [cytosolic state (H. sapiens)], ADP [cytosolic state (H. sapiens)], H⁺ [cytosolic state (H. sapiens)]
-  Modifier:  hexokinase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 1: phenylalanine deamination
+  Reactants: phenylalanine [unknown]
+  Products:  trans-cinnamic acid [unknown]
+  Modifier:  phenylalanine ammonia-lyase (PAL) [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: phosphoglucose isomerase reaction
-  Reactants: glucose-6-phosphate [cytosolic state (H. sapiens)]
-  Products:  fructose-6-phosphate [cytosolic state (H. sapiens)]
-  Modifier:  phosphoglucose isomerase [cytosolic state (H. sapiens)] (role=catalyst, confidence=1.0)
+REACTION 2: trans-cinnamic acid hydroxylation
+  Reactants: trans-cinnamic acid [unknown]
+  Products:  4-hydroxycinnamic acid [unknown]
+  Modifier:  cinnamate 4-hydroxylase (CYP73A1) [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 3: 4-hydroxycinnamic acid 3-hydroxylation
+  Reactants: 4-hydroxycinnamic acid [unknown]
+  Products:  3,4-dihydroxycinnamic acid [unknown]
+  Modifier:  CYP98A3 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 4: 3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde
+  Reactants: 3,4-dihydroxycinnamic acid [unknown]
+  Products:  3,4-dihydroxybenzaldehyde [unknown]
+  Modifier:  vanillin synthase (VpVAN) [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 5: tyrosine decarboxylation
+  Reactants: tyrosine [unknown]
+  Products:  tyramine [unknown]
+  Modifier:  tyrosine decarboxylase [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 6: Schiff-base condensation of tyramine and 3,4-dihydroxybenzaldehyde
+  Reactants: tyramine [unknown], 3,4-dihydroxybenzaldehyde [unknown]
+  Products:  Schiff-base intermediate [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 7: imine reduction to norbelladine
+  Reactants: Schiff-base intermediate [unknown]
+  Products:  norbelladine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 8: norbelladine 4′-O-methylation
+  Reactants: norbelladine [unknown]
+  Products:  4′-O-methylnorbelladine [unknown]
+  Modifier:  N4OMT [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 9: para-ortho' phenol coupling to galanthamine-type skeleton
+  Reactants: 4′-O-methylnorbelladine [unknown]
+  Products:  N-demethylnarwedine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 10: N-demethylnarwedine reduction to N-demethylgalanthamine
+  Reactants: N-demethylnarwedine [unknown]
+  Products:  N-demethylgalanthamine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 11: N-methylation to galanthamine
+  Reactants: N-demethylgalanthamine [unknown]
+  Products:  galanthamine [unknown]
+  Modifier:  MISSING
   QA flags:  none

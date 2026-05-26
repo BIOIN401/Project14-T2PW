@@ -4,6 +4,7 @@ import re
 from collections import defaultdict
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
 
 
@@ -79,6 +80,66 @@ def _first_nonempty(row: Dict[str, Any], keys: Sequence[str]) -> Any:
 
 def _db_id(row: Dict[str, Any], keys: Sequence[str]) -> Optional[int]:
     return _to_int(_first_nonempty(row, keys))
+
+
+SPECIES_CREATE_DEFAULTS: Dict[str, Dict[str, Any]] = {
+    "narcissus sp aff pseudonarcissus": {
+        "name": "Narcissus aff. pseudonarcissus MK-2014",
+        "taxonomy_id": "1540222",
+        "classification": "Eukaryote",
+        "common_name": "Daffodil",
+        "aliases": ["Narcissus sp. aff. pseudonarcissus"],
+    },
+}
+
+SUBCELLULAR_LOCATION_CREATE_DEFAULTS: Dict[str, Dict[str, Any]] = {
+    "cell": {"name": "cell", "ontology_id": "GO:0005623"},
+}
+
+
+def _dedupe_aliases(values: Iterable[Any]) -> List[str]:
+    aliases: List[str] = []
+    seen = set()
+    for value in values:
+        text = _canonical(value)
+        norm = _norm(text)
+        if not text or not norm or norm in seen:
+            continue
+        seen.add(norm)
+        aliases.append(text)
+    return aliases
+
+
+def _create_default_key(value: Any) -> str:
+    return re.sub(r"\s+", " ", _norm(value)).strip()
+
+
+def _apply_create_defaults(raw: Dict[str, Any], defaults: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    name = _canonical(raw.get("name"))
+    default = defaults.get(_create_default_key(name))
+    if not default:
+        return raw
+
+    record = dict(raw)
+    default_name = _canonical(default.get("name"))
+    existing_aliases = _safe_list(record.get("aliases"))
+    default_aliases = _safe_list(default.get("aliases"))
+    aliases = [name, *existing_aliases, *default_aliases]
+
+    if default_name:
+        record["name"] = default_name
+        aliases.append(default_name)
+
+    for key, value in default.items():
+        if key in {"name", "aliases"}:
+            continue
+        if record.get(key) in (None, ""):
+            record[key] = value
+
+    deduped_aliases = _dedupe_aliases(aliases)
+    if deduped_aliases:
+        record["aliases"] = deduped_aliases
+    return record
 
 
 def _new_report() -> Dict[str, Any]:
@@ -266,6 +327,9 @@ def _component_record(raw: Dict[str, Any], key: str, db_keys: Sequence[str]) -> 
     pathwhiz_id = _db_id(raw, db_keys)
     if pathwhiz_id is not None:
         record["pathwhiz_id"] = pathwhiz_id
+    aliases = _dedupe_aliases(_safe_list(raw.get("aliases")))
+    if aliases:
+        record["aliases"] = aliases
     for src, dst in [
         ("taxonomy_id", "taxonomy_id"),
         ("taxonomy-id", "taxonomy_id"),
@@ -540,14 +604,33 @@ def build_pwml_ir(
     ]
     component_by_name: Dict[str, Dict[str, Dict[str, Any]]] = {}
     for source_key, ir_key, prefix, db_keys in component_specs:
+        component_rows = _safe_list(entities.get(source_key))
+        if source_key == "species":
+            component_rows = [
+                _apply_create_defaults(row, SPECIES_CREATE_DEFAULTS)
+                for row in component_rows
+                if isinstance(row, dict)
+            ]
+        elif source_key == "subcellular_locations":
+            component_rows = [
+                _apply_create_defaults(row, SUBCELLULAR_LOCATION_CREATE_DEFAULTS)
+                for row in component_rows
+                if isinstance(row, dict)
+            ]
         rows, lookup = _dedupe_named_rows(
-            _safe_list(entities.get(source_key)),
+            component_rows,
             key_prefix=prefix,
             report=report,
             pointer_prefix=f"/entities/{source_key}",
         )
         ir[ir_key] = [_component_record(row, row["key"], db_keys) for row in rows]
-        component_by_name[source_key] = {_norm(row["name"]): row for row in ir[ir_key]}
+        by_name: Dict[str, Dict[str, Any]] = {}
+        for row in ir[ir_key]:
+            for alias in [row.get("name"), *_safe_list(row.get("aliases"))]:
+                norm = _norm(alias)
+                if norm:
+                    by_name[norm] = row
+        component_by_name[source_key] = by_name
 
     entity_specs = [
         (
@@ -1016,7 +1099,11 @@ def build_pwml_ir(
             "x": int(x),
             "y": int(y),
             "zindex": 10 if entity_type == "compound" else 8,
-            "visualization_template_id": 3 if entity_type == "compound" else 2,
+            "visualization_template_id": (
+                select_compound_template_id(entity)
+                if entity_type == "compound"
+                else 2
+            ),
             "hidden": False,
         }
         ir["locations"].append(loc)

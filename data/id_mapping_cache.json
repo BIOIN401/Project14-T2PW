@@ -9028,6 +9028,1527 @@
         "status": "matched",
         "order_step": "uniprot"
       }
+    },
+    "db::phosphofructokinase1::homo sapiens::::{\"uniprot\": \"P21777\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api::phosphofructokinase1::homo sapiens::::{\"uniprot\": \"P21777\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"phosphofructokinase-1\" OR gene:\"phosphofructokinase-1\") AND organism_name:\"Homo sapiens\" | (protein_name:\"phosphofructokinase 1\" OR gene:\"phosphofructokinase 1\") AND organism_name:\"Homo sapiens\" | (protein_name:\"phosphofructokinase-1\" OR gene:\"phosphofructokinase-1\") | (protein_name:\"phosphofructokinase 1\" OR gene:\"phosphofructokinase 1\")",
+      "confidence": 0.1267,
+      "candidates": [
+        {
+          "accession": "P21777",
+          "protein_name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_names": [
+            "pfkA"
+          ],
+          "organism": "Thermus thermophilus (strain ATCC 27634 / DSM 579 / HB8)",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "O94201",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Candida albicans",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q8NJU8",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Komagataella pastoris",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "P0A796",
+          "protein_name": "ATP-dependent 6-phosphofructokinase isozyme 1",
+          "gene_names": [
+            "pfkA"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q92448",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "GSA1",
+            "PFK1"
+          ],
+          "organism": "Komagataella phaffii (strain GS115 / ATCC 20864)",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q03215",
+          "protein_name": "ATP-dependent 6-phosphofructokinase subunit alpha",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Kluyveromyces lactis (strain ATCC 8585 / CBS 2359 / DSM 70799 / NBRC 1267 / NRRL Y-1140 / WM37)",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q9TZL8",
+          "protein_name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_names": [
+            "pfk-1.1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q9M0F9",
+          "protein_name": "ATP-dependent 6-phosphofructokinase 1",
+          "gene_names": [
+            "PFK1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.1267
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"phosphofructokinase-1\" OR gene:\"phosphofructokinase-1\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"phosphofructokinase 1\" OR gene:\"phosphofructokinase 1\") AND organism_name:\"Homo sapiens\"",
+        "(protein_name:\"phosphofructokinase-1\" OR gene:\"phosphofructokinase-1\")",
+        "(protein_name:\"phosphofructokinase 1\" OR gene:\"phosphofructokinase 1\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::aldolase::homo sapiens::4743::{\"uniprot\": \"Q8NHT3\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q8NHT3",
+        "pathbank_protein_id": "4743"
+      },
+      "pathbank_protein_id": 4743,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4743,
+          "name": "Fructose-bisphosphate aldolase",
+          "uniprot": "Q8NHT3",
+          "gene_name": "",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::triose phosphate isomerase::homo sapiens::::{\"uniprot\": \"P60174\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P60174",
+        "pathbank_protein_id": "1472"
+      },
+      "pathbank_protein_id": 1472,
+      "confidence": 1.08,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 1472,
+          "name": "Triosephosphate isomerase",
+          "uniprot": "P60174",
+          "gene_name": "TPI1",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.08
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::glyceraldehyde3phosphate dehydrogenase::homo sapiens::659::{\"uniprot\": \"P04406\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P04406",
+        "pathbank_protein_id": "659",
+        "gene_name": "GAPDH"
+      },
+      "pathbank_protein_id": 659,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 659,
+          "name": "Glyceraldehyde-3-phosphate dehydrogenase",
+          "uniprot": "P04406",
+          "gene_name": "GAPDH",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::phosphoglycerate kinase::homo sapiens::1395::{\"uniprot\": \"P07205\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P07205",
+        "pathbank_protein_id": "1395",
+        "gene_name": "PGK2"
+      },
+      "pathbank_protein_id": 1395,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 1395,
+          "name": "Phosphoglycerate kinase 2",
+          "uniprot": "P07205",
+          "gene_name": "PGK2",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::phosphoglycerate mutase::homo sapiens::4356::{\"uniprot\": \"A4D2J6\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "A4D2J6",
+        "pathbank_protein_id": "4356",
+        "gene_name": "PGAM2"
+      },
+      "pathbank_protein_id": 4356,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4356,
+          "name": "Phosphoglycerate mutase",
+          "uniprot": "A4D2J6",
+          "gene_name": "PGAM2",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::enolase::homo sapiens::1019::{\"uniprot\": \"P13929\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P13929",
+        "pathbank_protein_id": "1019",
+        "gene_name": "ENO3"
+      },
+      "pathbank_protein_id": 1019,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 1019,
+          "name": "Beta-enolase",
+          "uniprot": "P13929",
+          "gene_name": "ENO3",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::pyruvate kinase::homo sapiens::4176::{\"uniprot\": \"Q16715\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q16715",
+        "pathbank_protein_id": "4176"
+      },
+      "pathbank_protein_id": 4176,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4176,
+          "name": "Pyruvate kinase",
+          "uniprot": "Q16715",
+          "gene_name": "",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::n4omt::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A077EWA5\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::n4omt::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A077EWA5\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"N4OMT\" OR gene:\"N4OMT\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A077EWA5",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A2H5AIZ6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A5P8H727",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Lycoris radiata",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A346TLF5",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus papyraceus",
+          "reviewed": true,
+          "score": 0.56
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::phenylalanine ammonialyase pal::unknown species::::{\"uniprot\": \"B2J528\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::phenylalanine ammonialyase pal::unknown species::::{\"uniprot\": \"B2J528\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\") AND organism_name:\"Unknown species\" | (protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\") AND organism_name:\"Unknown species\" | (protein_name:\"phenylalanine ammonia lyase (PAL)\" OR gene:\"phenylalanine ammonia lyase (PAL)\") AND organism_name:\"Unknown species\" | (protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\") | (protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "B2J528",
+          "protein_name": "Phenylalanine ammonia-lyase",
+          "gene_names": [],
+          "organism": "Nostoc punctiforme (strain ATCC 29133 / PCC 73102)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q3M5Z3",
+          "protein_name": "Phenylalanine ammonia-lyase",
+          "gene_names": [],
+          "organism": "Trichormus variabilis (strain ATCC 29413 / PCC 7937)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q6GZ04",
+          "protein_name": "Phenylalanine aminomutase (L-beta-phenylalanine forming)",
+          "gene_names": [
+            "pam"
+          ],
+          "organism": "Taxus canadensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q68G84",
+          "protein_name": "Phenylalanine aminomutase (L-beta-phenylalanine forming)",
+          "gene_names": [
+            "pam"
+          ],
+          "organism": "Taxus chinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P35510",
+          "protein_name": "Phenylalanine ammonia-lyase 1",
+          "gene_names": [
+            "PAL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "P45725",
+          "protein_name": "Phenylalanine ammonia-lyase 3",
+          "gene_names": [
+            "PAL3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "P45724",
+          "protein_name": "Phenylalanine ammonia-lyase 2",
+          "gene_names": [
+            "PAL2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "P24481",
+          "protein_name": "Phenylalanine ammonia-lyase 1",
+          "gene_names": [
+            "PAL1"
+          ],
+          "organism": "Petroselinum crispum",
+          "reviewed": true,
+          "score": 0.2433
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"phenylalanine ammonia lyase (PAL)\" OR gene:\"phenylalanine ammonia lyase (PAL)\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\")",
+        "(protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cinnamate 4hydroxylase cyp73a1::unknown species::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::cinnamate 4hydroxylase cyp73a1::unknown species::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") AND organism_name:\"Unknown species\" | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Unknown species\" | (protein_name:\"cinnamate 4 hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4 hydroxylase (CYP73A1)\") AND organism_name:\"Unknown species\" | (protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A4S4DRC9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis var. sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A7J7HQ38",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9D5D4E9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Dioscorea zingiberensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9Q1QFF8",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Carnegiea gigantea",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0AA38FKR9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Taxus chinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "F1B283",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H2",
+          "gene_names": [
+            "C4H2"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "F1B282",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H1",
+          "gene_names": [
+            "C4H1"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2I4JM57",
+          "protein_name": "",
+          "gene_names": [
+            "C4H"
+          ],
+          "organism": "Sesamum indicum",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"cinnamate 4 hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4 hydroxylase (CYP73A1)\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\")",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cyp98a3::arabidopsis thaliana::::{\"uniprot\": \"O22203\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O22203",
+        "pathbank_protein_id": "13561"
+      },
+      "pathbank_protein_id": 13561,
+      "confidence": 1.08,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 13561,
+          "name": "Cytochrome P450 98A3",
+          "uniprot": "O22203",
+          "gene_name": "CYP98A3",
+          "species_id": 4,
+          "matched_on": "uniprot_id",
+          "score": 1.08
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::vanillin synthase vpvan::vanilla planifolia::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Vanilla planifolia",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::vanillin synthase vpvan::vanilla planifolia::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") AND organism_name:\"Vanilla planifolia\" | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Vanilla planifolia\" | (protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")",
+      "confidence": 0.5333,
+      "candidates": [
+        {
+          "accession": "A0A0F7G352",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Vanilla planifolia",
+          "reviewed": true,
+          "score": 0.5333
+        },
+        {
+          "accession": "A0A068CNX1",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Glechoma hederacea",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "O69762",
+          "protein_name": "Hydroxycinnamoyl-CoA hydratase-lyase",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.0975
+        },
+        {
+          "accession": "A0A7W9PIY2",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Nocardia transvalensis",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2U9K4U5",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Decalepis hamiltonii",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6P6SI29",
+          "protein_name": "",
+          "gene_names": [
+            "LOC113691700"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0ABM4UNW9",
+          "protein_name": "",
+          "gene_names": [
+            "LOC140008450"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1I4VUH7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Saccharopolyspora antimicrobica",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") AND organism_name:\"Vanilla planifolia\"",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Vanilla planifolia\"",
+        "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\")",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tyrosine decarboxylase::unknown species::::{\"uniprot\": \"Q95ZS2\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::tyrosine decarboxylase::unknown species::::{\"uniprot\": \"Q95ZS2\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"Unknown species\" | (protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "Q95ZS2",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "tdc-1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "O82415",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TYDC",
+            "TYDC9"
+          ],
+          "organism": "Papaver somniferum",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q94EE9",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TDC",
+            "TYDC"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q9M0G4",
+          "protein_name": "Tyrosine decarboxylase 2",
+          "gene_names": [
+            "TYDC",
+            "TYRDC"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "J7GQ11",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tdc"
+          ],
+          "organism": "Levilactobacillus brevis",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "A0A481NV25",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "mfnA_1",
+            "tdc"
+          ],
+          "organism": "Enterococcus faecium",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q838D6",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tdc",
+            "tdcA"
+          ],
+          "organism": "Enterococcus faecalis (strain ATCC 700802 / V583)",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "P0DTQ4",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tyrDC"
+          ],
+          "organism": "Enterococcus faecalis (strain EnGen0310 / MMH594)",
+          "reviewed": true,
+          "score": 0.1267
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::n4omt::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A2H5AIZ6\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::n4omt::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A2H5AIZ6\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"N4OMT\" OR gene:\"N4OMT\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A077EWA5",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A2H5AIZ6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A5P8H727",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Lycoris radiata",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A346TLF5",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus papyraceus",
+          "reviewed": true,
+          "score": 0.56
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::phenylalanine ammonialyase pal::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"B2J528\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::phenylalanine ammonialyase pal::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"B2J528\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"phenylalanine ammonia lyase (PAL)\" OR gene:\"phenylalanine ammonia lyase (PAL)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\") | (protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "B2J528",
+          "protein_name": "Phenylalanine ammonia-lyase",
+          "gene_names": [],
+          "organism": "Nostoc punctiforme (strain ATCC 29133 / PCC 73102)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q3M5Z3",
+          "protein_name": "Phenylalanine ammonia-lyase",
+          "gene_names": [],
+          "organism": "Trichormus variabilis (strain ATCC 29413 / PCC 7937)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q6GZ04",
+          "protein_name": "Phenylalanine aminomutase (L-beta-phenylalanine forming)",
+          "gene_names": [
+            "pam"
+          ],
+          "organism": "Taxus canadensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q68G84",
+          "protein_name": "Phenylalanine aminomutase (L-beta-phenylalanine forming)",
+          "gene_names": [
+            "pam"
+          ],
+          "organism": "Taxus chinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P35510",
+          "protein_name": "Phenylalanine ammonia-lyase 1",
+          "gene_names": [
+            "PAL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "P45725",
+          "protein_name": "Phenylalanine ammonia-lyase 3",
+          "gene_names": [
+            "PAL3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "P45724",
+          "protein_name": "Phenylalanine ammonia-lyase 2",
+          "gene_names": [
+            "PAL2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "P24481",
+          "protein_name": "Phenylalanine ammonia-lyase 1",
+          "gene_names": [
+            "PAL1"
+          ],
+          "organism": "Petroselinum crispum",
+          "reviewed": true,
+          "score": 0.2433
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"phenylalanine ammonia lyase (PAL)\" OR gene:\"phenylalanine ammonia lyase (PAL)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"phenylalanine ammonia-lyase (PAL)\" OR gene:\"phenylalanine ammonia-lyase (PAL)\")",
+        "(protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cinnamate 4hydroxylase cyp73a1::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::cinnamate 4hydroxylase cyp73a1::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"cinnamate 4 hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4 hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A4S4DRC9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis var. sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A7J7HQ38",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9D5D4E9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Dioscorea zingiberensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9Q1QFF8",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Carnegiea gigantea",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0AA38FKR9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Taxus chinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "F1B283",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H2",
+          "gene_names": [
+            "C4H2"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "F1B282",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H1",
+          "gene_names": [
+            "C4H1"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2I4JM57",
+          "protein_name": "",
+          "gene_names": [
+            "C4H"
+          ],
+          "organism": "Sesamum indicum",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4 hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4 hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\")",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tyrosine decarboxylase::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"Q95ZS2\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::tyrosine decarboxylase::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"Q95ZS2\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "Q95ZS2",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "tdc-1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "O82415",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TYDC",
+            "TYDC9"
+          ],
+          "organism": "Papaver somniferum",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q94EE9",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TDC",
+            "TYDC"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q9M0G4",
+          "protein_name": "Tyrosine decarboxylase 2",
+          "gene_names": [
+            "TYDC",
+            "TYRDC"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "J7GQ11",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tdc"
+          ],
+          "organism": "Levilactobacillus brevis",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "A0A481NV25",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "mfnA_1",
+            "tdc"
+          ],
+          "organism": "Enterococcus faecium",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q838D6",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tdc",
+            "tdcA"
+          ],
+          "organism": "Enterococcus faecalis (strain ATCC 700802 / V583)",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "P0DTQ4",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tyrDC"
+          ],
+          "organism": "Enterococcus faecalis (strain EnGen0310 / MMH594)",
+          "reviewed": true,
+          "score": 0.1267
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::norbelladine 4omethyltransferase n4omt::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A2H5AIZ6\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::norbelladine 4omethyltransferase n4omt::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A2H5AIZ6\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"norbelladine 4′-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4′-O-methyltransferase (N4OMT)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"norbelladine 4′-O-methyltransferase\" OR gene:\"norbelladine 4′-O-methyltransferase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"norbelladine 4′ O methyltransferase (N4OMT)\" OR gene:\"norbelladine 4′ O methyltransferase (N4OMT)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"norbelladine 4′-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4′-O-methyltransferase (N4OMT)\") | (protein_name:\"norbelladine 4′-O-methyltransferase\" OR gene:\"norbelladine 4′-O-methyltransferase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A077EWA5",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A2H5AIZ6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A077ES70",
+          "protein_name": "Norbelladine 4'-O-methyltransferase 4",
+          "gene_names": [
+            "N4OMT4"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A077EYL8",
+          "protein_name": "Norbelladine 4'-O-methyltransferase 3",
+          "gene_names": [
+            "N4OMT3"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A077ESS0",
+          "protein_name": "Norbelladine 4'-O-methyltransferase 5",
+          "gene_names": [
+            "N4OMT5"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A077EW86",
+          "protein_name": "Norbelladine 4'-O-methyltransferase 2",
+          "gene_names": [
+            "N4OMT2"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A6J0PMM0",
+          "protein_name": "",
+          "gene_names": [
+            "LOC105051182"
+          ],
+          "organism": "Elaeis guineensis var. tenera",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6J0PMF1",
+          "protein_name": "",
+          "gene_names": [
+            "LOC105051171"
+          ],
+          "organism": "Elaeis guineensis var. tenera",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"norbelladine 4′-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4′-O-methyltransferase (N4OMT)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4′-O-methyltransferase\" OR gene:\"norbelladine 4′-O-methyltransferase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4′ O methyltransferase (N4OMT)\" OR gene:\"norbelladine 4′ O methyltransferase (N4OMT)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4′-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4′-O-methyltransferase (N4OMT)\")",
+        "(protein_name:\"norbelladine 4′-O-methyltransferase\" OR gene:\"norbelladine 4′-O-methyltransferase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cyp98a3::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"O22203\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O22203",
+        "pathbank_protein_id": "13561"
+      },
+      "pathbank_protein_id": 13561,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 13561,
+          "name": "Cytochrome P450 98A3",
+          "uniprot": "O22203",
+          "gene_name": "CYP98A3",
+          "species_id": 4,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::vanillin synthase vpvan::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::vanillin synthase vpvan::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")",
+      "confidence": 0.2433,
+      "candidates": [
+        {
+          "accession": "A0A068CNX1",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Glechoma hederacea",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A0F7G352",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Vanilla planifolia",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "O69762",
+          "protein_name": "Hydroxycinnamoyl-CoA hydratase-lyase",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.0975
+        },
+        {
+          "accession": "A0A7W9PIY2",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Nocardia transvalensis",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2U9K4U5",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Decalepis hamiltonii",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6P6SI29",
+          "protein_name": "",
+          "gene_names": [
+            "LOC113691700"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0ABM4UNW9",
+          "protein_name": "",
+          "gene_names": [
+            "LOC140008450"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1I4VUH7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Saccharopolyspora antimicrobica",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"vanillin synthase (VpVAN)\" OR gene:\"vanillin synthase (VpVAN)\")",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tyrosine decarboxylase::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"O82415\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O82415",
+        "pathbank_protein_id": "161086"
+      },
+      "pathbank_protein_id": 161086,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 161086,
+          "name": "Tyrosine decarboxylase",
+          "uniprot": "O82415",
+          "gene_name": "TYDC",
+          "species_id": 12186,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
     }
   },
   "compounds": {
@@ -22730,6 +24251,829 @@
         "status": "matched",
         "order_step": "pathbank_compound_id"
       }
+    },
+    "db::nadh::1144::{\"cas\": \"58-68-4\", \"chebi\": \"CHEBI:16908\", \"hmdb\": \"HMDB0001487\", \"kegg\": \"C00004\", \"pubchem\": \"439153\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001487",
+        "kegg": "C00004",
+        "chebi": "CHEBI:16908",
+        "pubchem": "439153",
+        "cas": "58-68-4",
+        "biocyc": "NADH",
+        "chemspider": "388299",
+        "drugbank": "DB00157",
+        "pathbank_compound_id": "1144"
+      },
+      "pathbank_compound_id": 1144,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1144,
+          "name": "NADH",
+          "short_name": "NADH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001487",
+            "kegg": "C00004",
+            "chebi": "CHEBI:16908",
+            "pubchem": "439153",
+            "cas": "58-68-4",
+            "biocyc": "NADH",
+            "chemspider": "388299",
+            "drugbank": "DB00157",
+            "pathbank_compound_id": "1144"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::fructose16bisphosphate::833::{\"cas\": \"488-69-7\", \"chebi\": \"CHEBI:16905\", \"hmdb\": \"HMDB0001058\", \"kegg\": \"C00354\", \"pubchem\": \"445557\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001058",
+        "kegg": "C00354",
+        "chebi": "CHEBI:16905",
+        "pubchem": "445557",
+        "cas": "488-69-7",
+        "biocyc": "FRUCTOSE-16-DIPHOSPHATE",
+        "chemspider": "393165",
+        "pathbank_compound_id": "833"
+      },
+      "pathbank_compound_id": 833,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 833,
+          "name": "Fructose 1,6-bisphosphate",
+          "short_name": "Fru1,6P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001058",
+            "kegg": "C00354",
+            "chebi": "CHEBI:16905",
+            "pubchem": "445557",
+            "cas": "488-69-7",
+            "biocyc": "FRUCTOSE-16-DIPHOSPHATE",
+            "chemspider": "393165",
+            "pathbank_compound_id": "833"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::glyceraldehyde3phosphate::869::{\"cas\": \"591-59-3\", \"chebi\": \"CHEBI:17138\", \"hmdb\": \"HMDB0001112\", \"kegg\": \"C00661\", \"pubchem\": \"729\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001112",
+        "kegg": "C00661",
+        "chebi": "CHEBI:17138",
+        "pubchem": "729",
+        "cas": "591-59-3",
+        "biocyc": "GAP",
+        "chemspider": "709",
+        "drugbank": "DB02263",
+        "pathbank_compound_id": "869"
+      },
+      "pathbank_compound_id": 869,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 869,
+          "name": "D-Glyceraldehyde 3-phosphate",
+          "short_name": "Glyc3P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001112",
+            "kegg": "C00661",
+            "chebi": "CHEBI:17138",
+            "pubchem": "729",
+            "cas": "591-59-3",
+            "biocyc": "GAP",
+            "chemspider": "709",
+            "drugbank": "DB02263",
+            "pathbank_compound_id": "869"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::dihydroxyacetone phosphate::1134::{\"cas\": \"57-04-5\", \"chebi\": \"CHEBI:16108\", \"hmdb\": \"HMDB0001473\", \"kegg\": \"C00111\", \"pubchem\": \"668\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001473",
+        "kegg": "C00111",
+        "chebi": "CHEBI:16108",
+        "pubchem": "668",
+        "cas": "57-04-5",
+        "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
+        "chemspider": "648",
+        "drugbank": "DB04326",
+        "pathbank_compound_id": "1134"
+      },
+      "pathbank_compound_id": 1134,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1134,
+          "name": "Dihydroxyacetone phosphate",
+          "short_name": "Dhapp",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001473",
+            "kegg": "C00111",
+            "chebi": "CHEBI:16108",
+            "pubchem": "668",
+            "cas": "57-04-5",
+            "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
+            "chemspider": "648",
+            "drugbank": "DB04326",
+            "pathbank_compound_id": "1134"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::13bisphosphoglycerate::983::{\"cas\": \"1981-49-3\", \"hmdb\": \"HMDB0001270\", \"kegg\": \"C00236\", \"pubchem\": \"683\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001270",
+        "kegg": "C00236",
+        "pubchem": "683",
+        "cas": "1981-49-3",
+        "biocyc": "DPG",
+        "chemspider": "663",
+        "pathbank_compound_id": "983"
+      },
+      "pathbank_compound_id": 983,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 983,
+          "name": "Glyceric acid 1,3-biphosphate",
+          "short_name": "GlyABp",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001270",
+            "kegg": "C00236",
+            "pubchem": "683",
+            "cas": "1981-49-3",
+            "biocyc": "DPG",
+            "chemspider": "663",
+            "pathbank_compound_id": "983"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::nad::721::{\"cas\": \"53-84-9\", \"chebi\": \"CHEBI:15846\", \"hmdb\": \"HMDB0000902\", \"kegg\": \"C00003\", \"pubchem\": \"5893\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000902",
+        "kegg": "C00003",
+        "chebi": "CHEBI:15846",
+        "pubchem": "5893",
+        "cas": "53-84-9",
+        "biocyc": "NAD",
+        "chemspider": "5682",
+        "pathbank_compound_id": "721"
+      },
+      "pathbank_compound_id": 721,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 721,
+          "name": "NAD",
+          "short_name": "NAD",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000902",
+            "kegg": "C00003",
+            "chebi": "CHEBI:15846",
+            "pubchem": "5893",
+            "cas": "53-84-9",
+            "biocyc": "NAD",
+            "chemspider": "5682",
+            "pathbank_compound_id": "721"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::3phosphoglycerate::644::{\"cas\": \"820-11-1\", \"chebi\": \"CHEBI:17050\", \"hmdb\": \"HMDB0000807\", \"kegg\": \"C00597\", \"pubchem\": \"724\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000807",
+        "kegg": "C00597",
+        "chebi": "CHEBI:17050",
+        "pubchem": "724",
+        "cas": "820-11-1",
+        "biocyc": "G3P",
+        "chemspider": "704",
+        "pathbank_compound_id": "644"
+      },
+      "pathbank_compound_id": 644,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 644,
+          "name": "3-Phosphoglyceric acid",
+          "short_name": "G3P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000807",
+            "kegg": "C00597",
+            "chebi": "CHEBI:17050",
+            "pubchem": "724",
+            "cas": "820-11-1",
+            "biocyc": "G3P",
+            "chemspider": "704",
+            "pathbank_compound_id": "644"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::2phosphoglycerate::262::{\"cas\": \"2553-59-5\", \"chebi\": \"CHEBI:24344\", \"hmdb\": \"HMDB0000362\", \"pubchem\": \"59\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000362",
+        "chebi": "CHEBI:24344",
+        "pubchem": "59",
+        "cas": "2553-59-5",
+        "biocyc": "2-PG",
+        "chemspider": "58",
+        "pathbank_compound_id": "262"
+      },
+      "pathbank_compound_id": 262,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 262,
+          "name": "2-Phosphoglyceric acid",
+          "short_name": "2-PPGA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000362",
+            "chebi": "CHEBI:24344",
+            "pubchem": "59",
+            "cas": "2553-59-5",
+            "biocyc": "2-PG",
+            "chemspider": "58",
+            "pathbank_compound_id": "262"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::water::1420::{\"cas\": \"7732-18-5\", \"chebi\": \"CHEBI:15377\", \"hmdb\": \"HMDB0002111\", \"kegg\": \"C00001\", \"pubchem\": \"962\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002111",
+        "kegg": "C00001",
+        "chebi": "CHEBI:15377",
+        "pubchem": "962",
+        "cas": "7732-18-5",
+        "chemspider": "937",
+        "pathbank_compound_id": "1420"
+      },
+      "pathbank_compound_id": 1420,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1420,
+          "name": "Water",
+          "short_name": "H2O",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002111",
+            "kegg": "C00001",
+            "chebi": "CHEBI:15377",
+            "pubchem": "962",
+            "cas": "7732-18-5",
+            "chemspider": "937",
+            "pathbank_compound_id": "1420"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::phosphoenolpyruvate::180::{\"cas\": \"138-08-9\", \"chebi\": \"CHEBI:44897\", \"hmdb\": \"HMDB0000263\", \"kegg\": \"C00074\", \"pubchem\": \"1005\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000263",
+        "kegg": "C00074",
+        "chebi": "CHEBI:44897",
+        "pubchem": "1005",
+        "cas": "138-08-9",
+        "biocyc": "PHOSPHO-ENOL-PYRUVATE",
+        "chemspider": "980",
+        "drugbank": "DB01819",
+        "pathbank_compound_id": "180"
+      },
+      "pathbank_compound_id": 180,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 180,
+          "name": "Phosphoenolpyruvic acid",
+          "short_name": "Pep",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000263",
+            "kegg": "C00074",
+            "chebi": "CHEBI:44897",
+            "pubchem": "1005",
+            "cas": "138-08-9",
+            "biocyc": "PHOSPHO-ENOL-PYRUVATE",
+            "chemspider": "980",
+            "drugbank": "DB01819",
+            "pathbank_compound_id": "180"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::norbelladine::::{\"kegg\": \"C16701\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::4omethylnorbelladine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::34dihydroxybenzaldehyde::::{\"kegg\": \"C16700\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0059965",
+        "kegg": "C16700",
+        "chebi": "CHEBI:50205",
+        "pubchem": "8768",
+        "cas": "139-85-5",
+        "chemspider": "8438",
+        "pathbank_compound_id": "40350"
+      },
+      "pathbank_compound_id": 40350,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 40350,
+          "name": "3,4-Dihydroxybenzaldehyde",
+          "short_name": "Protoca",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0059965",
+            "kegg": "C16700",
+            "chebi": "CHEBI:50205",
+            "pubchem": "8768",
+            "cas": "139-85-5",
+            "chemspider": "8438"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::tyramine::::{\"kegg\": \"C00483\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000306",
+        "kegg": "C00483",
+        "chebi": "CHEBI:15760",
+        "pubchem": "5610",
+        "cas": "51-67-2",
+        "biocyc": "CPD-7650",
+        "chemspider": "5408",
+        "pathbank_compound_id": "210"
+      },
+      "pathbank_compound_id": 210,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 210,
+          "name": "Tyramine",
+          "short_name": "Tyramin",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000306",
+            "kegg": "C00483",
+            "chebi": "CHEBI:15760",
+            "pubchem": "5610",
+            "cas": "51-67-2",
+            "biocyc": "CPD-7650",
+            "chemspider": "5408"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::schiffbase intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::galanthamine::::{\"kegg\": \"C08526\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0014812",
+        "kegg": "C08526",
+        "chebi": "CHEBI:42944",
+        "pubchem": "9651",
+        "cas": "357-70-0",
+        "chemspider": "9272",
+        "drugbank": "DB00674",
+        "pathbank_compound_id": "9152"
+      },
+      "pathbank_compound_id": 9152,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 9152,
+          "name": "Galantamine",
+          "short_name": "Galanta",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0014812",
+            "kegg": "C08526",
+            "chebi": "CHEBI:42944",
+            "pubchem": "9651",
+            "cas": "357-70-0",
+            "chemspider": "9272",
+            "drugbank": "DB00674"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::ndemethylgalanthamine::::{\"kegg\": \"C12173\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::ndemethylnarwedine::::{\"kegg\": \"C16703\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::phenylalanine::::{\"kegg\": \"C02057\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000159",
+        "kegg": "C00079",
+        "chebi": "CHEBI:17295",
+        "pubchem": "6140",
+        "cas": "63-91-2",
+        "biocyc": "PHE",
+        "chemspider": "5910",
+        "drugbank": "DB00120",
+        "pathbank_compound_id": "104"
+      },
+      "pathbank_compound_id": 104,
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 104,
+          "name": "L-Phenylalanine",
+          "short_name": "Phe",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0000159",
+            "kegg": "C00079",
+            "chebi": "CHEBI:17295",
+            "pubchem": "6140",
+            "cas": "63-91-2",
+            "biocyc": "PHE",
+            "chemspider": "5910",
+            "drugbank": "DB00120",
+            "pathbank_compound_id": "104"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym"
+      }
+    },
+    "db::transcinnamic acid::::{\"kegg\": \"C00423\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000930",
+        "kegg": "C00423",
+        "chebi": "CHEBI:35697",
+        "pubchem": "444539",
+        "cas": "621-82-9",
+        "biocyc": "CPD-674",
+        "chemspider": "392447",
+        "pathbank_compound_id": "742"
+      },
+      "pathbank_compound_id": 742,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 742,
+          "name": "trans-Cinnamic acid",
+          "short_name": "Cinnama",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000930",
+            "kegg": "C00423",
+            "chebi": "CHEBI:35697",
+            "pubchem": "444539",
+            "cas": "621-82-9",
+            "biocyc": "CPD-674",
+            "chemspider": "392447"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::4hydroxycinnamic acid::::{\"kegg\": \"C00811\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002035",
+        "kegg": "C00811",
+        "chebi": "CHEBI:32374",
+        "pubchem": "637542",
+        "cas": "7400-08-0",
+        "biocyc": "COUMARATE",
+        "chemspider": "553148",
+        "drugbank": "DB04066",
+        "pathbank_compound_id": "1366"
+      },
+      "pathbank_compound_id": 1366,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1366,
+          "name": "4-Hydroxycinnamic acid",
+          "short_name": "PC",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002035",
+            "kegg": "C00811",
+            "chebi": "CHEBI:32374",
+            "pubchem": "637542",
+            "cas": "7400-08-0",
+            "biocyc": "COUMARATE",
+            "chemspider": "553148",
+            "drugbank": "DB04066"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::34dihydroxycinnamic acid::::{\"kegg\": \"C01481\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001964",
+        "kegg": "C01481",
+        "chebi": "CHEBI:17395",
+        "pubchem": "1549111",
+        "cas": "331-39-5",
+        "biocyc": "CAFFEATE",
+        "chemspider": "1266077",
+        "pathbank_compound_id": "1313"
+      },
+      "pathbank_compound_id": 1313,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1313,
+          "name": "Caffeic acid",
+          "short_name": "Caffeat",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001964",
+            "kegg": "C01481",
+            "chebi": "CHEBI:17395",
+            "pubchem": "1549111",
+            "cas": "331-39-5",
+            "biocyc": "CAFFEATE",
+            "chemspider": "1266077"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::tyrosine::::{\"kegg\": \"C00082\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000158",
+        "kegg": "C00082",
+        "chebi": "CHEBI:17895",
+        "pubchem": "6057",
+        "cas": "60-18-4",
+        "biocyc": "TYR",
+        "chemspider": "5833",
+        "drugbank": "DB00135",
+        "pathbank_compound_id": "103"
+      },
+      "pathbank_compound_id": 103,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 103,
+          "name": "L-Tyrosine",
+          "short_name": "Tyr",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000158",
+            "kegg": "C00082",
+            "chebi": "CHEBI:17895",
+            "pubchem": "6057",
+            "cas": "60-18-4",
+            "biocyc": "TYR",
+            "chemspider": "5833",
+            "drugbank": "DB00135"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::schiffbase::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "pubchem": "86573619",
+        "pathbank_compound_id": "113301"
+      },
+      "pathbank_compound_id": 113301,
+      "confidence": 0.87,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_compound_id": 113301,
+          "name": "Schiff Base",
+          "short_name": "",
+          "score": 0.87,
+          "mapped_ids": {
+            "pubchem": "86573619"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "high_confidence_fuzzy"
+      }
     }
   },
   "complexes": {
@@ -22905,7 +25249,7 @@
       "species_id": 1,
       "components": [
         {
-          "name": "Hexokinase-3",
+          "name": "hexokinase",
           "pathbank_protein_id": 161288,
           "stoichiometry": 1,
           "uniprot": "P52790",
@@ -22972,39 +25316,8 @@
         "status": "matched",
         "order_step": "pathbank_protein_complex_id"
       }
-    }
-  },
-  "enzyme_complexes": {
-    "hexokinase::206::homo sapiens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "hexokinase complex",
-      "species_id": 1,
-      "components": [
-        {
-          "name": "hexokinase",
-          "stoichiometry": 1,
-          "pathbank_protein_id": 206,
-          "mapped_ids": {
-            "uniprot": "P52790",
-            "pathbank_protein_id": "206",
-            "gene_name": "HK3"
-          }
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
     },
-    "phosphoglucose isomerase::751::homo sapiens": {
+    "db::glucose6phosphate isomerase::homo sapiens::3607::[{\"ids\": {\"gene_name\": \"GPI\", \"pathbank_protein_id\": \"751\", \"uniprot\": \"P06744\"}, \"name\": \"phosphoglucose isomerase\", \"stoichiometry\": 1}]": {
       "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
@@ -23013,7 +25326,7 @@
       "species_id": 1,
       "components": [
         {
-          "name": "Glucose-6-phosphate isomerase",
+          "name": "phosphoglucose isomerase",
           "pathbank_protein_id": 751,
           "stoichiometry": 1,
           "uniprot": "P06744",
@@ -23025,38 +25338,1030 @@
           "species_id": 1
         }
       ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
       "candidates": [
-        {
-          "pathbank_complex_id": 495,
-          "pathbank_protein_complex_id": 495,
-          "name": "Glucose-6-phosphate isomerase",
-          "species_id": 1,
-          "component_protein_id": 751,
-          "score": 0.9
-        },
         {
           "pathbank_complex_id": 3607,
           "pathbank_protein_complex_id": 3607,
           "name": "phosphoglucose isomerase",
           "species_id": 1,
-          "component_protein_id": 751,
-          "score": 0.9
-        },
-        {
-          "pathbank_complex_id": 14773,
-          "pathbank_protein_complex_id": 14773,
-          "name": "Phosphohexose isomerase",
-          "species_id": 1,
-          "component_protein_id": 751,
-          "score": 0.9
+          "score": 1.0,
+          "component_count": 1
         }
       ],
       "issues": [],
       "resolution": {
         "status": "matched",
-        "order_step": "enzyme_component_species"
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::phosphofructokinase1 complex::homo sapiens::::[{\"ids\": {\"uniprot\": \"P21777\"}, \"name\": \"phosphofructokinase-1\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "phosphofructokinase-1",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P21777"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "phosphofructokinase-1",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::aldolase complex::homo sapiens::::[{\"ids\": {\"pathbank_protein_id\": \"4743\", \"uniprot\": \"Q8NHT3\"}, \"name\": \"aldolase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "aldolase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 4743,
+          "mapped_ids": {
+            "uniprot": "Q8NHT3",
+            "pathbank_protein_id": "4743"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::triosephosphate isomerase::homo sapiens::290::[{\"ids\": {\"gene_name\": \"TPI1\", \"pathbank_protein_id\": \"1472\", \"uniprot\": \"P60174\"}, \"name\": \"triose phosphate isomerase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 290,
+      "pathbank_protein_complex_id": 290,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "triose phosphate isomerase",
+          "pathbank_protein_id": 1472,
+          "stoichiometry": 1,
+          "uniprot": "P60174",
+          "mapped_ids": {
+            "uniprot": "P60174",
+            "pathbank_protein_id": "1472"
+          },
+          "gene_name": "TPI1",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 290,
+          "pathbank_protein_complex_id": 290,
+          "name": "Triosephosphate isomerase",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::glyceraldehyde3phosphate dehydrogenase::homo sapiens::15373::[{\"ids\": {\"gene_name\": \"GAPDH\", \"pathbank_protein_id\": \"659\", \"uniprot\": \"P04406\"}, \"name\": \"glyceraldehyde-3-phosphate dehydrogenase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 15373,
+      "pathbank_protein_complex_id": 15373,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "glyceraldehyde-3-phosphate dehydrogenase",
+          "pathbank_protein_id": 659,
+          "stoichiometry": 1,
+          "uniprot": "P04406",
+          "mapped_ids": {
+            "uniprot": "P04406",
+            "pathbank_protein_id": "659"
+          },
+          "gene_name": "GAPDH",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 15373,
+          "pathbank_protein_complex_id": 15373,
+          "name": "Malonylated Glyceraldehyde-3-phosphate dehydrogenase",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::phosphoglycerate kinase complex::homo sapiens::::[{\"ids\": {\"gene_name\": \"PGK2\", \"pathbank_protein_id\": \"1395\", \"uniprot\": \"P07205\"}, \"name\": \"phosphoglycerate kinase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphoglycerate kinase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 1395,
+          "mapped_ids": {
+            "uniprot": "P07205",
+            "pathbank_protein_id": "1395",
+            "gene_name": "PGK2"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::phosphoglycerate mutase complex::homo sapiens::::[{\"ids\": {\"gene_name\": \"PGAM2\", \"pathbank_protein_id\": \"4356\", \"uniprot\": \"A4D2J6\"}, \"name\": \"phosphoglycerate mutase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphoglycerate mutase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 4356,
+          "mapped_ids": {
+            "uniprot": "A4D2J6",
+            "pathbank_protein_id": "4356",
+            "gene_name": "PGAM2"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::enolase complex::homo sapiens::::[{\"ids\": {\"gene_name\": \"ENO3\", \"pathbank_protein_id\": \"1019\", \"uniprot\": \"P13929\"}, \"name\": \"enolase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "enolase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 1019,
+          "mapped_ids": {
+            "uniprot": "P13929",
+            "pathbank_protein_id": "1019",
+            "gene_name": "ENO3"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::pyruvate kinase complex::homo sapiens::::[{\"ids\": {\"pathbank_protein_id\": \"4176\", \"uniprot\": \"Q16715\"}, \"name\": \"pyruvate kinase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_complex_from_resolved_components",
+      "candidates": [],
+      "species_id": 1,
+      "components": [
+        {
+          "name": "pyruvate kinase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 4176,
+          "mapped_ids": {
+            "uniprot": "Q16715",
+            "pathbank_protein_id": "4176"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::phosphoglycerate mutase complex::homo sapiens::431777::[{\"ids\": {\"gene_name\": \"PGAM2\", \"pathbank_protein_id\": \"4356\", \"uniprot\": \"A4D2J6\"}, \"name\": \"phosphoglycerate mutase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431777,
+      "pathbank_protein_complex_id": 431777,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phosphoglycerate mutase",
+          "pathbank_protein_id": 4356,
+          "stoichiometry": 1,
+          "uniprot": "A4D2J6",
+          "mapped_ids": {
+            "uniprot": "A4D2J6",
+            "pathbank_protein_id": "4356"
+          },
+          "gene_name": "PGAM2",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431777,
+          "pathbank_protein_complex_id": 431777,
+          "name": "phosphoglycerate mutase complex",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::pyruvate kinase complex::homo sapiens::431779::[{\"ids\": {\"pathbank_protein_id\": \"4176\", \"uniprot\": \"Q16715\"}, \"name\": \"pyruvate kinase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431779,
+      "pathbank_protein_complex_id": 431779,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "pyruvate kinase",
+          "pathbank_protein_id": 4176,
+          "stoichiometry": 1,
+          "uniprot": "Q16715",
+          "mapped_ids": {
+            "uniprot": "Q16715",
+            "pathbank_protein_id": "4176"
+          },
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431779,
+          "pathbank_protein_complex_id": 431779,
+          "name": "pyruvate kinase complex",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::n4omt complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A077EWA5\"}, \"name\": \"N4OMT\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "N4OMT",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A077EWA5"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "N4OMT",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::phenylalanine ammonialyase pal complex::unknown species::::[{\"ids\": {\"uniprot\": \"B2J528\"}, \"name\": \"phenylalanine ammonia-lyase (PAL)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "phenylalanine ammonia-lyase (PAL)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "B2J528"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "phenylalanine ammonia-lyase (PAL)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::cinnamate 4hydroxylase cyp73a1 complex::unknown species::::[{\"ids\": {\"uniprot\": \"A0A4S4DRC9\"}, \"name\": \"cinnamate 4-hydroxylase (CYP73A1)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "cinnamate 4-hydroxylase (CYP73A1)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A4S4DRC9"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "cinnamate 4-hydroxylase (CYP73A1)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::cytochrome p450 98a3::arabidopsis thaliana::6646::[{\"ids\": {\"gene_name\": \"CYP98A3\", \"pathbank_protein_id\": \"13561\", \"uniprot\": \"O22203\"}, \"name\": \"CYP98A3\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 6646,
+      "pathbank_protein_complex_id": 6646,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "CYP98A3",
+          "pathbank_protein_id": 13561,
+          "stoichiometry": 1,
+          "uniprot": "O22203",
+          "mapped_ids": {
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561"
+          },
+          "gene_name": "CYP98A3",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 6646,
+          "pathbank_protein_complex_id": 6646,
+          "name": "Cytochrome P450 98A3",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::vanillin synthase vpvan complex::vanilla planifolia::::[{\"ids\": {\"uniprot\": \"A0A0F7G352\"}, \"name\": \"vanillin synthase (VpVAN)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Vanilla planifolia",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "vanillin synthase (VpVAN)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0F7G352"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "vanillin synthase (VpVAN)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::tyrosine decarboxylase complex::unknown species::::[{\"ids\": {\"uniprot\": \"Q95ZS2\"}, \"name\": \"tyrosine decarboxylase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "tyrosine decarboxylase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q95ZS2"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "tyrosine decarboxylase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::n4omt complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A2H5AIZ6\"}, \"name\": \"N4OMT\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "N4OMT",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A2H5AIZ6"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "N4OMT",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::phenylalanine ammonialyase pal complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"B2J528\"}, \"name\": \"phenylalanine ammonia-lyase (PAL)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "phenylalanine ammonia-lyase (PAL)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "B2J528"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "phenylalanine ammonia-lyase (PAL)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::cinnamate 4hydroxylase cyp73a1 complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A4S4DRC9\"}, \"name\": \"cinnamate 4-hydroxylase (CYP73A1)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "cinnamate 4-hydroxylase (CYP73A1)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A4S4DRC9"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "cinnamate 4-hydroxylase (CYP73A1)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::tyrosine decarboxylase complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"Q95ZS2\"}, \"name\": \"tyrosine decarboxylase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "tyrosine decarboxylase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q95ZS2"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "tyrosine decarboxylase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::norbelladine 4omethyltransferase n4omt complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A2H5AIZ6\"}, \"name\": \"norbelladine 4\\u2032-O-methyltransferase (N4OMT)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "norbelladine 4′-O-methyltransferase (N4OMT)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A2H5AIZ6"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "norbelladine 4′-O-methyltransferase (N4OMT)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::cyp98a3 complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"gene_name\": \"CYP98A3\", \"pathbank_protein_id\": \"13561\", \"uniprot\": \"O22203\"}, \"name\": \"CYP98A3\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "CYP98A3",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 13561,
+          "mapped_ids": {
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561",
+            "gene_name": "CYP98A3"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::vanillin synthase vpvan complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A0F7G352\"}, \"name\": \"vanillin synthase (VpVAN)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "vanillin synthase (VpVAN)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0F7G352"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "vanillin synthase (VpVAN)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::tyrosine decarboxylase complex::narcissus sp aff pseudonarcissus::::[{\"ids\": {\"gene_name\": \"TYDC\", \"pathbank_protein_id\": \"161086\", \"uniprot\": \"O82415\"}, \"name\": \"tyrosine decarboxylase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Narcissus sp. aff. pseudonarcissus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "tyrosine decarboxylase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 161086,
+          "mapped_ids": {
+            "uniprot": "O82415",
+            "pathbank_protein_id": "161086",
+            "gene_name": "TYDC"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    }
+  },
+  "enzyme_complexes": {
+    "phenylalanine ammonialyase pal::::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "phenylalanine ammonia-lyase (PAL) complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "phenylalanine ammonia-lyase (PAL)",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "B2J528"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "phenylalanine ammonia-lyase (PAL)",
+          "reason": "no_db_match"
+        },
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "cinnamate 4hydroxylase cyp73a1::::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "cinnamate 4-hydroxylase (CYP73A1) complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "cinnamate 4-hydroxylase (CYP73A1)",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A4S4DRC9"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "cinnamate 4-hydroxylase (CYP73A1)",
+          "reason": "no_db_match"
+        },
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "cyp98a3::13561::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "CYP98A3 complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "CYP98A3",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 13561,
+          "mapped_ids": {
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561",
+            "gene_name": "CYP98A3"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "vanillin synthase vpvan::::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "vanillin synthase (VpVAN) complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "vanillin synthase (VpVAN)",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A0F7G352"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "vanillin synthase (VpVAN)",
+          "reason": "no_db_match"
+        },
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "tyrosine decarboxylase::161086::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "tyrosine decarboxylase complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "tyrosine decarboxylase",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 161086,
+          "mapped_ids": {
+            "uniprot": "O82415",
+            "pathbank_protein_id": "161086",
+            "gene_name": "TYDC"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "n4omt::::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "N4OMT complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "N4OMT",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A077EWA5"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "N4OMT",
+          "reason": "no_db_match"
+        },
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
       }
     }
   }
