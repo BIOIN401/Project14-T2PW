@@ -1,9 +1,10 @@
 {
-  "compound:norbelladine|80666": {
-    "enrichment_status": "ok",
-    "primary_name": "Norbelladine",
+  "compound:phenylalanine|HMDB0000159": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Phenylalanine",
     "synonyms": [
-      "Norbelladine"
+      "Phenylalanine",
+      "alpha-Amino-beta-phenylpropionic acid"
     ],
     "description": "",
     "taxonomy": {},
@@ -11,53 +12,155 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C15H17NO3",
+    "formula": "C9H11NO2",
     "charge": 0,
-    "mass_monoisotopic": 259.1208,
-    "mass_average": 259.3,
+    "mass_monoisotopic": 165.079,
+    "mass_average": 165.19,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [],
-    "pathways": [
-      "Isoquinoline alkaloid biosynthesis",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Biosynthesis of secondary metabolites"
-    ],
+    "pathways": [],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C16701",
-      "pubchem_id": "96023225",
-      "chebi_id": "80666"
+      "kegg_id": "C02057",
+      "hmdb_id": "HMDB0000159",
+      "chebi_id": "CHEBI:17295",
+      "pubchem_id": "6140",
+      "cas": "63-91-2",
+      "biocyc": "PHE",
+      "chemspider": "5910",
+      "drugbank_id": "DB00120",
+      "pathbank_compound_id": "104"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C16701",
-      "primary_name": "Norbelladine",
+      "id": "C02057",
+      "primary_name": "Phenylalanine",
       "synonyms": [
-        "Norbelladine"
+        "Phenylalanine",
+        "alpha-Amino-beta-phenylpropionic acid"
       ],
-      "formula": "C15H17NO3",
-      "mass_monoisotopic": 259.1208,
-      "mass_average": 259.3,
-      "pathways": [
-        "Isoquinoline alkaloid biosynthesis",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Biosynthesis of secondary metabolites"
-      ],
+      "formula": "C9H11NO2",
+      "mass_monoisotopic": 165.079,
+      "mass_average": 165.19,
+      "pathways": [],
       "kegg_class": [],
       "cross_references": {
-        "kegg_id": "C16701",
-        "pubchem_id": "96023225",
-        "chebi_id": "80666"
+        "kegg_id": "C02057",
+        "pubchem_id": "5146",
+        "chebi_id": "28044"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C16701",
-        "source_url": "https://rest.kegg.jp/get/cpd:C16701",
-        "retrieved_at": "2026-05-25T16:13:56Z",
+        "id": "C02057",
+        "source_url": "https://rest.kegg.jp/get/cpd:C02057",
+        "retrieved_at": "2026-05-01T18:45:31Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17295",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-01T18:45:29Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000159",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000159",
+        "retrieved_at": "2026-05-01T18:45:30Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17295",
+        "retrieved_at": "2026-05-01T18:45:29Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000159",
+        "retrieved_at": "2026-05-01T18:45:30Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C02057",
+        "retrieved_at": "2026-05-01T18:45:31Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:tyrosine|18186": {
+    "enrichment_status": "ok",
+    "primary_name": "Tyrosine",
+    "synonyms": [
+      "Tyrosine",
+      "3-(p-Hydroxyphenyl)alanine",
+      "2-Amino-3-(p-hydroxyphenyl)propionic acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C9H11NO3",
+    "charge": 0,
+    "mass_monoisotopic": 181.0739,
+    "mass_average": 181.19,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C01536",
+      "pubchem_id": "4697",
+      "chebi_id": "18186"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C01536",
+      "primary_name": "Tyrosine",
+      "synonyms": [
+        "Tyrosine",
+        "3-(p-Hydroxyphenyl)alanine",
+        "2-Amino-3-(p-hydroxyphenyl)propionic acid"
+      ],
+      "formula": "C9H11NO3",
+      "mass_monoisotopic": 181.0739,
+      "mass_average": 181.19,
+      "pathways": [],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C01536",
+        "pubchem_id": "4697",
+        "chebi_id": "18186"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C01536",
+        "source_url": "https://rest.kegg.jp/get/cpd:C01536",
+        "retrieved_at": "2026-05-26T17:28:15Z",
         "status": "ok"
       }
     },
@@ -67,8 +170,639 @@
     "sources": [
       {
         "source": "KEGG",
-        "id": "C16701",
-        "retrieved_at": "2026-05-25T16:13:56Z",
+        "id": "C01536",
+        "retrieved_at": "2026-05-26T17:28:15Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:trans-cinnamic acid|HMDB0000930": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "trans-Cinnamate",
+    "synonyms": [
+      "trans-Cinnamate",
+      "trans-Cinnamic acid",
+      "(E)-Cinnamate",
+      "(2E)-3-Phenylprop-2-enoate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C9H8O2",
+    "charge": 0,
+    "mass_monoisotopic": 148.0524,
+    "mass_average": 148.16,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Phytochemical compounds [BR:br08003]",
+      "Phenylpropanoids",
+      "Monolignols",
+      "Others",
+      "C00423 trans-Cinnamate"
+    ],
+    "pathways": [
+      "Ubiquinone and other terpenoid-quinone biosynthesis",
+      "Phenylalanine metabolism",
+      "Phenylpropanoid biosynthesis",
+      "Biosynthesis of various alkaloids",
+      "Biosynthesis of various plant secondary metabolites",
+      "Biosynthesis of plant secondary metabolites",
+      "Biosynthesis of plant hormones",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Degradation of aromatic compounds"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C00423",
+      "hmdb_id": "HMDB0000930",
+      "chebi_id": "CHEBI:35697",
+      "pubchem_id": "444539",
+      "cas": "621-82-9",
+      "biocyc": "CPD-674",
+      "chemspider": "392447",
+      "pathbank_compound_id": "742"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00423",
+      "primary_name": "trans-Cinnamate",
+      "synonyms": [
+        "trans-Cinnamate",
+        "trans-Cinnamic acid",
+        "(E)-Cinnamate",
+        "(2E)-3-Phenylprop-2-enoate"
+      ],
+      "formula": "C9H8O2",
+      "mass_monoisotopic": 148.0524,
+      "mass_average": 148.16,
+      "pathways": [
+        "Ubiquinone and other terpenoid-quinone biosynthesis",
+        "Phenylalanine metabolism",
+        "Phenylpropanoid biosynthesis",
+        "Biosynthesis of various alkaloids",
+        "Biosynthesis of various plant secondary metabolites",
+        "Biosynthesis of plant secondary metabolites",
+        "Biosynthesis of plant hormones",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Degradation of aromatic compounds"
+      ],
+      "kegg_class": [
+        "Phytochemical compounds [BR:br08003]",
+        "Phenylpropanoids",
+        "Monolignols",
+        "Others",
+        "C00423 trans-Cinnamate"
+      ],
+      "cross_references": {
+        "kegg_id": "C00423",
+        "pubchem_id": "3713",
+        "chebi_id": "15669"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00423",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00423",
+        "retrieved_at": "2026-05-01T18:46:10Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:35697",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-25T17:01:39Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000930",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000930",
+        "retrieved_at": "2026-05-25T17:01:40Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:35697",
+        "retrieved_at": "2026-05-25T17:01:39Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000930",
+        "retrieved_at": "2026-05-25T17:01:40Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00423",
+        "retrieved_at": "2026-05-01T18:46:10Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:4-hydroxycinnamic acid|HMDB0002035": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "4-Coumarate",
+    "synonyms": [
+      "4-Coumarate",
+      "p-Coumaric acid",
+      "trans-4-Hydroxycinnamate",
+      "trans-p-Hydroxycinnamate",
+      "4-Hydroxycinnamic acid",
+      "4-Hydroxycinnamate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C9H8O3",
+    "charge": 0,
+    "mass_monoisotopic": 164.0473,
+    "mass_average": 164.16,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Phytochemical compounds [BR:br08003]",
+      "Phenylpropanoids",
+      "Monolignols",
+      "Paracoumaryl alcohol derivatives",
+      "C00811 4-Coumarate"
+    ],
+    "pathways": [
+      "Ubiquinone and other terpenoid-quinone biosynthesis",
+      "Tyrosine metabolism",
+      "Phenylpropanoid biosynthesis",
+      "Isoquinoline alkaloid biosynthesis",
+      "Biosynthesis of phenylpropanoids",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Degradation of aromatic compounds"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C00811",
+      "hmdb_id": "HMDB0002035",
+      "chebi_id": "CHEBI:32374",
+      "pubchem_id": "637542",
+      "cas": "7400-08-0",
+      "biocyc": "COUMARATE",
+      "chemspider": "553148",
+      "drugbank_id": "DB04066",
+      "pathbank_compound_id": "1366"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00811",
+      "primary_name": "4-Coumarate",
+      "synonyms": [
+        "4-Coumarate",
+        "p-Coumaric acid",
+        "trans-4-Hydroxycinnamate",
+        "trans-p-Hydroxycinnamate",
+        "4-Hydroxycinnamic acid",
+        "4-Hydroxycinnamate"
+      ],
+      "formula": "C9H8O3",
+      "mass_monoisotopic": 164.0473,
+      "mass_average": 164.16,
+      "pathways": [
+        "Ubiquinone and other terpenoid-quinone biosynthesis",
+        "Tyrosine metabolism",
+        "Phenylpropanoid biosynthesis",
+        "Isoquinoline alkaloid biosynthesis",
+        "Biosynthesis of phenylpropanoids",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Degradation of aromatic compounds"
+      ],
+      "kegg_class": [
+        "Phytochemical compounds [BR:br08003]",
+        "Phenylpropanoids",
+        "Monolignols",
+        "Paracoumaryl alcohol derivatives",
+        "C00811 4-Coumarate"
+      ],
+      "cross_references": {
+        "kegg_id": "C00811",
+        "pubchem_id": "4069",
+        "chebi_id": "32374"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00811",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00811",
+        "retrieved_at": "2026-05-01T18:46:15Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:32374",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-01T18:46:14Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0002035",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0002035",
+        "retrieved_at": "2026-05-01T18:46:14Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:32374",
+        "retrieved_at": "2026-05-01T18:46:14Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0002035",
+        "retrieved_at": "2026-05-01T18:46:14Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00811",
+        "retrieved_at": "2026-05-01T18:46:15Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:3,4-dihydroxycinnamic acid|HMDB0001964": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Caffeate",
+    "synonyms": [
+      "Caffeate",
+      "Caffeic acid",
+      "3,4-Dihydroxycinnamic acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C9H8O4",
+    "charge": 0,
+    "mass_monoisotopic": 180.0423,
+    "mass_average": 180.16,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C01481",
+      "hmdb_id": "HMDB0001964",
+      "chebi_id": "CHEBI:17395",
+      "pubchem_id": "1549111",
+      "cas": "331-39-5",
+      "biocyc": "CAFFEATE",
+      "chemspider": "1266077",
+      "pathbank_compound_id": "1313"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C01481",
+      "primary_name": "Caffeate",
+      "synonyms": [
+        "Caffeate",
+        "Caffeic acid",
+        "3,4-Dihydroxycinnamic acid"
+      ],
+      "formula": "C9H8O4",
+      "mass_monoisotopic": 180.0423,
+      "mass_average": 180.16,
+      "pathways": [],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C01481",
+        "pubchem_id": "4652",
+        "chebi_id": "16433"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C01481",
+        "source_url": "https://rest.kegg.jp/get/cpd:C01481",
+        "retrieved_at": "2026-05-25T17:01:41Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17395",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-01T18:46:29Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001964",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001964",
+        "retrieved_at": "2026-05-01T18:46:29Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17395",
+        "retrieved_at": "2026-05-01T18:46:29Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001964",
+        "retrieved_at": "2026-05-01T18:46:29Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C01481",
+        "retrieved_at": "2026-05-25T17:01:41Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:4-hydroxybenzaldehyde|HMDB0011718": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "4-Hydroxybenzaldehyde",
+    "synonyms": [
+      "4-Hydroxybenzaldehyde",
+      "p-Hydroxybenzaldehyde"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C7H6O2",
+    "charge": 0,
+    "mass_monoisotopic": 122.0368,
+    "mass_average": 122.12,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Bisphenol degradation",
+      "Toluene degradation",
+      "Aminobenzoate degradation",
+      "Biosynthesis of phenylpropanoids",
+      "Metabolic pathways",
+      "Microbial metabolism in diverse environments"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C00633",
+      "hmdb_id": "HMDB0011718",
+      "chebi_id": "CHEBI:17597",
+      "pubchem_id": "126",
+      "cas": "123-08-0",
+      "biocyc": "CPD-7367",
+      "chemspider": "123",
+      "drugbank_id": "DB03560",
+      "pathbank_compound_id": "7294"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00633",
+      "primary_name": "4-Hydroxybenzaldehyde",
+      "synonyms": [
+        "4-Hydroxybenzaldehyde",
+        "p-Hydroxybenzaldehyde"
+      ],
+      "formula": "C7H6O2",
+      "mass_monoisotopic": 122.0368,
+      "mass_average": 122.12,
+      "pathways": [
+        "Bisphenol degradation",
+        "Toluene degradation",
+        "Aminobenzoate degradation",
+        "Biosynthesis of phenylpropanoids",
+        "Metabolic pathways",
+        "Microbial metabolism in diverse environments"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00633",
+        "pubchem_id": "3906",
+        "chebi_id": "17597"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00633",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00633",
+        "retrieved_at": "2026-05-26T21:12:24Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17597",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-26T21:12:23Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0011718",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0011718",
+        "retrieved_at": "2026-05-26T21:12:23Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17597",
+        "retrieved_at": "2026-05-26T21:12:23Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0011718",
+        "retrieved_at": "2026-05-26T21:12:23Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00633",
+        "retrieved_at": "2026-05-26T21:12:24Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:3,4-dihydroxybenzaldehyde|HMDB0059965": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "3,4-Dihydroxybenzaldehyde",
+    "synonyms": [
+      "3,4-Dihydroxybenzaldehyde",
+      "Protocatechualdehyde"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C7H6O3",
+    "charge": 0,
+    "mass_monoisotopic": 138.0317,
+    "mass_average": 138.12,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Isoquinoline alkaloid biosynthesis",
+      "Biosynthesis of alkaloids derived from shikimate pathway"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C16700",
+      "hmdb_id": "HMDB0059965",
+      "chebi_id": "CHEBI:50205",
+      "pubchem_id": "8768",
+      "cas": "139-85-5",
+      "chemspider": "8438",
+      "pathbank_compound_id": "40350"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C16700",
+      "primary_name": "3,4-Dihydroxybenzaldehyde",
+      "synonyms": [
+        "3,4-Dihydroxybenzaldehyde",
+        "Protocatechualdehyde"
+      ],
+      "formula": "C7H6O3",
+      "mass_monoisotopic": 138.0317,
+      "mass_average": 138.12,
+      "pathways": [
+        "Isoquinoline alkaloid biosynthesis",
+        "Biosynthesis of alkaloids derived from shikimate pathway"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C16700",
+        "pubchem_id": "96023224",
+        "chebi_id": "50205"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C16700",
+        "source_url": "https://rest.kegg.jp/get/cpd:C16700",
+        "retrieved_at": "2026-05-25T16:14:01Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:50205",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-25T16:14:00Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0059965",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0059965",
+        "retrieved_at": "2026-05-25T16:14:00Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:50205",
+        "retrieved_at": "2026-05-25T16:14:00Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0059965",
+        "retrieved_at": "2026-05-25T16:14:00Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C16700",
+        "retrieved_at": "2026-05-25T16:14:01Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -222,12 +956,11 @@
       }
     ]
   },
-  "compound:3,4-dihydroxybenzaldehyde|HMDB0059965": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "3,4-Dihydroxybenzaldehyde",
+  "compound:norbelladine|80666": {
+    "enrichment_status": "ok",
+    "primary_name": "Norbelladine",
     "synonyms": [
-      "3,4-Dihydroxybenzaldehyde",
-      "Protocatechualdehyde"
+      "Norbelladine"
     ],
     "description": "",
     "taxonomy": {},
@@ -235,359 +968,53 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C7H6O3",
+    "formula": "C15H17NO3",
     "charge": 0,
-    "mass_monoisotopic": 138.0317,
-    "mass_average": 138.12,
+    "mass_monoisotopic": 259.1208,
+    "mass_average": 259.3,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [],
     "pathways": [
       "Isoquinoline alkaloid biosynthesis",
-      "Biosynthesis of alkaloids derived from shikimate pathway"
+      "Biosynthesis of alkaloids derived from shikimate pathway",
+      "Biosynthesis of secondary metabolites"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C16700",
-      "hmdb_id": "HMDB0059965",
-      "chebi_id": "CHEBI:50205",
-      "pubchem_id": "8768",
-      "cas": "139-85-5",
-      "chemspider": "8438",
-      "pathbank_compound_id": "40350"
+      "kegg_id": "C16701",
+      "pubchem_id": "96023225",
+      "chebi_id": "80666"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C16700",
-      "primary_name": "3,4-Dihydroxybenzaldehyde",
+      "id": "C16701",
+      "primary_name": "Norbelladine",
       "synonyms": [
-        "3,4-Dihydroxybenzaldehyde",
-        "Protocatechualdehyde"
+        "Norbelladine"
       ],
-      "formula": "C7H6O3",
-      "mass_monoisotopic": 138.0317,
-      "mass_average": 138.12,
+      "formula": "C15H17NO3",
+      "mass_monoisotopic": 259.1208,
+      "mass_average": 259.3,
       "pathways": [
         "Isoquinoline alkaloid biosynthesis",
-        "Biosynthesis of alkaloids derived from shikimate pathway"
+        "Biosynthesis of alkaloids derived from shikimate pathway",
+        "Biosynthesis of secondary metabolites"
       ],
       "kegg_class": [],
       "cross_references": {
-        "kegg_id": "C16700",
-        "pubchem_id": "96023224",
-        "chebi_id": "50205"
+        "kegg_id": "C16701",
+        "pubchem_id": "96023225",
+        "chebi_id": "80666"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C16700",
-        "source_url": "https://rest.kegg.jp/get/cpd:C16700",
-        "retrieved_at": "2026-05-25T16:14:01Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:50205",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-05-25T16:14:00Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0059965",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0059965",
-        "retrieved_at": "2026-05-25T16:14:00Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:50205",
-        "retrieved_at": "2026-05-25T16:14:00Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0059965",
-        "retrieved_at": "2026-05-25T16:14:00Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C16700",
-        "retrieved_at": "2026-05-25T16:14:01Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:galanthamine|HMDB0014812": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Galanthamine",
-    "synonyms": [
-      "Galanthamine",
-      "Galantamine"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C17H21NO3",
-    "charge": 0,
-    "mass_monoisotopic": 287.1521,
-    "mass_average": 287.35,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Phytochemical compounds [BR:br08003]",
-      "Alkaloids",
-      "Alkaloids derived from tyrosine",
-      "Isoquinoline alkaloids",
-      "C08526 Galanthamine",
-      "Natural toxins [BR:br08009]",
-      "Phytotoxins",
-      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D04292)]",
-      "N NERVOUS SYSTEM",
-      "N06 PSYCHOANALEPTICS",
-      "N06D ANTI-DEMENTIA DRUGS",
-      "N06DA Anticholinesterases",
-      "N06DA04 Galantamine",
-      "D04292 Galantamine (USAN/INN)",
-      "Drug groups [BR:br08330(D04292)]",
-      "Neuropsychiatric agent",
-      "DG01595 Cholinesterase inhibitor",
-      "DG01593 Acetylcholinesterase inhibitor",
-      "DG00985 Galantamine",
-      "D04292 Galantamine",
-      "DG01968 Antidementia agent",
-      "Metabolizing enzyme substrate",
-      "DG01644 CYP2D6 substrate",
-      "DG01633 CYP3A/CYP3A4 substrate",
-      "DG02913 CYP3A4 substrate",
-      "Target-based classification of drugs [BR:br08310(D04292)]",
-      "Enzymes",
-      "Hydrolases (EC3)",
-      "Carboxylic-ester hydrolases",
-      "ACHE",
-      "Drug metabolizing enzymes and transporters [br08309.html(D04292)]",
-      "Drug metabolizing enzymes",
-      "D04292"
-    ],
-    "pathways": [
-      "Isoquinoline alkaloid biosynthesis",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Biosynthesis of secondary metabolites"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C08526",
-      "hmdb_id": "HMDB0014812",
-      "chebi_id": "CHEBI:42944",
-      "pubchem_id": "9651",
-      "cas": "357-70-0",
-      "chemspider": "9272",
-      "drugbank_id": "DB00674",
-      "pathbank_compound_id": "9152"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C08526",
-      "primary_name": "Galanthamine",
-      "synonyms": [
-        "Galanthamine",
-        "Galantamine"
-      ],
-      "formula": "C17H21NO3",
-      "mass_monoisotopic": 287.1521,
-      "mass_average": 287.35,
-      "pathways": [
-        "Isoquinoline alkaloid biosynthesis",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Biosynthesis of secondary metabolites"
-      ],
-      "kegg_class": [
-        "Phytochemical compounds [BR:br08003]",
-        "Alkaloids",
-        "Alkaloids derived from tyrosine",
-        "Isoquinoline alkaloids",
-        "C08526 Galanthamine",
-        "Natural toxins [BR:br08009]",
-        "Phytotoxins",
-        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D04292)]",
-        "N NERVOUS SYSTEM",
-        "N06 PSYCHOANALEPTICS",
-        "N06D ANTI-DEMENTIA DRUGS",
-        "N06DA Anticholinesterases",
-        "N06DA04 Galantamine",
-        "D04292 Galantamine (USAN/INN)",
-        "Drug groups [BR:br08330(D04292)]",
-        "Neuropsychiatric agent",
-        "DG01595 Cholinesterase inhibitor",
-        "DG01593 Acetylcholinesterase inhibitor",
-        "DG00985 Galantamine",
-        "D04292 Galantamine",
-        "DG01968 Antidementia agent",
-        "Metabolizing enzyme substrate",
-        "DG01644 CYP2D6 substrate",
-        "DG01633 CYP3A/CYP3A4 substrate",
-        "DG02913 CYP3A4 substrate",
-        "Target-based classification of drugs [BR:br08310(D04292)]",
-        "Enzymes",
-        "Hydrolases (EC3)",
-        "Carboxylic-ester hydrolases",
-        "ACHE",
-        "Drug metabolizing enzymes and transporters [br08309.html(D04292)]",
-        "Drug metabolizing enzymes",
-        "D04292"
-      ],
-      "cross_references": {
-        "kegg_id": "C08526",
-        "pubchem_id": "10719",
-        "chebi_id": "42944"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C08526",
-        "source_url": "https://rest.kegg.jp/get/cpd:C08526",
-        "retrieved_at": "2026-05-25T16:14:11Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:42944",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-05-25T16:14:10Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0014812",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0014812",
-        "retrieved_at": "2026-05-25T16:14:10Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:42944",
-        "retrieved_at": "2026-05-25T16:14:10Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0014812",
-        "retrieved_at": "2026-05-25T16:14:10Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C08526",
-        "retrieved_at": "2026-05-25T16:14:11Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:N-demethylgalanthamine|31919": {
-    "enrichment_status": "ok",
-    "primary_name": "Norgalanthamine",
-    "synonyms": [
-      "Norgalanthamine",
-      "N-Demethylgalanthamine"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C16H19NO3",
-    "charge": 0,
-    "mass_monoisotopic": 273.1365,
-    "mass_average": 273.33,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Phytochemical compounds [BR:br08003]",
-      "Alkaloids",
-      "Alkaloids derived from tyrosine",
-      "Isoquinoline alkaloids",
-      "C12173 Norgalanthamine"
-    ],
-    "pathways": [
-      "Isoquinoline alkaloid biosynthesis",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Biosynthesis of secondary metabolites"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C12173",
-      "pubchem_id": "14320",
-      "chebi_id": "31919"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C12173",
-      "primary_name": "Norgalanthamine",
-      "synonyms": [
-        "Norgalanthamine",
-        "N-Demethylgalanthamine"
-      ],
-      "formula": "C16H19NO3",
-      "mass_monoisotopic": 273.1365,
-      "mass_average": 273.33,
-      "pathways": [
-        "Isoquinoline alkaloid biosynthesis",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Biosynthesis of secondary metabolites"
-      ],
-      "kegg_class": [
-        "Phytochemical compounds [BR:br08003]",
-        "Alkaloids",
-        "Alkaloids derived from tyrosine",
-        "Isoquinoline alkaloids",
-        "C12173 Norgalanthamine"
-      ],
-      "cross_references": {
-        "kegg_id": "C12173",
-        "pubchem_id": "14320",
-        "chebi_id": "31919"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C12173",
-        "source_url": "https://rest.kegg.jp/get/cpd:C12173",
-        "retrieved_at": "2026-05-25T16:14:11Z",
+        "id": "C16701",
+        "source_url": "https://rest.kegg.jp/get/cpd:C16701",
+        "retrieved_at": "2026-05-25T16:13:56Z",
         "status": "ok"
       }
     },
@@ -597,111 +1024,337 @@
     "sources": [
       {
         "source": "KEGG",
-        "id": "C12173",
-        "retrieved_at": "2026-05-25T16:14:11Z",
+        "id": "C16701",
+        "retrieved_at": "2026-05-25T16:13:56Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:N-demethylnarwedine|80668": {
-    "enrichment_status": "ok",
-    "primary_name": "N-Demethylnarwedine",
-    "synonyms": [
-      "N-Demethylnarwedine"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C16H17NO3",
-    "charge": 0,
-    "mass_monoisotopic": 271.1208,
-    "mass_average": 271.31,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Phytochemical compounds [BR:br08003]",
-      "Alkaloids",
-      "Alkaloids derived from tyrosine",
-      "Isoquinoline alkaloids",
-      "C16703 N-Demethylnarwedine"
-    ],
-    "pathways": [
-      "Isoquinoline alkaloid biosynthesis",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Biosynthesis of secondary metabolites"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C16703",
-      "pubchem_id": "96023227",
-      "chebi_id": "80668"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C16703",
-      "primary_name": "N-Demethylnarwedine",
-      "synonyms": [
-        "N-Demethylnarwedine"
-      ],
-      "formula": "C16H17NO3",
-      "mass_monoisotopic": 271.1208,
-      "mass_average": 271.31,
-      "pathways": [
-        "Isoquinoline alkaloid biosynthesis",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Biosynthesis of secondary metabolites"
-      ],
-      "kegg_class": [
-        "Phytochemical compounds [BR:br08003]",
-        "Alkaloids",
-        "Alkaloids derived from tyrosine",
-        "Isoquinoline alkaloids",
-        "C16703 N-Demethylnarwedine"
-      ],
-      "cross_references": {
-        "kegg_id": "C16703",
-        "pubchem_id": "96023227",
-        "chebi_id": "80668"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C16703",
-        "source_url": "https://rest.kegg.jp/get/cpd:C16703",
-        "retrieved_at": "2026-05-25T16:14:11Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {},
-    "hmdb": {},
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "KEGG",
-        "id": "C16703",
-        "retrieved_at": "2026-05-25T16:14:11Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "protein:N4OMT|A0A077EWA5": {
+  "protein:phenylalanine ammonia-lyase (PAL)|A0A2H5AIW0": {
     "status": "ok",
-    "uniprot_id": "A0A077EWA5",
+    "uniprot_id": "A0A2H5AIW0",
+    "recommended_name": "Phenylalanine ammonia-lyase 1",
+    "alternative_names": [],
+    "gene_names": [
+      "PAL1"
+    ],
+    "organism": "Narcissus pseudonarcissus",
+    "taxonomy_id": "39639",
+    "function_text": "This is a key enzyme of plant metabolism catalyzing the first reaction in the biosynthesis from L-phenylalanine of a wide variety of natural products based on the phenylpropane skeleton",
+    "catalytic_activity": [
+      "L-phenylalanine = (E)-cinnamate + NH4(+)"
+    ],
+    "enzyme_commission": [
+      "4.3.1.24"
+    ],
+    "pathways": [
+      "Alkaloid biosynthesis",
+      "Phenylpropanoid metabolism; trans-cinnamate biosynthesis; trans-cinnamate from L-phenylalanine: step 1/1"
+    ],
+    "keywords": [
+      "Alkaloid metabolism",
+      "Cytoplasm",
+      "Lyase",
+      "Phenylalanine catabolism",
+      "Phenylpropanoid metabolism"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm"
+    ],
+    "go_mf_ids": [
+      "GO:0045548"
+    ],
+    "go_bp_ids": [
+      "GO:0009820",
+      "GO:0009800",
+      "GO:0006559"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005737"
+    ],
+    "protein_existence": "2: Evidence at transcript level",
+    "sequence_length": 708,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "A0A2H5AIW0",
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A2H5AIW0.json",
+      "retrieved_at": "2026-05-26T22:07:19Z"
+    }
+  },
+  "protein:cinnamate 4-hydroxylase (CYP73A1)|A0A4S4DRC9": {
+    "status": "ok",
+    "uniprot_id": "A0A4S4DRC9",
+    "recommended_name": "Cinnamate 4-hydroxylase",
+    "alternative_names": [],
+    "gene_names": [],
+    "organism": "Camellia sinensis var. sinensis",
+    "taxonomy_id": "542762",
+    "function_text": "",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "Heme",
+      "Iron",
+      "Membrane",
+      "Metal-binding",
+      "Monooxygenase",
+      "Oxidoreductase",
+      "Reference proteome",
+      "Transmembrane",
+      "Transmembrane helix"
+    ],
+    "subcellular_locations": [
+      "Membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0020037",
+      "GO:0005506",
+      "GO:0016710"
+    ],
+    "go_bp_ids": [
+      "GO:0009808"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0016020"
+    ],
+    "protein_existence": "3: Inferred from homology",
+    "sequence_length": 546,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "542762.A0A4S4DRC9",
+    "provenance": {
+      "source": "UniProt",
+      "query": "A0A4S4DRC9",
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A4S4DRC9.json",
+      "retrieved_at": "2026-05-25T17:01:34Z"
+    }
+  },
+  "protein:CYP98A3|O22203": {
+    "status": "ok",
+    "uniprot_id": "O22203",
+    "recommended_name": "Cytochrome P450 98A3",
+    "alternative_names": [
+      "Protein REDUCED EPIDERMAL FLUORESCENCE 8",
+      "p-coumaroylshikimate/quinate 3'-hydrolxylase"
+    ],
+    "gene_names": [
+      "CYP98A3",
+      "C3'H",
+      "REF8"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Cytochrome P450 which catalyzes 3'-hydroxylation of p-coumaric esters of shikimic/quinic acids to form lignin monomers. Can use p-coumarate, p-coumaraldehyde, p-coumaroyl methyl ester, 5-O-(4-coumaroyl) D-quinate and 5-O-(4-coumaroyl) shikimate as substrates, but not p-coumaryl alcohol, p-coumaroyl CoA, 1-O-p-coumaroyl-beta-D-glucose, p-hydroxy-cinnamyl alcohol, cinnamate, caffeate or ferulate. Has a weak activity on tri(p-coumaroyl)spermidine, but none on triferuloylspermidine. Hydroxylates preferentially the 5-O-isomer, but can also convert the 4-O- and 3-O-isomers with a lower efficiency. Involved in the biosynthesis of the coumarins scopoletin and scopolin. Essential for the biosynthesis of lignin",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "Heme",
+      "Iron",
+      "Membrane",
+      "Metal-binding",
+      "Monooxygenase",
+      "Oxidoreductase",
+      "Reference proteome",
+      "Transmembrane",
+      "Transmembrane helix"
+    ],
+    "subcellular_locations": [
+      "Membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0020037",
+      "GO:0042802",
+      "GO:0005506",
+      "GO:0004497",
+      "GO:0016709",
+      "GO:0046409"
+    ],
+    "go_bp_ids": [
+      "GO:0009805",
+      "GO:0009813",
+      "GO:0009809",
+      "GO:0009699"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005829",
+      "GO:0005783",
+      "GO:0016020",
+      "GO:0005739"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 508,
+    "transmembrane_regions_count": 1,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "3702.O22203",
+    "provenance": {
+      "source": "UniProt",
+      "query": "O22203",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O22203.json",
+      "retrieved_at": "2026-05-01T18:45:23Z"
+    }
+  },
+  "protein:VpVAN|A0A0F7G352": {
+    "status": "ok",
+    "uniprot_id": "A0A0F7G352",
+    "recommended_name": "Vanillin synthase, chloroplastic",
+    "alternative_names": [],
+    "gene_names": [
+      "VAN"
+    ],
+    "organism": "Vanilla planifolia",
+    "taxonomy_id": "51239",
+    "function_text": "Involved in the biosynthesis of vanillin (4-hydroxy-3-methoxy-benzaldehyde) and derivative natural products, key components of vanilla pods flavor (PubMed:24941968, PubMed:29186560). Catalyzes the double carbon bond cleavage of ferulic acid to vanillin and of their respective glucosides via a coupled non-oxidative hydratase/lyase reaction (PubMed:24941968, PubMed:29186560). Inactive toward p-coumaric acid, caffeic acid and their glucosides derivatives (PubMed:24941968)",
+    "catalytic_activity": [
+      "(E)-ferulate + H2O = vanillin + acetate",
+      "4-O-beta-D-glucosyl-trans-ferulate + H2O = 4-O-beta-D-glucosyl-vanillin + acetate",
+      "(E)-ferulate + H2O = 3-hydroxy-3-(4-hydroxy-3-methoxyphenyl)propanoate",
+      "3-hydroxy-3-(4-hydroxy-3-methoxyphenyl)propanoate = vanillin + acetate",
+      "4-O-beta-D-glucosyl-trans-ferulate + H2O = 3-hydroxy-3-(4-O-beta-D-glucosyl-3-methoxyphenyl)propanoate",
+      "3-hydroxy-3-(4-O-beta-D-glucosyl-3-methoxyphenyl)propanoate = 4-O-beta-D-glucosyl-vanillin + acetate"
+    ],
+    "enzyme_commission": [
+      "4.1.2.65"
+    ],
+    "pathways": [
+      "Aromatic compound metabolism; phenylpropanoid biosynthesis"
+    ],
+    "keywords": [
+      "Chloroplast",
+      "Disulfide bond",
+      "Glycoprotein",
+      "Lyase",
+      "Plastid",
+      "Reference proteome",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Plastid, chloroplast"
+    ],
+    "go_mf_ids": [
+      "GO:0008234",
+      "GO:0050547",
+      "GO:0016836",
+      "GO:0042802",
+      "GO:0042803"
+    ],
+    "go_bp_ids": [
+      "GO:0033494",
+      "GO:0009699",
+      "GO:0006508",
+      "GO:0042189"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009507",
+      "GO:0062116"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 356,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "A0A0F7G352",
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A0F7G352.json",
+      "retrieved_at": "2026-05-25T17:01:34Z"
+    }
+  },
+  "protein:tyrosine decarboxylase|A0A2H5AIY2": {
+    "status": "ok",
+    "uniprot_id": "A0A2H5AIY2",
+    "recommended_name": "Tyrosine decarboxylase 2",
+    "alternative_names": [],
+    "gene_names": [
+      "TYDC2"
+    ],
+    "organism": "Narcissus pseudonarcissus",
+    "taxonomy_id": "39639",
+    "function_text": "Catalyzes the decarboxylation of L-tyrosine to tyramine, which is converted to norbelladine, a precursor to all Amaryllidaceae alkaloids such as galanthamine, lycorine and haemanthamine, and including haemanthamine- and crinamine-type alkaloids, promising anticancer agents",
+    "catalytic_activity": [
+      "L-tyrosine + H(+) = tyramine + CO2"
+    ],
+    "enzyme_commission": [
+      "4.1.1.25"
+    ],
+    "pathways": [
+      "Alkaloid biosynthesis"
+    ],
+    "keywords": [
+      "Alkaloid metabolism",
+      "Decarboxylase",
+      "Lyase",
+      "Pyridoxal phosphate",
+      "Repeat"
+    ],
+    "subcellular_locations": [],
+    "go_mf_ids": [
+      "GO:0030170",
+      "GO:0004837"
+    ],
+    "go_bp_ids": [
+      "GO:0009820",
+      "GO:0006520",
+      "GO:0019752",
+      "GO:0046189",
+      "GO:1901162"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005737"
+    ],
+    "protein_existence": "2: Evidence at transcript level",
+    "sequence_length": 500,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "A0A2H5AIY2",
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A2H5AIY2.json",
+      "retrieved_at": "2026-05-26T22:07:19Z"
+    }
+  },
+  "protein:N4OMT|A0A2H5AIZ6": {
+    "status": "ok",
+    "uniprot_id": "A0A2H5AIZ6",
     "recommended_name": "Norbelladine 4'-O-methyltransferase",
     "alternative_names": [],
     "gene_names": [
       "N4OMT"
     ],
-    "organism": "Narcissus aff. pseudonarcissus MK-2014",
-    "taxonomy_id": "1540222",
-    "function_text": "4'-O-methyltransferase converting norbelladine to 4'-O-methylnorbelladine. 4'-O-methylnorbelladine is a precursor to all Amaryllidaceae alkaloids such as galanthamine, lycorine and haemanthamine, and including haemanthamine- and crinamine-type alkaloids, promising anticancer agents. Can use norbelladine, N-methylnorbelladine and dopamine as substrate, but not caffeic acid, vanillin, 3,4-dihydroxybenzaldehyde and tyramine",
+    "organism": "Narcissus pseudonarcissus",
+    "taxonomy_id": "39639",
+    "function_text": "4'-O-methyltransferase converting norbelladine to 4'-O-methylnorbelladine (By similarity). 4'-O-methylnorbelladine is a precursor to all Amaryllidaceae alkaloids such as galanthamine, lycorine and haemanthamine, and including haemanthamine- and crinamine-type alkaloids, promising anticancer agents (PubMed:29229969)",
     "catalytic_activity": [
       "norbelladine + S-adenosyl-L-methionine = 4'-O-methylnorbelladine + S-adenosyl-L-homocysteine + H(+)"
     ],
@@ -712,7 +1365,6 @@
       "Alkaloid biosynthesis"
     ],
     "keywords": [
-      "3D-structure",
       "Alkaloid metabolism",
       "Metal-binding",
       "Methyltransferase",
@@ -730,32 +1382,21 @@
       "GO:0032259"
     ],
     "go_cellular_component_ids": [],
-    "protein_existence": "1: Evidence at protein level",
+    "protein_existence": "2: Evidence at transcript level",
     "sequence_length": 239,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
-    "pdb_ids": [
-      "8UKE",
-      "8XE3",
-      "8XE4",
-      "8XE5",
-      "8Z8O",
-      "8Z8P",
-      "8Z8R",
-      "8Z8S",
-      "8Z8T",
-      "8ZFW"
-    ],
+    "pdb_ids": [],
     "reactome_ids": [],
     "string_id": "",
     "provenance": {
       "source": "UniProt",
-      "query": "A0A077EWA5",
-      "source_url": "https://rest.uniprot.org/uniprotkb/A0A077EWA5.json",
-      "retrieved_at": "2026-05-25T16:13:55Z"
+      "query": "A0A2H5AIZ6",
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A2H5AIZ6.json",
+      "retrieved_at": "2026-05-25T17:01:35Z"
     }
   }
 }

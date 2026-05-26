@@ -283155,6 +283155,2056 @@
           "uniParcId": "UPI000E5A0FA0"
         }
       }
+    },
+    "uniprot:A0A2H5AIW0": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "A0A2H5AIW0",
+        "recommended_name": "Phenylalanine ammonia-lyase 1",
+        "alternative_names": [],
+        "gene_names": [
+          "PAL1"
+        ],
+        "organism": "Narcissus pseudonarcissus",
+        "taxonomy_id": "39639",
+        "function_text": "This is a key enzyme of plant metabolism catalyzing the first reaction in the biosynthesis from L-phenylalanine of a wide variety of natural products based on the phenylpropane skeleton",
+        "catalytic_activity": [
+          "L-phenylalanine = (E)-cinnamate + NH4(+)"
+        ],
+        "enzyme_commission": [
+          "4.3.1.24"
+        ],
+        "pathways": [
+          "Alkaloid biosynthesis",
+          "Phenylpropanoid metabolism; trans-cinnamate biosynthesis; trans-cinnamate from L-phenylalanine: step 1/1"
+        ],
+        "keywords": [
+          "Alkaloid metabolism",
+          "Cytoplasm",
+          "Lyase",
+          "Phenylalanine catabolism",
+          "Phenylpropanoid metabolism"
+        ],
+        "subcellular_locations": [
+          "Cytoplasm"
+        ],
+        "go_mf_ids": [
+          "GO:0045548"
+        ],
+        "go_bp_ids": [
+          "GO:0009820",
+          "GO:0009800",
+          "GO:0006559"
+        ],
+        "go_cellular_component_ids": [
+          "GO:0005737"
+        ],
+        "protein_existence": "2: Evidence at transcript level",
+        "sequence_length": 708,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [],
+        "reactome_ids": [],
+        "string_id": "",
+        "provenance": {
+          "source": "UniProt",
+          "query": "A0A2H5AIW0",
+          "source_url": "https://rest.uniprot.org/uniprotkb/A0A2H5AIW0.json",
+          "retrieved_at": "2026-05-26T22:07:19Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "A0A2H5AIW0",
+        "uniProtkbId": "PAL1_NARPS",
+        "entryAudit": {
+          "firstPublicDate": "2020-08-12",
+          "lastAnnotationUpdateDate": "2025-02-05",
+          "lastSequenceUpdateDate": "2018-02-28",
+          "entryVersion": 19,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 3.0,
+        "organism": {
+          "scientificName": "Narcissus pseudonarcissus",
+          "commonName": "Daffodil",
+          "taxonId": 39639,
+          "lineage": [
+            "Eukaryota",
+            "Viridiplantae",
+            "Streptophyta",
+            "Embryophyta",
+            "Tracheophyta",
+            "Spermatophyta",
+            "Magnoliopsida",
+            "Liliopsida",
+            "Asparagales",
+            "Amaryllidaceae",
+            "Amaryllidoideae",
+            "Narcissus"
+          ]
+        },
+        "proteinExistence": "2: Evidence at transcript level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "29229969"
+                }
+              ],
+              "value": "Phenylalanine ammonia-lyase 1"
+            },
+            "ecNumbers": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "Q6GZ04"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000255",
+                    "source": "PROSITE-ProRule",
+                    "id": "PRU10122"
+                  }
+                ],
+                "value": "4.3.1.24"
+              }
+            ]
+          }
+        },
+        "genes": [
+          {
+            "geneName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "29229969"
+                }
+              ],
+              "value": "PAL1"
+            }
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "P24481"
+                  }
+                ],
+                "value": "This is a key enzyme of plant metabolism catalyzing the first reaction in the biosynthesis from L-phenylalanine of a wide variety of natural products based on the phenylpropane skeleton"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "L-phenylalanine = (E)-cinnamate + NH4(+)",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:21384"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15669"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:28938"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:58095"
+                }
+              ],
+              "ecNumber": "4.3.1.24",
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000250",
+                  "source": "UniProtKB",
+                  "id": "Q6GZ04"
+                },
+                {
+                  "evidenceCode": "ECO:0000255",
+                  "source": "PROSITE-ProRule",
+                  "id": "PRU10122"
+                }
+              ]
+            }
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "29229969"
+                  }
+                ],
+                "value": "Alkaloid biosynthesis"
+              }
+            ],
+            "commentType": "PATHWAY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "Q6GZ04"
+                  }
+                ],
+                "value": "Phenylpropanoid metabolism; trans-cinnamate biosynthesis; trans-cinnamate from L-phenylalanine: step 1/1"
+              }
+            ],
+            "commentType": "PATHWAY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "Q6GZ04"
+                  }
+                ],
+                "value": "Homotetramer"
+              }
+            ],
+            "commentType": "SUBUNIT"
+          },
+          {
+            "commentType": "SUBCELLULAR LOCATION",
+            "subcellularLocations": [
+              {
+                "location": {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000250",
+                      "source": "UniProtKB",
+                      "id": "P11544"
+                    }
+                  ],
+                  "value": "Cytoplasm",
+                  "id": "SL-0086"
+                }
+              }
+            ]
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "29229969"
+                  }
+                ],
+                "value": "Mostly expressed in stems, and, to a lower extent, in bulbs, roots, leaves and flowers"
+              }
+            ],
+            "commentType": "TISSUE SPECIFICITY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "Q68G84"
+                  }
+                ],
+                "value": "Contains an active site 4-methylidene-imidazol-5-one (MIO), which is formed autocatalytically by cyclization and dehydration of residues Ala-Ser-Gly"
+              }
+            ],
+            "commentType": "PTM"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "Belongs to the PAL/histidase family"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          }
+        ],
+        "features": [
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 708,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Phenylalanine ammonia-lyase 1",
+            "featureId": "PRO_0000450631"
+          },
+          {
+            "type": "Active site",
+            "location": {
+              "start": {
+                "value": 100,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 100,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Proton donor/acceptor",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              }
+            ]
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 252,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 252,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15669"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              }
+            ],
+            "ligand": {
+              "name": "(E)-cinnamate",
+              "id": "ChEBI:CHEBI:15669"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 340,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 340,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15669"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              }
+            ],
+            "ligand": {
+              "name": "(E)-cinnamate",
+              "id": "ChEBI:CHEBI:15669"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 346,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 346,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15669"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              }
+            ],
+            "ligand": {
+              "name": "(E)-cinnamate",
+              "id": "ChEBI:CHEBI:15669"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 376,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 376,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15669"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              }
+            ],
+            "ligand": {
+              "name": "(E)-cinnamate",
+              "id": "ChEBI:CHEBI:15669"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 448,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 448,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15669"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P11544"
+              }
+            ],
+            "ligand": {
+              "name": "(E)-cinnamate",
+              "id": "ChEBI:CHEBI:15669"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 476,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 476,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15669"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P11544"
+              }
+            ],
+            "ligand": {
+              "name": "(E)-cinnamate",
+              "id": "ChEBI:CHEBI:15669"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 479,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 479,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15669"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              }
+            ],
+            "ligand": {
+              "name": "(E)-cinnamate",
+              "id": "ChEBI:CHEBI:15669"
+            }
+          },
+          {
+            "type": "Modified residue",
+            "location": {
+              "start": {
+                "value": 195,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 195,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "2,3-didehydroalanine (Ser)",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              },
+              {
+                "evidenceCode": "ECO:0000255",
+                "source": "PROSITE-ProRule",
+                "id": "PRU10122"
+              }
+            ]
+          },
+          {
+            "type": "Cross-link",
+            "location": {
+              "start": {
+                "value": 194,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 196,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "5-imidazolinone (Ala-Gly)",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q68G84"
+              }
+            ]
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0017",
+            "category": "Biological process",
+            "name": "Alkaloid metabolism"
+          },
+          {
+            "id": "KW-0963",
+            "category": "Cellular component",
+            "name": "Cytoplasm"
+          },
+          {
+            "id": "KW-0456",
+            "category": "Molecular function",
+            "name": "Lyase"
+          },
+          {
+            "id": "KW-0585",
+            "category": "Biological process",
+            "name": "Phenylalanine catabolism"
+          },
+          {
+            "id": "KW-0587",
+            "category": "Biological process",
+            "name": "Phenylpropanoid metabolism"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "29229969",
+              "citationType": "journal article",
+              "authors": [
+                "Singh A.",
+                "Desgagne-Penix I."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "29229969"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1038/s41598-017-17724-0"
+                }
+              ],
+              "title": "Transcriptome and metabolome profiling of Narcissus pseudonarcissus 'King Alfred' reveal components of Amaryllidaceae alkaloid metabolism.",
+              "publicationDate": "2017",
+              "journal": "Sci. Rep.",
+              "firstPage": "17356",
+              "lastPage": "17356",
+              "volume": "7"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [MRNA]",
+              "REVIEW ON THE AMARYLLIDACEAE ALKALOID METABOLISM",
+              "PATHWAY",
+              "TISSUE SPECIFICITY",
+              "GENE FAMILY",
+              "NOMENCLATURE"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. King Alfred",
+                "type": "STRAIN"
+              },
+              {
+                "value": "Bulb",
+                "type": "TISSUE"
+              }
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "MF405173",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AUG71934.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "mRNA"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "A0A2H5AIW0",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "A0A2H5AIW0",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "UniPathway",
+            "id": "UPA00713",
+            "properties": [
+              {
+                "key": "RectionId",
+                "value": "UER00725"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005737",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:cytoplasm"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-SubCell"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0045548",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:phenylalanine ammonia-lyase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-EC"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009820",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:alkaloid metabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009800",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:cinnamic acid biosynthetic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-UniPathway"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0006559",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:L-phenylalanine catabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd00332",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PAL-HAL"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "1.10.274.20:FF:000001",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Phenylalanine ammonia-lyase"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "1.10.275.10:FF:000009",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Phenylalanine ammonia-lyase"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "1.20.200.10:FF:000009",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Phenylalanine ammonia-lyase"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.20.200.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Fumarase/aspartase (Central domain)"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.10.275.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Fumarase/aspartase (N-terminal domain)"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.10.274.20",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Phenylalanine ammonia-lyase 1, domain 3"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR001106",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Aromatic_Lyase"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR024083",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Fumarase/histidase_N"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR008948",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "L-Aspartase-like"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR022313",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Phe/His_NH3-lyase_AS"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR005922",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Phe_NH3-lyase"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR023144",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Phe_NH3-lyase_shielding_dom_sf"
+              }
+            ]
+          },
+          {
+            "database": "NCBIfam",
+            "id": "TIGR01226",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "phe_am_lyase"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR10362",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "HISTIDINE AMMONIA-LYASE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00221",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Lyase_aromatic"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF48557",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "L-aspartase-like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS00488",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PAL_HISTIDASE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MACANGNGNANGLCIRDPLSWGAAAEALAGSHLEEVKRMVKEHREACIRLGGATLKVGQIAAVANGGSAAKVELDESARARVKASSDWVMDSMSKGTDSYGVTTGFGATSHRRTKQGGALQKELIRFLNAGIFGSGRDSCNTLPASTTRAAMLVRINTLLQGYSGIRFEILEAITRLLNNNVTPCLPLRGTITASGDLVPLSYIAGILTGRPNSKATAPDGAQIDASEAFRLAGITDGFFQLQPKEGLALVNGTAVGSGLASTVLYDANILAVLSEVFSAIFCEVMQGKPEFTDHLTHKLKHHPGQIEAAAVMEHILDGSSYMKMAKKLHELDPLQKPKQDRYALRTSPQWLGPQIEVIRSATKSIEREINSVNDNPLIDVSRNKALHGGNFQGTPIGVSMDNTRLAIASIGKLMFAQFSELVNDFYNNGLPSNLSGGRDPSLDYGFKGAEIAMASYCSELQFLANPVTNHVQSAEQHNQDVNSLGLISARKTEEAVHILKLMSTTFLVGLCQAIDLRHLEENLKSTVKTTISQVAKRVLTSGINGELHPSRFCEKDLIKVVDREHVFSYVDDPCSATYPLMQRLRQILVEHAMNNGEKEKDADTSIFRKISAFEDELKVVLPKEVESARVAYENGTSAIKNRIEECRSYPLYRFVREETGTSLLTGENVRSPGEEFDKVFNAICEGRLVDPLLECLEDWNGAPLPIC",
+          "length": 708,
+          "molWeight": 76979,
+          "crc64": "E8A8023BA269874C",
+          "md5": "7FDDC0871B2DAEC0F2859869E878A406"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "CATALYTIC ACTIVITY": 1,
+            "PATHWAY": 2,
+            "SUBUNIT": 1,
+            "SUBCELLULAR LOCATION": 1,
+            "TISSUE SPECIFICITY": 1,
+            "PTM": 1,
+            "SIMILARITY": 1
+          },
+          "countByFeatureType": {
+            "Chain": 1,
+            "Active site": 1,
+            "Binding site": 7,
+            "Modified residue": 1,
+            "Cross-link": 1
+          },
+          "uniParcId": "UPI000CA2F64E"
+        }
+      }
+    },
+    "uniprot:A0A2H5AIY2": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "A0A2H5AIY2",
+        "recommended_name": "Tyrosine decarboxylase 2",
+        "alternative_names": [],
+        "gene_names": [
+          "TYDC2"
+        ],
+        "organism": "Narcissus pseudonarcissus",
+        "taxonomy_id": "39639",
+        "function_text": "Catalyzes the decarboxylation of L-tyrosine to tyramine, which is converted to norbelladine, a precursor to all Amaryllidaceae alkaloids such as galanthamine, lycorine and haemanthamine, and including haemanthamine- and crinamine-type alkaloids, promising anticancer agents",
+        "catalytic_activity": [
+          "L-tyrosine + H(+) = tyramine + CO2"
+        ],
+        "enzyme_commission": [
+          "4.1.1.25"
+        ],
+        "pathways": [
+          "Alkaloid biosynthesis"
+        ],
+        "keywords": [
+          "Alkaloid metabolism",
+          "Decarboxylase",
+          "Lyase",
+          "Pyridoxal phosphate",
+          "Repeat"
+        ],
+        "subcellular_locations": [],
+        "go_mf_ids": [
+          "GO:0030170",
+          "GO:0004837"
+        ],
+        "go_bp_ids": [
+          "GO:0009820",
+          "GO:0006520",
+          "GO:0019752",
+          "GO:0046189",
+          "GO:1901162"
+        ],
+        "go_cellular_component_ids": [
+          "GO:0005737"
+        ],
+        "protein_existence": "2: Evidence at transcript level",
+        "sequence_length": 500,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [],
+        "reactome_ids": [],
+        "string_id": "",
+        "provenance": {
+          "source": "UniProt",
+          "query": "A0A2H5AIY2",
+          "source_url": "https://rest.uniprot.org/uniprotkb/A0A2H5AIY2.json",
+          "retrieved_at": "2026-05-26T22:07:19Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "A0A2H5AIY2",
+        "uniProtkbId": "TYDC2_NARPS",
+        "entryAudit": {
+          "firstPublicDate": "2020-08-12",
+          "lastAnnotationUpdateDate": "2026-01-28",
+          "lastSequenceUpdateDate": "2018-02-28",
+          "entryVersion": 22,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 3.0,
+        "organism": {
+          "scientificName": "Narcissus pseudonarcissus",
+          "commonName": "Daffodil",
+          "taxonId": 39639,
+          "lineage": [
+            "Eukaryota",
+            "Viridiplantae",
+            "Streptophyta",
+            "Embryophyta",
+            "Tracheophyta",
+            "Spermatophyta",
+            "Magnoliopsida",
+            "Liliopsida",
+            "Asparagales",
+            "Amaryllidaceae",
+            "Amaryllidoideae",
+            "Narcissus"
+          ]
+        },
+        "proteinExistence": "2: Evidence at transcript level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "29229969"
+                }
+              ],
+              "value": "Tyrosine decarboxylase 2"
+            },
+            "ecNumbers": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305",
+                    "source": "PubMed",
+                    "id": "29229969"
+                  }
+                ],
+                "value": "4.1.1.25"
+              }
+            ]
+          }
+        },
+        "genes": [
+          {
+            "geneName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "29229969"
+                }
+              ],
+              "value": "TYDC2"
+            }
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "29229969"
+                  }
+                ],
+                "value": "Catalyzes the decarboxylation of L-tyrosine to tyramine, which is converted to norbelladine, a precursor to all Amaryllidaceae alkaloids such as galanthamine, lycorine and haemanthamine, and including haemanthamine- and crinamine-type alkaloids, promising anticancer agents"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "L-tyrosine + H(+) = tyramine + CO2",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:14345"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15378"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:16526"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:58315"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:327995"
+                }
+              ],
+              "ecNumber": "4.1.1.25",
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000305",
+                  "source": "PubMed",
+                  "id": "29229969"
+                }
+              ]
+            }
+          },
+          {
+            "commentType": "COFACTOR",
+            "cofactors": [
+              {
+                "name": "pyridoxal 5'-phosphate",
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "P20711"
+                  }
+                ],
+                "cofactorCrossReference": {
+                  "database": "ChEBI",
+                  "id": "CHEBI:597326"
+                }
+              }
+            ]
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "29229969"
+                  }
+                ],
+                "value": "Alkaloid biosynthesis"
+              }
+            ],
+            "commentType": "PATHWAY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "29229969"
+                  }
+                ],
+                "value": "Mostly expressed in bulbs, and, to a lower extent, in stems, roots, leaves and flowers"
+              }
+            ],
+            "commentType": "TISSUE SPECIFICITY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "Belongs to the group II decarboxylase family"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          }
+        ],
+        "features": [
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 500,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Tyrosine decarboxylase 2",
+            "featureId": "PRO_0000450639"
+          },
+          {
+            "type": "Repeat",
+            "location": {
+              "start": {
+                "value": 65,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 122,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "1",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ]
+          },
+          {
+            "type": "Repeat",
+            "location": {
+              "start": {
+                "value": 125,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 176,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "2",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ]
+          },
+          {
+            "type": "Region",
+            "location": {
+              "start": {
+                "value": 65,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 176,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "2 X approximate tandem repeats",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ]
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 89,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 89,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P80041"
+              }
+            ],
+            "ligand": {
+              "name": "substrate"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 153,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 153,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:597326"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ],
+            "ligand": {
+              "name": "pyridoxal 5'-phosphate",
+              "id": "ChEBI:CHEBI:597326"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 154,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 154,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:597326"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ],
+            "ligand": {
+              "name": "pyridoxal 5'-phosphate",
+              "id": "ChEBI:CHEBI:597326"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 189,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 189,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P80041"
+              }
+            ],
+            "ligand": {
+              "name": "substrate"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 248,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 248,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:597326"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ],
+            "ligand": {
+              "name": "pyridoxal 5'-phosphate",
+              "id": "ChEBI:CHEBI:597326"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 302,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 302,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:597326"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ],
+            "ligand": {
+              "name": "pyridoxal 5'-phosphate",
+              "id": "ChEBI:CHEBI:597326"
+            }
+          },
+          {
+            "type": "Modified residue",
+            "location": {
+              "start": {
+                "value": 305,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 305,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "N6-(pyridoxal phosphate)lysine",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P20711"
+              }
+            ]
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0017",
+            "category": "Biological process",
+            "name": "Alkaloid metabolism"
+          },
+          {
+            "id": "KW-0210",
+            "category": "Molecular function",
+            "name": "Decarboxylase"
+          },
+          {
+            "id": "KW-0456",
+            "category": "Molecular function",
+            "name": "Lyase"
+          },
+          {
+            "id": "KW-0663",
+            "category": "Ligand",
+            "name": "Pyridoxal phosphate"
+          },
+          {
+            "id": "KW-0677",
+            "category": "Domain",
+            "name": "Repeat"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "29229969",
+              "citationType": "journal article",
+              "authors": [
+                "Singh A.",
+                "Desgagne-Penix I."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "29229969"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1038/s41598-017-17724-0"
+                }
+              ],
+              "title": "Transcriptome and metabolome profiling of Narcissus pseudonarcissus 'King Alfred' reveal components of Amaryllidaceae alkaloid metabolism.",
+              "publicationDate": "2017",
+              "journal": "Sci. Rep.",
+              "firstPage": "17356",
+              "lastPage": "17356",
+              "volume": "7"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [MRNA]",
+              "FUNCTION",
+              "REVIEW ON THE AMARYLLIDACEAE ALKALOID METABOLISM",
+              "PATHWAY",
+              "TISSUE SPECIFICITY",
+              "GENE FAMILY",
+              "NOMENCLATURE"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. King Alfred",
+                "type": "STRAIN"
+              },
+              {
+                "value": "Bulb",
+                "type": "TISSUE"
+              }
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "MF405172",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AUG71933.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "mRNA"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "A0A2H5AIY2",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "A0A2H5AIY2",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005737",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:cytoplasm"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0030170",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:pyridoxal phosphate binding"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0004837",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:tyrosine decarboxylase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-EC"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009820",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:alkaloid metabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0006520",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:amino acid metabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0019752",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:carboxylic acid metabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0046189",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:phenol-containing compound biosynthetic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-ARBA"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:1901162",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:primary amino compound biosynthetic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-ARBA"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd06450",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "DOPA_deC_like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "1.20.1340.10:FF:000001",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Histidine decarboxylase"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "3.40.640.10:FF:000025",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Histidine decarboxylase"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "3.90.1150.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Aspartate Aminotransferase, domain 1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.20.1340.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "dopa decarboxylase, N-terminal domain"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "3.40.640.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Type I PLP-dependent aspartate aminotransferase-like (Major domain)"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR010977",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Aromatic_deC"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR002129",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PyrdxlP-dep_de-COase"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR015424",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PyrdxlP-dep_Trfase"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR015421",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PyrdxlP-dep_Trfase_major"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR015422",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PyrdxlP-dep_Trfase_small"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR021115",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Pyridoxal-P_BS"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR11999",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GROUP II PYRIDOXAL-5-PHOSPHATE DECARBOXYLASE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR11999:SF70",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "MIP05841P"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00282",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Pyridoxal_deC"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PRINTS",
+            "id": "PR00800",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "YHDCRBOXLASE"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF53383",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PLP-dependent transferases"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS00392",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "DDC_GAD_HDC_YDC"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MEESLKPMDAEQLRENAHKMVDFIADYYKSIESFPVLSQVKPGYLRDLLPDSAPDHPESLEDVLEDIRQKIVPGVTHWQSPNYFAYYPSNSSVAGFLGEMISAGFNIVGFNWIASPAATELEVIVLDWLAKMLNLPNQFLSSGQGGGVIQGTASEANLVVLLAARDKFLNRFGKRSLEKLVVYASDQTHAAMKKACQIAGIYPENFRVLNADHTSNYALVPEALSDAISNDLSAGLIPFFLCATVGTTSSAAVDPLSELGKISKVNDMWFHVDAAYAGSACICPEYRHYIDGIEEAASFNMNAHKWFLTNFDCSLLWIKDRSALIQSLSTYPEYLKNKASQENSVVDFKDWQIPLGRRFRSLKLWMVLRLYGLENLQSYIRNHIKLAGQFEQLVCSDSRFEVVVPRTFSLVCFRLLPPPNHQDNGYKLNHSLLDAVNSSGKIFVSHTVLSGKYVIRFAVGAPLTEEEHIKQAWKVFQDQATILLAGSDGSDFGASNGDII",
+          "length": 500,
+          "molWeight": 55640,
+          "crc64": "FEDAD9D8911BDE0F",
+          "md5": "F1210C1EA80D2320DE7BB46185CBBD08"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "CATALYTIC ACTIVITY": 1,
+            "COFACTOR": 1,
+            "PATHWAY": 1,
+            "TISSUE SPECIFICITY": 1,
+            "SIMILARITY": 1
+          },
+          "countByFeatureType": {
+            "Chain": 1,
+            "Repeat": 2,
+            "Region": 1,
+            "Binding site": 6,
+            "Modified residue": 1
+          },
+          "uniParcId": "UPI000CA24477"
+        }
+      }
     }
   },
   "compounds": {
@@ -290776,6 +292826,60 @@
         "id": "C01536",
         "source_url": "https://rest.kegg.jp/get/cpd:C01536",
         "retrieved_at": "2026-05-26T17:28:15Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:17597": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17597",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-26T21:12:23Z"
+      }
+    },
+    "hmdb:HMDB0011718": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0011718",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0011718",
+        "retrieved_at": "2026-05-26T21:12:23Z"
+      }
+    },
+    "kegg:C00633": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00633",
+      "primary_name": "4-Hydroxybenzaldehyde",
+      "synonyms": [
+        "4-Hydroxybenzaldehyde",
+        "p-Hydroxybenzaldehyde"
+      ],
+      "formula": "C7H6O2",
+      "mass_monoisotopic": 122.0368,
+      "mass_average": 122.12,
+      "pathways": [
+        "Bisphenol degradation",
+        "Toluene degradation",
+        "Aminobenzoate degradation",
+        "Biosynthesis of phenylpropanoids",
+        "Metabolic pathways",
+        "Microbial metabolism in diverse environments"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00633",
+        "pubchem_id": "3906",
+        "chebi_id": "17597"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00633",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00633",
+        "retrieved_at": "2026-05-26T21:12:24Z",
         "status": "ok"
       }
     }
