@@ -1999,7 +1999,25 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
         if isinstance(row, dict) and isinstance(row.get("name"), str)
     }
     if _normalize(auto_state_name) not in existing_states:
-        biological_states.append({"name": auto_state_name, "subcellular_location": auto_location_name})
+        entities = _safe_dict(payload.get("entities"))
+        species_list = _safe_list(entities.get("species"))
+        auto_species_name = ""
+        for sp in species_list:
+            if isinstance(sp, dict):
+                name = str(sp.get("name") or "").strip()
+                if name:
+                    auto_species_name = name
+                    break
+        if not auto_species_name:
+            auto_species_name = "Homo sapiens"
+            if not species_list:
+                entities.setdefault("species", []).append({"name": auto_species_name})
+                payload["entities"] = entities
+        biological_states.append({
+            "name": auto_state_name,
+            "subcellular_location": auto_location_name,
+            "species": auto_species_name,
+        })
         rep["summary"]["n_autostate_created"] += 1
 
     element_locations = _safe_dict(payload.setdefault("element_locations", {}))
