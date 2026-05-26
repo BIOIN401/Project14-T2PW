@@ -2,8 +2,8 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 18,
-    "edge_count": 17
+    "node_count": 15,
+    "edge_count": 14
   },
   "nodes": [
     {
@@ -25,15 +25,6 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:3,4-dihydroxybenzaldehyde",
-      "label": "3,4-dihydroxybenzaldehyde",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
       "id": "compound:tyramine",
       "label": "tyramine",
       "kind": "compound",
@@ -43,8 +34,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:tyrosine",
-      "label": "tyrosine",
+      "id": "compound:3,4-dihydroxybenzaldehyde",
+      "label": "3,4-dihydroxybenzaldehyde",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -97,26 +88,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:tyrosine decarboxylase",
-      "label": "tyrosine decarboxylase",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:tyrosine decarboxylation to tyramine",
-      "label": "tyrosine decarboxylation to tyramine",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:schiff-base condensation of tyramine and 3,4-dihydroxybenzaldehyde",
-      "label": "Schiff-base condensation of tyramine and 3,4-dihydroxybenzaldehyde",
+      "id": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
+      "label": "condensation of tyramine and 3,4-dihydroxybenzaldehyde to Schiff-base",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -142,8 +115,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:para-ortho' phenol coupling of 4'-o-methylnorbelladine toward galanthamine",
-      "label": "para-ortho' phenol coupling of 4'-O-methylnorbelladine toward galanthamine",
+      "id": "reaction:para-ortho' phenol-phenol' coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
+      "label": "para-ortho' phenol-phenol' coupling of 4′-O-methylnorbelladine toward galanthamine skeleton",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -171,37 +144,19 @@
   ],
   "edges": [
     {
-      "source": "compound:tyrosine",
-      "target": "reaction:tyrosine decarboxylation to tyramine",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:tyrosine decarboxylation to tyramine",
-      "target": "compound:tyramine",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:tyrosine decarboxylase",
-      "target": "reaction:tyrosine decarboxylation to tyramine",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
       "source": "compound:tyramine",
-      "target": "reaction:schiff-base condensation of tyramine and 3,4-dihydroxybenzaldehyde",
+      "target": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:3,4-dihydroxybenzaldehyde",
-      "target": "reaction:schiff-base condensation of tyramine and 3,4-dihydroxybenzaldehyde",
+      "target": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:schiff-base condensation of tyramine and 3,4-dihydroxybenzaldehyde",
+      "source": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
       "target": "compound:schiff-base intermediate",
       "role": "product",
       "confidence": 1.0
@@ -238,12 +193,12 @@
     },
     {
       "source": "compound:4′-o-methylnorbelladine",
-      "target": "reaction:para-ortho' phenol coupling of 4'-o-methylnorbelladine toward galanthamine",
+      "target": "reaction:para-ortho' phenol-phenol' coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:para-ortho' phenol coupling of 4'-o-methylnorbelladine toward galanthamine",
+      "source": "reaction:para-ortho' phenol-phenol' coupling of 4′-o-methylnorbelladine toward galanthamine skeleton",
       "target": "compound:n-demethylnarwedine",
       "role": "product",
       "confidence": 1.0

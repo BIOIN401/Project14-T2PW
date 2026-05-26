@@ -208,6 +208,95 @@ def _trusted_compound_short_name(record: Dict[str, Any], db_row: Dict[str, Any])
     return _nonempty_text(db_row.get("short_name") or record.get("short_name"))
 
 
+_TRUSTED_BIOLOGICAL_STATE_STATUSES = {
+    "matched",
+    "mapped",
+    "resolved",
+    "verified",
+    "db_matched",
+}
+
+
+def _trusted_status(value: Any) -> bool:
+    return str(value or "").strip().casefold() in _TRUSTED_BIOLOGICAL_STATE_STATUSES
+
+
+def _format_pwbs_id(value: Any) -> Optional[str]:
+    text = _nonempty_text(value)
+    if text is None:
+        return None
+    if text.casefold().startswith("pw_bs"):
+        return text
+    parsed = _to_positive_int(text)
+    if parsed is not None:
+        return f"PW_BS{parsed:06d}"
+    return text
+
+
+def _first_pwbs_id(container: Dict[str, Any]) -> Optional[str]:
+    for key in [
+        "pwbs_id",
+        "pwbs-id",
+        "pathwhiz_biological_state_pwbs_id",
+        "pathbank_biological_state_pwbs_id",
+    ]:
+        pwbs_id = _format_pwbs_id(container.get(key))
+        if pwbs_id is not None:
+            return pwbs_id
+    return None
+
+
+def _first_biological_state_db_id(container: Dict[str, Any], *, allow_plain_id: bool = False) -> Optional[int]:
+    keys = [
+        "pathbank_biological_state_id",
+        "pw_biological_state_id",
+        "pathwhiz_biological_state_id",
+        "db_id",
+    ]
+    if allow_plain_id:
+        keys.append("id")
+    for key in keys:
+        db_id = _to_positive_int(container.get(key))
+        if db_id is not None:
+            return db_id
+    return None
+
+
+def _trusted_biological_state_pwbs_id(record: Dict[str, Any]) -> Optional[str]:
+    db_row = record.get("db_row") if isinstance(record.get("db_row"), dict) else {}
+    mapping_meta = record.get("mapping_meta") if isinstance(record.get("mapping_meta"), dict) else {}
+    mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+    db_match = record.get("db_match") if isinstance(record.get("db_match"), dict) else {}
+    chosen = db_match.get("chosen") if isinstance(db_match.get("chosen"), dict) else {}
+    meta_chosen = mapping_meta.get("chosen") if isinstance(mapping_meta.get("chosen"), dict) else {}
+
+    trusted = bool(db_row) or any(
+        _trusted_status(container.get("status") or container.get("db_status"))
+        for container in [record, mapping_meta, mapped_ids, db_match]
+    )
+    if not trusted:
+        return None
+
+    for container in [db_row, chosen, meta_chosen, record, mapping_meta, mapped_ids]:
+        pwbs_id = _first_pwbs_id(container)
+        if pwbs_id is not None:
+            return pwbs_id
+
+    for container, allow_plain_id in [
+        (db_row, True),
+        (chosen, True),
+        (meta_chosen, True),
+        (record, False),
+        (mapping_meta, False),
+        (mapped_ids, False),
+    ]:
+        db_id = _first_biological_state_db_id(container, allow_plain_id=allow_plain_id)
+        if db_id is not None:
+            return f"PW_BS{db_id:06d}"
+
+    return None
+
+
 def _component_name(component: Any) -> str:
     if isinstance(component, str):
         return component.strip()
@@ -343,6 +432,18 @@ class DeterministicPwmlBuilder:
             field
             for field in compound_sig.required_fields
             if field not in {"pwc-id", "short-name"}
+        ]
+
+    def _make_biological_state_identity_fields_optional(self) -> None:
+        biological_state_sig = self.signature.sections.get("biological-states")
+        if biological_state_sig is None:
+            return
+        # pwbs-id is a global database identity, not a local XML reference.
+        # Generated states must omit it so Rails can resolve/create by context.
+        biological_state_sig.required_fields = [
+            field
+            for field in biological_state_sig.required_fields
+            if field != "pwbs-id"
         ]
 
     def _prepare_entities(self) -> None:
@@ -495,8 +596,10 @@ class DeterministicPwmlBuilder:
                 ),
                 "species-id": self._resolve_ref_id(record.get("species"), "species", fallback=True),
                 "cell-type-id": self._resolve_ref_id(record.get("cell_type"), "cell_types", fallback=True),
-                "pwbs-id": f"PW_BS{sid:06d}",
             }
+            pwbs_id = _trusted_biological_state_pwbs_id(record)
+            if pwbs_id is not None:
+                state["pwbs-id"] = pwbs_id
             states.append(state)
 
         self._state_id_map: Dict[str, int] = {
@@ -1271,19 +1374,20 @@ class DeterministicPwmlBuilder:
                 continue
             rid = self.ids.next()
             remember("biological_states", record.get("key"), rid)
-            biological_states.append(
-                {
-                    "id": rid,
-                    "name": record.get("name") or record.get("key") or f"State {rid}",
-                    "tissue-id": lookup("tissues", record.get("tissue_key")),
-                    "subcellular-location-id": lookup(
-                        "subcellular_locations", record.get("subcellular_location_key")
-                    ),
-                    "species-id": lookup("species", record.get("species_key")),
-                    "cell-type-id": lookup("cell_types", record.get("cell_type_key")),
-                    "pwbs-id": f"PW_BS{rid:06d}",
-                }
-            )
+            state = {
+                "id": rid,
+                "name": record.get("name") or record.get("key") or f"State {rid}",
+                "tissue-id": lookup("tissues", record.get("tissue_key")),
+                "subcellular-location-id": lookup(
+                    "subcellular_locations", record.get("subcellular_location_key")
+                ),
+                "species-id": lookup("species", record.get("species_key")),
+                "cell-type-id": lookup("cell_types", record.get("cell_type_key")),
+            }
+            pwbs_id = _trusted_biological_state_pwbs_id(record)
+            if pwbs_id is not None:
+                state["pwbs-id"] = pwbs_id
+            biological_states.append(state)
         self.section_items["biological-states"] = biological_states
 
         entities = ir.get("entities") if isinstance(ir.get("entities"), dict) else {}
@@ -2244,6 +2348,7 @@ class DeterministicPwmlBuilder:
 
     def build(self) -> BuildResult:
         self._make_compound_identity_fields_optional()
+        self._make_biological_state_identity_fields_optional()
         counts = self._populate_sections()
 
         root = etree.Element(self.signature.root_tag)
