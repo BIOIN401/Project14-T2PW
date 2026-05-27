@@ -116,6 +116,37 @@ class _AliasUniProtClient:
         )
 
 
+class _NocBDomainUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any]) -> _FakeResponse:
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if 'gene:"NocB"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "Q5J1Q6",
+                        "entryType": "UniProtKB unreviewed (TrEMBL)",
+                        "proteinDescription": {
+                            "recommendedName": {
+                                "fullName": {"value": "Nonribosomal peptide synthetase NocB"}
+                            },
+                            "alternativeNames": [
+                                {"fullName": {"value": "NocB thioesterase domain-containing protein"}}
+                            ],
+                        },
+                        "genes": [{"geneName": {"value": "NocB"}}],
+                        "organism": {"scientificName": "Nocardia uniformis subsp. tsuyamanensis"},
+                    }
+                ]
+            }
+        )
+
+
 def _glycolysis_complex_result(protein_row: Dict[str, Any], species: str) -> Dict[str, Any]:
     assert species == "Homo sapiens"
     name = str(protein_row.get("name") or "")
@@ -287,18 +318,37 @@ def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
     api_lookup.assert_called_once()
 
 
-def test_uniprot_mapping_uses_curated_alias_for_obag() -> None:
+def test_uniprot_mapping_uses_row_alias_for_obag() -> None:
     client = _AliasUniProtClient()
 
-    result = map_protein_uniprot(client, "ObaG", "Pseudomonas fluorescens")
+    result = map_protein_uniprot(
+        client,
+        "ObaG",
+        "Pseudomonas fluorescens",
+        aliases=[{"alias": "ObiH", "source": "row:aliases"}],
+    )
 
     assert result["status"] == "mapped"
     assert result["mapped_ids"]["uniprot"] == "A0A1X9LWZ7"
     assert result["matched_alias"] == "ObiH"
-    assert result["alias_source"] == "curated_obafluorin_ltta"
+    assert result["alias_source"] == "row:aliases"
     assert result["resolved_name"] == "Threonine aldolase"
     assert result["chosen_rule"] == "top_unique_alias_candidate"
     assert any('gene:"ObiH"' in query for query in client.queries)
+
+
+def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:
+    client = _NocBDomainUniProtClient()
+
+    result = map_protein_uniprot(client, "NocB thioesterase (TE) domain", "Nocardia uniformis")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q5J1Q6"
+    assert result["matched_alias"] == "NocB"
+    assert result["alias_source"] == "domain_parent"
+    assert result["resolved_name"] == "Nonribosomal peptide synthetase NocB"
+    assert result["chosen_rule"] == "top_unique_alias_candidate"
+    assert any('gene:"NocB"' in query for query in client.queries)
 
 
 def test_complex_maps_by_name_and_species() -> None:

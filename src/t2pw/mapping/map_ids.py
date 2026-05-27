@@ -62,18 +62,6 @@ def _name_variants(value: str, *, max_variants: int = 4) -> List[str]:
     return variants or ([base] if base else [])
 
 
-CURATED_PROTEIN_ALIAS_FALLBACKS: Dict[str, List[Dict[str, str]]] = {
-    # Obafluorin pathway papers use ObaG, while public protein records commonly
-    # use ObiH/threonine aldolase for the same L-threonine transaldolase.
-    "obag": [
-        {"alias": "ObiH", "source": "curated_obafluorin_ltta"},
-        {"alias": "CIB54_12585", "source": "curated_obafluorin_ltta"},
-        {"alias": "L-threonine transaldolase", "source": "curated_obafluorin_ltta"},
-        {"alias": "threonine aldolase", "source": "curated_obafluorin_ltta"},
-    ],
-}
-
-
 def _protein_alias_entries(name: str, protein_row: Optional[Dict[str, Any]] = None) -> List[Dict[str, str]]:
     row = _safe_dict(protein_row)
     entries: List[Dict[str, str]] = []
@@ -104,8 +92,26 @@ def _protein_alias_entries(name: str, protein_row: Optional[Dict[str, Any]] = No
     mapped_ids = _safe_dict(row.get("mapped_ids"))
     add(mapped_ids.get("gene_name"), "mapped_ids:gene_name")
 
-    for curated in CURATED_PROTEIN_ALIAS_FALLBACKS.get(_normalize_name(name), []):
-        add(curated.get("alias"), curated.get("source", "curated"))
+    name_no_parens = _canonical_name(re.sub(r"\([^)]*\)", " ", name))
+    if name_no_parens and _normalize_name(name_no_parens) != _normalize_name(name):
+        add(name_no_parens, "name_without_parenthetical")
+
+    domain_parent_patterns = [
+        r"^([A-Za-z][A-Za-z0-9_.-]*)\s+[A-Za-z0-9_-]+\s+domain$",
+        r"^([A-Za-z][A-Za-z0-9_.-]*)\s+.+\s+domain$",
+    ]
+    for pattern in domain_parent_patterns:
+        match = re.match(pattern, name_no_parens or _canonical_name(name), flags=re.IGNORECASE)
+        if match:
+            parent = match.group(1)
+            add(parent, "domain_parent")
+            descriptor = re.sub(r"^" + re.escape(parent) + r"\s+", "", name_no_parens or _canonical_name(name), flags=re.IGNORECASE)
+            descriptor = re.sub(r"\bdomain\b", " ", descriptor, flags=re.IGNORECASE)
+            descriptor = _canonical_name(descriptor)
+            if descriptor:
+                add(f"{parent} {descriptor}", "domain_parent_descriptor")
+                add(descriptor, "domain_descriptor")
+            break
 
     deduped: List[Dict[str, str]] = []
     seen: set = set()
@@ -2872,14 +2878,26 @@ def map_protein_uniprot(
 
     query_plan: List[Tuple[str, str, bool, str, str]] = []
 
-    def add_query_plan(query_name: str, used_organism: bool, alias_source: str, matched_alias: str) -> None:
-        query_parts = [f'(protein_name:"{query_name}" OR gene:"{query_name}")']
-        if organism:
-            query_parts.append(f'organism_name:"{organism}"')
-        if used_organism:
-            query = " AND ".join(query_parts)
+    def add_query_plan(
+        query_name: str,
+        used_organism: bool,
+        alias_source: str,
+        matched_alias: str,
+        *,
+        broad: bool = False,
+    ) -> None:
+        if broad:
+            query = f'"{query_name}"'
+            if used_organism and organism:
+                query = f'{query} AND organism_name:"{organism}"'
         else:
-            query = f'(protein_name:"{query_name}" OR gene:"{query_name}")'
+            query_parts = [f'(protein_name:"{query_name}" OR gene:"{query_name}")']
+            if organism:
+                query_parts.append(f'organism_name:"{organism}"')
+            if used_organism:
+                query = " AND ".join(query_parts)
+            else:
+                query = f'(protein_name:"{query_name}" OR gene:"{query_name}")'
         query_plan.append((query_name, query, used_organism, alias_source, matched_alias))
 
     variants = _name_variants(name, max_variants=4)
@@ -2896,6 +2914,9 @@ def map_protein_uniprot(
             add_query_plan(variant, True, source, alias)
             if organism:
                 add_query_plan(variant, False, source, alias)
+            add_query_plan(variant, True, source, alias, broad=True)
+            if organism:
+                add_query_plan(variant, False, source, alias, broad=True)
 
     aggregated: Dict[str, Dict[str, Any]] = {}
     queries_tried: List[str] = []
