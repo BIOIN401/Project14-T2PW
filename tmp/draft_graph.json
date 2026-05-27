@@ -2,13 +2,13 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 16,
-    "edge_count": 13
+    "node_count": 12,
+    "edge_count": 10
   },
   "nodes": [
     {
-      "id": "compound:seryl residue",
-      "label": "seryl residue",
+      "id": "compound:l-thr",
+      "label": "L-Thr",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -16,8 +16,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:pcp-linked dehydroalanyl tetrapeptide thioester",
-      "label": "PCP-linked dehydroalanyl tetrapeptide thioester",
+      "id": "compound:2,3-dihydroxybenzoic acid",
+      "label": "2,3-dihydroxybenzoic acid",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -25,8 +25,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:water",
-      "label": "water",
+      "id": "compound:4-nitrophenyacetaldehyde",
+      "label": "4-nitrophenyacetaldehyde",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -34,8 +34,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:l-(p-hydroxyphenyl)glycine",
-      "label": "L-(p-hydroxyphenyl)glycine",
+      "id": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "label": "(2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -43,26 +43,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:pro-nocardicin g",
-      "label": "pro-nocardicin G",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:nocardicin g",
-      "label": "nocardicin G",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:nocardicin a",
-      "label": "nocardicin A",
+      "id": "compound:obafluorin",
+      "label": "obafluorin",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -88,17 +70,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:nocb c domain",
-      "label": "NocB C domain",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:nocb thioesterase (te) domain",
-      "label": "NocB thioesterase (TE) domain",
+      "id": "protein:obag",
+      "label": "ObaG",
       "kind": "protein",
       "cls": "protein",
       "compartment": "",
@@ -115,17 +88,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:nocb c-domain-catalysed beta-lactam formation",
-      "label": "NocB C-domain-catalysed beta-lactam formation",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:nocb te-domain-catalysed epimerization and release of nocardicin g",
-      "label": "NocB TE-domain-catalysed epimerization and release of nocardicin G",
+      "id": "reaction:obag-catalysed ahnb formation",
+      "label": "ObaG-catalysed AHNB formation",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -142,8 +106,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:conversion of nocardicin g to nocardicin a",
-      "label": "Conversion of nocardicin G to nocardicin A",
+      "id": "reaction:obafluorin assembly",
+      "label": "Obafluorin assembly",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -153,50 +117,26 @@
   ],
   "edges": [
     {
-      "source": "compound:pcp-linked dehydroalanyl tetrapeptide thioester",
-      "target": "reaction:nocb c-domain-catalysed beta-lactam formation",
+      "source": "compound:l-thr",
+      "target": "reaction:obag-catalysed ahnb formation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:l-(p-hydroxyphenyl)glycine",
-      "target": "reaction:nocb c-domain-catalysed beta-lactam formation",
+      "source": "compound:4-nitrophenyacetaldehyde",
+      "target": "reaction:obag-catalysed ahnb formation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:nocb c-domain-catalysed beta-lactam formation",
-      "target": "compound:pro-nocardicin g",
+      "source": "reaction:obag-catalysed ahnb formation",
+      "target": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:nocb c-domain-catalysed beta-lactam formation",
-      "target": "compound:water",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:nocb c domain",
-      "target": "reaction:nocb c-domain-catalysed beta-lactam formation",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:pro-nocardicin g",
-      "target": "reaction:nocb te-domain-catalysed epimerization and release of nocardicin g",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:nocb te-domain-catalysed epimerization and release of nocardicin g",
-      "target": "compound:nocardicin g",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:nocb thioesterase (te) domain",
-      "target": "reaction:nocb te-domain-catalysed epimerization and release of nocardicin g",
+      "source": "protein:obag",
+      "target": "reaction:obag-catalysed ahnb formation",
       "role": "catalyst",
       "confidence": 1.0
     },
@@ -219,14 +159,20 @@
       "confidence": 1.0
     },
     {
-      "source": "compound:nocardicin g",
-      "target": "reaction:conversion of nocardicin g to nocardicin a",
+      "source": "compound:2,3-dihydroxybenzoic acid",
+      "target": "reaction:obafluorin assembly",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:conversion of nocardicin g to nocardicin a",
-      "target": "compound:nocardicin a",
+      "source": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "target": "reaction:obafluorin assembly",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:obafluorin assembly",
+      "target": "compound:obafluorin",
       "role": "product",
       "confidence": 1.0
     }

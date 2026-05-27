@@ -125,6 +125,113 @@ def _protein_alias_entries(name: str, protein_row: Optional[Dict[str, Any]] = No
     return deduped[:12]
 
 
+def _candidate_alias_text(value: str) -> str:
+    text = re.sub(r"<[^>]+>", " ", str(value or ""))
+    text = text.replace("&beta;", "beta").replace("&alpha;", "alpha")
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def _extract_aliases_from_literature_text(name: str, text: str) -> List[Dict[str, str]]:
+    body = _candidate_alias_text(text)
+    if not body:
+        return []
+    escaped = re.escape(name)
+    aliases: List[Dict[str, str]] = []
+
+    def add(value: str, source: str) -> None:
+        alias = _canonical_name(value)
+        alias = re.sub(r"^(?:the|an?|known as|called)\s+", "", alias, flags=re.IGNORECASE)
+        alias = alias.strip(" ,;:.()[]")
+        if not alias or _normalize_name(alias) == _normalize_name(name):
+            return
+        if len(alias) > 96:
+            return
+        aliases.append({"alias": alias, "source": source})
+
+    gene_token = r"([A-Za-z][A-Za-z0-9_.-]{2,20})"
+    for pattern in [
+        gene_token + r"\s*\(\s*(?:or|also known as|aka|a\.k\.a\.|formerly)\s+" + escaped + r"\s*\)",
+        escaped + r"\s*\(\s*(?:or|also known as|aka|a\.k\.a\.|formerly)\s+" + gene_token + r"\s*\)",
+    ]:
+        for match in re.finditer(pattern, body, flags=re.IGNORECASE):
+            add(match.group(1), "literature_alias")
+
+    function_patterns = [
+        escaped + r"[^.]{0,120}?\b(?:encodes(?:\s+for)?|is|as|being|known as)\s+(?:an?|the)?\s*([A-Za-z][A-Za-z0-9,\- /]+?(?:ase|protein|enzyme))\b",
+        escaped + r"[^.]{0,120}?\b(?:catalys(?:es|es|ed)|catalyzes|catalyzed)\s+[^.]{0,80}?\b([A-Za-z][A-Za-z0-9,\- /]+?(?:ase|enzyme))\b",
+    ]
+    for pattern in function_patterns:
+        for match in re.finditer(pattern, body, flags=re.IGNORECASE):
+            add(match.group(1), "literature_function")
+
+    deduped: List[Dict[str, str]] = []
+    seen: set = set()
+    for item in aliases:
+        norm = _normalize_name(item["alias"])
+        if not norm or norm in seen:
+            continue
+        seen.add(norm)
+        deduped.append(item)
+    return deduped[:8]
+
+
+def lookup_literature_protein_aliases(
+    client: HttpClient,
+    name: str,
+    organism: str = "",
+    *,
+    max_results: int = 8,
+) -> Dict[str, Any]:
+    query_parts = [f'"{name}"']
+    if organism:
+        query_parts.append(f'"{organism}"')
+    query = " AND ".join(query_parts)
+    params = {
+        "query": query,
+        "format": "json",
+        "pageSize": max_results,
+        "resultType": "core",
+    }
+    try:
+        resp = client.get("https://www.ebi.ac.uk/europepmc/webservices/rest/search", params=params)
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "unmapped", "reason": f"literature_lookup_error:{exc}", "query": query, "aliases": []}
+    if resp.status_code != 200:
+        return {"status": "unmapped", "reason": f"literature_lookup_status:{resp.status_code}", "query": query, "aliases": []}
+
+    payload = resp.json()
+    results = _safe_list(_safe_dict(payload.get("resultList")).get("result"))
+    aliases: List[Dict[str, str]] = []
+    for item in results:
+        if not isinstance(item, dict):
+            continue
+        text = " ".join(
+            str(item.get(field) or "")
+            for field in ["title", "abstractText"]
+            if item.get(field)
+        )
+        for alias in _extract_aliases_from_literature_text(name, text):
+            alias["literature_title"] = str(item.get("title") or "")[:180]
+            aliases.append(alias)
+
+    deduped: List[Dict[str, str]] = []
+    seen: set = set()
+    for alias in aliases:
+        norm = _normalize_name(alias.get("alias", ""))
+        if not norm or norm in seen:
+            continue
+        seen.add(norm)
+        deduped.append(alias)
+
+    return {
+        "status": "mapped" if deduped else "unmapped",
+        "query": query,
+        "aliases": deduped[:8],
+        "reason": "" if deduped else "no_literature_aliases",
+    }
+
+
 def _search_terms(value: str, *, max_terms: int = 6) -> List[str]:
     base = _canonical_name(value)
     if not base:
@@ -2961,10 +3068,77 @@ def map_protein_uniprot(
             if best_score >= 0.9 and best_score >= second_score + 0.12:
                 break
 
+    literature_aliases_used: List[Dict[str, str]] = []
+    if not aggregated:
+        literature_result = lookup_literature_protein_aliases(client, name, organism)
+        literature_aliases = _safe_list(literature_result.get("aliases"))
+        if not literature_aliases and organism:
+            literature_result = lookup_literature_protein_aliases(client, name, "")
+            literature_aliases = _safe_list(literature_result.get("aliases"))
+
+        start_idx = len(query_plan)
+        for entry in literature_aliases:
+            if not isinstance(entry, dict):
+                continue
+            alias = _canonical_name(str(entry.get("alias") or ""))
+            if not alias:
+                continue
+            source = _canonical_name(str(entry.get("source") or "literature_alias")) or "literature_alias"
+            norm = _normalize_name(alias)
+            if not norm or norm in seen_aliases:
+                continue
+            seen_aliases.add(norm)
+            literature_aliases_used.append({"alias": alias, "source": source})
+            for variant in _name_variants(alias, max_variants=2):
+                add_query_plan(variant, True, source, alias)
+                if organism:
+                    add_query_plan(variant, False, source, alias)
+                add_query_plan(variant, True, source, alias, broad=True)
+                if organism:
+                    add_query_plan(variant, False, source, alias, broad=True)
+
+        for variant, query, used_organism, alias_source, matched_alias in query_plan[start_idx:]:
+            params = {
+                "query": query,
+                "format": "json",
+                "size": 10,
+                "fields": "accession,protein_name,gene_names,organism_name,reviewed",
+            }
+            try:
+                resp = client.get("https://rest.uniprot.org/uniprotkb/search", params=params)
+            except Exception as exc:  # noqa: BLE001
+                network_errors.append(str(exc))
+                continue
+            queries_tried.append(query)
+            if resp.status_code != 200:
+                continue
+            payload = resp.json()
+            candidates = _extract_uniprot_candidates(payload, query_name=variant, organism=organism if used_organism else "")
+            for candidate in candidates:
+                accession = str(candidate.get("accession") or "").strip()
+                if not accession:
+                    continue
+                adjusted = dict(candidate)
+                if not used_organism:
+                    adjusted["score"] = round(float(adjusted.get("score", 0.0)) - 0.04, 4)
+                adjusted["matched_query"] = variant
+                adjusted["alias_source"] = alias_source
+                if matched_alias:
+                    adjusted["matched_alias"] = matched_alias
+                existing = aggregated.get(accession)
+                if not existing or float(adjusted.get("score", 0.0)) > float(existing.get("score", 0.0)):
+                    aggregated[accession] = adjusted
+
     candidates = sorted(aggregated.values(), key=lambda item: item.get("score", 0.0), reverse=True)
     if not candidates:
         reason = f"network_error:{network_errors[0]}" if network_errors else "no_match"
-        return {"status": "unmapped", "reason": reason, "query": " | ".join(queries_tried), "candidates": []}
+        return {
+            "status": "unmapped",
+            "reason": reason,
+            "query": " | ".join(queries_tried),
+            "candidates": [],
+            "literature_aliases": literature_aliases_used,
+        }
 
     best = candidates[0]
     second_score = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
@@ -2985,6 +3159,7 @@ def map_protein_uniprot(
             "matched_alias": matched_alias,
             "alias_source": str(best.get("alias_source") or "").strip(),
             "resolved_name": str(best.get("protein_name") or "").strip(),
+            "literature_aliases": literature_aliases_used,
         }
     return {
         "status": "unmapped",
@@ -3407,7 +3582,7 @@ def _map_protein_with_strategy(
     protein_aliases = _protein_alias_entries(name, _safe_dict(protein_row))
     base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}"
     db_key = f"db::{base_key}"
-    api_key = f"api-v2::{base_key}::{json.dumps(protein_aliases, sort_keys=True)}"
+    api_key = f"api-v4::{base_key}::{json.dumps(protein_aliases, sort_keys=True)}"
 
     if not organism and not row_ids.get("uniprot") and not pathbank_id:
         return _with_resolution(
@@ -4025,7 +4200,7 @@ def run_mapping(
         protein["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
         protein["mapping_meta"]["reviewed"] = bool(result.get("reviewed", False))
         protein["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
-        for meta_key in ["matched_alias", "alias_source", "resolved_name", "queries_tried"]:
+        for meta_key in ["matched_alias", "alias_source", "resolved_name", "queries_tried", "literature_aliases"]:
             if result.get(meta_key):
                 protein["mapping_meta"][meta_key] = result.get(meta_key)
 

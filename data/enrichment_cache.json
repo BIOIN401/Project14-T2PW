@@ -304696,6 +304696,60 @@
         "retrieved_at": "2026-05-27T20:12:31Z",
         "status": "ok"
       }
+    },
+    "chebi:CHEBI:18026": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:18026",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-27T21:11:25Z"
+      }
+    },
+    "hmdb:HMDB0000397": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000397",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000397",
+        "retrieved_at": "2026-05-27T21:11:27Z"
+      }
+    },
+    "kegg:C00196": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00196",
+      "primary_name": "2,3-Dihydroxybenzoate",
+      "synonyms": [
+        "2,3-Dihydroxybenzoate",
+        "2,3-Dihydroxybenzoic acid"
+      ],
+      "formula": "C7H6O4",
+      "mass_monoisotopic": 154.0266,
+      "mass_average": 154.12,
+      "pathways": [
+        "Benzoate degradation",
+        "Aminobenzoate degradation",
+        "Biosynthesis of siderophore group nonribosomal peptides",
+        "Biosynthesis of phenylpropanoids",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00196",
+        "pubchem_id": "3496",
+        "chebi_id": "18026"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00196",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00196",
+        "retrieved_at": "2026-05-27T21:11:29Z",
+        "status": "ok"
+      }
     }
   }
 }

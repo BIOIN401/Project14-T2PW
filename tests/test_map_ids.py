@@ -92,6 +92,19 @@ class _AliasUniProtClient:
     def get(self, url: str, params: Dict[str, Any]) -> _FakeResponse:
         query = str(params.get("query") or "")
         self.queries.append(query)
+        if "europepmc" in url:
+            return _FakeResponse(
+                {
+                    "resultList": {
+                        "result": [
+                            {
+                                "title": "Discovery of L-threonine transaldolases",
+                                "abstractText": "The TTA known as ObiH (or ObaG) was discovered in obafluorin biosynthesis.",
+                            }
+                        ]
+                    }
+                }
+            )
         if 'gene:"ObiH"' not in query and 'gene:"obiH"' not in query:
             return _FakeResponse({"results": []})
         return _FakeResponse(
@@ -318,22 +331,18 @@ def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
     api_lookup.assert_called_once()
 
 
-def test_uniprot_mapping_uses_row_alias_for_obag() -> None:
+def test_uniprot_mapping_uses_literature_alias_for_obag() -> None:
     client = _AliasUniProtClient()
 
-    result = map_protein_uniprot(
-        client,
-        "ObaG",
-        "Pseudomonas fluorescens",
-        aliases=[{"alias": "ObiH", "source": "row:aliases"}],
-    )
+    result = map_protein_uniprot(client, "ObaG", "Pseudomonas fluorescens")
 
     assert result["status"] == "mapped"
     assert result["mapped_ids"]["uniprot"] == "A0A1X9LWZ7"
     assert result["matched_alias"] == "ObiH"
-    assert result["alias_source"] == "row:aliases"
+    assert result["alias_source"] == "literature_alias"
     assert result["resolved_name"] == "Threonine aldolase"
     assert result["chosen_rule"] == "top_unique_alias_candidate"
+    assert result["literature_aliases"] == [{"alias": "ObiH", "source": "literature_alias"}]
     assert any('gene:"ObiH"' in query for query in client.queries)
 
 

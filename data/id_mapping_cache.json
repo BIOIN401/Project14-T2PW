@@ -12843,6 +12843,125 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "api-v2::obag::pseudomonas fluorescens::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ObaG\" OR gene:\"ObaG\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"ObaG\" OR gene:\"ObaG\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v2::pntm::pseudomonas fluorescens::::{\"uniprot\": \"E3VWI3\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PntM\" OR gene:\"PntM\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "E3VWI3",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces arenae",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2N9BJN2",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces chartreusis NRRL 3882",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0BTW4",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Actinomadura macrotermitis",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0DYT4",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Nocardia aurantia",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW0BAM4",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces mutomycini",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABV3LSP6",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces huasconensis",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW8LVR4",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces milbemycinicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PntM\" OR gene:\"PntM\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -28277,6 +28396,60 @@
         "status": "matched",
         "order_step": "exact_normalized_name"
       }
+    },
+    "db::23dihydroxybenzoic acid::::{\"kegg\": \"C00196\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000397",
+        "kegg": "C00196",
+        "chebi": "CHEBI:18026",
+        "pubchem": "19",
+        "cas": "303-38-8",
+        "chemspider": "18",
+        "drugbank": "DB01672",
+        "pathbank_compound_id": "296"
+      },
+      "pathbank_compound_id": 296,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 296,
+          "name": "2-Pyrocatechuic acid",
+          "short_name": "DHBA",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000397",
+            "kegg": "C00196",
+            "chebi": "CHEBI:18026",
+            "pubchem": "19",
+            "cas": "303-38-8",
+            "chemspider": "18",
+            "drugbank": "DB01672"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::obafluorin::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -30249,7 +30422,7 @@
     }
   },
   "enzyme_complexes": {
-    "nocb c domain::::nocardia uniformis": {
+    "obag::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -30257,23 +30430,19 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "NocB C domain complex",
-      "species_id": null,
+      "name": "ObaG complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "NocB C domain",
+          "name": "ObaG",
           "stoichiometry": 1
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "NocB C domain",
-          "reason": "species_not_found:Nocardia uniformis"
-        },
-        {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
+          "component": "ObaG",
+          "reason": "novel_protein"
         }
       ],
       "resolution": {
@@ -30282,40 +30451,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "nocb thioesterase te domain::::nocardia uniformis": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NocB thioesterase (TE) domain complex",
-      "species_id": null,
-      "components": [
-        {
-          "name": "NocB thioesterase (TE) domain",
-          "stoichiometry": 1
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NocB thioesterase (TE) domain",
-          "reason": "species_not_found:Nocardia uniformis"
-        },
-        {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "pntm::::nocardia uniformis": {
+    "pntm::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -30324,7 +30460,7 @@
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
       "name": "PntM complex",
-      "species_id": null,
+      "species_id": 539,
       "components": [
         {
           "name": "PntM",
@@ -30339,10 +30475,6 @@
           "issue": "component_protein_unresolved",
           "component": "PntM",
           "reason": "no_db_match"
-        },
-        {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
         }
       ],
       "resolution": {
