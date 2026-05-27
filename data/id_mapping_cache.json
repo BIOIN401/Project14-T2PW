@@ -11231,6 +11231,1447 @@
         "status": "matched",
         "order_step": "api_uniprot"
       }
+    },
+    "db::n4omt::l aurea::::{\"uniprot\": \"A0A5P8H727\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::n4omt::l aurea::::{\"uniprot\": \"A0A5P8H727\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"L. aurea\" | (protein_name:\"N4OMT\" OR gene:\"N4OMT\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A077EWA5",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A2H5AIZ6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A5P8H727",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Lycoris radiata",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A346TLF5",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus papyraceus",
+          "reviewed": true,
+          "score": 0.56
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::pal::l aurea::::{\"uniprot\": \"P11544\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::pal::l aurea::::{\"uniprot\": \"P11544\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PAL\" OR gene:\"PAL\") AND organism_name:\"L. aurea\" | (protein_name:\"PAL\" OR gene:\"PAL\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "P0A912",
+          "protein_name": "Peptidoglycan-associated lipoprotein",
+          "gene_names": [
+            "excC",
+            "pal"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P11544",
+          "protein_name": "Phenylalanine/tyrosine ammonia-lyase",
+          "gene_names": [
+            "PAL"
+          ],
+          "organism": "Rhodotorula toruloides",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q8K099",
+          "protein_name": "Leucine-rich repeat, immunoglobulin-like domain and transmembrane domain-containing protein 1",
+          "gene_names": [
+            "Lrit1",
+            "Lrrc21",
+            "Pal"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q9JMH2",
+          "protein_name": "Leucine-rich repeat, immunoglobulin-like domain and transmembrane domain-containing protein 1",
+          "gene_names": [
+            "Lrit1",
+            "Lrrc21",
+            "Pal"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P34766",
+          "protein_name": "Homeobox protein pal-1",
+          "gene_names": [
+            "ceh-3",
+            "pal-1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "Q16656",
+          "protein_name": "Nuclear respiratory factor 1",
+          "gene_names": [
+            "NRF1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "P19021",
+          "protein_name": "Peptidyl-glycine alpha-amidating monooxygenase",
+          "gene_names": [
+            "PAM"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "P0A855",
+          "protein_name": "Tol-Pal system protein TolB",
+          "gene_names": [
+            "tolB"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PAL\" OR gene:\"PAL\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"PAL\" OR gene:\"PAL\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lrpal1::l aurea::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::lrpal1::l aurea::::{}": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"LrPAL1\" OR gene:\"LrPAL1\") AND organism_name:\"L. aurea\" | (protein_name:\"LrPAL1\" OR gene:\"LrPAL1\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lrpal2::l aurea::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::lrpal2::l aurea::::{}": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"LrPAL2\" OR gene:\"LrPAL2\") AND organism_name:\"L. aurea\" | (protein_name:\"LrPAL2\" OR gene:\"LrPAL2\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cinnamate 4hydroxylase::l aurea::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::cinnamate 4hydroxylase::l aurea::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"L. aurea\" | (protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\") AND organism_name:\"L. aurea\" | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") | (protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A4S4DRC9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis var. sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A7J7HQ38",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9D5D4E9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Dioscorea zingiberensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9Q1QFF8",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Carnegiea gigantea",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0AA38FKR9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Taxus chinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "F1B283",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H2",
+          "gene_names": [
+            "C4H2"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "F1B282",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H1",
+          "gene_names": [
+            "C4H1"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2I4JM57",
+          "protein_name": "",
+          "gene_names": [
+            "C4H"
+          ],
+          "organism": "Sesamum indicum",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")",
+        "(protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cyp98a3::l aurea::::{\"uniprot\": \"O22203\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O22203",
+        "pathbank_protein_id": "13561"
+      },
+      "pathbank_protein_id": 13561,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 13561,
+          "name": "Cytochrome P450 98A3",
+          "uniprot": "O22203",
+          "gene_name": "CYP98A3",
+          "species_id": 4,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::vanillin synthase::l aurea::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::vanillin synthase::l aurea::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"L. aurea\" | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")",
+      "confidence": 0.2433,
+      "candidates": [
+        {
+          "accession": "A0A068CNX1",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Glechoma hederacea",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A0F7G352",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Vanilla planifolia",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "O69762",
+          "protein_name": "Hydroxycinnamoyl-CoA hydratase-lyase",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.0975
+        },
+        {
+          "accession": "A0A7W9PIY2",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Nocardia transvalensis",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2U9K4U5",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Decalepis hamiltonii",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6P6SI29",
+          "protein_name": "",
+          "gene_names": [
+            "LOC113691700"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0ABM4UNW9",
+          "protein_name": "",
+          "gene_names": [
+            "LOC140008450"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1I4VUH7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Saccharopolyspora antimicrobica",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tyrosine decarboxylase::l aurea::::{\"uniprot\": \"Q94EE9\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::tyrosine decarboxylase::l aurea::::{\"uniprot\": \"Q94EE9\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"L. aurea\" | (protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "Q95ZS2",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "tdc-1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "O82415",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TYDC",
+            "TYDC9"
+          ],
+          "organism": "Papaver somniferum",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q94EE9",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TDC",
+            "TYDC"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q9M0G4",
+          "protein_name": "Tyrosine decarboxylase 2",
+          "gene_names": [
+            "TYDC",
+            "TYRDC"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "J7GQ11",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tdc"
+          ],
+          "organism": "Levilactobacillus brevis",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "A0A481NV25",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "mfnA_1",
+            "tdc"
+          ],
+          "organism": "Enterococcus faecium",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "Q838D6",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tdc",
+            "tdcA"
+          ],
+          "organism": "Enterococcus faecalis (strain ATCC 700802 / V583)",
+          "reviewed": true,
+          "score": 0.1267
+        },
+        {
+          "accession": "P0DTQ4",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tyrDC"
+          ],
+          "organism": "Enterococcus faecalis (strain EnGen0310 / MMH594)",
+          "reviewed": true,
+          "score": 0.1267
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tetrahydroalstonine synthase::l aurea::::{\"uniprot\": \"A0A0F6SD02\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::tetrahydroalstonine synthase::l aurea::::{\"uniprot\": \"A0A0F6SD02\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"tetrahydroalstonine synthase\" OR gene:\"tetrahydroalstonine synthase\") AND organism_name:\"L. aurea\" | (protein_name:\"tetrahydroalstonine synthase\" OR gene:\"tetrahydroalstonine synthase\")",
+      "confidence": 0.01,
+      "candidates": [
+        {
+          "accession": "A0A0F6SD02",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Catharanthus roseus",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A9E7V6Z7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Hamelia patens",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1B1FHP1",
+          "protein_name": "",
+          "gene_names": [
+            "THAS3"
+          ],
+          "organism": "Catharanthus roseus",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1B1FHQ0",
+          "protein_name": "",
+          "gene_names": [
+            "THAS2"
+          ],
+          "organism": "Catharanthus roseus",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1B1FHP9",
+          "protein_name": "",
+          "gene_names": [
+            "THAS4"
+          ],
+          "organism": "Catharanthus roseus",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A4Y5UXZ6",
+          "protein_name": "",
+          "gene_names": [
+            "THAS"
+          ],
+          "organism": "Uncaria tomentosa",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6M2RFB9",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Rauvolfia tetraphylla",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A384UXT7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Rauvolfia tetraphylla",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"tetrahydroalstonine synthase\" OR gene:\"tetrahydroalstonine synthase\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"tetrahydroalstonine synthase\" OR gene:\"tetrahydroalstonine synthase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::secologanin synthase::l aurea::::{\"uniprot\": \"Q05047\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::secologanin synthase::l aurea::::{\"uniprot\": \"Q05047\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"secologanin synthase\" OR gene:\"secologanin synthase\") AND organism_name:\"L. aurea\" | (protein_name:\"secologanin synthase\" OR gene:\"secologanin synthase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "Q05047",
+          "protein_name": "Secologanin synthase 1",
+          "gene_names": [
+            "CYP72",
+            "CYP72A1",
+            "P450CR3",
+            "SLS",
+            "SLS1"
+          ],
+          "organism": "Catharanthus roseus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "U5NDT8",
+          "protein_name": "Secologanin synthase 2",
+          "gene_names": [
+            "CYP72C",
+            "SLS",
+            "SLS2"
+          ],
+          "organism": "Catharanthus roseus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A0B2SBB7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Glycine soja",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A0B2SSF8",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Glycine soja",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A151S295",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Cajanus cajan",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A151SG66",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Cajanus cajan",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2G2VRL7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Capsicum baccatum",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2G9G2A5",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Handroanthus impetiginosus",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"secologanin synthase\" OR gene:\"secologanin synthase\") AND organism_name:\"L. aurea\"",
+        "(protein_name:\"secologanin synthase\" OR gene:\"secologanin synthase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::n4omt::n bowdenii::::{\"uniprot\": \"A0A077EWA5\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::n4omt::n bowdenii::::{\"uniprot\": \"A0A077EWA5\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"N. bowdenii\" | (protein_name:\"N4OMT\" OR gene:\"N4OMT\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A077EWA5",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A2H5AIZ6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A5P8H727",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Lycoris radiata",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A346TLF5",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus papyraceus",
+          "reviewed": true,
+          "score": 0.56
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"N. bowdenii\"",
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::pal::n bowdenii::::{\"uniprot\": \"P11544\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::pal::n bowdenii::::{\"uniprot\": \"P11544\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PAL\" OR gene:\"PAL\") AND organism_name:\"N. bowdenii\" | (protein_name:\"PAL\" OR gene:\"PAL\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "P0A912",
+          "protein_name": "Peptidoglycan-associated lipoprotein",
+          "gene_names": [
+            "excC",
+            "pal"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P11544",
+          "protein_name": "Phenylalanine/tyrosine ammonia-lyase",
+          "gene_names": [
+            "PAL"
+          ],
+          "organism": "Rhodotorula toruloides",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q8K099",
+          "protein_name": "Leucine-rich repeat, immunoglobulin-like domain and transmembrane domain-containing protein 1",
+          "gene_names": [
+            "Lrit1",
+            "Lrrc21",
+            "Pal"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "Q9JMH2",
+          "protein_name": "Leucine-rich repeat, immunoglobulin-like domain and transmembrane domain-containing protein 1",
+          "gene_names": [
+            "Lrit1",
+            "Lrrc21",
+            "Pal"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "P34766",
+          "protein_name": "Homeobox protein pal-1",
+          "gene_names": [
+            "ceh-3",
+            "pal-1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "Q16656",
+          "protein_name": "Nuclear respiratory factor 1",
+          "gene_names": [
+            "NRF1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "P19021",
+          "protein_name": "Peptidyl-glycine alpha-amidating monooxygenase",
+          "gene_names": [
+            "PAM"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "P0A855",
+          "protein_name": "Tol-Pal system protein TolB",
+          "gene_names": [
+            "tolB"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PAL\" OR gene:\"PAL\") AND organism_name:\"N. bowdenii\"",
+        "(protein_name:\"PAL\" OR gene:\"PAL\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lrpal1::n bowdenii::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::lrpal1::n bowdenii::::{}": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"LrPAL1\" OR gene:\"LrPAL1\") AND organism_name:\"N. bowdenii\" | (protein_name:\"LrPAL1\" OR gene:\"LrPAL1\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lrpal2::n bowdenii::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::lrpal2::n bowdenii::::{}": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"LrPAL2\" OR gene:\"LrPAL2\") AND organism_name:\"N. bowdenii\" | (protein_name:\"LrPAL2\" OR gene:\"LrPAL2\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cinnamate 4hydroxylase::n bowdenii::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::cinnamate 4hydroxylase::n bowdenii::::{\"uniprot\": \"A0A4S4DRC9\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"N. bowdenii\" | (protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\") AND organism_name:\"N. bowdenii\" | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") | (protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A4S4DRC9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis var. sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A7J7HQ38",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9D5D4E9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Dioscorea zingiberensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A9Q1QFF8",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Carnegiea gigantea",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0AA38FKR9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Taxus chinensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "F1B283",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H2",
+          "gene_names": [
+            "C4H2"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "F1B282",
+          "protein_name": "Trans-cinnamate 4-monooxygenase C4H1",
+          "gene_names": [
+            "C4H1"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2I4JM57",
+          "protein_name": "",
+          "gene_names": [
+            "C4H"
+          ],
+          "organism": "Sesamum indicum",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"N. bowdenii\"",
+        "(protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\") AND organism_name:\"N. bowdenii\"",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")",
+        "(protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cyp98a3::n bowdenii::::{\"uniprot\": \"O22203\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O22203",
+        "pathbank_protein_id": "13561"
+      },
+      "pathbank_protein_id": 13561,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 13561,
+          "name": "Cytochrome P450 98A3",
+          "uniprot": "O22203",
+          "gene_name": "CYP98A3",
+          "species_id": 4,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::vanillin synthase::n bowdenii::::{\"uniprot\": \"A0A068CNX1\"}": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api::vanillin synthase::n bowdenii::::{\"uniprot\": \"A0A068CNX1\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"N. bowdenii\" | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")",
+      "confidence": 0.2433,
+      "candidates": [
+        {
+          "accession": "A0A068CNX1",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Glechoma hederacea",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "A0A0F7G352",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Vanilla planifolia",
+          "reviewed": true,
+          "score": 0.2433
+        },
+        {
+          "accession": "O69762",
+          "protein_name": "Hydroxycinnamoyl-CoA hydratase-lyase",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.0975
+        },
+        {
+          "accession": "A0A7W9PIY2",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Nocardia transvalensis",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A2U9K4U5",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Decalepis hamiltonii",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A6P6SI29",
+          "protein_name": "",
+          "gene_names": [
+            "LOC113691700"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0ABM4UNW9",
+          "protein_name": "",
+          "gene_names": [
+            "LOC140008450"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": true,
+          "score": 0.01
+        },
+        {
+          "accession": "A0A1I4VUH7",
+          "protein_name": "",
+          "gene_names": [],
+          "organism": "Saccharopolyspora antimicrobica",
+          "reviewed": true,
+          "score": 0.01
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"N. bowdenii\"",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tyrosine decarboxylase::n bowdenii::::{\"uniprot\": \"O82415\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O82415",
+        "pathbank_protein_id": "161086"
+      },
+      "pathbank_protein_id": 161086,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 161086,
+          "name": "Tyrosine decarboxylase",
+          "uniprot": "O82415",
+          "gene_name": "TYDC",
+          "species_id": 12186,
+          "matched_on": "uniprot_id",
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::obag::pseudomonas fluorescens::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api::obag::pseudomonas fluorescens::::{}": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ObaG\" OR gene:\"ObaG\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"ObaG\" OR gene:\"ObaG\")",
+      "candidates": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::pntm::pseudomonas fluorescens::::{\"uniprot\": \"E3VWI3\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api::pntm::pseudomonas fluorescens::::{\"uniprot\": \"E3VWI3\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PntM\" OR gene:\"PntM\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "E3VWI3",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces arenae",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A2N9BJN2",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces chartreusis NRRL 3882",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A7K0BTW4",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Actinomadura macrotermitis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0A7K0DYT4",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Nocardia aurantia",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0ABW0BAM4",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces mutomycini",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0ABV3LSP6",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces huasconensis",
+          "reviewed": true,
+          "score": 0.56
+        },
+        {
+          "accession": "A0ABW8LVR4",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces milbemycinicus",
+          "reviewed": true,
+          "score": 0.56
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PntM\" OR gene:\"PntM\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -25856,6 +27297,541 @@
         "status": "matched",
         "order_step": "external_id:direct_id_match:kegg"
       }
+    },
+    "db::ferulic acid::::{\"kegg\": \"C01494\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000954",
+        "kegg": "C01494",
+        "chebi": "CHEBI:17620",
+        "pubchem": "445858",
+        "cas": "537-98-4",
+        "chemspider": "393368",
+        "drugbank": "DB07767",
+        "pathbank_compound_id": "761"
+      },
+      "pathbank_compound_id": 761,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 761,
+          "name": "trans-Ferulic acid",
+          "short_name": "Ferulat",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000954",
+            "kegg": "C01494",
+            "chebi": "CHEBI:17620",
+            "pubchem": "445858",
+            "cas": "537-98-4",
+            "chemspider": "393368",
+            "drugbank": "DB07767"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::vanillin::::{\"kegg\": \"C00755\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0012308",
+        "kegg": "C00755",
+        "chebi": "CHEBI:18346",
+        "pubchem": "1183",
+        "cas": "121-33-5",
+        "biocyc": "VANILLIN",
+        "chemspider": "13860434",
+        "pathbank_compound_id": "7840"
+      },
+      "pathbank_compound_id": 7840,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 7840,
+          "name": "Vanillin",
+          "short_name": "Zimco",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0012308",
+            "kegg": "C00755",
+            "chebi": "CHEBI:18346",
+            "pubchem": "1183",
+            "cas": "121-33-5",
+            "biocyc": "VANILLIN",
+            "chemspider": "13860434"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::haemanthamine::::{\"kegg\": \"C08527\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::haemanthidine::::{\"kegg\": \"C12174\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::6hydroxycrinamine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lycorine::::{\"kegg\": \"C08532\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "kegg": "C08532",
+        "chebi": "CHEBI:6601",
+        "pubchem": "72378",
+        "cas": "476-28-8",
+        "chemspider": "65312",
+        "pathbank_compound_id": "96860"
+      },
+      "pathbank_compound_id": 96860,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 96860,
+          "name": "lycorine",
+          "short_name": "Lycorin",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C08532",
+            "chebi": "CHEBI:6601",
+            "pubchem": "72378",
+            "cas": "476-28-8",
+            "chemspider": "65312"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::norpluviine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::crinine::::{\"kegg\": \"C12162\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "kegg": "C12162",
+        "chebi": "CHEBI:31437",
+        "pubchem": "398937",
+        "cas": "510-67-8",
+        "chemspider": "353636",
+        "pathbank_compound_id": "96861"
+      },
+      "pathbank_compound_id": 96861,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 96861,
+          "name": "crinine",
+          "short_name": "crinine",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C12162",
+            "chebi": "CHEBI:31437",
+            "pubchem": "398937",
+            "cas": "510-67-8",
+            "chemspider": "353636"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::vittatine::::{\"kegg\": \"C12193\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::11hydroxyvittatine::::{\"kegg\": \"C12194\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::galanthine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::crinamine::::{\"kegg\": \"C08525\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::belladine::::{\"kegg\": \"C08518\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::narciclasine::::{\"kegg\": \"C08533\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::strictosidine::::{\"kegg\": \"C03470\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "kegg": "C03470",
+        "chebi": "CHEBI:17559",
+        "pubchem": "161336",
+        "cas": "20824-29-7",
+        "biocyc": "STRICTOSIDINE",
+        "chemspider": "141721",
+        "pathbank_compound_id": "96935"
+      },
+      "pathbank_compound_id": 96935,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 96935,
+          "name": "3-α(S)-Strictosidine",
+          "short_name": "3α-S-S",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C03470",
+            "chebi": "CHEBI:17559",
+            "pubchem": "161336",
+            "cas": "20824-29-7",
+            "biocyc": "STRICTOSIDINE",
+            "chemspider": "141721"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::tetrahydroalstonine::::{\"kegg\": \"C11682\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::loganin::::{\"kegg\": \"C01433\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.625,
+      "candidates": [
+        {
+          "pathbank_compound_id": 96812,
+          "name": "loganic acid",
+          "short_name": "LA",
+          "score": 0.625,
+          "mapped_ids": {
+            "kegg": "C01512",
+            "chebi": "CHEBI:30632",
+            "pubchem": "89640",
+            "cas": "22255-40-9",
+            "chemspider": "80905"
+          }
+        },
+        {
+          "pathbank_compound_id": 96934,
+          "name": "(-)-Secologanin",
+          "short_name": "Secolo",
+          "score": 0.43,
+          "mapped_ids": {
+            "kegg": "C01852",
+            "chebi": "CHEBI:18002",
+            "pubchem": "161276",
+            "cas": "19351-63-4",
+            "biocyc": "SECOLOGANIN-CPD",
+            "chemspider": "141670"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::secologanin::::{\"kegg\": \"C01852\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "kegg": "C01852",
+        "chebi": "CHEBI:18002",
+        "pubchem": "161276",
+        "cas": "19351-63-4",
+        "biocyc": "SECOLOGANIN-CPD",
+        "chemspider": "141670",
+        "pathbank_compound_id": "96934"
+      },
+      "pathbank_compound_id": 96934,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 96934,
+          "name": "(-)-Secologanin",
+          "short_name": "Secolo",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C01852",
+            "chebi": "CHEBI:18002",
+            "pubchem": "161276",
+            "cas": "19351-63-4",
+            "biocyc": "SECOLOGANIN-CPD",
+            "chemspider": "141670"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::lthr::::{\"kegg\": \"C00188\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000167",
+        "kegg": "C00188",
+        "chebi": "CHEBI:16857",
+        "pubchem": "6288",
+        "cas": "72-19-5",
+        "biocyc": "THR",
+        "chemspider": "6051",
+        "drugbank": "DB00156",
+        "pathbank_compound_id": "109"
+      },
+      "pathbank_compound_id": 109,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 109,
+          "name": "L-Threonine",
+          "short_name": "Thr",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000167",
+            "kegg": "C00188",
+            "chebi": "CHEBI:16857",
+            "pubchem": "6288",
+            "cas": "72-19-5",
+            "biocyc": "THR",
+            "chemspider": "6051",
+            "drugbank": "DB00156"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::4nitrophenyacetaldehyde::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::2s3r2amino3hydroxy44nitrophenylbutanoate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glycine enolate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::pentalenolactone f::::{\"kegg\": \"C20397\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::pentalenolactone::::{\"kegg\": \"C20407\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -27162,161 +29138,600 @@
         "status": "unresolved",
         "issue": "component_proteins_unresolved"
       }
-    }
-  },
-  "enzyme_complexes": {
-    "phenylalanine ammonialyase pal::::narcissus pseudonarcissus": {
+    },
+    "db::pal complex::l aurea::::[{\"ids\": {\"uniprot\": \"P11544\"}, \"name\": \"PAL\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
-      "reason": "novel_complex",
+      "reason": "species_not_found:L. aurea",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "",
       "candidates": [],
-      "name": "phenylalanine ammonia-lyase (PAL) complex",
-      "species_id": 12205,
       "components": [
         {
-          "name": "phenylalanine ammonia-lyase (PAL)",
+          "name": "PAL",
           "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
           "mapped_ids": {
-            "uniprot": "A0A2H5AIW0"
-          }
+            "uniprot": "P11544"
+          },
+          "reason": "no_db_match"
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "phenylalanine ammonia-lyase (PAL)",
+          "component": "PAL",
+          "component_index": 0,
           "reason": "no_db_match"
         }
       ],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "unresolved",
+        "issue": "species_not_found"
       }
     },
-    "cinnamate 4hydroxylase cyp73a1::::narcissus pseudonarcissus": {
+    "db::cinnamate 4hydroxylase complex::l aurea::::[{\"ids\": {\"uniprot\": \"A0A4S4DRC9\"}, \"name\": \"cinnamate 4-hydroxylase\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
-      "reason": "novel_complex",
+      "reason": "species_not_found:L. aurea",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "",
       "candidates": [],
-      "name": "cinnamate 4-hydroxylase (CYP73A1) complex",
-      "species_id": 12205,
       "components": [
         {
-          "name": "cinnamate 4-hydroxylase (CYP73A1)",
+          "name": "cinnamate 4-hydroxylase",
           "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
           "mapped_ids": {
             "uniprot": "A0A4S4DRC9"
-          }
+          },
+          "reason": "no_db_match"
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "cinnamate 4-hydroxylase (CYP73A1)",
+          "component": "cinnamate 4-hydroxylase",
+          "component_index": 0,
           "reason": "no_db_match"
         }
       ],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "unresolved",
+        "issue": "species_not_found"
       }
     },
-    "cyp98a3::::narcissus pseudonarcissus": {
+    "db::cyp98a3 complex::l aurea::::[{\"ids\": {\"gene_name\": \"CYP98A3\", \"pathbank_protein_id\": \"13561\", \"uniprot\": \"O22203\"}, \"name\": \"CYP98A3\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
-      "reason": "novel_complex",
+      "reason": "species_not_found:L. aurea",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "",
       "candidates": [],
-      "name": "CYP98A3 complex",
-      "species_id": 12205,
       "components": [
         {
           "name": "CYP98A3",
           "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 13561,
           "mapped_ids": {
-            "uniprot": "O22203"
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561",
+            "gene_name": "CYP98A3"
           }
         }
       ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "CYP98A3",
-          "reason": "no_db_match"
-        }
-      ],
+      "issues": [],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "unresolved",
+        "issue": "species_not_found"
       }
     },
-    "vpvan::::narcissus pseudonarcissus": {
+    "db::vanillin synthase complex::l aurea::::[{\"ids\": {\"uniprot\": \"A0A0F7G352\"}, \"name\": \"vanillin synthase\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
-      "reason": "novel_complex",
+      "reason": "species_not_found:L. aurea",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "",
       "candidates": [],
-      "name": "VpVAN complex",
-      "species_id": 12205,
       "components": [
         {
-          "name": "VpVAN",
+          "name": "vanillin synthase",
           "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
           "mapped_ids": {
             "uniprot": "A0A0F7G352"
-          }
+          },
+          "reason": "no_db_match"
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "VpVAN",
+          "component": "vanillin synthase",
+          "component_index": 0,
           "reason": "no_db_match"
         }
       ],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "unresolved",
+        "issue": "species_not_found"
       }
     },
-    "tyrosine decarboxylase::::narcissus pseudonarcissus": {
+    "db::tyrosine decarboxylase complex::l aurea::::[{\"ids\": {\"uniprot\": \"Q94EE9\"}, \"name\": \"tyrosine decarboxylase\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
-      "reason": "novel_complex",
+      "reason": "species_not_found:L. aurea",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "",
       "candidates": [],
-      "name": "tyrosine decarboxylase complex",
-      "species_id": 12205,
       "components": [
         {
           "name": "tyrosine decarboxylase",
           "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
           "mapped_ids": {
-            "uniprot": "A0A2H5AIY2"
-          }
+            "uniprot": "Q94EE9"
+          },
+          "reason": "no_db_match"
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
           "component": "tyrosine decarboxylase",
+          "component_index": 0,
           "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::n4omt complex::l aurea::::[{\"ids\": {\"uniprot\": \"A0A5P8H727\"}, \"name\": \"N4OMT\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "N4OMT",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A5P8H727"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "N4OMT",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::secologanin synthase complex::l aurea::::[{\"ids\": {\"uniprot\": \"Q05047\"}, \"name\": \"secologanin synthase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "secologanin synthase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q05047"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "secologanin synthase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::tetrahydroalstonine synthase complex::l aurea::::[{\"ids\": {\"uniprot\": \"A0A0F6SD02\"}, \"name\": \"tetrahydroalstonine synthase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:L. aurea",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "tetrahydroalstonine synthase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0F6SD02"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "tetrahydroalstonine synthase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::pal complex::n bowdenii::::[{\"ids\": {\"uniprot\": \"P11544\"}, \"name\": \"PAL\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "PAL",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P11544"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PAL",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::lrpal1 complex::n bowdenii::::[{\"ids\": {}, \"name\": \"LrPAL1\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "LrPAL1",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:N. bowdenii"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "LrPAL1",
+          "component_index": 0,
+          "reason": "species_not_found:N. bowdenii"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::lrpal2 complex::n bowdenii::::[{\"ids\": {}, \"name\": \"LrPAL2\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "LrPAL2",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:N. bowdenii"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "LrPAL2",
+          "component_index": 0,
+          "reason": "species_not_found:N. bowdenii"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::cinnamate 4hydroxylase complex::n bowdenii::::[{\"ids\": {\"uniprot\": \"A0A4S4DRC9\"}, \"name\": \"cinnamate 4-hydroxylase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "cinnamate 4-hydroxylase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A4S4DRC9"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "cinnamate 4-hydroxylase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::cyp98a3 complex::n bowdenii::::[{\"ids\": {\"gene_name\": \"CYP98A3\", \"pathbank_protein_id\": \"13561\", \"uniprot\": \"O22203\"}, \"name\": \"CYP98A3\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "CYP98A3",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 13561,
+          "mapped_ids": {
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561",
+            "gene_name": "CYP98A3"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::vanillin synthase complex::n bowdenii::::[{\"ids\": {\"uniprot\": \"A0A068CNX1\"}, \"name\": \"vanillin synthase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "vanillin synthase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A068CNX1"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "vanillin synthase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::tyrosine decarboxylase complex::n bowdenii::::[{\"ids\": {\"gene_name\": \"TYDC\", \"pathbank_protein_id\": \"161086\", \"uniprot\": \"O82415\"}, \"name\": \"tyrosine decarboxylase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "tyrosine decarboxylase",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "pathbank_protein_id",
+          "pathbank_protein_id": 161086,
+          "mapped_ids": {
+            "uniprot": "O82415",
+            "pathbank_protein_id": "161086",
+            "gene_name": "TYDC"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::n4omt complex::n bowdenii::::[{\"ids\": {\"uniprot\": \"A0A077EWA5\"}, \"name\": \"N4OMT\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:N. bowdenii",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "N4OMT",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A077EWA5"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "N4OMT",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::obag complex::pseudomonas fluorescens::::[{\"ids\": {}, \"name\": \"ObaG\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "ObaG",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "ObaG",
+          "component_index": 0,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::pntm complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"E3VWI3\"}, \"name\": \"PntM\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "PntM",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "E3VWI3"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PntM",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    }
+  },
+  "enzyme_complexes": {
+    "obag::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "ObaG complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "ObaG",
+          "stoichiometry": 1
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "ObaG",
+          "reason": "novel_protein"
         }
       ],
       "resolution": {
@@ -27325,7 +29740,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "n4omt::::narcissus pseudonarcissus": {
+    "pntm::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -27333,21 +29748,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "N4OMT complex",
-      "species_id": 12205,
+      "name": "PntM complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "N4OMT",
+          "name": "PntM",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "A0A2H5AIZ6"
+            "uniprot": "E3VWI3"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "N4OMT",
+          "component": "PntM",
           "reason": "no_db_match"
         }
       ],

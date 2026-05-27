@@ -16,6 +16,7 @@ from t2pw.mapping.map_ids import (  # noqa: E402
     _map_protein_with_strategy,
     _reconcile_components_against_local_proteins,
     _rewrite_reaction_protein_enzymes_to_complexes,
+    map_protein_uniprot,
 )
 
 
@@ -73,6 +74,46 @@ class _AvailableDb:
             "candidates": [],
             "resolution": {"status": "novel", "issue": "no_db_candidates"},
         }
+
+
+class _FakeResponse:
+    def __init__(self, payload: Dict[str, Any], status_code: int = 200) -> None:
+        self._payload = payload
+        self.status_code = status_code
+
+    def json(self) -> Dict[str, Any]:
+        return self._payload
+
+
+class _AliasUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any]) -> _FakeResponse:
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if 'gene:"ObiH"' not in query and 'gene:"obiH"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "A0A1X9LWZ7",
+                        "entryType": "UniProtKB unreviewed (TrEMBL)",
+                        "proteinDescription": {
+                            "recommendedName": {"fullName": {"value": "Threonine aldolase"}},
+                        },
+                        "genes": [
+                            {
+                                "geneName": {"value": "obiH"},
+                                "synonyms": [{"value": "CIB54_12585"}],
+                            }
+                        ],
+                        "organism": {"scientificName": "Pseudomonas fluorescens"},
+                    }
+                ]
+            }
+        )
 
 
 def _glycolysis_complex_result(protein_row: Dict[str, Any], species: str) -> Dict[str, Any]:
@@ -244,6 +285,20 @@ def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
     assert result["source"] == "api"
     assert result["mapped_ids"]["uniprot"] == "P19367"
     api_lookup.assert_called_once()
+
+
+def test_uniprot_mapping_uses_curated_alias_for_obag() -> None:
+    client = _AliasUniProtClient()
+
+    result = map_protein_uniprot(client, "ObaG", "Pseudomonas fluorescens")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "A0A1X9LWZ7"
+    assert result["matched_alias"] == "ObiH"
+    assert result["alias_source"] == "curated_obafluorin_ltta"
+    assert result["resolved_name"] == "Threonine aldolase"
+    assert result["chosen_rule"] == "top_unique_alias_candidate"
+    assert any('gene:"ObiH"' in query for query in client.queries)
 
 
 def test_complex_maps_by_name_and_species() -> None:
