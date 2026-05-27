@@ -1,13 +1,13 @@
 {
   "summary": {
-    "total_species": 9,
-    "total_reactions": 3,
+    "total_species": 24,
+    "total_reactions": 6,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "L-Thr",
+        "entity": "obafluorin",
         "reason": "no subcellular location recorded"
       },
       {
@@ -15,31 +15,87 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "4-nitrophenyacetaldehyde",
-        "reason": "no subcellular location recorded"
-      },
-      {
         "entity": "(2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "obafluorin",
+        "entity": "AHNB",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pentalenolactone F",
+        "entity": "L-Thr",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pentalenolactone",
+        "entity": "4-nitrophenyacetaldehyde",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "ObaG",
+        "entity": "glycine enolate",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "PntM",
+        "entity": "pyridoxal-phosphate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "L-Trp",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "3-methyl-2-indolic acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "formaldehyde",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ammonia",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "nosiheptide",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "MIA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "linear pentathiazolyl peptide intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Cys",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Glu6",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "SAM",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NosL",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NosJ",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NosK",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NosN",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Cys-bound MIA",
         "reason": "no subcellular location recorded"
       }
     ],
@@ -49,7 +105,7 @@
     "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "L-Thr",
+        "entity": "obafluorin",
         "type": "compound"
       },
       {
@@ -57,23 +113,67 @@
         "type": "compound"
       },
       {
-        "entity": "4-nitrophenyacetaldehyde",
-        "type": "compound"
-      },
-      {
         "entity": "(2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
         "type": "compound"
       },
       {
-        "entity": "obafluorin",
+        "entity": "AHNB",
         "type": "compound"
       },
       {
-        "entity": "pentalenolactone F",
+        "entity": "L-Thr",
         "type": "compound"
       },
       {
-        "entity": "pentalenolactone",
+        "entity": "4-nitrophenyacetaldehyde",
+        "type": "compound"
+      },
+      {
+        "entity": "glycine enolate",
+        "type": "compound"
+      },
+      {
+        "entity": "pyridoxal-phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "L-Trp",
+        "type": "compound"
+      },
+      {
+        "entity": "3-methyl-2-indolic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "formaldehyde",
+        "type": "compound"
+      },
+      {
+        "entity": "ammonia",
+        "type": "compound"
+      },
+      {
+        "entity": "nosiheptide",
+        "type": "compound"
+      },
+      {
+        "entity": "MIA",
+        "type": "compound"
+      },
+      {
+        "entity": "linear pentathiazolyl peptide intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "Cys",
+        "type": "compound"
+      },
+      {
+        "entity": "Glu6",
+        "type": "compound"
+      },
+      {
+        "entity": "SAM",
         "type": "compound"
       },
       {
@@ -81,12 +181,30 @@
         "type": "protein"
       },
       {
-        "entity": "PntM",
+        "entity": "NosL",
+        "type": "protein"
+      },
+      {
+        "entity": "NosJ",
+        "type": "protein"
+      },
+      {
+        "entity": "NosK",
+        "type": "protein"
+      },
+      {
+        "entity": "NosN",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
     "duplicate_species": [],
-    "inconsistent_class": []
+    "inconsistent_class": [
+      {
+        "entity": "pyridoxal-phosphate",
+        "assigned_class": "compound",
+        "conflict": "compound used as catalyst in reaction 'ObaG-catalysed retro-aldol cleavage of L-Thr'"
+      }
+    ]
   }
 }

@@ -77,9 +77,10 @@ class _AvailableDb:
 
 
 class _FakeResponse:
-    def __init__(self, payload: Dict[str, Any], status_code: int = 200) -> None:
+    def __init__(self, payload: Dict[str, Any], status_code: int = 200, text: str = "") -> None:
         self._payload = payload
         self.status_code = status_code
+        self.text = text
 
     def json(self) -> Dict[str, Any]:
         return self._payload
@@ -89,9 +90,15 @@ class _AliasUniProtClient:
     def __init__(self) -> None:
         self.queries: List[str] = []
 
-    def get(self, url: str, params: Dict[str, Any]) -> _FakeResponse:
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
         query = str(params.get("query") or "")
         self.queries.append(query)
+        if "fullTextXML" in url:
+            return _FakeResponse(
+                {},
+                text="<article><body>The TTA known as ObiH (or ObaG) was discovered in obafluorin biosynthesis.</body></article>",
+            )
         if "europepmc" in url:
             return _FakeResponse(
                 {
@@ -99,7 +106,10 @@ class _AliasUniProtClient:
                         "result": [
                             {
                                 "title": "Discovery of L-threonine transaldolases",
-                                "abstractText": "The TTA known as ObiH (or ObaG) was discovered in obafluorin biosynthesis.",
+                                "abstractText": "Beta-hydroxy amino acid biosynthesis.",
+                                "source": "PMC",
+                                "id": "10495429",
+                                "pmcid": "PMC10495429",
                             }
                         ]
                     }
@@ -133,7 +143,8 @@ class _NocBDomainUniProtClient:
     def __init__(self) -> None:
         self.queries: List[str] = []
 
-    def get(self, url: str, params: Dict[str, Any]) -> _FakeResponse:
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
         query = str(params.get("query") or "")
         self.queries.append(query)
         if 'gene:"NocB"' not in query:

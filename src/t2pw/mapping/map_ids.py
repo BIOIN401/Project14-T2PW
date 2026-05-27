@@ -176,6 +176,46 @@ def _extract_aliases_from_literature_text(name: str, text: str) -> List[Dict[str
     return deduped[:8]
 
 
+def _plain_text_from_xml(value: str) -> str:
+    text = str(value or "")
+    if not text:
+        return ""
+    try:
+        root = ElementTree.fromstring(text)
+        return _candidate_alias_text(" ".join(root.itertext()))
+    except Exception:  # noqa: BLE001
+        return _candidate_alias_text(re.sub(r"<[^>]+>", " ", text))
+
+
+def _europepmc_full_text(client: HttpClient, item: Dict[str, Any]) -> str:
+    source = _canonical_name(str(item.get("source") or ""))
+    raw_id = _canonical_name(str(item.get("id") or ""))
+    pmcid = _canonical_name(str(item.get("pmcid") or ""))
+    candidates: List[Tuple[str, str]] = []
+    if source and raw_id:
+        candidates.append((source, raw_id.removeprefix("PMC")))
+    if pmcid:
+        candidates.append(("PMC", pmcid.removeprefix("PMC")))
+
+    seen: set = set()
+    for src, ident in candidates[:3]:
+        key = (src, ident)
+        if not src or not ident or key in seen:
+            continue
+        seen.add(key)
+        url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{src}/{ident}/fullTextXML"
+        try:
+            resp = client.get(url)
+        except Exception:  # noqa: BLE001
+            continue
+        if resp.status_code != 200:
+            continue
+        text = getattr(resp, "text", "")
+        if text:
+            return _plain_text_from_xml(text)
+    return ""
+
+
 def lookup_literature_protein_aliases(
     client: HttpClient,
     name: str,
@@ -214,6 +254,19 @@ def lookup_literature_protein_aliases(
         for alias in _extract_aliases_from_literature_text(name, text):
             alias["literature_title"] = str(item.get("title") or "")[:180]
             aliases.append(alias)
+
+    if not aliases:
+        for item in results[: min(4, len(results))]:
+            if not isinstance(item, dict):
+                continue
+            text = _europepmc_full_text(client, item)
+            if not text:
+                continue
+            for alias in _extract_aliases_from_literature_text(name, text):
+                alias["literature_title"] = str(item.get("title") or "")[:180]
+                aliases.append(alias)
+            if aliases:
+                break
 
     deduped: List[Dict[str, str]] = []
     seen: set = set()
@@ -3582,7 +3635,7 @@ def _map_protein_with_strategy(
     protein_aliases = _protein_alias_entries(name, _safe_dict(protein_row))
     base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}"
     db_key = f"db::{base_key}"
-    api_key = f"api-v4::{base_key}::{json.dumps(protein_aliases, sort_keys=True)}"
+    api_key = f"api-v5::{base_key}::{json.dumps(protein_aliases, sort_keys=True)}"
 
     if not organism and not row_ids.get("uniprot") and not pathbank_id:
         return _with_resolution(
