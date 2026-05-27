@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+from lxml import etree
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -11,7 +13,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from t2pw.pwml.ir import build_pwml_ir  # noqa: E402
-from t2pw.pwml.validate import discover_structure_signature  # noqa: E402
+from t2pw.pwml.validate import discover_structure_signature, repair_tree  # noqa: E402
 from t2pw.pwml.writer import DeterministicPwmlBuilder, blocking_pwml_ir_errors  # noqa: E402
 
 
@@ -120,6 +122,75 @@ class _EmptyCompoundDb:
         return []
 
 
+def _writer_args() -> SimpleNamespace:
+    return SimpleNamespace(
+        name="Generated Pathway",
+        description="",
+        subject="Metabolic",
+        pw_id="PW000000",
+        height=1400,
+        width=3200,
+        background_color="#FFFFFF",
+        ref=str(ROOT / "reference" / "PW000001.pwml"),
+    )
+
+
+def _minimal_pwml_ir_with_compounds(compounds: list[dict]) -> dict:
+    return {
+        "pathway": {
+            "key": "pathway_1",
+            "name": "Generated Pathway",
+            "subject": "Metabolic",
+            "width": 3200,
+            "height": 1400,
+        },
+        "species": [],
+        "subcellular_locations": [],
+        "cell_types": [],
+        "tissues": [],
+        "biological_states": [],
+        "entities": {
+            "compounds": compounds,
+            "proteins": [],
+            "nucleic_acids": [],
+            "element_collections": [],
+            "protein_complexes": [],
+            "bounds": [],
+        },
+        "processes": {
+            "reactions": [],
+            "reaction_coupled_transports": [],
+            "transports": [],
+            "interactions": [],
+            "sub_pathways": [],
+        },
+        "locations": [],
+        "protein_complex_visualizations": [],
+        "bound_visualizations": [],
+        "edges": [],
+        "process_visualizations": [],
+    }
+
+
+def _minimal_pwml_ir_with_biological_states(biological_states: list[dict]) -> dict:
+    ir = _minimal_pwml_ir_with_compounds([])
+    ir["species"] = [{"key": "sp_1", "name": "Homo sapiens", "pathwhiz_id": 1}]
+    ir["subcellular_locations"] = [{"key": "scl_1", "name": "cytosol", "pathwhiz_id": 2}]
+    ir["biological_states"] = biological_states
+    return ir
+
+
+def _build_pwml_for_ir(ir: dict) -> tuple[DeterministicPwmlBuilder, object]:
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=_writer_args())
+    build = builder.build()
+    return builder, build.root
+
+
+def _compound_xml(root: object) -> bytes:
+    return etree.tostring(root, encoding="utf-8")
+
+
 def _payload_with_complex_enzyme() -> dict:
     return {
         "entities": {
@@ -146,6 +217,185 @@ def _payload_with_complex_enzyme() -> dict:
             "interactions": [],
         },
     }
+
+
+def test_db_matched_compound_emits_trusted_pwc_id_and_short_name() -> None:
+    ir = _minimal_pwml_ir_with_compounds(
+        [
+            {
+                "key": "cmp_1",
+                "name": "Extracted glucose",
+                "pathwhiz_id": 77,
+                "db_status": "matched",
+                "db_row": {
+                    "id": 77,
+                    "name": "D-Glucose",
+                    "pwc_id": "PW_C000077",
+                    "short_name": "D-Glc",
+                },
+            }
+        ]
+    )
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    compound = builder.section_items["compounds"][0]
+    assert compound["id"] == 77
+    assert compound["pwc-id"] == "PW_C000077"
+    assert compound["short-name"] == "D-Glc"
+
+    compound_node = root.find(".//compounds/compound")
+    assert compound_node is not None
+    assert compound_node.findtext("id") == "77"
+    assert compound_node.findtext("pwc-id") == "PW_C000077"
+    assert compound_node.findtext("short-name") == "D-Glc"
+
+
+def test_structured_ir_novel_compound_omits_synthetic_pwc_id() -> None:
+    ir = _minimal_pwml_ir_with_compounds([{"key": "cmp_1", "name": "Novel compound"}])
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    compound = builder.section_items["compounds"][0]
+    assert compound["id"] == 20000
+    assert "pwc-id" not in compound
+    assert root.find(".//compounds/compound/pwc-id") is None
+    repaired_root = repair_tree(etree.ElementTree(root), builder.signature).getroot()
+    assert repaired_root.find(".//compounds/compound/pwc-id") is None
+    assert b"PW_C020000" not in _compound_xml(root)
+
+
+def test_structured_ir_novel_compound_does_not_trust_record_pwc_id() -> None:
+    ir = _minimal_pwml_ir_with_compounds(
+        [{"key": "cmp_1", "name": "Novel compound", "pwc_id": "PW_C020001"}]
+    )
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    compound = builder.section_items["compounds"][0]
+    assert "pwc-id" not in compound
+    assert root.find(".//compounds/compound/pwc-id") is None
+    assert b"PW_C020001" not in _compound_xml(root)
+
+
+def test_structured_ir_novel_compound_does_not_trust_mapped_pwc_id() -> None:
+    ir = _minimal_pwml_ir_with_compounds(
+        [{"key": "cmp_1", "name": "Novel compound", "mapped_ids": {"pwc_id": "PW_C020001"}}]
+    )
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    compound = builder.section_items["compounds"][0]
+    assert "pwc-id" not in compound
+    assert root.find(".//compounds/compound/pwc-id") is None
+    assert b"PW_C020001" not in _compound_xml(root)
+
+
+def test_structured_ir_novel_compound_omits_unsafe_short_name() -> None:
+    long_name = "N10-demethylated synthetic intermediate with unresolved PathWhiz identity"
+    ir = _minimal_pwml_ir_with_compounds(
+        [{"key": "cmp_1", "name": long_name, "short_name": long_name}]
+    )
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    compound = builder.section_items["compounds"][0]
+    assert "short-name" not in compound
+    assert root.find(".//compounds/compound/short-name") is None
+    assert b"<short-name>" not in _compound_xml(root)
+
+
+def test_fallback_novel_compound_omits_synthetic_pwc_id_and_short_name() -> None:
+    payload = {"entities": {"compounds": [{"name": "Novel fallback compound"}]}, "processes": {}}
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=_writer_args())
+    build = builder.build()
+
+    compound = builder.section_items["compounds"][0]
+    assert compound["id"] == 20000
+    assert "pwc-id" not in compound
+    assert "short-name" not in compound
+    assert build.root.find(".//compounds/compound/pwc-id") is None
+    assert build.root.find(".//compounds/compound/short-name") is None
+    repaired_root = repair_tree(etree.ElementTree(build.root), builder.signature).getroot()
+    assert repaired_root.find(".//compounds/compound/pwc-id") is None
+    assert repaired_root.find(".//compounds/compound/short-name") is None
+    assert b"PW_C020000" not in _compound_xml(build.root)
+
+
+def test_fallback_generated_biological_state_omits_pwbs_id() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {},
+    }
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=_writer_args())
+    build = builder.build()
+
+    state = builder.section_items["biological-states"][0]
+    assert isinstance(state["id"], int)
+    assert state["species-id"] == 1
+    assert state["subcellular-location-id"] == 2
+    assert "pwbs-id" not in state
+    assert build.root.find(".//biological-states/biological-state/pwbs-id") is None
+    repaired_root = repair_tree(etree.ElementTree(build.root), builder.signature).getroot()
+    assert repaired_root.find(".//biological-states/biological-state/pwbs-id") is None
+    assert b"<pwbs-id>" not in _compound_xml(build.root)
+
+
+def test_structured_ir_generated_biological_state_omits_pwbs_id_but_keeps_local_context_and_refs() -> None:
+    ir, report = build_pwml_ir(_payload_with_complex_enzyme(), strict_db=True)
+    assert not report["errors"]
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    state = builder.section_items["biological-states"][0]
+    state_id = state["id"]
+    assert isinstance(state_id, int)
+    assert "pwbs-id" not in state
+    assert state["species-id"] == 1
+    assert state["subcellular-location-id"] == 2
+
+    state_node = root.find(".//biological-states/biological-state")
+    assert state_node is not None
+    assert state_node.findtext("id") == str(state_id)
+    assert state_node.findtext("species-id") == "1"
+    assert state_node.findtext("subcellular-location-id") == "2"
+    assert state_node.find("pwbs-id") is None
+
+    assert root.findtext(".//compound-locations/compound-location/biological-state-id") == str(state_id)
+    assert root.findtext(".//reaction-visualizations/reaction-visualization/biological-state-id") == str(state_id)
+    assert root.findtext(".//protein-locations/protein-location/biological-state-id") == str(state_id)
+
+    repaired_root = repair_tree(etree.ElementTree(root), builder.signature).getroot()
+    assert repaired_root.find(".//biological-states/biological-state/pwbs-id") is None
+    assert b"<pwbs-id>" not in _compound_xml(root)
+    assert b"PW_BS000003" not in _compound_xml(root)
+
+
+def test_structured_ir_db_backed_biological_state_emits_real_pwbs_id() -> None:
+    ir = _minimal_pwml_ir_with_biological_states(
+        [
+            {
+                "key": "bs_1",
+                "name": "cytosol",
+                "species_key": "sp_1",
+                "subcellular_location_key": "scl_1",
+                "db_status": "matched",
+                "pwbs_id": "PW_BS000123",
+            }
+        ]
+    )
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    state = builder.section_items["biological-states"][0]
+    assert state["pwbs-id"] == "PW_BS000123"
+    assert root.findtext(".//biological-states/biological-state/pwbs-id") == "PW_BS000123"
 
 
 def test_compound_db_resolution_failures_are_non_blocking_for_pwml_build() -> None:
