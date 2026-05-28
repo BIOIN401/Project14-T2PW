@@ -2,10 +2,19 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 16,
-    "edge_count": 19
+    "node_count": 22,
+    "edge_count": 24
   },
   "nodes": [
+    {
+      "id": "compound:obafluorin",
+      "label": "obafluorin",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
     {
       "id": "compound:2,3-dihydroxybenzoic acid",
       "label": "2,3-dihydroxybenzoic acid",
@@ -18,6 +27,15 @@
     {
       "id": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
       "label": "(2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:ahnb",
+      "label": "AHNB",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -43,6 +61,15 @@
       "provenance": "extracted"
     },
     {
+      "id": "compound:4-npa",
+      "label": "4-NPA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
       "id": "compound:glycine enolate",
       "label": "glycine enolate",
       "kind": "compound",
@@ -61,8 +88,17 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:obafluorin",
-      "label": "obafluorin",
+      "id": "compound:plp",
+      "label": "PLP",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:l-threonine",
+      "label": "L-threonine",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -70,17 +106,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:pentalenolactone f",
-      "label": "pentalenolactone F",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:pentalenolactone",
-      "label": "pentalenolactone",
+      "id": "compound:β-hydroxy-α-amino acid",
+      "label": "β-hydroxy-α-amino acid",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -97,15 +124,6 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:pntm",
-      "label": "PntM",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
       "id": "reaction:obag-catalysed retro-aldol cleavage of l-thr",
       "label": "ObaG-catalysed retro-aldol cleavage of L-Thr",
       "kind": "reaction",
@@ -115,8 +133,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:obag-catalysed crossed aldol formation of ahnb",
-      "label": "ObaG-catalysed crossed aldol formation of AHNB",
+      "id": "reaction:obag-catalysed aldol formation of ahnb",
+      "label": "ObaG-catalysed aldol formation of AHNB",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -124,8 +142,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:pntm-catalysed rearrangement of pentalenolactone f",
-      "label": "PntM-catalysed rearrangement of pentalenolactone F",
+      "id": "reaction:obafluorin assembly from ahnb",
+      "label": "Obafluorin assembly from AHNB",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -133,8 +151,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
-      "label": "Obafluorin assembly from AHNB and 2,3-dihydroxybenzoic acid",
+      "id": "reaction:obag l-threonine transaldolase reaction",
+      "label": "ObaG L-threonine transaldolase reaction",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -142,10 +160,46 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:obag cofactor-assisted retro-aldol cleavage with plp",
-      "label": "ObaG cofactor-assisted retro-aldol cleavage with PLP",
-      "kind": "reaction",
-      "cls": "",
+      "id": "interaction:ahnb synonym of (2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "label": "AHNB synonym of (2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:plp synonym of pyridoxal-phosphate",
+      "label": "PLP synonym of pyridoxal-phosphate",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:4-npa synonym of 4-nitrophenyacetaldehyde",
+      "label": "4-NPA synonym of 4-nitrophenyacetaldehyde",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:l-thr synonym of l-threonine",
+      "label": "L-Thr synonym of L-threonine",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:l-thr synonym of l-threonine_5",
+      "label": "L-Thr synonym of L-threonine",
+      "kind": "interaction",
+      "cls": "SAME_AS",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
@@ -165,105 +219,135 @@
       "confidence": 1.0
     },
     {
-      "source": "reaction:obag-catalysed retro-aldol cleavage of l-thr",
-      "target": "compound:4-nitrophenyacetaldehyde",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
       "source": "protein:obag",
       "target": "reaction:obag-catalysed retro-aldol cleavage of l-thr",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
+      "source": "compound:plp",
+      "target": "reaction:obag-catalysed retro-aldol cleavage of l-thr",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
       "source": "compound:glycine enolate",
-      "target": "reaction:obag-catalysed crossed aldol formation of ahnb",
+      "target": "reaction:obag-catalysed aldol formation of ahnb",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:4-nitrophenyacetaldehyde",
-      "target": "reaction:obag-catalysed crossed aldol formation of ahnb",
+      "source": "compound:4-npa",
+      "target": "reaction:obag-catalysed aldol formation of ahnb",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:obag-catalysed crossed aldol formation of ahnb",
-      "target": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "source": "reaction:obag-catalysed aldol formation of ahnb",
+      "target": "compound:ahnb",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:obag",
-      "target": "reaction:obag-catalysed crossed aldol formation of ahnb",
+      "target": "reaction:obag-catalysed aldol formation of ahnb",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:pentalenolactone f",
-      "target": "reaction:pntm-catalysed rearrangement of pentalenolactone f",
+      "source": "compound:ahnb",
+      "target": "reaction:obafluorin assembly from ahnb",
       "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:pntm-catalysed rearrangement of pentalenolactone f",
-      "target": "compound:pentalenolactone",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:pntm",
-      "target": "reaction:pntm-catalysed rearrangement of pentalenolactone f",
-      "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:2,3-dihydroxybenzoic acid",
-      "target": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
+      "target": "reaction:obafluorin assembly from ahnb",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
-      "target": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
+      "source": "reaction:obafluorin assembly from ahnb",
       "target": "compound:obafluorin",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:l-thr",
-      "target": "reaction:obag cofactor-assisted retro-aldol cleavage with plp",
+      "source": "compound:l-threonine",
+      "target": "reaction:obag l-threonine transaldolase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:pyridoxal-phosphate",
-      "target": "reaction:obag cofactor-assisted retro-aldol cleavage with plp",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:obag cofactor-assisted retro-aldol cleavage with plp",
-      "target": "compound:glycine enolate",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:obag cofactor-assisted retro-aldol cleavage with plp",
-      "target": "compound:4-nitrophenyacetaldehyde",
+      "source": "reaction:obag l-threonine transaldolase reaction",
+      "target": "compound:β-hydroxy-α-amino acid",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:obag",
-      "target": "reaction:obag cofactor-assisted retro-aldol cleavage with plp",
+      "target": "reaction:obag l-threonine transaldolase reaction",
       "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:ahnb",
+      "target": "interaction:ahnb synonym of (2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:ahnb synonym of (2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "target": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:plp",
+      "target": "interaction:plp synonym of pyridoxal-phosphate",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:plp synonym of pyridoxal-phosphate",
+      "target": "compound:pyridoxal-phosphate",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:4-npa",
+      "target": "interaction:4-npa synonym of 4-nitrophenyacetaldehyde",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:4-npa synonym of 4-nitrophenyacetaldehyde",
+      "target": "compound:4-nitrophenyacetaldehyde",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:l-thr",
+      "target": "interaction:l-thr synonym of l-threonine",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:l-thr synonym of l-threonine",
+      "target": "compound:l-threonine",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:l-thr",
+      "target": "interaction:l-thr synonym of l-threonine_5",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:l-thr synonym of l-threonine_5",
+      "target": "compound:l-threonine",
+      "role": "participant",
       "confidence": 1.0
     }
   ]

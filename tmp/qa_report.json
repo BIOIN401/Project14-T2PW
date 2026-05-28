@@ -1,17 +1,25 @@
 {
   "summary": {
-    "total_species": 11,
-    "total_reactions": 5,
+    "total_species": 13,
+    "total_reactions": 4,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
+      {
+        "entity": "obafluorin",
+        "reason": "no subcellular location recorded"
+      },
       {
         "entity": "2,3-dihydroxybenzoic acid",
         "reason": "no subcellular location recorded"
       },
       {
         "entity": "(2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "AHNB",
         "reason": "no subcellular location recorded"
       },
       {
@@ -23,6 +31,10 @@
         "reason": "no subcellular location recorded"
       },
       {
+        "entity": "4-NPA",
+        "reason": "no subcellular location recorded"
+      },
+      {
         "entity": "glycine enolate",
         "reason": "no subcellular location recorded"
       },
@@ -31,23 +43,19 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "obafluorin",
+        "entity": "PLP",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pentalenolactone F",
+        "entity": "L-threonine",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pentalenolactone",
+        "entity": "β-hydroxy-α-amino acid",
         "reason": "no subcellular location recorded"
       },
       {
         "entity": "ObaG",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "PntM",
         "reason": "no subcellular location recorded"
       }
     ],
@@ -57,11 +65,19 @@
     "orphan_nodes": [],
     "missing_ids": [
       {
+        "entity": "obafluorin",
+        "type": "compound"
+      },
+      {
         "entity": "2,3-dihydroxybenzoic acid",
         "type": "compound"
       },
       {
         "entity": "(2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
+        "type": "compound"
+      },
+      {
+        "entity": "AHNB",
         "type": "compound"
       },
       {
@@ -73,6 +89,10 @@
         "type": "compound"
       },
       {
+        "entity": "4-NPA",
+        "type": "compound"
+      },
+      {
         "entity": "glycine enolate",
         "type": "compound"
       },
@@ -81,28 +101,30 @@
         "type": "compound"
       },
       {
-        "entity": "obafluorin",
+        "entity": "PLP",
         "type": "compound"
       },
       {
-        "entity": "pentalenolactone F",
+        "entity": "L-threonine",
         "type": "compound"
       },
       {
-        "entity": "pentalenolactone",
+        "entity": "β-hydroxy-α-amino acid",
         "type": "compound"
       },
       {
         "entity": "ObaG",
         "type": "protein"
-      },
-      {
-        "entity": "PntM",
-        "type": "protein"
       }
     ],
     "empty_reactions": [],
     "duplicate_species": [],
-    "inconsistent_class": []
+    "inconsistent_class": [
+      {
+        "entity": "PLP",
+        "assigned_class": "compound",
+        "conflict": "compound used as catalyst in reaction 'ObaG-catalysed retro-aldol cleavage of L-Thr'"
+      }
+    ]
   }
 }

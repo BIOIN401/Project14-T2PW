@@ -13501,6 +13501,445 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "db::obag::pseudomonas fluorescens::::{\"uniprot\": \"A0A1X9LWZ7\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::obag::pseudomonas fluorescens::::{\"uniprot\": \"A0A1X9LWZ7\"}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"ObaG\" OR gene:\"ObaG\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"ObaG\" OR gene:\"ObaG\") | (protein_name:\"ObiH\" OR gene:\"ObiH\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"ObiH\" OR gene:\"ObiH\") | \"ObiH\" AND organism_name:\"Pseudomonas fluorescens\" | \"ObiH\" | (protein_name:\"L -threonine transaldolase\" OR gene:\"L -threonine transaldolase\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"L -threonine transaldolase\" OR gene:\"L -threonine transaldolase\") | \"L -threonine transaldolase\" AND organism_name:\"Pseudomonas fluorescens\" | \"L -threonine transaldolase\" | (protein_name:\"enzyme\" OR gene:\"enzyme\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"enzyme\" OR gene:\"enzyme\") | \"enzyme\" AND organism_name:\"Pseudomonas fluorescens\" | \"enzyme\" | (protein_name:\"aldolase\" OR gene:\"aldolase\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"aldolase\" OR gene:\"aldolase\") | \"aldolase\" AND organism_name:\"Pseudomonas fluorescens\" | \"aldolase\" | (protein_name:\"PLP-dependent enzyme\" OR gene:\"PLP-dependent enzyme\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PLP-dependent enzyme\" OR gene:\"PLP-dependent enzyme\") | \"PLP-dependent enzyme\" AND organism_name:\"Pseudomonas fluorescens\" | \"PLP-dependent enzyme\" | (protein_name:\"PLP dependent enzyme\" OR gene:\"PLP dependent enzyme\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PLP dependent enzyme\" OR gene:\"PLP dependent enzyme\") | \"PLP dependent enzyme\" AND organism_name:\"Pseudomonas fluorescens\" | \"PLP dependent enzyme\"",
+      "mapped_ids": {
+        "uniprot": "A0A1X9LWZ7"
+      },
+      "confidence": 0.8,
+      "chosen_rule": "top_unique_alias_candidate",
+      "candidates": [
+        {
+          "accession": "A0A1X9LWZ7",
+          "protein_name": "Threonine aldolase",
+          "gene_names": [
+            "obiH"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "ObiH",
+          "alias_source": "literature_alias",
+          "matched_alias": "ObiH"
+        },
+        {
+          "accession": "Q9ZEP7",
+          "protein_name": "Pantothenate synthetase",
+          "gene_names": [
+            "panC"
+          ],
+          "organism": "Pseudomonas fluorescens (strain SBW25)",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "enzyme",
+          "alias_source": "literature_function",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "Q3K6Q5",
+          "protein_name": "Pantothenate synthetase",
+          "gene_names": [
+            "panC"
+          ],
+          "organism": "Pseudomonas fluorescens (strain Pf0-1)",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "enzyme",
+          "alias_source": "literature_function",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "P51853",
+          "protein_name": "Benzaldehyde lyase",
+          "gene_names": [
+            "bznB"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "aldolase",
+          "alias_source": "literature_function",
+          "matched_alias": "aldolase"
+        },
+        {
+          "accession": "C3K6H5",
+          "protein_name": "2-dehydro-3-deoxyphosphooctonate aldolase",
+          "gene_names": [
+            "kdsA"
+          ],
+          "organism": "Pseudomonas fluorescens (strain SBW25)",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "aldolase",
+          "alias_source": "literature_function",
+          "matched_alias": "aldolase"
+        },
+        {
+          "accession": "Q3KH93",
+          "protein_name": "2-dehydro-3-deoxyphosphooctonate aldolase",
+          "gene_names": [
+            "kdsA"
+          ],
+          "organism": "Pseudomonas fluorescens (strain Pf0-1)",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "aldolase",
+          "alias_source": "literature_function",
+          "matched_alias": "aldolase"
+        },
+        {
+          "accession": "Q4KHF7",
+          "protein_name": "2-dehydro-3-deoxyphosphooctonate aldolase",
+          "gene_names": [
+            "kdsA"
+          ],
+          "organism": "Pseudomonas fluorescens (strain ATCC BAA-477 / NRRL B-23932 / Pf-5)",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "aldolase",
+          "alias_source": "literature_function",
+          "matched_alias": "aldolase"
+        },
+        {
+          "accession": "Q51789",
+          "protein_name": "Probable phospho-2-dehydro-3-deoxyheptonate aldolase",
+          "gene_names": [
+            "phzC"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "aldolase",
+          "alias_source": "literature_function",
+          "matched_alias": "aldolase"
+        }
+      ],
+      "reviewed": false,
+      "queries_tried": [
+        "(protein_name:\"ObaG\" OR gene:\"ObaG\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"ObaG\" OR gene:\"ObaG\")",
+        "(protein_name:\"ObiH\" OR gene:\"ObiH\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"ObiH\" OR gene:\"ObiH\")",
+        "\"ObiH\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"ObiH\"",
+        "(protein_name:\"L -threonine transaldolase\" OR gene:\"L -threonine transaldolase\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"L -threonine transaldolase\" OR gene:\"L -threonine transaldolase\")",
+        "\"L -threonine transaldolase\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"L -threonine transaldolase\"",
+        "(protein_name:\"enzyme\" OR gene:\"enzyme\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"enzyme\" OR gene:\"enzyme\")",
+        "\"enzyme\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"enzyme\"",
+        "(protein_name:\"aldolase\" OR gene:\"aldolase\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"aldolase\" OR gene:\"aldolase\")",
+        "\"aldolase\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"aldolase\"",
+        "(protein_name:\"PLP-dependent enzyme\" OR gene:\"PLP-dependent enzyme\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PLP-dependent enzyme\" OR gene:\"PLP-dependent enzyme\")",
+        "\"PLP-dependent enzyme\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"PLP-dependent enzyme\"",
+        "(protein_name:\"PLP dependent enzyme\" OR gene:\"PLP dependent enzyme\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PLP dependent enzyme\" OR gene:\"PLP dependent enzyme\")",
+        "\"PLP dependent enzyme\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"PLP dependent enzyme\""
+      ],
+      "matched_alias": "ObiH",
+      "alias_source": "literature_alias",
+      "resolved_name": "Threonine aldolase",
+      "literature_aliases": [
+        {
+          "alias": "ObiH",
+          "source": "literature_alias"
+        },
+        {
+          "alias": "L -threonine transaldolase",
+          "source": "literature_function"
+        },
+        {
+          "alias": "enzyme",
+          "source": "literature_function"
+        },
+        {
+          "alias": "aldolase",
+          "source": "literature_function"
+        },
+        {
+          "alias": "PLP-dependent enzyme",
+          "source": "literature_function"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::pntm::pseudomonas fluorescens::::{\"uniprot\": \"E3VWI3\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PntM\" OR gene:\"PntM\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "E3VWI3",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces arenae",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2N9BJN2",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces chartreusis NRRL 3882",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0BTW4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Actinomadura macrotermitis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0DYT4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Nocardia aurantia",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW0BAM4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces mutomycini",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABV3LSP6",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces huasconensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW8LVR4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces milbemycinicus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PntM\" OR gene:\"PntM\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::plp::pseudomonas fluorescens::::{\"uniprot\": \"P60201\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::plp::pseudomonas fluorescens::::{\"uniprot\": \"P60201\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PLP\" OR gene:\"PLP\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PLP\" OR gene:\"PLP\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "P60201",
+          "protein_name": "Myelin proteolipid protein",
+          "gene_names": [
+            "PLP",
+            "PLP1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q96GD0",
+          "protein_name": "Chronophin",
+          "gene_names": [
+            "CIN",
+            "PDXP",
+            "PLP",
+            "PLPP"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P60202",
+          "protein_name": "Myelin proteolipid protein",
+          "gene_names": [
+            "Plp",
+            "Plp1"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P04116",
+          "protein_name": "Myelin proteolipid protein",
+          "gene_names": [
+            "PLP",
+            "PLP1"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P60203",
+          "protein_name": "Myelin proteolipid protein",
+          "gene_names": [
+            "Plp",
+            "Plp1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P60487",
+          "protein_name": "Chronophin",
+          "gene_names": [
+            "Cin",
+            "Pdxp",
+            "Plp",
+            "Plpp"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8VD52",
+          "protein_name": "Chronophin",
+          "gene_names": [
+            "Cin",
+            "Pdxp",
+            "Plp",
+            "Plpp",
+            "Rbp1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P23294",
+          "protein_name": "Myelin proteolipid protein",
+          "gene_names": [
+            "PLP",
+            "PLP1"
+          ],
+          "organism": "Canis lupus familiaris",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PLP",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PLP\" OR gene:\"PLP\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PLP\" OR gene:\"PLP\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -29451,6 +29890,34 @@
         "status": "matched",
         "order_step": "external_id:direct_id_match:kegg"
       }
+    },
+    "db::4npa::::{\"kegg\": \"C12434\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::hydroxyamino acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -31585,6 +32052,72 @@
         "status": "unresolved",
         "issue": "component_proteins_unresolved"
       }
+    },
+    "db::obag complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A0A1X9LWZ7\"}, \"name\": \"ObaG\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "ObaG",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A1X9LWZ7"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "ObaG",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::plp complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"P60201\"}, \"name\": \"PLP\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "PLP",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P60201"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PLP",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
     }
   },
   "enzyme_complexes": {
@@ -31601,14 +32134,17 @@
       "components": [
         {
           "name": "ObaG",
-          "stoichiometry": 1
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A1X9LWZ7"
+          }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
           "component": "ObaG",
-          "reason": "novel_protein"
+          "reason": "no_db_match"
         }
       ],
       "resolution": {
@@ -31617,7 +32153,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "pntm::::pseudomonas fluorescens": {
+    "plp::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -31625,21 +32161,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "PntM complex",
+      "name": "PLP complex",
       "species_id": 539,
       "components": [
         {
-          "name": "PntM",
+          "name": "PLP",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "E3VWI3"
+            "uniprot": "P60201"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "PntM",
+          "component": "PLP",
           "reason": "no_db_match"
         }
       ],
