@@ -2,7 +2,7 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 37,
+    "node_count": 36,
     "edge_count": 42
   },
   "nodes": [
@@ -43,8 +43,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:nad+",
-      "label": "NAD+",
+      "id": "compound:nad⁺",
+      "label": "NAD⁺",
       "kind": "compound",
       "cls": "cofactor",
       "compartment": "human cytosolic state",
@@ -146,7 +146,7 @@
       "label": "water",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -291,15 +291,6 @@
       "kind": "reaction",
       "cls": "",
       "compartment": "human cytosolic state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:nad",
-      "label": "NAD",
-      "kind": "compound",
-      "cls": "",
-      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -468,7 +459,7 @@
       "confidence": 1.0
     },
     {
-      "source": "compound:nad",
+      "source": "compound:nad⁺",
       "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
       "role": "reactant",
       "confidence": 1.0

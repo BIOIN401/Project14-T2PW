@@ -1,29 +1,15 @@
 {
   "summary": {
-    "total_species": 27,
+    "total_species": 26,
     "total_reactions": 10,
-    "completeness_score": 0.216
+    "completeness_score": 0.278
   },
   "flags": {
-    "missing_compartments": [
-      {
-        "entity": "water",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "NAD",
-        "reason": "no subcellular location recorded"
-      }
-    ],
+    "missing_compartments": [],
     "missing_modifiers": [],
     "possible_complexes": [],
     "transport_like_reactions": [],
-    "orphan_nodes": [
-      {
-        "entity": "NAD+",
-        "degree": 0
-      }
-    ],
+    "orphan_nodes": [],
     "missing_ids": [
       {
         "entity": "glucose",
@@ -42,7 +28,7 @@
         "type": "compound"
       },
       {
-        "entity": "NAD+",
+        "entity": "NAD⁺",
         "type": "compound"
       },
       {
@@ -131,13 +117,7 @@
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [
-      {
-        "entity_a": "NAD+",
-        "entity_b": "NAD",
-        "reason": "normalized label collision"
-      }
-    ],
+    "duplicate_species": [],
     "inconsistent_class": []
   }
 }
