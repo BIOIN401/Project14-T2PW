@@ -285,6 +285,53 @@ def lookup_literature_protein_aliases(
     }
 
 
+def _ai_protein_synonym_lookup(name: str, organism: str) -> List[Dict[str, str]]:
+    """Ask the LLM for alternate names/gene symbols for a protein that failed UniProt lookup.
+
+    Returns a list of alias dicts with keys 'alias' and 'source', same format as
+    lookup_literature_protein_aliases. Never returns hallucinated UniProt IDs — only
+    name strings that will be fed back into the UniProt search API.
+    """
+    try:
+        from t2pw.llm.client import chat  # pylint: disable=import-outside-toplevel
+    except ImportError:
+        return []
+
+    organism_clause = f" from {organism}" if organism else ""
+    prompt = (
+        f"The protein '{name}'{organism_clause} could not be matched in UniProt by its primary name.\n"
+        "Provide a JSON object with key \"aliases\": an array of objects, each with:\n"
+        "  \"alias\": an alternate name, gene symbol, gene synonym, or common abbreviation "
+        "that UniProt or NCBI might use for this protein\n"
+        "  \"source\": one of \"gene_name\", \"synonym\", or \"alternate_abbreviation\"\n"
+        "Rules:\n"
+        "- Only include names plausibly listed in a protein database entry\n"
+        "- Do NOT include the original name\n"
+        "- Do NOT guess or invent UniProt accession IDs\n"
+        "- Maximum 6 aliases\n"
+        "- If you have no reliable information, return {\"aliases\": []}\n"
+        "Return ONLY valid JSON, no markdown."
+    )
+    try:
+        raw = chat(
+            [{"role": "user", "content": prompt}],
+            temperature=0.0,
+            max_tokens=300,
+            response_json=True,
+        )
+        data = json.loads(raw) if isinstance(raw, str) else (raw if isinstance(raw, dict) else {})
+        aliases = _safe_list(_safe_dict(data).get("aliases"))
+        result: List[Dict[str, str]] = []
+        for entry in aliases:
+            alias = _canonical_name(str(_safe_dict(entry).get("alias") or ""))
+            source = _canonical_name(str(_safe_dict(entry).get("source") or "ai_synonym")) or "ai_synonym"
+            if alias and len(alias) <= 96:
+                result.append({"alias": alias, "source": source})
+        return result[:6]
+    except Exception:  # noqa: BLE001
+        return []
+
+
 def _search_terms(value: str, *, max_terms: int = 6) -> List[str]:
     base = _canonical_name(value)
     if not base:
@@ -3168,6 +3215,66 @@ def map_protein_uniprot(
             payload = resp.json()
             candidates = _extract_uniprot_candidates(payload, query_name=variant, organism=organism if used_organism else "")
             for candidate in candidates:
+                accession = str(candidate.get("accession") or "").strip()
+                if not accession:
+                    continue
+                adjusted = dict(candidate)
+                if not used_organism:
+                    adjusted["score"] = round(float(adjusted.get("score", 0.0)) - 0.04, 4)
+                adjusted["matched_query"] = variant
+                adjusted["alias_source"] = alias_source
+                if matched_alias:
+                    adjusted["matched_alias"] = matched_alias
+                existing = aggregated.get(accession)
+                if not existing or float(adjusted.get("score", 0.0)) > float(existing.get("score", 0.0)):
+                    aggregated[accession] = adjusted
+
+    # Third-tier fallback: ask the LLM for alternate names/gene symbols when both
+    # the direct UniProt search and the EuropePMC literature lookup found nothing.
+    if not aggregated:
+        ai_aliases = _ai_protein_synonym_lookup(name, organism)
+        if not ai_aliases and organism:
+            ai_aliases = _ai_protein_synonym_lookup(name, "")
+
+        start_idx = len(query_plan)
+        for entry in ai_aliases:
+            alias = _canonical_name(str(entry.get("alias") or ""))
+            if not alias:
+                continue
+            source = _canonical_name(str(entry.get("source") or "ai_synonym")) or "ai_synonym"
+            norm = _normalize_name(alias)
+            if not norm or norm in seen_aliases:
+                continue
+            seen_aliases.add(norm)
+            literature_aliases_used.append({"alias": alias, "source": source})
+            for variant in _name_variants(alias, max_variants=2):
+                add_query_plan(variant, True, source, alias)
+                if organism:
+                    add_query_plan(variant, False, source, alias)
+                add_query_plan(variant, True, source, alias, broad=True)
+                if organism:
+                    add_query_plan(variant, False, source, alias, broad=True)
+
+        for variant, query, used_organism, alias_source, matched_alias in query_plan[start_idx:]:
+            params = {
+                "query": query,
+                "format": "json",
+                "size": 10,
+                "fields": "accession,protein_name,gene_names,organism_name,reviewed",
+            }
+            try:
+                resp = client.get("https://rest.uniprot.org/uniprotkb/search", params=params)
+            except Exception as exc:  # noqa: BLE001
+                network_errors.append(str(exc))
+                continue
+            queries_tried.append(query)
+            if resp.status_code != 200:
+                continue
+            payload = resp.json()
+            candidates_batch = _extract_uniprot_candidates(
+                payload, query_name=variant, organism=organism if used_organism else ""
+            )
+            for candidate in candidates_batch:
                 accession = str(candidate.get("accession") or "").strip()
                 if not accession:
                     continue

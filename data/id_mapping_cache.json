@@ -13381,6 +13381,126 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "api-v5::obag::pseudomonas fluorescens::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ObaG\" OR gene:\"ObaG\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"ObaG\" OR gene:\"ObaG\")",
+      "candidates": [],
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v5::pntm::pseudomonas fluorescens::::{\"uniprot\": \"E3VWI3\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PntM\" OR gene:\"PntM\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "E3VWI3",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces arenae",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2N9BJN2",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces chartreusis NRRL 3882",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0BTW4",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Actinomadura macrotermitis",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0DYT4",
+          "protein_name": "",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Nocardia aurantia",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW0BAM4",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces mutomycini",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABV3LSP6",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces huasconensis",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW8LVR4",
+          "protein_name": "",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces milbemycinicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PntM\" OR gene:\"PntM\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -31455,7 +31575,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "pyridoxalphosphate::::pseudomonas fluorescens": {
+    "pntm::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -31463,149 +31583,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "pyridoxal-phosphate complex",
+      "name": "PntM complex",
       "species_id": 539,
       "components": [
         {
-          "name": "pyridoxal-phosphate",
+          "name": "PntM",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "A0A3S4Q2C5"
+            "uniprot": "E3VWI3"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "pyridoxal-phosphate",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosl::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosL complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosL",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "Q9F0W0"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosL",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosj::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosJ complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosJ",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "C6FX49"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosJ",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosk::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosK complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosK",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "C6FX50"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosK",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosn::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosN complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosN",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "C6FX53"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosN",
+          "component": "PntM",
           "reason": "no_db_match"
         }
       ],

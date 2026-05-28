@@ -2,19 +2,10 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 34,
-    "edge_count": 35
+    "node_count": 20,
+    "edge_count": 21
   },
   "nodes": [
-    {
-      "id": "compound:obafluorin",
-      "label": "obafluorin",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
     {
       "id": "compound:2,3-dihydroxybenzoic acid",
       "label": "2,3-dihydroxybenzoic acid",
@@ -61,8 +52,26 @@
       "provenance": "extracted"
     },
     {
+      "id": "compound:4-npa",
+      "label": "4-NPA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
       "id": "compound:glycine enolate",
       "label": "glycine enolate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:obafluorin",
+      "label": "obafluorin",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -73,14 +82,14 @@
       "id": "compound:pyridoxal-phosphate",
       "label": "pyridoxal-phosphate",
       "kind": "compound",
-      "cls": "cofactor",
+      "cls": "compound",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:l-trp",
-      "label": "L-Trp",
+      "id": "compound:pentalenolactone f",
+      "label": "pentalenolactone F",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -88,82 +97,10 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:3-methyl-2-indolic acid",
-      "label": "3-methyl-2-indolic acid",
+      "id": "compound:pentalenolactone",
+      "label": "pentalenolactone",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:formaldehyde",
-      "label": "formaldehyde",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:ammonia",
-      "label": "ammonia",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:nosiheptide",
-      "label": "nosiheptide",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:mia",
-      "label": "MIA",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:linear pentathiazolyl peptide intermediate",
-      "label": "linear pentathiazolyl peptide intermediate",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:cys",
-      "label": "Cys",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:glu6",
-      "label": "Glu6",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:sam",
-      "label": "SAM",
-      "kind": "compound",
-      "cls": "cofactor",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
@@ -173,40 +110,13 @@
       "label": "ObaG",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "Pseudomonas fluorescens context",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:nosl",
-      "label": "NosL",
-      "kind": "protein",
-      "cls": "protein",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:nosj",
-      "label": "NosJ",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:nosk",
-      "label": "NosK",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:nosn",
-      "label": "NosN",
+      "id": "protein:pntm",
+      "label": "PntM",
       "kind": "protein",
       "cls": "protein",
       "compartment": "",
@@ -218,31 +128,13 @@
       "label": "ObaG-catalysed retro-aldol cleavage of L-Thr",
       "kind": "reaction",
       "cls": "",
-      "compartment": "Pseudomonas fluorescens context",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:obag-catalysed crossed aldol reaction yielding ahnb",
-      "label": "ObaG-catalysed crossed aldol reaction yielding AHNB",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "Pseudomonas fluorescens context",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
-      "label": "Obafluorin assembly from AHNB and 2,3-dihydroxybenzoic acid",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "Pseudomonas fluorescens context",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:nosl-catalyzed rearrangement of l-trp to mia",
-      "label": "NosL-catalyzed rearrangement of L-Trp to MIA",
+      "id": "reaction:obag-catalysed crossed aldol reaction to form ahnb",
+      "label": "ObaG-catalysed crossed aldol reaction to form AHNB",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -250,8 +142,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:nosk-mediated transfer of indoyl to pentathiazolyl peptide",
-      "label": "NosK-mediated transfer of indoyl to pentathiazolyl peptide",
+      "id": "reaction:obafluorin assembly",
+      "label": "obafluorin assembly",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -259,17 +151,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:cys-bound mia",
-      "label": "Cys-bound MIA",
-      "kind": "compound",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:nosn-catalyzed c1 transfer and ester bond formation",
-      "label": "NosN-catalyzed C1 transfer and ester bond formation",
+      "id": "reaction:pntm-catalysed rearrangement of pentalenolactone f to pentalenolactone",
+      "label": "PntM-catalysed rearrangement of pentalenolactone F to pentalenolactone",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -277,8 +160,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "interaction:ahnb synonym bridge",
-      "label": "AHNB synonym bridge",
+      "id": "interaction:ahnb synonym",
+      "label": "AHNB synonym",
       "kind": "interaction",
       "cls": "SAME_AS",
       "compartment": "",
@@ -286,17 +169,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "interaction:cys is the residue modified in pentathiazolyl peptide",
-      "label": "Cys is the residue modified in pentathiazolyl peptide",
-      "kind": "interaction",
-      "cls": "part_of",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "interaction:mia synonym bridge",
-      "label": "MIA synonym bridge",
+      "id": "interaction:4-npa synonym",
+      "label": "4-NPA synonym",
       "kind": "interaction",
       "cls": "SAME_AS",
       "compartment": "",
@@ -304,10 +178,10 @@
       "provenance": "extracted"
     },
     {
-      "id": "interaction:cys residue in pentathiazolyl intermediate",
-      "label": "Cys residue in pentathiazolyl intermediate",
+      "id": "interaction:ahnb is part of obafluorin",
+      "label": "AHNB is part of obafluorin",
       "kind": "interaction",
-      "cls": "part_of",
+      "cls": "PART_OF",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
@@ -340,187 +214,103 @@
     },
     {
       "source": "compound:glycine enolate",
-      "target": "reaction:obag-catalysed crossed aldol reaction yielding ahnb",
+      "target": "reaction:obag-catalysed crossed aldol reaction to form ahnb",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:4-nitrophenyacetaldehyde",
-      "target": "reaction:obag-catalysed crossed aldol reaction yielding ahnb",
+      "target": "reaction:obag-catalysed crossed aldol reaction to form ahnb",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:obag-catalysed crossed aldol reaction yielding ahnb",
+      "source": "reaction:obag-catalysed crossed aldol reaction to form ahnb",
       "target": "compound:ahnb",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:obag",
-      "target": "reaction:obag-catalysed crossed aldol reaction yielding ahnb",
+      "target": "reaction:obag-catalysed crossed aldol reaction to form ahnb",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:pyridoxal-phosphate",
-      "target": "reaction:obag-catalysed crossed aldol reaction yielding ahnb",
+      "target": "reaction:obag-catalysed crossed aldol reaction to form ahnb",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:ahnb",
-      "target": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
       "source": "compound:2,3-dihydroxybenzoic acid",
-      "target": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
+      "target": "reaction:obafluorin assembly",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:obafluorin assembly from ahnb and 2,3-dihydroxybenzoic acid",
+      "source": "compound:ahnb",
+      "target": "reaction:obafluorin assembly",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:obafluorin assembly",
       "target": "compound:obafluorin",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:l-trp",
-      "target": "reaction:nosl-catalyzed rearrangement of l-trp to mia",
+      "source": "compound:pentalenolactone f",
+      "target": "reaction:pntm-catalysed rearrangement of pentalenolactone f to pentalenolactone",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:nosl-catalyzed rearrangement of l-trp to mia",
-      "target": "compound:3-methyl-2-indolic acid",
+      "source": "reaction:pntm-catalysed rearrangement of pentalenolactone f to pentalenolactone",
+      "target": "compound:pentalenolactone",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:nosl-catalyzed rearrangement of l-trp to mia",
-      "target": "compound:formaldehyde",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:nosl-catalyzed rearrangement of l-trp to mia",
-      "target": "compound:ammonia",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:nosl",
-      "target": "reaction:nosl-catalyzed rearrangement of l-trp to mia",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:mia",
-      "target": "reaction:nosk-mediated transfer of indoyl to pentathiazolyl peptide",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:linear pentathiazolyl peptide intermediate",
-      "target": "reaction:nosk-mediated transfer of indoyl to pentathiazolyl peptide",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:nosk-mediated transfer of indoyl to pentathiazolyl peptide",
-      "target": "compound:cys-bound mia",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:nosj",
-      "target": "reaction:nosk-mediated transfer of indoyl to pentathiazolyl peptide",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:nosk",
-      "target": "reaction:nosk-mediated transfer of indoyl to pentathiazolyl peptide",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:cys-bound mia",
-      "target": "reaction:nosn-catalyzed c1 transfer and ester bond formation",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:sam",
-      "target": "reaction:nosn-catalyzed c1 transfer and ester bond formation",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:glu6",
-      "target": "reaction:nosn-catalyzed c1 transfer and ester bond formation",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:nosn-catalyzed c1 transfer and ester bond formation",
-      "target": "compound:nosiheptide",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:nosn",
-      "target": "reaction:nosn-catalyzed c1 transfer and ester bond formation",
+      "source": "protein:pntm",
+      "target": "reaction:pntm-catalysed rearrangement of pentalenolactone f to pentalenolactone",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:(2s,3r)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate",
-      "target": "interaction:ahnb synonym bridge",
+      "target": "interaction:ahnb synonym",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "interaction:ahnb synonym bridge",
+      "source": "interaction:ahnb synonym",
       "target": "compound:ahnb",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "compound:cys",
-      "target": "interaction:cys is the residue modified in pentathiazolyl peptide",
+      "source": "compound:4-nitrophenyacetaldehyde",
+      "target": "interaction:4-npa synonym",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "interaction:cys is the residue modified in pentathiazolyl peptide",
-      "target": "compound:linear pentathiazolyl peptide intermediate",
+      "source": "interaction:4-npa synonym",
+      "target": "compound:4-npa",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "compound:3-methyl-2-indolic acid",
-      "target": "interaction:mia synonym bridge",
+      "source": "compound:ahnb",
+      "target": "interaction:ahnb is part of obafluorin",
       "role": "participant",
       "confidence": 1.0
     },
     {
-      "source": "interaction:mia synonym bridge",
-      "target": "compound:mia",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:cys",
-      "target": "interaction:cys residue in pentathiazolyl intermediate",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "interaction:cys residue in pentathiazolyl intermediate",
-      "target": "compound:linear pentathiazolyl peptide intermediate",
+      "source": "interaction:ahnb is part of obafluorin",
+      "target": "compound:obafluorin",
       "role": "participant",
       "confidence": 1.0
     }
