@@ -30049,6 +30049,104 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::plp::::{\"kegg\": \"C00018\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001491",
+        "kegg": "C00018",
+        "chebi": "CHEBI:18405",
+        "pubchem": "1051",
+        "cas": "54-47-7",
+        "biocyc": "PYRIDOXAL_PHOSPHATE",
+        "chemspider": "1022",
+        "drugbank": "DB00114",
+        "pathbank_compound_id": "1148"
+      },
+      "pathbank_compound_id": 1148,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1148,
+          "name": "Pyridoxal 5'-phosphate",
+          "short_name": "Pyr-5'P",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001491",
+            "kegg": "C00018",
+            "chebi": "CHEBI:18405",
+            "pubchem": "1051",
+            "cas": "54-47-7",
+            "biocyc": "PYRIDOXAL_PHOSPHATE",
+            "chemspider": "1022",
+            "drugbank": "DB00114"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::4nitrophenylacetaldehyde::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::pyridoxal phosphate::::{\"kegg\": \"C00018\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001491",
+        "kegg": "C00018",
+        "chebi": "CHEBI:18405",
+        "pubchem": "1051",
+        "cas": "54-47-7",
+        "biocyc": "PYRIDOXAL_PHOSPHATE",
+        "chemspider": "1022",
+        "drugbank": "DB00114",
+        "pathbank_compound_id": "1148"
+      },
+      "pathbank_compound_id": 1148,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1148,
+          "name": "Pyridoxal 5'-phosphate",
+          "short_name": "Pyr-5'P",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001491",
+            "kegg": "C00018",
+            "chebi": "CHEBI:18405",
+            "pubchem": "1051",
+            "cas": "54-47-7",
+            "biocyc": "PYRIDOXAL_PHOSPHATE",
+            "chemspider": "1022",
+            "drugbank": "DB00114"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
     }
   },
   "complexes": {
@@ -32275,38 +32373,6 @@
         {
           "issue": "component_protein_unresolved",
           "component": "ObaG",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "pntm::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "PntM complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "PntM",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "E3VWI3"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "PntM",
           "reason": "no_db_match"
         }
       ],

@@ -1,17 +1,17 @@
 {
   "summary": {
-    "total_species": 11,
-    "total_reactions": 4,
+    "total_species": 13,
+    "total_reactions": 3,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "obafluorin",
+        "entity": "L-Thr",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "2,3-dihydroxybenzoic acid",
+        "entity": "4-nitrophenylacetaldehyde",
         "reason": "no subcellular location recorded"
       },
       {
@@ -19,11 +19,19 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "L-Thr",
+        "entity": "AHNB",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "4-nitrophenyacetaldehyde",
+        "entity": "2,3-dihydroxybenzoic acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "obafluorin",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "glycine enolate",
         "reason": "no subcellular location recorded"
       },
       {
@@ -31,11 +39,15 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pentalenolactone F",
+        "entity": "L-threonine",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pentalenolactone",
+        "entity": "β-hydroxy-α-amino acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyridoxal phosphate",
         "reason": "no subcellular location recorded"
       },
       {
@@ -43,25 +55,30 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "PntM",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "glycine enolate",
+        "entity": "L-threonine transaldolase",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [],
     "transport_like_reactions": [],
-    "orphan_nodes": [],
-    "missing_ids": [
+    "orphan_nodes": [
+      {
+        "entity": "2,3-dihydroxybenzoic acid",
+        "degree": 0
+      },
       {
         "entity": "obafluorin",
+        "degree": 0
+      }
+    ],
+    "missing_ids": [
+      {
+        "entity": "L-Thr",
         "type": "compound"
       },
       {
-        "entity": "2,3-dihydroxybenzoic acid",
+        "entity": "4-nitrophenylacetaldehyde",
         "type": "compound"
       },
       {
@@ -69,11 +86,19 @@
         "type": "compound"
       },
       {
-        "entity": "L-Thr",
+        "entity": "AHNB",
         "type": "compound"
       },
       {
-        "entity": "4-nitrophenyacetaldehyde",
+        "entity": "2,3-dihydroxybenzoic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "obafluorin",
+        "type": "compound"
+      },
+      {
+        "entity": "glycine enolate",
         "type": "compound"
       },
       {
@@ -81,11 +106,15 @@
         "type": "compound"
       },
       {
-        "entity": "pentalenolactone F",
+        "entity": "L-threonine",
         "type": "compound"
       },
       {
-        "entity": "pentalenolactone",
+        "entity": "β-hydroxy-α-amino acid",
+        "type": "compound"
+      },
+      {
+        "entity": "pyridoxal phosphate",
         "type": "compound"
       },
       {
@@ -93,18 +122,18 @@
         "type": "protein"
       },
       {
-        "entity": "PntM",
+        "entity": "L-threonine transaldolase",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [],
-    "inconsistent_class": [
+    "duplicate_species": [
       {
-        "entity": "pyridoxal-phosphate",
-        "assigned_class": "compound",
-        "conflict": "compound used as catalyst in reaction 'ObaG retro-aldol cleavage of L-Thr'"
+        "entity_a": "pyridoxal-phosphate",
+        "entity_b": "pyridoxal phosphate",
+        "reason": "normalized label collision"
       }
-    ]
+    ],
+    "inconsistent_class": []
   }
 }
