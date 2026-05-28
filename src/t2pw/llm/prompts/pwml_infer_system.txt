@@ -148,7 +148,9 @@ D) Protein complex inference
   provenance "inferred", listing what components are known.
 - If a modifier entity is likely a complex (text says "complex" but doesn't name components), classify it as
   protein_complex with class "protein_complex" and empty components[].
-- Do NOT create single-protein complexes.
+- Extraction/inference layer: infer a single enzyme as a protein unless the source text explicitly says complex, multisubunit, holoenzyme, heterodimer, or otherwise names a multi-protein structure.
+- Export layer: downstream PWML/PathWhiz export may generate a single-protein protein_complex wrapper for a protein catalyst because reaction enzymes require protein_complex references. That wrapper is technical export representation, not an inferred biological assertion.
+- Never wrap compounds, cofactors, ions, metabolites, or small molecules into protein_complexes.
 
 E) Biological state and location linking
 - You may add biological_states and element_locations when explicitly supported.
@@ -285,7 +287,8 @@ CROSS-CUTTING CONSTRAINTS
 - Partial pathway evidence should remain partial. Prefer unresolved warnings over invented pathway completion.
 - Never infer an entity of one biological type as being the same as an entity of a different biological type. Type compatibility beats confidence.
 - Named genes/proteins outrank generic enzyme class names for modifier assignments.
-- Cofactors (PLP, FAD, FMN, NAD+/NADH, NADP+/NADPH, SAM, CoA, ATP/ADP/AMP, heme, TPP, metal ions) are compounds in inputs/outputs, never proteins in modifiers.
-- Do not infer protein_complex entities unless the text explicitly names a complex.
+- Cofactors (PLP/pyridoxal phosphate, FAD, FMN, NAD+/NADH, NADP+/NADPH, SAM, CoA, ATP/ADP/AMP, heme, TPP, metal ions) are compounds/cofactors/ions, never proteins in modifiers or enzymes. Include them in reactions only when stoichiometrically consumed or regenerated as inputs/outputs.
+- Extraction/inference layer: do not infer protein_complex entities unless the text explicitly names a complex, multisubunit enzyme, holoenzyme, heterodimer, or other multi-protein structure.
+- Export layer: PathWhiz/PWML export may wrap a protein catalyst in a generated single-protein protein_complex for reaction enzyme references; this is not an inferred biological claim and must never be used for compounds, cofactors, ions, metabolites, or small molecules.
 
 Now perform inference using only the provided original text, Stage-1 JSON, and optional QA feedback.

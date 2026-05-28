@@ -64,7 +64,7 @@ from t2pw.pipeline.pipeline import (
 from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
-from t2pw.pipeline.preprocessor import preprocess
+from t2pw.pipeline.preprocessor import is_ambiguous_multi_example_review_context, preprocess
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
 from t2pw.pwml.writer import (
@@ -1649,6 +1649,30 @@ if submit:
     # Preprocessing: lightweight context summary to guide extraction and inference
     with st.spinner("Running preprocessor..."):
         pathway_context = preprocess(text, temperature=temperature)
+
+    if is_ambiguous_multi_example_review_context(pathway_context):
+        candidate_examples = pathway_context.get("candidate_examples", [])
+        st.session_state["pipeline_ready"] = False
+        st.session_state["pathway_context"] = pathway_context
+        st.session_state["pipeline_error"] = {
+            "status": "ambiguous_review_scope",
+            "message": (
+                "multi_example_review detected with no selected_example. "
+                "Extraction skipped to prevent mixed-pathway output."
+            ),
+            "candidate_examples": candidate_examples,
+        }
+        st.error(
+            "Ambiguous review scope: this looks like a multi-example review, but no target example was selected. "
+            "Choose one candidate example and rerun extraction."
+        )
+        if candidate_examples:
+            st.subheader("Candidate examples")
+            st.json(candidate_examples)
+        warning = pathway_context.get("warning")
+        if isinstance(warning, str) and warning.strip():
+            st.warning(warning.strip())
+        st.stop()
 
     # Stage 1: strict extraction with auto-repair
     try:

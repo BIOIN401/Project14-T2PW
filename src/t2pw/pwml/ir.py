@@ -1174,6 +1174,7 @@ def build_pwml_ir(
         row = index // cols
         return 180 + col * col_w, 220 + row * 220
 
+    allowed_enzyme_entity_types = {"protein", "protein_complex"}
     reaction_index = 0
     for ridx, raw in enumerate(_safe_list(processes.get("reactions"))):
         if not isinstance(raw, dict):
@@ -1252,6 +1253,19 @@ def build_pwml_ir(
                 continue
             entity = resolve_entity(name, "enzyme", f"/processes/reactions/{ridx}/enzymes/{eidx}", hint=hint)
             if not entity:
+                continue
+            entity_type = str(entity.get("entity_type") or "").casefold()
+            if entity_type not in allowed_enzyme_entity_types:
+                _add_issue(
+                    report,
+                    "warning",
+                    "non_protein_catalyst_dropped",
+                    f"Reaction enzyme/modifier '{name}' resolved to {entity_type or 'unknown'} and was dropped.",
+                    pointer=f"/processes/reactions/{ridx}/enzymes/{eidx}",
+                    name=name,
+                    entity_type=entity_type,
+                    role=role or "catalyst",
+                )
                 continue
             entity = ensure_enzyme_complex_entity(entity, f"/processes/reactions/{ridx}/enzymes/{eidx}")
             member_key = f"{rx_key}_enzyme_{len(reaction['enzymes']) + 1}"

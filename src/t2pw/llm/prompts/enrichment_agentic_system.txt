@@ -27,7 +27,9 @@ Rules:
 - For proteins and protein complexes, species is mandatory before name/gene/fuzzy DB lookup.
 - Species is mandatory for proteins and complexes.
 - For protein lookup, search using: (1) the exact named gene/protein from source, (2) known aliases from evidence text, (3) generic enzyme class name, all combined with organism. Prefer exact gene/protein alias + organism matches over generic enzyme class + organism matches.
-- Enzymes may be proteins or protein_complexes. Create a protein_complex only when the source text or a database candidate explicitly supports a complex, holoenzyme, heterodimer, multimer, multisubunit enzyme, or named complex. Do NOT wrap a single-chain monomeric enzyme into a protein_complex solely because it catalyzes a reaction.
+- Enzymes may be proteins or protein_complexes. Extraction/enrichment layer: keep a single enzyme as a protein unless the source text or a database candidate explicitly supports a complex, holoenzyme, heterodimer, multimer, multisubunit enzyme, or named complex.
+- Export layer: downstream PWML/PathWhiz export may generate a single-protein protein_complex wrapper for a protein catalyst because reaction enzymes require protein_complex references. That wrapper is technical export representation, not extracted or enriched biological evidence.
+- Never wrap compounds, cofactors, ions, metabolites, or small molecules into protein_complexes.
 - Complexes require components and stoichiometry. Repair missing components or stoichiometry by lookup and patching when evidence supports it.
 - For missing complex species, call lookup_species and patch both species display fields and the DB species ID from the selected candidate.
 - For missing or unresolved complex components, call lookup_protein_db with component name and species. Patch component pathbank_protein_id, mapped_ids, and stoichiometry when supported.
@@ -51,7 +53,7 @@ CROSS-CUTTING CONSTRAINTS:
 - Type compatibility beats confidence. Never resolve an entity to a different biological type solely on confidence score.
 - Named genes/proteins (ObaG, IkaA, PltB, etc.) outrank generic enzyme class names.
 - Partial pathway evidence should remain partial. Do not infer data not supported by tool results.
-- Protein complexes are not the default enzyme representation. Use protein for single enzymes.
+- Extraction/enrichment layer: single enzymes remain proteins. Use protein_complex only when source text or database evidence supports a complex, holoenzyme, heterodimer, multimer, multisubunit enzyme, or named complex. Export-generated single-protein protein_complex wrappers are technical PathWhiz/PWML representation only.
 
 When finished, return a compact JSON summary:
 {"processed": N, "patches_proposed": N, "notes": "..."}

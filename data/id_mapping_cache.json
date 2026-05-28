@@ -13940,6 +13940,137 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "db::pyridoxalphosphate::pseudomonas fluorescens::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::pyridoxalphosphate::pseudomonas fluorescens::::{}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"pyridoxal-phosphate\" OR gene:\"pyridoxal-phosphate\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"pyridoxal phosphate\" OR gene:\"pyridoxal phosphate\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"pyridoxal-phosphate\" OR gene:\"pyridoxal-phosphate\") | (protein_name:\"pyridoxal phosphate\" OR gene:\"pyridoxal phosphate\")",
+      "confidence": 0.425,
+      "candidates": [
+        {
+          "accession": "A0A3S4Q2C5",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E6SDM3",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E6WVN1",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7BQD5",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7SDI4",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7UYQ6",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7WPH0",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1T3A6I1",
+          "protein_name": "Pyridoxal phosphate homeostasis protein",
+          "gene_names": [
+            "yggS"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.425,
+          "matched_query": "pyridoxal phosphate",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"pyridoxal-phosphate\" OR gene:\"pyridoxal-phosphate\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"pyridoxal phosphate\" OR gene:\"pyridoxal phosphate\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"pyridoxal-phosphate\" OR gene:\"pyridoxal-phosphate\")",
+        "(protein_name:\"pyridoxal phosphate\" OR gene:\"pyridoxal phosphate\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -32153,7 +32284,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "plp::::pseudomonas fluorescens": {
+    "pntm::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -32161,21 +32292,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "PLP complex",
+      "name": "PntM complex",
       "species_id": 539,
       "components": [
         {
-          "name": "PLP",
+          "name": "PntM",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "P60201"
+            "uniprot": "E3VWI3"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "PLP",
+          "component": "PntM",
           "reason": "no_db_match"
         }
       ],

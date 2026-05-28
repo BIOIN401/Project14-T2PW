@@ -8,7 +8,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from t2pw.llm.client import chat
 from t2pw.paths import PROMPTS_DIR, TMP_DIR
-from t2pw.pipeline.preprocessor import format_context_header
+from t2pw.pipeline.preprocessor import format_context_header, is_ambiguous_multi_example_review_context
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
@@ -165,6 +165,32 @@ class PipelineFailure(RuntimeError):
         self.attempts = attempts
 
 
+def _ambiguous_review_scope_failure(pathway_context: Optional[Dict[str, Any]]) -> PipelineFailure:
+    candidate_examples = (
+        pathway_context.get("candidate_examples", [])
+        if isinstance(pathway_context, dict)
+        else []
+    )
+    return PipelineFailure(
+        "ambiguous_review_scope",
+        "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+        [
+            {
+                "attempt": 0,
+                "raw": json.dumps(
+                    {
+                        "error": "ambiguous_review_scope",
+                        "candidate_examples": candidate_examples,
+                    },
+                    indent=2,
+                    ensure_ascii=False,
+                ),
+                "error": "ambiguous_review_scope",
+            }
+        ],
+    )
+
+
 AttemptLog = Dict[str, Any]
 AttemptLogs = List[AttemptLog]
 
@@ -189,6 +215,9 @@ def run_extraction_pipeline(
         When provided it is injected into the prompt so the LLM can classify each
         reaction with a ``scope_membership`` label.
     """
+    if is_ambiguous_multi_example_review_context(pathway_context):
+        raise _ambiguous_review_scope_failure(pathway_context)
+
     return _run_json_stage(
         stage_name="extraction",
         system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8"),
@@ -259,6 +288,9 @@ def run_inference_pipeline(
     """
     Stage 2: inference/enrichment pass. Uses Stage-1 output as context and retries if JSON is invalid.
     """
+    if is_ambiguous_multi_example_review_context(pathway_context):
+        raise _ambiguous_review_scope_failure(pathway_context)
+
     stage_one_str = json.dumps(stage_one, indent=2, ensure_ascii=False)
     return _run_json_stage(
         stage_name="inference",
@@ -303,6 +335,9 @@ def run_stage_two_with_chunking(
     Optionally chunk Stage-2 inference by reusing Stage-1 chunk outputs.
     Returns merged inference additions plus per-chunk details.
     """
+    if is_ambiguous_multi_example_review_context(pathway_context):
+        raise _ambiguous_review_scope_failure(pathway_context)
+
     chunks: List[Dict[str, Any]] = []
 
     if enable_chunking and chunk_details and len(chunk_details) > 1:
@@ -546,6 +581,9 @@ def run_stage_two_with_feedback_loop(
     Run Stage 2 one or more times, feeding graph-QA hints into later rounds.
     Returns merged additions, flattened per-chunk details, and per-round summaries.
     """
+    if is_ambiguous_multi_example_review_context(pathway_context):
+        raise _ambiguous_review_scope_failure(pathway_context)
+
     total_rounds = max(1, int(qa_rounds))
     base_stage_one = deepcopy(stage_one)
     working_stage_one = deepcopy(stage_one)
@@ -1206,17 +1244,26 @@ def _clean_element_locations(locations: Dict[str, Any]) -> Dict[str, Any]:
 def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
     cleaned: List[Dict[str, Any]] = []
     seen_names: set = set()
+    allowed_entity_types = {"protein", "protein_complex"}
+    dropped_entity_types = {"compound", "cofactor", "ion", "small_molecule", "metabolite"}
     for item in _safe_list(enzymes):
         if not isinstance(item, dict):
             continue
         entry: Dict[str, Any] = {}
-        # Accept protein_complex, entity (modifier schema), or plain protein key.
-        protein_complex = (
-            item.get("protein_complex")
-            or item.get("entity")
-            or ""
-        ).strip()
+        entity_type = str(item.get("entity_type") or item.get("type") or "").strip().casefold()
+        if entity_type in dropped_entity_types:
+            continue
+        # Accept legacy protein/protein_complex keys, or typed modifier entity refs.
+        protein_complex = (item.get("protein_complex") or "").strip()
         plain_protein = (item.get("protein") or "").strip()
+        if not protein_complex and not plain_protein:
+            entity = (item.get("entity") or "").strip()
+            if not entity or entity_type not in allowed_entity_types:
+                continue
+            if entity_type == "protein":
+                plain_protein = entity
+            else:
+                protein_complex = entity
         actor_name = protein_complex or plain_protein
         if actor_name:
             norm = _normalize_name(actor_name)
@@ -1554,6 +1601,9 @@ def run_stage_one_with_chunking(
     Optionally chunk the input text before running Stage 1 extraction. Returns the merged JSON
     plus per-chunk details (inputs, outputs, attempts) for inspection.
     """
+    if is_ambiguous_multi_example_review_context(pathway_context):
+        raise _ambiguous_review_scope_failure(pathway_context)
+
     words = input_text.split()
     use_chunks = enable_chunking and len(words) > chunk_word_limit
 
