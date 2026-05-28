@@ -29409,6 +29409,48 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::pyridoxalphosphate::::{\"kegg\": \"C00018\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001491",
+        "kegg": "C00018",
+        "chebi": "CHEBI:18405",
+        "pubchem": "1051",
+        "cas": "54-47-7",
+        "biocyc": "PYRIDOXAL_PHOSPHATE",
+        "chemspider": "1022",
+        "drugbank": "DB00114",
+        "pathbank_compound_id": "1148"
+      },
+      "pathbank_compound_id": 1148,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1148,
+          "name": "Pyridoxal 5'-phosphate",
+          "short_name": "Pyr-5'P",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001491",
+            "kegg": "C00018",
+            "chebi": "CHEBI:18405",
+            "pubchem": "1051",
+            "cas": "54-47-7",
+            "biocyc": "PYRIDOXAL_PHOSPHATE",
+            "chemspider": "1022",
+            "drugbank": "DB00114"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
     }
   },
   "complexes": {

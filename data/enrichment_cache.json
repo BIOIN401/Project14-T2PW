@@ -307426,6 +307426,74 @@
         "retrieved_at": "2026-05-27T22:04:08Z",
         "status": "ok"
       }
+    },
+    "chebi:CHEBI:18405": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:18405",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-05-28T16:08:49Z"
+      }
+    },
+    "hmdb:HMDB0001491": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001491",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001491",
+        "retrieved_at": "2026-05-28T16:08:49Z"
+      }
+    },
+    "kegg:C00018": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00018",
+      "primary_name": "Pyridoxal phosphate",
+      "synonyms": [
+        "Pyridoxal phosphate",
+        "Pyridoxal 5'-phosphate",
+        "Pyridoxal 5-phosphate",
+        "PLP"
+      ],
+      "formula": "C8H10NO6P",
+      "mass_monoisotopic": 247.0246,
+      "mass_average": 247.14,
+      "pathways": [
+        "Thiamine metabolism",
+        "Vitamin B6 metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of cofactors",
+        "Vitamin digestion and absorption"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Vitamins and cofactors",
+        "Cofactors",
+        "Coenzymes",
+        "C00018 PLP",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303]",
+        "A ALIMENTARY TRACT AND METABOLISM",
+        "A11 VITAMINS",
+        "A11H OTHER PLAIN VITAMIN PREPARATIONS",
+        "A11HA Other plain vitamin preparations",
+        "A11HA06 Pyridoxal phosphate",
+        "C00018 Pyridoxal phosphate"
+      ],
+      "cross_references": {
+        "kegg_id": "C00018",
+        "pubchem_id": "3320",
+        "chebi_id": "18405"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00018",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00018",
+        "retrieved_at": "2026-05-28T16:08:50Z",
+        "status": "ok"
+      }
     }
   }
 }

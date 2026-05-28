@@ -3,24 +3,30 @@ Organism: Unknown Organism
 
 REACTION 1: ObaG-catalysed retro-aldol cleavage of L-Thr
   Reactants: L-Thr [unknown]
-  Products:  glycine enolate [unknown]
-  Modifier:  ObaG [unknown] (role=catalyst, confidence=1.0), pyridoxal-phosphate [unknown] (role=catalyst, confidence=1.0)
+  Products:  glycine enolate [unknown], 4-nitrophenyacetaldehyde [unknown]
+  Modifier:  ObaG [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: ObaG-catalysed crossed aldol reaction to form AHNB
+REACTION 2: ObaG-catalysed crossed aldol formation of AHNB
   Reactants: glycine enolate [unknown], 4-nitrophenyacetaldehyde [unknown]
-  Products:  AHNB [unknown]
-  Modifier:  ObaG [unknown] (role=catalyst, confidence=1.0), pyridoxal-phosphate [unknown] (role=catalyst, confidence=1.0)
+  Products:  (2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate [unknown]
+  Modifier:  ObaG [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: obafluorin assembly
-  Reactants: 2,3-dihydroxybenzoic acid [unknown], AHNB [unknown]
+REACTION 3: PntM-catalysed rearrangement of pentalenolactone F
+  Reactants: pentalenolactone F [unknown]
+  Products:  pentalenolactone [unknown]
+  Modifier:  PntM [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 4: Obafluorin assembly from AHNB and 2,3-dihydroxybenzoic acid
+  Reactants: 2,3-dihydroxybenzoic acid [unknown], (2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate [unknown]
   Products:  obafluorin [unknown]
   Modifier:  MISSING
   QA flags:  none
 
-REACTION 4: PntM-catalysed rearrangement of pentalenolactone F to pentalenolactone
-  Reactants: pentalenolactone F [unknown]
-  Products:  pentalenolactone [unknown]
-  Modifier:  PntM [unknown] (role=catalyst, confidence=1.0)
+REACTION 5: ObaG cofactor-assisted retro-aldol cleavage with PLP
+  Reactants: L-Thr [unknown], pyridoxal-phosphate [unknown]
+  Products:  glycine enolate [unknown], 4-nitrophenyacetaldehyde [unknown]
+  Modifier:  ObaG [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none

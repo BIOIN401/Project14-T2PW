@@ -153,6 +153,8 @@ def _extract_aliases_from_literature_text(name: str, text: str) -> List[Dict[str
     for pattern in [
         gene_token + r"\s*\(\s*(?:or|also known as|aka|a\.k\.a\.|formerly)\s+" + escaped + r"\s*\)",
         escaped + r"\s*\(\s*(?:or|also known as|aka|a\.k\.a\.|formerly)\s+" + gene_token + r"\s*\)",
+        gene_token + r"\s*\(\s*" + escaped + r"\s*\)",
+        escaped + r"\s*\(\s*" + gene_token + r"\s*\)",
     ]:
         for match in re.finditer(pattern, body, flags=re.IGNORECASE):
             add(match.group(1), "literature_alias")
@@ -191,19 +193,20 @@ def _europepmc_full_text(client: HttpClient, item: Dict[str, Any]) -> str:
     source = _canonical_name(str(item.get("source") or ""))
     raw_id = _canonical_name(str(item.get("id") or ""))
     pmcid = _canonical_name(str(item.get("pmcid") or ""))
-    candidates: List[Tuple[str, str]] = []
-    if source and raw_id:
-        candidates.append((source, raw_id.removeprefix("PMC")))
+    candidates: List[str] = []
     if pmcid:
-        candidates.append(("PMC", pmcid.removeprefix("PMC")))
+        candidates.append(pmcid if pmcid.upper().startswith("PMC") else f"PMC{pmcid}")
+    if source.upper() == "PMC" and raw_id:
+        candidates.append(raw_id if raw_id.upper().startswith("PMC") else f"PMC{raw_id}")
+    if raw_id.upper().startswith("PMC"):
+        candidates.append(raw_id)
 
     seen: set = set()
-    for src, ident in candidates[:3]:
-        key = (src, ident)
-        if not src or not ident or key in seen:
+    for ident in candidates[:3]:
+        if not ident or ident in seen:
             continue
-        seen.add(key)
-        url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{src}/{ident}/fullTextXML"
+        seen.add(ident)
+        url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{ident}/fullTextXML"
         try:
             resp = client.get(url)
         except Exception:  # noqa: BLE001
@@ -265,11 +268,12 @@ def lookup_literature_protein_aliases(
             for alias in _extract_aliases_from_literature_text(name, text):
                 alias["literature_title"] = str(item.get("title") or "")[:180]
                 aliases.append(alias)
-            if aliases:
+            if any(alias.get("source") == "literature_alias" for alias in aliases):
                 break
 
     deduped: List[Dict[str, str]] = []
     seen: set = set()
+    aliases.sort(key=lambda alias: 0 if alias.get("source") == "literature_alias" else 1)
     for alias in aliases:
         norm = _normalize_name(alias.get("alias", ""))
         if not norm or norm in seen:
@@ -3004,6 +3008,12 @@ def _entity_locations(payload: Dict[str, Any], location_key: str, name_key: str)
 def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organism: str) -> List[Dict[str, Any]]:
     results = _safe_list(payload.get("results"))
     out: List[Dict[str, Any]] = []
+
+    def full_name_value(value: Any) -> str:
+        name = _safe_dict(value).get("fullName")
+        text = _safe_dict(name).get("value")
+        return text.strip() if isinstance(text, str) else ""
+
     for item in results:
         if not isinstance(item, dict):
             continue
@@ -3012,15 +3022,22 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
             continue
         protein_desc = _safe_dict(item.get("proteinDescription"))
         recommended = _safe_dict(protein_desc.get("recommendedName"))
-        fullname = _safe_dict(recommended.get("fullName")).get("value")
+        fullname = full_name_value(recommended)
         alt_names = _safe_list(protein_desc.get("alternativeNames"))
         alt_values: List[str] = []
         for alt in alt_names:
             if not isinstance(alt, dict):
                 continue
-            alt_full = _safe_dict(alt.get("fullName")).get("value")
-            if isinstance(alt_full, str) and alt_full.strip():
-                alt_values.append(alt_full.strip())
+            alt_full = full_name_value(alt)
+            if alt_full:
+                alt_values.append(alt_full)
+        submission_values: List[str] = []
+        for submission in _safe_list(protein_desc.get("submissionNames")):
+            if not isinstance(submission, dict):
+                continue
+            submission_full = full_name_value(submission)
+            if submission_full:
+                submission_values.append(submission_full)
         gene_names: List[str] = []
         for gene_obj in _safe_list(item.get("genes")):
             if not isinstance(gene_obj, dict):
@@ -3033,16 +3050,21 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
                 if isinstance(syn, str) and syn.strip():
                     gene_names.append(syn.strip())
         organism_name = _safe_dict(item.get("organism")).get("scientificName", "")
-        reviewed = str(item.get("entryType", "")).lower().find("reviewed") != -1
+        entry_type = str(item.get("entryType", "")).lower()
+        reviewed = "reviewed" in entry_type and "unreviewed" not in entry_type
 
-        candidate_names = [v for v in [fullname] if isinstance(v, str)] + [v for v in alt_values if isinstance(v, str)] + gene_names
+        candidate_names = [v for v in [fullname] if isinstance(v, str)] + alt_values + submission_values + gene_names
         best_name_score = max((_jaccard(query_name, c) for c in candidate_names), default=0.0)
         exact_name_match = any(_normalize_name(query_name) == _normalize_name(c) for c in candidate_names)
         organism_score = 0.0
         if organism and isinstance(organism_name, str):
-            if _normalize_name(organism) == _normalize_name(organism_name):
+            norm_organism = _normalize_name(organism)
+            norm_candidate_organism = _normalize_name(organism_name)
+            if norm_organism == norm_candidate_organism:
                 organism_score = 0.25
-            elif _normalize_name(organism) in _normalize_name(organism_name):
+            elif norm_candidate_organism.startswith(f"{norm_organism} "):
+                organism_score = 0.25
+            elif norm_organism in norm_candidate_organism:
                 organism_score = 0.15
         reviewed_score = 0.05 if reviewed else 0.0
         score = min(1.0, (0.55 if exact_name_match else 0.35 * best_name_score) + organism_score + reviewed_score)
@@ -3050,7 +3072,7 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
         out.append(
             {
                 "accession": accession,
-                "protein_name": fullname if isinstance(fullname, str) else "",
+                "protein_name": fullname or (submission_values[0] if submission_values else ""),
                 "gene_names": sorted(set(gene_names))[:8],
                 "organism": organism_name if isinstance(organism_name, str) else "",
                 "reviewed": reviewed,
@@ -3742,7 +3764,7 @@ def _map_protein_with_strategy(
     protein_aliases = _protein_alias_entries(name, _safe_dict(protein_row))
     base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}"
     db_key = f"db::{base_key}"
-    api_key = f"api-v5::{base_key}::{json.dumps(protein_aliases, sort_keys=True)}"
+    api_key = f"api-v6::{base_key}::{json.dumps(protein_aliases, sort_keys=True)}"
 
     if not organism and not row_ids.get("uniprot") and not pathbank_id:
         return _with_resolution(

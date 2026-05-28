@@ -13,6 +13,9 @@ if str(SRC) not in sys.path:
 
 from t2pw.mapping.map_ids import (  # noqa: E402
     PathBankDbResolver,
+    _europepmc_full_text,
+    _extract_aliases_from_literature_text,
+    _extract_uniprot_candidates,
     _map_protein_with_strategy,
     _reconcile_components_against_local_proteins,
     _rewrite_reaction_protein_enzymes_to_complexes,
@@ -169,6 +172,20 @@ class _NocBDomainUniProtClient:
                 ]
             }
         )
+
+
+class _EuropePmcFullTextClient:
+    def __init__(self) -> None:
+        self.urls: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        self.urls.append(url)
+        if url.endswith("/PMC8072733/fullTextXML"):
+            return _FakeResponse(
+                {},
+                text="<article><body>Biochemical assays demonstrated that ObiH (ObaG) is a new LTTA.</body></article>",
+            )
+        return _FakeResponse({}, status_code=404)
 
 
 def _glycolysis_complex_result(protein_row: Dict[str, Any], species: str) -> Dict[str, Any]:
@@ -355,6 +372,54 @@ def test_uniprot_mapping_uses_literature_alias_for_obag() -> None:
     assert result["chosen_rule"] == "top_unique_alias_candidate"
     assert result["literature_aliases"] == [{"alias": "ObiH", "source": "literature_alias"}]
     assert any('gene:"ObiH"' in query for query in client.queries)
+
+
+def test_europepmc_full_text_uses_pmcid_endpoint() -> None:
+    client = _EuropePmcFullTextClient()
+
+    text = _europepmc_full_text(
+        client,
+        {"source": "MED", "id": "33900425", "pmcid": "PMC8072733"},
+    )
+
+    assert "ObiH (ObaG)" in text
+    assert client.urls == ["https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8072733/fullTextXML"]
+
+
+def test_literature_alias_extracts_parenthetical_gene_name_without_marker() -> None:
+    aliases = _extract_aliases_from_literature_text(
+        "ObaG",
+        "Biochemical assays demonstrated that ObiH (ObaG) is a new LTTA.",
+    )
+
+    assert aliases == [{"alias": "ObiH", "source": "literature_alias"}]
+
+
+def test_uniprot_candidate_parser_uses_submission_names_and_unreviewed_flag() -> None:
+    result = _extract_uniprot_candidates(
+        {
+            "results": [
+                {
+                    "primaryAccession": "A0A1X9LWZ7",
+                    "entryType": "UniProtKB unreviewed (TrEMBL)",
+                    "proteinDescription": {
+                        "submissionNames": [
+                            {"fullName": {"value": "Threonine aldolase"}},
+                        ],
+                    },
+                    "genes": [{"geneName": {"value": "obiH"}}],
+                    "organism": {"scientificName": "Pseudomonas fluorescens"},
+                }
+            ]
+        },
+        query_name="Threonine aldolase",
+        organism="Pseudomonas fluorescens",
+    )
+
+    assert result[0]["accession"] == "A0A1X9LWZ7"
+    assert result[0]["protein_name"] == "Threonine aldolase"
+    assert result[0]["reviewed"] is False
+    assert result[0]["score"] == 0.8
 
 
 def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:
