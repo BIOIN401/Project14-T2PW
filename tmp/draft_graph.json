@@ -2,13 +2,148 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 27,
-    "edge_count": 27
+    "node_count": 37,
+    "edge_count": 42
   },
   "nodes": [
     {
-      "id": "compound:phenylalanine",
-      "label": "phenylalanine",
+      "id": "compound:glucose",
+      "label": "glucose",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:atp",
+      "label": "ATP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:adp",
+      "label": "ADP",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nadh",
+      "label": "NADH",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nad+",
+      "label": "NAD+",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:glucose-6-phosphate",
+      "label": "glucose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-6-phosphate",
+      "label": "fructose-6-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:fructose-1,6-bisphosphate",
+      "label": "fructose-1,6-bisphosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:glyceraldehyde-3-phosphate",
+      "label": "glyceraldehyde-3-phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dihydroxyacetone phosphate",
+      "label": "dihydroxyacetone phosphate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:1,3-bisphosphoglycerate",
+      "label": "1,3-bisphosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:3-phosphoglycerate",
+      "label": "3-phosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:2-phosphoglycerate",
+      "label": "2-phosphoglycerate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:phosphoenolpyruvate",
+      "label": "phosphoenolpyruvate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:pyruvate",
+      "label": "pyruvate",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:water",
+      "label": "water",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
@@ -16,400 +151,445 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:tyrosine",
-      "label": "tyrosine",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:trans-cinnamic acid",
-      "label": "trans-cinnamic acid",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:4-hydroxycinnamic acid",
-      "label": "4-hydroxycinnamic acid",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:3,4-dihydroxycinnamic acid",
-      "label": "3,4-dihydroxycinnamic acid",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:4-hydroxybenzaldehyde",
-      "label": "4-hydroxybenzaldehyde",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:3,4-dihydroxybenzaldehyde",
-      "label": "3,4-dihydroxybenzaldehyde",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:tyramine",
-      "label": "tyramine",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:schiff-base",
-      "label": "Schiff-base",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:norbelladine",
-      "label": "norbelladine",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:4′-o-methylnorbelladine",
-      "label": "4′-O-methylnorbelladine",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "protein:phenylalanine ammonia-lyase (pal)",
-      "label": "phenylalanine ammonia-lyase (PAL)",
+      "id": "protein:hexokinase",
+      "label": "hexokinase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:cinnamate 4-hydroxylase (cyp73a1)",
-      "label": "cinnamate 4-hydroxylase (CYP73A1)",
+      "id": "protein:phosphoglucose isomerase",
+      "label": "phosphoglucose isomerase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:cyp98a3",
-      "label": "CYP98A3",
+      "id": "protein:phosphofructokinase-1",
+      "label": "phosphofructokinase-1",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:vpvan",
-      "label": "VpVAN",
+      "id": "protein:aldolase",
+      "label": "aldolase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:tyrosine decarboxylase",
-      "label": "tyrosine decarboxylase",
+      "id": "protein:triose phosphate isomerase",
+      "label": "triose phosphate isomerase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:n4omt",
-      "label": "N4OMT",
+      "id": "protein:glyceraldehyde-3-phosphate dehydrogenase",
+      "label": "glyceraldehyde-3-phosphate dehydrogenase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:phenylalanine deamination to trans-cinnamic acid",
-      "label": "phenylalanine deamination to trans-cinnamic acid",
+      "id": "protein:phosphoglycerate kinase",
+      "label": "phosphoglycerate kinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phosphoglycerate mutase",
+      "label": "phosphoglycerate mutase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:enolase",
+      "label": "enolase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:pyruvate kinase",
+      "label": "pyruvate kinase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:hexokinase reaction",
+      "label": "hexokinase reaction",
       "kind": "reaction",
+      "cls": "",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphoglucose isomerase reaction",
+      "label": "phosphoglucose isomerase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phosphofructokinase-1 reaction",
+      "label": "phosphofructokinase-1 reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:aldolase reaction",
+      "label": "aldolase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:triose phosphate isomerase reaction",
+      "label": "triose phosphate isomerase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "label": "glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "human cytosolic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:nad",
+      "label": "NAD",
+      "kind": "compound",
       "cls": "",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:trans-cinnamic acid hydroxylation to 4-hydroxycinnamic acid",
-      "label": "trans-cinnamic acid hydroxylation to 4-hydroxycinnamic acid",
+      "id": "reaction:phosphoglycerate kinase reaction",
+      "label": "phosphoglycerate kinase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:4-hydroxycinnamic acid hydroxylation to 3,4-dihydroxycinnamic acid",
-      "label": "4-hydroxycinnamic acid hydroxylation to 3,4-dihydroxycinnamic acid",
+      "id": "reaction:phosphoglycerate mutase reaction",
+      "label": "phosphoglycerate mutase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:4-hydroxycinnamic acid to 4-hydroxybenzaldehyde",
-      "label": "4-hydroxycinnamic acid to 4-hydroxybenzaldehyde",
+      "id": "reaction:enolase reaction",
+      "label": "enolase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde",
-      "label": "3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde",
+      "id": "reaction:pyruvate kinase reaction",
+      "label": "pyruvate kinase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:4-hydroxybenzaldehyde to 3,4-dihydroxybenzaldehyde",
-      "label": "4-hydroxybenzaldehyde to 3,4-dihydroxybenzaldehyde",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:tyrosine decarboxylation to tyramine",
-      "label": "tyrosine decarboxylation to tyramine",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
-      "label": "condensation of tyramine and 3,4-dihydroxybenzaldehyde to Schiff-base",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:reduction of schiff-base to norbelladine",
-      "label": "reduction of Schiff-base to norbelladine",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:methylation of norbelladine to 4′-o-methylnorbelladine",
-      "label": "methylation of norbelladine to 4′-O-methylnorbelladine",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "",
+      "compartment": "human cytosolic state",
       "confidence": 1.0,
       "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:phenylalanine",
-      "target": "reaction:phenylalanine deamination to trans-cinnamic acid",
+      "source": "compound:glucose",
+      "target": "reaction:hexokinase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:phenylalanine deamination to trans-cinnamic acid",
-      "target": "compound:trans-cinnamic acid",
+      "source": "compound:atp",
+      "target": "reaction:hexokinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:glucose-6-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:phenylalanine ammonia-lyase (pal)",
-      "target": "reaction:phenylalanine deamination to trans-cinnamic acid",
+      "source": "reaction:hexokinase reaction",
+      "target": "compound:adp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:hexokinase",
+      "target": "reaction:hexokinase reaction",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:trans-cinnamic acid",
-      "target": "reaction:trans-cinnamic acid hydroxylation to 4-hydroxycinnamic acid",
+      "source": "compound:glucose-6-phosphate",
+      "target": "reaction:phosphoglucose isomerase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:trans-cinnamic acid hydroxylation to 4-hydroxycinnamic acid",
-      "target": "compound:4-hydroxycinnamic acid",
+      "source": "reaction:phosphoglucose isomerase reaction",
+      "target": "compound:fructose-6-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:cinnamate 4-hydroxylase (cyp73a1)",
-      "target": "reaction:trans-cinnamic acid hydroxylation to 4-hydroxycinnamic acid",
+      "source": "protein:phosphoglucose isomerase",
+      "target": "reaction:phosphoglucose isomerase reaction",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:4-hydroxycinnamic acid",
-      "target": "reaction:4-hydroxycinnamic acid hydroxylation to 3,4-dihydroxycinnamic acid",
+      "source": "compound:fructose-6-phosphate",
+      "target": "reaction:phosphofructokinase-1 reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:4-hydroxycinnamic acid hydroxylation to 3,4-dihydroxycinnamic acid",
-      "target": "compound:3,4-dihydroxycinnamic acid",
+      "source": "compound:atp",
+      "target": "reaction:phosphofructokinase-1 reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphofructokinase-1 reaction",
+      "target": "compound:fructose-1,6-bisphosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:cyp98a3",
-      "target": "reaction:4-hydroxycinnamic acid hydroxylation to 3,4-dihydroxycinnamic acid",
+      "source": "reaction:phosphofructokinase-1 reaction",
+      "target": "compound:adp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphofructokinase-1",
+      "target": "reaction:phosphofructokinase-1 reaction",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:4-hydroxycinnamic acid",
-      "target": "reaction:4-hydroxycinnamic acid to 4-hydroxybenzaldehyde",
+      "source": "compound:fructose-1,6-bisphosphate",
+      "target": "reaction:aldolase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:4-hydroxycinnamic acid to 4-hydroxybenzaldehyde",
-      "target": "compound:4-hydroxybenzaldehyde",
+      "source": "reaction:aldolase reaction",
+      "target": "compound:glyceraldehyde-3-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:3,4-dihydroxycinnamic acid",
-      "target": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde",
-      "target": "compound:3,4-dihydroxybenzaldehyde",
+      "source": "reaction:aldolase reaction",
+      "target": "compound:dihydroxyacetone phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:vpvan",
-      "target": "reaction:3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde",
+      "source": "protein:aldolase",
+      "target": "reaction:aldolase reaction",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:4-hydroxybenzaldehyde",
-      "target": "reaction:4-hydroxybenzaldehyde to 3,4-dihydroxybenzaldehyde",
+      "source": "compound:dihydroxyacetone phosphate",
+      "target": "reaction:triose phosphate isomerase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:4-hydroxybenzaldehyde to 3,4-dihydroxybenzaldehyde",
-      "target": "compound:3,4-dihydroxybenzaldehyde",
+      "source": "reaction:triose phosphate isomerase reaction",
+      "target": "compound:glyceraldehyde-3-phosphate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:tyrosine",
-      "target": "reaction:tyrosine decarboxylation to tyramine",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:tyrosine decarboxylation to tyramine",
-      "target": "compound:tyramine",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:tyrosine decarboxylase",
-      "target": "reaction:tyrosine decarboxylation to tyramine",
+      "source": "protein:triose phosphate isomerase",
+      "target": "reaction:triose phosphate isomerase reaction",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:tyramine",
-      "target": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
+      "source": "compound:glyceraldehyde-3-phosphate",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:3,4-dihydroxybenzaldehyde",
-      "target": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
+      "source": "compound:nad",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:condensation of tyramine and 3,4-dihydroxybenzaldehyde to schiff-base",
-      "target": "compound:schiff-base",
+      "source": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "target": "compound:1,3-bisphosphoglycerate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:schiff-base",
-      "target": "reaction:reduction of schiff-base to norbelladine",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:reduction of schiff-base to norbelladine",
-      "target": "compound:norbelladine",
+      "source": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "target": "compound:nadh",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "compound:norbelladine",
-      "target": "reaction:methylation of norbelladine to 4′-o-methylnorbelladine",
+      "source": "protein:glyceraldehyde-3-phosphate dehydrogenase",
+      "target": "reaction:glyceraldehyde-3-phosphate dehydrogenase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:1,3-bisphosphoglycerate",
+      "target": "reaction:phosphoglycerate kinase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:methylation of norbelladine to 4′-o-methylnorbelladine",
-      "target": "compound:4′-o-methylnorbelladine",
+      "source": "compound:adp",
+      "target": "reaction:phosphoglycerate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglycerate kinase reaction",
+      "target": "compound:3-phosphoglycerate",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:n4omt",
-      "target": "reaction:methylation of norbelladine to 4′-o-methylnorbelladine",
+      "source": "reaction:phosphoglycerate kinase reaction",
+      "target": "compound:atp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphoglycerate kinase",
+      "target": "reaction:phosphoglycerate kinase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:3-phosphoglycerate",
+      "target": "reaction:phosphoglycerate mutase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phosphoglycerate mutase reaction",
+      "target": "compound:2-phosphoglycerate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:phosphoglycerate mutase",
+      "target": "reaction:phosphoglycerate mutase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:2-phosphoglycerate",
+      "target": "reaction:enolase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:enolase reaction",
+      "target": "compound:phosphoenolpyruvate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:enolase reaction",
+      "target": "compound:water",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:enolase",
+      "target": "reaction:enolase reaction",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:phosphoenolpyruvate",
+      "target": "reaction:pyruvate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:adp",
+      "target": "reaction:pyruvate kinase reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate kinase reaction",
+      "target": "compound:pyruvate",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:pyruvate kinase reaction",
+      "target": "compound:atp",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:pyruvate kinase",
+      "target": "reaction:pyruvate kinase reaction",
       "role": "catalyst",
       "confidence": 1.0
     }

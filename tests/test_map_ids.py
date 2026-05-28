@@ -13,9 +13,13 @@ if str(SRC) not in sys.path:
 
 from t2pw.mapping.map_ids import (  # noqa: E402
     PathBankDbResolver,
+    _europepmc_full_text,
+    _extract_aliases_from_literature_text,
+    _extract_uniprot_candidates,
     _map_protein_with_strategy,
     _reconcile_components_against_local_proteins,
     _rewrite_reaction_protein_enzymes_to_complexes,
+    map_protein_uniprot,
 )
 
 
@@ -73,6 +77,115 @@ class _AvailableDb:
             "candidates": [],
             "resolution": {"status": "novel", "issue": "no_db_candidates"},
         }
+
+
+class _FakeResponse:
+    def __init__(self, payload: Dict[str, Any], status_code: int = 200, text: str = "") -> None:
+        self._payload = payload
+        self.status_code = status_code
+        self.text = text
+
+    def json(self) -> Dict[str, Any]:
+        return self._payload
+
+
+class _AliasUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if "fullTextXML" in url:
+            return _FakeResponse(
+                {},
+                text="<article><body>The TTA known as ObiH (or ObaG) was discovered in obafluorin biosynthesis.</body></article>",
+            )
+        if "europepmc" in url:
+            return _FakeResponse(
+                {
+                    "resultList": {
+                        "result": [
+                            {
+                                "title": "Discovery of L-threonine transaldolases",
+                                "abstractText": "Beta-hydroxy amino acid biosynthesis.",
+                                "source": "PMC",
+                                "id": "10495429",
+                                "pmcid": "PMC10495429",
+                            }
+                        ]
+                    }
+                }
+            )
+        if 'gene:"ObiH"' not in query and 'gene:"obiH"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "A0A1X9LWZ7",
+                        "entryType": "UniProtKB unreviewed (TrEMBL)",
+                        "proteinDescription": {
+                            "recommendedName": {"fullName": {"value": "Threonine aldolase"}},
+                        },
+                        "genes": [
+                            {
+                                "geneName": {"value": "obiH"},
+                                "synonyms": [{"value": "CIB54_12585"}],
+                            }
+                        ],
+                        "organism": {"scientificName": "Pseudomonas fluorescens"},
+                    }
+                ]
+            }
+        )
+
+
+class _NocBDomainUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if 'gene:"NocB"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "Q5J1Q6",
+                        "entryType": "UniProtKB unreviewed (TrEMBL)",
+                        "proteinDescription": {
+                            "recommendedName": {
+                                "fullName": {"value": "Nonribosomal peptide synthetase NocB"}
+                            },
+                            "alternativeNames": [
+                                {"fullName": {"value": "NocB thioesterase domain-containing protein"}}
+                            ],
+                        },
+                        "genes": [{"geneName": {"value": "NocB"}}],
+                        "organism": {"scientificName": "Nocardia uniformis subsp. tsuyamanensis"},
+                    }
+                ]
+            }
+        )
+
+
+class _EuropePmcFullTextClient:
+    def __init__(self) -> None:
+        self.urls: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        self.urls.append(url)
+        if url.endswith("/PMC8072733/fullTextXML"):
+            return _FakeResponse(
+                {},
+                text="<article><body>Biochemical assays demonstrated that ObiH (ObaG) is a new LTTA.</body></article>",
+            )
+        return _FakeResponse({}, status_code=404)
 
 
 def _glycolysis_complex_result(protein_row: Dict[str, Any], species: str) -> Dict[str, Any]:
@@ -244,6 +357,83 @@ def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
     assert result["source"] == "api"
     assert result["mapped_ids"]["uniprot"] == "P19367"
     api_lookup.assert_called_once()
+
+
+def test_uniprot_mapping_uses_literature_alias_for_obag() -> None:
+    client = _AliasUniProtClient()
+
+    result = map_protein_uniprot(client, "ObaG", "Pseudomonas fluorescens")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "A0A1X9LWZ7"
+    assert result["matched_alias"] == "ObiH"
+    assert result["alias_source"] == "literature_alias"
+    assert result["resolved_name"] == "Threonine aldolase"
+    assert result["chosen_rule"] == "top_unique_alias_candidate"
+    assert result["literature_aliases"] == [{"alias": "ObiH", "source": "literature_alias"}]
+    assert any('gene:"ObiH"' in query for query in client.queries)
+
+
+def test_europepmc_full_text_uses_pmcid_endpoint() -> None:
+    client = _EuropePmcFullTextClient()
+
+    text = _europepmc_full_text(
+        client,
+        {"source": "MED", "id": "33900425", "pmcid": "PMC8072733"},
+    )
+
+    assert "ObiH (ObaG)" in text
+    assert client.urls == ["https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8072733/fullTextXML"]
+
+
+def test_literature_alias_extracts_parenthetical_gene_name_without_marker() -> None:
+    aliases = _extract_aliases_from_literature_text(
+        "ObaG",
+        "Biochemical assays demonstrated that ObiH (ObaG) is a new LTTA.",
+    )
+
+    assert aliases == [{"alias": "ObiH", "source": "literature_alias"}]
+
+
+def test_uniprot_candidate_parser_uses_submission_names_and_unreviewed_flag() -> None:
+    result = _extract_uniprot_candidates(
+        {
+            "results": [
+                {
+                    "primaryAccession": "A0A1X9LWZ7",
+                    "entryType": "UniProtKB unreviewed (TrEMBL)",
+                    "proteinDescription": {
+                        "submissionNames": [
+                            {"fullName": {"value": "Threonine aldolase"}},
+                        ],
+                    },
+                    "genes": [{"geneName": {"value": "obiH"}}],
+                    "organism": {"scientificName": "Pseudomonas fluorescens"},
+                }
+            ]
+        },
+        query_name="Threonine aldolase",
+        organism="Pseudomonas fluorescens",
+    )
+
+    assert result[0]["accession"] == "A0A1X9LWZ7"
+    assert result[0]["protein_name"] == "Threonine aldolase"
+    assert result[0]["reviewed"] is False
+    assert result[0]["score"] == 0.8
+
+
+def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:
+    client = _NocBDomainUniProtClient()
+
+    result = map_protein_uniprot(client, "NocB thioesterase (TE) domain", "Nocardia uniformis")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q5J1Q6"
+    assert result["matched_alias"] == "NocB"
+    assert result["alias_source"] == "domain_parent"
+    assert result["resolved_name"] == "Nonribosomal peptide synthetase NocB"
+    assert result["chosen_rule"] == "top_unique_alias_candidate"
+    assert any('gene:"NocB"' in query for query in client.queries)
 
 
 def test_complex_maps_by_name_and_species() -> None:

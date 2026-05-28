@@ -12,8 +12,34 @@ reaction you extract with exactly one of these labels in the required "scope_mem
                   context but is not itself a step of the named pathway
   out_of_scope  — mentioned in passing but belongs to a completely different pathway
 
-If no <pathway_scope> is supplied, set scope_membership: "core" on every reaction.
+If no <pathway_scope> is supplied and upstream_context is absent, set scope_membership to "core" only for reactions clearly belonging to the main described pathway or process. For reactions that are unrelated mentions or belong to a different pathway, use "out_of_scope" or omit them.
 Reactions whose scope_membership is "out_of_scope" will be filtered before graph building.
+
+UPSTREAM CONTEXT GATE (apply before extraction)
+When a <upstream_context> block is supplied, it contains Stage 0 preprocessor output fields including document_type, context_type, selected_example, candidate_examples, scope_clarity_score, and warning. Use these to gate extraction:
+
+Case A — document_type is "multi_example_review" AND selected_example is empty:
+  - Do NOT extract a merged PWML pathway from the whole review.
+  - Do NOT populate reactions, transports, interactions, proteins, compounds from multiple unrelated examples.
+  - Return empty process lists (reactions: [], transports: [], interactions: []).
+  - Set a top-level "scope_warning" field: "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output."
+  - Do NOT populate entities.compounds or entities.proteins from the review body. Return empty entity and process registries. Rely on upstream_context.candidate_examples for downstream selection. Extracting orphan entities from an ambiguous review contaminates the entity registry with unrelated examples.
+
+Case B — document_type is "multi_example_review" AND selected_example is non-empty:
+  - Extract ONLY entities and reactions whose evidence is locally anchored to the selected_example by paragraph, figure caption, or directly adjacent section.
+  - Do NOT extract entities/reactions that belong to other named examples in the review even if they appear in the same document.
+  - Apply the evidence-locality rule: an entity belongs to selected_example only if the entity name and a reaction/transformation involving it appear within the same paragraph or figure caption as the selected_example's name or product.
+
+Case C — context_type is "enzyme_mechanism" or "partial_biosynthetic_step":
+  - Do NOT attempt to extract a complete pathway.
+  - Extract only the explicitly described reaction step(s), enzyme(s), substrate(s), and product(s).
+  - Leave reactions, transports, and interactions lists containing only what is directly supported.
+  - Do not infer upstream or downstream steps to complete the pathway.
+
+Case D — document_type is "primary_research" or scope_clarity_score >= 0.7:
+  - Proceed with normal full extraction.
+
+If no <upstream_context> is supplied, proceed with normal extraction (Case D behavior).
 
 USER TASK CONTEXT
 When a <user_task_context> block is supplied, use it only as task-scoping and
@@ -58,13 +84,25 @@ OUTPUT RULES (MANDATORY)
 - Do not create pseudo-species like "protein + metabolite" as entity records.
 - reactants/products = species that are consumed or produced (stoichiometric participants).
 - modifiers = anything that participates in a reaction without being consumed: enzymes, transporters, activators, inhibitors.
-  Assign role: "catalyst" for enzymes, "transporter" for carrier proteins, "activator" for positive regulators, "inhibitor" for negative regulators, "cofactor" for non-consumed small-molecule helpers.
+  Assign role: "catalyst" for enzymes, "transporter" for carrier proteins, "activator" for positive regulators, "inhibitor" for negative regulators.
+  Note: "cofactor" is NOT a valid modifier role. Small-molecule helpers are never modifiers — see COFACTOR RULE below.
+- When the text gives both a named gene/protein (e.g., ObaG, IkaA, PltB) AND a generic enzyme class (e.g., "L-threonine transaldolase", "PKS-NRPS hybrid") for the same catalytic activity, use the named gene/protein as the primary protein entity name. Store the generic enzyme class only as context — it may be added as a second name or synonym note but must not replace or displace the named protein in the proteins[] list or modifiers[].
 - An enzyme is NEVER an input or output of a reaction. If the text lists an enzyme as an input, place it in modifiers with role: "catalyst" and remove it from inputs.
 - A protein_complex that catalyzes a reaction MUST appear in that reaction's modifiers[] with entity_type: "protein_complex" and role: "catalyst". Use the exact complex name from protein_complexes[]. Do NOT use a subunit name as the modifier — subunits go in protein_complexes[].components only.
-- Cofactors that are stoichiometrically consumed and regenerated (e.g., ATP → ADP) are reactants/products, NOT modifiers.
+- modifiers[].entity_type MUST be "protein" or "protein_complex". Small molecules, metabolites, and chemical cofactors are NEVER valid modifiers and MUST NOT appear in modifiers[] or enzymes[].
+
+COFACTOR RULE (MANDATORY — supersedes any conflicting rule above):
+- Reaction modifiers[] MUST contain only proteins or protein_complexes. No exceptions.
+- Small-molecule cofactors, prosthetic groups, vitamins, metal ions, and currency metabolites MUST NEVER appear in modifiers[] or enzymes[].
+- This includes: PLP, pyridoxal phosphate, FAD, FMN, NAD+, NADH, NADP+, NADPH, SAM, CoA, ATP, ADP, AMP, GTP, GDP, heme, haem, Mg2+, Fe2+, Fe3+, Zn2+, Mn2+, Cu2+, TPP, thiamine pyrophosphate, biotin, lipoate, iron-sulfur cluster, and all similar biochemical helpers.
+- Remove the role "cofactor" from modifiers[] — it is no longer a valid modifier role. Valid modifier roles are: catalyst, transporter, activator, inhibitor.
+- If a small-molecule cofactor is explicitly mentioned but NOT stoichiometrically consumed or regenerated: add it to entities.compounds with class "cofactor" and omit it from the reaction entirely.
+- If a small-molecule cofactor IS stoichiometrically consumed/regenerated: place it in inputs/outputs as a reactant/product, not in modifiers.
 - BACKWARD COMPATIBILITY: if you see legacy format { "protein_complex": "X" } in enzymes[], treat it as { "entity": "X", "entity_type": "protein_complex", "role": "catalyst" }. The field name enzymes is now modifiers.
-- Create a protein_complex ONLY when the text explicitly says "complex", "heterodimer", "holoenzyme", or names a multi-subunit structure.
-- Single-protein entries should NEVER be wrapped in a complex unless the text forces it.
+- Extraction layer: extract a single enzyme as a protein unless the source text explicitly says "complex", "heterodimer", "holoenzyme", "multisubunit", or otherwise names a multi-subunit structure.
+- Extraction layer: create protein_complex records only for complexes/multisubunit enzymes/holoenzymes supported by the source text. Do not add an extracted protein_complex solely because a protein catalyzes a reaction.
+- Export layer: downstream PWML/PathWhiz export may generate a single-protein protein_complex wrapper for a protein catalyst because PathWhiz reaction enzymes require protein_complex references. That wrapper is a technical export representation, not an extracted biological assertion.
+- Never wrap compounds, cofactors, ions, metabolites, or small molecules into protein_complexes.
 - If exact subunit membership is unknown, still create the complex but mark confidence < 1.0 and provenance: "inferred" in the inference stage.
 - class must always be filled; if uncertain, use the parent type name (e.g., "compound" for a compound).
   Valid class values — compound: compound | cofactor | ion | element_collection;
@@ -140,6 +178,7 @@ KEY DEFINITIONS (verbatim-only)
 
 OUTPUT JSON SCHEMA (must match exactly)
 {
+  "scope_warning": "",
   "compartments": [
     {
       "name": "",
@@ -204,7 +243,7 @@ OUTPUT JSON SCHEMA (must match exactly)
           {
             "entity": "",
             "entity_type": "protein | protein_complex",
-            "role": "catalyst | transporter | activator | inhibitor | cofactor",
+            "role": "catalyst | transporter | activator | inhibitor",
             "evidence": "",
             "confidence": 1.0,
             "provenance": "extracted"
@@ -228,7 +267,7 @@ OUTPUT JSON SCHEMA (must match exactly)
           {
             "entity": "",
             "entity_type": "protein | protein_complex",
-            "role": "catalyst | transporter | activator | inhibitor | cofactor",
+            "role": "catalyst | transporter | activator | inhibitor",
             "evidence": "",
             "confidence": 1.0,
             "provenance": "extracted"
@@ -299,7 +338,7 @@ OUTPUT JSON SCHEMA (must match exactly)
 IMPORTANT CONSTRUCTION NOTES
 - biological_state fields reference biological_states[].name (string). Leave "" if none is explicitly stated.
 - proteins vs protein_complexes:
-  If text only mentions "glycerol kinase" (single enzyme), put it under proteins and (optionally) create a protein_complex with that single component ONLY if the text explicitly implies a complex. Otherwise do not create a complex.
+  If text only mentions "glycerol kinase" or another single enzyme, extract it under proteins. Use protein_complex only when the source text explicitly supports a complex, holoenzyme, multisubunit enzyme, or named multi-protein structure. A downstream PathWhiz exporter may later create a generated single-protein protein_complex wrapper for reaction enzyme references; do not treat that export wrapper as a biological extraction or create it here.
 - For reactions: only create if at least one input AND one output compound are explicitly mentioned.
 - For transports: only create if movement is explicit. Movement keywords include: "transported into", "exported from", "imported into", "imported from", "translocated", "shuttle", "moves from", "transferred from", "supplied from ... and imported", or any phrasing that names a source compartment and a destination compartment for a cargo molecule.
 - transports[].transporters[] MAY be empty. If the text says the transporter is "unknown", unnamed, or simply does not name a carrier protein, still create the transport object with transporters: []. Do NOT skip a transport just because no transporter protein is named.
@@ -410,3 +449,10 @@ Example 4 — protein complex as catalyst (MANDATORY pattern — applies wheneve
 SUMMARY RULE: every named enzyme/catalyst in the text MUST appear in modifiers[] on its reaction with role "catalyst". This applies equally to single proteins (entity_type: "protein") AND protein complexes (entity_type: "protein_complex"). Never leave a reaction without modifiers if the text names its catalyst.
 
 
+CROSS-CUTTING CONSTRAINTS
+- Partial pathway evidence should remain partial. Prefer unresolved warnings over invented pathway completion.
+- Never resolve or assign an entity to a candidate of a different biological type solely because of confidence score. Type compatibility beats confidence.
+- Named genes/proteins outrank generic enzyme class names. If both are present in text for the same activity, use the named gene/protein.
+- Cofactors (PLP/pyridoxal phosphate, FAD, FMN, NAD+/NADH, NADP+/NADPH, SAM, CoA, ATP/ADP/AMP, heme, TPP, metal ions) are compounds/cofactors/ions, never reaction modifiers or enzymes. Include them in reactions only when stoichiometrically consumed or regenerated as inputs/outputs.
+- Extraction layer: single enzymes are proteins. Use protein_complex only when the text explicitly names a complex, holoenzyme, heterodimer, or multisubunit structure.
+- Export layer: PathWhiz/PWML export may wrap a protein catalyst in a generated single-protein protein_complex for reaction enzyme references. This technical wrapper is not an extracted biological claim and must never be applied to compounds, cofactors, ions, metabolites, or small molecules.

@@ -193,10 +193,14 @@ def infer_entity_species(
             "Return JSON only with keys: name, taxonomy_id, confidence, reason.",
             "Use a known_pathway_species name when the context clearly indicates it.",
             "If the species cannot be inferred, return an empty name and confidence 0.",
-            "Do not infer a species from generic protein names alone.",
+            "Do not infer a species from generic protein names alone (e.g., 'kinase', 'transferase', 'reductase', 'oxidase' are generic — do not infer species from these).",
+            "If known_pathway_species is empty and biological_states carry no species field, return empty name and confidence 0.",
+            "For multi-example review documents: infer species only from local evidence directly associated with the entity's named example. Do not infer species from a global review-level species list that may contain species from other examples.",
+            "If a protein candidate's organism conflicts with the known selected-example organism, return empty name and confidence 0 unless the text explicitly supports that organism for this entity.",
+            "For selected examples from review papers: species may be inferred from the producer organism of the same local example when the protein is explicitly described as part of that example's biosynthesis. For instance, if obafluorin is stated to be produced by Pseudomonas fluorescens and ObaG is described as an enzyme in obafluorin biosynthesis, Pseudomonas fluorescens is a valid species inference for ObaG.",
         ],
     }
-    system = "You are a strict biological species resolver. Return only compact JSON."
+    system = "You are a strict biological species resolver. Return only compact JSON. Never infer species from ambiguous or generic evidence."
     raw = ""
     try:
         raw = chat(
@@ -489,11 +493,15 @@ def _llm_choose_location(
             "Do not invent locations outside candidate list.",
             "Prefer higher evidence score and biological plausibility.",
             "Return JSON only with keys: choice, confidence, reason.",
+            "If no candidate is explicitly supported by source text evidence, biological_state evidence, or high-confidence DB context, return choice '' (empty string) with confidence 0 and reason 'no_supported_candidate'.",
+            "Do NOT assign default compartments (e.g., cytosol, cell) for review-derived partial biosynthetic examples or natural-product pathway snippets when the compartment is not stated in the source text.",
+            "Allowing no selection is correct when the evidence is absent — do not force a location solely to fill the field.",
         ],
     }
     system = (
         "You are a strict location resolver. Return only JSON. "
-        "Never invent a location not present in candidate list."
+        "Never invent a location not present in candidate list. "
+        "Returning an empty choice is correct when no candidate is well-supported."
     )
     try:
         raw = chat(
@@ -961,12 +969,15 @@ def _llm_plan_stage3(
         "rules": [
             "Return JSON only.",
             "Do not invent issue_key values outside provided list.",
+            "Before planning any lookup, assign expected_entity_type from the source JSON: compound/cofactor/ion → compound databases only; protein/transporter/enzyme → protein databases only; protein_complex → complex lookup only after protein/component evidence exists; species → species lookup only; subcellular_location → location lookup only.",
+            "For ambiguous abbreviations (PLP, FAD, CoA, SAM, TPP, NAD, NADP, etc.): require expanded source evidence or explicit local context before planning any lookup. Do not plan a protein lookup for a biochemical cofactor abbreviation.",
             "For resolve_ids.strategy use one of: db_then_api, api_then_db, db_only, api_only, skip.",
             "For resolve_location.strategy use one of: db_then_default, default_only, skip.",
             "For background.api_lookup use one of: auto, none, full.",
             "For background.hmdb_lookup use true only for compounds when additional ID context is useful.",
             "For background.max_results use an integer from 1 to 12.",
             "Plan should prefer deterministic evidence sources and minimize API calls.",
+            "For multi-example review documents: include selected_example or candidate_example ownership in lookup context. Avoid broad global-review lookups that may return candidates from unrelated examples.",
         ],
         "output_schema": {
             "operations": [
@@ -980,7 +991,7 @@ def _llm_plan_stage3(
             ]
         },
     }
-    system = "You are a strict planner for deterministic DB/API resolution. Output JSON only."
+    system = "You are a strict planner for deterministic DB/API resolution. Output JSON only. Assign entity type before planning — type determines which databases to search."
     raw = ""
     try:
         raw = chat(
@@ -1092,17 +1103,22 @@ def _llm_choose_id_candidate(
         "background_context": _safe_dict(background_context),
         "rules": [
             "Choose exactly one index from candidates by mapped ID quality and confidence.",
-            "Prefer higher confidence and richer mapped_ids coverage.",
-            "Use background_context only as supporting evidence; do not invent new IDs.",
-            "If top candidates are close, prefer database-backed evidence over weaker API-only candidates.",
-            "Do not reject all candidates when at least one candidate has confidence >= 0.55.",
+            "Selection priority (in order): (1) exact entity type match, (2) exact expanded-name or recognized synonym match, (3) organism/species match when relevant, (4) database-backed identifier quality, (5) confidence score.",
+            "Confidence score must NOT override type or organism conflicts — type compatibility is a hard gate.",
+            "Reject all candidates (return selected_index: -1) when ANY of the following apply:",
+            "  - The candidate entity type conflicts with the source entity type (e.g., compound candidate for a protein entity).",
+            "  - The candidate organism conflicts with the known selected-example species.",
+            "  - The match is only an ambiguous abbreviation with no expanded-name confirmation (e.g., 'PLP' matching proteolipid protein when the source context is a biosynthesis cofactor).",
+            "  - The candidate belongs to a different pathway or natural-product example than the source entity.",
+            "  - All candidates have only weak synonym evidence despite high generic confidence scores.",
+            "Do not force-select a candidate solely because confidence >= 0.55. Rejecting is correct when type or scope conflicts exist.",
             "Return JSON only with keys: selected_index, confidence, reason.",
         ],
     }
     try:
         raw = chat(
             [
-                {"role": "system", "content": "You are a strict candidate selector. Output JSON only."},
+                {"role": "system", "content": "You are a strict candidate selector. Output JSON only. Returning selected_index: -1 (reject all) is correct when type, organism, or scope conflicts exist."},
                 {"role": "user", "content": json.dumps(prompt_obj, ensure_ascii=False)},
             ],
             temperature=float(temperature),

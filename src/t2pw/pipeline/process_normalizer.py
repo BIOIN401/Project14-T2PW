@@ -1831,6 +1831,11 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
     summary = _safe_dict(rep.setdefault("summary", {}))
     summary.setdefault("modifier_refs_canonicalized", 0)
     summary.setdefault("modifier_refs_dropped", 0)
+    summary.setdefault("non_protein_catalysts_dropped", 0)
+    rep.setdefault("actions", [])
+    allowed_enzyme_entity_types = {"protein", "protein_complex"}
+    dropped_enzyme_entity_types = {"compound", "cofactor", "ion", "small_molecule", "metabolite"}
+    enzyme_export_roles = {"", "catalyst", "enzyme", "activator", "inhibitor"}
     entities = _safe_dict(payload.get("entities"))
     protein_rows = _safe_list(entities.get("proteins"))
     complex_rows = _safe_list(entities.get("protein_complexes"))
@@ -1860,6 +1865,20 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 return "protein", protein_by_norm[norm]
         return None
 
+    def _record_non_protein_catalyst_drop(pointer: str, name: str, entity_type: str, role: str, source_field: str) -> None:
+        summary["non_protein_catalysts_dropped"] += 1
+        summary["modifier_refs_dropped"] += 1
+        rep["actions"].append(
+            {
+                "type": "non_protein_catalyst_dropped",
+                "json_pointer": pointer,
+                "name": name,
+                "entity_type": entity_type,
+                "role": role or "catalyst",
+                "source_field": source_field,
+            }
+        )
+
     def _rewrite_actor_rows(rows: List[Any], pointer_prefix: str, *, drop_unknown: bool = True) -> List[Dict[str, Any]]:
         kept: List[Dict[str, Any]] = []
         for idx, row in enumerate(rows):
@@ -1877,6 +1896,15 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             if not raw_name:
                 if not drop_unknown:
                     kept.append(row)
+                continue
+
+            explicit_entity_type = _canonical(str(row.get("entity_type") or row.get("type") or "")).casefold()
+            role = _canonical(str(row.get("role", ""))).casefold()
+            if (
+                explicit_entity_type in dropped_enzyme_entity_types
+                and (pointer_prefix.endswith("/enzymes") or role in enzyme_export_roles)
+            ):
+                _record_non_protein_catalyst_drop(pointer, raw_name, explicit_entity_type, role, source_field)
                 continue
 
             resolved = _resolve_actor_name(raw_name)
@@ -1925,12 +1953,12 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             reaction[key] = _rewrite_actor_rows(rows, f"/processes/reactions/{ridx}/{key}")
 
     # Post-process: normalise modifiers[] to entity/entity_type schema and migrate legacy enzymes[].
-    for reaction in reactions:
+    for ridx, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
             continue
         # 1. Ensure modifiers[] rows use entity/entity_type schema.
         new_modifiers: List[Dict[str, Any]] = []
-        for mod in _safe_list(reaction.get("modifiers")):
+        for midx, mod in enumerate(_safe_list(reaction.get("modifiers"))):
             if not isinstance(mod, dict):
                 continue
             updated_mod = dict(mod)
@@ -1948,6 +1976,17 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             for old_key in ["protein", "protein_complex", "name", "protein_name"]:
                 updated_mod.pop(old_key, None)
             updated_mod.setdefault("role", "catalyst")
+            entity_type = _canonical(str(updated_mod.get("entity_type", ""))).casefold()
+            role = _canonical(str(updated_mod.get("role", "catalyst"))).casefold() or "catalyst"
+            if entity_type in dropped_enzyme_entity_types and role in enzyme_export_roles:
+                _record_non_protein_catalyst_drop(
+                    f"/processes/reactions/{ridx}/modifiers/{midx}",
+                    _canonical(str(updated_mod.get("entity", ""))),
+                    entity_type,
+                    role,
+                    "entity",
+                )
+                continue
             if updated_mod.get("entity"):
                 new_modifiers.append(updated_mod)
         reaction["modifiers"] = new_modifiers
@@ -1984,11 +2023,20 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                     if v:
                         ename = v
                         if k == "entity":
-                            etype = str(enz.get("entity_type") or "protein")
+                            etype = _canonical(str(enz.get("entity_type") or "protein")).casefold()
                         elif t:
                             etype = t
                         break
                 if not ename or _normalize(ename) in existing_modifier_norms:
+                    continue
+                if etype not in allowed_enzyme_entity_types:
+                    _record_non_protein_catalyst_drop(
+                        f"/processes/reactions/{ridx}/enzymes",
+                        ename,
+                        etype,
+                        str(enz.get("role") or "catalyst"),
+                        "entity",
+                    )
                     continue
                 reaction["modifiers"].append({
                     "entity": ename,
@@ -2014,6 +2062,16 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             if not entity:
                 continue
             entity_type = _canonical(str(mod.get("entity_type", "protein"))).casefold() or "protein"
+            if entity_type not in allowed_enzyme_entity_types:
+                if entity_type in dropped_enzyme_entity_types:
+                    _record_non_protein_catalyst_drop(
+                        f"/processes/reactions/{ridx}/modifiers",
+                        entity,
+                        entity_type,
+                        role,
+                        "entity",
+                    )
+                continue
             key = (entity_type, _normalize(entity))
             if key in seen_enzyme_norms:
                 continue

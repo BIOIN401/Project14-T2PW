@@ -550,6 +550,85 @@ def test_single_protein_complex_preserved_for_enzyme() -> None:
     assert int(alias_stats.get("n_single_protein_complexes_removed", 0)) == 0
 
 
+def test_compound_catalyst_modifier_not_rebuilt_as_legacy_enzyme() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "pyridoxal-phosphate"}],
+            "proteins": [],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "PLP-assisted reaction",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "modifiers": [
+                        {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"}
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    normalize_process_actor_schema(payload, report=report)
+
+    reaction = payload["processes"]["reactions"][0]
+    assert reaction["modifiers"] == []
+    assert reaction["enzymes"] == []
+    assert int(report["summary"].get("non_protein_catalysts_dropped", 0)) == 1
+    assert any(action.get("type") == "non_protein_catalyst_dropped" for action in report["actions"])
+
+
+def test_mixed_protein_and_plp_catalysts_keep_protein_drop_non_protein() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Pseudomonas fluorescens"}],
+            "compounds": [
+                {"name": "L-Thr"},
+                {"name": "glycine enolate"},
+                {"name": "acetaldehyde"},
+                {"name": "pyridoxal-phosphate"},
+            ],
+            "proteins": [{"name": "ObaG"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "L-Thr cleavage",
+                    "inputs": ["L-Thr"],
+                    "outputs": ["glycine enolate", "acetaldehyde"],
+                    "modifiers": [
+                        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"},
+                        {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"},
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    normalize_process_actor_schema(payload, report=report)
+
+    reaction = payload["processes"]["reactions"][0]
+    assert reaction["modifiers"] == [
+        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"}
+    ]
+    assert reaction["enzymes"] == [
+        {"role": "catalyst", "confidence": 1.0, "provenance": "extracted", "protein": "ObaG"}
+    ]
+    assert int(report["summary"].get("non_protein_catalysts_dropped", 0)) == 1
+    assert any(
+        action.get("type") == "non_protein_catalyst_dropped"
+        and action.get("name") == "pyridoxal-phosphate"
+        for action in report["actions"]
+    )
+
+
 def test_mapping_route_and_species_id_helpers() -> None:
     protein_like_names = {"thyroglobulin", "thyroid peroxidase"}
     assert route_entity_for_mapping("thyroglobulin", "compound", protein_like_names=protein_like_names)["route"] == "protein"

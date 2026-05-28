@@ -114,8 +114,14 @@ def classify_reaction(reaction: dict) -> dict:
 
     system = (
         "You are a biochemistry expert. Classify the following reaction into exactly one "
-        f"of these classes: {REACTION_CLASS_NAMES}. "
-        "Respond with a JSON object: {\"class\": str, \"confidence\": \"high\"|\"medium\"|\"low\", \"reasoning\": str}."
+        f"of these classes: {REACTION_CLASS_NAMES} or \"unknown_or_mechanistic\". "
+        "Use \"unknown_or_mechanistic\" when the reaction is: "
+        "(a) a rare or unusual natural-product biosynthetic transformation, "
+        "(b) a partial enzyme mechanism step, "
+        "(c) a review-described transformation without full stoichiometry, or "
+        "(d) cannot be confidently assigned to any standard class. "
+        "Respond with a JSON object: {{\"class\": str, \"confidence\": \"high\"|\"medium\"|\"low\", \"reasoning\": str}}. "
+        "The reasoning field is explanatory context only — it must NOT be used as evidence for adding compounds or reactions downstream."
     )
     user_msg = (
         f"Reaction name: {reaction.get('name', 'unknown')}\n"
@@ -136,12 +142,14 @@ def classify_reaction(reaction: dict) -> dict:
         llm_class = parsed.get("class")
         llm_conf = parsed.get("confidence", "low")
         llm_reason = parsed.get("reasoning", "")
-        if llm_class not in REACTION_CLASS_NAMES:
+        if llm_class not in REACTION_CLASS_NAMES and llm_class != "unknown_or_mechanistic":
             llm_class = None
             llm_conf = "low"
         if llm_conf not in ("high", "medium", "low"):
             llm_conf = "low"
         evidence.append(f"LLM: {llm_reason[:120]}" if llm_reason else "LLM fallback used")
+        # Note: "unknown_or_mechanistic" is a valid class. Callers must handle it — do not
+        # apply standard stoichiometry templates to unknown_or_mechanistic reactions.
         return {"class": llm_class, "confidence": llm_conf, "evidence": evidence}
     except (json.JSONDecodeError, AttributeError):
         evidence.append("LLM fallback used (parse error)")

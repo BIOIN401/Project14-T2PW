@@ -1,156 +1,143 @@
 {
   "summary": {
-    "total_species": 17,
+    "total_species": 27,
     "total_reactions": 10,
-    "completeness_score": 0.0
+    "completeness_score": 0.216
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "phenylalanine",
+        "entity": "water",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "tyrosine",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "trans-cinnamic acid",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "4-hydroxycinnamic acid",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "3,4-dihydroxycinnamic acid",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "4-hydroxybenzaldehyde",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "3,4-dihydroxybenzaldehyde",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "tyramine",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "Schiff-base",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "norbelladine",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "4′-O-methylnorbelladine",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "phenylalanine ammonia-lyase (PAL)",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "cinnamate 4-hydroxylase (CYP73A1)",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "CYP98A3",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "VpVAN",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "tyrosine decarboxylase",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "N4OMT",
+        "entity": "NAD",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [],
     "transport_like_reactions": [],
-    "orphan_nodes": [],
+    "orphan_nodes": [
+      {
+        "entity": "NAD+",
+        "degree": 0
+      }
+    ],
     "missing_ids": [
       {
-        "entity": "phenylalanine",
+        "entity": "glucose",
         "type": "compound"
       },
       {
-        "entity": "tyrosine",
+        "entity": "ATP",
         "type": "compound"
       },
       {
-        "entity": "trans-cinnamic acid",
+        "entity": "ADP",
         "type": "compound"
       },
       {
-        "entity": "4-hydroxycinnamic acid",
+        "entity": "NADH",
         "type": "compound"
       },
       {
-        "entity": "3,4-dihydroxycinnamic acid",
+        "entity": "NAD+",
         "type": "compound"
       },
       {
-        "entity": "4-hydroxybenzaldehyde",
+        "entity": "glucose-6-phosphate",
         "type": "compound"
       },
       {
-        "entity": "3,4-dihydroxybenzaldehyde",
+        "entity": "fructose-6-phosphate",
         "type": "compound"
       },
       {
-        "entity": "tyramine",
+        "entity": "fructose-1,6-bisphosphate",
         "type": "compound"
       },
       {
-        "entity": "Schiff-base",
+        "entity": "glyceraldehyde-3-phosphate",
         "type": "compound"
       },
       {
-        "entity": "norbelladine",
+        "entity": "dihydroxyacetone phosphate",
         "type": "compound"
       },
       {
-        "entity": "4′-O-methylnorbelladine",
+        "entity": "1,3-bisphosphoglycerate",
         "type": "compound"
       },
       {
-        "entity": "phenylalanine ammonia-lyase (PAL)",
+        "entity": "3-phosphoglycerate",
+        "type": "compound"
+      },
+      {
+        "entity": "2-phosphoglycerate",
+        "type": "compound"
+      },
+      {
+        "entity": "phosphoenolpyruvate",
+        "type": "compound"
+      },
+      {
+        "entity": "pyruvate",
+        "type": "compound"
+      },
+      {
+        "entity": "water",
+        "type": "compound"
+      },
+      {
+        "entity": "hexokinase",
         "type": "protein"
       },
       {
-        "entity": "cinnamate 4-hydroxylase (CYP73A1)",
+        "entity": "phosphoglucose isomerase",
         "type": "protein"
       },
       {
-        "entity": "CYP98A3",
+        "entity": "phosphofructokinase-1",
         "type": "protein"
       },
       {
-        "entity": "VpVAN",
+        "entity": "aldolase",
         "type": "protein"
       },
       {
-        "entity": "tyrosine decarboxylase",
+        "entity": "triose phosphate isomerase",
         "type": "protein"
       },
       {
-        "entity": "N4OMT",
+        "entity": "glyceraldehyde-3-phosphate dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "phosphoglycerate kinase",
+        "type": "protein"
+      },
+      {
+        "entity": "phosphoglycerate mutase",
+        "type": "protein"
+      },
+      {
+        "entity": "enolase",
+        "type": "protein"
+      },
+      {
+        "entity": "pyruvate kinase",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [],
+    "duplicate_species": [
+      {
+        "entity_a": "NAD+",
+        "entity_b": "NAD",
+        "reason": "normalized label collision"
+      }
+    ],
     "inconsistent_class": []
   }
 }

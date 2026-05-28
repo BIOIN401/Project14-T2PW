@@ -30,11 +30,23 @@ Hard constraints:
 - Prefer add/replace over remove.
 - Every issue and patch must include concrete evidence from input JSON.
 - Be conservative: if uncertain, emit warning/suggestion instead of risky patch.
+- If upstream context includes a "selected_example" field (non-empty), any entity or process whose evidence quotes belong to a different named example than selected_example may be removed at high confidence (>= 0.90). This is a valid out-of-scope removal, not a data loss.
+- If upstream context indicates document_type = "multi_example_review" and selected_example is empty, do NOT repair the payload into a single pathway. Emit a scope_ambiguity error/warning in the issues block instead of adding bridging reactions or compartment assignments.
+
+TYPE-CONFLICT REPAIRS (high confidence, apply before other patches):
+These are deterministic type errors that should be patched at confidence >= 0.90:
+- A small-molecule cofactor (PLP, pyridoxal phosphate, FAD, FMN, NAD+, NADH, NADP+, NADPH, SAM, CoA, ATP, ADP, AMP, heme, Mg2+, Fe2+, Fe3+, Zn2+, TPP, biotin, lipoate) listed under entities.proteins[] is a type error. Propose removing it from proteins[] and adding it to entities.compounds[] with class "cofactor".
+- Before adding a moved cofactor to entities.compounds[], check whether the same name or an expanded synonym already exists there. If it does, only propose removing the incorrect proteins[] entry — do not create a duplicate compound entry.
+- A named gene or protein listed under entities.compounds[] is a type error. Do NOT classify an abbreviation as a protein by pattern alone — move a compound to proteins[] only if the payload evidence explicitly identifies it as a gene, protein, enzyme, subunit, transporter, or catalyst. Pattern matching alone (e.g., 2-5 uppercase letters) is insufficient — require explicit evidence in the entity's evidence field or reaction modifiers.
+- An ambiguous abbreviation (e.g., PLP, FAD, CoA) must NOT be reclassified to a different entity type unless the source evidence in the payload explicitly identifies it as that type. If evidence is ambiguous, emit a warning, not a patch.
 
 Patch policy guidance:
 - High confidence (>=0.95): deterministic structure fixes, obvious token splits, duplicate cleanup.
 - Medium confidence (0.75-0.94): location/organism propagation, minor normalization.
 - Low confidence (<0.75): avoid patching; report as warning/suggestion.
+- Type-conflict repairs: confidence >= 0.90 (high — these are structural errors).
+- Out-of-scope entity removal when selected_example is set: confidence >= 0.90.
+- Scope ambiguity: emit warning/suggestion, not a patch.
 
 Return JSON object with this shape:
 {
@@ -55,6 +67,13 @@ Return JSON object with this shape:
   ],
   "repair_rationale": "Short 1-3 sentence summary of why these changes are the safest next step."
 }
+
+Cross-cutting constraints:
+- Partial pathway evidence should remain partial. Do not add bridging reactions to make a partial mechanism look complete.
+- Type compatibility beats confidence. Never patch an entity to a different type solely on confidence score.
+- Named genes/proteins outrank generic enzyme class names.
+- Cofactors are compounds. Proteins/genes are not compounds.
+- Do not wrap a single enzyme into a protein_complex unless complex evidence exists in the payload.
 """
 
 
