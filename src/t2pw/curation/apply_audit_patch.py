@@ -8,6 +8,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 
+DEFAULT_CONNECTIVITY_CONFIDENCE_THRESHOLD = 0.98
+DEFAULT_MAJOR_TOPOLOGY_CONFIDENCE_THRESHOLD = 0.98
+
+
 def _decode_pointer(path: str) -> List[str]:
     if path == "":
         return []
@@ -105,6 +109,15 @@ def _is_connectivity_path(path: str) -> bool:
         or path.endswith("/outputs")
         or "/inputs/" in path
         or "/outputs/" in path
+    )
+
+
+def _is_major_topology_path(path: str) -> bool:
+    return bool(
+        re.match(
+            r"^/processes/(?:reactions|transports|reaction_coupled_transports|interactions)(?:/\d+|/-)?$",
+            path,
+        )
     )
 
 
@@ -247,7 +260,14 @@ def _entity_path_from_mapped_ids_patch(path: str) -> Optional[str]:
     return match.group(1) if match else None
 
 
-def _should_accept(op: Dict[str, Any], source_payload: Dict[str, Any]) -> Tuple[bool, str]:
+def _should_accept(
+    op: Dict[str, Any],
+    source_payload: Dict[str, Any],
+    *,
+    connectivity_confidence_threshold: float = DEFAULT_CONNECTIVITY_CONFIDENCE_THRESHOLD,
+    major_topology_confidence_threshold: float = DEFAULT_MAJOR_TOPOLOGY_CONFIDENCE_THRESHOLD,
+    enforce_major_topology_threshold: bool = False,
+) -> Tuple[bool, str]:
     action = str(op.get("op", "")).lower()
     path = str(op.get("path", ""))
     confidence = _float_or_default(op.get("confidence"), 0.0)
@@ -260,10 +280,15 @@ def _should_accept(op: Dict[str, Any], source_payload: Dict[str, Any]) -> Tuple[
     if confidence < _threshold_for_op(op):
         return False, f"Confidence {confidence:.3f} is below threshold for {action}."
     if _is_connectivity_path(path):
-        if confidence < 0.98:
-            return False, "Connectivity changes require confidence >= 0.98."
+        if confidence < connectivity_confidence_threshold:
+            return False, f"Connectivity changes require confidence >= {connectivity_confidence_threshold:.2f}."
         if not evidence.strip():
             return False, "Connectivity changes require explicit evidence."
+    if enforce_major_topology_threshold and _is_major_topology_path(path):
+        if confidence < major_topology_confidence_threshold:
+            return False, f"Major topology changes require confidence >= {major_topology_confidence_threshold:.2f}."
+        if not evidence.strip():
+            return False, "Major topology changes require explicit evidence."
     if action == "remove" and _is_core_semantics_path(path):
         if not _is_safe_core_remove(op, source_payload):
             return False, "Remove on core process semantics is blocked unless target is provable no-op."
@@ -273,6 +298,10 @@ def _should_accept(op: Dict[str, Any], source_payload: Dict[str, Any]) -> Tuple[
 def apply_patch_with_policy(
     source_payload: Dict[str, Any],
     patch_ops: List[Dict[str, Any]],
+    *,
+    connectivity_confidence_threshold: float = DEFAULT_CONNECTIVITY_CONFIDENCE_THRESHOLD,
+    major_topology_confidence_threshold: float = DEFAULT_MAJOR_TOPOLOGY_CONFIDENCE_THRESHOLD,
+    enforce_major_topology_threshold: bool = False,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     working = deepcopy(source_payload)
     accepted: List[Dict[str, Any]] = []
@@ -284,7 +313,13 @@ def apply_patch_with_policy(
             continue
         # Accept both the internal format (op/evidence) and the enrichment format (action/reason)
         op = _normalize_patch_op(raw_op)
-        allow, reason = _should_accept(op, source_payload)
+        allow, reason = _should_accept(
+            op,
+            source_payload,
+            connectivity_confidence_threshold=connectivity_confidence_threshold,
+            major_topology_confidence_threshold=major_topology_confidence_threshold,
+            enforce_major_topology_threshold=enforce_major_topology_threshold,
+        )
         record = {"index": idx, "reason": reason, "op": op}
         if not allow:
             rejected.append(record)
@@ -338,6 +373,9 @@ def run_apply(
     *,
     audit_report_path: Path | None = None,
     apply_report_path: Path | None = None,
+    connectivity_confidence_threshold: float = DEFAULT_CONNECTIVITY_CONFIDENCE_THRESHOLD,
+    major_topology_confidence_threshold: float = DEFAULT_MAJOR_TOPOLOGY_CONFIDENCE_THRESHOLD,
+    enforce_major_topology_threshold: bool = False,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -346,7 +384,13 @@ def run_apply(
     if not isinstance(patch_ops, list):
         raise ValueError("Patch file must be a JSON list.")
 
-    audited, apply_report = apply_patch_with_policy(payload, patch_ops)
+    audited, apply_report = apply_patch_with_policy(
+        payload,
+        patch_ops,
+        connectivity_confidence_threshold=connectivity_confidence_threshold,
+        major_topology_confidence_threshold=major_topology_confidence_threshold,
+        enforce_major_topology_threshold=enforce_major_topology_threshold,
+    )
     output_path.write_text(json.dumps(audited, indent=2, ensure_ascii=False), encoding="utf-8")
 
     if apply_report_path is not None:
