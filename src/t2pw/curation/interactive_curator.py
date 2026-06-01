@@ -10,6 +10,9 @@ from pathlib import Path
 from typing import Any
 
 
+INTERACTIVE_CONNECTIVITY_CONFIDENCE_THRESHOLD = 0.90
+
+
 INTERACTIVE_CURATOR_SYSTEM_PROMPT = """You are a surgical JSON patch generator for biological pathway curation.
 
 You receive the current pathway JSON, a rendered graph image, QA issues, mapping misses, recent edit history, and a human user's requested change.
@@ -492,6 +495,8 @@ def apply_patch_and_rerender(
             patch_file,
             patch_output,
             apply_report_path=patch_report_file,
+            connectivity_confidence_threshold=INTERACTIVE_CONNECTIVITY_CONFIDENCE_THRESHOLD,
+            enforce_major_topology_threshold=True,
         )
         if patch_output.exists():
             loaded = json.loads(patch_output.read_text(encoding="utf-8"))

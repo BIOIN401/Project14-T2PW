@@ -14495,6 +14495,87 @@
         "status": "matched",
         "order_step": "uniprot"
       }
+    },
+    "db::aromatic lamino acid decarboxylase::homo sapiens::4198::{\"gene_name\": \"DDC\", \"uniprot\": \"Q53Y41\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q53Y41",
+        "pathbank_protein_id": "4198",
+        "gene_name": "DDC"
+      },
+      "pathbank_protein_id": 4198,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4198,
+          "name": "Dopa decarboxylase (Aromatic L-amino acid decarboxylase)",
+          "uniprot": "Q53Y41",
+          "gene_name": "DDC",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::vesicular monoamine transporter 2::homo sapiens::1957::{\"uniprot\": \"Q05940\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q05940",
+        "pathbank_protein_id": "1957",
+        "gene_name": "SLC18A2"
+      },
+      "pathbank_protein_id": 1957,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 1957,
+          "name": "Synaptic vesicular amine transporter",
+          "uniprot": "Q05940",
+          "gene_name": "SLC18A2",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::vesicular monoamine transporter 2::homo sapiens::1957::{\"gene_name\": \"SLC18A2\", \"uniprot\": \"Q05940\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q05940",
+        "pathbank_protein_id": "1957",
+        "gene_name": "SLC18A2"
+      },
+      "pathbank_protein_id": 1957,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 1957,
+          "name": "Synaptic vesicular amine transporter",
+          "uniprot": "Q05940",
+          "gene_name": "SLC18A2",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
     }
   },
   "compounds": {
@@ -30897,6 +30978,248 @@
         "status": "matched",
         "order_step": "pathbank_compound_id"
       }
+    },
+    "db::oxygen::::{\"kegg\": \"C00007\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001377",
+        "kegg": "C00007",
+        "chebi": "CHEBI:15379",
+        "pubchem": "977",
+        "cas": "7782-44-7",
+        "biocyc": "CPD-6641",
+        "chemspider": "952",
+        "pathbank_compound_id": "1065"
+      },
+      "pathbank_compound_id": 1065,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1065,
+          "name": "Oxygen",
+          "short_name": "O2",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001377",
+            "kegg": "C00007",
+            "chebi": "CHEBI:15379",
+            "pubchem": "977",
+            "cas": "7782-44-7",
+            "biocyc": "CPD-6641",
+            "chemspider": "952"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::carbon dioxide::::{\"kegg\": \"C00011\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001967",
+        "kegg": "C00011",
+        "chebi": "CHEBI:16526",
+        "pubchem": "280",
+        "cas": "124-38-9",
+        "chemspider": "274",
+        "pathbank_compound_id": "1316"
+      },
+      "pathbank_compound_id": 1316,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1316,
+          "name": "Carbon dioxide",
+          "short_name": "CO2",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001967",
+            "kegg": "C00011",
+            "chebi": "CHEBI:16526",
+            "pubchem": "280",
+            "cas": "124-38-9",
+            "chemspider": "274"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::dihydrobiopterin::1499::{\"cas\": \"79647-29-3\", \"hmdb\": \"HMDB0002215\", \"kegg\": \"C00268\", \"pubchem\": \"133246\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002215",
+        "kegg": "C00268",
+        "pubchem": "133246",
+        "cas": "79647-29-3",
+        "biocyc": "CPD-16",
+        "chemspider": "117564",
+        "pathbank_compound_id": "1499"
+      },
+      "pathbank_compound_id": 1499,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1499,
+          "name": "4a-Carbinolamine tetrahydrobiopterin",
+          "short_name": "Phlorog",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002215",
+            "kegg": "C00268",
+            "pubchem": "133246",
+            "cas": "79647-29-3",
+            "biocyc": "CPD-16",
+            "chemspider": "117564",
+            "pathbank_compound_id": "1499"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::pyridoxal phosphate::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001491",
+        "kegg": "C00018",
+        "chebi": "CHEBI:18405",
+        "pubchem": "1051",
+        "cas": "54-47-7",
+        "biocyc": "PYRIDOXAL_PHOSPHATE",
+        "chemspider": "1022",
+        "drugbank": "DB00114",
+        "pathbank_compound_id": "1148"
+      },
+      "pathbank_compound_id": 1148,
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1148,
+          "name": "Pyridoxal 5'-phosphate",
+          "short_name": "Pyr-5'P",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0001491",
+            "kegg": "C00018",
+            "chebi": "CHEBI:18405",
+            "pubchem": "1051",
+            "cas": "54-47-7",
+            "biocyc": "PYRIDOXAL_PHOSPHATE",
+            "chemspider": "1022",
+            "drugbank": "DB00114",
+            "pathbank_compound_id": "1148"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym"
+      }
+    },
+    "db::pyridoxal phosphate::1148::{\"cas\": \"54-47-7\", \"chebi\": \"CHEBI:18405\", \"hmdb\": \"HMDB0001491\", \"kegg\": \"C00018\", \"pubchem\": \"1051\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001491",
+        "kegg": "C00018",
+        "chebi": "CHEBI:18405",
+        "pubchem": "1051",
+        "cas": "54-47-7",
+        "biocyc": "PYRIDOXAL_PHOSPHATE",
+        "chemspider": "1022",
+        "drugbank": "DB00114",
+        "pathbank_compound_id": "1148"
+      },
+      "pathbank_compound_id": 1148,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1148,
+          "name": "Pyridoxal 5'-phosphate",
+          "short_name": "Pyr-5'P",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001491",
+            "kegg": "C00018",
+            "chebi": "CHEBI:18405",
+            "pubchem": "1051",
+            "cas": "54-47-7",
+            "biocyc": "PYRIDOXAL_PHOSPHATE",
+            "chemspider": "1022",
+            "drugbank": "DB00114",
+            "pathbank_compound_id": "1148"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::levodopa::117::{\"cas\": \"59-92-7\", \"chebi\": \"CHEBI:15765\", \"hmdb\": \"HMDB0000181\", \"kegg\": \"C00355\", \"pubchem\": \"6047\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000181",
+        "kegg": "C00355",
+        "chebi": "CHEBI:15765",
+        "pubchem": "6047",
+        "cas": "59-92-7",
+        "biocyc": "L-DOPA",
+        "chemspider": "5824",
+        "drugbank": "DB01235",
+        "pathbank_compound_id": "117"
+      },
+      "pathbank_compound_id": 117,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 117,
+          "name": "L-Dopa",
+          "short_name": "L-Dopa",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000181",
+            "kegg": "C00355",
+            "chebi": "CHEBI:15765",
+            "pubchem": "6047",
+            "cas": "59-92-7",
+            "biocyc": "L-DOPA",
+            "chemspider": "5824",
+            "drugbank": "DB01235",
+            "pathbank_compound_id": "117"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
     }
   },
   "complexes": {
@@ -33193,92 +33516,86 @@
         "issue": "no_db_candidates",
         "order_step": "novel_complex_from_resolved_components"
       }
-    }
-  },
-  "enzyme_complexes": {
-    "phenylalanine hydroxylase::::homo sapiens": {
+    },
+    "db::phenylalanine hydroxylase complex::homo sapiens::::[{\"ids\": {}, \"name\": \"phenylalanine hydroxylase\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
-      "reason": "novel_complex",
+      "reason": "component_proteins_unresolved",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "",
       "candidates": [],
-      "name": "phenylalanine hydroxylase complex",
-      "species_id": 1,
       "components": [
         {
           "name": "phenylalanine hydroxylase",
           "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "Q66RJ7"
-          }
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
           "component": "phenylalanine hydroxylase",
-          "reason": "no_db_match"
+          "component_index": 0,
+          "reason": "novel_protein"
         }
       ],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
       }
     },
-    "tyrosine hydroxylase::::homo sapiens": {
+    "db::tyrosine hydroxylase complex::homo sapiens::::[{\"ids\": {}, \"name\": \"tyrosine hydroxylase\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
-      "reason": "novel_complex",
+      "reason": "component_proteins_unresolved",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "",
       "candidates": [],
-      "name": "tyrosine hydroxylase complex",
-      "species_id": 1,
       "components": [
         {
           "name": "tyrosine hydroxylase",
           "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "P78428"
-          }
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
           "component": "tyrosine hydroxylase",
-          "reason": "no_db_match"
+          "component_index": 0,
+          "reason": "novel_protein"
         }
       ],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
       }
     },
-    "aromatic lamino acid decarboxylase::4198::homo sapiens": {
+    "db::aromatic lamino acid decarboxylase complex::homo sapiens::::[{\"ids\": {}, \"name\": \"aromatic L-amino acid decarboxylase\", \"stoichiometry\": 1}]": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
       "source": "db",
       "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
+      "chosen_rule": "novel_complex_from_resolved_components",
       "candidates": [],
-      "name": "aromatic L-amino acid decarboxylase complex",
       "species_id": 1,
       "components": [
         {
           "name": "aromatic L-amino acid decarboxylase",
           "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
           "pathbank_protein_id": 4198,
           "mapped_ids": {
             "uniprot": "Q53Y41",
-            "pathbank_protein_id": "4198",
-            "gene_name": "DDC"
+            "pathbank_protein_id": "4198"
           }
         }
       ],
@@ -33286,7 +33603,7 @@
       "resolution": {
         "status": "novel",
         "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "order_step": "novel_complex_from_resolved_components"
       }
     }
   }

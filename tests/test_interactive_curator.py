@@ -13,6 +13,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from t2pw.curation import interactive_curator as curator  # noqa: E402
+from t2pw.curation.apply_audit_patch import apply_patch_with_policy  # noqa: E402
 
 
 def test_strip_payload_for_interactive_context_removes_bulky_fields_and_preserves_core_payload() -> None:
@@ -368,6 +369,78 @@ def test_apply_patch_and_rerender_writes_patch_list_only(tmp_path: Path, monkeyp
             "value": "ADP",
         }
     ]
+
+
+def test_interactive_connectivity_patch_accepts_090_but_audit_default_rejects(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "ATP"}, {"name": "ADP"}, {"name": "Glucose"}],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "ATP conversion",
+                    "inputs": ["ATP"],
+                    "outputs": ["ADP"],
+                    "biological_state": "cytosol",
+                }
+            ]
+        },
+    }
+    interactive_patch = [
+        {
+            "action": "add",
+            "json_pointer": "/processes/reactions/0/inputs/-",
+            "new_value": "Glucose",
+            "confidence": curator.INTERACTIVE_CONNECTIVITY_CONFIDENCE_THRESHOLD,
+            "reason": "User asked to add glucose as an input to this reaction.",
+        }
+    ]
+    audit_patch = [
+        {
+            "op": "add",
+            "path": "/processes/reactions/0/inputs/-",
+            "value": "Glucose",
+            "confidence": curator.INTERACTIVE_CONNECTIVITY_CONFIDENCE_THRESHOLD,
+            "evidence": "User asked to add glucose as an input to this reaction.",
+        }
+    ]
+
+    _, audit_report = apply_patch_with_policy(payload, audit_patch)
+    assert audit_report["summary"] == {"accepted_count": 0, "rejected_count": 1, "total": 1}
+    assert "confidence >= 0.98" in audit_report["rejected"][0]["reason"]
+
+    def fake_run_mapping(input_path: Path, output_path: Path, report_path: Path, **_: object) -> dict:
+        output_path.write_text(input_path.read_text(encoding="utf-8"), encoding="utf-8")
+        report = {"summary": {"mapped": 0}}
+        report_path.write_text(json.dumps(report), encoding="utf-8")
+        return report
+
+    class FakeGraph:
+        def to_dict(self) -> dict:
+            return {"nodes": [], "edges": []}
+
+    monkeypatch.setattr("t2pw.mapping.map_ids.run_mapping", fake_run_mapping)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.apply_biochemical_aliases", lambda payload, report=None: None)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.canonicalize_same_as_aliases", lambda payload, report=None: None)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.normalize_process_actor_schema", lambda payload, report=None: None)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.run_strict_post_normalization_gates", lambda payload, report=None, enforce_all_proteins_connected=False: {})
+    monkeypatch.setattr("t2pw.pipeline.draft_graph.build_draft_graph", lambda payload: FakeGraph())
+    monkeypatch.setattr("t2pw.pipeline.draft_graph_render.render_draft_graph_to_png_bytes", lambda graph, dpi=100: b"png")
+    monkeypatch.setattr("t2pw.pipeline.qa_graph.generate_qa_report", lambda graph, payload: {"summary": {"ok": True}})
+
+    result = curator.apply_patch_and_rerender(
+        working_json=payload,
+        patch=interactive_patch,
+        mapping_cache_path=tmp_path / "mapping_cache.json",
+        work_dir=tmp_path,
+    )
+
+    assert result["patch_apply_errors"] == []
+    assert result["updated_json"]["processes"]["reactions"][0]["inputs"] == ["ATP", "Glucose"]
 
 
 def test_extract_entity_names_reads_supported_entity_groups_and_handles_missing_keys() -> None:
