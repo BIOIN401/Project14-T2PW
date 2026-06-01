@@ -14576,6 +14576,60 @@
         "status": "matched",
         "order_step": "pathbank_protein_id"
       }
+    },
+    "db::aromatic lamino acid decarboxylase::homo sapiens::::{\"uniprot\": \"P20711\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P20711",
+        "pathbank_protein_id": "272"
+      },
+      "pathbank_protein_id": 272,
+      "confidence": 1.08,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 272,
+          "name": "Aromatic-L-amino-acid decarboxylase",
+          "uniprot": "P20711",
+          "gene_name": "DDC",
+          "species_id": 1,
+          "matched_on": "uniprot_id",
+          "score": 1.08
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::aromatic lamino acid decarboxylase::homo sapiens::272::{\"uniprot\": \"P20711\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P20711",
+        "pathbank_protein_id": "272",
+        "gene_name": "DDC"
+      },
+      "pathbank_protein_id": 272,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 272,
+          "name": "Aromatic-L-amino-acid decarboxylase",
+          "uniprot": "P20711",
+          "gene_name": "DDC",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
     }
   },
   "compounds": {
@@ -33604,6 +33658,84 @@
         "status": "novel",
         "issue": "no_db_candidates",
         "order_step": "novel_complex_from_resolved_components"
+      }
+    },
+    "db::aromaticlaminoacid decarboxylase::homo sapiens::96::[{\"ids\": {\"gene_name\": \"DDC\", \"pathbank_protein_id\": \"272\", \"uniprot\": \"P20711\"}, \"name\": \"aromatic L-amino acid decarboxylase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 96,
+      "pathbank_protein_complex_id": 96,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "aromatic L-amino acid decarboxylase",
+          "pathbank_protein_id": 272,
+          "stoichiometry": 1,
+          "uniprot": "P20711",
+          "mapped_ids": {
+            "uniprot": "P20711",
+            "pathbank_protein_id": "272"
+          },
+          "gene_name": "DDC",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 96,
+          "pathbank_protein_complex_id": 96,
+          "name": "Aromatic-L-amino-acid decarboxylase",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::aromaticlaminoacid decarboxylase::homo sapiens::96::[{\"ids\": {}, \"name\": \"aromatic L-amino acid decarboxylase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 96,
+      "pathbank_protein_complex_id": 96,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "aromatic L-amino acid decarboxylase",
+          "pathbank_protein_id": 272,
+          "stoichiometry": 1,
+          "uniprot": "P20711",
+          "mapped_ids": {
+            "uniprot": "P20711",
+            "pathbank_protein_id": "272"
+          },
+          "gene_name": "DDC",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 96,
+          "pathbank_protein_complex_id": 96,
+          "name": "Aromatic-L-amino-acid decarboxylase",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
       }
     }
   }
