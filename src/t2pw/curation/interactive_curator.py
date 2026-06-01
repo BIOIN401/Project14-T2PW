@@ -5,6 +5,8 @@ from __future__ import annotations
 import base64
 import copy
 import json
+import tempfile
+from pathlib import Path
 from typing import Any
 
 
@@ -86,6 +88,7 @@ _BULKY_KEY_TOKENS = (
     "search_results",
     "match_result",
     "match_results",
+    "enrichment",
     "enrichment_cache",
     "enrichment_caches",
     "raw_enrichment",
@@ -192,7 +195,7 @@ def compact_mapping_misses(mapping_report: dict | list | None) -> list[dict]:
             for item in value:
                 walk(item, parent_key=parent_key, suspect_context=current_context)
 
-    walk(mapping_report, parent_key="mapping_misses", suspect_context=isinstance(mapping_report, list))
+    walk(mapping_report, parent_key=None, suspect_context=isinstance(mapping_report, list))
     return misses
 
 
@@ -410,7 +413,296 @@ def apply_patch_and_rerender(
     id_source: str = "hybrid",
     db_config: dict | None = None,
 ) -> dict:
-    raise NotImplementedError
+    from t2pw.curation.apply_audit_patch import run_apply
+    from t2pw.mapping.map_ids import run_mapping
+    from t2pw.pipeline.draft_graph import build_draft_graph
+    from t2pw.pipeline.draft_graph_render import render_draft_graph_to_png_bytes
+    from t2pw.pipeline.process_normalizer import (
+        GateValidationError,
+        apply_biochemical_aliases,
+        canonicalize_same_as_aliases,
+        normalize_process_actor_schema,
+        run_strict_post_normalization_gates,
+    )
+    from t2pw.pipeline.qa_graph import generate_qa_report
+
+    work_path = Path(work_dir)
+    work_path.mkdir(parents=True, exist_ok=True)
+
+    source_json = copy.deepcopy(working_json) if isinstance(working_json, dict) else {}
+    entities_before = extract_entity_names(source_json)
+    patch_ops = patch if isinstance(patch, list) else []
+    patch_apply_errors: list[str] = []
+
+    patched_json = source_json
+    patch_apply_report: dict[str, Any] = {}
+    patch_files: list[Path] = []
+    try:
+        patch_input = _temp_json_path(work_path, "interactive_patch_input")
+        patch_file = _temp_json_path(work_path, "interactive_patch_ops")
+        patch_output = _temp_json_path(work_path, "interactive_patch_output")
+        patch_report_file = _temp_json_path(work_path, "interactive_patch_report")
+        patch_files.extend([patch_input, patch_file, patch_output, patch_report_file])
+
+        patch_input.write_text(
+            json.dumps(source_json, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        patch_file.write_text(
+            json.dumps(_patch_ops_for_apply(patch_ops), indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        patch_apply_report = run_apply(
+            patch_input,
+            patch_file,
+            patch_output,
+            apply_report_path=patch_report_file,
+        )
+        if patch_output.exists():
+            loaded = json.loads(patch_output.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                patched_json = loaded
+
+        for rejected in _safe_list(patch_apply_report.get("rejected")):
+            if isinstance(rejected, dict):
+                index = rejected.get("index", "?")
+                reason = rejected.get("reason", "rejected")
+                patch_apply_errors.append(f"patch[{index}]: {reason}")
+    except Exception as exc:  # noqa: BLE001
+        patch_apply_errors.append(f"Patch application failed: {exc}")
+        patched_json = source_json
+    finally:
+        _cleanup_temp_files(patch_files)
+
+    normalization_report: dict[str, Any] = {"summary": {}, "actions": []}
+    norm_warnings: list[str] = []
+    gate_errors: list[str] = []
+    normalized_json = copy.deepcopy(patched_json)
+
+    try:
+        apply_biochemical_aliases(normalized_json, report=normalization_report)
+    except Exception as exc:  # noqa: BLE001
+        norm_warnings.append(f"apply_biochemical_aliases failed: {exc}")
+
+    try:
+        canonicalize_same_as_aliases(normalized_json, report=normalization_report)
+    except Exception as exc:  # noqa: BLE001
+        norm_warnings.append(f"canonicalize_same_as_aliases failed: {exc}")
+
+    try:
+        normalize_process_actor_schema(normalized_json, report=normalization_report)
+    except Exception as exc:  # noqa: BLE001
+        norm_warnings.append(f"normalize_process_actor_schema failed: {exc}")
+
+    try:
+        gate_details = run_strict_post_normalization_gates(
+            normalized_json,
+            report=normalization_report,
+            enforce_all_proteins_connected=False,
+        )
+        normalization_report["gate_details"] = gate_details
+    except GateValidationError as exc:
+        normalization_report["gate_details"] = exc.details
+        gate_errors.extend(_gate_error_strings(exc.details))
+        if not gate_errors:
+            gate_errors.append(str(exc))
+    except Exception as exc:  # noqa: BLE001
+        gate_errors.append(str(exc))
+
+    entities_after = extract_entity_names(normalized_json)
+    entities_remapped = sorted(
+        (entities_after - entities_before) | _patched_entity_names(patch_ops, entities_after)
+    )
+
+    updated_json = normalized_json
+    mapping_report: dict[str, Any] = {}
+    mapping_files: list[Path] = []
+    try:
+        mapping_input = _temp_json_path(work_path, "interactive_mapping_input")
+        mapping_output = _temp_json_path(work_path, "interactive_mapping_output")
+        mapping_report_path = _temp_json_path(work_path, "interactive_mapping_report")
+        mapping_files.extend([mapping_input, mapping_output, mapping_report_path])
+
+        mapping_input.write_text(
+            json.dumps(normalized_json, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        mapping_report = run_mapping(
+            mapping_input,
+            mapping_output,
+            mapping_report_path,
+            cache_path=Path(mapping_cache_path),
+            id_source=id_source,
+            db_config=db_config,
+        )
+        if mapping_report_path.exists():
+            loaded_report = json.loads(mapping_report_path.read_text(encoding="utf-8"))
+            if isinstance(loaded_report, dict):
+                mapping_report = loaded_report
+        if mapping_output.exists():
+            loaded_output = json.loads(mapping_output.read_text(encoding="utf-8"))
+            if isinstance(loaded_output, dict):
+                updated_json = loaded_output
+    except Exception as exc:  # noqa: BLE001
+        mapping_report = {"error": f"Mapping failed: {exc}"}
+    finally:
+        _cleanup_temp_files(mapping_files)
+
+    mapping_misses = compact_mapping_misses(mapping_report)
+
+    graph_png_bytes = b""
+    qa_report: dict[str, Any] = {}
+    try:
+        draft_graph = build_draft_graph(updated_json)
+        graph_png_bytes = render_draft_graph_to_png_bytes(draft_graph.to_dict(), dpi=100)
+        qa_report = generate_qa_report(draft_graph, updated_json)
+    except Exception as exc:  # noqa: BLE001
+        qa_report = {"error": f"Graph render or QA failed: {exc}"}
+
+    return {
+        "updated_json": updated_json,
+        "graph_png_bytes": graph_png_bytes,
+        "qa_report": qa_report,
+        "normalization_report": normalization_report,
+        "mapping_report": mapping_report,
+        "mapping_misses": mapping_misses,
+        "entities_remapped": entities_remapped,
+        "norm_warnings": norm_warnings,
+        "gate_errors": gate_errors,
+        "patch_apply_errors": patch_apply_errors,
+    }
+
+
+def extract_entity_names(payload: dict) -> set[str]:
+    """Extract known entity names from a pathway payload defensively."""
+    if not isinstance(payload, dict):
+        return set()
+    entities = payload.get("entities")
+    if not isinstance(entities, dict):
+        return set()
+
+    names: set[str] = set()
+    for key in (
+        "compounds",
+        "proteins",
+        "protein_complexes",
+        "nucleic_acids",
+        "element_collections",
+    ):
+        rows = entities.get(key)
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            name = row.get("name")
+            if isinstance(name, str) and name.strip():
+                names.add(name.strip())
+    return names
+
+
+def _temp_json_path(work_dir: Path, prefix: str) -> Path:
+    handle = tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".json",
+        prefix=f"{prefix}_",
+        dir=work_dir,
+        delete=False,
+        encoding="utf-8",
+    )
+    path = Path(handle.name)
+    handle.close()
+    return path
+
+
+def _cleanup_temp_files(paths: list[Path]) -> None:
+    for path in paths:
+        try:
+            path.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
+def _patch_ops_for_apply(patch: list[dict]) -> list[Any]:
+    """Convert interactive patch shape to the audit patch applier shape."""
+    converted: list[Any] = []
+    for raw_op in patch:
+        if not isinstance(raw_op, dict):
+            converted.append(raw_op)
+            continue
+
+        op = dict(raw_op)
+        if "action" in op and "op" not in op:
+            op["op"] = op["action"]
+        if "json_pointer" in op and "path" not in op:
+            op["path"] = op["json_pointer"]
+        if "new_value" in op and "value" not in op:
+            op["value"] = op["new_value"]
+        if "reason" in op and "evidence" not in op:
+            op["evidence"] = op["reason"]
+        converted.append(op)
+    return converted
+
+
+def _patched_entity_names(patch: list[dict], known_after: set[str]) -> set[str]:
+    names: set[str] = set()
+    for op in patch:
+        if not isinstance(op, dict):
+            continue
+
+        path = op.get("json_pointer", op.get("path", ""))
+        if isinstance(path, str) and path.startswith("/entities/"):
+            _collect_names_from_value(op.get("new_value", op.get("value")), names)
+
+        action = op.get("action", op.get("op"))
+        if action == "replace" and isinstance(path, str) and path.endswith("/name"):
+            value = op.get("new_value", op.get("value"))
+            if isinstance(value, str) and value.strip():
+                names.add(value.strip())
+
+    if known_after:
+        names = {name for name in names if name in known_after}
+    return names
+
+
+def _collect_names_from_value(value: Any, names: set[str]) -> None:
+    if isinstance(value, dict):
+        name = value.get("name")
+        if isinstance(name, str) and name.strip():
+            names.add(name.strip())
+        for child in value.values():
+            _collect_names_from_value(child, names)
+        return
+    if isinstance(value, list):
+        for item in value:
+            _collect_names_from_value(item, names)
+
+
+def _gate_error_strings(details: Any) -> list[str]:
+    if not isinstance(details, dict):
+        return []
+    errors = details.get("errors")
+    if not isinstance(errors, list):
+        return []
+
+    out: list[str] = []
+    for error in errors:
+        if isinstance(error, dict):
+            path = error.get("path")
+            reason = error.get("reason")
+            if path and reason:
+                out.append(f"{path}: {reason}")
+            elif reason:
+                out.append(str(reason))
+            else:
+                out.append(json.dumps(error, ensure_ascii=False, default=str))
+        elif error is not None:
+            out.append(str(error))
+    return out
+
+
+def _safe_list(value: Any) -> list[Any]:
+    return value if isinstance(value, list) else []
 
 
 def _strip_payload_value(value: Any, *, parent_key: str | None) -> Any:
