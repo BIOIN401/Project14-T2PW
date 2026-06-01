@@ -6,6 +6,7 @@ import hashlib
 import sys
 import time
 import shutil
+import copy
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
@@ -25,6 +26,11 @@ import t2pw.llm.client as llm_client_module
 from t2pw.paths import PROJECT_ROOT
 from t2pw.curation.apply_audit_patch import run_apply
 from t2pw.curation.audit_json_llm import run_audit
+from t2pw.curation.interactive_curator import (
+    apply_patch_and_rerender,
+    compact_mapping_misses,
+    run_interactive_curator_round,
+)
 from t2pw.mapping.enrich_entities import run_enrichment
 from t2pw.mapping.grounding import apply_grounding
 from t2pw.curation.gap_resolver import run_gap_resolution
@@ -78,6 +84,53 @@ from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, g
 
 st.set_page_config(page_title="PWML Multi-Stage Pipeline", layout="wide")
 st.title("PWML Extraction -> Inference Pipeline (LM Studio)")
+
+REFINEMENT_STATE_DEFAULTS = {
+    "refinement_working_json": None,
+    "refinement_graph_bytes": None,
+    "refinement_qa_report": None,
+    "refinement_mapping_report": None,
+    "refinement_mapping_misses": [],
+    "refinement_history": [],
+    "refinement_round": 0,
+    "refinement_pwml_ready": False,
+    "refinement_last_error": None,
+    "refinement_last_warnings": [],
+    "refinement_gate_errors": [],
+    "refinement_checkpoints": [],
+}
+
+
+def reset_refinement_state() -> None:
+    for key, default in REFINEMENT_STATE_DEFAULTS.items():
+        st.session_state[key] = deepcopy(default)
+
+
+def initialize_refinement_review_state(
+    final_mapped_payload: Dict[str, Any],
+    mapping_report: Dict[str, Any],
+) -> None:
+    graph = build_draft_graph(final_mapped_payload)
+    graph_bytes = render_draft_graph_to_png_bytes(graph.to_dict(), dpi=100)
+    qa_report = generate_qa_report(graph, final_mapped_payload)
+
+    st.session_state.refinement_working_json = deepcopy(final_mapped_payload)
+    st.session_state.refinement_graph_bytes = graph_bytes
+    st.session_state.refinement_qa_report = qa_report
+    st.session_state.refinement_mapping_report = deepcopy(mapping_report)
+    st.session_state.refinement_mapping_misses = compact_mapping_misses(mapping_report)
+    st.session_state.refinement_history = []
+    st.session_state.refinement_round = 0
+    st.session_state.refinement_pwml_ready = False
+    st.session_state.refinement_last_error = None
+    st.session_state.refinement_last_warnings = []
+    st.session_state.refinement_gate_errors = []
+    st.session_state.refinement_checkpoints = []
+
+
+for _refinement_key, _refinement_default in REFINEMENT_STATE_DEFAULTS.items():
+    if _refinement_key not in st.session_state:
+        st.session_state[_refinement_key] = deepcopy(_refinement_default)
 
 
 def render_attempts(label: str, attempts: List[Dict[str, Any]]) -> None:
@@ -183,6 +236,251 @@ def _safe_list(value: Any) -> List[Any]:
 
 def _json_dump(value: Any) -> str:
     return json.dumps(value, indent=2, ensure_ascii=False)
+
+
+def _refinement_qa_issue_groups(qa_report: Any) -> Dict[str, List[Any]]:
+    report = _safe_dict(qa_report)
+    groups: Dict[str, List[Any]] = {}
+
+    issues = report.get("issues")
+    if isinstance(issues, list):
+        groups["issues"] = [issue for issue in issues if issue]
+
+    flags = report.get("flags")
+    if isinstance(flags, dict):
+        for name, values in flags.items():
+            if isinstance(values, list):
+                non_empty = [value for value in values if value]
+                if non_empty:
+                    groups[str(name)] = non_empty
+
+    return groups
+
+
+def _compact_refinement_issue(value: Any) -> str:
+    if isinstance(value, dict):
+        preferred = [
+            "entity",
+            "reaction",
+            "name",
+            "type",
+            "reason",
+            "message",
+            "conflict",
+            "assigned_class",
+        ]
+        parts = [f"{key}: {value[key]}" for key in preferred if value.get(key) not in (None, "", [], {})]
+        if parts:
+            return "; ".join(parts)
+    return str(value)
+
+
+def _render_review_refine_section(
+    *,
+    mapping_cache_path: str | Path,
+    work_dir: str | Path,
+    id_source: str,
+    db_config: Dict[str, Any],
+) -> bool:
+    if st.session_state.get("refinement_working_json") is None:
+        return False
+
+    st.header("Review & Refine Pathway")
+
+    if st.session_state.get("refinement_last_error"):
+        st.error(st.session_state.refinement_last_error)
+    for warning_text in _safe_list(st.session_state.get("refinement_last_warnings")):
+        st.warning(warning_text)
+
+    refinement_round = int(st.session_state.get("refinement_round") or 0)
+    if refinement_round <= 0:
+        st.caption("Round 0: initial mapped output")
+    else:
+        st.caption(f"Round {refinement_round}: after {refinement_round} refinement rounds")
+
+    graph_bytes = st.session_state.get("refinement_graph_bytes")
+    if isinstance(graph_bytes, (bytes, bytearray)) and graph_bytes:
+        st.image(graph_bytes, caption="Current mapped pathway graph")
+
+    st.subheader("QA")
+    qa_report = _safe_dict(st.session_state.get("refinement_qa_report"))
+    qa_issue_groups = _refinement_qa_issue_groups(qa_report)
+    qa_issue_count = sum(len(values) for values in qa_issue_groups.values())
+    if qa_issue_count:
+        st.warning(f"{qa_issue_count} QA issues need review.")
+        with st.expander("QA Issue Details", expanded=False):
+            for group_name, issues in qa_issue_groups.items():
+                st.markdown(f"**{group_name.replace('_', ' ').title()}** ({len(issues)})")
+                for issue in issues[:25]:
+                    st.markdown(f"- {_compact_refinement_issue(issue)}")
+                if len(issues) > 25:
+                    st.caption(f"{len(issues) - 25} more not shown.")
+    else:
+        st.success("No QA issues found.")
+
+    with st.expander("Unmapped or Uncertain Entities", expanded=False):
+        mapping_misses = _safe_list(st.session_state.get("refinement_mapping_misses"))
+        if mapping_misses:
+            st.json(mapping_misses)
+        else:
+            st.success("No unmapped or uncertain entities found.")
+
+    with st.expander("Refinement History", expanded=False):
+        history = _safe_list(st.session_state.get("refinement_history"))
+        if not history:
+            st.info("No refinement rounds have been applied yet.")
+        for index, entry in enumerate(history, start=1):
+            if not isinstance(entry, dict):
+                continue
+            round_number = entry.get("round", index)
+            user_request = entry.get("user_request") or entry.get("request") or ""
+            change_summary = entry.get("change_summary") or entry.get("summary") or ""
+            patch_op_count = entry.get("patch_op_count")
+            if patch_op_count is None and isinstance(entry.get("patch"), list):
+                patch_op_count = len(entry["patch"])
+            entities_remapped = _safe_list(entry.get("entities_remapped"))
+
+            st.markdown(f"**Round {round_number}**")
+            st.markdown(f"- User request: {user_request or 'None recorded'}")
+            st.markdown(f"- Change summary: {change_summary or 'None recorded'}")
+            st.markdown(f"- Patch op count: {patch_op_count if patch_op_count is not None else 0}")
+            st.markdown(
+                "- Entities remapped: "
+                + (", ".join(str(entity) for entity in entities_remapped) if entities_remapped else "None")
+            )
+            for label, key in (
+                ("Gate errors", "gate_errors"),
+                ("Norm warnings", "norm_warnings"),
+                ("Patch apply errors", "patch_apply_errors"),
+            ):
+                values = _safe_list(entry.get(key))
+                if values:
+                    st.markdown(f"- {label}:")
+                    for value in values[:10]:
+                        st.markdown(f"  - {value}")
+                    if len(values) > 10:
+                        st.caption(f"{len(values) - 10} more {label.lower()} not shown.")
+
+    st.text_area("Describe changes to make", key="refinement_request")
+
+    refine_col, undo_col, pwml_col = st.columns(3)
+    if refine_col.button("Submit Changes to AI", key="refinement_submit_ai"):
+        refinement_request = str(st.session_state.get("refinement_request") or "").strip()
+        if not refinement_request:
+            st.warning("Describe the changes you want before submitting to AI.")
+            st.stop()
+
+        working_json = st.session_state.get("refinement_working_json")
+        graph_bytes = st.session_state.get("refinement_graph_bytes")
+        if not isinstance(working_json, dict) or not working_json:
+            st.error("No refinement working JSON is available.")
+            st.stop()
+        if not isinstance(graph_bytes, (bytes, bytearray)) or not graph_bytes:
+            st.error("No refinement graph image is available.")
+            st.stop()
+
+        with st.spinner("Asking AI for a pathway patch..."):
+            ai_result = run_interactive_curator_round(
+                working_json=working_json,
+                graph_png_bytes=bytes(graph_bytes),
+                user_request=refinement_request,
+                qa_report=st.session_state.refinement_qa_report,
+                mapping_misses=st.session_state.refinement_mapping_misses,
+                history=st.session_state.refinement_history,
+            )
+
+        if ai_result.get("error"):
+            st.session_state.refinement_last_error = str(ai_result["error"])
+            st.error(st.session_state.refinement_last_error)
+            st.stop()
+
+        patch = ai_result.get("patch") if isinstance(ai_result, dict) else []
+        if not patch:
+            rationale = str(ai_result.get("rationale", "") if isinstance(ai_result, dict) else "")
+            st.session_state.refinement_last_error = None
+            st.session_state.refinement_last_warnings = []
+            st.info(rationale or "AI returned no patch.")
+            st.session_state.refinement_history.append(
+                {
+                    "round": st.session_state.refinement_round,
+                    "user_request": refinement_request,
+                    "change_summary": ai_result.get("change_summary") or "No patch was applied.",
+                    "rationale": rationale or "No patch was applied.",
+                    "patch_op_count": 0,
+                    "entities_remapped": [],
+                    "gate_errors": [],
+                    "norm_warnings": [],
+                    "patch_apply_errors": [],
+                    "no_patch_applied": True,
+                }
+            )
+            st.stop()
+
+        checkpoint = {
+            "round": st.session_state.refinement_round,
+            "working_json": copy.deepcopy(st.session_state.refinement_working_json),
+            "graph_bytes": st.session_state.refinement_graph_bytes,
+            "qa_report": copy.deepcopy(st.session_state.refinement_qa_report),
+            "mapping_report": copy.deepcopy(st.session_state.refinement_mapping_report),
+            "mapping_misses": copy.deepcopy(st.session_state.refinement_mapping_misses),
+            "history": copy.deepcopy(st.session_state.refinement_history),
+            "gate_errors": copy.deepcopy(st.session_state.refinement_gate_errors),
+        }
+        if not isinstance(st.session_state.get("refinement_checkpoints"), list):
+            st.session_state.refinement_checkpoints = []
+        st.session_state.refinement_checkpoints.append(checkpoint)
+        if len(st.session_state.refinement_checkpoints) > 5:
+            st.session_state.refinement_checkpoints.pop(0)
+
+        with st.spinner("Applying patch, remapping IDs, and re-rendering graph..."):
+            rerender_result = apply_patch_and_rerender(
+                working_json=st.session_state.refinement_working_json,
+                patch=patch,
+                mapping_cache_path=mapping_cache_path,
+                work_dir=work_dir,
+                id_source=id_source,
+                db_config=db_config,
+            )
+
+        st.session_state.refinement_working_json = rerender_result["updated_json"]
+        st.session_state.refinement_graph_bytes = rerender_result["graph_png_bytes"]
+        st.session_state.refinement_qa_report = rerender_result["qa_report"]
+        st.session_state.refinement_mapping_report = rerender_result["mapping_report"]
+        st.session_state.refinement_mapping_misses = rerender_result["mapping_misses"]
+        st.session_state.refinement_gate_errors = rerender_result["gate_errors"]
+        st.session_state.refinement_round += 1
+        st.session_state.refinement_history.append(
+            {
+                "round": st.session_state.refinement_round,
+                "user_request": refinement_request,
+                "change_summary": ai_result.get("change_summary", ""),
+                "rationale": ai_result.get("rationale", ""),
+                "patch_op_count": len(ai_result.get("patch", [])),
+                "entities_remapped": rerender_result.get("entities_remapped", []),
+                "gate_errors": rerender_result.get("gate_errors", []),
+                "norm_warnings": rerender_result.get("norm_warnings", []),
+                "patch_apply_errors": rerender_result.get("patch_apply_errors", []),
+            }
+        )
+
+        warning_messages: List[str] = []
+        for label, key in (
+            ("Gate errors", "gate_errors"),
+            ("Normalization warnings", "norm_warnings"),
+            ("Patch apply errors", "patch_apply_errors"),
+        ):
+            values = _safe_list(rerender_result.get(key))
+            if values:
+                warning_messages.append(f"{label}: {len(values)} issue(s). Review the refinement history for details.")
+        st.session_state.refinement_last_error = None
+        st.session_state.refinement_last_warnings = warning_messages
+        st.rerun()
+    if undo_col.button("Undo Last Refinement", key="refinement_undo_last"):
+        st.info("Undo button is present but not wired yet.")
+    if pwml_col.button("Generate PWML", key="refinement_generate_pwml"):
+        st.info("PWML generation button is present but not wired yet.")
+
+    return True
 
 
 def _json_artifact_entries(
@@ -1646,6 +1944,8 @@ if submit:
         st.warning("No text to process. Paste text, upload one or more PDFs, or use both.")
         st.stop()
 
+    reset_refinement_state()
+
     # Preprocessing: lightweight context summary to guide extraction and inference
     with st.spinner("Running preprocessor..."):
         pathway_context = preprocess(text, temperature=temperature)
@@ -2472,6 +2772,27 @@ if st.session_state.get("pipeline_ready"):
             )
 
     st.divider()
+    _refinement_mapping_cache_path = _safe_dict(post_artifacts).get("mapping_cache_path")
+    if not _refinement_mapping_cache_path:
+        _refinement_cache_text = mapping_cache_text.strip() or "id_mapping_cache.json"
+        _refinement_cache_path = Path(_refinement_cache_text)
+        if not _refinement_cache_path.is_absolute():
+            _refinement_cache_path = PROJECT_ROOT / _refinement_cache_path
+        _refinement_mapping_cache_path = str(_refinement_cache_path)
+    _refinement_db_config = {
+        "host": (db_host or "").strip(),
+        "port": int(db_port),
+        "user": (db_user or "").strip(),
+        "password": db_password or "",
+        "schema": (db_schema or "pathbank").strip() or "pathbank",
+    }
+    if _render_review_refine_section(
+        mapping_cache_path=_refinement_mapping_cache_path,
+        work_dir=PROJECT_ROOT / "tmp",
+        id_source=(id_source_mode or "hybrid").strip().lower(),
+        db_config=_refinement_db_config,
+    ):
+        st.divider()
 
     # ── PWML Export ───────────────────────────────────────────────────────────
     st.subheader("PWML Export")
@@ -2523,7 +2844,7 @@ if st.session_state.get("pipeline_ready"):
             st.error("No pipeline output in session state. Run the pipeline first.")
         else:
             try:
-                with st.spinner("Running audit, DB mapping, and PWML export..."):
+                with st.spinner("Running audit and DB mapping..."):
                     final_payload = propagate_context_organism(
                         final_payload,
                         st.session_state.get("pathway_context"),
@@ -2568,23 +2889,33 @@ if st.session_state.get("pipeline_ready"):
                 if bool(_pa.get("gate_failed", False)):
                     st.warning("Post-pipeline stopped at hard-gate validation. Review gate_fail_report.json.")
                 else:
-                    _pwml_source_payload = _pa.get("final_export_input") or _pa.get("final_mapped") or final_payload
-                    with st.spinner("Building PWML..."):
-                        _pwml_result = run_pwml_export(
-                            _pwml_source_payload,
-                            pathway_name=_pwml_name,
-                            pathway_description=_pwml_description,
-                            pathway_subject=_pwml_subject,
-                            project_root=_project_root_pwml,
-                            ref_path=_ref_path_pwml,
-                            vis_width=int(_pwml_width),
-                            vis_height=int(_pwml_height),
-                            background_color=_pwml_bg,
-                            grounding_dict=_pwml_grounding_dict,
-                            strict_db=bool(_pwml_strict_db),
-                        )
-                    st.session_state["pwml_export_result"] = _pwml_result
-                    st.success("Audit, DB mapping, and PWML export completed.")
+                    final_mapped_payload = _pa.get("final_mapped_db") or _pa.get("final_mapped")
+                    mapping_report = _safe_dict(_pa.get("mapping_report"))
+                    if isinstance(final_mapped_payload, dict) and final_mapped_payload:
+                        initialize_refinement_review_state(final_mapped_payload, mapping_report)
+                    if st.session_state.get("refinement_pwml_ready") is True:
+                        _pwml_source_payload = st.session_state.get("refinement_working_json")
+                        if not isinstance(_pwml_source_payload, dict) or not _pwml_source_payload:
+                            st.error("No reviewed mapped pathway is available for PWML export.")
+                        else:
+                            with st.spinner("Building PWML..."):
+                                _pwml_result = run_pwml_export(
+                                    _pwml_source_payload,
+                                    pathway_name=_pwml_name,
+                                    pathway_description=_pwml_description,
+                                    pathway_subject=_pwml_subject,
+                                    project_root=_project_root_pwml,
+                                    ref_path=_ref_path_pwml,
+                                    vis_width=int(_pwml_width),
+                                    vis_height=int(_pwml_height),
+                                    background_color=_pwml_bg,
+                                    grounding_dict=_pwml_grounding_dict,
+                                    strict_db=bool(_pwml_strict_db),
+                                )
+                            st.session_state["pwml_export_result"] = _pwml_result
+                            st.success("Audit, DB mapping, and PWML export completed.")
+                    else:
+                        st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
 
