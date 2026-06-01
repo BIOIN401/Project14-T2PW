@@ -87,6 +87,7 @@ st.title("PWML Extraction -> Inference Pipeline (LM Studio)")
 
 REFINEMENT_STATE_DEFAULTS = {
     "refinement_working_json": None,
+    "refinement_graph_dict": None,
     "refinement_graph_bytes": None,
     "refinement_qa_report": None,
     "refinement_mapping_report": None,
@@ -111,10 +112,12 @@ def initialize_refinement_review_state(
     mapping_report: Dict[str, Any],
 ) -> None:
     graph = build_draft_graph(final_mapped_payload)
-    graph_bytes = render_draft_graph_to_png_bytes(graph.to_dict(), dpi=100)
+    graph_dict = graph.to_dict()
+    graph_bytes = render_draft_graph_to_png_bytes(graph_dict, dpi=100)
     qa_report = generate_qa_report(graph, final_mapped_payload)
 
     st.session_state.refinement_working_json = deepcopy(final_mapped_payload)
+    st.session_state.refinement_graph_dict = graph_dict
     st.session_state.refinement_graph_bytes = graph_bytes
     st.session_state.refinement_qa_report = qa_report
     st.session_state.refinement_mapping_report = deepcopy(mapping_report)
@@ -364,7 +367,14 @@ def _render_review_refine_section(
 
     graph_bytes = st.session_state.get("refinement_graph_bytes")
     if isinstance(graph_bytes, (bytes, bytearray)) and graph_bytes:
-        st.image(graph_bytes, caption="Current mapped pathway graph")
+        st.image(graph_bytes, caption="Mapped pathway graph after audit and DB mapping")
+        st.download_button(
+            "Download mapped graph diagram",
+            bytes(graph_bytes),
+            file_name="mapped_pathway_graph.png",
+            mime="image/png",
+            key="download_refinement_graph_png",
+        )
 
     st.subheader("QA")
     qa_report = _safe_dict(st.session_state.get("refinement_qa_report"))
@@ -456,7 +466,13 @@ def _render_review_refine_section(
             key="download_refinement_mapping_misses_json",
         )
 
-    st.text_area("Describe changes to make", key="refinement_request")
+    st.subheader("AI Edit Chat")
+    st.text_area(
+        "Message to AI",
+        key="refinement_request",
+        height=140,
+        placeholder="Type the pathway edits to make, then submit them to the AI curator.",
+    )
 
     refine_col, undo_col, pwml_col = st.columns(3)
     if refine_col.button("Submit Changes to AI", key="refinement_submit_ai"):
@@ -514,6 +530,7 @@ def _render_review_refine_section(
         checkpoint = {
             "round": st.session_state.refinement_round,
             "working_json": copy.deepcopy(st.session_state.refinement_working_json),
+            "graph_dict": copy.deepcopy(st.session_state.refinement_graph_dict),
             "graph_bytes": st.session_state.refinement_graph_bytes,
             "qa_report": copy.deepcopy(st.session_state.refinement_qa_report),
             "mapping_report": copy.deepcopy(st.session_state.refinement_mapping_report),
@@ -538,6 +555,9 @@ def _render_review_refine_section(
             )
 
         st.session_state.refinement_working_json = rerender_result["updated_json"]
+        st.session_state.refinement_graph_dict = rerender_result.get("graph") or build_draft_graph(
+            rerender_result["updated_json"]
+        ).to_dict()
         st.session_state.refinement_graph_bytes = rerender_result["graph_png_bytes"]
         st.session_state.refinement_qa_report = rerender_result["qa_report"]
         st.session_state.refinement_mapping_report = rerender_result["mapping_report"]
@@ -578,6 +598,10 @@ def _render_review_refine_section(
         checkpoint = st.session_state.refinement_checkpoints.pop()
         st.session_state.refinement_round = checkpoint["round"]
         st.session_state.refinement_working_json = checkpoint["working_json"]
+        checkpoint_graph_dict = checkpoint.get("graph_dict")
+        if not checkpoint_graph_dict and isinstance(checkpoint.get("working_json"), dict):
+            checkpoint_graph_dict = build_draft_graph(checkpoint["working_json"]).to_dict()
+        st.session_state.refinement_graph_dict = checkpoint_graph_dict
         st.session_state.refinement_graph_bytes = checkpoint["graph_bytes"]
         st.session_state.refinement_qa_report = checkpoint["qa_report"]
         st.session_state.refinement_mapping_report = checkpoint["mapping_report"]
@@ -1492,10 +1516,6 @@ def run_post_pipeline_sbml_artifacts(
             post_audit_qa_report = generate_qa_report(_audited_graph, _audited_payload)
             post_audit_reaction_summary = generate_reaction_summary(_audited_graph, post_audit_qa_report)
             post_audit_draft_graph_dict = _audited_graph.to_dict()
-            try:
-                post_audit_png_bytes = render_draft_graph_to_png_bytes(post_audit_draft_graph_dict)
-            except Exception:
-                pass
         except Exception:
             pass
 
@@ -1518,19 +1538,6 @@ def run_post_pipeline_sbml_artifacts(
             # Use curated output as input to mapping only if patches were accepted
             if int(_safe_dict(curator_report.get("summary", {})).get("patches_accepted", 0)) > 0:
                 audited_json.write_text(curator_json.read_text(encoding="utf-8"), encoding="utf-8")
-            # Always rebuild the PNG with the curator's reaction_order (mandatory output).
-            # This ensures the graph layout reflects biological sequence even when the
-            # only change was a new reaction_order patch.
-            if post_audit_draft_graph_dict:
-                try:
-                    _curated_payload = json.loads(audited_json.read_text(encoding="utf-8"))
-                    _curator_order = _curated_payload.get("reaction_order")
-                    post_audit_png_bytes = render_draft_graph_to_png_bytes(
-                        post_audit_draft_graph_dict,
-                        reaction_order=_curator_order,
-                    )
-                except Exception:
-                    pass
         except Exception as _cur_exc:
             curator_report = {"error": str(_cur_exc), "summary": {}}
 
@@ -2155,11 +2162,8 @@ if submit:
 
     draft_graph, qa_report, reaction_summary = build_and_save_draft_graph(final_payload)
     st.session_state["draft_graph"] = draft_graph.to_dict()
-    try:
-        st.session_state["draft_graph_png_bytes"] = render_draft_graph_to_png_bytes(draft_graph.to_dict())
-    except Exception as _dg_exc:
-        st.session_state["draft_graph_png_bytes"] = b""
-        st.session_state["draft_graph_render_error"] = str(_dg_exc)
+    st.session_state.pop("draft_graph_png_bytes", None)
+    st.session_state.pop("draft_graph_render_error", None)
     st.session_state["qa_report"] = qa_report
     st.session_state["reaction_summary"] = reaction_summary
 
@@ -2301,28 +2305,7 @@ if st.session_state.get("pipeline_ready"):
             file_name="draft_graph.json",
             mime="application/json",
         )
-
-        if st.button("Render pathway graph", key="btn_render_draft_graph"):
-            try:
-                st.session_state["draft_graph_png_bytes"] = render_draft_graph_to_png_bytes(draft_graph_dict)
-                st.session_state.pop("draft_graph_render_error", None)
-            except Exception as _dg_exc:
-                st.session_state["draft_graph_png_bytes"] = b""
-                st.session_state["draft_graph_render_error"] = str(_dg_exc)
-
-        dg_png = st.session_state.get("draft_graph_png_bytes", b"")
-        dg_render_err = st.session_state.get("draft_graph_render_error", "")
-        if dg_png:
-            st.image(dg_png, caption="Pathway graph (graphviz)")
-            st.download_button(
-                "Download graph diagram",
-                dg_png,
-                file_name="pathway_graph.png",
-                mime="image/png",
-                key="dl_draft_graph_png",
-            )
-        elif dg_render_err:
-            st.warning(f"Graph render failed: {dg_render_err}")
+        st.info("Graph rendering starts after audit and DB mapping, in the Review & Refine panel.")
 
     # ------------------------------------------------------------------ QA Report
     st.subheader("QA Report")
@@ -2899,28 +2882,6 @@ if st.session_state.get("pipeline_ready"):
             )
 
     st.divider()
-    _refinement_mapping_cache_path = _safe_dict(post_artifacts).get("mapping_cache_path")
-    if not _refinement_mapping_cache_path:
-        _refinement_cache_text = mapping_cache_text.strip() or "id_mapping_cache.json"
-        _refinement_cache_path = Path(_refinement_cache_text)
-        if not _refinement_cache_path.is_absolute():
-            _refinement_cache_path = PROJECT_ROOT / _refinement_cache_path
-        _refinement_mapping_cache_path = str(_refinement_cache_path)
-    _refinement_db_config = {
-        "host": (db_host or "").strip(),
-        "port": int(db_port),
-        "user": (db_user or "").strip(),
-        "password": db_password or "",
-        "schema": (db_schema or "pathbank").strip() or "pathbank",
-    }
-    if _render_review_refine_section(
-        mapping_cache_path=_refinement_mapping_cache_path,
-        work_dir=PROJECT_ROOT / "tmp",
-        id_source=(id_source_mode or "hybrid").strip().lower(),
-        db_config=_refinement_db_config,
-    ):
-        st.divider()
-
     # ── PWML Export ───────────────────────────────────────────────────────────
     st.subheader("PWML Export")
 
@@ -3004,10 +2965,6 @@ if st.session_state.get("pipeline_ready"):
                     )
                 st.session_state["post_pipeline_artifacts"] = artifacts
                 _pa = _safe_dict(artifacts)
-                if _pa.get("post_audit_draft_graph"):
-                    st.session_state["draft_graph"] = _pa["post_audit_draft_graph"]
-                if _pa.get("post_audit_png_bytes"):
-                    st.session_state["draft_graph_png_bytes"] = _pa["post_audit_png_bytes"]
                 if _pa.get("post_audit_qa_report"):
                     st.session_state["qa_report"] = _pa["post_audit_qa_report"]
                 if _pa.get("post_audit_reaction_summary"):
@@ -3023,6 +2980,28 @@ if st.session_state.get("pipeline_ready"):
                     st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
+
+    _refinement_mapping_cache_path = _safe_dict(post_artifacts).get("mapping_cache_path")
+    if not _refinement_mapping_cache_path:
+        _refinement_cache_text = mapping_cache_text.strip() or "id_mapping_cache.json"
+        _refinement_cache_path = Path(_refinement_cache_text)
+        if not _refinement_cache_path.is_absolute():
+            _refinement_cache_path = PROJECT_ROOT / _refinement_cache_path
+        _refinement_mapping_cache_path = str(_refinement_cache_path)
+    _refinement_db_config = {
+        "host": (db_host or "").strip(),
+        "port": int(db_port),
+        "user": (db_user or "").strip(),
+        "password": db_password or "",
+        "schema": (db_schema or "pathbank").strip() or "pathbank",
+    }
+    if _render_review_refine_section(
+        mapping_cache_path=_refinement_mapping_cache_path,
+        work_dir=PROJECT_ROOT / "tmp",
+        id_source=(id_source_mode or "hybrid").strip().lower(),
+        db_config=_refinement_db_config,
+    ):
+        st.divider()
 
     _pwml_result = st.session_state.get("pwml_export_result")
     if isinstance(_pwml_result, dict):

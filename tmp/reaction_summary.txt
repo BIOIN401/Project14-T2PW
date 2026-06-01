@@ -1,62 +1,27 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: hexokinase reaction
-  Reactants: glucose [human cytosolic state], ATP [human cytosolic state]
-  Products:  glucose-6-phosphate [human cytosolic state], ADP [human cytosolic state]
-  Modifier:  hexokinase [human cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 1: phenylalanine hydroxylase reaction
+  Reactants: phenylalanine [cytosolic state], tetrahydrobiopterin [cytosolic state], oxygen [cytosolic state]
+  Products:  tyrosine [cytosolic state], dihydrobiopterin [cytosolic state], water [cytosolic state]
+  Modifier:  phenylalanine hydroxylase [cytosolic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: phosphoglucose isomerase reaction
-  Reactants: glucose-6-phosphate [human cytosolic state]
-  Products:  fructose-6-phosphate [human cytosolic state]
-  Modifier:  phosphoglucose isomerase [human cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 2: tyrosine hydroxylase reaction
+  Reactants: tyrosine [cytosolic state], tetrahydrobiopterin [cytosolic state], oxygen [cytosolic state]
+  Products:  L-DOPA [cytosolic state], dihydrobiopterin [cytosolic state], water [cytosolic state]
+  Modifier:  tyrosine hydroxylase [cytosolic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: phosphofructokinase-1 reaction
-  Reactants: fructose-6-phosphate [human cytosolic state], ATP [human cytosolic state]
-  Products:  fructose-1,6-bisphosphate [human cytosolic state], ADP [human cytosolic state]
-  Modifier:  phosphofructokinase-1 [human cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 3: aromatic L-amino acid decarboxylase reaction
+  Reactants: L-DOPA [cytosolic state]
+  Products:  dopamine [cytosolic state], carbon dioxide [cytosolic state]
+  Modifier:  aromatic L-amino acid decarboxylase [cytosolic state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: aldolase reaction
-  Reactants: fructose-1,6-bisphosphate [human cytosolic state]
-  Products:  glyceraldehyde-3-phosphate [human cytosolic state], dihydroxyacetone phosphate [human cytosolic state]
-  Modifier:  aldolase [human cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 5: triose phosphate isomerase reaction
-  Reactants: dihydroxyacetone phosphate [human cytosolic state]
-  Products:  glyceraldehyde-3-phosphate [human cytosolic state]
-  Modifier:  triose phosphate isomerase [human cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 6: glyceraldehyde-3-phosphate dehydrogenase reaction
-  Reactants: glyceraldehyde-3-phosphate [human cytosolic state], NAD⁺ [human cytosolic state]
-  Products:  1,3-bisphosphoglycerate [human cytosolic state], NADH [human cytosolic state]
-  Modifier:  glyceraldehyde-3-phosphate dehydrogenase [human cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 7: phosphoglycerate kinase reaction
-  Reactants: 1,3-bisphosphoglycerate [human cytosolic state], ADP [human cytosolic state]
-  Products:  3-phosphoglycerate [human cytosolic state], ATP [human cytosolic state]
-  Modifier:  phosphoglycerate kinase [human cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 8: phosphoglycerate mutase reaction
-  Reactants: 3-phosphoglycerate [human cytosolic state]
-  Products:  2-phosphoglycerate [human cytosolic state]
-  Modifier:  phosphoglycerate mutase [human cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 9: enolase reaction
-  Reactants: 2-phosphoglycerate [human cytosolic state]
-  Products:  phosphoenolpyruvate [human cytosolic state], water [human cytosolic state]
-  Modifier:  enolase [human cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 10: pyruvate kinase reaction
-  Reactants: phosphoenolpyruvate [human cytosolic state], ADP [human cytosolic state]
-  Products:  pyruvate [human cytosolic state], ATP [human cytosolic state]
-  Modifier:  pyruvate kinase [human cytosolic state] (role=catalyst, confidence=1.0)
+TRANSPORT 1: dopamine transport into synaptic vesicles
+  From: cytosolic state
+  To:   synaptic vesicle state
+  Cargo: dopamine [cytosolic state]
+  Transporter: vesicular monoamine transporter 2 [synaptic vesicle state] (role=transporter, confidence=1.0)
   QA flags:  none

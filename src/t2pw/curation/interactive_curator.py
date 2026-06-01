@@ -585,17 +585,20 @@ def apply_patch_and_rerender(
 
     mapping_misses = compact_mapping_misses(mapping_report)
 
+    graph_dict: dict[str, Any] = {}
     graph_png_bytes = b""
     qa_report: dict[str, Any] = {}
     try:
         draft_graph = build_draft_graph(updated_json)
-        graph_png_bytes = render_draft_graph_to_png_bytes(draft_graph.to_dict(), dpi=100)
+        graph_dict = draft_graph.to_dict()
+        graph_png_bytes = render_draft_graph_to_png_bytes(graph_dict, dpi=100)
         qa_report = generate_qa_report(draft_graph, updated_json)
     except Exception as exc:  # noqa: BLE001
         qa_report = {"error": f"Graph render or QA failed: {exc}"}
 
     return {
         "updated_json": updated_json,
+        "graph": graph_dict,
         "graph_png_bytes": graph_png_bytes,
         "qa_report": qa_report,
         "normalization_report": normalization_report,
