@@ -78,7 +78,25 @@ _MAPPED_ID_KEYS = {
     "uniprot_id",
     "taxonomy_id",
     "pathbank_id",
+    "pathbank_compound_id",
+    "pathbank_protein_id",
+    "pathbank_complex_id",
+    "pathbank_reaction_id",
     "pathwhiz_id",
+    "pathwhiz_compound_id",
+    "pathwhiz_protein_id",
+    "pathwhiz_complex_id",
+    "pathwhiz_reaction_id",
+    "pwc_id",
+    "pwp_id",
+    "pwpe_id",
+}
+
+_INTERACTIVE_RESPONSE_KEYS = {
+    "patch",
+    "rationale",
+    "change_summary",
+    "needs_user_review",
 }
 
 _BULKY_KEY_TOKENS = (
@@ -332,6 +350,13 @@ def validate_interactive_patch_response(obj: dict) -> dict:
     if not isinstance(obj, dict):
         raise ValueError("Top-level response must be a JSON object.")
 
+    unexpected_keys = set(obj) - _INTERACTIVE_RESPONSE_KEYS
+    if unexpected_keys:
+        raise ValueError(
+            "Top-level response must contain only patch metadata, not pathway JSON "
+            f"or extra keys: {sorted(unexpected_keys)}."
+        )
+
     patch = obj.get("patch")
     if not isinstance(patch, list):
         raise ValueError("Response field 'patch' must be a list.")
@@ -364,9 +389,19 @@ def validate_interactive_patch_response(obj: dict) -> dict:
         json_pointer = raw_op.get("json_pointer")
         if not isinstance(json_pointer, str) or not json_pointer.startswith("/"):
             raise ValueError(f"Patch operation {index} json_pointer must be a string starting with '/'.")
+        if json_pointer == "/":
+            raise ValueError(f"Patch operation {index} must not target the whole pathway JSON.")
+        if _json_pointer_touches_db_identifier(json_pointer):
+            raise ValueError(f"Patch operation {index} must not modify mapped IDs or database identifiers.")
 
         if action in {"add", "replace"} and "new_value" not in raw_op:
             raise ValueError(f"Patch operation {index} action {action!r} requires new_value.")
+        if action in {"add", "replace"}:
+            new_value = raw_op.get("new_value")
+            if _value_looks_like_full_pathway_payload(new_value):
+                raise ValueError(f"Patch operation {index} must not rewrite the full pathway JSON.")
+            if _value_contains_db_identifier(new_value):
+                raise ValueError(f"Patch operation {index} must not invent mapped IDs or database identifiers.")
 
         normalized_op = {
             "action": action,
@@ -744,6 +779,40 @@ def _extract_json_object(text: str) -> dict[str, Any] | None:
         return parsed if isinstance(parsed, dict) else None
     except json.JSONDecodeError:
         return None
+
+
+def _json_pointer_touches_db_identifier(path: str) -> bool:
+    try:
+        tokens = _decode_json_pointer(path)
+    except ValueError:
+        return False
+    return any(_is_mapped_id_key(str(token).lower()) for token in tokens)
+
+
+def _decode_json_pointer(path: str) -> list[str]:
+    if not path.startswith("/"):
+        raise ValueError(f"Invalid JSON pointer: {path}")
+    return [token.replace("~1", "/").replace("~0", "~") for token in path[1:].split("/")]
+
+
+def _value_looks_like_full_pathway_payload(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    keys = {str(key) for key in value}
+    return "entities" in keys and ("processes" in keys or "reactions" in keys)
+
+
+def _value_contains_db_identifier(value: Any) -> bool:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if _is_mapped_id_key(str(key).lower()):
+                return True
+            if _value_contains_db_identifier(child):
+                return True
+        return False
+    if isinstance(value, list):
+        return any(_value_contains_db_identifier(item) for item in value)
+    return False
 
 
 def _build_interactive_curator_retry_messages(*, user_request: str, validation_error: str) -> list[dict]:

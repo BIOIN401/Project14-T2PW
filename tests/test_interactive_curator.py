@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -243,6 +244,130 @@ def test_validate_interactive_patch_response_rejects_invalid_patch_operations(
                 "needs_user_review": True,
             }
         )
+
+
+@pytest.mark.parametrize(
+    "response, error",
+    [
+        (
+            {
+                "patch": [],
+                "entities": {"compounds": []},
+                "rationale": "",
+                "change_summary": "",
+                "needs_user_review": True,
+            },
+            "only patch metadata",
+        ),
+        (
+            {
+                "patch": [
+                    {
+                        "action": "replace",
+                        "json_pointer": "/entities/compounds/0/mapped_ids/hmdb",
+                        "new_value": "HMDB0000122",
+                    }
+                ],
+                "rationale": "",
+                "change_summary": "",
+                "needs_user_review": True,
+            },
+            "must not modify mapped IDs",
+        ),
+        (
+            {
+                "patch": [
+                    {
+                        "action": "add",
+                        "json_pointer": "/entities/compounds/0",
+                        "new_value": {"name": "Glucose", "mapped_ids": {"hmdb": "HMDB0000122"}},
+                    }
+                ],
+                "rationale": "",
+                "change_summary": "",
+                "needs_user_review": True,
+            },
+            "must not invent mapped IDs",
+        ),
+        (
+            {
+                "patch": [
+                    {
+                        "action": "replace",
+                        "json_pointer": "/",
+                        "new_value": {
+                            "entities": {"compounds": []},
+                            "processes": {"reactions": []},
+                        },
+                    }
+                ],
+                "rationale": "",
+                "change_summary": "",
+                "needs_user_review": True,
+            },
+            "whole pathway JSON",
+        ),
+    ],
+)
+def test_validate_interactive_patch_response_rejects_full_payload_and_db_id_edits(
+    response: dict,
+    error: str,
+) -> None:
+    with pytest.raises(ValueError, match=error):
+        curator.validate_interactive_patch_response(response)
+
+
+def test_apply_patch_and_rerender_writes_patch_list_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    captured_patch_payload = None
+
+    def fake_run_apply(input_path: Path, patch_path: Path, output_path: Path, **_: object) -> dict:
+        nonlocal captured_patch_payload
+        captured_patch_payload = patch_path.read_text(encoding="utf-8")
+        output_path.write_text(input_path.read_text(encoding="utf-8"), encoding="utf-8")
+        return {"summary": {"accepted_count": 1, "rejected_count": 0}, "rejected": []}
+
+    def fake_run_mapping(input_path: Path, output_path: Path, report_path: Path, **_: object) -> dict:
+        payload = input_path.read_text(encoding="utf-8")
+        output_path.write_text(payload, encoding="utf-8")
+        report = {"summary": {"mapped": 1}}
+        report_path.write_text('{"summary":{"mapped":1}}', encoding="utf-8")
+        return report
+
+    class FakeGraph:
+        def to_dict(self) -> dict:
+            return {"nodes": [], "edges": []}
+
+    monkeypatch.setattr("t2pw.curation.apply_audit_patch.run_apply", fake_run_apply)
+    monkeypatch.setattr("t2pw.mapping.map_ids.run_mapping", fake_run_mapping)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.apply_biochemical_aliases", lambda payload, report=None: None)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.canonicalize_same_as_aliases", lambda payload, report=None: None)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.normalize_process_actor_schema", lambda payload, report=None: None)
+    monkeypatch.setattr("t2pw.pipeline.process_normalizer.run_strict_post_normalization_gates", lambda payload, report=None, enforce_all_proteins_connected=False: {})
+    monkeypatch.setattr("t2pw.pipeline.draft_graph.build_draft_graph", lambda payload: FakeGraph())
+    monkeypatch.setattr("t2pw.pipeline.draft_graph_render.render_draft_graph_to_png_bytes", lambda graph, dpi=100: b"png")
+    monkeypatch.setattr("t2pw.pipeline.qa_graph.generate_qa_report", lambda graph, payload: {"summary": {"ok": True}})
+
+    result = curator.apply_patch_and_rerender(
+        working_json={"entities": {"compounds": [{"name": "ATP"}]}, "processes": {"reactions": []}},
+        patch=[{"action": "replace", "json_pointer": "/entities/compounds/0/name", "new_value": "ADP"}],
+        mapping_cache_path=tmp_path / "mapping_cache.json",
+        work_dir=tmp_path,
+    )
+
+    assert result["graph_png_bytes"] == b"png"
+    assert captured_patch_payload is not None
+    captured = json.loads(captured_patch_payload)
+    assert isinstance(captured, list)
+    assert captured == [
+        {
+            "action": "replace",
+            "json_pointer": "/entities/compounds/0/name",
+            "new_value": "ADP",
+            "op": "replace",
+            "path": "/entities/compounds/0/name",
+            "value": "ADP",
+        }
+    ]
 
 
 def test_extract_entity_names_reads_supported_entity_groups_and_handles_missing_keys() -> None:

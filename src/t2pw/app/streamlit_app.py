@@ -275,6 +275,70 @@ def _compact_refinement_issue(value: Any) -> str:
     return str(value)
 
 
+def _pwml_reference_path(project_root: Path) -> Path:
+    ref_candidates = [
+        project_root / "reference" / "PW000001.pwml",
+        project_root / "reference" / "PW012926.pwml",
+    ]
+    return next((path for path in ref_candidates if path.exists()), ref_candidates[0])
+
+
+def _write_reviewed_payload_snapshot(working_json: Dict[str, Any], work_dir: str | Path) -> Path:
+    work_path = Path(work_dir)
+    work_path.mkdir(parents=True, exist_ok=True)
+    reviewed_json_path = work_path / "final.mapped.json"
+    reviewed_json_path.write_text(
+        json.dumps(working_json, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    post_artifacts = st.session_state.get("post_pipeline_artifacts")
+    if isinstance(post_artifacts, dict):
+        reviewed_payload = deepcopy(working_json)
+        post_artifacts["final_mapped_db"] = reviewed_payload
+        post_artifacts["final_export_input"] = deepcopy(reviewed_payload)
+        post_artifacts["reviewed_final_mapped_path"] = str(reviewed_json_path)
+        st.session_state["post_pipeline_artifacts"] = post_artifacts
+
+    return reviewed_json_path
+
+
+def _generate_pwml_from_refinement_working_json(work_dir: str | Path) -> Dict[str, Any]:
+    working_json = st.session_state.get("refinement_working_json")
+    if not isinstance(working_json, dict) or not working_json:
+        return {
+            "ok": False,
+            "error": "No reviewed mapped pathway is available for PWML export.",
+            "counts": {},
+            "issues": 0,
+            "output_path": "",
+            "qa": {},
+            "grounding_report": {},
+        }
+
+    _write_reviewed_payload_snapshot(working_json, work_dir)
+    st.session_state.refinement_pwml_ready = True
+
+    project_root = PROJECT_ROOT
+    grounding_dict = None
+    if bool(st.session_state.get("pwml_grounding", False)):
+        grounding_dict = st.session_state.get("pwml_grounding_dict")
+
+    return run_pwml_export(
+        working_json,
+        pathway_name=str(st.session_state.get("pwml_name") or "Generated Pathway"),
+        pathway_description=str(st.session_state.get("pwml_description") or ""),
+        pathway_subject=str(st.session_state.get("pwml_subject") or "Metabolic"),
+        project_root=project_root,
+        ref_path=_pwml_reference_path(project_root),
+        vis_width=int(st.session_state.get("pwml_width") or 3200),
+        vis_height=int(st.session_state.get("pwml_height") or 1400),
+        background_color=str(st.session_state.get("pwml_bg") or "#FFFFFF"),
+        grounding_dict=grounding_dict,
+        strict_db=bool(st.session_state.get("pwml_strict_db", True)),
+    )
+
+
 def _render_review_refine_section(
     *,
     mapping_cache_path: str | Path,
@@ -360,6 +424,37 @@ def _render_review_refine_section(
                         st.markdown(f"  - {value}")
                     if len(values) > 10:
                         st.caption(f"{len(values) - 10} more {label.lower()} not shown.")
+
+    with st.expander("Debug Downloads", expanded=False):
+        reviewed_col, history_col, qa_col, misses_col = st.columns(4)
+        reviewed_col.download_button(
+            "Reviewed JSON",
+            data=json.dumps(st.session_state.refinement_working_json, indent=2, ensure_ascii=False),
+            file_name="reviewed_final_mapped.json",
+            mime="application/json",
+            key="download_reviewed_final_mapped_json",
+        )
+        history_col.download_button(
+            "Refinement History",
+            data=json.dumps(st.session_state.refinement_history, indent=2, ensure_ascii=False),
+            file_name="refinement_history.json",
+            mime="application/json",
+            key="download_refinement_history_json",
+        )
+        qa_col.download_button(
+            "QA Report",
+            data=json.dumps(st.session_state.refinement_qa_report, indent=2, ensure_ascii=False),
+            file_name="refinement_qa_report.json",
+            mime="application/json",
+            key="download_refinement_qa_report_json",
+        )
+        misses_col.download_button(
+            "Mapping Misses",
+            data=json.dumps(st.session_state.refinement_mapping_misses, indent=2, ensure_ascii=False),
+            file_name="refinement_mapping_misses.json",
+            mime="application/json",
+            key="download_refinement_mapping_misses_json",
+        )
 
     st.text_area("Describe changes to make", key="refinement_request")
 
@@ -476,9 +571,41 @@ def _render_review_refine_section(
         st.session_state.refinement_last_warnings = warning_messages
         st.rerun()
     if undo_col.button("Undo Last Refinement", key="refinement_undo_last"):
-        st.info("Undo button is present but not wired yet.")
+        if not st.session_state.refinement_checkpoints:
+            st.warning("No refinement checkpoint is available to undo.")
+            st.stop()
+
+        checkpoint = st.session_state.refinement_checkpoints.pop()
+        st.session_state.refinement_round = checkpoint["round"]
+        st.session_state.refinement_working_json = checkpoint["working_json"]
+        st.session_state.refinement_graph_bytes = checkpoint["graph_bytes"]
+        st.session_state.refinement_qa_report = checkpoint["qa_report"]
+        st.session_state.refinement_mapping_report = checkpoint["mapping_report"]
+        st.session_state.refinement_mapping_misses = checkpoint["mapping_misses"]
+        st.session_state.refinement_history = checkpoint["history"]
+        st.session_state.refinement_gate_errors = checkpoint["gate_errors"]
+        st.session_state.refinement_last_error = None
+        st.success("Last refinement was undone.")
+        st.rerun()
     if pwml_col.button("Generate PWML", key="refinement_generate_pwml"):
-        st.info("PWML generation button is present but not wired yet.")
+        try:
+            with st.spinner("Building PWML from reviewed pathway JSON..."):
+                _pwml_result = _generate_pwml_from_refinement_working_json(work_dir)
+        except Exception as exc:  # noqa: BLE001
+            _pwml_result = {
+                "ok": False,
+                "error": str(exc),
+                "counts": {},
+                "issues": 0,
+                "output_path": "",
+                "qa": {},
+                "grounding_report": {},
+            }
+        st.session_state["pwml_export_result"] = _pwml_result
+        if _pwml_result.get("ok"):
+            st.success(f"PWML generated from reviewed JSON: {_pwml_result.get('output_path')}")
+        else:
+            st.error(f"PWML export failed: {_pwml_result.get('error', 'unknown')}")
 
     return True
 
@@ -534,7 +661,7 @@ def render_json_artifact_compare(
     entries = _json_artifact_entries(post_artifacts, pwml_result)
     with st.expander("Compare JSON artifacts", expanded=False):
         if not entries:
-            st.info("Run audit, DB mapping + PWML export to populate final.mapped.json and PWML IR here.")
+            st.info("Run audit and DB mapping, then generate PWML from the review panel to populate artifacts here.")
             return
         labels = [entry[0] for entry in entries]
         if len(entries) == 1:
@@ -2839,7 +2966,7 @@ if st.session_state.get("pipeline_ready"):
                 st.error(f"Grounding load failed: {_ge}")
         _pwml_grounding_dict = st.session_state.get("pwml_grounding_dict")
 
-    if st.button("Run audit, DB mapping + PWML export", key="pwml_generate_btn"):
+    if st.button("Run audit and DB mapping", key="pwml_generate_btn"):
         if not isinstance(final_payload, dict) or not final_payload:
             st.error("No pipeline output in session state. Run the pipeline first.")
         else:
@@ -2893,29 +3020,7 @@ if st.session_state.get("pipeline_ready"):
                     mapping_report = _safe_dict(_pa.get("mapping_report"))
                     if isinstance(final_mapped_payload, dict) and final_mapped_payload:
                         initialize_refinement_review_state(final_mapped_payload, mapping_report)
-                    if st.session_state.get("refinement_pwml_ready") is True:
-                        _pwml_source_payload = st.session_state.get("refinement_working_json")
-                        if not isinstance(_pwml_source_payload, dict) or not _pwml_source_payload:
-                            st.error("No reviewed mapped pathway is available for PWML export.")
-                        else:
-                            with st.spinner("Building PWML..."):
-                                _pwml_result = run_pwml_export(
-                                    _pwml_source_payload,
-                                    pathway_name=_pwml_name,
-                                    pathway_description=_pwml_description,
-                                    pathway_subject=_pwml_subject,
-                                    project_root=_project_root_pwml,
-                                    ref_path=_ref_path_pwml,
-                                    vis_width=int(_pwml_width),
-                                    vis_height=int(_pwml_height),
-                                    background_color=_pwml_bg,
-                                    grounding_dict=_pwml_grounding_dict,
-                                    strict_db=bool(_pwml_strict_db),
-                                )
-                            st.session_state["pwml_export_result"] = _pwml_result
-                            st.success("Audit, DB mapping, and PWML export completed.")
-                    else:
-                        st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
+                    st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
 
