@@ -14630,6 +14630,60 @@
         "status": "matched",
         "order_step": "pathbank_protein_id"
       }
+    },
+    "db::phenylalanine hydroxylase::homo sapiens::161338::{\"uniprot\": \"Q66RJ7\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q66RJ7",
+        "pathbank_protein_id": "161338",
+        "gene_name": "PAH"
+      },
+      "pathbank_protein_id": 161338,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 161338,
+          "name": "Phenylalanine hydroxylase",
+          "uniprot": "Q66RJ7",
+          "gene_name": "PAH",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::tyrosine hydroxylase::homo sapiens::161339::{\"uniprot\": \"P78428\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P78428",
+        "pathbank_protein_id": "161339",
+        "gene_name": "TH"
+      },
+      "pathbank_protein_id": 161339,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 161339,
+          "name": "Tyrosine hydroxylase",
+          "uniprot": "P78428",
+          "gene_name": "TH",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
     }
   },
   "compounds": {
@@ -31274,6 +31328,106 @@
         "status": "matched",
         "order_step": "pathbank_compound_id"
       }
+    },
+    "db::ldopa::::{\"kegg\": \"C00355\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000181",
+        "kegg": "C00355",
+        "chebi": "CHEBI:15765",
+        "pubchem": "6047",
+        "cas": "59-92-7",
+        "biocyc": "L-DOPA",
+        "chemspider": "5824",
+        "drugbank": "DB01235",
+        "pathbank_compound_id": "117"
+      },
+      "pathbank_compound_id": 117,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 117,
+          "name": "L-Dopa",
+          "short_name": "L-Dopa",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000181",
+            "kegg": "C00355",
+            "chebi": "CHEBI:15765",
+            "pubchem": "6047",
+            "cas": "59-92-7",
+            "biocyc": "L-DOPA",
+            "chemspider": "5824",
+            "drugbank": "DB01235"
+          }
+        },
+        {
+          "pathbank_compound_id": 473,
+          "name": "DL-Dopa",
+          "short_name": "DL-Dopa",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000609",
+            "kegg": "C00355",
+            "chebi": "CHEBI:49168",
+            "pubchem": "58663891",
+            "cas": "63-84-3",
+            "biocyc": "L-DIHYDROXY-PHENYLALANINE",
+            "chemspider": "813"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::dopamine::::{\"kegg\": \"C03758\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000073",
+        "kegg": "C03758",
+        "chebi": "CHEBI:18243",
+        "pubchem": "681",
+        "cas": "51-61-6",
+        "biocyc": "DOPAMINE",
+        "chemspider": "661",
+        "drugbank": "DB00988",
+        "pathbank_compound_id": "52"
+      },
+      "pathbank_compound_id": 52,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 52,
+          "name": "Dopamine",
+          "short_name": "LDP",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000073",
+            "kegg": "C03758",
+            "chebi": "CHEBI:18243",
+            "pubchem": "681",
+            "cas": "51-61-6",
+            "biocyc": "DOPAMINE",
+            "chemspider": "661",
+            "drugbank": "DB00988"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
     }
   },
   "complexes": {
@@ -33736,6 +33890,193 @@
       "resolution": {
         "status": "matched",
         "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::phenylalanine hydroxylase complex::homo sapiens::431796::[{\"ids\": {\"gene_name\": \"PAH\", \"pathbank_protein_id\": \"161338\", \"uniprot\": \"Q66RJ7\"}, \"name\": \"phenylalanine hydroxylase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431796,
+      "pathbank_protein_complex_id": 431796,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phenylalanine hydroxylase",
+          "pathbank_protein_id": 161338,
+          "stoichiometry": 1,
+          "uniprot": "Q66RJ7",
+          "mapped_ids": {
+            "uniprot": "Q66RJ7",
+            "pathbank_protein_id": "161338"
+          },
+          "gene_name": "PAH",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431796,
+          "pathbank_protein_complex_id": 431796,
+          "name": "phenylalanine hydroxylase complex",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::tyrosine hydroxylase complex::homo sapiens::431797::[{\"ids\": {\"gene_name\": \"TH\", \"pathbank_protein_id\": \"161339\", \"uniprot\": \"P78428\"}, \"name\": \"tyrosine hydroxylase\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431797,
+      "pathbank_protein_complex_id": 431797,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "tyrosine hydroxylase",
+          "pathbank_protein_id": 161339,
+          "stoichiometry": 1,
+          "uniprot": "P78428",
+          "mapped_ids": {
+            "uniprot": "P78428",
+            "pathbank_protein_id": "161339"
+          },
+          "gene_name": "TH",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431797,
+          "pathbank_protein_complex_id": 431797,
+          "name": "tyrosine hydroxylase complex",
+          "species_id": 1,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    }
+  },
+  "enzyme_complexes": {
+    "phenylalanine hydroxylase::161338::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431796,
+      "pathbank_protein_complex_id": 431796,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "phenylalanine hydroxylase",
+          "pathbank_protein_id": 161338,
+          "stoichiometry": 1,
+          "uniprot": "Q66RJ7",
+          "mapped_ids": {
+            "uniprot": "Q66RJ7",
+            "pathbank_protein_id": "161338"
+          },
+          "gene_name": "PAH",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431796,
+          "pathbank_protein_complex_id": 431796,
+          "name": "phenylalanine hydroxylase complex",
+          "species_id": 1,
+          "component_protein_id": 161338,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "tyrosine hydroxylase::161339::homo sapiens": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 431797,
+      "pathbank_protein_complex_id": 431797,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "tyrosine hydroxylase",
+          "pathbank_protein_id": 161339,
+          "stoichiometry": 1,
+          "uniprot": "P78428",
+          "mapped_ids": {
+            "uniprot": "P78428",
+            "pathbank_protein_id": "161339"
+          },
+          "gene_name": "TH",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 431797,
+          "pathbank_protein_complex_id": 431797,
+          "name": "tyrosine hydroxylase complex",
+          "species_id": 1,
+          "component_protein_id": 161339,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "aromatic lamino acid decarboxylase::4198::homo sapiens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "aromatic L-amino acid decarboxylase complex",
+      "species_id": 1,
+      "components": [
+        {
+          "name": "aromatic L-amino acid decarboxylase",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 4198,
+          "mapped_ids": {
+            "uniprot": "Q53Y41",
+            "pathbank_protein_id": "4198",
+            "gene_name": "DDC"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
       }
     }
   }
