@@ -898,12 +898,18 @@ class DeterministicPwmlBuilder:
             protein_complex_visualizations.append(visualization)
             pc_vis_by_pc_id[int(rec["id"])] = visualization
 
-        def anchor(loc, side):
+        def anchor(loc, side, etype=""):
             x = int(loc["x"]); y = int(loc["y"])
             w = int(loc["width"]); h = int(loc["height"])
+            if etype in ("Compound", "ElementCollection", "NucleicAcid"):
+                vis_w = max(26, min(78, w))
+            else:
+                vis_w = max(50, min(140, w))
+            cx = x + w // 2
+            cy = y + h // 2
             if side == "Left":
-                return x + w, y + h // 2
-            return x, y + h // 2
+                return cx + vis_w // 2, cy
+            return cx - vis_w // 2, cy
 
         def loc_for(element_type, element_id):
             if element_type == "Compound":
@@ -930,7 +936,7 @@ class DeterministicPwmlBuilder:
                     loc = loc_for(etype, eid)
                     if not loc:
                         continue
-                    ax, ay = anchor(loc, side)
+                    ax, ay = anchor(loc, side, etype)
                     edge_id = self.ids.next()
                     if side == "Left":
                         path = f"M{ax} {ay} L{rx} {ry}"
@@ -973,8 +979,10 @@ class DeterministicPwmlBuilder:
                     members = pc_member_protein_ids.get(int(pc_id), [])
                     anchor_loc = next((protein_loc_by_id.get(m) for m in members if protein_loc_by_id.get(m)), None)
                     if anchor_loc is not None:
-                        ex = int(anchor_loc["x"]) + int(anchor_loc["width"]) // 2
-                        ey = int(anchor_loc["y"]) + int(anchor_loc["height"])
+                        aw = int(anchor_loc["width"]); ah = int(anchor_loc["height"])
+                        vis_h_e = max(18, min(45, ah))
+                        ex = int(anchor_loc["x"]) + aw // 2
+                        ey = int(anchor_loc["y"]) + ah // 2 + vis_h_e // 2
                         edge_id_e = self.ids.next()
                         edges.append({
                             "id": edge_id_e,
@@ -989,8 +997,10 @@ class DeterministicPwmlBuilder:
                     prot_loc = protein_loc_by_id.get(int(prot_id))
                     if not prot_loc:
                         continue
-                    ex = int(prot_loc["x"]) + int(prot_loc["width"]) // 2
-                    ey = int(prot_loc["y"]) + int(prot_loc["height"])
+                    pw2 = int(prot_loc["width"]); ph2 = int(prot_loc["height"])
+                    vis_h_p = max(18, min(45, ph2))
+                    ex = int(prot_loc["x"]) + pw2 // 2
+                    ey = int(prot_loc["y"]) + ph2 // 2 + vis_h_p // 2
                     edge_id_e = self.ids.next()
                     edges.append({
                         "id": edge_id_e,
