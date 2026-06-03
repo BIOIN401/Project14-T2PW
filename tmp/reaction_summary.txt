@@ -1,8 +1,27 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: Hexokinase reaction
-  Reactants: Glucose [cytosolic state], ATP [cytosolic state]
-  Products:  Glucose-6-phosphate [cytosolic state], ADP [cytosolic state], H⁺ [cytosolic state]
-  Modifier:  Hexokinase [cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 1: phenylalanine to tyrosine
+  Reactants: phenylalanine [cytosolic dopaminergic state], tetrahydrobiopterin [cytosolic dopaminergic state], oxygen [cytosolic dopaminergic state]
+  Products:  tyrosine [cytosolic dopaminergic state], dihydrobiopterin [cytosolic dopaminergic state], water [cytosolic dopaminergic state]
+  Modifier:  phenylalanine hydroxylase [cytosolic dopaminergic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 2: tyrosine to L-DOPA
+  Reactants: tyrosine [cytosolic dopaminergic state], tetrahydrobiopterin [cytosolic dopaminergic state], oxygen [cytosolic dopaminergic state]
+  Products:  L-DOPA [cytosolic dopaminergic state], dihydrobiopterin [cytosolic dopaminergic state], water [cytosolic dopaminergic state]
+  Modifier:  tyrosine hydroxylase [cytosolic dopaminergic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 3: L-DOPA to dopamine
+  Reactants: L-DOPA [cytosolic dopaminergic state]
+  Products:  dopamine [cytosolic dopaminergic state], carbon dioxide [cytosolic dopaminergic state]
+  Modifier:  aromatic L-amino acid decarboxylase [cytosolic dopaminergic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 1: dopamine import into synaptic vesicles
+  From: cytosolic dopaminergic state
+  To:   synaptic vesicle state
+  Cargo: dopamine [cytosolic dopaminergic state]
+  Transporter: vesicular monoamine transporter 2 [synaptic vesicle state] (role=transporter, confidence=1.0)
   QA flags:  none

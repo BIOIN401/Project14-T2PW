@@ -4,10 +4,7 @@ from __future__ import annotations
 import json
 import re
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Set, Tuple
-
-if TYPE_CHECKING:
-    from t2pw.pipeline.draft_graph import DraftGraph
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 
 # ---------------------------------------------------------------------------
@@ -164,6 +161,13 @@ def _canonical(value: str) -> str:
     return re.sub(r"\s+", " ", (value or "").strip())
 
 
+def _to_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _has_plus_token(value: str) -> bool:
     # Strip trailing charge notation (e.g. NAD+, H+, Ca2+) before checking
     # for a composite "+" separator so chemical names aren't mis-parsed.
@@ -254,6 +258,61 @@ def _new_report() -> Dict[str, Any]:
         "rewrite_map": {},
         "actions": [],
     }
+
+
+def _species_confidence(row: Dict[str, Any]) -> float:
+    meta = _safe_dict(row.get("mapping_meta"))
+    species_resolution = _safe_dict(meta.get("species_resolution"))
+    mapping_resolution = _safe_dict(meta.get("resolution"))
+    return max(
+        _to_float(row.get("confidence")),
+        _to_float(species_resolution.get("confidence")),
+        _to_float(mapping_resolution.get("confidence")),
+    )
+
+
+def _select_default_species_name(entities: Dict[str, Any]) -> str:
+    species_rows: List[Tuple[str, Dict[str, Any], int]] = []
+    seen_species: Set[str] = set()
+    for index, row in enumerate(_safe_list(entities.get("species"))):
+        if not isinstance(row, dict) or not isinstance(row.get("name"), str):
+            continue
+        name = _canonical(row["name"])
+        norm = _normalize(name)
+        if not name or not norm or norm in seen_species:
+            continue
+        seen_species.add(norm)
+        species_rows.append((name, row, index))
+    if not species_rows:
+        return ""
+    if len(species_rows) == 1:
+        return species_rows[0][0]
+
+    usage_counts: Dict[str, int] = {}
+    for bucket in ("proteins", "protein_complexes"):
+        for item in _safe_list(entities.get(bucket)):
+            if not isinstance(item, dict):
+                continue
+            species = (
+                item.get("species")
+                or item.get("organism")
+                or item.get("species_name")
+                or _safe_dict(item.get("species_ref")).get("name")
+                or ""
+            )
+            if not isinstance(species, str):
+                continue
+            norm = _normalize(species)
+            if norm:
+                usage_counts[norm] = usage_counts.get(norm, 0) + 1
+
+    def score(entry: Tuple[str, Dict[str, Any], int]) -> Tuple[float, int, int, int]:
+        name, row, index = entry
+        norm = _normalize(name)
+        has_db_id = int(bool(row.get("pathbank_species_id") or row.get("species_id") or row.get("taxonomy_id")))
+        return (_species_confidence(row), usage_counts.get(norm, 0), has_db_id, -index)
+
+    return max(species_rows, key=score)[0]
 
 
 def _entity_name_norms(rows: Sequence[Any]) -> Set[str]:
@@ -1772,6 +1831,11 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
     summary = _safe_dict(rep.setdefault("summary", {}))
     summary.setdefault("modifier_refs_canonicalized", 0)
     summary.setdefault("modifier_refs_dropped", 0)
+    summary.setdefault("non_protein_catalysts_dropped", 0)
+    rep.setdefault("actions", [])
+    allowed_enzyme_entity_types = {"protein", "protein_complex"}
+    dropped_enzyme_entity_types = {"compound", "cofactor", "ion", "small_molecule", "metabolite"}
+    enzyme_export_roles = {"", "catalyst", "enzyme", "activator", "inhibitor"}
     entities = _safe_dict(payload.get("entities"))
     protein_rows = _safe_list(entities.get("proteins"))
     complex_rows = _safe_list(entities.get("protein_complexes"))
@@ -1801,6 +1865,20 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 return "protein", protein_by_norm[norm]
         return None
 
+    def _record_non_protein_catalyst_drop(pointer: str, name: str, entity_type: str, role: str, source_field: str) -> None:
+        summary["non_protein_catalysts_dropped"] += 1
+        summary["modifier_refs_dropped"] += 1
+        rep["actions"].append(
+            {
+                "type": "non_protein_catalyst_dropped",
+                "json_pointer": pointer,
+                "name": name,
+                "entity_type": entity_type,
+                "role": role or "catalyst",
+                "source_field": source_field,
+            }
+        )
+
     def _rewrite_actor_rows(rows: List[Any], pointer_prefix: str, *, drop_unknown: bool = True) -> List[Dict[str, Any]]:
         kept: List[Dict[str, Any]] = []
         for idx, row in enumerate(rows):
@@ -1818,6 +1896,15 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             if not raw_name:
                 if not drop_unknown:
                     kept.append(row)
+                continue
+
+            explicit_entity_type = _canonical(str(row.get("entity_type") or row.get("type") or "")).casefold()
+            role = _canonical(str(row.get("role", ""))).casefold()
+            if (
+                explicit_entity_type in dropped_enzyme_entity_types
+                and (pointer_prefix.endswith("/enzymes") or role in enzyme_export_roles)
+            ):
+                _record_non_protein_catalyst_drop(pointer, raw_name, explicit_entity_type, role, source_field)
                 continue
 
             resolved = _resolve_actor_name(raw_name)
@@ -1866,12 +1953,12 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             reaction[key] = _rewrite_actor_rows(rows, f"/processes/reactions/{ridx}/{key}")
 
     # Post-process: normalise modifiers[] to entity/entity_type schema and migrate legacy enzymes[].
-    for reaction in reactions:
+    for ridx, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
             continue
         # 1. Ensure modifiers[] rows use entity/entity_type schema.
         new_modifiers: List[Dict[str, Any]] = []
-        for mod in _safe_list(reaction.get("modifiers")):
+        for midx, mod in enumerate(_safe_list(reaction.get("modifiers"))):
             if not isinstance(mod, dict):
                 continue
             updated_mod = dict(mod)
@@ -1889,6 +1976,17 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             for old_key in ["protein", "protein_complex", "name", "protein_name"]:
                 updated_mod.pop(old_key, None)
             updated_mod.setdefault("role", "catalyst")
+            entity_type = _canonical(str(updated_mod.get("entity_type", ""))).casefold()
+            role = _canonical(str(updated_mod.get("role", "catalyst"))).casefold() or "catalyst"
+            if entity_type in dropped_enzyme_entity_types and role in enzyme_export_roles:
+                _record_non_protein_catalyst_drop(
+                    f"/processes/reactions/{ridx}/modifiers/{midx}",
+                    _canonical(str(updated_mod.get("entity", ""))),
+                    entity_type,
+                    role,
+                    "entity",
+                )
+                continue
             if updated_mod.get("entity"):
                 new_modifiers.append(updated_mod)
         reaction["modifiers"] = new_modifiers
@@ -1925,11 +2023,20 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                     if v:
                         ename = v
                         if k == "entity":
-                            etype = str(enz.get("entity_type") or "protein")
+                            etype = _canonical(str(enz.get("entity_type") or "protein")).casefold()
                         elif t:
                             etype = t
                         break
                 if not ename or _normalize(ename) in existing_modifier_norms:
+                    continue
+                if etype not in allowed_enzyme_entity_types:
+                    _record_non_protein_catalyst_drop(
+                        f"/processes/reactions/{ridx}/enzymes",
+                        ename,
+                        etype,
+                        str(enz.get("role") or "catalyst"),
+                        "entity",
+                    )
                     continue
                 reaction["modifiers"].append({
                     "entity": ename,
@@ -1955,6 +2062,16 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             if not entity:
                 continue
             entity_type = _canonical(str(mod.get("entity_type", "protein"))).casefold() or "protein"
+            if entity_type not in allowed_enzyme_entity_types:
+                if entity_type in dropped_enzyme_entity_types:
+                    _record_non_protein_catalyst_drop(
+                        f"/processes/reactions/{ridx}/modifiers",
+                        entity,
+                        entity_type,
+                        role,
+                        "entity",
+                    )
+                continue
             key = (entity_type, _normalize(entity))
             if key in seen_enzyme_norms:
                 continue
@@ -1990,35 +2107,37 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     auto_state_name = "__auto_state__"
     auto_location_name = "cell"
 
+    if not isinstance(payload.get("entities"), dict):
+        payload["entities"] = {}
+    entities = _safe_dict(payload.get("entities"))
+    if not isinstance(entities.get("subcellular_locations"), list):
+        entities["subcellular_locations"] = []
+    subcellular_locations = _safe_list(entities.get("subcellular_locations"))
+    if _find_entity_row(subcellular_locations, auto_location_name) is None:
+        subcellular_locations.append({"name": auto_location_name})
+    auto_species_name = _select_default_species_name(entities)
+
     if not isinstance(payload.get("biological_states"), list):
         payload["biological_states"] = []
     biological_states = _safe_list(payload.get("biological_states"))
-    existing_states = {
-        _normalize(str(row.get("name", "")))
-        for row in biological_states
-        if isinstance(row, dict) and isinstance(row.get("name"), str)
-    }
-    if _normalize(auto_state_name) not in existing_states:
-        entities = _safe_dict(payload.get("entities"))
-        species_list = _safe_list(entities.get("species"))
-        auto_species_name = ""
-        for sp in species_list:
-            if isinstance(sp, dict):
-                name = str(sp.get("name") or "").strip()
-                if name:
-                    auto_species_name = name
-                    break
-        if not auto_species_name:
-            auto_species_name = "Homo sapiens"
-            if not species_list:
-                entities.setdefault("species", []).append({"name": auto_species_name})
-                payload["entities"] = entities
-        biological_states.append({
-            "name": auto_state_name,
-            "subcellular_location": auto_location_name,
-            "species": auto_species_name,
-        })
+    auto_state = None
+    for row in biological_states:
+        if not isinstance(row, dict) or not isinstance(row.get("name"), str):
+            continue
+        if _normalize(row["name"]) == _normalize(auto_state_name):
+            auto_state = row
+            break
+    if auto_state is None:
+        auto_state = {"name": auto_state_name, "subcellular_location": auto_location_name}
+        if auto_species_name:
+            auto_state["species"] = auto_species_name
+        biological_states.append(auto_state)
         rep["summary"]["n_autostate_created"] += 1
+    else:
+        if not _canonical(str(auto_state.get("subcellular_location", ""))):
+            auto_state["subcellular_location"] = auto_location_name
+        if auto_species_name and not _canonical(str(auto_state.get("species") or auto_state.get("organism") or "")):
+            auto_state["species"] = auto_species_name
 
     element_locations = _safe_dict(payload.setdefault("element_locations", {}))
     for list_key in ["compound_locations", "protein_locations"]:
@@ -3039,7 +3158,7 @@ def _norm_label(label: str) -> str:
     return re.sub(r"\s+", " ", (label or "").strip().casefold())
 
 
-def normalize_draft_graph(draft_graph: DraftGraph) -> DraftGraph:
+def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F821
     """
     Normalise a DraftGraph in-place and return it.
 

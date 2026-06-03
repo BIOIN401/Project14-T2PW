@@ -203,7 +203,7 @@ def apply_stoich_fix(
     added_outputs: list[str] = []
     skipped: list[str] = []
 
-    reactions: list[dict] = pathway_json.get("reactions", [])
+    reactions: list[dict] = pathway_json.get("processes", {}).get("reactions", [])
     target_reaction: dict | None = None
     for rxn in reactions:
         if (rxn.get("name") or "").casefold() == reaction_name.casefold():
@@ -387,7 +387,7 @@ def _parse_verdict(content: str) -> dict:
 
 def _remove_addition(working: dict, reaction_name: str, compound: str, direction: str) -> None:
     side_key = "inputs" if direction == "input" else "outputs"
-    for rxn in working.get("reactions", []):
+    for rxn in working.get("processes", {}).get("reactions", []):
         if (rxn.get("name") or "").casefold() == reaction_name.casefold():
             rxn[side_key] = [
                 item for item in rxn.get(side_key, [])
@@ -412,7 +412,7 @@ def run_stoich_agent(
     audit_log: list[dict] = []
     deadline = time.time() + timeout_seconds
 
-    for reaction in working.get("reactions", []):
+    for reaction in working.get("processes", {}).get("reactions", []):
         if time.time() >= deadline:
             break
 
@@ -432,7 +432,28 @@ def run_stoich_agent(
             '{"verdict": "add"|"skip"|"uncertain", "add_inputs": [...], "add_outputs": [...], '
             '"reasoning": "...", "sources_used": ["kegg"|"chebi"|"template"|"prior_knowledge"]}\n'
             '"add" means corrections are needed. "skip" means the reaction is complete. '
-            '"uncertain" means insufficient evidence.'
+            '"uncertain" means insufficient evidence.\n\n'
+            'Important: for verdict "add", sources_used must include at least one of "kegg", "chebi", or "template". '
+            'Do not use "prior_knowledge" alone to justify adding stoichiometric inputs or outputs. '
+            'Prior knowledge may be cited as supporting context only.\n\n'
+            "Before adding any stoichiometric participant, determine the reaction type:\n"
+            "1. fully_specified — a complete biochemical equation with known stoichiometry\n"
+            "2. partial_biosynthetic_summary — a high-level step in a biosynthetic pathway\n"
+            "3. enzyme_mechanism_sketch — a mechanistic intermediate step\n"
+            "4. review_level_transformation — mentioned in a review without full detail\n\n"
+            "Only add inputs/outputs for type 1 (fully_specified), OR for types 2-4 ONLY when a "
+            "trusted KEGG/ChEBI tool result specifically supports the exact named reaction with that stoichiometry.\n\n"
+            "Bound cofactor rule: Do NOT add the following as stoichiometric participants unless the "
+            "tool result explicitly shows them as consumed/regenerated: "
+            "PLP, pyridoxal phosphate, FAD, FMN, heme, biotin, TPP, thiamine pyrophosphate, lipoate, "
+            "metal ions (Mg2+, Fe2+, Fe3+, Zn2+, Mn2+, Cu2+), iron-sulfur clusters. "
+            "These are usually bound prosthetic groups, not stoichiometric participants.\n\n"
+            'Template validity rule: a reaction class template is valid only when the reaction class and the specific named reaction match closely. '
+            'Do not apply generic class templates (e.g., dehydrogenase template) to reactions classified as "unknown_or_mechanistic" '
+            '— for those, require direct KEGG or ChEBI tool evidence or return verdict "uncertain".\n\n'
+            "Uncertainty rule: For unusual, poorly characterized, or natural-product-specific reactions "
+            "not found in KEGG/ChEBI templates, prefer verdict \"uncertain\" over adding guessed common "
+            "cofactors (ATP, NADPH, H2O, CO2, H+, O2)."
         )
         user_content = (
             f"Reaction record:\n{json.dumps(reaction, indent=2)}\n\n"
@@ -536,7 +557,10 @@ def run_stoich_agent(
                         "role": "user",
                         "content": (
                             f"Is it biochemically correct that {compound} is consumed in {reaction_name}? "
+                            "Answer based on established biochemistry. If this reaction is unusual, "
+                            "natural-product-specific, or poorly characterized, reply uncertain. "
                             'Reply JSON: {"verdict": "correct"|"incorrect"|"uncertain", "reasoning": "..."}'
+                            # verdict must be one of: "correct", "incorrect", "uncertain" only
                         ),
                     },
                 ],
@@ -544,6 +568,8 @@ def run_stoich_agent(
                 max_tokens=300,
             )
             av = _parse_json_from_text(audit_response.choices[0].message.content or "").get("verdict", "uncertain")
+            if av not in ("correct", "incorrect", "uncertain"):
+                av = "uncertain"
             if av == "incorrect":
                 _remove_addition(working, reaction_name, compound, "input")
                 reversed_inputs.append(compound)
@@ -559,7 +585,10 @@ def run_stoich_agent(
                         "role": "user",
                         "content": (
                             f"Is it biochemically correct that {compound} is produced in {reaction_name}? "
+                            "Answer based on established biochemistry. If this reaction is unusual, "
+                            "natural-product-specific, or poorly characterized, reply uncertain. "
                             'Reply JSON: {"verdict": "correct"|"incorrect"|"uncertain", "reasoning": "..."}'
+                            # verdict must be one of: "correct", "incorrect", "uncertain" only
                         ),
                     },
                 ],
@@ -567,6 +596,8 @@ def run_stoich_agent(
                 max_tokens=300,
             )
             av = _parse_json_from_text(audit_response.choices[0].message.content or "").get("verdict", "uncertain")
+            if av not in ("correct", "incorrect", "uncertain"):
+                av = "uncertain"
             if av == "incorrect":
                 _remove_addition(working, reaction_name, compound, "output")
                 reversed_outputs.append(compound)

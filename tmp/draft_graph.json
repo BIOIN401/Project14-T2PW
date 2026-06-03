@@ -2,109 +2,283 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 7,
-    "edge_count": 6
+    "node_count": 17,
+    "edge_count": 20
   },
   "nodes": [
     {
-      "id": "compound:glucose",
-      "label": "Glucose",
+      "id": "compound:phenylalanine",
+      "label": "phenylalanine",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:atp",
-      "label": "ATP",
-      "kind": "compound",
-      "cls": "cofactor",
-      "compartment": "cytosolic state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:glucose-6-phosphate",
-      "label": "Glucose-6-phosphate",
+      "id": "compound:tyrosine",
+      "label": "tyrosine",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:adp",
-      "label": "ADP",
+      "id": "compound:l-dopa",
+      "label": "L-DOPA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dopamine",
+      "label": "dopamine",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:tetrahydrobiopterin",
+      "label": "tetrahydrobiopterin",
       "kind": "compound",
       "cls": "cofactor",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:h⁺",
-      "label": "H⁺",
+      "id": "compound:dihydrobiopterin",
+      "label": "dihydrobiopterin",
       "kind": "compound",
-      "cls": "ion",
-      "compartment": "cytosolic state",
+      "cls": "cofactor",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:hexokinase",
-      "label": "Hexokinase",
+      "id": "compound:oxygen",
+      "label": "oxygen",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:water",
+      "label": "water",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:carbon dioxide",
+      "label": "carbon dioxide",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:phenylalanine hydroxylase",
+      "label": "phenylalanine hydroxylase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:hexokinase reaction",
-      "label": "Hexokinase reaction",
+      "id": "protein:tyrosine hydroxylase",
+      "label": "tyrosine hydroxylase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:aromatic l-amino acid decarboxylase",
+      "label": "aromatic L-amino acid decarboxylase",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:vesicular monoamine transporter 2",
+      "label": "vesicular monoamine transporter 2",
+      "kind": "protein",
+      "cls": "transporter",
+      "compartment": "synaptic vesicle state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:phenylalanine to tyrosine",
+      "label": "phenylalanine to tyrosine",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:tyrosine to l-dopa",
+      "label": "tyrosine to L-DOPA",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:l-dopa to dopamine",
+      "label": "L-DOPA to dopamine",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:dopamine import into synaptic vesicles",
+      "label": "dopamine import into synaptic vesicles",
+      "kind": "transport",
+      "cls": "",
+      "compartment": "cytosolic dopaminergic state → synaptic vesicle state",
       "confidence": 1.0,
       "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:glucose",
-      "target": "reaction:hexokinase reaction",
+      "source": "compound:phenylalanine",
+      "target": "reaction:phenylalanine to tyrosine",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:atp",
-      "target": "reaction:hexokinase reaction",
+      "source": "compound:tetrahydrobiopterin",
+      "target": "reaction:phenylalanine to tyrosine",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:glucose-6-phosphate",
+      "source": "compound:oxygen",
+      "target": "reaction:phenylalanine to tyrosine",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:phenylalanine to tyrosine",
+      "target": "compound:tyrosine",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:adp",
+      "source": "reaction:phenylalanine to tyrosine",
+      "target": "compound:dihydrobiopterin",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:hexokinase reaction",
-      "target": "compound:h⁺",
+      "source": "reaction:phenylalanine to tyrosine",
+      "target": "compound:water",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:hexokinase",
-      "target": "reaction:hexokinase reaction",
+      "source": "protein:phenylalanine hydroxylase",
+      "target": "reaction:phenylalanine to tyrosine",
       "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:tyrosine",
+      "target": "reaction:tyrosine to l-dopa",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:tetrahydrobiopterin",
+      "target": "reaction:tyrosine to l-dopa",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:oxygen",
+      "target": "reaction:tyrosine to l-dopa",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:tyrosine to l-dopa",
+      "target": "compound:l-dopa",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:tyrosine to l-dopa",
+      "target": "compound:dihydrobiopterin",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:tyrosine to l-dopa",
+      "target": "compound:water",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:tyrosine hydroxylase",
+      "target": "reaction:tyrosine to l-dopa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:l-dopa",
+      "target": "reaction:l-dopa to dopamine",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:l-dopa to dopamine",
+      "target": "compound:dopamine",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:l-dopa to dopamine",
+      "target": "compound:carbon dioxide",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aromatic l-amino acid decarboxylase",
+      "target": "reaction:l-dopa to dopamine",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:dopamine",
+      "target": "transport:dopamine import into synaptic vesicles",
+      "role": "cargo",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:vesicular monoamine transporter 2",
+      "target": "transport:dopamine import into synaptic vesicles",
+      "role": "transporter",
       "confidence": 1.0
     }
   ]

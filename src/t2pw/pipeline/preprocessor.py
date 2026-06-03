@@ -72,12 +72,44 @@ def format_context_header(ctx: Optional[Dict[str, Any]]) -> str:
     compounds = ctx.get("key_compounds") or []
     proteins = ctx.get("key_proteins") or []
     compartments = ctx.get("likely_compartments") or []
+    document_type = _clean_scalar(ctx.get("document_type"))
+    context_type = _clean_scalar(ctx.get("context_type"))
+    scope_status = _clean_scalar(ctx.get("scope_status"))
+    selected_example = _clean_scalar(ctx.get("selected_example"))
+    warning = _clean_scalar(ctx.get("warning"))
+    candidate_example_names = _candidate_example_names(ctx.get("candidate_examples"))
+    has_scope_clarity_score = "scope_clarity_score" in ctx
+    scope_clarity_score = ctx.get("scope_clarity_score")
+    scope_fields = [
+        document_type,
+        context_type,
+        scope_status,
+        selected_example,
+        warning,
+        candidate_example_names,
+    ]
+    if has_scope_clarity_score and scope_clarity_score is not None:
+        scope_fields.append(str(scope_clarity_score))
 
     # Only emit the header if there is at least one meaningful field.
-    if not any([pathway, organism, compounds, proteins, compartments]):
+    if not any([pathway, organism, compounds, proteins, compartments, *scope_fields]):
         return ""
 
     lines = ["PATHWAY CONTEXT (from preprocessor):"]
+    if document_type:
+        lines.append(f"document_type: {document_type}")
+    if context_type:
+        lines.append(f"context_type: {context_type}")
+    if scope_status:
+        lines.append(f"scope_status: {scope_status}")
+    if has_scope_clarity_score and scope_clarity_score is not None:
+        lines.append(f"scope_clarity_score: {scope_clarity_score}")
+    if "selected_example" in ctx:
+        lines.append(f"selected_example: {selected_example}")
+    if candidate_example_names:
+        lines.append(f"candidate_examples: {', '.join(candidate_example_names)}")
+    if warning:
+        lines.append(f"warning: {warning}")
     if pathway:
         lines.append(f"Pathway: {pathway}")
     if organism:
@@ -92,9 +124,52 @@ def format_context_header(ctx: Optional[Dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def is_ambiguous_multi_example_review_context(ctx: Optional[Dict[str, Any]]) -> bool:
+    """
+    Return True when Stage 0 identified a multi-example review but did not
+    select a single target example. Downstream extraction must stop in this
+    state to avoid building a merged pathway from unrelated examples.
+    """
+    if not isinstance(ctx, dict):
+        return False
+    document_type = _clean_scalar(ctx.get("document_type")).casefold()
+    if document_type != "multi_example_review":
+        return False
+    return _is_empty_value(ctx.get("selected_example"))
+
+
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
+def _clean_scalar(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _is_empty_value(value: Any) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, str):
+        return not value.strip()
+    if isinstance(value, (list, tuple, set, dict)):
+        return len(value) == 0
+    return False
+
+
+def _candidate_example_names(candidate_examples: Any) -> list[str]:
+    names: list[str] = []
+    if not isinstance(candidate_examples, list):
+        return names
+    for item in candidate_examples:
+        if isinstance(item, dict):
+            name = _clean_scalar(item.get("name"))
+        else:
+            name = _clean_scalar(item)
+        if name:
+            names.append(name)
+    return names
 
 def _parse_json(raw: str) -> Optional[Any]:
     text = (raw or "").strip()

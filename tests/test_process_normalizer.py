@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
@@ -185,6 +186,104 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
         enforce_all_proteins_connected=True,
     )
     return data, report
+
+
+def test_autostate_adds_matching_cell_subcellular_location_entity() -> None:
+    payload = {
+        "entities": {"subcellular_locations": []},
+        "biological_states": [],
+        "element_locations": {
+            "compound_locations": [{"compound": "substrate"}],
+            "protein_locations": [],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+    report = {
+        "summary": {
+            "n_autostate_created": 0,
+            "n_entities_assigned_to_autostate": 0,
+        },
+        "actions": [],
+        "rewrite_map": {},
+    }
+
+    ensure_autostates(payload, report=report)
+
+    assert payload["entities"]["subcellular_locations"] == [{"name": "cell"}]
+    assert payload["biological_states"] == [
+        {"name": "__auto_state__", "subcellular_location": "cell"}
+    ]
+
+
+def test_autostate_uses_single_declared_species() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Narcissus sp. aff. pseudonarcissus"}],
+            "subcellular_locations": [],
+        },
+        "biological_states": [],
+        "element_locations": {
+            "compound_locations": [{"compound": "substrate"}],
+            "protein_locations": [],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+    report = {
+        "summary": {
+            "n_autostate_created": 0,
+            "n_entities_assigned_to_autostate": 0,
+        },
+        "actions": [],
+        "rewrite_map": {},
+    }
+
+    ensure_autostates(payload, report=report)
+
+    assert payload["biological_states"] == [
+        {
+            "name": "__auto_state__",
+            "subcellular_location": "cell",
+            "species": "Narcissus sp. aff. pseudonarcissus",
+        }
+    ]
+
+
+def test_autostate_chooses_best_species_when_multiple_are_declared() -> None:
+    payload = {
+        "entities": {
+            "species": [
+                {
+                    "name": "Narcissus sp. aff. pseudonarcissus",
+                    "confidence": 1.0,
+                    "mapping_meta": {"species_resolution": {"confidence": 0.85}},
+                },
+                {"name": "Lycoris radiata", "confidence": 1.0},
+                {
+                    "name": "Arabidopsis thaliana",
+                    "pathbank_species_id": 4,
+                    "mapping_meta": {"species_resolution": {"confidence": 1.0}},
+                },
+            ],
+            "proteins": [
+                {"name": "N4OMT", "species": "Narcissus sp. aff. pseudonarcissus"},
+                {"name": "PAL", "species": "Narcissus sp. aff. pseudonarcissus"},
+                {"name": "CYP98A3", "species": "Arabidopsis thaliana"},
+            ],
+            "subcellular_locations": [],
+        },
+        "biological_states": [{"name": "__auto_state__", "subcellular_location": "cell"}],
+        "element_locations": {
+            "compound_locations": [{"compound": "phenylalanine", "location": "cell"}],
+            "protein_locations": [{"protein": "N4OMT", "location": "cell"}],
+        },
+        "processes": {"reactions": [], "transports": []},
+    }
+
+    ensure_autostates(payload)
+
+    assert payload["biological_states"][0]["species"] == "Narcissus sp. aff. pseudonarcissus"
+    assert payload["element_locations"]["compound_locations"][0]["biological_state"] == "__auto_state__"
+    assert payload["element_locations"]["protein_locations"][0]["biological_state"] == "__auto_state__"
 
 
 def test_thyroid_normalization_and_dedupe() -> None:
@@ -451,6 +550,85 @@ def test_single_protein_complex_preserved_for_enzyme() -> None:
     assert int(alias_stats.get("n_single_protein_complexes_removed", 0)) == 0
 
 
+def test_compound_catalyst_modifier_not_rebuilt_as_legacy_enzyme() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "pyridoxal-phosphate"}],
+            "proteins": [],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "PLP-assisted reaction",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "modifiers": [
+                        {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"}
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    normalize_process_actor_schema(payload, report=report)
+
+    reaction = payload["processes"]["reactions"][0]
+    assert reaction["modifiers"] == []
+    assert reaction["enzymes"] == []
+    assert int(report["summary"].get("non_protein_catalysts_dropped", 0)) == 1
+    assert any(action.get("type") == "non_protein_catalyst_dropped" for action in report["actions"])
+
+
+def test_mixed_protein_and_plp_catalysts_keep_protein_drop_non_protein() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Pseudomonas fluorescens"}],
+            "compounds": [
+                {"name": "L-Thr"},
+                {"name": "glycine enolate"},
+                {"name": "acetaldehyde"},
+                {"name": "pyridoxal-phosphate"},
+            ],
+            "proteins": [{"name": "ObaG"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "L-Thr cleavage",
+                    "inputs": ["L-Thr"],
+                    "outputs": ["glycine enolate", "acetaldehyde"],
+                    "modifiers": [
+                        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"},
+                        {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"},
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    normalize_process_actor_schema(payload, report=report)
+
+    reaction = payload["processes"]["reactions"][0]
+    assert reaction["modifiers"] == [
+        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"}
+    ]
+    assert reaction["enzymes"] == [
+        {"role": "catalyst", "confidence": 1.0, "provenance": "extracted", "protein": "ObaG"}
+    ]
+    assert int(report["summary"].get("non_protein_catalysts_dropped", 0)) == 1
+    assert any(
+        action.get("type") == "non_protein_catalyst_dropped"
+        and action.get("name") == "pyridoxal-phosphate"
+        for action in report["actions"]
+    )
+
+
 def test_mapping_route_and_species_id_helpers() -> None:
     protein_like_names = {"thyroglobulin", "thyroid peroxidase"}
     assert route_entity_for_mapping("thyroglobulin", "compound", protein_like_names=protein_like_names)["route"] == "protein"
@@ -462,6 +640,55 @@ def test_mapping_route_and_species_id_helpers() -> None:
     assert p_id.startswith("p_")
     assert m_id.startswith("m_")
     assert p_id == sbml_species_id({"kind": "protein", "name": "thyroglobulin", "mapped_ids": {}}, "c_cell")
+
+
+def test_sbml_reaction_edges_encode_pathwhiz_arrow_options(tmp_path: Path) -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "substrate"}, {"name": "product"}],
+            "proteins": [{"name": "enzyme"}],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cell"}],
+        },
+        "biological_states": [{"name": "cell_state", "subcellular_location": "cell"}],
+        "element_locations": {"compound_locations": [], "protein_locations": []},
+        "processes": {
+            "reactions": [
+                {
+                    "name": "enzyme reaction",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "biological_state": "cell_state",
+                    "enzymes": [{"protein": "enzyme"}],
+                }
+            ],
+            "transports": [],
+        },
+    }
+    in_path = tmp_path / "in.json"
+    sbml_path = tmp_path / "model.sbml"
+    report_json = tmp_path / "report.json"
+    report_txt = tmp_path / "report.txt"
+    in_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    build_sbml(in_path, sbml_path, report_json, report_txt, default_compartment_name="cell")
+
+    root = ET.fromstring(sbml_path.read_text(encoding="utf-8"))
+    namespaces = {"pathwhiz": "http://www.spmdb.ca/pathwhiz"}
+    edge_options = [
+        json.loads(options)
+        for elem in root.findall(".//pathwhiz:location_element", namespaces)
+        if elem.get("{http://www.spmdb.ca/pathwhiz}element_type") == "edge"
+        for options in [elem.get("{http://www.spmdb.ca/pathwhiz}options")]
+        if options
+    ]
+
+    assert {"end_arrow": False, "end_flat_arrow": True} in edge_options
+    assert any(
+        options.get("start_arrow") is True
+        and options.get("start_flat_arrow") is False
+        for options in edge_options
+    )
 
 
 @pytest.mark.skipif(libsbml is None, reason="python-libsbml not installed")

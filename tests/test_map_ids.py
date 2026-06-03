@@ -11,7 +11,16 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.mapping.map_ids import PathBankDbResolver, _map_protein_with_strategy  # noqa: E402
+from t2pw.mapping.map_ids import (  # noqa: E402
+    PathBankDbResolver,
+    _europepmc_full_text,
+    _extract_aliases_from_literature_text,
+    _extract_uniprot_candidates,
+    _map_protein_with_strategy,
+    _reconcile_components_against_local_proteins,
+    _rewrite_reaction_protein_enzymes_to_complexes,
+    map_protein_uniprot,
+)
 
 
 def _make_resolver() -> PathBankDbResolver:
@@ -68,6 +77,195 @@ class _AvailableDb:
             "candidates": [],
             "resolution": {"status": "novel", "issue": "no_db_candidates"},
         }
+
+
+class _FakeResponse:
+    def __init__(self, payload: Dict[str, Any], status_code: int = 200, text: str = "") -> None:
+        self._payload = payload
+        self.status_code = status_code
+        self.text = text
+
+    def json(self) -> Dict[str, Any]:
+        return self._payload
+
+
+class _AliasUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if "fullTextXML" in url:
+            return _FakeResponse(
+                {},
+                text="<article><body>The TTA known as ObiH (or ObaG) was discovered in obafluorin biosynthesis.</body></article>",
+            )
+        if "europepmc" in url:
+            return _FakeResponse(
+                {
+                    "resultList": {
+                        "result": [
+                            {
+                                "title": "Discovery of L-threonine transaldolases",
+                                "abstractText": "Beta-hydroxy amino acid biosynthesis.",
+                                "source": "PMC",
+                                "id": "10495429",
+                                "pmcid": "PMC10495429",
+                            }
+                        ]
+                    }
+                }
+            )
+        if 'gene:"ObiH"' not in query and 'gene:"obiH"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "A0A1X9LWZ7",
+                        "entryType": "UniProtKB unreviewed (TrEMBL)",
+                        "proteinDescription": {
+                            "recommendedName": {"fullName": {"value": "Threonine aldolase"}},
+                        },
+                        "genes": [
+                            {
+                                "geneName": {"value": "obiH"},
+                                "synonyms": [{"value": "CIB54_12585"}],
+                            }
+                        ],
+                        "organism": {"scientificName": "Pseudomonas fluorescens"},
+                    }
+                ]
+            }
+        )
+
+
+class _NocBDomainUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if 'gene:"NocB"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "Q5J1Q6",
+                        "entryType": "UniProtKB unreviewed (TrEMBL)",
+                        "proteinDescription": {
+                            "recommendedName": {
+                                "fullName": {"value": "Nonribosomal peptide synthetase NocB"}
+                            },
+                            "alternativeNames": [
+                                {"fullName": {"value": "NocB thioesterase domain-containing protein"}}
+                            ],
+                        },
+                        "genes": [{"geneName": {"value": "NocB"}}],
+                        "organism": {"scientificName": "Nocardia uniformis subsp. tsuyamanensis"},
+                    }
+                ]
+            }
+        )
+
+
+class _EuropePmcFullTextClient:
+    def __init__(self) -> None:
+        self.urls: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        self.urls.append(url)
+        if url.endswith("/PMC8072733/fullTextXML"):
+            return _FakeResponse(
+                {},
+                text="<article><body>Biochemical assays demonstrated that ObiH (ObaG) is a new LTTA.</body></article>",
+            )
+        return _FakeResponse({}, status_code=404)
+
+
+def _glycolysis_complex_result(protein_row: Dict[str, Any], species: str) -> Dict[str, Any]:
+    assert species == "Homo sapiens"
+    name = str(protein_row.get("name") or "")
+    if name == "hexokinase":
+        complex_name = "hexokinase complex"
+        complex_id = 431773
+        component = {"name": "Hexokinase-3", "uniprot": "P52790", "pathbank_protein_id": 161288, "stoichiometry": 1}
+    elif name == "phosphoglucose isomerase":
+        complex_name = "Glucose-6-phosphate isomerase"
+        complex_id = 3607
+        component = {
+            "name": "Glucose-6-phosphate isomerase",
+            "uniprot": "P06744",
+            "pathbank_protein_id": 751,
+            "stoichiometry": 1,
+        }
+    else:
+        raise AssertionError(f"unexpected enzyme lookup for {name}")
+    return {
+        "status": "mapped",
+        "provider": "PathBankDB",
+        "source": "db",
+        "name": complex_name,
+        "pathbank_complex_id": complex_id,
+        "pathbank_protein_complex_id": complex_id,
+        "species_id": 1,
+        "components": [component],
+        "confidence": 0.9,
+        "chosen_rule": "enzyme_component_species",
+        "candidates": [],
+        "issues": [],
+        "resolution": {"status": "matched"},
+    }
+
+
+def test_complex_component_reconciles_by_uniprot_without_replacing_db_ids() -> None:
+    components = [{"name": "Hexokinase-3", "uniprot": "P52790", "pathbank_protein_id": 161288}]
+    local_proteins = [
+        {
+            "key": "prot_hexokinase",
+            "name": "hexokinase",
+            "mapped_ids": {"uniprot": "P52790", "pathbank_protein_id": "206"},
+        }
+    ]
+
+    reconciled = _reconcile_components_against_local_proteins(components, local_proteins)
+
+    assert reconciled == [
+        {
+            "name": "hexokinase",
+            "uniprot": "P52790",
+            "pathbank_protein_id": 161288,
+            "protein_key": "prot_hexokinase",
+        }
+    ]
+    assert components == [{"name": "Hexokinase-3", "uniprot": "P52790", "pathbank_protein_id": 161288}]
+
+
+def test_complex_component_reconciles_by_pathbank_protein_id() -> None:
+    reconciled = _reconcile_components_against_local_proteins(
+        [{"name": "DB display name", "mapped_ids": {"pathbank_protein_id": "751"}}],
+        [{"name": "phosphoglucose isomerase", "mapping_meta": {"pathbank_protein_id": 751}}],
+    )
+
+    assert reconciled[0]["name"] == "phosphoglucose isomerase"
+    assert reconciled[0]["mapped_ids"] == {"pathbank_protein_id": "751"}
+
+
+def test_complex_component_without_local_protein_match_is_unchanged() -> None:
+    components = [{"name": "Missing protein", "uniprot": "Q00000", "pathbank_protein_id": 99}]
+
+    reconciled = _reconcile_components_against_local_proteins(
+        components,
+        [{"name": "different protein", "mapped_ids": {"uniprot": "P00001"}}],
+    )
+
+    assert reconciled == components
+    assert reconciled[0] is not components[0]
 
 
 def test_compound_resolves_by_hmdb_before_fuzzy_name() -> None:
@@ -161,6 +359,83 @@ def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
     api_lookup.assert_called_once()
 
 
+def test_uniprot_mapping_uses_literature_alias_for_obag() -> None:
+    client = _AliasUniProtClient()
+
+    result = map_protein_uniprot(client, "ObaG", "Pseudomonas fluorescens")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "A0A1X9LWZ7"
+    assert result["matched_alias"] == "ObiH"
+    assert result["alias_source"] == "literature_alias"
+    assert result["resolved_name"] == "Threonine aldolase"
+    assert result["chosen_rule"] == "top_unique_alias_candidate"
+    assert result["literature_aliases"] == [{"alias": "ObiH", "source": "literature_alias"}]
+    assert any('gene:"ObiH"' in query for query in client.queries)
+
+
+def test_europepmc_full_text_uses_pmcid_endpoint() -> None:
+    client = _EuropePmcFullTextClient()
+
+    text = _europepmc_full_text(
+        client,
+        {"source": "MED", "id": "33900425", "pmcid": "PMC8072733"},
+    )
+
+    assert "ObiH (ObaG)" in text
+    assert client.urls == ["https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8072733/fullTextXML"]
+
+
+def test_literature_alias_extracts_parenthetical_gene_name_without_marker() -> None:
+    aliases = _extract_aliases_from_literature_text(
+        "ObaG",
+        "Biochemical assays demonstrated that ObiH (ObaG) is a new LTTA.",
+    )
+
+    assert aliases == [{"alias": "ObiH", "source": "literature_alias"}]
+
+
+def test_uniprot_candidate_parser_uses_submission_names_and_unreviewed_flag() -> None:
+    result = _extract_uniprot_candidates(
+        {
+            "results": [
+                {
+                    "primaryAccession": "A0A1X9LWZ7",
+                    "entryType": "UniProtKB unreviewed (TrEMBL)",
+                    "proteinDescription": {
+                        "submissionNames": [
+                            {"fullName": {"value": "Threonine aldolase"}},
+                        ],
+                    },
+                    "genes": [{"geneName": {"value": "obiH"}}],
+                    "organism": {"scientificName": "Pseudomonas fluorescens"},
+                }
+            ]
+        },
+        query_name="Threonine aldolase",
+        organism="Pseudomonas fluorescens",
+    )
+
+    assert result[0]["accession"] == "A0A1X9LWZ7"
+    assert result[0]["protein_name"] == "Threonine aldolase"
+    assert result[0]["reviewed"] is False
+    assert result[0]["score"] == 0.8
+
+
+def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:
+    client = _NocBDomainUniProtClient()
+
+    result = map_protein_uniprot(client, "NocB thioesterase (TE) domain", "Nocardia uniformis")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q5J1Q6"
+    assert result["matched_alias"] == "NocB"
+    assert result["alias_source"] == "domain_parent"
+    assert result["resolved_name"] == "Nonribosomal peptide synthetase NocB"
+    assert result["chosen_rule"] == "top_unique_alias_candidate"
+    assert any('gene:"NocB"' in query for query in client.queries)
+
+
 def test_complex_maps_by_name_and_species() -> None:
     resolver = _make_resolver()
     complex_rows = [{"id": 301, "name": "MPC complex", "species_id": 1}]
@@ -233,3 +508,54 @@ def test_enzyme_protein_becomes_single_component_complex_when_no_db_complex_exis
     assert result["name"] == "MPC1 complex"
     assert result["species_id"] == 1
     assert result["components"] == [{"name": "MPC1", "stoichiometry": 1, "pathbank_protein_id": 11, "mapped_ids": protein_result["mapped_ids"]}]
+
+
+def test_glycolysis_reaction_enzyme_complex_components_reconcile_to_local_proteins() -> None:
+    resolver = _make_resolver()
+    mapped = {
+        "entities": {
+            "proteins": [
+                {
+                    "name": "hexokinase",
+                    "pathbank_protein_id": 206,
+                    "mapped_ids": {"uniprot": "P52790", "pathbank_protein_id": "206"},
+                },
+                {
+                    "name": "phosphoglucose isomerase",
+                    "pathbank_protein_id": 751,
+                    "mapped_ids": {"uniprot": "P06744", "pathbank_protein_id": "751"},
+                },
+            ],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "hexokinase reaction", "enzymes": [{"protein": "hexokinase"}]},
+                {
+                    "name": "phosphoglucose isomerase reaction",
+                    "enzymes": [{"protein": "phosphoglucose isomerase"}],
+                },
+            ]
+        },
+    }
+
+    with patch.object(resolver, "map_enzyme_protein_to_complex", side_effect=_glycolysis_complex_result):
+        _rewrite_reaction_protein_enzymes_to_complexes(
+            mapped,
+            db=resolver,
+            cache=_MemoryCache(),  # type: ignore[arg-type]
+            global_organism="Homo sapiens",
+        )
+
+    complexes = {
+        complex_row["pathbank_protein_complex_id"]: complex_row
+        for complex_row in mapped["entities"]["protein_complexes"]
+    }
+    assert complexes[431773]["components"][0]["name"] == "hexokinase"
+    assert complexes[431773]["components"][0]["pathbank_protein_id"] == 161288
+    assert complexes[3607]["components"][0]["name"] == "phosphoglucose isomerase"
+    assert complexes[3607]["components"][0]["pathbank_protein_id"] == 751
+    assert all(
+        reaction["enzymes"][0]["entity_type"] == "protein_complex"
+        for reaction in mapped["processes"]["reactions"]
+    )

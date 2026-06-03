@@ -51,6 +51,46 @@ def _base_payload() -> dict:
     }
 
 
+def _obag_plp_payload() -> dict:
+    return {
+        "entities": {
+            "species": [{"name": "Pseudomonas fluorescens"}],
+            "subcellular_locations": [{"name": "cytosol"}],
+            "compounds": [
+                {"name": "L-Thr"},
+                {"name": "glycine enolate"},
+                {"name": "acetaldehyde"},
+                {"name": "pyridoxal-phosphate"},
+            ],
+            "proteins": [{"name": "ObaG"}],
+            "protein_complexes": [],
+        },
+        "biological_states": [
+            {
+                "name": "Pseudomonas fluorescens cytosol",
+                "species": "Pseudomonas fluorescens",
+                "subcellular_location": "cytosol",
+            }
+        ],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "L-Thr cleavage",
+                    "inputs": ["L-Thr"],
+                    "outputs": ["glycine enolate", "acetaldehyde"],
+                    "biological_state": "Pseudomonas fluorescens cytosol",
+                    "modifiers": [
+                        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"},
+                        {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"},
+                    ],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+
 def test_reaction_ir_construction_refs_resolve() -> None:
     ir, report = build_pwml_ir(_base_payload(), strict_db=True)
     validation = validate_pwml_ir(ir)
@@ -76,6 +116,134 @@ def test_reaction_ir_construction_refs_resolve() -> None:
         reaction["right"][0]["key"],
         reaction["enzymes"][0]["key"],
     }
+
+
+def test_compound_catalyst_modifier_is_not_exported_as_reaction_enzyme() -> None:
+    payload = _base_payload()
+    payload["entities"]["compounds"].append({"name": "pyridoxal-phosphate", "pathbank_compound_id": 103})
+    payload["processes"]["reactions"][0]["enzymes"] = []
+    payload["processes"]["reactions"][0]["modifiers"] = [
+        {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"}
+    ]
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert validation["ok"], validation["errors"]
+    assert ir["processes"]["reactions"][0]["enzymes"] == []
+    assert ir["entities"]["protein_complexes"] == []
+    assert "non_protein_catalyst_dropped" in {warning["code"] for warning in report["warnings"]}
+
+
+def test_protein_catalyst_modifier_exports_as_single_protein_complex() -> None:
+    payload = _base_payload()
+    payload["entities"]["proteins"] = [{"name": "ObaG", "pathbank_protein_id": 201}]
+    payload["processes"]["reactions"][0]["enzymes"] = []
+    payload["processes"]["reactions"][0]["modifiers"] = [
+        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"}
+    ]
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert validation["ok"], validation["errors"]
+    reaction = ir["processes"]["reactions"][0]
+    assert reaction["enzymes"][0]["entity_type"] == "protein_complex"
+    assert ir["entities"]["protein_complexes"][0]["components"] == [
+        {"protein_key": ir["entities"]["proteins"][0]["key"], "stoichiometry": 1}
+    ]
+    assert "enzyme_protein_wrapped_as_complex" in {warning["code"] for warning in report["warnings"]}
+
+
+def test_obag_export_drops_plp_catalyst_and_uses_single_protein_complex() -> None:
+    ir, report = build_pwml_ir(_obag_plp_payload(), strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert validation["ok"], validation["errors"]
+    assert "reaction_enzyme_must_be_protein_complex" not in {
+        error.get("code") for error in validation["errors"]
+    }
+    reaction = ir["processes"]["reactions"][0]
+    assert len(reaction["enzymes"]) == 1
+    assert reaction["enzymes"][0]["entity_type"] == "protein_complex"
+    complex_key = reaction["enzymes"][0]["entity_key"]
+    complex_row = next(row for row in ir["entities"]["protein_complexes"] if row["key"] == complex_key)
+    protein_row = next(row for row in ir["entities"]["proteins"] if row["name"] == "ObaG")
+    assert complex_row["name"] == "ObaG complex"
+    assert complex_row["components"] == [
+        {"protein_key": protein_row["key"], "stoichiometry": 1}
+    ]
+    assert {warning["code"] for warning in report["warnings"]} >= {
+        "enzyme_protein_wrapped_as_complex",
+        "non_protein_catalyst_dropped",
+    }
+    assert any(
+        warning.get("code") == "non_protein_catalyst_dropped"
+        and warning.get("name") == "pyridoxal-phosphate"
+        for warning in report["warnings"]
+    )
+
+
+def test_legacy_reaction_enzyme_rows_continue_exporting() -> None:
+    cases = [
+        ({"protein": "Hexokinase"}, []),
+        ({"protein_complex": "Hexokinase complex"}, [{"name": "Hexokinase complex", "components": ["Hexokinase"]}]),
+    ]
+
+    for enzyme_row, protein_complexes in cases:
+        payload = _base_payload()
+        payload["entities"]["protein_complexes"] = protein_complexes
+        payload["processes"]["reactions"][0]["enzymes"] = [enzyme_row]
+
+        ir, report = build_pwml_ir(payload, strict_db=True)
+        validation = validate_pwml_ir(ir)
+
+        assert not report["errors"]
+        assert validation["ok"], validation["errors"]
+        assert ir["processes"]["reactions"][0]["enzymes"][0]["entity_type"] == "protein_complex"
+
+
+def test_create_defaults_fill_unmatched_species_and_cell_location() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Narcissus sp. aff. pseudonarcissus"}],
+            "subcellular_locations": [{"name": "cell"}],
+            "compounds": [],
+            "proteins": [],
+        },
+        "biological_states": [
+            {
+                "name": "__auto_state__",
+                "species": "Narcissus sp. aff. pseudonarcissus",
+                "subcellular_location": "cell",
+            }
+        ],
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert not report["errors"]
+    assert validation["ok"], validation["errors"]
+    assert ir["species"] == [
+        {
+            "key": "sp_1",
+            "name": "Narcissus aff. pseudonarcissus MK-2014",
+            "aliases": [
+                "Narcissus sp. aff. pseudonarcissus",
+                "Narcissus aff. pseudonarcissus MK-2014",
+            ],
+            "taxonomy_id": "1540222",
+            "classification": "Eukaryote",
+            "common_name": "Daffodil",
+        }
+    ]
+    assert ir["subcellular_locations"] == [
+        {"key": "scl_1", "name": "cell", "aliases": ["cell"], "ontology_id": "GO:0005623"}
+    ]
+    assert ir["biological_states"][0]["species_key"] == "sp_1"
+    assert ir["biological_states"][0]["subcellular_location_key"] == "scl_1"
 
 
 def test_transport_ir_construction_has_state_and_visual_refs() -> None:

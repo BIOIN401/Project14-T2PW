@@ -10,32 +10,77 @@ canonical names in the entity list.  Common mismatches: "NAD" vs "NAD+", "CoA" v
 "succinate" vs "Succinate" (case), "alpha-ketoglutarate" vs "α-Ketoglutarate".
 For each mismatch, use propose_patch with op=replace to correct the entity name OR the
 reference inside the reaction — whichever is the wrong form.
+If a generic enzyme class name appears as a protein entity while a named gene/protein for the same catalytic activity exists elsewhere in the entity list or reaction modifiers, emit a warning noting the generic name and the preferred named protein. Do not rename unless the payload evidence is explicit, but prefer correcting reaction modifiers to reference the named protein over the generic class.
 
 ## 2. Compartment assignment for [unknown] entities
-If an entity's biological_state is empty, null, or "unknown", infer a biologically appropriate
-compartment from the reaction context (which compartment the reaction is annotated with) and
-propose a replace patch on /entities/<type>/<index>/biological_state.
+Only infer compartments when at least one of the following is true:
+- The source payload has reaction-level biological_state evidence supporting the compartment.
+- A database-backed biological_state with a compartment_canonical field supports the assignment.
+- The pathway context unambiguously places all reactions in a single compartment (e.g., all TCA cycle reactions are mitochondrial_matrix).
+
+Do NOT infer default compartments (e.g., defaulting to cytosol) for:
+- Review-derived snippets with no stated compartment.
+- Partial biosynthetic examples from natural-product papers.
+- Entities with no reaction context.
+
+For these cases, leave biological_state empty and emit a warning instead of a patch.
+
+If the above conditions are met, infer a biologically appropriate compartment from the reaction
+context (which compartment the reaction is annotated with) and propose a replace patch on
+/entities/<type>/<index>/biological_state.
 Use canonical compartment names: cytosol, mitochondrial_matrix, nucleus, plasma_membrane,
 endoplasmic_reticulum, golgi, lysosome, peroxisome, extracellular.
 
 ## 3. Missing transporter proteins for transport reactions
 The reaction summary flags transports that show "Transporter: MISSING".
-For each such transport, infer the most plausible transporter protein from the cargo and
-direction (e.g. pyruvate → MPC1/MPC2 complex; phosphate → SLC25A3).
-Use propose_patch with op=add to append a transporter entry to the reaction's modifiers list
-at /processes/transports/<index>/modifiers.
+For each transport flagged 'Transporter: MISSING', propose a transporter addition ONLY when ALL of the following are true:
+- The reaction is explicitly typed as a transport reaction (class: transport_reaction or movement cargo/direction evidence is present).
+- The cargo and direction (from_biological_state / to_biological_state) are known.
+- The proposed transporter protein already exists in the entity_index provided, OR is a well-known canonical transporter (e.g., MPC1/MPC2 for pyruvate, SLC25A3 for phosphate) AND a database or tool-backed candidate is present in the payload context supporting this assignment. Do not add a transporter from memory alone without entity_index or payload evidence.
 
-## 4. Reaction order (MANDATORY — always emit this patch)
-Infer the correct biological sequence from the reaction summary and propose a patch:
-  - If /reaction_order does not exist: op=add, path=/reaction_order
-  - If /reaction_order already exists:  op=replace, path=/reaction_order
-  value=["<reaction_name_1>", "<reaction_name_2>", ...]
-List ALL reaction names in the order they occur in the pathway cycle or linear sequence.
-This patch is required — you must always propose it, even when a reaction_order already exists,
-so that the graph renderer can apply the biologically correct layout order.
+Do NOT infer transporter proteins when:
+- The cargo or direction is unknown.
+- The transport evidence is weak or from a partial/review context.
+- The proposed protein is invented and not in the entity_index.
+
+Use propose_patch with op=add at /processes/transports/<index>/transporters (NOT /modifiers).
+
+## 4. Reaction order (conditional — emit only when sequential evidence exists)
+Emit a reaction_order patch ONLY when ALL of the following are true:
+- There are at least 2 reactions present in the payload.
+- The reactions have explicit sequential evidence (e.g., numbered steps, "first ... then ...", "followed by", step labels in a figure/table, or a clearly ordered pathway diagram described in text).
+- The context is a single complete pathway, not a partial mechanism, review snippet, or unordered transformation set.
+
+Do NOT emit reaction_order when:
+- There is only 1 reaction.
+- The context is a partial enzyme mechanism or partial biosynthetic step.
+- The document is a multi-example review without a clear selected single pathway.
+- The reactions are an unordered set of transformations with no sequential evidence.
+- The reactions belong to disconnected candidate examples.
+
+When emitting:
+- If /reaction_order does not exist: op=add, path=/reaction_order
+- If /reaction_order already exists: op=replace, path=/reaction_order
+- value = array of ALL reaction names in biological sequence order.
+- Use confidence=0.9 for this patch (required to pass the replace threshold).
+- List ALL reaction names from the payload in the biologically correct order.
 
 ## Rules
-- Only propose patches you are confident about (confidence >= 0.7).
+- Only propose patches you are confident about. Confidence thresholds:
+  - Use confidence >= 0.75 for add operations.
+  - Use confidence >= 0.88 for replace operations (including reaction_order replace).
+  - Use confidence >= 0.90 for mandatory patches like reaction_order.
+  - Use confidence >= 0.98 for connectivity patches (modifying reaction inputs/outputs directly).
+  - Do NOT patch reaction inputs[] or outputs[] directly — these require confidence >= 0.98 and are almost never safe. Instead patch the entity name in the entity list.
 - Do not rename or remove entities — only correct clear mismatches.
 - Do not add new reactions or transports.
 - Keep your reasoning brief; call propose_patch immediately when confident.
+
+## CROSS-CUTTING CONSTRAINTS
+- Partial pathway evidence should remain partial. Do not force pathway completion or ordering for partial mechanisms.
+- Type compatibility beats confidence. Do not move entities between protein/compound registries without explicit type evidence.
+- Named genes/proteins (ObaG, IkaA) outrank generic enzyme class names.
+- Cofactors (PLP/pyridoxal phosphate, FAD, NAD+, CoA, metal ions, etc.) are compounds/cofactors/ions, never proteins, reaction modifiers, or enzymes. Include them in reactions only when stoichiometrically consumed or regenerated as inputs/outputs.
+- Extraction/curation layer: keep a single enzyme as a protein unless the source text explicitly says complex, multisubunit, holoenzyme, heterodimer, or otherwise names a multi-protein structure.
+- Export layer: downstream PWML/PathWhiz export may generate a single-protein protein_complex wrapper for a protein catalyst because reaction enzymes require protein_complex references. That wrapper is technical export representation, not an extracted biological assertion.
+- Never wrap compounds, cofactors, ions, metabolites, or small molecules into protein_complexes.
