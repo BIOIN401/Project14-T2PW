@@ -11,7 +11,7 @@
       "label": "phenylalanine",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -20,25 +20,7 @@
       "label": "tyrosine",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:l-dopa",
-      "label": "L-DOPA",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:dopamine",
-      "label": "dopamine",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -47,16 +29,7 @@
       "label": "tetrahydrobiopterin",
       "kind": "compound",
       "cls": "cofactor",
-      "compartment": "cytosolic dopaminergic neuron state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:dihydrobiopterin",
-      "label": "dihydrobiopterin",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -65,7 +38,16 @@
       "label": "oxygen",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dihydrobiopterin",
+      "label": "dihydrobiopterin",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -74,7 +56,25 @@
       "label": "water",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:l-dopa",
+      "label": "L-DOPA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dopamine",
+      "label": "dopamine",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -83,7 +83,7 @@
       "label": "carbon dioxide",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -92,7 +92,7 @@
       "label": "phenylalanine hydroxylase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -101,7 +101,7 @@
       "label": "tyrosine hydroxylase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -110,7 +110,7 @@
       "label": "aromatic L-amino acid decarboxylase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -128,7 +128,7 @@
       "label": "phenylalanine hydroxylase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -137,7 +137,7 @@
       "label": "tyrosine hydroxylase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -146,16 +146,16 @@
       "label": "aromatic L-amino acid decarboxylase reaction",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "cytosolic dopaminergic state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "transport:vmat2-mediated dopamine transport",
-      "label": "VMAT2-mediated dopamine transport",
+      "id": "transport:dopamine transport into synaptic vesicles",
+      "label": "dopamine transport into synaptic vesicles",
       "kind": "transport",
       "cls": "",
-      "compartment": "cytosolic dopaminergic neuron state → synaptic vesicle state",
+      "compartment": "cytosolic dopaminergic state → synaptic vesicle state",
       "confidence": 1.0,
       "provenance": "extracted"
     }
@@ -271,13 +271,13 @@
     },
     {
       "source": "compound:dopamine",
-      "target": "transport:vmat2-mediated dopamine transport",
+      "target": "transport:dopamine transport into synaptic vesicles",
       "role": "cargo",
       "confidence": 1.0
     },
     {
       "source": "protein:vesicular monoamine transporter 2",
-      "target": "transport:vmat2-mediated dopamine transport",
+      "target": "transport:dopamine transport into synaptic vesicles",
       "role": "transporter",
       "confidence": 1.0
     }

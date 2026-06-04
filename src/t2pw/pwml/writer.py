@@ -865,7 +865,7 @@ class DeterministicPwmlBuilder:
         substrate_gap = 46
         product_gap = 51
         node_spacing_y = 220
-        rxn_step_x = 520
+        rxn_step_x = 800
         protein_w, protein_h = 150, 70
         protein_gap_x = 10
 
@@ -946,7 +946,7 @@ class DeterministicPwmlBuilder:
             region = region_for(bs_id)
             n_rxns = len(reaction_indices)
             enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * rxn_step_x // 2
-            enzyme_cy = region["y"] + region["h"] // 2
+            enzyme_cy = max(region["y"] + region["h"] // 2, 360)
             for k, reaction_idx in enumerate(reaction_indices):
                 enzyme_cx = enzyme_cx_base + k * rxn_step_x
                 enzyme_x = enzyme_cx - protein_w // 2
@@ -2494,7 +2494,7 @@ class DeterministicPwmlBuilder:
         layout_substrate_gap = 46
         layout_product_gap = 51
         layout_node_spacing_y = 220
-        layout_rxn_step_x = 520
+        layout_rxn_step_x = 800
         layout_protein_w, layout_protein_h = 150, 70
         layout_protein_gap_x = 10
 
@@ -2536,7 +2536,7 @@ class DeterministicPwmlBuilder:
             region = ir_region_for_state(biological_state_key)
             n_rxns = len(reaction_keys)
             enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * layout_rxn_step_x // 2
-            enzyme_cy = region["y"] + region["h"] // 2
+            enzyme_cy = max(region["y"] + region["h"] // 2, 360)
             for k, reaction_key in enumerate(reaction_keys):
                 enzyme_cx = enzyme_cx_base + k * layout_rxn_step_x
                 enzyme_x = enzyme_cx - layout_protein_w // 2
