@@ -414,6 +414,7 @@ class DeterministicPwmlBuilder:
         self.element_lookup: Dict[str, Tuple[str, int]] = {}
 
         self.section_items: Dict[str, List[Dict[str, Any]]] = {}
+        self.layout_debug_counts: Dict[str, int] = {}
 
         self.pathway_id_int = 1
         self.pathway_visualization_id_int = self.pathway_id_int
@@ -864,7 +865,6 @@ class DeterministicPwmlBuilder:
         substrate_gap = 46
         product_gap = 51
         node_spacing_y = 220
-        compound_above = 0  # stack is centered on enzyme_cy, not above it
         rxn_step_x = 520
         protein_w, protein_h = 150, 70
         protein_gap_x = 10
@@ -1044,11 +1044,39 @@ class DeterministicPwmlBuilder:
             nucleic_acid_loc_by_id.setdefault(nucleic_acid_id, loc)
             return loc
 
+        reaction_compound_ids: set[int] = set()
+        for reaction in reactions:
+            for side_key in ["reaction-left-elements", "reaction-right-elements"]:
+                elements = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                for rel in elements:
+                    if not isinstance(rel, dict):
+                        continue
+                    if str(rel.get("element-type") or "").casefold() != "compound":
+                        continue
+                    compound_id = _to_positive_int(rel.get("element-id"))
+                    if compound_id is not None:
+                        reaction_compound_ids.add(compound_id)
+
+        total_compound_count = len(self.entity_records.get("compounds", []))
+        grid_placed_compound_count = 0
         for bs_id, group_recs in sorted(group_by_bs("compounds").items()):
             region = region_for(bs_id)
-            for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
+            grid_recs = [
+                rec
+                for rec in group_recs
+                if _to_positive_int(rec.get("id")) not in reaction_compound_ids
+            ]
+            grid_placed_compound_count += len(grid_recs)
+            for rec, (x, y) in zip(grid_recs, sub_grid_left(region, len(grid_recs))):
                 loc = add_compound_location(int(rec["id"]), bs_id, x, y)
                 compound_loc_by_id[int(rec["id"])] = loc
+        self.layout_debug_counts.update(
+            {
+                "compound_total": total_compound_count,
+                "compound_grid_skipped_reaction_used": len(reaction_compound_ids),
+                "compound_grid_placed_non_reaction": grid_placed_compound_count,
+            }
+        )
 
         # Element-collection locations — left half of each compartment region
         for bs_id, group_recs in sorted(group_by_bs("element-collections").items()):
@@ -2288,6 +2316,22 @@ class DeterministicPwmlBuilder:
             "element-collection-locations",
         ]:
             self.section_items[section] = []
+        reaction_compound_entity_keys: set[str] = set()
+        for reaction in process_items.get("reactions", []) if isinstance(process_items.get("reactions"), list) else []:
+            if not isinstance(reaction, dict):
+                continue
+            for side_key in ["left", "right"]:
+                members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                for member in members:
+                    if not isinstance(member, dict):
+                        continue
+                    entity_key = str(member.get("entity_key") or "")
+                    info = entity_info(entity_key)
+                    if info and info.get("entity_type") == "compound":
+                        reaction_compound_entity_keys.add(entity_key)
+        total_compound_count = len(self.section_items.get("compounds", []))
+        grid_placed_compound_count = 0
+        skipped_base_location_by_id: Dict[int, Dict[str, Any]] = {}
         location_by_entity_state: Dict[Tuple[str, str], int] = {}
         protein_location_by_entity_state: Dict[Tuple[str, str], int] = {}
         for loc in ir.get("locations", []) if isinstance(ir.get("locations"), list) else []:
@@ -2326,7 +2370,24 @@ class DeterministicPwmlBuilder:
                 item["label-type"] = str(loc.get("label_type") or loc.get("label-type") or "subunit")
                 item["width"] = str(loc.get("width") or 150)
                 item["height"] = str(loc.get("height") or 70)
-            self.section_items[section].append(item)
+            skip_base_compound_location = (
+                section == "compound-locations"
+                and info.get("entity_type") == "compound"
+                and str(loc.get("entity_key") or "") in reaction_compound_entity_keys
+            )
+            if skip_base_compound_location:
+                skipped_base_location_by_id[lid] = item
+            else:
+                if section == "compound-locations":
+                    grid_placed_compound_count += 1
+                self.section_items[section].append(item)
+        self.layout_debug_counts.update(
+            {
+                "compound_total": total_compound_count,
+                "compound_grid_skipped_reaction_used": len(reaction_compound_entity_keys),
+                "compound_grid_placed_non_reaction": grid_placed_compound_count,
+            }
+        )
 
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
@@ -2404,6 +2465,7 @@ class DeterministicPwmlBuilder:
         ]:
             for loc in self.section_items.get(section, []):
                 loc_by_id[int(loc["id"])] = loc
+        loc_by_id.update(skipped_base_location_by_id)
 
         protein_complex_viz_by_id = {
             int(viz["id"]): viz
@@ -2413,7 +2475,6 @@ class DeterministicPwmlBuilder:
         layout_substrate_gap = 46
         layout_product_gap = 51
         layout_node_spacing_y = 220
-        layout_compound_above = 0  # stack is centered on enzyme_cy, not above it
         layout_rxn_step_x = 520
         layout_protein_w, layout_protein_h = 150, 70
         layout_protein_gap_x = 10

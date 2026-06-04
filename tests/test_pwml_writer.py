@@ -581,8 +581,8 @@ def test_writer_places_reaction_elements_around_enzyme_center() -> None:
 
     assert enzyme_x - substrate_right == 46
     assert product_left - (enzyme_x + enzyme_w) == 51
-    assert substrate_cy == enzyme_cy - 139
-    assert product_cy == enzyme_cy - 139
+    assert substrate_cy == enzyme_cy
+    assert product_cy == enzyme_cy
 
     reaction_viz = builder.section_items["reaction-visualizations"][0]
     edge_by_side = {
@@ -611,6 +611,7 @@ def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
             "compounds": [
                 {"name": "Oxygen", "short_name": "O2", "pathbank_compound_id": 301},
                 {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 302},
+                {"name": "Unused cofactor", "short_name": "UC", "pathbank_compound_id": 303},
             ],
             "proteins": [
                 {"name": "Enzyme A", "pathbank_protein_id": 401},
@@ -677,6 +678,70 @@ def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
     assert len({loc["id"] for loc in right_locations}) == 2
     assert len({int(loc["x"]) for loc in left_locations}) == 2
     assert len({int(loc["x"]) for loc in right_locations}) == 2
+    assert len(builder.section_items["compound-locations"]) == 4
+    assert [loc["compound-id"] for loc in builder.section_items["compound-locations"]].count(
+        compound_id_by_name["Unused cofactor"]
+    ) == 0
+    assert builder.layout_debug_counts == {
+        "compound_total": 3,
+        "compound_grid_skipped_reaction_used": 2,
+        "compound_grid_placed_non_reaction": 0,
+    }
+
+
+def test_direct_writer_skips_reaction_compounds_in_initial_grid_only() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "Oxygen", "short_name": "O2", "pathbank_compound_id": 301},
+                {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 302},
+                {"name": "Unused cofactor", "short_name": "UC", "pathbank_compound_id": 303},
+            ],
+            "proteins": [
+                {"name": "Enzyme A", "pathbank_protein_id": 401},
+                {"name": "Enzyme B", "pathbank_protein_id": 402},
+            ],
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "First oxygen reaction",
+                    "inputs": ["Oxygen"],
+                    "outputs": ["Water"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Enzyme A"}],
+                },
+                {
+                    "name": "Second oxygen reaction",
+                    "inputs": ["Oxygen"],
+                    "outputs": ["Water"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Enzyme B"}],
+                },
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=_writer_args())
+    builder.build()
+
+    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+    location_compound_ids = [loc["compound-id"] for loc in builder.section_items["compound-locations"]]
+
+    assert len(location_compound_ids) == 5
+    assert location_compound_ids.count(compound_id_by_name["Oxygen"]) == 2
+    assert location_compound_ids.count(compound_id_by_name["Water"]) == 2
+    assert location_compound_ids.count(compound_id_by_name["Unused cofactor"]) == 1
+    assert builder.layout_debug_counts == {
+        "compound_total": 3,
+        "compound_grid_skipped_reaction_used": 2,
+        "compound_grid_placed_non_reaction": 1,
+    }
 
 
 def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
