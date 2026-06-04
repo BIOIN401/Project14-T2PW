@@ -1213,15 +1213,11 @@ class DeterministicPwmlBuilder:
 
         def element_dims(element_type: str, element_id: int) -> Tuple[int, int]:
             if element_type == "Compound":
-                loc = compound_loc_by_id.get(element_id)
-            elif element_type == "ElementCollection":
-                loc = element_collection_loc_by_id.get(element_id)
-            elif element_type == "NucleicAcid":
-                loc = nucleic_acid_loc_by_id.get(element_id)
-            else:
-                loc = None
-            if loc:
-                return int(loc["width"]), int(loc["height"])
+                rec = compound_rec_by_id.get(element_id, {"id": element_id})
+                template_id = select_compound_template_id(rec)
+                return TEMPLATE_DIMS.get(template_id, TEMPLATE_DIMS[3])
+            if element_type in ("ElementCollection", "NucleicAcid"):
+                return TEMPLATE_DIMS[81]
             return TEMPLATE_DIMS[3]
 
         for reaction_idx, reaction in enumerate(reactions):
@@ -1398,6 +1394,35 @@ class DeterministicPwmlBuilder:
                 int(loc["y"]) + int(loc["height"]) // 2,
             )
 
+        def _rxn_loc(
+            by_rxn: Dict,
+            by_id: Dict,
+            entity_label: str,
+            element_id: int,
+            side: Optional[str],
+            reaction_idx: Optional[int],
+        ) -> Optional[Dict[str, Any]]:
+            """Return the location dict for a reaction participant.
+
+            When reaction_idx and side are both provided the lookup is strictly
+            per-reaction: no fallback to the global by-id map.  A missing entry
+            is a hard error so that mis-anchored edges are caught immediately
+            rather than silently pointing at the wrong visual instance.
+
+            When called without reaction context (reaction_idx or side absent)
+            the by-id map is used, which is the correct path for non-reaction
+            lookups (e.g. transport or orphan compound queries).
+            """
+            if reaction_idx is not None and side:
+                loc = by_rxn.get((element_id, reaction_idx, side))
+                if loc is None:
+                    raise RuntimeError(
+                        f"Missing per-reaction {entity_label} location for "
+                        f"{entity_label}={element_id}, reaction_idx={reaction_idx}, side={side}"
+                    )
+                return loc
+            return by_id.get(element_id)
+
         def location_info(
             element_type: str,
             element_id: int,
@@ -1405,30 +1430,24 @@ class DeterministicPwmlBuilder:
             reaction_idx: Optional[int] = None,
         ) -> Optional[Tuple[int, int, int]]:
             if element_type == "Compound":
-                loc = (
-                    compound_loc_by_rxn.get((element_id, reaction_idx, side))
-                    if reaction_idx is not None and side
-                    else None
+                loc = _rxn_loc(
+                    compound_loc_by_rxn, compound_loc_by_id,
+                    "compound", element_id, side, reaction_idx,
                 )
-                loc = loc or compound_loc_by_id.get(element_id)
                 if loc:
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "ElementCollection":
-                loc = (
-                    element_collection_loc_by_rxn.get((element_id, reaction_idx, side))
-                    if reaction_idx is not None and side
-                    else None
+                loc = _rxn_loc(
+                    element_collection_loc_by_rxn, element_collection_loc_by_id,
+                    "element-collection", element_id, side, reaction_idx,
                 )
-                loc = loc or element_collection_loc_by_id.get(element_id)
                 if loc:
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "NucleicAcid":
-                loc = (
-                    nucleic_acid_loc_by_rxn.get((element_id, reaction_idx, side))
-                    if reaction_idx is not None and side
-                    else None
+                loc = _rxn_loc(
+                    nucleic_acid_loc_by_rxn, nucleic_acid_loc_by_id,
+                    "nucleic-acid", element_id, side, reaction_idx,
                 )
-                loc = loc or nucleic_acid_loc_by_id.get(element_id)
                 if loc:
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "Protein":
