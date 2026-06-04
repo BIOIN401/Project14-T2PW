@@ -839,7 +839,130 @@ def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
         "compound_total": 3,
         "compound_grid_skipped_reaction_used": 2,
         "compound_grid_placed_non_reaction": 0,
+        "shared_intermediates_detected": 0,
+        "shared_intermediates_skipped_cofactor": 0,
+        "shared_intermediate_locations_reused": 0,
     }
+
+
+def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "L-phenylalanine", "pathbank_compound_id": 1001},
+                {"name": "L-tyrosine", "pathbank_compound_id": 1002},
+                {"name": "L-DOPA", "pathbank_compound_id": 1003},
+                {"name": "Dopamine", "pathbank_compound_id": 1004},
+                {"name": "Oxygen", "short_name": "O2", "pathbank_compound_id": 1005},
+                {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 1006},
+                {"name": "Tetrahydrobiopterin", "short_name": "BH4", "pathbank_compound_id": 1007},
+                {"name": "4a-Carbinolamine tetrahydrobiopterin", "pathbank_compound_id": 1008},
+            ],
+            "proteins": [
+                {"name": "Phenylalanine hydroxylase", "pathbank_protein_id": 2001},
+                {"name": "Tyrosine hydroxylase", "pathbank_protein_id": 2002},
+                {"name": "DOPA decarboxylase", "pathbank_protein_id": 2003},
+            ],
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "Phenylalanine hydroxylation",
+                    "inputs": ["L-phenylalanine", "Oxygen", "Tetrahydrobiopterin"],
+                    "outputs": ["L-tyrosine", "4a-Carbinolamine tetrahydrobiopterin"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Phenylalanine hydroxylase"}],
+                },
+                {
+                    "name": "Tyrosine hydroxylation",
+                    "inputs": [
+                        "L-tyrosine",
+                        "Oxygen",
+                        "Tetrahydrobiopterin",
+                        "4a-Carbinolamine tetrahydrobiopterin",
+                    ],
+                    "outputs": ["L-DOPA", "Water"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Tyrosine hydroxylase"}],
+                },
+                {
+                    "name": "DOPA decarboxylation",
+                    "inputs": ["L-DOPA", "Oxygen", "Tetrahydrobiopterin"],
+                    "outputs": ["Dopamine", "Water"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "DOPA decarboxylase"}],
+                },
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+    edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+
+    def compound_viz(reaction_idx: int, name: str, side: str) -> dict:
+        compound_id = compound_id_by_name[name]
+        reaction_viz = builder.section_items["reaction-visualizations"][reaction_idx]
+        return next(
+            rcv
+            for rcv in reaction_viz["reaction_compound_visualizations"]
+            if rcv["side"] == side and loc_by_id[rcv["compound-location-id"]]["compound-id"] == compound_id
+        )
+
+    tyrosine_product = compound_viz(0, "L-tyrosine", "Right")
+    tyrosine_substrate = compound_viz(1, "L-tyrosine", "Left")
+    dopa_product = compound_viz(1, "L-DOPA", "Right")
+    dopa_substrate = compound_viz(2, "L-DOPA", "Left")
+
+    assert tyrosine_product["compound-location-id"] == tyrosine_substrate["compound-location-id"]
+    assert dopa_product["compound-location-id"] == dopa_substrate["compound-location-id"]
+
+    location_compound_ids = [loc["compound-id"] for loc in builder.section_items["compound-locations"]]
+    assert location_compound_ids.count(compound_id_by_name["L-tyrosine"]) == 1
+    assert location_compound_ids.count(compound_id_by_name["L-DOPA"]) == 1
+    assert location_compound_ids.count(compound_id_by_name["Oxygen"]) == 3
+    assert location_compound_ids.count(compound_id_by_name["Water"]) == 2
+    assert location_compound_ids.count(compound_id_by_name["Tetrahydrobiopterin"]) == 3
+    assert location_compound_ids.count(compound_id_by_name["4a-Carbinolamine tetrahydrobiopterin"]) == 2
+
+    def enzyme_box(reaction_idx: int) -> tuple[int, int, int, int]:
+        loc = builder.section_items["protein-locations"][reaction_idx]
+        x, y = int(loc["x"]), int(loc["y"])
+        return x, y, int(loc["width"]), int(loc["height"])
+
+    enzyme_1 = enzyme_box(0)
+    enzyme_2 = enzyme_box(1)
+    tyrosine_loc = loc_by_id[tyrosine_product["compound-location-id"]]
+    tyrosine_left_anchor = (int(tyrosine_loc["x"]), int(tyrosine_loc["y"]) + int(tyrosine_loc["height"]) // 2)
+    tyrosine_right_anchor = (
+        int(tyrosine_loc["x"]) + int(tyrosine_loc["width"]),
+        int(tyrosine_loc["y"]) + int(tyrosine_loc["height"]) // 2,
+    )
+    enzyme_1_right = (enzyme_1[0] + enzyme_1[2], enzyme_1[1] + enzyme_1[3] // 2)
+    enzyme_2_left = (enzyme_2[0], enzyme_2[1] + enzyme_2[3] // 2)
+
+    assert edge_by_id[tyrosine_product["edge-id"]]["path"] == (
+        f"M{tyrosine_left_anchor[0]} {tyrosine_left_anchor[1]} L{enzyme_1_right[0]} {enzyme_1_right[1]}"
+    )
+    assert edge_by_id[tyrosine_substrate["edge-id"]]["path"] == (
+        f"M{tyrosine_right_anchor[0]} {tyrosine_right_anchor[1]} L{enzyme_2_left[0]} {enzyme_2_left[1]}"
+    )
+    assert builder.layout_debug_counts["shared_intermediates_detected"] == 2
+    assert builder.layout_debug_counts["shared_intermediate_locations_reused"] == 2
+    assert any(
+        item["action"] == "skipped_cofactor"
+        and item["compound_name"] == "4a-Carbinolamine tetrahydrobiopterin"
+        for item in builder.layout_debug_shared_intermediates
+    )
 
 
 def test_direct_writer_skips_reaction_compounds_in_initial_grid_only() -> None:
@@ -894,6 +1017,9 @@ def test_direct_writer_skips_reaction_compounds_in_initial_grid_only() -> None:
         "compound_total": 3,
         "compound_grid_skipped_reaction_used": 2,
         "compound_grid_placed_non_reaction": 1,
+        "shared_intermediates_detected": 0,
+        "shared_intermediates_skipped_cofactor": 0,
+        "shared_intermediate_locations_reused": 0,
     }
 
 

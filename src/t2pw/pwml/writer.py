@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -69,6 +70,131 @@ def _packed_reaction_stack_tops(
         tops.append(current_top)
         current_top += height + gap_y
     return total_stack_height, tops
+
+
+_CURRENCY_COMPOUND_NAMES = {
+    "4a carbinolamine tetrahydrobiopterin",
+    "4a hydroxy tetrahydrobiopterin",
+    "4a hydroxytetrahydrobiopterin",
+    "4a tetrahydrobiopterin",
+    "acetyl coenzyme a",
+    "acetyl coa",
+    "adp",
+    "adenosine diphosphate",
+    "adenosine monophosphate",
+    "adenosine triphosphate",
+    "amp",
+    "ammonia",
+    "ammonium",
+    "atp",
+    "bh4",
+    "carbon dioxide",
+    "coa",
+    "co2",
+    "coenzyme a",
+    "dihydrobiopterin",
+    "fad",
+    "fadh2",
+    "fmn",
+    "fmnh2",
+    "h",
+    "h+",
+    "h2o",
+    "h2o2",
+    "hydrogen ion",
+    "hydrogen peroxide",
+    "nad",
+    "nad+",
+    "nadh",
+    "nadp",
+    "nadp+",
+    "nadph",
+    "nh3",
+    "nh4+",
+    "o2",
+    "oxygen",
+    "phosphate",
+    "pi",
+    "ppi",
+    "pyrophosphate",
+    "tetrahydrobiopterin",
+    "water",
+}
+
+_CURRENCY_COMPOUND_KEGG_IDS = {
+    "C00001",  # H2O
+    "C00002",  # ATP
+    "C00003",  # NAD+
+    "C00004",  # NADH
+    "C00005",  # NADPH
+    "C00006",  # NADP+
+    "C00007",  # O2
+    "C00008",  # ADP
+    "C00009",  # phosphate
+    "C00010",  # CoA
+    "C00013",  # pyrophosphate
+    "C00014",  # NH3
+    "C00016",  # FAD
+    "C00020",  # AMP
+    "C00027",  # H2O2
+    "C00080",  # H+
+    "C00255",  # FMN
+    "C01352",  # FADH2
+    "C00272",  # tetrahydrobiopterin
+}
+
+_CURRENCY_COMPOUND_CHEBI_IDS = {
+    "15377",  # water
+    "15378",  # hydrogen ion
+    "15379",  # oxygen
+    "15380",  # carbon dioxide
+    "15347",  # acetyl-CoA
+    "15422",  # ATP
+    "15635",  # phosphate
+    "15713",  # NADH
+    "15846",  # NAD+
+    "16027",  # AMP
+    "16240",  # hydrogen peroxide
+    "16474",  # NADPH
+    "16761",  # ADP
+    "17621",  # FAD
+    "17877",  # pyrophosphate
+    "18420",  # magnesium(2+) common currency ion
+    "24636",  # proton
+    "26523",  # reactive oxygen species-ish, conservative
+    "29950",  # ammonia
+    "30616",  # tetrahydrobiopterin
+    "57287",  # CoA
+    "58349",  # NADP+
+}
+
+
+def _currency_name_token(value: Any) -> str:
+    text = str(value or "").strip().casefold()
+    text = text.replace("coenzyme-a", "coenzyme a").replace("co-a", "coa")
+    text = text.replace("β", "beta")
+    return re.sub(r"[^a-z0-9+]+", " ", text).strip()
+
+
+def _is_currency_compound_record(record: Dict[str, Any]) -> bool:
+    names = {
+        _currency_name_token(record.get("name")),
+        _currency_name_token(record.get("short-name")),
+        _currency_name_token(record.get("short_name")),
+    }
+    names.discard("")
+    if names & _CURRENCY_COMPOUND_NAMES:
+        return True
+    for token in names:
+        if token.endswith(" coa") or token.endswith(" coenzyme a") or token.startswith("coa "):
+            return True
+        if "tetrahydrobiopterin" in token or "biopterin" in token:
+            return True
+    kegg_id = str(record.get("kegg-id") or record.get("kegg_id") or "").strip().upper()
+    if kegg_id in _CURRENCY_COMPOUND_KEGG_IDS:
+        return True
+    chebi_id = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
+    return chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
 
 
 def _singularize(tag: str) -> str:
@@ -442,8 +568,13 @@ class DeterministicPwmlBuilder:
         self.element_lookup: Dict[str, Tuple[str, int]] = {}
 
         self.section_items: Dict[str, List[Dict[str, Any]]] = {}
-        self.layout_debug_counts: Dict[str, int] = {}
+        self.layout_debug_counts: Dict[str, int] = {
+            "shared_intermediates_detected": 0,
+            "shared_intermediates_skipped_cofactor": 0,
+            "shared_intermediate_locations_reused": 0,
+        }
         self.layout_debug_stacks: List[Dict[str, Any]] = []
+        self.layout_debug_shared_intermediates: List[Dict[str, Any]] = []
 
         self.pathway_id_int = 1
         self.pathway_visualization_id_int = self.pathway_id_int
@@ -2759,7 +2890,136 @@ class DeterministicPwmlBuilder:
                 return TEMPLATE_DIMS.get(template_id or 3, TEMPLATE_DIMS[3])
             return int(loc["width"]), int(loc["height"])
 
+        compound_record_by_id = {
+            int(compound["id"]): compound
+            for compound in self.section_items.get("compounds", [])
+            if isinstance(compound, dict) and compound.get("id") is not None
+        }
+
         reaction_idx_by_key = {reaction_key: idx for idx, reaction_key in enumerate(raw_reactions_by_key)}
+        reaction_sequence = list(raw_reactions_by_key.items())
+
+        def compound_member_identity(
+            member: Dict[str, Any],
+            reaction_biological_state_key: str,
+        ) -> Optional[Tuple[int, str]]:
+            info = entity_info(member.get("entity_key"))
+            if not info or info.get("entity_type") != "compound":
+                return None
+            state_key = str(member.get("biological_state_key") or reaction_biological_state_key)
+            return int(info["id"]), state_key
+
+        participant_occurrences: Dict[Tuple[int, str], List[Tuple[int, str, str, str]]] = defaultdict(list)
+        left_occurrences: Dict[Tuple[int, str], List[Tuple[int, str, str, str]]] = defaultdict(list)
+        right_occurrences: Dict[Tuple[int, str], List[Tuple[int, str, str, str]]] = defaultdict(list)
+        for idx, (reaction_key, reaction) in enumerate(reaction_sequence):
+            biological_state_key = str(reaction.get("biological_state_key") or "")
+            for side_key, by_side in [("left", left_occurrences), ("right", right_occurrences)]:
+                members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                for member in members:
+                    if not isinstance(member, dict):
+                        continue
+                    identity = compound_member_identity(member, biological_state_key)
+                    if identity is None:
+                        continue
+                    occurrence = (idx, reaction_key, side_key, str(member.get("key") or ""))
+                    participant_occurrences[identity].append(occurrence)
+                    by_side[identity].append(occurrence)
+
+        shared_from_previous: Dict[Tuple[int, str, int], int] = {}
+        for idx in range(len(reaction_sequence) - 1):
+            producer_key, producer = reaction_sequence[idx]
+            consumer_key, consumer = reaction_sequence[idx + 1]
+            producer_state_key = str(producer.get("biological_state_key") or "")
+            consumer_state_key = str(consumer.get("biological_state_key") or "")
+            producer_right = producer.get("right", []) if isinstance(producer.get("right"), list) else []
+            consumer_left = consumer.get("left", []) if isinstance(consumer.get("left"), list) else []
+            producer_products = {
+                identity
+                for member in producer_right
+                if isinstance(member, dict)
+                for identity in [compound_member_identity(member, producer_state_key)]
+                if identity is not None
+            }
+            consumer_substrates = {
+                identity
+                for member in consumer_left
+                if isinstance(member, dict)
+                for identity in [compound_member_identity(member, consumer_state_key)]
+                if identity is not None
+            }
+            candidates: List[Tuple[int, str]] = []
+            for identity in sorted(producer_products & consumer_substrates):
+                compound_id, state_key = identity
+                compound_record = compound_record_by_id.get(compound_id, {})
+                debug_base = {
+                    "compound_id": compound_id,
+                    "compound_name": compound_record.get("name", ""),
+                    "biological_state_key": state_key,
+                    "producer_rxn_idx": idx,
+                    "producer_reaction_key": producer_key,
+                    "consumer_rxn_idx": idx + 1,
+                    "consumer_reaction_key": consumer_key,
+                }
+                if _is_currency_compound_record(compound_record):
+                    self.layout_debug_shared_intermediates.append({**debug_base, "action": "skipped_cofactor"})
+                    continue
+                if (
+                    len(right_occurrences.get(identity, [])) != 1
+                    or len(left_occurrences.get(identity, [])) != 1
+                    or len(participant_occurrences.get(identity, [])) != 2
+                ):
+                    self.layout_debug_shared_intermediates.append(
+                        {**debug_base, "action": "skipped_ambiguous_participation"}
+                    )
+                    continue
+                candidates.append(identity)
+            if len(candidates) > 1:
+                for compound_id, state_key in candidates:
+                    compound_record = compound_record_by_id.get(compound_id, {})
+                    self.layout_debug_shared_intermediates.append(
+                        {
+                            "action": "skipped_branching_ambiguity",
+                            "compound_id": compound_id,
+                            "compound_name": compound_record.get("name", ""),
+                            "biological_state_key": state_key,
+                            "producer_rxn_idx": idx,
+                            "producer_reaction_key": producer_key,
+                            "consumer_rxn_idx": idx + 1,
+                            "consumer_reaction_key": consumer_key,
+                        }
+                    )
+                continue
+            for compound_id, state_key in candidates:
+                shared_from_previous[(compound_id, state_key, idx + 1)] = idx
+                compound_record = compound_record_by_id.get(compound_id, {})
+                self.layout_debug_shared_intermediates.append(
+                    {
+                        "action": "detected_shared_intermediate",
+                        "compound_id": compound_id,
+                        "compound_name": compound_record.get("name", ""),
+                        "biological_state_key": state_key,
+                        "producer_rxn_idx": idx,
+                        "producer_reaction_key": producer_key,
+                        "consumer_rxn_idx": idx + 1,
+                        "consumer_reaction_key": consumer_key,
+                    }
+                )
+        self.layout_debug_counts.update(
+            {
+                "shared_intermediates_detected": sum(
+                    1
+                    for item in self.layout_debug_shared_intermediates
+                    if item.get("action") == "detected_shared_intermediate"
+                ),
+                "shared_intermediates_skipped_cofactor": sum(
+                    1
+                    for item in self.layout_debug_shared_intermediates
+                    if item.get("action") == "skipped_cofactor"
+                ),
+            }
+        )
+        compound_loc_by_rxn_side: Dict[Tuple[int, str, int, str], int] = {}
 
         for reaction_key, reaction in raw_reactions_by_key.items():
             layout = reaction_layout_by_key.get(reaction_key)
@@ -2779,6 +3039,32 @@ class DeterministicPwmlBuilder:
                         continue
                     entity_key = str(member.get("entity_key") or "")
                     member_state_key = str(member.get("biological_state_key") or biological_state_key)
+                    identity = compound_member_identity(member, biological_state_key)
+                    if side_key == "left" and identity is not None:
+                        compound_id, state_key = identity
+                        producer_idx = shared_from_previous.get((compound_id, state_key, reaction_idx))
+                        if producer_idx is not None:
+                            shared_loc_id = compound_loc_by_rxn_side.get(
+                                (compound_id, state_key, producer_idx, "Right")
+                            )
+                            if shared_loc_id is not None:
+                                member_key = str(member.get("key") or "")
+                                if member_key:
+                                    reaction_member_location_by_key[member_key] = shared_loc_id
+                                compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, "Left")] = shared_loc_id
+                                compound_record = compound_record_by_id.get(compound_id, {})
+                                self.layout_debug_shared_intermediates.append(
+                                    {
+                                        "action": "reused_location",
+                                        "compound_id": compound_id,
+                                        "compound_name": compound_record.get("name", ""),
+                                        "biological_state_key": state_key,
+                                        "producer_rxn_idx": producer_idx,
+                                        "consumer_rxn_idx": reaction_idx,
+                                        "location_id": shared_loc_id,
+                                    }
+                                )
+                                continue
                     base_loc_id = location_by_entity_state.get((entity_key, member_state_key))
                     if base_loc_id is None:
                         base_loc_id = lookup("locations", member.get("location_key"))
@@ -2842,6 +3128,16 @@ class DeterministicPwmlBuilder:
                     if loc_id is not None:
                         written_loc = loc_by_id[loc_id]
                         _assert_reaction_member_anchor(written_loc, side, expected_anchor_x, expected_anchor_y)
+                        identity = compound_member_identity(member, biological_state_key)
+                        if identity is not None:
+                            compound_id, state_key = identity
+                            compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = loc_id
+
+        self.layout_debug_counts["shared_intermediate_locations_reused"] = sum(
+            1
+            for item in self.layout_debug_shared_intermediates
+            if item.get("action") == "reused_location"
+        )
 
         self.section_items["edges"] = []
         for edge in ir.get("edges", []) if isinstance(ir.get("edges"), list) else []:
