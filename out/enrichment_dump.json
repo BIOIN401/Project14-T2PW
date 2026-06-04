@@ -1158,8 +1158,8 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00007",
       "hmdb_id": "HMDB0001377",
+      "kegg_id": "C00007",
       "chebi_id": "CHEBI:15379",
       "pubchem_id": "977",
       "cas": "7782-44-7",
@@ -1333,8 +1333,8 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00001",
       "hmdb_id": "HMDB0002111",
+      "kegg_id": "C00001",
       "chebi_id": "CHEBI:15377",
       "pubchem_id": "962",
       "cas": "7732-18-5",
@@ -1519,12 +1519,13 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00011",
       "hmdb_id": "HMDB0001967",
+      "kegg_id": "C00011",
       "chebi_id": "CHEBI:16526",
       "pubchem_id": "280",
       "cas": "124-38-9",
       "chemspider": "274",
+      "biocyc": "7576565",
       "pathbank_compound_id": "1316"
     },
     "kegg": {
@@ -1718,93 +1719,56 @@
       "retrieved_at": "2026-06-01T18:54:47Z"
     }
   },
-  "protein:aromatic L-amino acid decarboxylase|P20711": {
+  "protein:aromatic L-amino acid decarboxylase|Q53Y41": {
     "status": "ok",
-    "uniprot_id": "P20711",
+    "uniprot_id": "Q53Y41",
     "recommended_name": "Aromatic-L-amino-acid decarboxylase",
     "alternative_names": [
       "DOPA decarboxylase"
     ],
     "gene_names": [
-      "DDC",
-      "AADC"
+      "DDC"
     ],
     "organism": "Homo sapiens",
     "taxonomy_id": "9606",
     "function_text": "Catalyzes the decarboxylation of L-3,4-dihydroxyphenylalanine (DOPA) to dopamine and L-5-hydroxytryptophan to serotonin",
-    "catalytic_activity": [
-      "L-dopa + H(+) = dopamine + CO2",
-      "5-hydroxy-L-tryptophan + H(+) = serotonin + CO2"
-    ],
-    "enzyme_commission": [
-      "4.1.1.28"
-    ],
+    "catalytic_activity": [],
+    "enzyme_commission": [],
     "pathways": [
       "Catecholamine biosynthesis; dopamine biosynthesis; dopamine from L-tyrosine: step 2/2"
     ],
     "keywords": [
-      "3D-structure",
-      "Acetylation",
-      "Alternative splicing",
       "Catecholamine biosynthesis",
       "Decarboxylase",
-      "Disease variant",
       "Lyase",
-      "Proteomics identification",
-      "Pyridoxal phosphate",
-      "Reference proteome",
-      "Repeat"
+      "Pyridoxal phosphate"
     ],
     "subcellular_locations": [],
     "go_mf_ids": [
-      "GO:0036467",
       "GO:0004058",
-      "GO:0019899",
-      "GO:0036468",
       "GO:0030170"
     ],
     "go_bp_ids": [
       "GO:0006520",
       "GO:0019752",
-      "GO:0006584",
-      "GO:0042416",
-      "GO:0010467",
-      "GO:0001822",
-      "GO:0009636",
-      "GO:0042427"
+      "GO:0042423"
     ],
-    "go_cellular_component_ids": [
-      "GO:0005737",
-      "GO:0005829",
-      "GO:0070062"
-    ],
-    "protein_existence": "1: Evidence at protein level",
+    "go_cellular_component_ids": [],
+    "protein_existence": "2: Evidence at transcript level",
     "sequence_length": 480,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
-    "pdb_ids": [
-      "3RBF",
-      "3RBL",
-      "3RCH",
-      "8OR9",
-      "8ORA",
-      "9GNS",
-      "9HRH",
-      "9HRI"
-    ],
-    "reactome_ids": [
-      "R-HSA-209905",
-      "R-HSA-209931"
-    ],
-    "string_id": "9606.ENSP00000403644",
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
     "provenance": {
       "source": "UniProt",
-      "query": "P20711",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P20711.json",
-      "retrieved_at": "2026-06-01T20:02:42Z"
+      "query": "Q53Y41",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q53Y41.json",
+      "retrieved_at": "2026-06-01T18:54:48Z"
     }
   },
   "protein:vesicular monoamine transporter 2|Q05940": {

@@ -680,6 +680,82 @@ def test_writer_places_stacked_reaction_members_from_side_anchors() -> None:
             )
 
 
+def test_writer_size_packs_mixed_compound_stack() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "Pyruvate", "pathbank_compound_id": 301},
+                {"name": "Oxygen", "short_name": "O2", "pathbank_compound_id": 302},
+                {"name": "ATP", "pathbank_compound_id": 303},
+                {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 304},
+            ],
+            "proteins": [{"name": "Mixed stack enzyme", "pathbank_protein_id": 401}],
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "Mixed-size reaction",
+                    "inputs": ["Pyruvate", "Oxygen", "ATP"],
+                    "outputs": ["Water"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Mixed stack enzyme"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    enzyme = builder.section_items["protein-locations"][0]
+    enzyme_x = int(enzyme["x"])
+    enzyme_cy = int(enzyme["y"]) + int(enzyme["height"]) // 2
+    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+    edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+    reaction_viz = builder.section_items["reaction-visualizations"][0]
+    left_members = [
+        rcv
+        for rcv in reaction_viz["reaction_compound_visualizations"]
+        if rcv["side"] == "Left"
+    ]
+
+    assert [int(loc_by_id[rcv["compound-location-id"]]["height"]) for rcv in left_members] == [190, 78, 30]
+    assert [int(loc_by_id[rcv["compound-location-id"]]["width"]) for rcv in left_members] == [200, 78, 50]
+
+    total_stack_height = 190 + 30 + 78 + 30 + 30
+    current_top = round(enzyme_cy - total_stack_height / 2)
+    expected_tops = [current_top, current_top + 190 + 30, current_top + 190 + 30 + 78 + 30]
+    expected_anchor_ys = [expected_tops[0] + 95, expected_tops[1] + 39, expected_tops[2] + 15]
+
+    assert [int(loc_by_id[rcv["compound-location-id"]]["y"]) for rcv in left_members] == expected_tops
+    for rcv, expected_anchor_y in zip(left_members, expected_anchor_ys):
+        loc = loc_by_id[rcv["compound-location-id"]]
+        actual_anchor = (
+            int(loc["x"]) + int(loc["width"]),
+            int(loc["y"]) + int(loc["height"]) // 2,
+        )
+        assert actual_anchor == (enzyme_x - 46, expected_anchor_y)
+        assert edge_by_id[rcv["edge-id"]]["path"].startswith(
+            f"M{actual_anchor[0]} {actual_anchor[1]} "
+        )
+
+    left_debug = next(
+        stack
+        for stack in builder.layout_debug_stacks
+        if stack["reaction_idx"] == 0 and stack["side"] == "Left"
+    )
+    assert left_debug["heights"] == [190, 78, 30]
+    assert left_debug["total_stack_height"] == total_stack_height
+    assert left_debug["enzyme_cy"] == enzyme_cy
+    assert left_debug["y_positions"] == expected_tops
+
+
 def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
     payload = {
         "entities": {
