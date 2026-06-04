@@ -863,8 +863,8 @@ class DeterministicPwmlBuilder:
         dx_left, dy_left = 200, 100
         substrate_gap = 46
         product_gap = 51
-        node_spacing_y = 90
-        compound_above = 139
+        node_spacing_y = 220
+        compound_above = 0  # stack is centered on enzyme_cy, not above it
         rxn_step_x = 520
         protein_w, protein_h = 150, 70
         protein_gap_x = 10
@@ -898,9 +898,12 @@ class DeterministicPwmlBuilder:
         membrane_visualizations: List[Dict[str, Any]] = []
 
         compound_loc_by_id: Dict[int, Dict[str, Any]] = {}
+        compound_loc_by_rxn: Dict[Tuple[int, int, str], Dict[str, Any]] = {}
         compound_loc_by_state: Dict[Tuple[int, int], Dict[str, Any]] = {}
         element_collection_loc_by_id: Dict[int, Dict[str, Any]] = {}
+        element_collection_loc_by_rxn: Dict[Tuple[int, int, str], Dict[str, Any]] = {}
         nucleic_acid_loc_by_id: Dict[int, Dict[str, Any]] = {}
+        nucleic_acid_loc_by_rxn: Dict[Tuple[int, int, str], Dict[str, Any]] = {}
         protein_loc_by_id: Dict[int, Dict[str, Any]] = {}
         pc_vis_by_pc_id: Dict[int, Dict[str, Any]] = {}
         transport_layouts: Dict[int, Dict[str, int]] = {}
@@ -954,7 +957,7 @@ class DeterministicPwmlBuilder:
                     "enzyme-cy": enzyme_cy,
                     "enzyme-x": enzyme_x,
                     "enzyme-y": enzyme_y,
-                    "compound-stack-cy": enzyme_cy - compound_above,
+                    "compound-stack-cy": enzyme_cy,
                 }
 
         # Compound locations — left half of each compartment region
@@ -993,6 +996,54 @@ class DeterministicPwmlBuilder:
             region = region_for(bs_id)
             return add_compound_location(compound_id, bs_id, region["x"] + pad, region["y"] + pad)
 
+        def add_element_collection_location(
+            element_collection_id: int,
+            bs_id: int,
+            x: int,
+            y: int,
+        ) -> Dict[str, Any]:
+            width, height = TEMPLATE_DIMS[81]
+            loc = {
+                "id": self.ids.next(),
+                "element-collection-id": element_collection_id,
+                "visualization-template-id": 0,
+                "biological-state-id": bs_id,
+                "hidden": False,
+                "x": x,
+                "y": y,
+                "zindex": 10,
+                "font-size": "regular",
+                "width": str(width),
+                "height": str(height),
+            }
+            element_collection_locations.append(loc)
+            element_collection_loc_by_id.setdefault(element_collection_id, loc)
+            return loc
+
+        def add_nucleic_acid_location(
+            nucleic_acid_id: int,
+            bs_id: int,
+            x: int,
+            y: int,
+        ) -> Dict[str, Any]:
+            width, height = TEMPLATE_DIMS[81]
+            loc = {
+                "id": self.ids.next(),
+                "nucleic-acid-id": nucleic_acid_id,
+                "biological-state-id": bs_id,
+                "visualization-template-id": 0,
+                "hidden": False,
+                "x": x,
+                "y": y,
+                "zindex": 10,
+                "font-size": "regular",
+                "width": str(width),
+                "height": str(height),
+            }
+            nucleic_acid_locations.append(loc)
+            nucleic_acid_loc_by_id.setdefault(nucleic_acid_id, loc)
+            return loc
+
         for bs_id, group_recs in sorted(group_by_bs("compounds").items()):
             region = region_for(bs_id)
             for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
@@ -1003,42 +1054,14 @@ class DeterministicPwmlBuilder:
         for bs_id, group_recs in sorted(group_by_bs("element-collections").items()):
             region = region_for(bs_id)
             for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
-                width, height = TEMPLATE_DIMS[81]
-                loc = {
-                    "id": self.ids.next(),
-                    "element-collection-id": int(rec["id"]),
-                    "visualization-template-id": 0,
-                    "biological-state-id": bs_id,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "font-size": "regular",
-                    "width": str(width),
-                    "height": str(height),
-                }
-                element_collection_locations.append(loc)
+                loc = add_element_collection_location(int(rec["id"]), bs_id, x, y)
                 element_collection_loc_by_id[int(rec["id"])] = loc
 
         # Nucleic-acid locations — left half of each compartment region
         for bs_id, group_recs in sorted(group_by_bs("nucleic-acids").items()):
             region = region_for(bs_id)
             for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
-                width, height = TEMPLATE_DIMS[81]
-                loc = {
-                    "id": self.ids.next(),
-                    "nucleic-acid-id": int(rec["id"]),
-                    "biological-state-id": bs_id,
-                    "visualization-template-id": 0,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "font-size": "regular",
-                    "width": str(width),
-                    "height": str(height),
-                }
-                nucleic_acid_locations.append(loc)
+                loc = add_nucleic_acid_location(int(rec["id"]), bs_id, x, y)
                 nucleic_acid_loc_by_id[int(rec["id"])] = loc
 
         # Protein locations: reaction enzymes sit at reaction-center positions.
@@ -1160,26 +1183,6 @@ class DeterministicPwmlBuilder:
                 add_protein_location(protein_id, bs_id, x, y)
                 y += protein_h + protein_gap_x
 
-        placed_element_locations: Set[Tuple[str, int]] = set()
-
-        def set_element_location_once(element_type: str, element_id: int, x: int, y: int) -> None:
-            key = (element_type, element_id)
-            if key in placed_element_locations:
-                return
-            if element_type == "Compound":
-                loc = compound_loc_by_id.get(element_id)
-            elif element_type == "ElementCollection":
-                loc = element_collection_loc_by_id.get(element_id)
-            elif element_type == "NucleicAcid":
-                loc = nucleic_acid_loc_by_id.get(element_id)
-            else:
-                loc = None
-            if not loc:
-                return
-            loc["x"] = x
-            loc["y"] = y
-            placed_element_locations.add(key)
-
         def element_dims(element_type: str, element_id: int) -> Tuple[int, int]:
             if element_type == "Compound":
                 loc = compound_loc_by_id.get(element_id)
@@ -1197,10 +1200,12 @@ class DeterministicPwmlBuilder:
             layout = reaction_layouts.get(reaction_idx)
             if not layout:
                 continue
+            bs_id = int(layout["biological-state-id"])
             enzyme_left_x = layout["enzyme-x"]
             enzyme_right_x = enzyme_left_x + protein_w
             compound_stack_cy = layout["compound-stack-cy"]
             for side_key in ["reaction-left-elements", "reaction-right-elements"]:
+                side = "Left" if side_key == "reaction-left-elements" else "Right"
                 elements = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
                 for j, rel in enumerate(elements):
                     etype = str(rel.get("element-type") or "")
@@ -1212,7 +1217,28 @@ class DeterministicPwmlBuilder:
                     else:
                         x = enzyme_right_x + product_gap
                     y = center_y - height // 2
-                    set_element_location_once(etype, eid, x, y)
+                    if y < 0:
+                        import warnings
+                        warnings.warn(
+                            f"DEBUG layout: reaction_idx={reaction_idx} side={side_key} j={j} "
+                            f"y={y} (center_y={center_y} height={height} compound_stack_cy={compound_stack_cy})"
+                        )
+                    if etype == "Compound":
+                        state_key = (eid, bs_id)
+                        had_state_loc = state_key in compound_loc_by_state
+                        previous_state_loc = compound_loc_by_state.get(state_key)
+                        loc = add_compound_location(eid, bs_id, x, y)
+                        if had_state_loc and previous_state_loc is not None:
+                            compound_loc_by_state[state_key] = previous_state_loc
+                        else:
+                            compound_loc_by_state.pop(state_key, None)
+                        compound_loc_by_rxn[(eid, reaction_idx, side)] = loc
+                    elif etype == "ElementCollection":
+                        loc = add_element_collection_location(eid, bs_id, x, y)
+                        element_collection_loc_by_rxn[(eid, reaction_idx, side)] = loc
+                    elif etype == "NucleicAcid":
+                        loc = add_nucleic_acid_location(eid, bs_id, x, y)
+                        nucleic_acid_loc_by_rxn[(eid, reaction_idx, side)] = loc
 
         # Transport layout is vertical across compartment boundaries. Cargo gets
         # one location per biological state; transporter proteins sit on the
@@ -1344,17 +1370,37 @@ class DeterministicPwmlBuilder:
                 int(loc["y"]) + int(loc["height"]) // 2,
             )
 
-        def location_info(element_type: str, element_id: int, side: Optional[str] = None) -> Optional[Tuple[int, int, int]]:
+        def location_info(
+            element_type: str,
+            element_id: int,
+            side: Optional[str] = None,
+            reaction_idx: Optional[int] = None,
+        ) -> Optional[Tuple[int, int, int]]:
             if element_type == "Compound":
-                loc = compound_loc_by_id.get(element_id)
+                loc = (
+                    compound_loc_by_rxn.get((element_id, reaction_idx, side))
+                    if reaction_idx is not None and side
+                    else None
+                )
+                loc = loc or compound_loc_by_id.get(element_id)
                 if loc:
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "ElementCollection":
-                loc = element_collection_loc_by_id.get(element_id)
+                loc = (
+                    element_collection_loc_by_rxn.get((element_id, reaction_idx, side))
+                    if reaction_idx is not None and side
+                    else None
+                )
+                loc = loc or element_collection_loc_by_id.get(element_id)
                 if loc:
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "NucleicAcid":
-                loc = nucleic_acid_loc_by_id.get(element_id)
+                loc = (
+                    nucleic_acid_loc_by_rxn.get((element_id, reaction_idx, side))
+                    if reaction_idx is not None and side
+                    else None
+                )
+                loc = loc or nucleic_acid_loc_by_id.get(element_id)
                 if loc:
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "Protein":
@@ -1411,7 +1457,7 @@ class DeterministicPwmlBuilder:
                 for rel in left_elements:
                     etype = str(rel.get("element-type") or "")
                     eid = int(rel.get("element-id") or 0)
-                    loc = location_info(etype, eid, "Left")
+                    loc = location_info(etype, eid, "Left", reaction_idx)
                     if loc:
                         no_enzyme_virtual_left = loc[1] + substrate_gap
                         break
@@ -1426,7 +1472,7 @@ class DeterministicPwmlBuilder:
                 for rel in reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []:
                     etype = str(rel.get("element-type") or "")
                     eid = int(rel.get("element-id") or 0)
-                    loc = location_info(etype, eid, side)
+                    loc = location_info(etype, eid, side, reaction_idx)
                     if not loc:
                         continue
                     location_id, lx, ly = loc
@@ -2366,8 +2412,8 @@ class DeterministicPwmlBuilder:
 
         layout_substrate_gap = 46
         layout_product_gap = 51
-        layout_node_spacing_y = 90
-        layout_compound_above = 139
+        layout_node_spacing_y = 220
+        layout_compound_above = 0  # stack is centered on enzyme_cy, not above it
         layout_rxn_step_x = 520
         layout_protein_w, layout_protein_h = 150, 70
         layout_protein_gap_x = 10
@@ -2420,7 +2466,7 @@ class DeterministicPwmlBuilder:
                     "enzyme-cy": enzyme_cy,
                     "enzyme-x": enzyme_x,
                     "enzyme-y": enzyme_y,
-                    "compound-stack-cy": enzyme_cy - layout_compound_above,
+                    "compound-stack-cy": enzyme_cy,
                 }
 
         def ensure_protein_location(protein_key: str, biological_state_key: str) -> Optional[int]:
@@ -2498,7 +2544,51 @@ class DeterministicPwmlBuilder:
                 loc["width"] = str(layout_protein_w)
                 loc["height"] = str(layout_protein_h)
 
-        placed_locations: Set[int] = set()
+        reaction_member_location_by_key: Dict[str, int] = {}
+
+        def location_section_for_record(loc: Dict[str, Any]) -> Optional[str]:
+            if "compound-id" in loc:
+                return "compound-locations"
+            if "element-collection-id" in loc:
+                return "element-collection-locations"
+            if "nucleic-acid-id" in loc:
+                return "nucleic-acid-locations"
+            return None
+
+        def add_reaction_member_location(
+            member: Dict[str, Any],
+            biological_state_key: str,
+            x: int,
+            y: int,
+        ) -> Optional[int]:
+            entity_key = str(member.get("entity_key") or "")
+            member_state_key = str(member.get("biological_state_key") or biological_state_key)
+            base_loc_id = location_by_entity_state.get((entity_key, member_state_key))
+            if base_loc_id is None:
+                base_loc_id = lookup("locations", member.get("location_key"))
+            if base_loc_id is None:
+                return None
+            base_loc = loc_by_id.get(base_loc_id)
+            if not base_loc:
+                return None
+            section = location_section_for_record(base_loc)
+            if not section:
+                return None
+            loc_id = self.ids.next()
+            loc = dict(base_loc)
+            loc["id"] = loc_id
+            loc["x"] = x
+            loc["y"] = y
+            biological_state_id = lookup("biological_states", member_state_key)
+            if biological_state_id is not None:
+                loc["biological-state-id"] = biological_state_id
+            self.section_items[section].append(loc)
+            loc_by_id[loc_id] = loc
+            member_key = str(member.get("key") or "")
+            if member_key:
+                reaction_member_location_by_key[member_key] = loc_id
+            return loc_id
+
         for reaction_key, reaction in raw_reactions_by_key.items():
             layout = reaction_layout_by_key.get(reaction_key)
             if not layout:
@@ -2512,20 +2602,28 @@ class DeterministicPwmlBuilder:
                 for j, member in enumerate(members):
                     if not isinstance(member, dict):
                         continue
-                    loc_id = location_by_entity_state.get(
-                        (str(member.get("entity_key") or ""), str(member.get("biological_state_key") or biological_state_key))
-                    )
-                    if loc_id is None or loc_id in placed_locations:
+                    entity_key = str(member.get("entity_key") or "")
+                    member_state_key = str(member.get("biological_state_key") or biological_state_key)
+                    base_loc_id = location_by_entity_state.get((entity_key, member_state_key))
+                    if base_loc_id is None:
+                        base_loc_id = lookup("locations", member.get("location_key"))
+                    if base_loc_id is None:
                         continue
-                    loc = loc_by_id.get(loc_id)
+                    loc = loc_by_id.get(base_loc_id)
                     if not loc:
                         continue
                     width = int(loc["width"])
                     height = int(loc["height"])
                     center_y = compound_stack_cy - (len(members) - 1) * layout_node_spacing_y // 2 + j * layout_node_spacing_y
-                    loc["x"] = enzyme_left_x - layout_substrate_gap - width if side_key == "left" else enzyme_right_x + layout_product_gap
-                    loc["y"] = center_y - height // 2
-                    placed_locations.add(loc_id)
+                    x = enzyme_left_x - layout_substrate_gap - width if side_key == "left" else enzyme_right_x + layout_product_gap
+                    y = center_y - height // 2
+                    if y < 0:
+                        import warnings
+                        warnings.warn(
+                            f"DEBUG layout (IR): reaction_key={reaction_key} side={side_key} j={j} "
+                            f"y={y} (center_y={center_y} height={height} compound_stack_cy={compound_stack_cy})"
+                        )
+                    add_reaction_member_location(member, biological_state_key, x, y)
 
         self.section_items["edges"] = []
         for edge in ir.get("edges", []) if isinstance(ir.get("edges"), list) else []:
@@ -2594,7 +2692,9 @@ class DeterministicPwmlBuilder:
                 for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
                     if not isinstance(member, dict) or str(member.get("role") or "") != "left":
                         continue
-                    loc_id = lookup("locations", member.get("location_key"))
+                    loc_id = reaction_member_location_by_key.get(str(member.get("process_member_key") or ""))
+                    if loc_id is None:
+                        loc_id = lookup("locations", member.get("location_key"))
                     if loc_id is None:
                         continue
                     point = loc_connection_point(loc_id, "Left")
@@ -2610,7 +2710,9 @@ class DeterministicPwmlBuilder:
                 side = "Left" if role == "left" else "Right" if role == "right" else ""
                 if not side:
                     continue
-                loc_id = lookup("locations", member.get("location_key"))
+                loc_id = reaction_member_location_by_key.get(str(member.get("process_member_key") or ""))
+                if loc_id is None:
+                    loc_id = lookup("locations", member.get("location_key"))
                 edge_id = lookup("edges", member.get("edge_key"))
                 if loc_id is None or edge_id is None:
                     continue
@@ -2667,7 +2769,9 @@ class DeterministicPwmlBuilder:
                     if not isinstance(member, dict):
                         continue
                     minfo = member_ids.get(str(member.get("process_member_key")))
-                    loc_id = lookup("locations", member.get("location_key"))
+                    loc_id = reaction_member_location_by_key.get(str(member.get("process_member_key") or ""))
+                    if loc_id is None:
+                        loc_id = lookup("locations", member.get("location_key"))
                     edge_id = lookup("edges", member.get("edge_key"))
                     if not minfo:
                         continue

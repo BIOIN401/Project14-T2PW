@@ -34050,33 +34050,43 @@
         "order_step": "enzyme_component_species"
       }
     },
-    "aromatic lamino acid decarboxylase::4198::homo sapiens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
+    "aromatic lamino acid decarboxylase::272::homo sapiens": {
+      "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "aromatic L-amino acid decarboxylase complex",
+      "pathbank_complex_id": 96,
+      "pathbank_protein_complex_id": 96,
       "species_id": 1,
       "components": [
         {
           "name": "aromatic L-amino acid decarboxylase",
+          "pathbank_protein_id": 272,
           "stoichiometry": 1,
-          "pathbank_protein_id": 4198,
+          "uniprot": "P20711",
           "mapped_ids": {
-            "uniprot": "Q53Y41",
-            "pathbank_protein_id": "4198",
-            "gene_name": "DDC"
-          }
+            "uniprot": "P20711",
+            "pathbank_protein_id": "272"
+          },
+          "gene_name": "DDC",
+          "species_id": 1
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 96,
+          "pathbank_protein_complex_id": 96,
+          "name": "Aromatic-L-amino-acid decarboxylase",
+          "species_id": 1,
+          "component_protein_id": 272,
+          "score": 0.9
         }
       ],
       "issues": [],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "matched",
+        "order_step": "enzyme_component_species"
       }
     }
   }

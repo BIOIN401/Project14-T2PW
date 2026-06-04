@@ -1,27 +1,27 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: phenylalanine hydroxylase reaction
-  Reactants: phenylalanine [cytosolic state of dopaminergic neurons], tetrahydrobiopterin [unknown], oxygen [unknown]
-  Products:  tyrosine [cytosolic state of dopaminergic neurons], dihydrobiopterin [unknown], water [unknown]
-  Modifier:  phenylalanine hydroxylase [cytosolic state of dopaminergic neurons] (role=catalyst, confidence=1.0)
+REACTION 1: phenylalanine hydroxylation
+  Reactants: phenylalanine [cytosolic dopaminergic neuron state], tetrahydrobiopterin [unknown], oxygen [unknown]
+  Products:  tyrosine [cytosolic dopaminergic neuron state], dihydrobiopterin [unknown], water [unknown]
+  Modifier:  phenylalanine hydroxylase [cytosolic dopaminergic neuron state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: tyrosine hydroxylase reaction
-  Reactants: tyrosine [cytosolic state of dopaminergic neurons], tetrahydrobiopterin [unknown], oxygen [unknown]
-  Products:  L-DOPA [cytosolic state of dopaminergic neurons], dihydrobiopterin [unknown], water [unknown]
-  Modifier:  tyrosine hydroxylase [cytosolic state of dopaminergic neurons] (role=catalyst, confidence=1.0)
+REACTION 2: tyrosine hydroxylation
+  Reactants: tyrosine [cytosolic dopaminergic neuron state], tetrahydrobiopterin [unknown], oxygen [unknown]
+  Products:  L-DOPA [cytosolic dopaminergic neuron state], dihydrobiopterin [unknown], water [unknown]
+  Modifier:  tyrosine hydroxylase [cytosolic dopaminergic neuron state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: aromatic L-amino acid decarboxylase reaction
-  Reactants: L-DOPA [cytosolic state of dopaminergic neurons]
-  Products:  dopamine [cytosolic state of dopaminergic neurons], carbon dioxide [unknown]
-  Modifier:  aromatic L-amino acid decarboxylase [cytosolic state of dopaminergic neurons] (role=catalyst, confidence=1.0)
+REACTION 3: L-DOPA decarboxylation
+  Reactants: L-DOPA [cytosolic dopaminergic neuron state]
+  Products:  dopamine [cytosolic dopaminergic neuron state], carbon dioxide [unknown]
+  Modifier:  aromatic L-amino acid decarboxylase [cytosolic dopaminergic neuron state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 TRANSPORT 1: dopamine transport into synaptic vesicles
-  From: cytosolic state of dopaminergic neurons
+  From: cytosolic dopaminergic neuron state
   To:   synaptic vesicle state
-  Cargo: dopamine [cytosolic state of dopaminergic neurons]
+  Cargo: dopamine [cytosolic dopaminergic neuron state]
   Transporter: vesicular monoamine transporter 2 [synaptic vesicle state] (role=transporter, confidence=1.0)
   QA flags:  none

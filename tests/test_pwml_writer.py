@@ -603,6 +603,82 @@ def test_writer_places_reaction_elements_around_enzyme_center() -> None:
     assert "option:end_arrow" not in edge_by_side["Right"]
 
 
+def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "Oxygen", "short_name": "O2", "pathbank_compound_id": 301},
+                {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 302},
+            ],
+            "proteins": [
+                {"name": "Enzyme A", "pathbank_protein_id": 401},
+                {"name": "Enzyme B", "pathbank_protein_id": 402},
+            ],
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "First oxygen reaction",
+                    "inputs": ["Oxygen"],
+                    "outputs": ["Water"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Enzyme A"}],
+                },
+                {
+                    "name": "Second oxygen reaction",
+                    "inputs": ["Oxygen"],
+                    "outputs": ["Water"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Enzyme B"}],
+                },
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+    edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+
+    left_locations = []
+    right_locations = []
+    for reaction_viz in builder.section_items["reaction-visualizations"]:
+        by_side = {
+            rcv["side"]: rcv
+            for rcv in reaction_viz["reaction_compound_visualizations"]
+        }
+        left_loc = loc_by_id[by_side["Left"]["compound-location-id"]]
+        right_loc = loc_by_id[by_side["Right"]["compound-location-id"]]
+        left_locations.append(left_loc)
+        right_locations.append(right_loc)
+
+        left_anchor = (
+            int(left_loc["x"]) + int(left_loc["width"]),
+            int(left_loc["y"]) + int(left_loc["height"]) // 2,
+        )
+        right_anchor = (
+            int(right_loc["x"]),
+            int(right_loc["y"]) + int(right_loc["height"]) // 2,
+        )
+        assert edge_by_id[by_side["Left"]["edge-id"]]["path"].startswith(f"M{left_anchor[0]} {left_anchor[1]} ")
+        assert edge_by_id[by_side["Right"]["edge-id"]]["path"].startswith(f"M{right_anchor[0]} {right_anchor[1]} ")
+
+    assert [loc["compound-id"] for loc in left_locations] == [compound_id_by_name["Oxygen"]] * 2
+    assert [loc["compound-id"] for loc in right_locations] == [compound_id_by_name["Water"]] * 2
+    assert len({loc["id"] for loc in left_locations}) == 2
+    assert len({loc["id"] for loc in right_locations}) == 2
+    assert len({int(loc["x"]) for loc in left_locations}) == 2
+    assert len({int(loc["x"]) for loc in right_locations}) == 2
+
+
 def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
     payload = _payload_with_complex_enzyme()
     payload["entities"].pop("proteins")

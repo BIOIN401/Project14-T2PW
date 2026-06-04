@@ -11,7 +11,7 @@
       "label": "phenylalanine",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -20,7 +20,25 @@
       "label": "tyrosine",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:l-dopa",
+      "label": "L-DOPA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic neuron state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dopamine",
+      "label": "dopamine",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -28,7 +46,16 @@
       "id": "compound:tetrahydrobiopterin",
       "label": "tetrahydrobiopterin",
       "kind": "compound",
-      "cls": "compound",
+      "cls": "cofactor",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dihydrobiopterin",
+      "label": "dihydrobiopterin",
+      "kind": "compound",
+      "cls": "cofactor",
       "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
@@ -43,38 +70,11 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:dihydrobiopterin",
-      "label": "dihydrobiopterin",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
       "id": "compound:water",
       "label": "water",
       "kind": "compound",
       "cls": "compound",
       "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:l-dopa",
-      "label": "L-DOPA",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state of dopaminergic neurons",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:dopamine",
-      "label": "dopamine",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic state of dopaminergic neurons",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -92,7 +92,7 @@
       "label": "phenylalanine hydroxylase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -101,7 +101,7 @@
       "label": "tyrosine hydroxylase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -110,7 +110,7 @@
       "label": "aromatic L-amino acid decarboxylase",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -124,29 +124,29 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:phenylalanine hydroxylase reaction",
-      "label": "phenylalanine hydroxylase reaction",
+      "id": "reaction:phenylalanine hydroxylation",
+      "label": "phenylalanine hydroxylation",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:tyrosine hydroxylase reaction",
-      "label": "tyrosine hydroxylase reaction",
+      "id": "reaction:tyrosine hydroxylation",
+      "label": "tyrosine hydroxylation",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:aromatic l-amino acid decarboxylase reaction",
-      "label": "aromatic L-amino acid decarboxylase reaction",
+      "id": "reaction:l-dopa decarboxylation",
+      "label": "L-DOPA decarboxylation",
       "kind": "reaction",
       "cls": "",
-      "compartment": "cytosolic state of dopaminergic neurons",
+      "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -155,7 +155,7 @@
       "label": "dopamine transport into synaptic vesicles",
       "kind": "transport",
       "cls": "",
-      "compartment": "cytosolic state of dopaminergic neurons → synaptic vesicle state",
+      "compartment": "cytosolic dopaminergic neuron state → synaptic vesicle state",
       "confidence": 1.0,
       "provenance": "extracted"
     }
@@ -163,109 +163,109 @@
   "edges": [
     {
       "source": "compound:phenylalanine",
-      "target": "reaction:phenylalanine hydroxylase reaction",
+      "target": "reaction:phenylalanine hydroxylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:tetrahydrobiopterin",
-      "target": "reaction:phenylalanine hydroxylase reaction",
+      "target": "reaction:phenylalanine hydroxylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:oxygen",
-      "target": "reaction:phenylalanine hydroxylase reaction",
+      "target": "reaction:phenylalanine hydroxylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:phenylalanine hydroxylase reaction",
+      "source": "reaction:phenylalanine hydroxylation",
       "target": "compound:tyrosine",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:phenylalanine hydroxylase reaction",
+      "source": "reaction:phenylalanine hydroxylation",
       "target": "compound:dihydrobiopterin",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:phenylalanine hydroxylase reaction",
+      "source": "reaction:phenylalanine hydroxylation",
       "target": "compound:water",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:phenylalanine hydroxylase",
-      "target": "reaction:phenylalanine hydroxylase reaction",
+      "target": "reaction:phenylalanine hydroxylation",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:tyrosine",
-      "target": "reaction:tyrosine hydroxylase reaction",
+      "target": "reaction:tyrosine hydroxylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:tetrahydrobiopterin",
-      "target": "reaction:tyrosine hydroxylase reaction",
+      "target": "reaction:tyrosine hydroxylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:oxygen",
-      "target": "reaction:tyrosine hydroxylase reaction",
+      "target": "reaction:tyrosine hydroxylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:tyrosine hydroxylase reaction",
+      "source": "reaction:tyrosine hydroxylation",
       "target": "compound:l-dopa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:tyrosine hydroxylase reaction",
+      "source": "reaction:tyrosine hydroxylation",
       "target": "compound:dihydrobiopterin",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:tyrosine hydroxylase reaction",
+      "source": "reaction:tyrosine hydroxylation",
       "target": "compound:water",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:tyrosine hydroxylase",
-      "target": "reaction:tyrosine hydroxylase reaction",
+      "target": "reaction:tyrosine hydroxylation",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:l-dopa",
-      "target": "reaction:aromatic l-amino acid decarboxylase reaction",
+      "target": "reaction:l-dopa decarboxylation",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:aromatic l-amino acid decarboxylase reaction",
+      "source": "reaction:l-dopa decarboxylation",
       "target": "compound:dopamine",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:aromatic l-amino acid decarboxylase reaction",
+      "source": "reaction:l-dopa decarboxylation",
       "target": "compound:carbon dioxide",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:aromatic l-amino acid decarboxylase",
-      "target": "reaction:aromatic l-amino acid decarboxylase reaction",
+      "target": "reaction:l-dopa decarboxylation",
       "role": "catalyst",
       "confidence": 1.0
     },
