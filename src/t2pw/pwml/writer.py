@@ -43,6 +43,30 @@ def blocking_pwml_ir_errors(ir_report: Dict[str, Any]) -> List[Dict[str, Any]]:
     ]
 
 
+def _reaction_member_top_left_from_anchor(
+    side: str,
+    expected_anchor_x: int,
+    expected_anchor_y: int,
+    width: int,
+    height: int,
+) -> Tuple[int, int]:
+    if side == "Left":
+        return expected_anchor_x - width, expected_anchor_y - height // 2
+    return expected_anchor_x, expected_anchor_y - height // 2
+
+
+def _assert_reaction_member_anchor(
+    loc: Dict[str, Any],
+    side: str,
+    expected_anchor_x: int,
+    expected_anchor_y: int,
+) -> None:
+    actual_anchor_x = int(loc["x"]) + int(loc["width"]) if side == "Left" else int(loc["x"])
+    actual_anchor_y = int(loc["y"]) + int(loc["height"]) // 2
+    assert actual_anchor_x == expected_anchor_x
+    assert abs(actual_anchor_y - expected_anchor_y) <= 1
+
+
 def _singularize(tag: str) -> str:
     overrides = {
         "species": "species",
@@ -1231,27 +1255,36 @@ class DeterministicPwmlBuilder:
             for side_key in ["reaction-left-elements", "reaction-right-elements"]:
                 side = "Left" if side_key == "reaction-left-elements" else "Right"
                 elements = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                stack_start_cy = compound_stack_cy - (len(elements) - 1) * node_spacing_y // 2
                 for j, rel in enumerate(elements):
                     etype = str(rel.get("element-type") or "")
                     eid = int(rel.get("element-id") or 0)
                     width, height = element_dims(etype, eid)
-                    center_y = compound_stack_cy - (len(elements) - 1) * node_spacing_y // 2 + j * node_spacing_y
-                    if side_key == "reaction-left-elements":
-                        x = enzyme_left_x - substrate_gap - width
-                    else:
-                        x = enzyme_right_x + product_gap
-                    y = center_y - height // 2
+                    expected_anchor_y = stack_start_cy + j * node_spacing_y
+                    expected_anchor_x = (
+                        enzyme_left_x - substrate_gap
+                        if side_key == "reaction-left-elements"
+                        else enzyme_right_x + product_gap
+                    )
+                    x, y = _reaction_member_top_left_from_anchor(
+                        side,
+                        expected_anchor_x,
+                        expected_anchor_y,
+                        width,
+                        height,
+                    )
                     if y < 0:
                         import warnings
                         warnings.warn(
                             f"DEBUG layout: reaction_idx={reaction_idx} side={side_key} j={j} "
-                            f"y={y} (center_y={center_y} height={height} compound_stack_cy={compound_stack_cy})"
+                            f"y={y} (anchor_y={expected_anchor_y} height={height} compound_stack_cy={compound_stack_cy})"
                         )
                     if etype == "Compound":
                         state_key = (eid, bs_id)
                         had_state_loc = state_key in compound_loc_by_state
                         previous_state_loc = compound_loc_by_state.get(state_key)
                         loc = add_compound_location(eid, bs_id, x, y)
+                        _assert_reaction_member_anchor(loc, side, expected_anchor_x, expected_anchor_y)
                         if had_state_loc and previous_state_loc is not None:
                             compound_loc_by_state[state_key] = previous_state_loc
                         else:
@@ -1259,9 +1292,11 @@ class DeterministicPwmlBuilder:
                         compound_loc_by_rxn[(eid, reaction_idx, side)] = loc
                     elif etype == "ElementCollection":
                         loc = add_element_collection_location(eid, bs_id, x, y)
+                        _assert_reaction_member_anchor(loc, side, expected_anchor_x, expected_anchor_y)
                         element_collection_loc_by_rxn[(eid, reaction_idx, side)] = loc
                     elif etype == "NucleicAcid":
                         loc = add_nucleic_acid_location(eid, bs_id, x, y)
+                        _assert_reaction_member_anchor(loc, side, expected_anchor_x, expected_anchor_y)
                         nucleic_acid_loc_by_rxn[(eid, reaction_idx, side)] = loc
 
         # Transport layout is vertical across compartment boundaries. Cargo gets
@@ -2679,6 +2714,8 @@ class DeterministicPwmlBuilder:
             compound_stack_cy = layout["compound-stack-cy"]
             for side_key in ["left", "right"]:
                 members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                side = "Left" if side_key == "left" else "Right"
+                stack_start_cy = compound_stack_cy - (len(members) - 1) * layout_node_spacing_y // 2
                 for j, member in enumerate(members):
                     if not isinstance(member, dict):
                         continue
@@ -2694,16 +2731,29 @@ class DeterministicPwmlBuilder:
                         continue
                     width = int(loc["width"])
                     height = int(loc["height"])
-                    center_y = compound_stack_cy - (len(members) - 1) * layout_node_spacing_y // 2 + j * layout_node_spacing_y
-                    x = enzyme_left_x - layout_substrate_gap - width if side_key == "left" else enzyme_right_x + layout_product_gap
-                    y = center_y - height // 2
+                    expected_anchor_y = stack_start_cy + j * layout_node_spacing_y
+                    expected_anchor_x = (
+                        enzyme_left_x - layout_substrate_gap
+                        if side_key == "left"
+                        else enzyme_right_x + layout_product_gap
+                    )
+                    x, y = _reaction_member_top_left_from_anchor(
+                        side,
+                        expected_anchor_x,
+                        expected_anchor_y,
+                        width,
+                        height,
+                    )
                     if y < 0:
                         import warnings
                         warnings.warn(
                             f"DEBUG layout (IR): reaction_key={reaction_key} side={side_key} j={j} "
-                            f"y={y} (center_y={center_y} height={height} compound_stack_cy={compound_stack_cy})"
+                            f"y={y} (anchor_y={expected_anchor_y} height={height} compound_stack_cy={compound_stack_cy})"
                         )
-                    add_reaction_member_location(member, biological_state_key, x, y)
+                    loc_id = add_reaction_member_location(member, biological_state_key, x, y)
+                    if loc_id is not None:
+                        written_loc = loc_by_id[loc_id]
+                        _assert_reaction_member_anchor(written_loc, side, expected_anchor_x, expected_anchor_y)
 
         self.section_items["edges"] = []
         for edge in ir.get("edges", []) if isinstance(ir.get("edges"), list) else []:

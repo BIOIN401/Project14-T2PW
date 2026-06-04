@@ -219,6 +219,37 @@ def _payload_with_complex_enzyme() -> dict:
     }
 
 
+def _payload_with_stacked_reaction_members() -> dict:
+    return {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "Reactant 1", "pathbank_compound_id": 301},
+                {"name": "Reactant 2", "pathbank_compound_id": 302},
+                {"name": "Reactant 3", "pathbank_compound_id": 303},
+                {"name": "Product 1", "pathbank_compound_id": 304},
+                {"name": "Product 2", "pathbank_compound_id": 305},
+            ],
+            "proteins": [{"name": "Stacking enzyme", "pathbank_protein_id": 401}],
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "Stacked reaction",
+                    "inputs": ["Reactant 1", "Reactant 2", "Reactant 3"],
+                    "outputs": ["Product 1", "Product 2"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Stacking enzyme"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+
 def test_db_matched_compound_emits_trusted_pwc_id_and_short_name() -> None:
     ir = _minimal_pwml_ir_with_compounds(
         [
@@ -601,6 +632,52 @@ def test_writer_places_reaction_elements_around_enzyme_center() -> None:
     assert edge_by_side["Right"]["visualization-template-id"] == 5
     assert edge_by_side["Right"]["option:start_arrow"] is True
     assert "option:end_arrow" not in edge_by_side["Right"]
+
+
+def test_writer_places_stacked_reaction_members_from_side_anchors() -> None:
+    ir, report = build_pwml_ir(_payload_with_stacked_reaction_members(), strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    enzyme = builder.section_items["protein-locations"][0]
+    enzyme_x = int(enzyme["x"])
+    enzyme_w = int(enzyme["width"])
+    enzyme_cy = int(enzyme["y"]) + int(enzyme["height"]) // 2
+    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+    edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+    reaction_viz = builder.section_items["reaction-visualizations"][0]
+
+    expected_by_side = {
+        "Left": {
+            "anchor_x": enzyme_x - 46,
+            "anchor_ys": [enzyme_cy - 220, enzyme_cy, enzyme_cy + 220],
+        },
+        "Right": {
+            "anchor_x": enzyme_x + enzyme_w + 51,
+            "anchor_ys": [enzyme_cy - 110, enzyme_cy + 110],
+        },
+    }
+
+    for side in ["Left", "Right"]:
+        members = [
+            rcv
+            for rcv in reaction_viz["reaction_compound_visualizations"]
+            if rcv["side"] == side
+        ]
+        assert len(members) == len(expected_by_side[side]["anchor_ys"])
+        for rcv, expected_anchor_y in zip(members, expected_by_side[side]["anchor_ys"]):
+            loc = loc_by_id[rcv["compound-location-id"]]
+            expected_anchor_x = expected_by_side[side]["anchor_x"]
+            actual_anchor_x = (
+                int(loc["x"]) + int(loc["width"]) if side == "Left" else int(loc["x"])
+            )
+            actual_anchor_y = int(loc["y"]) + int(loc["height"]) // 2
+            assert actual_anchor_x == expected_anchor_x
+            assert abs(actual_anchor_y - expected_anchor_y) <= 1
+            assert edge_by_id[rcv["edge-id"]]["path"].startswith(
+                f"M{actual_anchor_x} {actual_anchor_y} "
+            )
 
 
 def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
