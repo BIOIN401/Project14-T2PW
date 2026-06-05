@@ -82,6 +82,11 @@ def _add_end_arrow(edge: Dict[str, Any], x2: int, y2: int, cp2x: int, cp2y: int)
     edge["options"] = json.dumps(opts)
 
 
+def _add_no_arrow(edge: Dict[str, Any]) -> None:
+    opts: Dict[str, Any] = {"end_arrow": False, "end_flat_arrow": False, "start_arrow": False, "start_flat_arrow": False}
+    edge["options"] = json.dumps(opts)
+
+
 def is_non_blocking_pwml_ir_error(issue: Any) -> bool:
     if not isinstance(issue, dict):
         return False
@@ -1797,7 +1802,7 @@ class DeterministicPwmlBuilder:
                         "zindex": 18,
                     }
                     if side == "Left":
-                        _add_end_arrow(edge, x2, y2, cp2x, cp2y)
+                        _add_no_arrow(edge)
                     else:
                         _add_start_arrow(edge, x1, y1, cp1x, cp1y)
                     edges.append(edge)
@@ -3304,7 +3309,7 @@ class DeterministicPwmlBuilder:
                     edge["hidden"] = False
                 edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
                 if side == "Left":
-                    _add_end_arrow(edge, x2, y2, cp2x, cp2y)
+                    _add_no_arrow(edge)
                 else:
                     _add_start_arrow(edge, x1, y1, cp1x, cp1y)
 
