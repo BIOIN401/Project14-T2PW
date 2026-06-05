@@ -1136,8 +1136,11 @@ def build_pwml_ir(
         )
 
     # Honor explicit element_locations as visual references without duplicating entities.
+    # NOTE: this used to run before reactions, which caused the flat grid to win over the
+    # reaction-aware coordinates for every compound. We now build it as a deferred list
+    # and only register entities that aren't placed by a reaction/transport later.
+    explicit_locations_to_register: List[Tuple[str, str, Optional[str]]] = []
     element_locations = _safe_dict(payload.get("element_locations"))
-    explicit_loc_idx = 0
     for bucket, rows in element_locations.items():
         entity_type, name_field = _entity_type_from_location_bucket(bucket)
         if not entity_type:
@@ -1154,25 +1157,23 @@ def build_pwml_ir(
             if not entity:
                 continue
             bs_key = resolve_state(raw.get("biological_state"), f"/element_locations/{bucket}/{row_idx}/biological_state")
-            explicit_loc_idx += 1
-            ensure_location(
-                entity_type,
-                entity["key"],
-                bs_key,
-                x=40 + (explicit_loc_idx % 8) * 180,
-                y=80 + (explicit_loc_idx // 8) * 100,
-            )
+            explicit_locations_to_register.append((entity["entity_type"], entity["key"], bs_key))
 
     process_by_name: Dict[str, Dict[str, Any]] = {}
     process_by_key: Dict[str, Dict[str, Any]] = {}
 
     def process_xy(index: int) -> Tuple[int, int]:
-        usable_w = max(800, width - 240)
-        col_w = 360
+        # Leave enough room on the left for reactant nodes (REACTANT_OFFSET + half a
+        # node width + margin) so the leftmost compounds stay on-canvas.
+        margin_left = 380
+        col_w = 540
+        usable_w = max(col_w, width - margin_left - 200)
         cols = max(1, usable_w // col_w)
         col = index % cols
         row = index // cols
-        return 180 + col * col_w, 220 + row * 220
+        # First reaction sits roughly a third of the way down the canvas so enzymes
+        # placed above (rx_y - ~150) don't run off the top.
+        return margin_left + col * col_w, max(260, int(height * 0.35)) + row * 240
 
     allowed_enzyme_entity_types = {"protein", "protein_complex"}
     reaction_index = 0
@@ -1195,7 +1196,27 @@ def build_pwml_ir(
         }
         members_for_viz: List[Dict[str, Any]] = []
 
-        for side_name, raw_key, x_offset in [("left", "inputs", -145), ("right", "outputs", 145)]:
+        REACTANT_OFFSET = 240
+        PRODUCT_OFFSET = 240
+        NODE_SPACING_Y = 95
+        NODE_W = 160
+        NODE_H = 60
+
+        # Pre-count valid participants per side to center their vertical stacks on rx_y
+        side_counts: Dict[str, int] = {}
+        for side_name, raw_key in [("left", "inputs"), ("right", "outputs")]:
+            n = 0
+            for part in _coerce_participants(raw.get(raw_key)):
+                if part.get("name"):
+                    n += 1
+            side_counts[side_name] = n
+
+        for side_name, raw_key, x_offset in [
+            ("left", "inputs", -REACTANT_OFFSET),
+            ("right", "outputs", PRODUCT_OFFSET),
+        ]:
+            total = side_counts[side_name]
+            y_top = rx_y - ((total - 1) * NODE_SPACING_Y) // 2 - NODE_H // 2
             for midx, part in enumerate(_coerce_participants(raw.get(raw_key))):
                 entity = resolve_entity(
                     part["name"],
@@ -1212,15 +1233,27 @@ def build_pwml_ir(
                     "stoichiometry": int(part.get("stoichiometry") or 1),
                 }
                 reaction[side_name].append(member)
+                idx_on_side = len(reaction[side_name]) - 1
+                node_x = rx_x + x_offset - NODE_W // 2
+                node_y = y_top + idx_on_side * NODE_SPACING_Y
                 loc = ensure_location(
                     entity["entity_type"],
                     entity["key"],
                     bs_key,
-                    x=rx_x + x_offset,
-                    y=rx_y + (len(reaction[side_name]) - 1) * 46,
+                    x=node_x,
+                    y=node_y,
                 )
                 if loc:
-                    edge = add_edge(int(loc["x"]) + 60, int(loc["y"]) + 20, rx_x, rx_y)
+                    # Side-aware edge anchor: reactants exit at the right edge, products
+                    # are entered at the left edge.
+                    lx = int(loc["x"])
+                    ly = int(loc["y"])
+                    if side_name == "left":
+                        ax, ay = lx + NODE_W, ly + NODE_H // 2
+                        edge = add_edge(ax, ay, rx_x, rx_y)
+                    else:
+                        ax, ay = lx, ly + NODE_H // 2
+                        edge = add_edge(rx_x, rx_y, ax, ay)
                     members_for_viz.append(
                         {
                             "process_member_key": member_key,
@@ -1272,15 +1305,30 @@ def build_pwml_ir(
             reaction["enzymes"].append(
                 {"key": member_key, "entity_type": entity["entity_type"], "entity_key": entity["key"], "role": role or "catalyst"}
             )
-            loc = ensure_location(entity["entity_type"], entity["key"], bs_key, x=rx_x, y=rx_y - 90)
+            enzyme_w = 200
+            enzyme_h = 60
+            loc = ensure_location(
+                entity["entity_type"],
+                entity["key"],
+                bs_key,
+                x=rx_x - enzyme_w // 2,
+                y=rx_y - 150 - enzyme_h // 2,
+            )
+            enzyme_edge_key: Optional[str] = None
             if loc:
+                ex = int(loc["x"]) + enzyme_w // 2
+                ey = int(loc["y"]) + enzyme_h
+                enzyme_edge = add_edge(ex, ey, rx_x, rx_y)
+                # Dashed catalysis-style edge
+                enzyme_edge["visualization_template_id"] = 83
+                enzyme_edge_key = enzyme_edge["key"]
                 members_for_viz.append(
                     {
                         "process_member_key": member_key,
                         "role": "enzyme",
                         "member_type": entity["entity_type"],
                         "location_key": loc["key"],
-                        "edge_key": None,
+                        "edge_key": enzyme_edge_key,
                     }
                 )
 
@@ -1449,6 +1497,22 @@ def build_pwml_ir(
         ir["processes"]["interactions"].append(interaction)
         process_by_key[int_key] = interaction
         process_by_name[_norm(interaction["name"])] = interaction
+
+    # Fallback grid for entities referenced via explicit element_locations but not
+    # placed by any reaction/transport. They use a flat grid below the reaction band.
+    orphan_idx = 0
+    for entity_type, entity_key, bs_key in explicit_locations_to_register:
+        cache_key = (entity_type, entity_key, bs_key)
+        if cache_key in location_by_tuple:
+            continue
+        orphan_idx += 1
+        ensure_location(
+            entity_type,
+            entity_key,
+            bs_key,
+            x=40 + (orphan_idx % 8) * 200,
+            y=int(height * 0.75) + (orphan_idx // 8) * 100,
+        )
 
     # Preserve RCT/sub-pathway records in typed buckets. Full visualization is left
     # explicit so the validator can reject incomplete records before serialization.

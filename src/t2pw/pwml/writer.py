@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,7 +13,7 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 from lxml import etree
 
 from t2pw.paths import PROJECT_ROOT
-from t2pw.pwml.compound_templates import select_compound_template_id
+from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.pwml.validate import (
@@ -22,6 +24,62 @@ from t2pw.pwml.validate import (
     validate_generated_tree,
     write_json_report,
 )
+
+OPTION_TAG_NS = "urn:pathwhiz-option"
+ARROW_ANGLE = math.pi / 6
+ARROW_LENGTH = 30
+
+
+def _format_path_number(value: float) -> str:
+    return f"{value:.12g}"
+
+
+def _curved_edge_path(
+    x1: int,
+    y1: int,
+    x2: int,
+    y2: int,
+) -> Tuple[str, int, int, int, int]:
+    cp1x = x1 + (x2 - x1) // 3
+    cp1y = y1 + (y2 - y1) // 3
+    cp2x = x1 + 2 * (x2 - x1) // 3
+    cp2y = y1 + 2 * (y2 - y1) // 3
+    path = f"M{x1} {y1} C{cp1x} {cp1y} {cp2x} {cp2y} {x2} {y2}"
+    return path, cp1x, cp1y, cp2x, cp2y
+
+
+def _compute_arrow_path(tip_x: int, tip_y: int, from_x: int, from_y: int) -> Optional[str]:
+    dx = from_x - tip_x
+    dy = from_y - tip_y
+    distance = math.sqrt(dx**2 + dy**2)
+    if distance == 0:
+        return None
+    r = ARROW_LENGTH / distance
+    x4 = (math.cos(ARROW_ANGLE) * dx - math.sin(ARROW_ANGLE) * dy) * r + tip_x
+    y4 = (math.sin(ARROW_ANGLE) * dx + math.cos(ARROW_ANGLE) * dy) * r + tip_y
+    x5 = (math.cos(-ARROW_ANGLE) * dx - math.sin(-ARROW_ANGLE) * dy) * r + tip_x
+    y5 = (math.sin(-ARROW_ANGLE) * dx + math.cos(-ARROW_ANGLE) * dy) * r + tip_y
+    return (
+        f"M {_format_path_number(x5)} {_format_path_number(y5)} "
+        f"L {tip_x} {tip_y} "
+        f"L {_format_path_number(x4)} {_format_path_number(y4)}"
+    )
+
+
+def _add_start_arrow(edge: Dict[str, Any], x1: int, y1: int, cp1x: int, cp1y: int) -> None:
+    opts: Dict[str, Any] = {"start_arrow": True, "start_flat_arrow": False, "end_arrow": False, "end_flat_arrow": False}
+    arrow_path = _compute_arrow_path(x1, y1, cp1x, cp1y)
+    if arrow_path is not None:
+        opts["start_arrow_path"] = arrow_path
+    edge["options"] = json.dumps(opts)
+
+
+def _add_end_arrow(edge: Dict[str, Any], x2: int, y2: int, cp2x: int, cp2y: int) -> None:
+    opts: Dict[str, Any] = {"end_arrow": True, "end_flat_arrow": False, "start_arrow": False, "start_flat_arrow": False}
+    arrow_path = _compute_arrow_path(x2, y2, cp2x, cp2y)
+    if arrow_path is not None:
+        opts["end_arrow_path"] = arrow_path
+    edge["options"] = json.dumps(opts)
 
 
 def is_non_blocking_pwml_ir_error(issue: Any) -> bool:
@@ -39,6 +97,159 @@ def blocking_pwml_ir_errors(ir_report: Dict[str, Any]) -> List[Dict[str, Any]]:
         for issue in ir_report.get("errors", [])
         if not is_non_blocking_pwml_ir_error(issue)
     ]
+
+
+def _assert_reaction_member_anchor(
+    loc: Dict[str, Any],
+    side: str,
+    expected_anchor_x: int,
+    expected_anchor_y: int,
+) -> None:
+    actual_anchor_x = int(loc["x"]) + int(loc["width"]) if side == "Left" else int(loc["x"])
+    actual_anchor_y = int(loc["y"]) + int(loc["height"]) // 2
+    assert actual_anchor_x == expected_anchor_x
+    assert abs(actual_anchor_y - expected_anchor_y) <= 1
+
+
+def _packed_reaction_stack_tops(
+    heights: Sequence[int],
+    enzyme_cy: int,
+    gap_y: int,
+) -> Tuple[int, List[int]]:
+    if not heights:
+        return 0, []
+    total_stack_height = sum(heights) + gap_y * (len(heights) - 1)
+    current_top = int(round(enzyme_cy - total_stack_height / 2))
+    tops: List[int] = []
+    for height in heights:
+        tops.append(current_top)
+        current_top += height + gap_y
+    return total_stack_height, tops
+
+
+_CURRENCY_COMPOUND_NAMES = {
+    "4a carbinolamine tetrahydrobiopterin",
+    "4a hydroxy tetrahydrobiopterin",
+    "4a hydroxytetrahydrobiopterin",
+    "4a tetrahydrobiopterin",
+    "acetyl coenzyme a",
+    "acetyl coa",
+    "adp",
+    "adenosine diphosphate",
+    "adenosine monophosphate",
+    "adenosine triphosphate",
+    "amp",
+    "ammonia",
+    "ammonium",
+    "atp",
+    "bh4",
+    "carbon dioxide",
+    "coa",
+    "co2",
+    "coenzyme a",
+    "dihydrobiopterin",
+    "fad",
+    "fadh2",
+    "fmn",
+    "fmnh2",
+    "h",
+    "h+",
+    "h2o",
+    "h2o2",
+    "hydrogen ion",
+    "hydrogen peroxide",
+    "nad",
+    "nad+",
+    "nadh",
+    "nadp",
+    "nadp+",
+    "nadph",
+    "nh3",
+    "nh4+",
+    "o2",
+    "oxygen",
+    "phosphate",
+    "pi",
+    "ppi",
+    "pyrophosphate",
+    "tetrahydrobiopterin",
+    "water",
+}
+
+_CURRENCY_COMPOUND_KEGG_IDS = {
+    "C00001",  # H2O
+    "C00002",  # ATP
+    "C00003",  # NAD+
+    "C00004",  # NADH
+    "C00005",  # NADPH
+    "C00006",  # NADP+
+    "C00007",  # O2
+    "C00008",  # ADP
+    "C00009",  # phosphate
+    "C00010",  # CoA
+    "C00013",  # pyrophosphate
+    "C00014",  # NH3
+    "C00016",  # FAD
+    "C00020",  # AMP
+    "C00027",  # H2O2
+    "C00080",  # H+
+    "C00255",  # FMN
+    "C01352",  # FADH2
+    "C00272",  # tetrahydrobiopterin
+}
+
+_CURRENCY_COMPOUND_CHEBI_IDS = {
+    "15377",  # water
+    "15378",  # hydrogen ion
+    "15379",  # oxygen
+    "15380",  # carbon dioxide
+    "15347",  # acetyl-CoA
+    "15422",  # ATP
+    "15635",  # phosphate
+    "15713",  # NADH
+    "15846",  # NAD+
+    "16027",  # AMP
+    "16240",  # hydrogen peroxide
+    "16474",  # NADPH
+    "16761",  # ADP
+    "17621",  # FAD
+    "17877",  # pyrophosphate
+    "18420",  # magnesium(2+) common currency ion
+    "24636",  # proton
+    "26523",  # reactive oxygen species-ish, conservative
+    "29950",  # ammonia
+    "30616",  # tetrahydrobiopterin
+    "57287",  # CoA
+    "58349",  # NADP+
+}
+
+
+def _currency_name_token(value: Any) -> str:
+    text = str(value or "").strip().casefold()
+    text = text.replace("coenzyme-a", "coenzyme a").replace("co-a", "coa")
+    text = text.replace("β", "beta")
+    return re.sub(r"[^a-z0-9+]+", " ", text).strip()
+
+
+def _is_currency_compound_record(record: Dict[str, Any]) -> bool:
+    names = {
+        _currency_name_token(record.get("name")),
+        _currency_name_token(record.get("short-name")),
+        _currency_name_token(record.get("short_name")),
+    }
+    names.discard("")
+    if names & _CURRENCY_COMPOUND_NAMES:
+        return True
+    for token in names:
+        if token.endswith(" coa") or token.endswith(" coenzyme a") or token.startswith("coa "):
+            return True
+        if "tetrahydrobiopterin" in token or "biopterin" in token:
+            return True
+    kegg_id = str(record.get("kegg-id") or record.get("kegg_id") or "").strip().upper()
+    if kegg_id in _CURRENCY_COMPOUND_KEGG_IDS:
+        return True
+    chebi_id = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
+    return chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
 
 
 def _singularize(tag: str) -> str:
@@ -117,10 +328,6 @@ def _is_boolean_field(tag: str) -> bool:
         "spontaneous",
         "currency",
         "complete-membrane",
-        "option:end_arrow",
-        "option:end_flat_arrow",
-        "option:start_arrow",
-        "option:start_flat_arrow",
     }
 
 
@@ -412,6 +619,13 @@ class DeterministicPwmlBuilder:
         self.element_lookup: Dict[str, Tuple[str, int]] = {}
 
         self.section_items: Dict[str, List[Dict[str, Any]]] = {}
+        self.layout_debug_counts: Dict[str, int] = {
+            "shared_intermediates_detected": 0,
+            "shared_intermediates_skipped_cofactor": 0,
+            "shared_intermediate_locations_reused": 0,
+        }
+        self.layout_debug_stacks: List[Dict[str, Any]] = []
+        self.layout_debug_shared_intermediates: List[Dict[str, Any]] = []
 
         self.pathway_id_int = 1
         self.pathway_visualization_id_int = self.pathway_id_int
@@ -743,14 +957,24 @@ class DeterministicPwmlBuilder:
             for t in raw.get("transporters", []) if isinstance(raw.get("transporters"), list) else []:
                 if not isinstance(t, dict):
                     continue
-                entity_name = str(t.get("entity", "")).strip()
+                entity_name = str(
+                    t.get("entity")
+                    or t.get("protein")
+                    or t.get("protein_complex")
+                    or t.get("protein-complex")
+                    or ""
+                ).strip()
                 if not entity_name:
+                    continue
+                entity_type = str(t.get("entity_type") or t.get("type") or "").strip().lower()
+                pc = self.entity_lookup.get("protein_complexes", {}).get(_normalize_key(entity_name))
+                if entity_type == "protein_complex" and pc:
+                    transporters.append({"id": self.ids.next(), "protein-complex-id": int(pc["id"])})
                     continue
                 prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(entity_name))
                 if prot:
                     transporters.append({"id": self.ids.next(), "protein-id": int(prot["id"])})
                     continue
-                pc = self.entity_lookup.get("protein_complexes", {}).get(_normalize_key(entity_name))
                 if pc:
                     transporters.append({"id": self.ids.next(), "protein-complex-id": int(pc["id"])})
 
@@ -849,7 +1073,13 @@ class DeterministicPwmlBuilder:
         canvas_h: int = self.args.height
         pad = 30
         dx_left, dy_left = 200, 100
-        dx_right, dy_right = 220, 110
+        substrate_gap = 46
+        product_gap = 51
+        node_spacing_y = 220
+        compound_gap_y = 30
+        rxn_step_x = 800
+        protein_w, protein_h = 150, 70
+        protein_gap_x = 10
 
         raw_bio_states = _as_named_records(self.extraction.get("biological_states", []))
         compartment_regions = self._assign_compartment_regions(raw_bio_states, canvas_w, canvas_h)
@@ -868,13 +1098,6 @@ class DeterministicPwmlBuilder:
             cols = max(1, w // dx_left)
             return _grid_positions(n, x0, y0, dx_left, dy_left, cols)
 
-        def sub_grid_right(region: Dict[str, Any], n: int) -> List[Tuple[int, int]]:
-            x0 = region["x"] + region["w"] // 2 + pad
-            y0 = region["y"] + pad
-            w = max(region["w"] // 2 - 2 * pad, 100)
-            cols = max(1, w // dx_right)
-            return _grid_positions(n, x0, y0, dx_right, dy_right, cols)
-
         compound_locations: List[Dict[str, Any]] = []
         element_collection_locations: List[Dict[str, Any]] = []
         nucleic_acid_locations: List[Dict[str, Any]] = []
@@ -887,10 +1110,15 @@ class DeterministicPwmlBuilder:
         membrane_visualizations: List[Dict[str, Any]] = []
 
         compound_loc_by_id: Dict[int, Dict[str, Any]] = {}
+        compound_loc_by_rxn: Dict[Tuple[int, int, str], Dict[str, Any]] = {}
+        compound_loc_by_state: Dict[Tuple[int, int], Dict[str, Any]] = {}
         element_collection_loc_by_id: Dict[int, Dict[str, Any]] = {}
+        element_collection_loc_by_rxn: Dict[Tuple[int, int, str], Dict[str, Any]] = {}
         nucleic_acid_loc_by_id: Dict[int, Dict[str, Any]] = {}
+        nucleic_acid_loc_by_rxn: Dict[Tuple[int, int, str], Dict[str, Any]] = {}
         protein_loc_by_id: Dict[int, Dict[str, Any]] = {}
         pc_vis_by_pc_id: Dict[int, Dict[str, Any]] = {}
+        transport_layouts: Dict[int, Dict[str, int]] = {}
 
         # Bound-visualizations — one per biological state
         for name_norm, bs_id in self._state_id_map.items():
@@ -915,86 +1143,456 @@ class DeterministicPwmlBuilder:
                 groups[bsid].append(rec)
             return groups
 
+        raw_reactions = _as_process_list(self.processes, "reactions")
+        reaction_bs_ids: Dict[int, int] = {}
+        reaction_indices_by_bs: Dict[int, List[int]] = defaultdict(list)
+        for idx, _reaction in enumerate(reactions):
+            raw_rx = raw_reactions[idx] if idx < len(raw_reactions) else {}
+            bs_name = str(raw_rx.get("biological_state", "")).strip()
+            bs_id = self._state_id_map.get(bs_name.casefold(), default_state_id)
+            reaction_bs_ids[idx] = bs_id
+            reaction_indices_by_bs[bs_id].append(idx)
+
+        reaction_layouts: Dict[int, Dict[str, int]] = {}
+        for bs_id, reaction_indices in sorted(reaction_indices_by_bs.items()):
+            region = region_for(bs_id)
+            n_rxns = len(reaction_indices)
+            enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * rxn_step_x // 2
+            enzyme_cy = max(region["y"] + region["h"] // 2, 360)
+            for k, reaction_idx in enumerate(reaction_indices):
+                enzyme_cx = enzyme_cx_base + k * rxn_step_x
+                enzyme_x = enzyme_cx - protein_w // 2
+                enzyme_y = enzyme_cy - protein_h // 2
+                reaction_layouts[reaction_idx] = {
+                    "biological-state-id": bs_id,
+                    "enzyme-cx": enzyme_cx,
+                    "enzyme-cy": enzyme_cy,
+                    "enzyme-x": enzyme_x,
+                    "enzyme-y": enzyme_y,
+                    "compound-stack-cy": enzyme_cy,
+                }
+
         # Compound locations — left half of each compartment region
+        compound_rec_by_id = {
+            int(rec["id"]): rec
+            for rec in self.entity_records.get("compounds", [])
+            if rec.get("id") is not None
+        }
+
+        def add_compound_location(compound_id: int, bs_id: int, x: int, y: int) -> Dict[str, Any]:
+            rec = compound_rec_by_id.get(compound_id, {"id": compound_id})
+            template_id = select_compound_template_id(rec)
+            width, height = TEMPLATE_DIMS.get(template_id, TEMPLATE_DIMS[3])
+            loc = {
+                "id": self.ids.next(),
+                "compound-id": compound_id,
+                "biological-state-id": bs_id,
+                "visualization-template-id": template_id,
+                "hidden": False,
+                "x": x,
+                "y": y,
+                "zindex": 10,
+                "font-size": "regular",
+                "width": str(width),
+                "height": str(height),
+            }
+            compound_locations.append(loc)
+            compound_loc_by_state[(compound_id, bs_id)] = loc
+            compound_loc_by_id.setdefault(compound_id, loc)
+            return loc
+
+        def ensure_compound_location(compound_id: int, bs_id: int) -> Dict[str, Any]:
+            loc = compound_loc_by_state.get((compound_id, bs_id))
+            if loc:
+                return loc
+            region = region_for(bs_id)
+            return add_compound_location(compound_id, bs_id, region["x"] + pad, region["y"] + pad)
+
+        def add_element_collection_location(
+            element_collection_id: int,
+            bs_id: int,
+            x: int,
+            y: int,
+        ) -> Dict[str, Any]:
+            width, height = TEMPLATE_DIMS[81]
+            loc = {
+                "id": self.ids.next(),
+                "element-collection-id": element_collection_id,
+                "visualization-template-id": 0,
+                "biological-state-id": bs_id,
+                "hidden": False,
+                "x": x,
+                "y": y,
+                "zindex": 10,
+                "font-size": "regular",
+                "width": str(width),
+                "height": str(height),
+            }
+            element_collection_locations.append(loc)
+            element_collection_loc_by_id.setdefault(element_collection_id, loc)
+            return loc
+
+        def add_nucleic_acid_location(
+            nucleic_acid_id: int,
+            bs_id: int,
+            x: int,
+            y: int,
+        ) -> Dict[str, Any]:
+            width, height = TEMPLATE_DIMS[81]
+            loc = {
+                "id": self.ids.next(),
+                "nucleic-acid-id": nucleic_acid_id,
+                "biological-state-id": bs_id,
+                "visualization-template-id": 0,
+                "hidden": False,
+                "x": x,
+                "y": y,
+                "zindex": 10,
+                "font-size": "regular",
+                "width": str(width),
+                "height": str(height),
+            }
+            nucleic_acid_locations.append(loc)
+            nucleic_acid_loc_by_id.setdefault(nucleic_acid_id, loc)
+            return loc
+
+        reaction_compound_ids: set[int] = set()
+        for reaction in reactions:
+            for side_key in ["reaction-left-elements", "reaction-right-elements"]:
+                elements = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                for rel in elements:
+                    if not isinstance(rel, dict):
+                        continue
+                    if str(rel.get("element-type") or "").casefold() != "compound":
+                        continue
+                    compound_id = _to_positive_int(rel.get("element-id"))
+                    if compound_id is not None:
+                        reaction_compound_ids.add(compound_id)
+
+        total_compound_count = len(self.entity_records.get("compounds", []))
+        grid_placed_compound_count = 0
         for bs_id, group_recs in sorted(group_by_bs("compounds").items()):
             region = region_for(bs_id)
-            for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
-                loc = {
-                    "id": self.ids.next(),
-                    "compound-id": int(rec["id"]),
-                    "biological-state-id": bs_id,
-                    "visualization-template-id": select_compound_template_id(rec),
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "font-size": "regular",
-                    "width": "160",
-                    "height": "60",
-                }
-                compound_locations.append(loc)
+            grid_recs = [
+                rec
+                for rec in group_recs
+                if _to_positive_int(rec.get("id")) not in reaction_compound_ids
+            ]
+            grid_placed_compound_count += len(grid_recs)
+            for rec, (x, y) in zip(grid_recs, sub_grid_left(region, len(grid_recs))):
+                loc = add_compound_location(int(rec["id"]), bs_id, x, y)
                 compound_loc_by_id[int(rec["id"])] = loc
+        self.layout_debug_counts.update(
+            {
+                "compound_total": total_compound_count,
+                "compound_grid_skipped_reaction_used": len(reaction_compound_ids),
+                "compound_grid_placed_non_reaction": grid_placed_compound_count,
+            }
+        )
 
         # Element-collection locations — left half of each compartment region
         for bs_id, group_recs in sorted(group_by_bs("element-collections").items()):
             region = region_for(bs_id)
             for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
-                loc = {
-                    "id": self.ids.next(),
-                    "element-collection-id": int(rec["id"]),
-                    "visualization-template-id": 0,
-                    "biological-state-id": bs_id,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "font-size": "regular",
-                    "width": "180",
-                    "height": "70",
-                }
-                element_collection_locations.append(loc)
+                loc = add_element_collection_location(int(rec["id"]), bs_id, x, y)
                 element_collection_loc_by_id[int(rec["id"])] = loc
 
         # Nucleic-acid locations — left half of each compartment region
         for bs_id, group_recs in sorted(group_by_bs("nucleic-acids").items()):
             region = region_for(bs_id)
             for rec, (x, y) in zip(group_recs, sub_grid_left(region, len(group_recs))):
-                loc = {
-                    "id": self.ids.next(),
-                    "nucleic-acid-id": int(rec["id"]),
-                    "biological-state-id": bs_id,
-                    "visualization-template-id": 0,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "font-size": "regular",
-                    "width": "190",
-                    "height": "60",
-                }
-                nucleic_acid_locations.append(loc)
+                loc = add_nucleic_acid_location(int(rec["id"]), bs_id, x, y)
                 nucleic_acid_loc_by_id[int(rec["id"])] = loc
 
-        # Protein locations — right half of each compartment region
+        # Protein locations: reaction enzymes sit at reaction-center positions.
+        def protein_complex_component_ids(protein_complex_id: int) -> List[int]:
+            rec = next(
+                (
+                    pc
+                    for pc in self.entity_records.get("protein-complexes", [])
+                    if int(pc.get("id") or 0) == protein_complex_id
+                ),
+                None,
+            )
+            if not rec:
+                return []
+
+            protein_ids: List[int] = []
+            for component in rec.get("components", []) if isinstance(rec.get("components"), list) else []:
+                prot: Optional[Dict[str, Any]] = None
+                if isinstance(component, dict):
+                    protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
+                    if protein_key:
+                        prot = next(
+                            (
+                                p
+                                for p in self.entity_records.get("proteins", [])
+                                if str(p.get("key") or "") == protein_key
+                            ),
+                            None,
+                        )
+                comp_name = _component_name(component)
+                if prot is None and comp_name:
+                    prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
+                if prot:
+                    protein_id = int(prot["id"])
+                    if protein_id not in protein_ids:
+                        protein_ids.append(protein_id)
+            return protein_ids
+
+        def reaction_enzyme_protein_ids(reaction: Dict[str, Any]) -> List[int]:
+            protein_ids: List[int] = []
+            for enzyme in reaction.get("reaction-enzymes", []) if isinstance(reaction.get("reaction-enzymes"), list) else []:
+                pc_id = enzyme.get("protein-complex-id")
+                prot_id = enzyme.get("protein-id")
+                if prot_id is not None:
+                    protein_id = int(prot_id)
+                    if protein_id not in protein_ids:
+                        protein_ids.append(protein_id)
+                elif pc_id is not None:
+                    for protein_id in protein_complex_component_ids(int(pc_id)):
+                        if protein_id not in protein_ids:
+                            protein_ids.append(protein_id)
+            return protein_ids
+
+        def add_protein_location(protein_id: int, bs_id: int, x: int, y: int, label_type: str = "text") -> None:
+            if protein_id in protein_loc_by_id:
+                return
+            loc = {
+                "id": self.ids.next(),
+                "protein-id": protein_id,
+                "biological-state-id": bs_id,
+                "visualization-template-id": 0,
+                "hidden": False,
+                "x": x,
+                "y": y,
+                "zindex": 10,
+                "label-type": label_type,
+                "font-size": "regular",
+                "width": str(protein_w),
+                "height": str(protein_h),
+            }
+            protein_locations.append(loc)
+            protein_loc_by_id[protein_id] = loc
+
+        def place_protein_location(
+            protein_id: int,
+            bs_id: int,
+            x: int,
+            y: int,
+            label_type: str = "text",
+        ) -> Optional[Dict[str, Any]]:
+            loc = protein_loc_by_id.get(protein_id)
+            if loc:
+                loc["biological-state-id"] = bs_id
+                loc["x"] = x
+                loc["y"] = y
+                loc["label-type"] = label_type
+                return loc
+            add_protein_location(protein_id, bs_id, x, y, label_type)
+            return protein_loc_by_id.get(protein_id)
+
+        # Protein locations: enzyme proteins sit at reaction-center positions.
+        for reaction_idx, reaction in enumerate(reactions):
+            layout = reaction_layouts.get(reaction_idx)
+            if not layout:
+                continue
+            enzyme_protein_ids = reaction_enzyme_protein_ids(reaction)
+            if not enzyme_protein_ids:
+                continue
+            total_w = len(enzyme_protein_ids) * protein_w + (len(enzyme_protein_ids) - 1) * protein_gap_x
+            x0 = layout["enzyme-cx"] - total_w // 2
+            for j, protein_id in enumerate(enzyme_protein_ids):
+                add_protein_location(
+                    protein_id,
+                    int(layout["biological-state-id"]),
+                    x0 + j * (protein_w + protein_gap_x),
+                    layout["enzyme-y"],
+                    "subunit" if len(enzyme_protein_ids) > 1 else "text",
+                )
+
+        # Preserve locations for non-enzyme proteins that may still be referenced elsewhere.
         for bs_id, group_recs in sorted(group_by_bs("proteins").items()):
             region = region_for(bs_id)
-            for rec, (x, y) in zip(group_recs, sub_grid_right(region, len(group_recs))):
-                loc = {
-                    "id": self.ids.next(),
-                    "protein-id": int(rec["id"]),
-                    "biological-state-id": bs_id,
-                    "visualization-template-id": 0,
-                    "hidden": False,
-                    "x": x,
-                    "y": y,
-                    "zindex": 10,
-                    "label-type": "text",
-                    "font-size": "regular",
-                    "width": "200",
-                    "height": "60",
-                }
-                protein_locations.append(loc)
-                protein_loc_by_id[int(rec["id"])] = loc
+            x = region["x"] + region["w"] - pad - protein_w
+            y = region["y"] + pad
+            for rec in group_recs:
+                protein_id = int(rec["id"])
+                if protein_id in protein_loc_by_id:
+                    continue
+                add_protein_location(protein_id, bs_id, x, y)
+                y += protein_h + protein_gap_x
+
+        def element_dims(element_type: str, element_id: int) -> Tuple[int, int]:
+            if element_type == "Compound":
+                rec = compound_rec_by_id.get(element_id, {"id": element_id})
+                template_id = select_compound_template_id(rec)
+                return TEMPLATE_DIMS.get(template_id, TEMPLATE_DIMS[3])
+            if element_type in ("ElementCollection", "NucleicAcid"):
+                return TEMPLATE_DIMS[81]
+            return TEMPLATE_DIMS[3]
+
+        for reaction_idx, reaction in enumerate(reactions):
+            layout = reaction_layouts.get(reaction_idx)
+            if not layout:
+                continue
+            bs_id = int(layout["biological-state-id"])
+            enzyme_left_x = layout["enzyme-x"]
+            enzyme_right_x = enzyme_left_x + protein_w
+            compound_stack_cy = layout["compound-stack-cy"]
+            for side_key in ["reaction-left-elements", "reaction-right-elements"]:
+                side = "Left" if side_key == "reaction-left-elements" else "Right"
+                elements = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                stack_members: List[Dict[str, Any]] = []
+                for rel in elements:
+                    if not isinstance(rel, dict):
+                        continue
+                    etype = str(rel.get("element-type") or "")
+                    eid = int(rel.get("element-id") or 0)
+                    if etype not in ("Compound", "ElementCollection", "NucleicAcid"):
+                        continue
+                    width, height = element_dims(etype, eid)
+                    stack_members.append(
+                        {
+                            "rel": rel,
+                            "etype": etype,
+                            "eid": eid,
+                            "width": width,
+                            "height": height,
+                        }
+                    )
+                heights = [int(member["height"]) for member in stack_members]
+                total_stack_height, stack_tops = _packed_reaction_stack_tops(
+                    heights,
+                    compound_stack_cy,
+                    compound_gap_y,
+                )
+                self.layout_debug_stacks.append(
+                    {
+                        "reaction_idx": reaction_idx,
+                        "side": side,
+                        "element_ids": [member["eid"] for member in stack_members],
+                        "heights": heights,
+                        "total_stack_height": total_stack_height,
+                        "enzyme_cy": compound_stack_cy,
+                        "y_positions": stack_tops,
+                    }
+                )
+                for member, y in zip(stack_members, stack_tops):
+                    etype = member["etype"]
+                    eid = int(member["eid"])
+                    width = int(member["width"])
+                    height = int(member["height"])
+                    expected_anchor_x = (
+                        enzyme_left_x - substrate_gap
+                        if side_key == "reaction-left-elements"
+                        else enzyme_right_x + product_gap
+                    )
+                    expected_anchor_y = y + height // 2
+                    x = expected_anchor_x - width if side == "Left" else expected_anchor_x
+                    if y < 0:
+                        import warnings
+                        warnings.warn(
+                            f"DEBUG layout: reaction_idx={reaction_idx} side={side_key} "
+                            f"y={y} (anchor_y={expected_anchor_y} height={height} compound_stack_cy={compound_stack_cy})"
+                        )
+                    if etype == "Compound":
+                        state_key = (eid, bs_id)
+                        had_state_loc = state_key in compound_loc_by_state
+                        previous_state_loc = compound_loc_by_state.get(state_key)
+                        loc = add_compound_location(eid, bs_id, x, y)
+                        _assert_reaction_member_anchor(loc, side, expected_anchor_x, expected_anchor_y)
+                        if had_state_loc and previous_state_loc is not None:
+                            compound_loc_by_state[state_key] = previous_state_loc
+                        else:
+                            compound_loc_by_state.pop(state_key, None)
+                        compound_loc_by_rxn[(eid, reaction_idx, side)] = loc
+                    elif etype == "ElementCollection":
+                        loc = add_element_collection_location(eid, bs_id, x, y)
+                        _assert_reaction_member_anchor(loc, side, expected_anchor_x, expected_anchor_y)
+                        element_collection_loc_by_rxn[(eid, reaction_idx, side)] = loc
+                    elif etype == "NucleicAcid":
+                        loc = add_nucleic_acid_location(eid, bs_id, x, y)
+                        _assert_reaction_member_anchor(loc, side, expected_anchor_x, expected_anchor_y)
+                        nucleic_acid_loc_by_rxn[(eid, reaction_idx, side)] = loc
+
+        # Transport layout is vertical across compartment boundaries. Cargo gets
+        # one location per biological state; transporter proteins sit on the
+        # membrane boundary between the source and destination compartments.
+        for transport_idx, transport in enumerate(transports):
+            elements = transport.get("transport-elements", [])
+            if not isinstance(elements, list) or not elements:
+                continue
+
+            first_compound: Optional[Dict[str, Any]] = None
+            for element in elements:
+                if str(element.get("element-type") or "") == "Compound":
+                    first_compound = element
+                    break
+            if not first_compound:
+                continue
+
+            source_bs_id = int(first_compound.get("left-biological-state-id") or default_state_id)
+            source_region = region_for(source_bs_id)
+            membrane_y = int(source_region["y"] + source_region["h"])
+            center_x = int(source_region["x"] + source_region["w"] // 2)
+            center_x += (transport_idx - (len(transports) - 1) // 2) * rxn_step_x
+            center_x = max(source_region["x"] + pad + protein_w // 2, center_x)
+            center_x = min(source_region["x"] + source_region["w"] - pad - protein_w // 2, center_x)
+
+            transporter_x = center_x - protein_w // 2
+            transporter_y = membrane_y
+            transport_layouts[int(transport["id"])] = {
+                "x": transporter_x,
+                "y": transporter_y,
+                "width": protein_w,
+                "height": protein_h,
+                "center-x": center_x,
+            }
+
+            compound_count = sum(1 for element in elements if str(element.get("element-type") or "") == "Compound")
+            compound_idx = 0
+            for element in elements:
+                if str(element.get("element-type") or "") != "Compound":
+                    continue
+                compound_id = int(element.get("element-id") or 0)
+                if not compound_id:
+                    continue
+                left_bs_id = int(element.get("left-biological-state-id") or default_state_id)
+                right_bs_id = int(element.get("right-biological-state-id") or default_state_id)
+                cargo_center_x = center_x + (compound_idx - (compound_count - 1) // 2) * node_spacing_y
+                source_loc = ensure_compound_location(compound_id, left_bs_id)
+                dest_loc = ensure_compound_location(compound_id, right_bs_id)
+                source_loc["x"] = cargo_center_x - int(source_loc["width"]) // 2
+                source_loc["y"] = membrane_y - int(source_loc["height"]) - pad
+                dest_loc["x"] = cargo_center_x - int(dest_loc["width"]) // 2
+                dest_loc["y"] = membrane_y + protein_h + pad
+                compound_idx += 1
+
+            transporters = transport.get("transport-transporters", [])
+            transporter_protein_ids: List[int] = []
+            for transporter in transporters if isinstance(transporters, list) else []:
+                prot_id = transporter.get("protein-id")
+                pc_id = transporter.get("protein-complex-id")
+                if prot_id is not None:
+                    protein_id = int(prot_id)
+                    if protein_id not in transporter_protein_ids:
+                        transporter_protein_ids.append(protein_id)
+                elif pc_id is not None:
+                    for protein_id in protein_complex_component_ids(int(pc_id)):
+                        if protein_id not in transporter_protein_ids:
+                            transporter_protein_ids.append(protein_id)
+
+            total_w = len(transporter_protein_ids) * protein_w + max(0, len(transporter_protein_ids) - 1) * protein_gap_x
+            x0 = center_x - total_w // 2 if transporter_protein_ids else transporter_x
+            for j, protein_id in enumerate(transporter_protein_ids):
+                place_protein_location(
+                    protein_id,
+                    source_bs_id,
+                    x0 + j * (protein_w + protein_gap_x),
+                    transporter_y,
+                    "subunit" if len(transporter_protein_ids) > 1 else "text",
+                )
 
         for rec in self.entity_records.get("protein-complexes", []):
             pc_protein_vis: List[Dict[str, Any]] = []
@@ -1031,33 +1629,139 @@ class DeterministicPwmlBuilder:
             protein_complex_visualizations.append(visualization)
             pc_vis_by_pc_id[int(rec["id"])] = visualization
 
-        def location_info(element_type: str, element_id: int) -> Optional[Tuple[int, int, int]]:
+        def loc_center(loc: Dict[str, Any]) -> Tuple[int, int, int]:
+            return (
+                int(loc["id"]),
+                int(loc["x"]) + int(loc["width"]) // 2,
+                int(loc["y"]) + int(loc["height"]) // 2,
+            )
+
+        def loc_side_center(loc: Dict[str, Any], side: str) -> Tuple[int, int, int]:
+            x = int(loc["x"])
+            if side == "Left":
+                x += int(loc["width"])
+            return (
+                int(loc["id"]),
+                x,
+                int(loc["y"]) + int(loc["height"]) // 2,
+            )
+
+        def _rxn_loc(
+            by_rxn: Dict,
+            by_id: Dict,
+            entity_label: str,
+            element_id: int,
+            side: Optional[str],
+            reaction_idx: Optional[int],
+        ) -> Optional[Dict[str, Any]]:
+            """Return the location dict for a reaction participant.
+
+            When reaction_idx and side are both provided the lookup is strictly
+            per-reaction: no fallback to the global by-id map.  A missing entry
+            is a hard error so that mis-anchored edges are caught immediately
+            rather than silently pointing at the wrong visual instance.
+
+            When called without reaction context (reaction_idx or side absent)
+            the by-id map is used, which is the correct path for non-reaction
+            lookups (e.g. transport or orphan compound queries).
+            """
+            if reaction_idx is not None and side:
+                loc = by_rxn.get((element_id, reaction_idx, side))
+                if loc is None:
+                    raise RuntimeError(
+                        f"Missing per-reaction {entity_label} location for "
+                        f"{entity_label}={element_id}, reaction_idx={reaction_idx}, side={side}"
+                    )
+                return loc
+            return by_id.get(element_id)
+
+        def location_info(
+            element_type: str,
+            element_id: int,
+            side: Optional[str] = None,
+            reaction_idx: Optional[int] = None,
+        ) -> Optional[Tuple[int, int, int]]:
             if element_type == "Compound":
-                loc = compound_loc_by_id.get(element_id)
+                loc = _rxn_loc(
+                    compound_loc_by_rxn, compound_loc_by_id,
+                    "compound", element_id, side, reaction_idx,
+                )
                 if loc:
-                    return int(loc["id"]), int(loc["x"]) + 80, int(loc["y"]) + 30
+                    return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "ElementCollection":
-                loc = element_collection_loc_by_id.get(element_id)
+                loc = _rxn_loc(
+                    element_collection_loc_by_rxn, element_collection_loc_by_id,
+                    "element-collection", element_id, side, reaction_idx,
+                )
                 if loc:
-                    return int(loc["id"]), int(loc["x"]) + 90, int(loc["y"]) + 35
+                    return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "NucleicAcid":
-                loc = nucleic_acid_loc_by_id.get(element_id)
+                loc = _rxn_loc(
+                    nucleic_acid_loc_by_rxn, nucleic_acid_loc_by_id,
+                    "nucleic-acid", element_id, side, reaction_idx,
+                )
                 if loc:
-                    return int(loc["id"]), int(loc["x"]) + 95, int(loc["y"]) + 30
+                    return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "Protein":
                 loc = protein_loc_by_id.get(element_id)
                 if loc:
-                    return int(loc["id"]), int(loc["x"]) + 100, int(loc["y"]) + 30
+                    return loc_side_center(loc, side) if side else loc_center(loc)
             return None
 
-        # Reaction visualizations — positioned at compartment region centroid
-        raw_reactions = _as_process_list(self.processes, "reactions")
-        for reaction, raw_rx in zip(reactions, raw_reactions):
-            bs_name = str(raw_rx.get("biological_state", "")).strip()
-            rx_bs_id = self._state_id_map.get(bs_name.casefold(), default_state_id)
-            rx_region = region_for(rx_bs_id)
-            rx = rx_region["x"] + rx_region["w"] // 2
-            ry = rx_region["y"] + rx_region["h"] // 2
+        # Reaction visualizations: edges connect directly to enzyme box faces.
+        def reaction_has_enzyme(reaction: Dict[str, Any]) -> bool:
+            enzymes = reaction.get("reaction-enzymes", [])
+            return isinstance(enzymes, list) and bool(enzymes)
+
+        def reaction_enzyme_box(reaction_idx: int, reaction: Dict[str, Any]) -> Optional[Tuple[int, int, int, int]]:
+            for protein_id in reaction_enzyme_protein_ids(reaction):
+                prot_loc = protein_loc_by_id.get(protein_id)
+                if prot_loc:
+                    return (
+                        int(prot_loc["x"]),
+                        int(prot_loc["y"]),
+                        int(prot_loc["width"]),
+                        int(prot_loc["height"]),
+                    )
+            if not reaction_has_enzyme(reaction):
+                return None
+            layout = reaction_layouts.get(reaction_idx)
+            if layout:
+                return layout["enzyme-x"], layout["enzyme-y"], protein_w, protein_h
+            return None
+
+        for reaction_idx, reaction in enumerate(reactions):
+            rx_bs_id = reaction_bs_ids.get(reaction_idx, default_state_id)
+            enzyme_box = reaction_enzyme_box(reaction_idx, reaction)
+            if enzyme_box:
+                enzyme_x, enzyme_y, enzyme_width, enzyme_height = enzyme_box
+                enzyme_left_x = enzyme_x
+                enzyme_right_x = enzyme_x + enzyme_width
+                enzyme_cy = enzyme_y + enzyme_height // 2
+            else:
+                rx_region = region_for(rx_bs_id)
+                layout = reaction_layouts.get(reaction_idx)
+                enzyme_left_x = layout["enzyme-x"] if layout else rx_region["x"] + rx_region["w"] // 2
+                enzyme_right_x = enzyme_left_x + 70
+                enzyme_cy = layout["enzyme-cy"] if layout else rx_region["y"] + rx_region["h"] // 2
+
+            no_enzyme = enzyme_box is None
+            no_enzyme_virtual_left = enzyme_left_x
+            if no_enzyme:
+                left_elements = (
+                    reaction.get("reaction-left-elements", [])
+                    if isinstance(reaction.get("reaction-left-elements"), list)
+                    else []
+                )
+                for rel in left_elements:
+                    etype = str(rel.get("element-type") or "")
+                    eid = int(rel.get("element-id") or 0)
+                    loc = location_info(etype, eid, "Left", reaction_idx)
+                    if loc:
+                        no_enzyme_virtual_left = loc[1] + substrate_gap
+                        break
+                enzyme_left_x = no_enzyme_virtual_left
+                enzyme_right_x = no_enzyme_virtual_left + 70
 
             reaction_compound_visualizations: List[Dict[str, Any]] = []
             reaction_element_collection_visualizations: List[Dict[str, Any]] = []
@@ -1067,22 +1771,36 @@ class DeterministicPwmlBuilder:
                 for rel in reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []:
                     etype = str(rel.get("element-type") or "")
                     eid = int(rel.get("element-id") or 0)
-                    loc = location_info(etype, eid)
+                    loc = location_info(etype, eid, side, reaction_idx)
                     if not loc:
                         continue
                     location_id, lx, ly = loc
                     edge_id = self.ids.next()
-                    if side == "Left":
-                        path = f"M{lx} {ly} L{rx} {ry}"
+                    if no_enzyme and side == "Left":
+                        x1, y1, x2, y2 = enzyme_right_x, enzyme_cy, enzyme_right_x, enzyme_cy
+                        hidden = True
+                    elif no_enzyme:
+                        x1, y1, x2, y2 = lx, enzyme_cy, no_enzyme_virtual_left, enzyme_cy
+                        hidden = False
+                    elif side == "Left":
+                        x1, y1, x2, y2 = lx, ly, enzyme_left_x, enzyme_cy
+                        hidden = False
                     else:
-                        path = f"M{rx} {ry} L{lx} {ly}"
-                    edges.append({
+                        x1, y1, x2, y2 = lx, ly, enzyme_right_x, enzyme_cy
+                        hidden = False
+                    path, cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
+                    edge = {
                         "id": edge_id,
                         "path": path,
-                        "visualization-template-id": 0,
-                        "hidden": False,
+                        "visualization-template-id": 5,
+                        "hidden": hidden,
                         "zindex": 18,
-                    })
+                    }
+                    if side == "Left":
+                        _add_end_arrow(edge, x2, y2, cp2x, cp2y)
+                    else:
+                        _add_start_arrow(edge, x1, y1, cp1x, cp1y)
+                    edges.append(edge)
                     if etype == "Compound":
                         reaction_compound_visualizations.append({
                             "id": self.ids.next(),
@@ -1131,12 +1849,101 @@ class DeterministicPwmlBuilder:
             })
 
         for transport in transports:
+            layout = transport_layouts.get(int(transport["id"]))
+            if layout:
+                transporter_top_x = layout["x"] + layout["width"] // 2
+                transporter_top_y = layout["y"]
+                transporter_bottom_x = transporter_top_x
+                transporter_bottom_y = layout["y"] + layout["height"]
+            else:
+                rx_region = region_for(default_state_id)
+                transporter_top_x = rx_region["x"] + rx_region["w"] // 2
+                transporter_top_y = rx_region["y"] + rx_region["h"] // 2
+                transporter_bottom_x = transporter_top_x
+                transporter_bottom_y = transporter_top_y + protein_h
+
+            transport_compound_visualizations: List[Dict[str, Any]] = []
+            transport_transporter_visualizations: List[Dict[str, Any]] = []
+
+            for element in transport.get("transport-elements", []) if isinstance(transport.get("transport-elements"), list) else []:
+                if str(element.get("element-type") or "") != "Compound":
+                    continue
+                compound_id = int(element.get("element-id") or 0)
+                if not compound_id:
+                    continue
+                left_bs_id = int(element.get("left-biological-state-id") or default_state_id)
+                right_bs_id = int(element.get("right-biological-state-id") or default_state_id)
+
+                for bs_id, side in [(left_bs_id, "Left"), (right_bs_id, "Right")]:
+                    loc = ensure_compound_location(compound_id, bs_id)
+                    location_id = int(loc["id"])
+                    loc_x = int(loc["x"])
+                    loc_y = int(loc["y"])
+                    loc_w = int(loc["width"])
+                    loc_h = int(loc["height"])
+                    edge_id = self.ids.next()
+                    if side == "Left":
+                        anchor_x = loc_x + loc_w // 2
+                        anchor_y = loc_y + loc_h
+                        x1, y1, x2, y2 = anchor_x, anchor_y, transporter_top_x, transporter_top_y
+                    else:
+                        anchor_x = loc_x + loc_w // 2
+                        anchor_y = loc_y
+                        x1, y1, x2, y2 = anchor_x, anchor_y, transporter_bottom_x, transporter_bottom_y
+                    path, cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
+                    edge = {
+                        "id": edge_id,
+                        "path": path,
+                        "visualization-template-id": 83,
+                        "hidden": False,
+                        "zindex": 18,
+                    }
+                    if side == "Left":
+                        _add_end_arrow(edge, x2, y2, cp2x, cp2y)
+                    else:
+                        _add_start_arrow(edge, x1, y1, cp1x, cp1y)
+                    edges.append(edge)
+                    transport_compound_visualizations.append(
+                        {
+                            "id": self.ids.next(),
+                            "compound-location-id": location_id,
+                            "edge-id": edge_id,
+                            "side": side,
+                        }
+                    )
+
+            for transporter in transport.get("transport-transporters", []) if isinstance(transport.get("transport-transporters"), list) else []:
+                pc_id = transporter.get("protein-complex-id")
+                prot_id = transporter.get("protein-id")
+                if pc_id is not None:
+                    pc_vis = pc_vis_by_pc_id.get(int(pc_id))
+                    if not pc_vis:
+                        continue
+                    transport_transporter_visualizations.append(
+                        {
+                            "id": self.ids.next(),
+                            "protein-complex-visualization-id": int(pc_vis["id"]),
+                            "transport-transporter-id": int(transporter["id"]),
+                        }
+                    )
+                elif prot_id is not None:
+                    prot_loc = protein_loc_by_id.get(int(prot_id))
+                    if not prot_loc:
+                        continue
+                    transport_transporter_visualizations.append(
+                        {
+                            "id": self.ids.next(),
+                            "protein-location-id": int(prot_loc["id"]),
+                            "transport-transporter-id": int(transporter["id"]),
+                        }
+                    )
+
             transport_visualizations.append({
                 "id": self.ids.next(),
                 "transport-id": int(transport["id"]),
                 "pathway-visualization-id": self.pathway_visualization_id_int,
-                "transport_compound_visualizations": [],
-                "transport_transporter_visualizations": [],
+                "transport_compound_visualizations": transport_compound_visualizations,
+                "transport_transporter_visualizations": transport_transporter_visualizations,
             })
 
         # Membrane-visualizations at compartment boundaries
@@ -1423,7 +2230,12 @@ class DeterministicPwmlBuilder:
                 fallback=self.compound_ids,
             )
             remember("entities", record.get("key"), rid)
-            self._ir_entity_info[str(record.get("key"))] = {"id": rid, "type": "Compound", "entity_type": "compound"}
+            self._ir_entity_info[str(record.get("key"))] = {
+                "id": rid,
+                "type": "Compound",
+                "entity_type": "compound",
+                "template_id": select_compound_template_id(record),
+            }
             mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
             chebi_id = (
                 db_row.get("chebi_id")
@@ -1782,6 +2594,23 @@ class DeterministicPwmlBuilder:
             "element-collection-locations",
         ]:
             self.section_items[section] = []
+        reaction_compound_entity_keys: set[str] = set()
+        for reaction in process_items.get("reactions", []) if isinstance(process_items.get("reactions"), list) else []:
+            if not isinstance(reaction, dict):
+                continue
+            for side_key in ["left", "right"]:
+                members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                for member in members:
+                    if not isinstance(member, dict):
+                        continue
+                    entity_key = str(member.get("entity_key") or "")
+                    info = entity_info(entity_key)
+                    if info and info.get("entity_type") == "compound":
+                        reaction_compound_entity_keys.add(entity_key)
+        total_compound_count = len(self.section_items.get("compounds", []))
+        grid_placed_compound_count = 0
+        skipped_base_location_by_id: Dict[int, Dict[str, Any]] = {}
+        location_by_entity_state: Dict[Tuple[str, str], int] = {}
         protein_location_by_entity_state: Dict[Tuple[str, str], int] = {}
         for loc in ir.get("locations", []) if isinstance(ir.get("locations"), list) else []:
             if not isinstance(loc, dict):
@@ -1797,6 +2626,9 @@ class DeterministicPwmlBuilder:
                 protein_location_by_entity_state[
                     (str(loc.get("entity_key") or ""), str(loc.get("biological_state_key") or ""))
                 ] = lid
+            location_by_entity_state[
+                (str(loc.get("entity_key") or ""), str(loc.get("biological_state_key") or ""))
+            ] = lid
             item = {
                     "id": lid,
                     entity_field: int(info["id"]),
@@ -1816,7 +2648,24 @@ class DeterministicPwmlBuilder:
                 item["label-type"] = str(loc.get("label_type") or loc.get("label-type") or "subunit")
                 item["width"] = str(loc.get("width") or 150)
                 item["height"] = str(loc.get("height") or 70)
-            self.section_items[section].append(item)
+            skip_base_compound_location = (
+                section == "compound-locations"
+                and info.get("entity_type") == "compound"
+                and str(loc.get("entity_key") or "") in reaction_compound_entity_keys
+            )
+            if skip_base_compound_location:
+                skipped_base_location_by_id[lid] = item
+            else:
+                if section == "compound-locations":
+                    grid_placed_compound_count += 1
+                self.section_items[section].append(item)
+        self.layout_debug_counts.update(
+            {
+                "compound_total": total_compound_count,
+                "compound_grid_skipped_reaction_used": len(reaction_compound_entity_keys),
+                "compound_grid_placed_non_reaction": grid_placed_compound_count,
+            }
+        )
 
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
@@ -1855,6 +2704,7 @@ class DeterministicPwmlBuilder:
                     if protein_info is not None and biological_state_id is not None:
                         protein_location_id = self.ids.next()
                         protein_location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
+                        location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
                         self.section_items["protein-locations"].append(
                             {
                                 "id": protein_location_id,
@@ -1884,6 +2734,464 @@ class DeterministicPwmlBuilder:
                 }
             )
 
+        loc_by_id: Dict[int, Dict[str, Any]] = {}
+        for section in [
+            "compound-locations",
+            "protein-locations",
+            "nucleic-acid-locations",
+            "element-collection-locations",
+        ]:
+            for loc in self.section_items.get(section, []):
+                loc_by_id[int(loc["id"])] = loc
+        loc_by_id.update(skipped_base_location_by_id)
+
+        protein_complex_viz_by_id = {
+            int(viz["id"]): viz
+            for viz in self.section_items.get("protein-complex-visualizations", [])
+        }
+
+        layout_substrate_gap = 46
+        layout_product_gap = 51
+        layout_compound_gap_y = 30
+        layout_rxn_step_x = 800
+        layout_protein_w, layout_protein_h = 150, 70
+        layout_protein_gap_x = 10
+
+        state_region_by_key: Dict[str, Dict[str, int]] = {}
+        for bound in ir.get("bound_visualizations", []) if isinstance(ir.get("bound_visualizations"), list) else []:
+            if not isinstance(bound, dict):
+                continue
+            biological_state_key = str(bound.get("biological_state_key") or "")
+            if biological_state_key:
+                state_region_by_key[biological_state_key] = {
+                    "x": int(bound.get("x") or 0),
+                    "y": int(bound.get("y") or 0),
+                    "w": int(bound.get("width") or self.args.width),
+                    "h": int(bound.get("height") or self.args.height),
+                }
+
+        def ir_region_for_state(state_key: str) -> Dict[str, int]:
+            return state_region_by_key.get(
+                state_key,
+                {"x": 0, "y": 0, "w": int(self.args.width), "h": int(self.args.height)},
+            )
+
+        raw_reactions_by_key = {
+            str(reaction.get("key")): reaction
+            for reaction in process_items.get("reactions", [])
+            if isinstance(reaction, dict) and reaction.get("key") is not None
+        }
+        reaction_keys_by_state: Dict[str, List[str]] = defaultdict(list)
+        for reaction in process_items.get("reactions", []) if isinstance(process_items.get("reactions"), list) else []:
+            if not isinstance(reaction, dict):
+                continue
+            reaction_key = str(reaction.get("key") or "")
+            biological_state_key = str(reaction.get("biological_state_key") or "")
+            if reaction_key:
+                reaction_keys_by_state[biological_state_key].append(reaction_key)
+
+        reaction_layout_by_key: Dict[str, Dict[str, int]] = {}
+        for biological_state_key, reaction_keys in reaction_keys_by_state.items():
+            region = ir_region_for_state(biological_state_key)
+            n_rxns = len(reaction_keys)
+            enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * layout_rxn_step_x // 2
+            enzyme_cy = max(region["y"] + region["h"] // 2, 360)
+            for k, reaction_key in enumerate(reaction_keys):
+                enzyme_cx = enzyme_cx_base + k * layout_rxn_step_x
+                enzyme_x = enzyme_cx - layout_protein_w // 2
+                enzyme_y = enzyme_cy - layout_protein_h // 2
+                reaction_layout_by_key[reaction_key] = {
+                    "enzyme-cx": enzyme_cx,
+                    "enzyme-cy": enzyme_cy,
+                    "enzyme-x": enzyme_x,
+                    "enzyme-y": enzyme_y,
+                    "compound-stack-cy": enzyme_cy,
+                }
+
+        def ensure_protein_location(protein_key: str, biological_state_key: str) -> Optional[int]:
+            loc_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
+            if loc_id is not None:
+                return loc_id
+            protein_info = entity_info(protein_key)
+            biological_state_id = lookup("biological_states", biological_state_key)
+            if protein_info is None or biological_state_id is None:
+                return None
+            loc_id = self.ids.next()
+            protein_location_by_entity_state[(protein_key, biological_state_key)] = loc_id
+            location_by_entity_state[(protein_key, biological_state_key)] = loc_id
+            loc = {
+                "id": loc_id,
+                "protein-id": int(protein_info["id"]),
+                "biological-state-id": biological_state_id,
+                "visualization-template-id": 2,
+                "hidden": False,
+                "x": 0,
+                "y": 0,
+                "zindex": 8,
+                "label-type": "subunit",
+                "font-size": "regular",
+                "width": str(layout_protein_w),
+                "height": str(layout_protein_h),
+            }
+            self.section_items["protein-locations"].append(loc)
+            loc_by_id[loc_id] = loc
+            return loc_id
+
+        def enzyme_protein_location_ids(reaction: Dict[str, Any], biological_state_key: str) -> List[int]:
+            loc_ids: List[int] = []
+            for member in reaction.get("enzymes", []) if isinstance(reaction.get("enzymes"), list) else []:
+                if not isinstance(member, dict):
+                    continue
+                entity_key = str(member.get("entity_key") or "")
+                info = entity_info(entity_key)
+                if not info:
+                    continue
+                if info["entity_type"] == "protein":
+                    loc_id = ensure_protein_location(entity_key, biological_state_key)
+                    if loc_id is not None and loc_id not in loc_ids:
+                        loc_ids.append(loc_id)
+                elif info["entity_type"] == "protein_complex":
+                    pcv_id = protein_complex_viz_by_entity_state.get((entity_key, biological_state_key))
+                    if pcv_id is None:
+                        pcv_id = protein_complex_viz_by_entity.get(entity_key)
+                    pcv = protein_complex_viz_by_id.get(int(pcv_id)) if pcv_id is not None else None
+                    if pcv:
+                        for protein_viz in pcv.get("protein_complex_protein_visualizations", []):
+                            loc_id = int(protein_viz.get("protein-location-id") or 0)
+                            if loc_id and loc_id not in loc_ids:
+                                loc_ids.append(loc_id)
+            return loc_ids
+
+        enzyme_loc_ids_by_reaction_key: Dict[str, List[int]] = {}
+        for reaction_key, reaction in raw_reactions_by_key.items():
+            biological_state_key = str(reaction.get("biological_state_key") or "")
+            layout = reaction_layout_by_key.get(reaction_key)
+            if not layout:
+                continue
+            loc_ids = enzyme_protein_location_ids(reaction, biological_state_key)
+            enzyme_loc_ids_by_reaction_key[reaction_key] = loc_ids
+            if not loc_ids:
+                continue
+            total_w = len(loc_ids) * layout_protein_w + (len(loc_ids) - 1) * layout_protein_gap_x
+            x0 = layout["enzyme-cx"] - total_w // 2
+            for j, loc_id in enumerate(loc_ids):
+                loc = loc_by_id.get(loc_id)
+                if not loc:
+                    continue
+                loc["x"] = x0 + j * (layout_protein_w + layout_protein_gap_x)
+                loc["y"] = layout["enzyme-y"]
+                loc["width"] = str(layout_protein_w)
+                loc["height"] = str(layout_protein_h)
+
+        reaction_member_location_by_key: Dict[str, int] = {}
+
+        def location_section_for_record(loc: Dict[str, Any]) -> Optional[str]:
+            if "compound-id" in loc:
+                return "compound-locations"
+            if "element-collection-id" in loc:
+                return "element-collection-locations"
+            if "nucleic-acid-id" in loc:
+                return "nucleic-acid-locations"
+            return None
+
+        def add_reaction_member_location(
+            member: Dict[str, Any],
+            biological_state_key: str,
+            x: int,
+            y: int,
+            width: Optional[int] = None,
+            height: Optional[int] = None,
+        ) -> Optional[int]:
+            entity_key = str(member.get("entity_key") or "")
+            member_state_key = str(member.get("biological_state_key") or biological_state_key)
+            base_loc_id = location_by_entity_state.get((entity_key, member_state_key))
+            if base_loc_id is None:
+                base_loc_id = lookup("locations", member.get("location_key"))
+            if base_loc_id is None:
+                return None
+            base_loc = loc_by_id.get(base_loc_id)
+            if not base_loc:
+                return None
+            section = location_section_for_record(base_loc)
+            if not section:
+                return None
+            loc_id = self.ids.next()
+            loc = dict(base_loc)
+            loc["id"] = loc_id
+            loc["x"] = x
+            loc["y"] = y
+            if width is not None:
+                loc["width"] = str(width)
+            if height is not None:
+                loc["height"] = str(height)
+            biological_state_id = lookup("biological_states", member_state_key)
+            if biological_state_id is not None:
+                loc["biological-state-id"] = biological_state_id
+            self.section_items[section].append(loc)
+            loc_by_id[loc_id] = loc
+            member_key = str(member.get("key") or "")
+            if member_key:
+                reaction_member_location_by_key[member_key] = loc_id
+            return loc_id
+
+        def reaction_member_dims(member: Dict[str, Any], loc: Dict[str, Any]) -> Tuple[int, int]:
+            info = entity_info(member.get("entity_key"))
+            if info and info.get("entity_type") == "compound":
+                template_id = _to_positive_int(info.get("template_id"))
+                if template_id is None:
+                    template_id = _to_positive_int(loc.get("visualization-template-id"))
+                return TEMPLATE_DIMS.get(template_id or 3, TEMPLATE_DIMS[3])
+            return int(loc["width"]), int(loc["height"])
+
+        compound_record_by_id = {
+            int(compound["id"]): compound
+            for compound in self.section_items.get("compounds", [])
+            if isinstance(compound, dict) and compound.get("id") is not None
+        }
+
+        reaction_idx_by_key = {reaction_key: idx for idx, reaction_key in enumerate(raw_reactions_by_key)}
+        reaction_sequence = list(raw_reactions_by_key.items())
+
+        def compound_member_identity(
+            member: Dict[str, Any],
+            reaction_biological_state_key: str,
+        ) -> Optional[Tuple[int, str]]:
+            info = entity_info(member.get("entity_key"))
+            if not info or info.get("entity_type") != "compound":
+                return None
+            state_key = str(member.get("biological_state_key") or reaction_biological_state_key)
+            return int(info["id"]), state_key
+
+        participant_occurrences: Dict[Tuple[int, str], List[Tuple[int, str, str, str]]] = defaultdict(list)
+        left_occurrences: Dict[Tuple[int, str], List[Tuple[int, str, str, str]]] = defaultdict(list)
+        right_occurrences: Dict[Tuple[int, str], List[Tuple[int, str, str, str]]] = defaultdict(list)
+        for idx, (reaction_key, reaction) in enumerate(reaction_sequence):
+            biological_state_key = str(reaction.get("biological_state_key") or "")
+            for side_key, by_side in [("left", left_occurrences), ("right", right_occurrences)]:
+                members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                for member in members:
+                    if not isinstance(member, dict):
+                        continue
+                    identity = compound_member_identity(member, biological_state_key)
+                    if identity is None:
+                        continue
+                    occurrence = (idx, reaction_key, side_key, str(member.get("key") or ""))
+                    participant_occurrences[identity].append(occurrence)
+                    by_side[identity].append(occurrence)
+
+        shared_from_previous: Dict[Tuple[int, str, int], int] = {}
+        for idx in range(len(reaction_sequence) - 1):
+            producer_key, producer = reaction_sequence[idx]
+            consumer_key, consumer = reaction_sequence[idx + 1]
+            producer_state_key = str(producer.get("biological_state_key") or "")
+            consumer_state_key = str(consumer.get("biological_state_key") or "")
+            producer_right = producer.get("right", []) if isinstance(producer.get("right"), list) else []
+            consumer_left = consumer.get("left", []) if isinstance(consumer.get("left"), list) else []
+            producer_products = {
+                identity
+                for member in producer_right
+                if isinstance(member, dict)
+                for identity in [compound_member_identity(member, producer_state_key)]
+                if identity is not None
+            }
+            consumer_substrates = {
+                identity
+                for member in consumer_left
+                if isinstance(member, dict)
+                for identity in [compound_member_identity(member, consumer_state_key)]
+                if identity is not None
+            }
+            candidates: List[Tuple[int, str]] = []
+            for identity in sorted(producer_products & consumer_substrates):
+                compound_id, state_key = identity
+                compound_record = compound_record_by_id.get(compound_id, {})
+                debug_base = {
+                    "compound_id": compound_id,
+                    "compound_name": compound_record.get("name", ""),
+                    "biological_state_key": state_key,
+                    "producer_rxn_idx": idx,
+                    "producer_reaction_key": producer_key,
+                    "consumer_rxn_idx": idx + 1,
+                    "consumer_reaction_key": consumer_key,
+                }
+                if _is_currency_compound_record(compound_record):
+                    self.layout_debug_shared_intermediates.append({**debug_base, "action": "skipped_cofactor"})
+                    continue
+                if (
+                    len(right_occurrences.get(identity, [])) != 1
+                    or len(left_occurrences.get(identity, [])) != 1
+                    or len(participant_occurrences.get(identity, [])) != 2
+                ):
+                    self.layout_debug_shared_intermediates.append(
+                        {**debug_base, "action": "skipped_ambiguous_participation"}
+                    )
+                    continue
+                candidates.append(identity)
+            if len(candidates) > 1:
+                for compound_id, state_key in candidates:
+                    compound_record = compound_record_by_id.get(compound_id, {})
+                    self.layout_debug_shared_intermediates.append(
+                        {
+                            "action": "skipped_branching_ambiguity",
+                            "compound_id": compound_id,
+                            "compound_name": compound_record.get("name", ""),
+                            "biological_state_key": state_key,
+                            "producer_rxn_idx": idx,
+                            "producer_reaction_key": producer_key,
+                            "consumer_rxn_idx": idx + 1,
+                            "consumer_reaction_key": consumer_key,
+                        }
+                    )
+                continue
+            for compound_id, state_key in candidates:
+                shared_from_previous[(compound_id, state_key, idx + 1)] = idx
+                compound_record = compound_record_by_id.get(compound_id, {})
+                self.layout_debug_shared_intermediates.append(
+                    {
+                        "action": "detected_shared_intermediate",
+                        "compound_id": compound_id,
+                        "compound_name": compound_record.get("name", ""),
+                        "biological_state_key": state_key,
+                        "producer_rxn_idx": idx,
+                        "producer_reaction_key": producer_key,
+                        "consumer_rxn_idx": idx + 1,
+                        "consumer_reaction_key": consumer_key,
+                    }
+                )
+        self.layout_debug_counts.update(
+            {
+                "shared_intermediates_detected": sum(
+                    1
+                    for item in self.layout_debug_shared_intermediates
+                    if item.get("action") == "detected_shared_intermediate"
+                ),
+                "shared_intermediates_skipped_cofactor": sum(
+                    1
+                    for item in self.layout_debug_shared_intermediates
+                    if item.get("action") == "skipped_cofactor"
+                ),
+            }
+        )
+        compound_loc_by_rxn_side: Dict[Tuple[int, str, int, str], int] = {}
+
+        for reaction_key, reaction in raw_reactions_by_key.items():
+            layout = reaction_layout_by_key.get(reaction_key)
+            if not layout:
+                continue
+            reaction_idx = reaction_idx_by_key.get(reaction_key, 0)
+            biological_state_key = str(reaction.get("biological_state_key") or "")
+            enzyme_left_x = layout["enzyme-x"]
+            enzyme_right_x = enzyme_left_x + layout_protein_w
+            compound_stack_cy = layout["compound-stack-cy"]
+            for side_key in ["left", "right"]:
+                members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
+                side = "Left" if side_key == "left" else "Right"
+                stack_members: List[Dict[str, Any]] = []
+                for member in members:
+                    if not isinstance(member, dict):
+                        continue
+                    entity_key = str(member.get("entity_key") or "")
+                    member_state_key = str(member.get("biological_state_key") or biological_state_key)
+                    identity = compound_member_identity(member, biological_state_key)
+                    if side_key == "left" and identity is not None:
+                        compound_id, state_key = identity
+                        producer_idx = shared_from_previous.get((compound_id, state_key, reaction_idx))
+                        if producer_idx is not None:
+                            shared_loc_id = compound_loc_by_rxn_side.get(
+                                (compound_id, state_key, producer_idx, "Right")
+                            )
+                            if shared_loc_id is not None:
+                                member_key = str(member.get("key") or "")
+                                if member_key:
+                                    reaction_member_location_by_key[member_key] = shared_loc_id
+                                compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, "Left")] = shared_loc_id
+                                compound_record = compound_record_by_id.get(compound_id, {})
+                                self.layout_debug_shared_intermediates.append(
+                                    {
+                                        "action": "reused_location",
+                                        "compound_id": compound_id,
+                                        "compound_name": compound_record.get("name", ""),
+                                        "biological_state_key": state_key,
+                                        "producer_rxn_idx": producer_idx,
+                                        "consumer_rxn_idx": reaction_idx,
+                                        "location_id": shared_loc_id,
+                                    }
+                                )
+                                continue
+                    base_loc_id = location_by_entity_state.get((entity_key, member_state_key))
+                    if base_loc_id is None:
+                        base_loc_id = lookup("locations", member.get("location_key"))
+                    if base_loc_id is None:
+                        continue
+                    loc = loc_by_id.get(base_loc_id)
+                    if not loc:
+                        continue
+                    width, height = reaction_member_dims(member, loc)
+                    stack_members.append(
+                        {
+                            "member": member,
+                            "entity_key": entity_key,
+                            "width": width,
+                            "height": height,
+                        }
+                    )
+                heights = [int(member["height"]) for member in stack_members]
+                total_stack_height, stack_tops = _packed_reaction_stack_tops(
+                    heights,
+                    compound_stack_cy,
+                    layout_compound_gap_y,
+                )
+                self.layout_debug_stacks.append(
+                    {
+                        "reaction_idx": reaction_idx,
+                        "reaction_key": reaction_key,
+                        "side": side,
+                        "element_ids": [member["entity_key"] for member in stack_members],
+                        "heights": heights,
+                        "total_stack_height": total_stack_height,
+                        "enzyme_cy": compound_stack_cy,
+                        "y_positions": stack_tops,
+                    }
+                )
+                for stack_member, y in zip(stack_members, stack_tops):
+                    member = stack_member["member"]
+                    width = int(stack_member["width"])
+                    height = int(stack_member["height"])
+                    expected_anchor_x = (
+                        enzyme_left_x - layout_substrate_gap
+                        if side_key == "left"
+                        else enzyme_right_x + layout_product_gap
+                    )
+                    expected_anchor_y = y + height // 2
+                    x = expected_anchor_x - width if side == "Left" else expected_anchor_x
+                    if y < 0:
+                        import warnings
+                        warnings.warn(
+                            f"DEBUG layout (IR): reaction_key={reaction_key} side={side_key} "
+                            f"y={y} (anchor_y={expected_anchor_y} height={height} compound_stack_cy={compound_stack_cy})"
+                        )
+                    loc_id = add_reaction_member_location(
+                        member,
+                        biological_state_key,
+                        x,
+                        y,
+                        width,
+                        height,
+                    )
+                    if loc_id is not None:
+                        written_loc = loc_by_id[loc_id]
+                        _assert_reaction_member_anchor(written_loc, side, expected_anchor_x, expected_anchor_y)
+                        identity = compound_member_identity(member, biological_state_key)
+                        if identity is not None:
+                            compound_id, state_key = identity
+                            compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = loc_id
+
+        self.layout_debug_counts["shared_intermediate_locations_reused"] = sum(
+            1
+            for item in self.layout_debug_shared_intermediates
+            if item.get("action") == "reused_location"
+        )
+
         self.section_items["edges"] = []
         for edge in ir.get("edges", []) if isinstance(ir.get("edges"), list) else []:
             if not isinstance(edge, dict):
@@ -1899,6 +3207,106 @@ class DeterministicPwmlBuilder:
                     "zindex": int(edge.get("zindex") or 18),
                 }
             )
+
+        edge_by_id = {int(edge["id"]): edge for edge in self.section_items["edges"]}
+
+        def loc_connection_point(loc_id: int, side: str) -> Optional[Tuple[int, int]]:
+            loc = loc_by_id.get(loc_id)
+            if not loc:
+                return None
+            x = int(loc["x"])
+            if side == "Left":
+                x += int(loc["width"])
+            return x, int(loc["y"]) + int(loc["height"]) // 2
+
+        def reaction_key_has_enzyme(reaction_key: str) -> bool:
+            reaction = raw_reactions_by_key.get(reaction_key)
+            if not reaction:
+                return False
+            enzymes = reaction.get("enzymes", [])
+            return isinstance(enzymes, list) and bool(enzymes)
+
+        def enzyme_box_for_reaction_key(reaction_key: str) -> Optional[Tuple[int, int, int, int]]:
+            for loc_id in enzyme_loc_ids_by_reaction_key.get(reaction_key, []):
+                loc = loc_by_id.get(loc_id)
+                if loc:
+                    return int(loc["x"]), int(loc["y"]), int(loc["width"]), int(loc["height"])
+            if not reaction_key_has_enzyme(reaction_key):
+                return None
+            layout = reaction_layout_by_key.get(reaction_key)
+            if layout:
+                return layout["enzyme-x"], layout["enzyme-y"], layout_protein_w, layout_protein_h
+            return None
+
+        for viz in ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []:
+            if not isinstance(viz, dict) or str(viz.get("type") or "") != "reaction_visualization":
+                continue
+            reaction_key = str(viz.get("process_key") or "")
+            enzyme_box = enzyme_box_for_reaction_key(reaction_key)
+            if enzyme_box:
+                enzyme_x, enzyme_y, enzyme_width, enzyme_height = enzyme_box
+                enzyme_left = enzyme_x
+                enzyme_right = enzyme_x + enzyme_width
+                enzyme_cy = enzyme_y + enzyme_height // 2
+            else:
+                reaction = raw_reactions_by_key.get(reaction_key, {})
+                biological_state_key = str(reaction.get("biological_state_key") or viz.get("biological_state_key") or "")
+                region = ir_region_for_state(biological_state_key)
+                layout = reaction_layout_by_key.get(reaction_key)
+                enzyme_left = layout["enzyme-x"] if layout else region["x"] + region["w"] // 2
+                enzyme_right = enzyme_left + 70
+                enzyme_cy = layout["enzyme-cy"] if layout else region["y"] + region["h"] // 2
+                for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
+                    if not isinstance(member, dict) or str(member.get("role") or "") != "left":
+                        continue
+                    loc_id = reaction_member_location_by_key.get(str(member.get("process_member_key") or ""))
+                    if loc_id is None:
+                        loc_id = lookup("locations", member.get("location_key"))
+                    if loc_id is None:
+                        continue
+                    point = loc_connection_point(loc_id, "Left")
+                    if point is not None:
+                        enzyme_left = point[0] + layout_substrate_gap
+                        enzyme_right = enzyme_left + 70
+                        break
+            no_enzyme = enzyme_box is None
+            for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
+                if not isinstance(member, dict):
+                    continue
+                role = str(member.get("role") or "")
+                side = "Left" if role == "left" else "Right" if role == "right" else ""
+                if not side:
+                    continue
+                loc_id = reaction_member_location_by_key.get(str(member.get("process_member_key") or ""))
+                if loc_id is None:
+                    loc_id = lookup("locations", member.get("location_key"))
+                edge_id = lookup("edges", member.get("edge_key"))
+                if loc_id is None or edge_id is None:
+                    continue
+                point = loc_connection_point(loc_id, side)
+                edge = edge_by_id.get(edge_id)
+                if point is None or edge is None:
+                    continue
+                px, py = point
+                edge["visualization-template-id"] = 5
+                edge.pop("options", None)
+                if no_enzyme and side == "Left":
+                    x1, y1, x2, y2 = enzyme_right, enzyme_cy, enzyme_right, enzyme_cy
+                    edge["hidden"] = True
+                elif no_enzyme:
+                    x1, y1, x2, y2 = px, enzyme_cy, enzyme_left, enzyme_cy
+                    edge["hidden"] = False
+                elif side == "Left":
+                    x1, y1, x2, y2 = px, py, enzyme_left, enzyme_cy
+                    edge["hidden"] = False
+                else:
+                    x1, y1, x2, y2 = px, py, enzyme_right, enzyme_cy
+                    edge["hidden"] = False
+                edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
+                if side == "Left":
+                    _add_end_arrow(edge, x2, y2, cp2x, cp2y)
+                else:
+                    _add_start_arrow(edge, x1, y1, cp1x, cp1y)
 
         self.section_items["reaction-visualizations"] = []
         self.section_items["transport-visualizations"] = []
@@ -1928,7 +3336,9 @@ class DeterministicPwmlBuilder:
                     if not isinstance(member, dict):
                         continue
                     minfo = member_ids.get(str(member.get("process_member_key")))
-                    loc_id = lookup("locations", member.get("location_key"))
+                    loc_id = reaction_member_location_by_key.get(str(member.get("process_member_key") or ""))
+                    if loc_id is None:
+                        loc_id = lookup("locations", member.get("location_key"))
                     edge_id = lookup("edges", member.get("edge_key"))
                     if not minfo:
                         continue
@@ -2219,7 +3629,10 @@ class DeterministicPwmlBuilder:
         value: Any,
         section_sig: Optional[SectionSignature],
     ) -> etree._Element:
-        node = etree.SubElement(parent, tag)
+        node_tag = tag
+        if tag.startswith("option:"):
+            node_tag = f"{{{OPTION_TAG_NS}}}{tag.split(':', 1)[1]}"
+        node = etree.SubElement(parent, node_tag)
         if section_sig is not None:
             is_integer = tag in section_sig.integer_fields
             is_boolean = tag in section_sig.boolean_fields
@@ -2351,7 +3764,7 @@ class DeterministicPwmlBuilder:
         self._make_biological_state_identity_fields_optional()
         counts = self._populate_sections()
 
-        root = etree.Element(self.signature.root_tag)
+        root = etree.Element(self.signature.root_tag, nsmap={"option": OPTION_TAG_NS})
         for tag in self.signature.root_children:
             if tag == "named-for-id":
                 node = etree.SubElement(root, tag)
