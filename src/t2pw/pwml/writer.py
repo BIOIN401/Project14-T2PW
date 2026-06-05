@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 from collections import defaultdict
 from dataclasses import dataclass
@@ -25,6 +26,58 @@ from t2pw.pwml.validate import (
 )
 
 OPTION_TAG_NS = "urn:pathwhiz-option"
+ARROW_ANGLE = math.pi / 6
+ARROW_LENGTH = 30
+
+
+def _format_path_number(value: float) -> str:
+    return f"{value:.12g}"
+
+
+def _curved_edge_path(
+    x1: int,
+    y1: int,
+    x2: int,
+    y2: int,
+) -> Tuple[str, int, int, int, int]:
+    cp1x = x1 + (x2 - x1) // 3
+    cp1y = y1 + (y2 - y1) // 3
+    cp2x = x1 + 2 * (x2 - x1) // 3
+    cp2y = y1 + 2 * (y2 - y1) // 3
+    path = f"M{x1} {y1} C{cp1x} {cp1y} {cp2x} {cp2y} {x2} {y2}"
+    return path, cp1x, cp1y, cp2x, cp2y
+
+
+def _compute_arrow_path(tip_x: int, tip_y: int, from_x: int, from_y: int) -> Optional[str]:
+    dx = from_x - tip_x
+    dy = from_y - tip_y
+    distance = math.sqrt(dx**2 + dy**2)
+    if distance == 0:
+        return None
+    r = ARROW_LENGTH / distance
+    x4 = (math.cos(ARROW_ANGLE) * dx - math.sin(ARROW_ANGLE) * dy) * r + tip_x
+    y4 = (math.sin(ARROW_ANGLE) * dx + math.cos(ARROW_ANGLE) * dy) * r + tip_y
+    x5 = (math.cos(-ARROW_ANGLE) * dx - math.sin(-ARROW_ANGLE) * dy) * r + tip_x
+    y5 = (math.sin(-ARROW_ANGLE) * dx + math.cos(-ARROW_ANGLE) * dy) * r + tip_y
+    return (
+        f"M {_format_path_number(x5)} {_format_path_number(y5)} "
+        f"L {tip_x} {tip_y} "
+        f"L {_format_path_number(x4)} {_format_path_number(y4)}"
+    )
+
+
+def _add_start_arrow(edge: Dict[str, Any], x1: int, y1: int, cp1x: int, cp1y: int) -> None:
+    edge["option:start_arrow"] = True
+    arrow_path = _compute_arrow_path(x1, y1, cp1x, cp1y)
+    if arrow_path is not None:
+        edge["option:start_arrow_path"] = arrow_path
+
+
+def _add_end_arrow(edge: Dict[str, Any], x2: int, y2: int, cp2x: int, cp2y: int) -> None:
+    edge["option:end_arrow"] = True
+    arrow_path = _compute_arrow_path(x2, y2, cp2x, cp2y)
+    if arrow_path is not None:
+        edge["option:end_arrow_path"] = arrow_path
 
 
 def is_non_blocking_pwml_ir_error(issue: Any) -> bool:
@@ -1726,17 +1779,18 @@ class DeterministicPwmlBuilder:
                     location_id, lx, ly = loc
                     edge_id = self.ids.next()
                     if no_enzyme and side == "Left":
-                        path = f"M{enzyme_right_x} {enzyme_cy} L{enzyme_right_x} {enzyme_cy}"
+                        x1, y1, x2, y2 = enzyme_right_x, enzyme_cy, enzyme_right_x, enzyme_cy
                         hidden = True
                     elif no_enzyme:
-                        path = f"M{lx} {enzyme_cy} L{no_enzyme_virtual_left} {enzyme_cy}"
+                        x1, y1, x2, y2 = lx, enzyme_cy, no_enzyme_virtual_left, enzyme_cy
                         hidden = False
                     elif side == "Left":
-                        path = f"M{lx} {ly} L{enzyme_left_x} {enzyme_cy}"
+                        x1, y1, x2, y2 = lx, ly, enzyme_left_x, enzyme_cy
                         hidden = False
                     else:
-                        path = f"M{lx} {ly} L{enzyme_right_x} {enzyme_cy}"
+                        x1, y1, x2, y2 = lx, ly, enzyme_right_x, enzyme_cy
                         hidden = False
+                    path, cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
                     edge = {
                         "id": edge_id,
                         "path": path,
@@ -1745,9 +1799,9 @@ class DeterministicPwmlBuilder:
                         "zindex": 18,
                     }
                     if side == "Left":
-                        edge["option:end_arrow"] = True
+                        _add_end_arrow(edge, x2, y2, cp2x, cp2y)
                     else:
-                        edge["option:start_arrow"] = True
+                        _add_start_arrow(edge, x1, y1, cp1x, cp1y)
                     edges.append(edge)
                     if etype == "Compound":
                         reaction_compound_visualizations.append({
@@ -1833,11 +1887,12 @@ class DeterministicPwmlBuilder:
                     if side == "Left":
                         anchor_x = loc_x + loc_w // 2
                         anchor_y = loc_y + loc_h
-                        path = f"M{anchor_x} {anchor_y} L{transporter_top_x} {transporter_top_y}"
+                        x1, y1, x2, y2 = anchor_x, anchor_y, transporter_top_x, transporter_top_y
                     else:
                         anchor_x = loc_x + loc_w // 2
                         anchor_y = loc_y
-                        path = f"M{anchor_x} {anchor_y} L{transporter_bottom_x} {transporter_bottom_y}"
+                        x1, y1, x2, y2 = anchor_x, anchor_y, transporter_bottom_x, transporter_bottom_y
+                    path, cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
                     edge = {
                         "id": edge_id,
                         "path": path,
@@ -1846,9 +1901,9 @@ class DeterministicPwmlBuilder:
                         "zindex": 18,
                     }
                     if side == "Left":
-                        edge["option:end_arrow"] = True
+                        _add_end_arrow(edge, x2, y2, cp2x, cp2y)
                     else:
-                        edge["option:start_arrow"] = True
+                        _add_start_arrow(edge, x1, y1, cp1x, cp1y)
                     edges.append(edge)
                     transport_compound_visualizations.append(
                         {
@@ -3237,23 +3292,26 @@ class DeterministicPwmlBuilder:
                 px, py = point
                 edge["visualization-template-id"] = 5
                 edge.pop("option:start_arrow", None)
+                edge.pop("option:start_arrow_path", None)
                 edge.pop("option:end_arrow", None)
+                edge.pop("option:end_arrow_path", None)
                 if no_enzyme and side == "Left":
-                    edge["path"] = f"M{enzyme_right} {enzyme_cy} L{enzyme_right} {enzyme_cy}"
+                    x1, y1, x2, y2 = enzyme_right, enzyme_cy, enzyme_right, enzyme_cy
                     edge["hidden"] = True
-                    edge["option:end_arrow"] = True
                 elif no_enzyme:
-                    edge["path"] = f"M{px} {enzyme_cy} L{enzyme_left} {enzyme_cy}"
+                    x1, y1, x2, y2 = px, enzyme_cy, enzyme_left, enzyme_cy
                     edge["hidden"] = False
-                    edge["option:start_arrow"] = True
                 elif side == "Left":
-                    edge["path"] = f"M{px} {py} L{enzyme_left} {enzyme_cy}"
+                    x1, y1, x2, y2 = px, py, enzyme_left, enzyme_cy
                     edge["hidden"] = False
-                    edge["option:end_arrow"] = True
                 else:
-                    edge["path"] = f"M{px} {py} L{enzyme_right} {enzyme_cy}"
+                    x1, y1, x2, y2 = px, py, enzyme_right, enzyme_cy
                     edge["hidden"] = False
-                    edge["option:start_arrow"] = True
+                edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
+                if side == "Left":
+                    _add_end_arrow(edge, x2, y2, cp2x, cp2y)
+                else:
+                    _add_start_arrow(edge, x1, y1, cp1x, cp1y)
 
         self.section_items["reaction-visualizations"] = []
         self.section_items["transport-visualizations"] = []

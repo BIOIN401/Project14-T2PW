@@ -28,7 +28,7 @@
       "id": "compound:tetrahydrobiopterin",
       "label": "tetrahydrobiopterin",
       "kind": "compound",
-      "cls": "compound",
+      "cls": "cofactor",
       "compartment": "cytosolic dopaminergic neuron state",
       "confidence": 1.0,
       "provenance": "extracted"
@@ -151,8 +151,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "transport:dopamine transport into synaptic vesicles",
-      "label": "dopamine transport into synaptic vesicles",
+      "id": "transport:vesicular monoamine transporter 2-mediated dopamine transport",
+      "label": "vesicular monoamine transporter 2-mediated dopamine transport",
       "kind": "transport",
       "cls": "",
       "compartment": "cytosolic dopaminergic neuron state → synaptic vesicle state",
@@ -271,13 +271,13 @@
     },
     {
       "source": "compound:dopamine",
-      "target": "transport:dopamine transport into synaptic vesicles",
+      "target": "transport:vesicular monoamine transporter 2-mediated dopamine transport",
       "role": "cargo",
       "confidence": 1.0
     },
     {
       "source": "protein:vesicular monoamine transporter 2",
-      "target": "transport:dopamine transport into synaptic vesicles",
+      "target": "transport:vesicular monoamine transporter 2-mediated dopamine transport",
       "role": "transporter",
       "confidence": 1.0
     }
