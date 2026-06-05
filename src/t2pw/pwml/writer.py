@@ -67,17 +67,19 @@ def _compute_arrow_path(tip_x: int, tip_y: int, from_x: int, from_y: int) -> Opt
 
 
 def _add_start_arrow(edge: Dict[str, Any], x1: int, y1: int, cp1x: int, cp1y: int) -> None:
-    edge["option:start_arrow"] = True
+    opts: Dict[str, Any] = {"start_arrow": True, "start_flat_arrow": False, "end_arrow": False, "end_flat_arrow": False}
     arrow_path = _compute_arrow_path(x1, y1, cp1x, cp1y)
     if arrow_path is not None:
-        edge["option:start_arrow_path"] = arrow_path
+        opts["start_arrow_path"] = arrow_path
+    edge["options"] = json.dumps(opts)
 
 
 def _add_end_arrow(edge: Dict[str, Any], x2: int, y2: int, cp2x: int, cp2y: int) -> None:
-    edge["option:end_arrow"] = True
+    opts: Dict[str, Any] = {"end_arrow": True, "end_flat_arrow": False, "start_arrow": False, "start_flat_arrow": False}
     arrow_path = _compute_arrow_path(x2, y2, cp2x, cp2y)
     if arrow_path is not None:
-        edge["option:end_arrow_path"] = arrow_path
+        opts["end_arrow_path"] = arrow_path
+    edge["options"] = json.dumps(opts)
 
 
 def is_non_blocking_pwml_ir_error(issue: Any) -> bool:
@@ -326,10 +328,6 @@ def _is_boolean_field(tag: str) -> bool:
         "spontaneous",
         "currency",
         "complete-membrane",
-        "option:end_arrow",
-        "option:end_flat_arrow",
-        "option:start_arrow",
-        "option:start_flat_arrow",
     }
 
 
@@ -3291,10 +3289,7 @@ class DeterministicPwmlBuilder:
                     continue
                 px, py = point
                 edge["visualization-template-id"] = 5
-                edge.pop("option:start_arrow", None)
-                edge.pop("option:start_arrow_path", None)
-                edge.pop("option:end_arrow", None)
-                edge.pop("option:end_arrow_path", None)
+                edge.pop("options", None)
                 if no_enzyme and side == "Left":
                     x1, y1, x2, y2 = enzyme_right, enzyme_cy, enzyme_right, enzyme_cy
                     edge["hidden"] = True

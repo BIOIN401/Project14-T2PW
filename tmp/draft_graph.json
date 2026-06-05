@@ -25,42 +25,6 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:tetrahydrobiopterin",
-      "label": "tetrahydrobiopterin",
-      "kind": "compound",
-      "cls": "cofactor",
-      "compartment": "cytosolic dopaminergic neuron state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:oxygen",
-      "label": "oxygen",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:dihydrobiopterin",
-      "label": "dihydrobiopterin",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:water",
-      "label": "water",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
       "id": "compound:l-dopa",
       "label": "L-DOPA",
       "kind": "compound",
@@ -79,11 +43,47 @@
       "provenance": "extracted"
     },
     {
+      "id": "compound:tetrahydrobiopterin",
+      "label": "tetrahydrobiopterin",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:dihydrobiopterin",
+      "label": "dihydrobiopterin",
+      "kind": "compound",
+      "cls": "cofactor",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:oxygen",
+      "label": "oxygen",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:water",
+      "label": "water",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
       "id": "compound:carbon dioxide",
       "label": "carbon dioxide",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "cytosolic dopaminergic neuron state",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -151,8 +151,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "transport:vesicular monoamine transporter 2-mediated dopamine transport",
-      "label": "vesicular monoamine transporter 2-mediated dopamine transport",
+      "id": "transport:vmat2-mediated dopamine transport",
+      "label": "VMAT2-mediated dopamine transport",
       "kind": "transport",
       "cls": "",
       "compartment": "cytosolic dopaminergic neuron state → synaptic vesicle state",
@@ -271,13 +271,13 @@
     },
     {
       "source": "compound:dopamine",
-      "target": "transport:vesicular monoamine transporter 2-mediated dopamine transport",
+      "target": "transport:vmat2-mediated dopamine transport",
       "role": "cargo",
       "confidence": 1.0
     },
     {
       "source": "protein:vesicular monoamine transporter 2",
-      "target": "transport:vesicular monoamine transporter 2-mediated dopamine transport",
+      "target": "transport:vmat2-mediated dopamine transport",
       "role": "transporter",
       "confidence": 1.0
     }
