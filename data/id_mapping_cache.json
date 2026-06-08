@@ -16171,6 +16171,522 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "db::prna::pseudomonas fluorescens::::{\"uniprot\": \"P95480\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::prna::pseudomonas fluorescens::::{\"uniprot\": \"P95480\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PrnA\" OR gene:\"PrnA\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PrnA\" OR gene:\"PrnA\")",
+      "confidence": 0.85,
+      "candidates": [
+        {
+          "accession": "P95480",
+          "protein_name": "Tryptophan 7-halogenase PrnA",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9RPG3",
+          "protein_name": "PrnA",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "I1V4X0",
+          "protein_name": "Tryptophan halogenase PrnA",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4KAM7",
+          "protein_name": "Tryptophan halogenase PrnA",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Pseudomonas fluorescens (strain ATCC BAA-477 / NRRL B-23932 / Pf-5)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A172WBZ5",
+          "protein_name": "Tryptophan halogenase",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Pseudomonas fluorescens (strain ATCC BAA-477 / NRRL B-23932 / Pf-5)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1W5X9Y5",
+          "protein_name": "PrnA",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Pseudomonas chlororaphis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A8W2Z0",
+          "protein_name": "PrnA",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Pseudomonas chlororaphis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "G0ZGJ1",
+          "protein_name": "PrnA",
+          "gene_names": [
+            "prnA"
+          ],
+          "organism": "Serratia plymuthica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnA",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PrnA\" OR gene:\"PrnA\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PrnA\" OR gene:\"PrnA\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::prnb::pseudomonas fluorescens::::{\"uniprot\": \"P95481\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::prnb::pseudomonas fluorescens::::{\"uniprot\": \"P95481\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PrnB\" OR gene:\"PrnB\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PrnB\" OR gene:\"PrnB\")",
+      "confidence": 0.85,
+      "candidates": [
+        {
+          "accession": "P95481",
+          "protein_name": "Monodechloroaminopyrrolnitrin synthase PrnB",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "I1V4X1",
+          "protein_name": "Pyrrolnitrin biosynthesis enzyme PrnB",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4KAM6",
+          "protein_name": "Pyrrolnitrin biosynthesis enzyme PrnB",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Pseudomonas fluorescens (strain ATCC BAA-477 / NRRL B-23932 / Pf-5)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P18696",
+          "protein_name": "Proline-specific permease",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Emericella nidulans (strain FGSC A4 / ATCC 38163 / CBS 112.46 / NRRL 194 / M139)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1W5X9Z0",
+          "protein_name": "PrnB",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Pseudomonas chlororaphis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "G0ZGJ2",
+          "protein_name": "PrnB",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Serratia plymuthica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9RPG2",
+          "protein_name": "PrnB",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Myxococcus fulvus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9RBU6",
+          "protein_name": "PrnB",
+          "gene_names": [
+            "prnB"
+          ],
+          "organism": "Burkholderia pyrrocinia",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PrnB\" OR gene:\"PrnB\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PrnB\" OR gene:\"PrnB\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::prnc::pseudomonas fluorescens::::{\"uniprot\": \"P95482\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::prnc::pseudomonas fluorescens::::{\"uniprot\": \"P95482\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PrnC\" OR gene:\"PrnC\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PrnC\" OR gene:\"PrnC\")",
+      "confidence": 0.85,
+      "candidates": [
+        {
+          "accession": "P95482",
+          "protein_name": "Monodechloroaminopyrrolnitrin halogenase PrnC",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B4YE41",
+          "protein_name": "PrnC",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "I1V4X2",
+          "protein_name": "Halogenase PrnC",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4TU98",
+          "protein_name": "Pyrrolnitrin biosynthetic protein PrnC",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4KAM5",
+          "protein_name": "Halogenase PrnC",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Pseudomonas fluorescens (strain ATCC BAA-477 / NRRL B-23932 / Pf-5)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0E3KV85",
+          "protein_name": "Pyrrolnitrin biosynthesis protein",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9P8I0",
+          "protein_name": "Delta-1-pyrroline-5-carboxylate dehydrogenase, mitochondrial",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Emericella nidulans (strain FGSC A4 / ATCC 38163 / CBS 112.46 / NRRL 194 / M139)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9RBU5",
+          "protein_name": "PrnC",
+          "gene_names": [
+            "prnC"
+          ],
+          "organism": "Burkholderia pyrrocinia",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PrnC",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PrnC\" OR gene:\"PrnC\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PrnC\" OR gene:\"PrnC\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::prnd::pseudomonas fluorescens::::{\"uniprot\": \"P95483\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::prnd::pseudomonas fluorescens::::{\"uniprot\": \"P95483\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"PrnD\" OR gene:\"PrnD\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"PrnD\" OR gene:\"PrnD\")",
+      "confidence": 0.85,
+      "candidates": [
+        {
+          "accession": "P95483",
+          "protein_name": "Aminopyrrolnitrin oxygenase PrnD",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A1YJL8",
+          "protein_name": "PrnD",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A1YJL9",
+          "protein_name": "PrnD",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A1YJM0",
+          "protein_name": "PrnD",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "I1V4X3",
+          "protein_name": "Aminopyrrolnitrin oxidase PrnD",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4KAM4",
+          "protein_name": "Aminopyrrolnitrin oxidase PrnD",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens (strain ATCC BAA-477 / NRRL B-23932 / Pf-5)",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "R9U8I0",
+          "protein_name": "Aminopyrrolnitrin oxidase",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B3CL30",
+          "protein_name": "Aminopyrrolnitrin oxygenase",
+          "gene_names": [
+            "prnD"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "PrnD",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PrnD\" OR gene:\"PrnD\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"PrnD\" OR gene:\"PrnD\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -33714,6 +34230,188 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::ltryptophan::741::{\"cas\": \"73-22-3\", \"chebi\": \"CHEBI:16828\", \"hmdb\": \"HMDB0000929\", \"kegg\": \"C00078\", \"pubchem\": \"6305\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000929",
+        "kegg": "C00078",
+        "chebi": "CHEBI:16828",
+        "pubchem": "6305",
+        "cas": "73-22-3",
+        "biocyc": "TRP",
+        "chemspider": "6066",
+        "drugbank": "DB00150",
+        "pathbank_compound_id": "741"
+      },
+      "pathbank_compound_id": 741,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 741,
+          "name": "L-Tryptophan",
+          "short_name": "Trp",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000929",
+            "kegg": "C00078",
+            "chebi": "CHEBI:16828",
+            "pubchem": "6305",
+            "cas": "73-22-3",
+            "biocyc": "TRP",
+            "chemspider": "6066",
+            "drugbank": "DB00150",
+            "pathbank_compound_id": "741"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::7chloroltryptophan::::{\"kegg\": \"C19687\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::monodechloroaminopyrrolnitrin::::{\"kegg\": \"C21110\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::aminopyrrolnitrin::::{\"kegg\": \"C21109\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::pyrrolnitrin::::{\"kegg\": \"C12491\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::chloride::374::{\"cas\": \"16887-00-6\", \"chebi\": \"CHEBI:17996\", \"hmdb\": \"HMDB0000492\", \"kegg\": \"C00698\", \"pubchem\": \"312\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000492",
+        "kegg": "C00698",
+        "chebi": "CHEBI:17996",
+        "pubchem": "312",
+        "cas": "16887-00-6",
+        "biocyc": "CPD-4521",
+        "chemspider": "306",
+        "pathbank_compound_id": "374"
+      },
+      "pathbank_compound_id": 374,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 374,
+          "name": "Chloride ion",
+          "short_name": "Cl",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000492",
+            "kegg": "C00698",
+            "chebi": "CHEBI:17996",
+            "pubchem": "312",
+            "cas": "16887-00-6",
+            "biocyc": "CPD-4521",
+            "chemspider": "306",
+            "pathbank_compound_id": "374"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::reduced flavin::::{\"kegg\": \"C19790\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.7167,
+      "candidates": [
+        {
+          "pathbank_compound_id": 891,
+          "name": "FMNH2",
+          "short_name": "FMNH2",
+          "score": 0.7167,
+          "mapped_ids": {
+            "hmdb": "HMDB0001142",
+            "kegg": "C01847",
+            "chebi": "CHEBI:16048",
+            "pubchem": "445395",
+            "cas": "5666-16-0",
+            "biocyc": "FMNH2",
+            "chemspider": "393046"
+          }
+        },
+        {
+          "pathbank_compound_id": 932,
+          "name": "FADH",
+          "short_name": "FADH",
+          "score": 0.625,
+          "mapped_ids": {
+            "hmdb": "HMDB0001197",
+            "kegg": "C01352",
+            "chebi": "CHEBI:17877",
+            "pubchem": "446013",
+            "cas": "1910-41-4",
+            "biocyc": "FADH2",
+            "chemspider": "393487"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
     }
   },
   "complexes": {
@@ -36714,10 +37412,142 @@
         "status": "unresolved",
         "issue": "component_proteins_unresolved"
       }
+    },
+    "db::prna complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"P95480\"}, \"name\": \"PrnA\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "PrnA",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P95480"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PrnA",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::prnb complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"P95481\"}, \"name\": \"PrnB\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "PrnB",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P95481"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PrnB",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::prnc complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"P95482\"}, \"name\": \"PrnC\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "PrnC",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P95482"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PrnC",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::prnd complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"P95483\"}, \"name\": \"PrnD\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "PrnD",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P95483"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PrnD",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
     }
   },
   "enzyme_complexes": {
-    "obag::::pseudomonas fluorescens": {
+    "prna::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -36725,21 +37555,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "ObaG complex",
+      "name": "PrnA complex",
       "species_id": 539,
       "components": [
         {
-          "name": "ObaG",
+          "name": "PrnA",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "A0A0D0NC88"
+            "uniprot": "P95480"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "ObaG",
+          "component": "PrnA",
           "reason": "no_db_match"
         }
       ],
@@ -36749,7 +37579,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "ktzi::::pseudomonas fluorescens": {
+    "prnb::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -36757,21 +37587,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "KtzI complex",
+      "name": "PrnB complex",
       "species_id": 539,
       "components": [
         {
-          "name": "KtzI",
+          "name": "PrnB",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "A8CF85"
+            "uniprot": "P95481"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "KtzI",
+          "component": "PrnB",
           "reason": "no_db_match"
         }
       ],
@@ -36781,7 +37611,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "ktzt::::pseudomonas fluorescens": {
+    "prnc::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -36789,21 +37619,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "KtzT complex",
+      "name": "PrnC complex",
       "species_id": 539,
       "components": [
         {
-          "name": "KtzT",
+          "name": "PrnC",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "Q9ZEP7"
+            "uniprot": "P95482"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "KtzT",
+          "component": "PrnC",
           "reason": "no_db_match"
         }
       ],
@@ -36813,7 +37643,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "curb::::pseudomonas fluorescens": {
+    "prnd::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -36821,498 +37651,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "CurB complex",
+      "name": "PrnD complex",
       "species_id": 539,
       "components": [
         {
-          "name": "CurB",
+          "name": "PrnD",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "Q02579"
+            "uniprot": "P95483"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "CurB",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "jamf::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "JamF complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "JamF",
-          "stoichiometry": 1
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "JamF",
-          "reason": "novel_protein"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "curf::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "CurF complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "CurF",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "Q02572"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "CurF",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "cura::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "CurA complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "CurA",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "A0A5E6QBT2"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "CurA",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "jamj::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "JamJ complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "JamJ",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "Q6E7K0"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "JamJ",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nocb::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NocB complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NocB",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "A0ABU1PVG6"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NocB",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "ikaa::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "IkaA complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "IkaA",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "A0A0B4ZT44"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "IkaA",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "ikab::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "IkaB complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "IkaB",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "A0A0B4ZTH0"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "IkaB",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "ikac::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "IkaC complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "IkaC",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "A0A0B4ZV71"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "IkaC",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "sfmc::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "SfmC complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "SfmC",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "P77249"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "SfmC",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "pntm::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "PntM complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "PntM",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "E3VWI3"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "PntM",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosl::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosL complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosL",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "Q9F0W0"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosL",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosj::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosJ complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosJ",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "C6FX49"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosJ",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosk::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosK complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosK",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "C6FX50"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosK",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosn::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosN complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosN",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "C6FX53"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosN",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "nosi::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosI complex",
-      "species_id": 539,
-      "components": [
-        {
-          "name": "NosI",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "C6FX48"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "NosI",
+          "component": "PrnD",
           "reason": "no_db_match"
         }
       ],
