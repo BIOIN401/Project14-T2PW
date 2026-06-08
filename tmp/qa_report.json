@@ -1,21 +1,89 @@
 {
   "summary": {
-    "total_species": 13,
-    "total_reactions": 3,
+    "total_species": 78,
+    "total_reactions": 30,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "tetrahydrobiopterin",
+        "entity": "L-Thr",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "oxygen",
+        "entity": "4-nitrophenyacetaldehyde",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "dihydrobiopterin",
+        "entity": "AHNB",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "L-Orn",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "L-N5-OH-Orn",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "L-piperazate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ACP-bound gamma-chloro-3-hydroxy-3-methylglutaryl intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "alpha,beta-enoyl-gamma-chloroglutaryl-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "alpha,beta-enoyl-gamma-chloro-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "beta,gamma-enoyl-gamma-chloro-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "curacin A cyclopropyl intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADPH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADP+",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "chloride",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PCP-linked seryl tetrapeptide thioester",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PCP-linked dehydroalanyl tetrapeptide thioester",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "L-(p-hydroxyphenyl)glycine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "beta-lactam thioester intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "epimerized beta-lactam thioester",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pro-nocardicin G",
         "reason": "no subcellular location recorded"
       },
       {
@@ -23,33 +91,191 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "carbon dioxide",
+        "entity": "hexaketide-Orn linear precursor",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "tetramic acid macrolactam intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ikarugamycin",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "dipeptidyl-PCP substrate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "reduced peptidyl aldehyde intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "saframycin A",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "3-OH-O,5-dimethyl-L-Tyr",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "O2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "linear pentathiazolyl peptide intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "indoyl-Cys-thiolated pentathiazolyl intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "nosiheptide indolic side-ring intermediate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADP",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [],
-    "transport_like_reactions": [],
-    "orphan_nodes": [],
+    "transport_like_reactions": [
+      {
+        "reaction": "CurA/JamE halogenation",
+        "reason": "same species appear as both input and output"
+      }
+    ],
+    "orphan_nodes": [
+      {
+        "entity": "pyridoxal phosphate",
+        "degree": 0
+      },
+      {
+        "entity": "haem",
+        "degree": 0
+      },
+      {
+        "entity": "NADP+",
+        "degree": 0
+      },
+      {
+        "entity": "epimerized beta-lactam thioester",
+        "degree": 0
+      }
+    ],
     "missing_ids": [
       {
-        "entity": "phenylalanine",
+        "entity": "L-Thr",
         "type": "compound"
       },
       {
-        "entity": "tyrosine",
+        "entity": "4-nitrophenyacetaldehyde",
         "type": "compound"
       },
       {
-        "entity": "tetrahydrobiopterin",
+        "entity": "AHNB",
         "type": "compound"
       },
       {
-        "entity": "oxygen",
+        "entity": "2,3-dihydroxybenzoic acid",
         "type": "compound"
       },
       {
-        "entity": "dihydrobiopterin",
+        "entity": "obafluorin",
+        "type": "compound"
+      },
+      {
+        "entity": "L-Orn",
+        "type": "compound"
+      },
+      {
+        "entity": "L-N5-OH-Orn",
+        "type": "compound"
+      },
+      {
+        "entity": "L-piperazate",
+        "type": "compound"
+      },
+      {
+        "entity": "kutzneride 1",
+        "type": "compound"
+      },
+      {
+        "entity": "pyridoxal phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "haem",
+        "type": "compound"
+      },
+      {
+        "entity": "ACP-bound gamma-chloro-3-hydroxy-3-methylglutaryl intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "alpha,beta-enoyl-gamma-chloroglutaryl-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "alpha,beta-enoyl-gamma-chloro-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "beta,gamma-enoyl-gamma-chloro-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "curacin A cyclopropyl intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "curacin A",
+        "type": "compound"
+      },
+      {
+        "entity": "jamaicamide A",
+        "type": "compound"
+      },
+      {
+        "entity": "NADPH",
+        "type": "compound"
+      },
+      {
+        "entity": "NADP+",
+        "type": "compound"
+      },
+      {
+        "entity": "chloride",
+        "type": "compound"
+      },
+      {
+        "entity": "PCP-linked seryl tetrapeptide thioester",
+        "type": "compound"
+      },
+      {
+        "entity": "PCP-linked dehydroalanyl tetrapeptide thioester",
+        "type": "compound"
+      },
+      {
+        "entity": "L-(p-hydroxyphenyl)glycine",
+        "type": "compound"
+      },
+      {
+        "entity": "beta-lactam thioester intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "epimerized beta-lactam thioester",
+        "type": "compound"
+      },
+      {
+        "entity": "pro-nocardicin G",
+        "type": "compound"
+      },
+      {
+        "entity": "nocardicin A",
         "type": "compound"
       },
       {
@@ -57,36 +283,206 @@
         "type": "compound"
       },
       {
-        "entity": "L-DOPA",
+        "entity": "hexaketide-Orn linear precursor",
         "type": "compound"
       },
       {
-        "entity": "dopamine",
+        "entity": "tetramic acid macrolactam intermediate",
         "type": "compound"
       },
       {
-        "entity": "carbon dioxide",
+        "entity": "ikarugamycin",
         "type": "compound"
       },
       {
-        "entity": "phenylalanine hydroxylase",
+        "entity": "dipeptidyl-PCP substrate",
+        "type": "compound"
+      },
+      {
+        "entity": "reduced peptidyl aldehyde intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "saframycin A",
+        "type": "compound"
+      },
+      {
+        "entity": "3-OH-O,5-dimethyl-L-Tyr",
+        "type": "compound"
+      },
+      {
+        "entity": "ATP",
+        "type": "compound"
+      },
+      {
+        "entity": "pentalenolactone F",
+        "type": "compound"
+      },
+      {
+        "entity": "pentalenolactone",
+        "type": "compound"
+      },
+      {
+        "entity": "O2",
+        "type": "compound"
+      },
+      {
+        "entity": "L-Trp",
+        "type": "compound"
+      },
+      {
+        "entity": "3-methyl-2-indolic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "formaldehyde",
+        "type": "compound"
+      },
+      {
+        "entity": "ammonia",
+        "type": "compound"
+      },
+      {
+        "entity": "SAM",
+        "type": "compound"
+      },
+      {
+        "entity": "linear pentathiazolyl peptide intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "indoyl-Cys-thiolated pentathiazolyl intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "nosiheptide indolic side-ring intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "AMP",
+        "type": "compound"
+      },
+      {
+        "entity": "PPi",
+        "type": "compound"
+      },
+      {
+        "entity": "MIA-AMP",
+        "type": "compound"
+      },
+      {
+        "entity": "indoyl-S-NosJ",
+        "type": "compound"
+      },
+      {
+        "entity": "linear pentathiazolyl nosiheptide intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "MIA-Cys pentathiazolyl intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "5'-deoxyadenosyl radical",
+        "type": "compound"
+      },
+      {
+        "entity": "L-methionine",
+        "type": "compound"
+      },
+      {
+        "entity": "nosiheptide",
+        "type": "compound"
+      },
+      {
+        "entity": "ObaG",
         "type": "protein"
       },
       {
-        "entity": "tyrosine hydroxylase",
+        "entity": "KtzI",
         "type": "protein"
       },
       {
-        "entity": "aromatic L-amino acid decarboxylase",
+        "entity": "KtzT",
         "type": "protein"
       },
       {
-        "entity": "vesicular monoamine transporter 2",
+        "entity": "CurA",
+        "type": "protein"
+      },
+      {
+        "entity": "CurB",
+        "type": "protein"
+      },
+      {
+        "entity": "CurF",
+        "type": "protein"
+      },
+      {
+        "entity": "JamE",
+        "type": "protein"
+      },
+      {
+        "entity": "JamF",
+        "type": "protein"
+      },
+      {
+        "entity": "JamJ",
+        "type": "protein"
+      },
+      {
+        "entity": "NocB",
+        "type": "protein"
+      },
+      {
+        "entity": "IkaA",
+        "type": "protein"
+      },
+      {
+        "entity": "IkaB",
+        "type": "protein"
+      },
+      {
+        "entity": "IkaC",
+        "type": "protein"
+      },
+      {
+        "entity": "SfmC",
+        "type": "protein"
+      },
+      {
+        "entity": "PntM",
+        "type": "protein"
+      },
+      {
+        "entity": "NosL",
+        "type": "protein"
+      },
+      {
+        "entity": "NosJ",
+        "type": "protein"
+      },
+      {
+        "entity": "NosK",
+        "type": "protein"
+      },
+      {
+        "entity": "NosN",
+        "type": "protein"
+      },
+      {
+        "entity": "NosI",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [],
+    "duplicate_species": [
+      {
+        "entity_a": "NADP+",
+        "entity_b": "NADP",
+        "reason": "normalized label collision"
+      }
+    ],
     "inconsistent_class": []
   }
 }

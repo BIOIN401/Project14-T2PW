@@ -4331,6 +4331,7 @@ def run_mapping(
     protein_complexes_ambiguous = 0
     protein_complexes_novel = 0
     protein_complexes_gap_issues = 0
+    proteins_unknown_substituted = 0
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -4370,6 +4371,29 @@ def run_mapping(
             organism=organism,
             protein_row=protein,
         )
+
+        # Unknown-protein substitution: last-resort safeguard following SMPDB convention.
+        # When all resolution fallbacks are exhausted (novel_protein / no_db_candidates) or
+        # the API search found nothing (no_match), stamp a placeholder UniProt ID of "Unknown"
+        # so the entity passes IR/PWML validation instead of causing downstream failures.
+        if result.get("status") != "mapped" and result.get("reason") in {"novel_protein", "no_match"}:
+            result = {
+                "status": "mapped",
+                "reason": "unknown_protein_placeholder",
+                "provider": str(result.get("provider") or "PathBankDB"),
+                "source": str(result.get("source") or "db"),
+                "confidence": 0.0,
+                "chosen_rule": "unknown_protein_placeholder",
+                "candidates": [],
+                "mapped_ids": {"uniprot": "Unknown"},
+                "resolution": {
+                    "status": "unknown_protein",
+                    "issue": "no_db_candidates",
+                    "order_step": "unknown_protein_placeholder",
+                },
+            }
+            proteins_unknown_substituted += 1
+
         provider = str(result.get("provider") or ("PathBankDB" if result.get("source") == "db" else "UniProt"))
         source = str(result.get("source") or ("db" if provider == "PathBankDB" else "api"))
 
@@ -4649,6 +4673,7 @@ def run_mapping(
         "id_source_mode": source_mode,
         "db_available": bool(db and db.available()),
         "db_last_error": db.last_error if db else "",
+        "proteins_unknown_substituted": proteins_unknown_substituted,
         "proteins_mapped_by_db": proteins_mapped_by_db,
         "proteins_mapped_by_api": proteins_mapped_by_api,
         "compounds_mapped_by_db": compounds_mapped_by_db,

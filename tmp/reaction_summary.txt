@@ -1,27 +1,182 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: phenylalanine hydroxylase reaction
-  Reactants: phenylalanine [cytosolic state of dopaminergic neurons], tetrahydrobiopterin [unknown], oxygen [unknown]
-  Products:  tyrosine [cytosolic state of dopaminergic neurons], dihydrobiopterin [unknown], water [unknown]
-  Modifier:  phenylalanine hydroxylase [cytosolic state of dopaminergic neurons] (role=catalyst, confidence=1.0)
+REACTION 1: ObaG L-Thr transaldolase
+  Reactants: L-Thr [unknown], 4-nitrophenyacetaldehyde [unknown]
+  Products:  AHNB [unknown]
+  Modifier:  ObaG [bacterial cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: tyrosine hydroxylase reaction
-  Reactants: tyrosine [cytosolic state of dopaminergic neurons], tetrahydrobiopterin [unknown], oxygen [unknown]
-  Products:  L-DOPA [cytosolic state of dopaminergic neurons], dihydrobiopterin [unknown], water [unknown]
-  Modifier:  tyrosine hydroxylase [cytosolic state of dopaminergic neurons] (role=catalyst, confidence=1.0)
+REACTION 2: KtzI L-Orn N-hydroxylation
+  Reactants: L-Orn [unknown], O2 [unknown]
+  Products:  L-N5-OH-Orn [unknown]
+  Modifier:  KtzI [bacterial cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: aromatic L-amino acid decarboxylase reaction
-  Reactants: L-DOPA [cytosolic state of dopaminergic neurons]
-  Products:  dopamine [cytosolic state of dopaminergic neurons], carbon dioxide [unknown]
-  Modifier:  aromatic L-amino acid decarboxylase [cytosolic state of dopaminergic neurons] (role=catalyst, confidence=1.0)
+REACTION 3: KtzT N-N bond cyclization
+  Reactants: L-N5-OH-Orn [unknown]
+  Products:  L-piperazate [unknown]
+  Modifier:  KtzT [bacterial cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-TRANSPORT 1: dopamine transport into synaptic vesicles
-  From: cytosolic state of dopaminergic neurons
-  To:   synaptic vesicle state
-  Cargo: dopamine [cytosolic state of dopaminergic neurons]
-  Transporter: vesicular monoamine transporter 2 [synaptic vesicle state] (role=transporter, confidence=1.0)
+REACTION 4: CurA/JamE halogenation
+  Reactants: ACP-bound gamma-chloro-3-hydroxy-3-methylglutaryl intermediate [unknown]
+  Products:  ACP-bound gamma-chloro-3-hydroxy-3-methylglutaryl intermediate [unknown]
+  Modifier:  CurA [bacterial cytosol] (role=catalyst, confidence=1.0), JamE [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  transport_like — same species appear as both input and output
+
+REACTION 5: CurB/JamF ECH1 dehydration
+  Reactants: ACP-bound gamma-chloro-3-hydroxy-3-methylglutaryl intermediate [unknown]
+  Products:  alpha,beta-enoyl-gamma-chloroglutaryl-ACP [unknown], water [unknown]
+  Modifier:  CurB [bacterial cytosol] (role=catalyst, confidence=1.0), JamF [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 6: CurF ECH2 decarboxylation (curacin branch)
+  Reactants: alpha,beta-enoyl-gamma-chloroglutaryl-ACP [unknown]
+  Products:  alpha,beta-enoyl-gamma-chloro-ACP [unknown]
+  Modifier:  CurF [bacterial cytosol] (role=catalyst, confidence=1.0), CurA [bacterial cytosol] (role=catalyst, confidence=1.0), JamJ [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 7: JamJ ECH2 decarboxylation (jamaicamide branch)
+  Reactants: alpha,beta-enoyl-gamma-chloroglutaryl-ACP [unknown]
+  Products:  beta,gamma-enoyl-gamma-chloro-ACP [unknown]
+  Modifier:  JamJ [bacterial cytosol] (role=catalyst, confidence=1.0), CurF [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 8: CurF ER cyclopropanation
+  Reactants: alpha,beta-enoyl-gamma-chloro-ACP [unknown], NADPH [unknown]
+  Products:  curacin A cyclopropyl intermediate [unknown], NADP [unknown], chloride [unknown]
+  Modifier:  CurF [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 9: NocB C-domain beta-lactam formation
+  Reactants: PCP-linked seryl tetrapeptide thioester [unknown], L-(p-hydroxyphenyl)glycine [unknown]
+  Products:  beta-lactam thioester intermediate [unknown], water [unknown]
+  Modifier:  NocB [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 10: NocB TE epimerization and hydrolysis
+  Reactants: beta-lactam thioester intermediate [unknown]
+  Products:  pro-nocardicin G [unknown]
+  Modifier:  NocB [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 11: IkaA macrolactam assembly
+  Reactants: L-Orn [unknown]
+  Products:  tetramic acid macrolactam intermediate [unknown]
+  Modifier:  IkaA [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 12: IkaB/IkaC oxidative cyclization to ikarugamycin
+  Reactants: tetramic acid macrolactam intermediate [unknown]
+  Products:  ikarugamycin [unknown]
+  Modifier:  IkaB [bacterial cytosol] (role=catalyst, confidence=1.0), IkaC [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 13: SfmC iterative Pictet-Spengler tetrahydroisoquinoline assembly
+  Reactants: dipeptidyl-PCP substrate [unknown], 3-OH-O,5-dimethyl-L-Tyr [unknown], ATP [Streptomyces cytosol]
+  Products:  saframycin A [unknown]
+  Modifier:  SfmC [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: PntM oxidative rearrangement of pentalenolactone F
+  Reactants: pentalenolactone F [Streptomyces cytosol], O2 [unknown]
+  Products:  pentalenolactone [Streptomyces cytosol], water [unknown]
+  Modifier:  PntM [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 15: NosL rearrangement of L-Trp to MIA
+  Reactants: L-Trp [Streptomyces cytosol], SAM [Streptomyces cytosol]
+  Products:  3-methyl-2-indolic acid [Streptomyces cytosol], formaldehyde [Streptomyces cytosol], ammonia [Streptomyces cytosol]
+  Modifier:  NosL [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 16: NosJ/NosK indoyl thiolation and transfer
+  Reactants: 3-methyl-2-indolic acid [Streptomyces cytosol], linear pentathiazolyl peptide intermediate [unknown]
+  Products:  indoyl-Cys-thiolated pentathiazolyl intermediate [unknown]
+  Modifier:  NosJ [bacterial cytosol] (role=catalyst, confidence=1.0), NosK [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 17: NosN methylation and ester bond ring closure
+  Reactants: indoyl-Cys-thiolated pentathiazolyl intermediate [unknown], SAM [Streptomyces cytosol]
+  Products:  nosiheptide indolic side-ring intermediate [unknown]
+  Modifier:  NosN [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 18: NosL-catalysed rearrangement of L-Trp to MIA
+  Reactants: L-Trp [Streptomyces cytosol], SAM [Streptomyces cytosol]
+  Products:  3-methyl-2-indolic acid [Streptomyces cytosol], formaldehyde [Streptomyces cytosol], ammonia [Streptomyces cytosol], 5'-deoxyadenosyl radical [Streptomyces cytosol], L-methionine [Streptomyces cytosol]
+  Modifier:  NosL [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 19: NosI activation of MIA
+  Reactants: 3-methyl-2-indolic acid [Streptomyces cytosol], ATP [Streptomyces cytosol]
+  Products:  MIA-AMP [Streptomyces cytosol], PPi [Streptomyces cytosol]
+  Modifier:  NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 20: NosJ indoyl thiolation
+  Reactants: MIA-AMP [Streptomyces cytosol]
+  Products:  indoyl-S-NosJ [Streptomyces cytosol], AMP [Streptomyces cytosol]
+  Modifier:  NosJ [bacterial cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 21: NosK transfer of indoyl to pentathiazolyl intermediate
+  Reactants: indoyl-S-NosJ [Streptomyces cytosol], linear pentathiazolyl nosiheptide intermediate [Streptomyces cytosol]
+  Products:  MIA-Cys pentathiazolyl intermediate [Streptomyces cytosol]
+  Modifier:  NosK [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 22: NosN methylation and ester bond formation to close nosiheptide side-ring
+  Reactants: MIA-Cys pentathiazolyl intermediate [Streptomyces cytosol], SAM [Streptomyces cytosol]
+  Products:  nosiheptide [Streptomyces cytosol], 5'-deoxyadenosyl radical [Streptomyces cytosol], L-methionine [Streptomyces cytosol]
+  Modifier:  NosN [bacterial cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 23: Obafluorin assembly from AHNB and 2,3-dihydroxybenzoic acid
+  Reactants: AHNB [unknown], 2,3-dihydroxybenzoic acid [bacterial cytosol]
+  Products:  obafluorin [bacterial cytosol]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 24: L-piperazate incorporation into kutzneride 1
+  Reactants: L-piperazate [unknown]
+  Products:  kutzneride 1 [Kutzneria cytosol]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 25: Curacin A maturation from cyclopropyl intermediate
+  Reactants: curacin A cyclopropyl intermediate [unknown]
+  Products:  curacin A [Moorea producens cytosol]
+  Modifier:  CurF [bacterial cytosol] (role=catalyst, confidence=1.0), CurA [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 26: Jamaicamide A maturation from beta,gamma-enoyl-gamma-chloro-ACP
+  Reactants: beta,gamma-enoyl-gamma-chloro-ACP [unknown]
+  Products:  jamaicamide A [Moorea producens cytosol]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 27: Pro-nocardicin G maturation to nocardicin A
+  Reactants: pro-nocardicin G [unknown]
+  Products:  nocardicin A [Nocardia uniformis cytosol]
+  Modifier:  NocB [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 28: NocB serine dehydration to dehydroalanyl thioester
+  Reactants: PCP-linked seryl tetrapeptide thioester [unknown]
+  Products:  PCP-linked dehydroalanyl tetrapeptide thioester [unknown], water [unknown]
+  Modifier:  NocB [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 29: IkaA-catalysed conversion of hexaketide-Orn precursor
+  Reactants: hexaketide-Orn linear precursor [unknown]
+  Products:  tetramic acid macrolactam intermediate [unknown]
+  Modifier:  IkaA [bacterial cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 30: SfmC reduction of dipeptidyl-PCP to peptidyl aldehyde
+  Reactants: dipeptidyl-PCP substrate [unknown]
+  Products:  reduced peptidyl aldehyde intermediate [unknown]
+  Modifier:  SfmC [bacterial cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none

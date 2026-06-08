@@ -14684,6 +14684,1493 @@
         "status": "matched",
         "order_step": "pathbank_protein_id"
       }
+    },
+    "db::obag::pseudomonas fluorescens::::{\"uniprot\": \"A0A0D0NC88\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::obag::pseudomonas fluorescens::::{\"uniprot\": \"A0A0D0NC88\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"ObaG\" OR gene:\"ObaG\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"ObaG\" OR gene:\"ObaG\") | (protein_name:\"group\" OR gene:\"group\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"group\" OR gene:\"group\") | \"group\" AND organism_name:\"Pseudomonas fluorescens\" | \"group\"",
+      "confidence": 0.3375,
+      "candidates": [
+        {
+          "accession": "A0A0D0NC88",
+          "protein_name": "Group 1 truncated hemoglobin",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        },
+        {
+          "accession": "A0A4Y9TG25",
+          "protein_name": "Group 1 truncated hemoglobin",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        },
+        {
+          "accession": "C3K7I0",
+          "protein_name": "Group 1 truncated hemoglobin",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens (strain SBW25)",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        },
+        {
+          "accession": "A0A0D0TP28",
+          "protein_name": "Glycosyl transferases group 1",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        },
+        {
+          "accession": "A0A3S4P009",
+          "protein_name": "Group 1 glycosyl transferase",
+          "gene_names": [
+            "mshA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        },
+        {
+          "accession": "A0A448DL50",
+          "protein_name": "Group 1 glycosyl transferase",
+          "gene_names": [
+            "pimB_1"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        },
+        {
+          "accession": "A0A448E0I1",
+          "protein_name": "Group 1 glycosyl transferase",
+          "gene_names": [
+            "pimC"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        },
+        {
+          "accession": "A0A8B4IDX6",
+          "protein_name": "Group 2 family glycosyltransferase",
+          "gene_names": [],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "group",
+          "alias_source": "literature_alias",
+          "matched_alias": "group"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"ObaG\" OR gene:\"ObaG\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"ObaG\" OR gene:\"ObaG\")",
+        "(protein_name:\"group\" OR gene:\"group\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"group\" OR gene:\"group\")",
+        "\"group\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"group\""
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::ktzi::pseudomonas fluorescens::::{\"uniprot\": \"A8CF85\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::ktzi::pseudomonas fluorescens::::{\"uniprot\": \"A8CF85\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"KtzI\" OR gene:\"KtzI\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"KtzI\" OR gene:\"KtzI\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "A8CF85",
+          "protein_name": "L-lysine N6-monooxygenase MbtG",
+          "gene_names": [
+            "ktzI"
+          ],
+          "organism": "Kutzneria sp. (strain 744)",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "KtzI",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"KtzI\" OR gene:\"KtzI\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"KtzI\" OR gene:\"KtzI\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::ktzt::pseudomonas fluorescens::::{\"uniprot\": \"Q9ZEP7\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::ktzt::pseudomonas fluorescens::::{\"uniprot\": \"Q9ZEP7\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"KtzT\" OR gene:\"KtzT\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"KtzT\" OR gene:\"KtzT\") | (protein_name:\"enzyme\" OR gene:\"enzyme\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"enzyme\" OR gene:\"enzyme\") | \"enzyme\" AND organism_name:\"Pseudomonas fluorescens\" | \"enzyme\"",
+      "confidence": 0.475,
+      "candidates": [
+        {
+          "accession": "Q9ZEP7",
+          "protein_name": "Pantothenate synthetase",
+          "gene_names": [
+            "panC"
+          ],
+          "organism": "Pseudomonas fluorescens (strain SBW25)",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "Q3K6Q5",
+          "protein_name": "Pantothenate synthetase",
+          "gene_names": [
+            "panC"
+          ],
+          "organism": "Pseudomonas fluorescens (strain Pf0-1)",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "C3K5E4",
+          "protein_name": "Bifunctional uridylyltransferase/uridylyl-removing enzyme",
+          "gene_names": [
+            "glnD"
+          ],
+          "organism": "Pseudomonas fluorescens (strain SBW25)",
+          "reviewed": true,
+          "score": 0.4167,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "Q3KHB4",
+          "protein_name": "Bifunctional uridylyltransferase/uridylyl-removing enzyme",
+          "gene_names": [
+            "glnD"
+          ],
+          "organism": "Pseudomonas fluorescens (strain Pf0-1)",
+          "reviewed": true,
+          "score": 0.4167,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "Q3KD78",
+          "protein_name": "1,4-alpha-glucan branching enzyme GlgB",
+          "gene_names": [
+            "glgB"
+          ],
+          "organism": "Pseudomonas fluorescens (strain Pf0-1)",
+          "reviewed": true,
+          "score": 0.4167,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "Q3KC83",
+          "protein_name": "NAD-capped RNA hydrolase NudC",
+          "gene_names": [
+            "nudC"
+          ],
+          "organism": "Pseudomonas fluorescens (strain Pf0-1)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "C3K334",
+          "protein_name": "Multifunctional CCA protein",
+          "gene_names": [
+            "cca"
+          ],
+          "organism": "Pseudomonas fluorescens (strain SBW25)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        },
+        {
+          "accession": "Q3K5S5",
+          "protein_name": "Multifunctional CCA protein",
+          "gene_names": [
+            "cca"
+          ],
+          "organism": "Pseudomonas fluorescens (strain Pf0-1)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "enzyme",
+          "alias_source": "literature_alias",
+          "matched_alias": "enzyme"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"KtzT\" OR gene:\"KtzT\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"KtzT\" OR gene:\"KtzT\")",
+        "(protein_name:\"enzyme\" OR gene:\"enzyme\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"enzyme\" OR gene:\"enzyme\")",
+        "\"enzyme\" AND organism_name:\"Pseudomonas fluorescens\"",
+        "\"enzyme\""
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cura::pseudomonas fluorescens::::{\"uniprot\": \"A0A5E6QBT2\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::cura::pseudomonas fluorescens::::{\"uniprot\": \"A0A5E6QBT2\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"CurA\" OR gene:\"CurA\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"CurA\" OR gene:\"CurA\")",
+      "confidence": 0.8,
+      "candidates": [
+        {
+          "accession": "A0A5E6QBT2",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7HUN5",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7JE75",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7SVF2",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E6VL01",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E6RP22",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7HD97",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7RVC3",
+          "protein_name": "NADPH-dependent curcumin reductase",
+          "gene_names": [
+            "curA"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CurA",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"CurA\" OR gene:\"CurA\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"CurA\" OR gene:\"CurA\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::curb::pseudomonas fluorescens::::{\"uniprot\": \"Q02579\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::curb::pseudomonas fluorescens::::{\"uniprot\": \"Q02579\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"CurB\" OR gene:\"CurB\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"CurB\" OR gene:\"CurB\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "Q02579",
+          "protein_name": "Putative polyketide beta-ketoacyl synthase 2",
+          "gene_names": [
+            "curB"
+          ],
+          "organism": "Streptomyces cyaneus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CurB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6DNF1",
+          "protein_name": "CurB",
+          "gene_names": [
+            "curB"
+          ],
+          "organism": "Lyngbya majuscula",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4Y434",
+          "protein_name": "CurB",
+          "gene_names": [],
+          "organism": "Moorena producens 3L",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D3VCW3",
+          "protein_name": "CurB",
+          "gene_names": [],
+          "organism": "Xenorhabdus nematophila (strain ATCC 19061 / DSM 3370 / CCUG 14189 / LMG 1036 / NCIMB 9965 / AN6)",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6B9PGA6",
+          "protein_name": "PLP-dependent aminotransferase",
+          "gene_names": [
+            "curB"
+          ],
+          "organism": "Curvularia sp. IFB-Z10",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A089XEJ3",
+          "protein_name": "Putative polyketide beta-ketoacyl synthase 2",
+          "gene_names": [
+            "curB"
+          ],
+          "organism": "Streptomyces glaucescens",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"CurB\" OR gene:\"CurB\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"CurB\" OR gene:\"CurB\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::curf::pseudomonas fluorescens::::{\"uniprot\": \"Q02572\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::curf::pseudomonas fluorescens::::{\"uniprot\": \"Q02572\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"CurF\" OR gene:\"CurF\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"CurF\" OR gene:\"CurF\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "Q02572",
+          "protein_name": "Putative polyketide cyclase",
+          "gene_names": [
+            "curF"
+          ],
+          "organism": "Streptomyces cyaneus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6DNE7",
+          "protein_name": "CurF",
+          "gene_names": [
+            "curF"
+          ],
+          "organism": "Lyngbya majuscula",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4Y430",
+          "protein_name": "Amino acid adenylation domain protein",
+          "gene_names": [],
+          "organism": "Moorena producens 3L",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "W1WK93",
+          "protein_name": "CurF",
+          "gene_names": [],
+          "organism": "human gut metagenome",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "C4IC05",
+          "protein_name": "CurF",
+          "gene_names": [],
+          "organism": "Clostridium butyricum E4 str. BoNT E BL5262",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6B9PP11",
+          "protein_name": "Zn(II)Cys5 transcription factor",
+          "gene_names": [
+            "curF"
+          ],
+          "organism": "Curvularia sp. IFB-Z10",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9W4DV39",
+          "protein_name": "Polyketide cyclase",
+          "gene_names": [
+            "curF"
+          ],
+          "organism": "Actinacidiphila cocklensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7U4TIA7",
+          "protein_name": "Polyketide cyclase",
+          "gene_names": [
+            "curF"
+          ],
+          "organism": "Desulfofervidus auxilii",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CurF",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"CurF\" OR gene:\"CurF\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"CurF\" OR gene:\"CurF\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::jame::pseudomonas fluorescens::::{\"uniprot\": \"Q6E7K5\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::jame::pseudomonas fluorescens::::{\"uniprot\": \"Q6E7K5\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"JamE\" OR gene:\"JamE\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"JamE\" OR gene:\"JamE\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "Q6E7K5",
+          "protein_name": "JamE",
+          "gene_names": [],
+          "organism": "Lyngbya majuscula",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "JamE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0C2I6T5",
+          "protein_name": "JamE",
+          "gene_names": [],
+          "organism": "Pseudomonas batumici",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "JamE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAU8TJC9",
+          "protein_name": "JamE",
+          "gene_names": [],
+          "organism": "Pseudomonas synxantha",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "JamE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "G2JA36",
+          "protein_name": "Putative JamE",
+          "gene_names": [],
+          "organism": "Candidatus Glomeribacter gigasporarum BEG34",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "JamE",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"JamE\" OR gene:\"JamE\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"JamE\" OR gene:\"JamE\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::jamf::pseudomonas fluorescens::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::jamf::pseudomonas fluorescens::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"JamF\" OR gene:\"JamF\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"JamF\" OR gene:\"JamF\") | (protein_name:\"jamF\" OR gene:\"jamF\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"jamF\" OR gene:\"jamF\") | \"jamF\" AND organism_name:\"Pseudomonas fluorescens\" | \"jamF\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "jamF",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::jamj::pseudomonas fluorescens::::{\"uniprot\": \"Q6E7K0\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::jamj::pseudomonas fluorescens::::{\"uniprot\": \"Q6E7K0\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"JamJ\" OR gene:\"JamJ\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"JamJ\" OR gene:\"JamJ\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "Q6E7K0",
+          "protein_name": "JamJ",
+          "gene_names": [],
+          "organism": "Lyngbya majuscula",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "JamJ",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1L1PP51",
+          "protein_name": "JamJ",
+          "gene_names": [],
+          "organism": "Hydrogenophaga intermedia",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "JamJ",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"JamJ\" OR gene:\"JamJ\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"JamJ\" OR gene:\"JamJ\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::nocb::pseudomonas fluorescens::::{\"uniprot\": \"A0ABU1PVG6\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::nocb::pseudomonas fluorescens::::{\"uniprot\": \"A0ABU1PVG6\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"NocB\" OR gene:\"NocB\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"NocB\" OR gene:\"NocB\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "A0A186QIJ2",
+          "protein_name": "Acireductone dioxygenase",
+          "gene_names": [
+            "mtnD",
+            "nocB"
+          ],
+          "organism": "Nostoc sp. CCAP 1453/38",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1S7B4A6",
+          "protein_name": "Acireductone dioxygenase",
+          "gene_names": [
+            "mtnD",
+            "nocB"
+          ],
+          "organism": "Nodularia sp. HBU26",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "E5DUG3",
+          "protein_name": "NocB",
+          "gene_names": [
+            "nocB"
+          ],
+          "organism": "Nocardia sp. ATCC 202099",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5J1Q6",
+          "protein_name": "NocB",
+          "gene_names": [
+            "nocB"
+          ],
+          "organism": "Nocardia uniformis subsp. tsuyamanensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABX8U105",
+          "protein_name": "A50926 NRPS, module 3",
+          "gene_names": [
+            "nocB"
+          ],
+          "organism": "Nonomuraea coxensis DSM 45129",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABU1PVG6",
+          "protein_name": "Nocardicin nonribosomal peptide synthetase NocB",
+          "gene_names": [],
+          "organism": "Saccharothrix longispora",
+          "reviewed": false,
+          "score": 0.03,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A561VIE3",
+          "protein_name": "Nocardicin nonribosomal peptide synthetase NocB",
+          "gene_names": [],
+          "organism": "Actinoplanes teichomyceticus",
+          "reviewed": false,
+          "score": 0.03,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A542DFE1",
+          "protein_name": "Nocardicin nonribosomal peptide synthetase NocB",
+          "gene_names": [],
+          "organism": "Amycolatopsis cihanbeyliensis",
+          "reviewed": false,
+          "score": 0.03,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NocB\" OR gene:\"NocB\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"NocB\" OR gene:\"NocB\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::ikaa::pseudomonas fluorescens::::{\"uniprot\": \"A0A0B4ZT44\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::ikaa::pseudomonas fluorescens::::{\"uniprot\": \"A0A0B4ZT44\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"IkaA\" OR gene:\"IkaA\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"IkaA\" OR gene:\"IkaA\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "A0A0B4ZT44",
+          "protein_name": "IkaA",
+          "gene_names": [],
+          "organism": "Streptomyces sp. ZJ306",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "IkaA",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"IkaA\" OR gene:\"IkaA\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"IkaA\" OR gene:\"IkaA\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::ikab::pseudomonas fluorescens::::{\"uniprot\": \"A0A0B4ZTH0\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::ikab::pseudomonas fluorescens::::{\"uniprot\": \"A0A0B4ZTH0\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"IkaB\" OR gene:\"IkaB\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"IkaB\" OR gene:\"IkaB\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "A0A0B4ZTH0",
+          "protein_name": "IkaB",
+          "gene_names": [],
+          "organism": "Streptomyces sp. ZJ306",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "IkaB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"IkaB\" OR gene:\"IkaB\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"IkaB\" OR gene:\"IkaB\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::ikac::pseudomonas fluorescens::::{\"uniprot\": \"A0A0B4ZV71\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::ikac::pseudomonas fluorescens::::{\"uniprot\": \"A0A0B4ZV71\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"IkaC\" OR gene:\"IkaC\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"IkaC\" OR gene:\"IkaC\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "A0A0B4ZV71",
+          "protein_name": "IkaC",
+          "gene_names": [],
+          "organism": "Streptomyces sp. ZJ306",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "IkaC",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"IkaC\" OR gene:\"IkaC\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"IkaC\" OR gene:\"IkaC\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::sfmc::pseudomonas fluorescens::::{\"uniprot\": \"P77249\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::sfmc::pseudomonas fluorescens::::{\"uniprot\": \"P77249\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"SfmC\" OR gene:\"SfmC\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"SfmC\" OR gene:\"SfmC\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "P77249",
+          "protein_name": "Probable fimbrial chaperone SfmC",
+          "gene_names": [
+            "sfmC"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D4GN07",
+          "protein_name": "SfmC",
+          "gene_names": [
+            "sfmC"
+          ],
+          "organism": "Pantoea ananatis (strain LMG 20103)",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0U5KY23",
+          "protein_name": "Chaperone protein SfmC",
+          "gene_names": [
+            "sfmC"
+          ],
+          "organism": "Duffyella gerundensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABY3S655",
+          "protein_name": "Fimbrial chaperone SfmC",
+          "gene_names": [
+            "sfmC"
+          ],
+          "organism": "Pseudocitrobacter corydidari",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABC7ZM19",
+          "protein_name": "Fimbrial periplasmic chaperone SfmC",
+          "gene_names": [
+            "sfmC"
+          ],
+          "organism": "Escherichia coli O145:H28 (strain RM12581)",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A564HN73",
+          "protein_name": "Putative fimbrial chaperone SfmC",
+          "gene_names": [
+            "sfmC"
+          ],
+          "organism": "Klebsiella spallanzanii",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0H3L435",
+          "protein_name": "Pili assembly chaperone SfmC",
+          "gene_names": [
+            "sfmC"
+          ],
+          "organism": "Pantoea ananatis (strain AJ13355)",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A833UQJ3",
+          "protein_name": "Putative fimbrial chaperone SfmC",
+          "gene_names": [
+            "sfmC_3"
+          ],
+          "organism": "Acinetobacter bereziniae",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "SfmC",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"SfmC\" OR gene:\"SfmC\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"SfmC\" OR gene:\"SfmC\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::nosl::pseudomonas fluorescens::::{\"uniprot\": \"Q9F0W0\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"NosL\" OR gene:\"NosL\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"NosL\" OR gene:\"NosL\")",
+      "confidence": 0.8,
+      "candidates": [
+        {
+          "accession": "Q9F0W0",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E6UKE3",
+          "protein_name": "Copper-binding lipoprotein NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7H4Z7",
+          "protein_name": "Copper-binding lipoprotein NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5E7W3Q2",
+          "protein_name": "Copper-binding lipoprotein NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O68481",
+          "protein_name": "Copper-binding lipoprotein NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Achromobacter cycloclastes",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q52529",
+          "protein_name": "Copper-binding lipoprotein NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Stutzerimonas stutzeri",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0F6TMC5",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Paracoccus sp. SY",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O07331",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Rhizobium meliloti",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosL\" OR gene:\"NosL\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"NosL\" OR gene:\"NosL\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::nosj::pseudomonas fluorescens::::{\"uniprot\": \"C6FX49\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"NosJ\" OR gene:\"NosJ\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"NosJ\" OR gene:\"NosJ\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "C6FX49",
+          "protein_name": "NosJ",
+          "gene_names": [
+            "nosJ"
+          ],
+          "organism": "Streptomyces actuosus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosJ",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABP2RDK7",
+          "protein_name": "COX2/NosJ periplasmic domain protein",
+          "gene_names": [],
+          "organism": "Leptospira licerasiae str. MMD4847",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "NosJ",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosJ\" OR gene:\"NosJ\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"NosJ\" OR gene:\"NosJ\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::nosk::pseudomonas fluorescens::::{\"uniprot\": \"C6FX50\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"NosK\" OR gene:\"NosK\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"NosK\" OR gene:\"NosK\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "C6FX50",
+          "protein_name": "NosK",
+          "gene_names": [
+            "nosK"
+          ],
+          "organism": "Streptomyces actuosus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosK",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosK\" OR gene:\"NosK\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"NosK\" OR gene:\"NosK\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::nosn::pseudomonas fluorescens::::{\"uniprot\": \"C6FX53\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"NosN\" OR gene:\"NosN\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"NosN\" OR gene:\"NosN\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "C6FX53",
+          "protein_name": "Heme chaperone HemW",
+          "gene_names": [
+            "nosN"
+          ],
+          "organism": "Streptomyces actuosus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosN",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosN\" OR gene:\"NosN\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"NosN\" OR gene:\"NosN\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::nosi::pseudomonas fluorescens::::{\"uniprot\": \"C6FX48\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::nosi::pseudomonas fluorescens::::{\"uniprot\": \"C6FX48\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"NosI\" OR gene:\"NosI\") AND organism_name:\"Pseudomonas fluorescens\" | (protein_name:\"NosI\" OR gene:\"NosI\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "C6FX48",
+          "protein_name": "NosI",
+          "gene_names": [
+            "nosI"
+          ],
+          "organism": "Streptomyces actuosus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosI",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D8KYG0",
+          "protein_name": "MHC class II antigen",
+          "gene_names": [
+            "Nosi-DRA"
+          ],
+          "organism": "Nomascus siki",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "NosI",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosI\" OR gene:\"NosI\") AND organism_name:\"Pseudomonas fluorescens\"",
+        "(protein_name:\"NosI\" OR gene:\"NosI\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -31428,6 +32915,805 @@
         "status": "matched",
         "order_step": "external_id:direct_id_match:kegg"
       }
+    },
+    "db::lorn::::{\"kegg\": \"C00077\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000214",
+        "kegg": "C00077",
+        "chebi": "CHEBI:15729",
+        "pubchem": "6262",
+        "cas": "70-26-8",
+        "biocyc": "L-ORNITHINE",
+        "chemspider": "6026",
+        "drugbank": "DB00129",
+        "pathbank_compound_id": "140"
+      },
+      "pathbank_compound_id": 140,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 140,
+          "name": "Ornithine",
+          "short_name": "Ornithi",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000214",
+            "kegg": "C00077",
+            "chebi": "CHEBI:15729",
+            "pubchem": "6262",
+            "cas": "70-26-8",
+            "biocyc": "L-ORNITHINE",
+            "chemspider": "6026",
+            "drugbank": "DB00129"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::ln5ohorn::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lpiperazate::::{\"kegg\": \"C22456\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::kutzneride 1::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::haem::::{\"kegg\": \"C00032\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0003178",
+        "kegg": "C00032",
+        "chebi": "CHEBI:17627",
+        "cas": "14875-96-8",
+        "biocyc": "HEME_A",
+        "chemspider": "24604415",
+        "drugbank": "DB02577",
+        "pathbank_compound_id": "1799"
+      },
+      "pathbank_compound_id": 1799,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1799,
+          "name": "Heme",
+          "short_name": "Heme",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0003178",
+            "kegg": "C00032",
+            "chebi": "CHEBI:17627",
+            "cas": "14875-96-8",
+            "biocyc": "HEME_A",
+            "chemspider": "24604415",
+            "drugbank": "DB02577"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::acpbound gammachloro3hydroxy3methylglutaryl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::alphabetaenoylgammachloroglutarylacp::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::alphabetaenoylgammachloroacp::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::betagammaenoylgammachloroacp::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::curacin a cyclopropyl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::curacin a::::{\"kegg\": \"C11689\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::jamaicamide a::::{\"kegg\": \"C18212\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::nadph::::{\"kegg\": \"C00005\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000221",
+        "kegg": "C00005",
+        "chebi": "CHEBI:16474",
+        "pubchem": "22833512",
+        "cas": "53-57-6",
+        "biocyc": "NADPH",
+        "chemspider": "17215925",
+        "pathbank_compound_id": "146"
+      },
+      "pathbank_compound_id": 146,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 146,
+          "name": "NADPH",
+          "short_name": "NADPH",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000221",
+            "kegg": "C00005",
+            "chebi": "CHEBI:16474",
+            "pubchem": "22833512",
+            "cas": "53-57-6",
+            "biocyc": "NADPH",
+            "chemspider": "17215925"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::nadp::::{\"kegg\": \"C00006\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000217",
+        "kegg": "C00006",
+        "chebi": "CHEBI:18009",
+        "pubchem": "5886",
+        "cas": "53-59-8",
+        "biocyc": "NAD(P)",
+        "chemspider": "5675",
+        "pathbank_compound_id": "143"
+      },
+      "pathbank_compound_id": 143,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 143,
+          "name": "NADP",
+          "short_name": "NADP",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000217",
+            "kegg": "C00006",
+            "chebi": "CHEBI:18009",
+            "pubchem": "5886",
+            "cas": "53-59-8",
+            "biocyc": "NAD(P)",
+            "chemspider": "5675"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::chloride::::{\"kegg\": \"C00698\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000492",
+        "kegg": "C00698",
+        "chebi": "CHEBI:17996",
+        "pubchem": "312",
+        "cas": "16887-00-6",
+        "biocyc": "CPD-4521",
+        "chemspider": "306",
+        "pathbank_compound_id": "374"
+      },
+      "pathbank_compound_id": 374,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 374,
+          "name": "Chloride ion",
+          "short_name": "Cl",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000492",
+            "kegg": "C00698",
+            "chebi": "CHEBI:17996",
+            "pubchem": "312",
+            "cas": "16887-00-6",
+            "biocyc": "CPD-4521",
+            "chemspider": "306"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::pcplinked seryl tetrapeptide thioester::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::betalactam thioester intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::epimerized betalactam thioester::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::hexaketideorn linear precursor::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::tetramic acid macrolactam intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::ikarugamycin::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::dipeptidylpcp substrate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::reduced peptidyl aldehyde intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::saframycin a::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3oho5dimethylltyr::::{\"kegg\": \"C05944\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0004231",
+        "kegg": "C05944",
+        "chebi": "CHEBI:895821",
+        "pubchem": "4678",
+        "cas": "16485-10-2",
+        "biocyc": "PANTOTHENOL",
+        "chemspider": "4516",
+        "pathbank_compound_id": "2097"
+      },
+      "pathbank_compound_id": 2097,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 2097,
+          "name": "Pantothenol",
+          "short_name": "Pnthol",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0004231",
+            "kegg": "C05944",
+            "chebi": "CHEBI:895821",
+            "pubchem": "4678",
+            "cas": "16485-10-2",
+            "biocyc": "PANTOTHENOL",
+            "chemspider": "4516"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::o2::::{\"kegg\": \"C00007\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001377",
+        "kegg": "C00007",
+        "chebi": "CHEBI:15379",
+        "pubchem": "977",
+        "cas": "7782-44-7",
+        "biocyc": "CPD-6641",
+        "chemspider": "952",
+        "pathbank_compound_id": "1065"
+      },
+      "pathbank_compound_id": 1065,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1065,
+          "name": "Oxygen",
+          "short_name": "O2",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001377",
+            "kegg": "C00007",
+            "chebi": "CHEBI:15379",
+            "pubchem": "977",
+            "cas": "7782-44-7",
+            "biocyc": "CPD-6641",
+            "chemspider": "952"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::indoylcysthiolated pentathiazolyl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::nosiheptide indolic sidering intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::amp::::{\"kegg\": \"C00020\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000045",
+        "kegg": "C00020",
+        "chebi": "CHEBI:16027",
+        "pubchem": "6083",
+        "cas": "61-19-8",
+        "biocyc": "AMP",
+        "chemspider": "5858",
+        "drugbank": "DB00131",
+        "pathbank_compound_id": "32"
+      },
+      "pathbank_compound_id": 32,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 32,
+          "name": "Adenosine monophosphate",
+          "short_name": "AMP",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000045",
+            "kegg": "C00020",
+            "chebi": "CHEBI:16027",
+            "pubchem": "6083",
+            "cas": "61-19-8",
+            "biocyc": "AMP",
+            "chemspider": "5858",
+            "drugbank": "DB00131"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::ppi::::{\"kegg\": \"C00013\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000250",
+        "kegg": "C00013",
+        "chebi": "CHEBI:18361",
+        "pubchem": "644102",
+        "cas": "14000-31-8",
+        "biocyc": "PPI",
+        "chemspider": "559142",
+        "drugbank": "DB04160",
+        "pathbank_compound_id": "170"
+      },
+      "pathbank_compound_id": 170,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 170,
+          "name": "Pyrophosphate",
+          "short_name": "Ppi",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000250",
+            "kegg": "C00013",
+            "chebi": "CHEBI:18361",
+            "pubchem": "644102",
+            "cas": "14000-31-8",
+            "biocyc": "PPI",
+            "chemspider": "559142",
+            "drugbank": "DB04160"
+          }
+        },
+        {
+          "pathbank_compound_id": 108886,
+          "name": "Diphosphoric acid",
+          "short_name": "",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C00013",
+            "chebi": "CHEBI:29888",
+            "pubchem": "1023",
+            "cas": "2466-09-3"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::miaamp::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::indoylsnosj::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::linear pentathiazolyl nosiheptide intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::miacys pentathiazolyl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::5deoxyadenosyl radical::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lmethionine::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000696",
+        "kegg": "C00073",
+        "chebi": "CHEBI:16643",
+        "pubchem": "6137",
+        "cas": "63-68-3",
+        "biocyc": "MET",
+        "chemspider": "5907",
+        "drugbank": "DB00134",
+        "pathbank_compound_id": "548"
+      },
+      "pathbank_compound_id": 548,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 548,
+          "name": "L-Methionine",
+          "short_name": "Met",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000696",
+            "kegg": "C00073",
+            "chebi": "CHEBI:16643",
+            "pubchem": "6137",
+            "cas": "63-68-3",
+            "biocyc": "MET",
+            "chemspider": "5907",
+            "drugbank": "DB00134",
+            "pathbank_compound_id": "548"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::nosiheptide::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -33969,88 +36255,469 @@
         "status": "matched",
         "order_step": "pathbank_protein_complex_id"
       }
+    },
+    "db::obag complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A0A0D0NC88\"}, \"name\": \"ObaG\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "ObaG",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0D0NC88"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "ObaG",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::ktzi complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A8CF85\"}, \"name\": \"KtzI\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "KtzI",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A8CF85"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "KtzI",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::ktzt complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"Q9ZEP7\"}, \"name\": \"KtzT\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "KtzT",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q9ZEP7"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "KtzT",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::curb complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"Q02579\"}, \"name\": \"CurB\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "CurB",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q02579"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CurB",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::jamf complex::pseudomonas fluorescens::::[{\"ids\": {}, \"name\": \"JamF\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "JamF",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "JamF",
+          "component_index": 0,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::curf complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"Q02572\"}, \"name\": \"CurF\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "CurF",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q02572"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CurF",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::cura complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A0A5E6QBT2\"}, \"name\": \"CurA\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "CurA",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A5E6QBT2"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CurA",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::jamj complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"Q6E7K0\"}, \"name\": \"JamJ\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "JamJ",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q6E7K0"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "JamJ",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::nocb complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A0ABU1PVG6\"}, \"name\": \"NocB\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "NocB",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0ABU1PVG6"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NocB",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::ikaa complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A0A0B4ZT44\"}, \"name\": \"IkaA\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "IkaA",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0B4ZT44"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "IkaA",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::ikab complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A0A0B4ZTH0\"}, \"name\": \"IkaB\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "IkaB",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0B4ZTH0"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "IkaB",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::ikac complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"A0A0B4ZV71\"}, \"name\": \"IkaC\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "IkaC",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0B4ZV71"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "IkaC",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::sfmc complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"P77249\"}, \"name\": \"SfmC\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "SfmC",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "P77249"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "SfmC",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::nosi complex::pseudomonas fluorescens::::[{\"ids\": {\"uniprot\": \"C6FX48\"}, \"name\": \"NosI\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "NosI",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "C6FX48"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NosI",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
     }
   },
   "enzyme_complexes": {
-    "phenylalanine hydroxylase::161338::homo sapiens": {
-      "status": "mapped",
-      "provider": "PathBankDB",
-      "source": "db",
-      "pathbank_complex_id": 431796,
-      "pathbank_protein_complex_id": 431796,
-      "species_id": 1,
-      "components": [
-        {
-          "name": "phenylalanine hydroxylase",
-          "pathbank_protein_id": 161338,
-          "stoichiometry": 1,
-          "uniprot": "Q66RJ7",
-          "mapped_ids": {
-            "uniprot": "Q66RJ7",
-            "pathbank_protein_id": "161338"
-          },
-          "gene_name": "PAH",
-          "species_id": 1
-        }
-      ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
-        {
-          "pathbank_complex_id": 431796,
-          "pathbank_protein_complex_id": 431796,
-          "name": "phenylalanine hydroxylase complex",
-          "species_id": 1,
-          "component_protein_id": 161338,
-          "score": 0.9
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
-      }
-    },
-    "tyrosine hydroxylase::161339::homo sapiens": {
-      "status": "mapped",
-      "provider": "PathBankDB",
-      "source": "db",
-      "pathbank_complex_id": 431797,
-      "pathbank_protein_complex_id": 431797,
-      "species_id": 1,
-      "components": [
-        {
-          "name": "tyrosine hydroxylase",
-          "pathbank_protein_id": 161339,
-          "stoichiometry": 1,
-          "uniprot": "P78428",
-          "mapped_ids": {
-            "uniprot": "P78428",
-            "pathbank_protein_id": "161339"
-          },
-          "gene_name": "TH",
-          "species_id": 1
-        }
-      ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
-        {
-          "pathbank_complex_id": 431797,
-          "pathbank_protein_complex_id": 431797,
-          "name": "tyrosine hydroxylase complex",
-          "species_id": 1,
-          "component_protein_id": 161339,
-          "score": 0.9
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
-      }
-    },
-    "aromatic lamino acid decarboxylase::4198::homo sapiens": {
+    "obag::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -34058,21 +36725,597 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "aromatic L-amino acid decarboxylase complex",
-      "species_id": 1,
+      "name": "ObaG complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "aromatic L-amino acid decarboxylase",
+          "name": "ObaG",
           "stoichiometry": 1,
-          "pathbank_protein_id": 4198,
           "mapped_ids": {
-            "uniprot": "Q53Y41",
-            "pathbank_protein_id": "4198",
-            "gene_name": "DDC"
+            "uniprot": "A0A0D0NC88"
           }
         }
       ],
-      "issues": [],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "ObaG",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "ktzi::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "KtzI complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "KtzI",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A8CF85"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "KtzI",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "ktzt::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "KtzT complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "KtzT",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "Q9ZEP7"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "KtzT",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "curb::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "CurB complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "CurB",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "Q02579"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CurB",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "jamf::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "JamF complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "JamF",
+          "stoichiometry": 1
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "JamF",
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "curf::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "CurF complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "CurF",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "Q02572"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CurF",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "cura::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "CurA complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "CurA",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A5E6QBT2"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CurA",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "jamj::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "JamJ complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "JamJ",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "Q6E7K0"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "JamJ",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "nocb::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "NocB complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "NocB",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0ABU1PVG6"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NocB",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "ikaa::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "IkaA complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "IkaA",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A0B4ZT44"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "IkaA",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "ikab::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "IkaB complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "IkaB",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A0B4ZTH0"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "IkaB",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "ikac::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "IkaC complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "IkaC",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "A0A0B4ZV71"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "IkaC",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "sfmc::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "SfmC complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "SfmC",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "P77249"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "SfmC",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "pntm::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "PntM complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "PntM",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "E3VWI3"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "PntM",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "nosl::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "NosL complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "NosL",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "Q9F0W0"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NosL",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "nosj::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "NosJ complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "NosJ",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "C6FX49"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NosJ",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "nosk::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "NosK complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "NosK",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "C6FX50"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NosK",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "nosn::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "NosN complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "NosN",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "C6FX53"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NosN",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "nosi::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "NosI complex",
+      "species_id": 539,
+      "components": [
+        {
+          "name": "NosI",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "C6FX48"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NosI",
+          "reason": "no_db_match"
+        }
+      ],
       "resolution": {
         "status": "novel",
         "issue": "no_db_candidates",
