@@ -120,11 +120,12 @@ def _packed_reaction_stack_tops(
     heights: Sequence[int],
     enzyme_cy: int,
     gap_y: int,
+    min_y: int = 0,
 ) -> Tuple[int, List[int]]:
     if not heights:
         return 0, []
     total_stack_height = sum(heights) + gap_y * (len(heights) - 1)
-    current_top = int(round(enzyme_cy - total_stack_height / 2))
+    current_top = max(int(round(enzyme_cy - total_stack_height / 2)), min_y)
     tops: List[int] = []
     for height in heights:
         tops.append(current_top)
@@ -1162,10 +1163,21 @@ class DeterministicPwmlBuilder:
         for bs_id, reaction_indices in sorted(reaction_indices_by_bs.items()):
             region = region_for(bs_id)
             n_rxns = len(reaction_indices)
-            enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * rxn_step_x // 2
+            # Minimum x distance from the region edge to the first reaction center,
+            # ensuring left-side compounds (max width ~78) stay on-canvas.
+            min_rx_cx = region["x"] + pad + 78 + substrate_gap + protein_w // 2
+            if n_rxns > 1:
+                available_span = region["w"] - 2 * (pad + 78 + substrate_gap + protein_w // 2)
+                effective_step_x = max(1, min(rxn_step_x, available_span // (n_rxns - 1)))
+            else:
+                effective_step_x = rxn_step_x
+            enzyme_cx_base = max(
+                region["x"] + region["w"] // 2 - (n_rxns - 1) * effective_step_x // 2,
+                min_rx_cx,
+            )
             enzyme_cy = max(region["y"] + region["h"] // 2, 360)
             for k, reaction_idx in enumerate(reaction_indices):
-                enzyme_cx = enzyme_cx_base + k * rxn_step_x
+                enzyme_cx = enzyme_cx_base + k * effective_step_x
                 enzyme_x = enzyme_cx - protein_w // 2
                 enzyme_y = enzyme_cy - protein_h // 2
                 reaction_layouts[reaction_idx] = {
@@ -1471,6 +1483,7 @@ class DeterministicPwmlBuilder:
                     heights,
                     compound_stack_cy,
                     compound_gap_y,
+                    pad,
                 )
                 self.layout_debug_stacks.append(
                     {
@@ -1495,12 +1508,6 @@ class DeterministicPwmlBuilder:
                     )
                     expected_anchor_y = y + height // 2
                     x = expected_anchor_x - width if side == "Left" else expected_anchor_x
-                    if y < 0:
-                        import warnings
-                        warnings.warn(
-                            f"DEBUG layout: reaction_idx={reaction_idx} side={side_key} "
-                            f"y={y} (anchor_y={expected_anchor_y} height={height} compound_stack_cy={compound_stack_cy})"
-                        )
                     if etype == "Compound":
                         state_key = (eid, bs_id)
                         had_state_loc = state_key in compound_loc_by_state

@@ -28,6 +28,9 @@ Use your biochemical knowledge to find:
    Only emit this when sequential order is explicit — never for unordered transformation sets.
 
 RULES
+- Preserve selected pathway scope. Do not promote out-of-scope review/background material,
+  excluded examples, peripheral branches, or broad derivative-family summaries into graph content
+  during curation.
 • Confidence thresholds: ≥0.75 for add, ≥0.88 for replace, ≥0.98 for modifying reaction inputs/outputs.
 • Do not modify reaction inputs[] or outputs[] directly unless confidence ≥ 0.98.
 • Do not add new reactions or transports.

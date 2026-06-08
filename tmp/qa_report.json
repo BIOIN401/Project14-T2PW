@@ -1,62 +1,83 @@
 {
   "summary": {
-    "total_species": 12,
-    "total_reactions": 5,
-    "completeness_score": 0.294
+    "total_species": 15,
+    "total_reactions": 7,
+    "completeness_score": 0.227
   },
   "flags": {
-    "missing_compartments": [],
+    "missing_compartments": [
+      {
+        "entity": "S-adenosyl-L-methionine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "S-adenosyl-L-homocysteine",
+        "reason": "no subcellular location recorded"
+      }
+    ],
     "missing_modifiers": [],
     "possible_complexes": [],
     "transport_like_reactions": [],
     "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "L-tryptophan",
+        "entity": "phenylalanine",
         "type": "compound"
       },
       {
-        "entity": "7-chloro-L-tryptophan",
+        "entity": "trans-cinnamic acid",
         "type": "compound"
       },
       {
-        "entity": "monodechloroaminopyrrolnitrin",
+        "entity": "4-hydroxycinnamic acid",
         "type": "compound"
       },
       {
-        "entity": "aminopyrrolnitrin",
+        "entity": "3,4-dihydroxycinnamic acid",
         "type": "compound"
       },
       {
-        "entity": "pyrrolnitrin",
+        "entity": "3,4-dihydroxybenzaldehyde",
         "type": "compound"
       },
       {
-        "entity": "chloride",
+        "entity": "tyrosine",
         "type": "compound"
       },
       {
-        "entity": "reduced flavin",
+        "entity": "tyramine",
         "type": "compound"
       },
       {
-        "entity": "oxygen",
+        "entity": "norbelladine",
         "type": "compound"
       },
       {
-        "entity": "PrnA",
+        "entity": "4'-O-methylnorbelladine",
+        "type": "compound"
+      },
+      {
+        "entity": "S-adenosyl-L-methionine",
+        "type": "compound"
+      },
+      {
+        "entity": "S-adenosyl-L-homocysteine",
+        "type": "compound"
+      },
+      {
+        "entity": "phenylalanine ammonia-lyase",
         "type": "protein"
       },
       {
-        "entity": "PrnB",
+        "entity": "cinnamate 4-hydroxylase (CYP73A1)",
         "type": "protein"
       },
       {
-        "entity": "PrnC",
+        "entity": "tyrosine decarboxylase",
         "type": "protein"
       },
       {
-        "entity": "PrnD",
+        "entity": "norbelladine 4'-O-methyltransferase (N4OMT)",
         "type": "protein"
       }
     ],

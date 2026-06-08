@@ -1,32 +1,44 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: Chlorination of L-tryptophan by PrnA
-  Reactants: L-tryptophan [Pseudomonas fluorescens cytosol], chloride [Pseudomonas fluorescens cytosol], reduced flavin [Pseudomonas fluorescens cytosol], oxygen [Pseudomonas fluorescens cytosol]
-  Products:  7-chloro-L-tryptophan [Pseudomonas fluorescens cytosol]
-  Modifier:  PrnA [Pseudomonas fluorescens cytosol] (role=catalyst, confidence=1.0)
+REACTION 1: Phenylalanine deamination to trans-cinnamic acid
+  Reactants: phenylalanine [Narcissus cytosol]
+  Products:  trans-cinnamic acid [Narcissus cytosol]
+  Modifier:  phenylalanine ammonia-lyase [Narcissus cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: Rearrangement of 7-chloro-L-tryptophan by PrnB
-  Reactants: 7-chloro-L-tryptophan [Pseudomonas fluorescens cytosol]
-  Products:  monodechloroaminopyrrolnitrin [Pseudomonas fluorescens cytosol]
-  Modifier:  PrnB [Pseudomonas fluorescens cytosol] (role=catalyst, confidence=1.0)
+REACTION 2: trans-Cinnamic acid hydroxylation to 4-hydroxycinnamic acid
+  Reactants: trans-cinnamic acid [Narcissus cytosol]
+  Products:  4-hydroxycinnamic acid [Narcissus cytosol]
+  Modifier:  cinnamate 4-hydroxylase (CYP73A1) [Narcissus cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: Chlorination of monodechloroaminopyrrolnitrin by PrnC
-  Reactants: monodechloroaminopyrrolnitrin [Pseudomonas fluorescens cytosol], chloride [Pseudomonas fluorescens cytosol], reduced flavin [Pseudomonas fluorescens cytosol], oxygen [Pseudomonas fluorescens cytosol]
-  Products:  aminopyrrolnitrin [Pseudomonas fluorescens cytosol]
-  Modifier:  PrnC [Pseudomonas fluorescens cytosol] (role=catalyst, confidence=1.0)
+REACTION 3: 4-Hydroxycinnamic acid hydroxylation to 3,4-dihydroxycinnamic acid
+  Reactants: 4-hydroxycinnamic acid [Narcissus cytosol]
+  Products:  3,4-dihydroxycinnamic acid [Narcissus cytosol]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 4: Oxidation of aminopyrrolnitrin by PrnD
-  Reactants: aminopyrrolnitrin [Pseudomonas fluorescens cytosol]
-  Products:  pyrrolnitrin [Pseudomonas fluorescens cytosol]
-  Modifier:  PrnD [Pseudomonas fluorescens cytosol] (role=catalyst, confidence=1.0)
+REACTION 4: 3,4-Dihydroxycinnamic acid conversion to 3,4-dihydroxybenzaldehyde
+  Reactants: 3,4-dihydroxycinnamic acid [Narcissus cytosol]
+  Products:  3,4-dihydroxybenzaldehyde [Narcissus cytosol]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 5: Oxidation of aminopyrrolnitrin by PrnD
-  Reactants: aminopyrrolnitrin [Pseudomonas fluorescens cytosol], oxygen [Pseudomonas fluorescens cytosol]
-  Products:  pyrrolnitrin [Pseudomonas fluorescens cytosol]
-  Modifier:  PrnD [Pseudomonas fluorescens cytosol] (role=catalyst, confidence=1.0)
+REACTION 5: Tyrosine decarboxylation to tyramine
+  Reactants: tyrosine [Narcissus cytosol]
+  Products:  tyramine [Narcissus cytosol]
+  Modifier:  tyrosine decarboxylase [Narcissus cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 6: Condensation and reduction of tyramine and 3,4-dihydroxybenzaldehyde to norbelladine
+  Reactants: tyramine [Narcissus cytosol], 3,4-dihydroxybenzaldehyde [Narcissus cytosol]
+  Products:  norbelladine [Narcissus cytosol]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 7: Methylation of norbelladine to 4'-O-methylnorbelladine
+  Reactants: norbelladine [Narcissus cytosol], S-adenosyl-L-methionine [unknown]
+  Products:  4'-O-methylnorbelladine [Narcissus cytosol], S-adenosyl-L-homocysteine [unknown]
+  Modifier:  norbelladine 4'-O-methyltransferase (N4OMT) [Narcissus cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none

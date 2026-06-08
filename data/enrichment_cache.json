@@ -345289,6 +345289,670 @@
           "uniParcId": "UPI00000B98D7"
         }
       }
+    },
+    "uniprot:A0A2I4JM57": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "A0A2I4JM57",
+        "recommended_name": "",
+        "alternative_names": [],
+        "gene_names": [
+          "C4H"
+        ],
+        "organism": "Sesamum indicum",
+        "taxonomy_id": "4182",
+        "function_text": "",
+        "catalytic_activity": [],
+        "enzyme_commission": [],
+        "pathways": [],
+        "keywords": [
+          "Heme",
+          "Iron",
+          "Membrane",
+          "Metal-binding",
+          "Monooxygenase",
+          "Oxidoreductase",
+          "Transmembrane",
+          "Transmembrane helix"
+        ],
+        "subcellular_locations": [
+          "Membrane"
+        ],
+        "go_mf_ids": [
+          "GO:0020037",
+          "GO:0005506",
+          "GO:0016710"
+        ],
+        "go_bp_ids": [
+          "GO:0009808"
+        ],
+        "go_cellular_component_ids": [
+          "GO:0016020"
+        ],
+        "protein_existence": "2: Evidence at transcript level",
+        "sequence_length": 509,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [],
+        "reactome_ids": [],
+        "string_id": "",
+        "provenance": {
+          "source": "UniProt",
+          "query": "A0A2I4JM57",
+          "source_url": "https://rest.uniprot.org/uniprotkb/A0A2I4JM57.json",
+          "retrieved_at": "2026-06-08T18:23:48Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB unreviewed (TrEMBL)",
+        "primaryAccession": "A0A2I4JM57",
+        "uniProtkbId": "A0A2I4JM57_SESIN",
+        "entryAudit": {
+          "firstPublicDate": "2018-03-28",
+          "lastAnnotationUpdateDate": "2025-10-08",
+          "lastSequenceUpdateDate": "2018-03-28",
+          "entryVersion": 21,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 2.0,
+        "organism": {
+          "scientificName": "Sesamum indicum",
+          "commonName": "Oriental sesame",
+          "synonyms": [
+            "Sesamum orientale"
+          ],
+          "taxonId": 4182,
+          "evidences": [
+            {
+              "evidenceCode": "ECO:0000313",
+              "source": "EMBL",
+              "id": "ALA55538.1"
+            }
+          ],
+          "lineage": [
+            "Eukaryota",
+            "Viridiplantae",
+            "Streptophyta",
+            "Embryophyta",
+            "Tracheophyta",
+            "Spermatophyta",
+            "Magnoliopsida",
+            "eudicotyledons",
+            "Gunneridae",
+            "Pentapetalae",
+            "asterids",
+            "lamiids",
+            "Lamiales",
+            "Pedaliaceae",
+            "Sesamum"
+          ]
+        },
+        "proteinExistence": "2: Evidence at transcript level",
+        "proteinDescription": {
+          "submissionNames": [
+            {
+              "fullName": {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000313",
+                    "source": "EMBL",
+                    "id": "ALA55538.1"
+                  }
+                ],
+                "value": "Cinnamate 4-hydroxylase"
+              }
+            }
+          ]
+        },
+        "genes": [
+          {
+            "geneName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000313",
+                  "source": "EMBL",
+                  "id": "ALA55538.1"
+                }
+              ],
+              "value": "C4H"
+            }
+          }
+        ],
+        "comments": [
+          {
+            "commentType": "COFACTOR",
+            "cofactors": [
+              {
+                "name": "heme",
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000256",
+                    "source": "ARBA",
+                    "id": "ARBA00001971"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000256",
+                    "source": "PIRSR",
+                    "id": "PIRSR602401-1"
+                  }
+                ],
+                "cofactorCrossReference": {
+                  "database": "ChEBI",
+                  "id": "CHEBI:30413"
+                }
+              }
+            ]
+          },
+          {
+            "commentType": "SUBCELLULAR LOCATION",
+            "subcellularLocations": [
+              {
+                "location": {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000256",
+                      "source": "ARBA",
+                      "id": "ARBA00004167"
+                    }
+                  ],
+                  "value": "Membrane",
+                  "id": "SL-0162"
+                },
+                "topology": {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000256",
+                      "source": "ARBA",
+                      "id": "ARBA00004167"
+                    }
+                  ],
+                  "value": "Single-pass membrane protein",
+                  "id": "SL-9904"
+                }
+              }
+            ]
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000256",
+                    "source": "ARBA",
+                    "id": "ARBA00010617"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000256",
+                    "source": "RuleBase",
+                    "id": "RU000461"
+                  }
+                ],
+                "value": "Belongs to the cytochrome P450 family"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          }
+        ],
+        "features": [
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 451,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 451,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "axial binding residue",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:30413"
+              },
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:18248"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "PIRSR",
+                "id": "PIRSR602401-1"
+              }
+            ],
+            "ligand": {
+              "name": "heme",
+              "id": "ChEBI:CHEBI:30413"
+            },
+            "ligandPart": {
+              "name": "Fe",
+              "id": "ChEBI:CHEBI:18248"
+            }
+          }
+        ],
+        "keywords": [
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00022617"
+              },
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "PIRSR",
+                "id": "PIRSR602401-1"
+              }
+            ],
+            "id": "KW-0349",
+            "category": "Ligand",
+            "name": "Heme"
+          },
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00023004"
+              },
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "PIRSR",
+                "id": "PIRSR602401-1"
+              }
+            ],
+            "id": "KW-0408",
+            "category": "Ligand",
+            "name": "Iron"
+          },
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00023136"
+              }
+            ],
+            "id": "KW-0472",
+            "category": "Cellular component",
+            "name": "Membrane"
+          },
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00022723"
+              },
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "PIRSR",
+                "id": "PIRSR602401-1"
+              }
+            ],
+            "id": "KW-0479",
+            "category": "Ligand",
+            "name": "Metal-binding"
+          },
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00023033"
+              },
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "RuleBase",
+                "id": "RU000461"
+              }
+            ],
+            "id": "KW-0503",
+            "category": "Molecular function",
+            "name": "Monooxygenase"
+          },
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00023002"
+              },
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "RuleBase",
+                "id": "RU000461"
+              }
+            ],
+            "id": "KW-0560",
+            "category": "Molecular function",
+            "name": "Oxidoreductase"
+          },
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00022692"
+              }
+            ],
+            "id": "KW-0812",
+            "category": "Domain",
+            "name": "Transmembrane"
+          },
+          {
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000256",
+                "source": "ARBA",
+                "id": "ARBA00022989"
+              }
+            ],
+            "id": "KW-1133",
+            "category": "Domain",
+            "name": "Transmembrane helix"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "CI-8HH9HQ0HIB55R",
+              "citationType": "submission",
+              "authors": [
+                "Lee K.-R.",
+                "Kim H.U.",
+                "Roh K.H.",
+                "Kang H.-C.",
+                "Kim J.-B."
+              ],
+              "title": "Cloning of genes in the phenylpropanoid pathway from sesame.",
+              "publicationDate": "OCT-2014",
+              "submissionDatabase": "EMBL/GenBank/DDBJ databases"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE"
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000313",
+                "source": "EMBL",
+                "id": "ALA55538.1"
+              }
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "KP070828",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "ALA55538.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "mRNA"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "A0A2I4JM57",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0016020",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:membrane"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-SubCell"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0020037",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:heme binding"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005506",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:iron ion binding"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0016710",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:trans-cinnamate 4-monooxygenase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009808",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:lignin metabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.10.630.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Cytochrome P450"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR001128",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Cyt_P450"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR017972",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Cyt_P450_CS"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR002401",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Cyt_P450_E_grp-I"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR036396",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Cyt_P450_sf"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR47948",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "TRANS-CINNAMATE 4-MONOOXYGENASE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR47948:SF11",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "TRANS-CINNAMATE 4-MONOOXYGENASE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00067",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "p450"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PRINTS",
+            "id": "PR00463",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "EP450I"
+              }
+            ]
+          },
+          {
+            "database": "PRINTS",
+            "id": "PR00385",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "P450"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF48264",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Cytochrome P450"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS00086",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "CYTOCHROME_P450"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MDFLLLLQKTLVGLFSAAATAILISKLRGKRLNLPPGPFALPLVGSWLQIGNNLDHHDFINYAKKFGQLFLLRMGQRNIAVISSTELAKEVLLTRGKEFGSRSRNIVFDIFTGKGQDMVFAEYGDHWRKMRRIVSVPFFTNRVVQQYRREWEAEVAKVVEEVRRNPAAAEEGVVLRRRLELMVYNNVYKMMFDKRFESEEDPLFVKLKSVNGERSKLGQSLEYNFGDFVPFLRPFLRGYLKTCREVMRRRLNLYKDSFIHQKKSVVATRNGMVEKNIDLKCGIDHFLEAQKNGEINEDNVLFIVENMNVAAIETTVWALEWAIAELINNPKIQAKLRTEIDTILGPKNQVTEPDTHKLPYLEAVIKETLRLRMIVPCLVPHMNLHQANLGGYDIPAECRIYVNAWWLANNPAHWERPEEFRPERFLEEESNVQVNGNNIKYIPFGVGRRNCPGMLIAMPVLGITLGSLVQNFELLPPPGQSKIDMTENNGQFATRMLNHATIVLKPRYV",
+          "length": 509,
+          "molWeight": 58585,
+          "crc64": "AD8B1645C7A1A6AA",
+          "md5": "0429EA99367A119637F187E08010EE0C"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "COFACTOR": 1,
+            "SUBCELLULAR LOCATION": 1,
+            "SIMILARITY": 1
+          },
+          "countByFeatureType": {
+            "Binding site": 1
+          },
+          "uniParcId": "UPI000CA09E09"
+        }
+      }
     }
   },
   "compounds": {
@@ -355644,6 +356308,91 @@
         "id": "C19790",
         "source_url": "https://rest.kegg.jp/get/cpd:C19790",
         "retrieved_at": "2026-06-08T16:27:40Z",
+        "status": "ok"
+      }
+    },
+    "kegg:C16702": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C16702",
+      "primary_name": "4'-O-Methylnorbelladine",
+      "synonyms": [
+        "4'-O-Methylnorbelladine"
+      ],
+      "formula": "C16H19NO3",
+      "mass_monoisotopic": 273.1365,
+      "mass_average": 273.33,
+      "pathways": [
+        "Isoquinoline alkaloid biosynthesis",
+        "Biosynthesis of alkaloids derived from shikimate pathway",
+        "Biosynthesis of secondary metabolites"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C16702",
+        "pubchem_id": "96023226",
+        "chebi_id": "80667"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C16702",
+        "source_url": "https://rest.kegg.jp/get/cpd:C16702",
+        "retrieved_at": "2026-06-08T18:23:49Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:16680": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16680",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-06-08T18:23:53Z"
+      }
+    },
+    "hmdb:HMDB0000939": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000939",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000939",
+        "retrieved_at": "2026-06-08T18:23:53Z"
+      }
+    },
+    "kegg:C00021": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00021",
+      "primary_name": "S-Adenosyl-L-homocysteine",
+      "synonyms": [
+        "S-Adenosyl-L-homocysteine",
+        "S-Adenosylhomocysteine"
+      ],
+      "formula": "C14H20N6O5S",
+      "mass_monoisotopic": 384.1216,
+      "mass_average": 384.41,
+      "pathways": [
+        "Cysteine and methionine metabolism",
+        "One carbon pool by folate",
+        "Metabolic pathways",
+        "Biosynthesis of amino acids",
+        "Biosynthesis of cofactors",
+        "Folate transport and metabolism",
+        "Chemical carcinogenesis - reactive oxygen species"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00021",
+        "pubchem_id": "3323",
+        "chebi_id": "16680"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00021",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00021",
+        "retrieved_at": "2026-06-08T18:23:54Z",
         "status": "ok"
       }
     }

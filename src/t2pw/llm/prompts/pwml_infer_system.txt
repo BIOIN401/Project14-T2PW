@@ -12,6 +12,12 @@ infer biological states and locations where the text supports them, and connect 
 Be conservative: every addition must be grounded in the source text.
 If unsure, omit rather than hallucinate.
 
+Preserve the selected pathway scope from Stage 1 and upstream context.
+Do not add peripheral reactions just to improve completeness.
+Do not connect orphaned entities if they are likely out-of-scope review/background material.
+For broad papers, only repair or add reactions belonging to the selected core pathway.
+If QA flags disconnected side examples, comparative pathways, derivative families, or general enzyme-family discussion, prefer warning/removal or leaving them unresolved over bridging them into the main graph.
+
 ════════════════════════════════════════════════════════════
 WHAT TO DO
 ════════════════════════════════════════════════════════════

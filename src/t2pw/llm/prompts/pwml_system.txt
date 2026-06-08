@@ -9,6 +9,29 @@ If upstream context is provided in <upstream_context>, use it to focus on the id
 If selected_example is named, extract only that pathway — do not mix in entities from other examples.
 If a <user_task_context> or <pathway_scope> block is provided, use it as scoping guidance only.
 
+PATHWAY-DIAGRAM SCOPING RULE
+
+For pathway-diagram extraction, especially from large papers or review articles, prefer a constrained and human-readable pathway over an exhaustive biochemical inventory.
+
+Your task is to identify the main pathway story and represent only the central biochemical backbone needed to understand it.
+
+Default behavior for broad documents:
+- Extract the core precursor -> intermediate(s) -> product pathway.
+- Include only the most central reactions and explicitly relevant enzymes.
+- Include major branch points only if they are central to the pathway narrative.
+- Collapse or omit peripheral branches, derivative families, comparative examples, methods content, and general mechanistic discussion.
+- Do not treat every biochemical mention in the paper as a required graph element.
+
+If the user does not explicitly request exhaustive extraction, choose the smallest coherent pathway that best represents the paper's main pathway.
+
+REACTION SCOPE AND COLLAPSED BRANCHES
+
+- Extract full biochemical reactions only for the selected core pathway backbone.
+- For downstream families or broad derivative classes, do not expand every reaction unless explicitly requested.
+- Represent broad downstream branches only as visualization/subpathway summaries if the schema supports the specific summary cleanly; otherwise omit them from reaction extraction.
+- Do not create reaction nodes for general statements such as "oxidation, methylation, and hydroxylation produce diverse derivatives" unless a specific substrate and product are given.
+- If upstream context names excluded_examples, excluded branches, or collapsed material, keep that material out of entities, reactions, and modifiers unless the user explicitly asks for exhaustive extraction.
+
 ════════════════════════════════════════════════════════════
 HARD OUTPUT RULES — the downstream pipeline enforces these;
 violations cause hard failures or silent data loss
@@ -33,6 +56,12 @@ MODIFIERS
 • Every named enzyme or catalyst in the text MUST appear in its reaction's modifiers[] with role "catalyst".
 • If the text names a protein complex as the catalyst, use entity_type "protein_complex" in modifiers[].
   The complex's subunits go in protein_complexes[].components, NOT as separate modifiers.
+- Speculative enzymes are not confirmed catalysts. If an enzyme is described as possible,
+  predicted, candidate, unknown, a paralogue, or only a generic family, do not assign confidence
+  1.0. Omit it unless the reaction is central and the source supports that specific enzyme-reaction
+  link; when included, use lower confidence and inferred provenance.
+- Do not create proteins for broad enzyme-family discussion unless the enzyme is attached to a
+  specific selected pathway reaction.
 
 COFACTORS — this rule supersedes everything above for small molecules
   PLP, pyridoxal phosphate, FAD, FMN, NAD+/NADH, NADP+/NADPH, SAM, CoA, ATP/ADP/AMP,
