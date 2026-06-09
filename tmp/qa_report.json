@@ -1,75 +1,152 @@
 {
   "summary": {
-    "total_species": 15,
-    "total_reactions": 8,
-    "completeness_score": 0.304
+    "total_species": 27,
+    "total_reactions": 11,
+    "completeness_score": 0.105
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "CYP98A3",
+        "entity": "formaldehyde",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ammonia",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "AMP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PPi",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ATP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "SAM",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [],
-    "transport_like_reactions": [],
+    "transport_like_reactions": [
+      {
+        "reaction": "ObaG PLP-dependent retro-aldol/aldol formation of AHNB",
+        "reason": "same species appear as both input and output"
+      }
+    ],
     "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "phenylalanine",
+        "entity": "L-threonine",
         "type": "compound"
       },
       {
-        "entity": "trans-cinnamic acid",
+        "entity": "4-nitrophenylacetaldehyde",
         "type": "compound"
       },
       {
-        "entity": "4-hydroxycinnamic acid",
+        "entity": "glycine",
         "type": "compound"
       },
       {
-        "entity": "3,4-dihydroxycinnamic acid",
+        "entity": "AHNB",
         "type": "compound"
       },
       {
-        "entity": "3,4-dihydroxybenzaldehyde",
+        "entity": "2,3-dihydroxybenzoic acid",
         "type": "compound"
       },
       {
-        "entity": "tyrosine",
+        "entity": "obafluorin",
         "type": "compound"
       },
       {
-        "entity": "tyramine",
+        "entity": "pyridoxal phosphate",
         "type": "compound"
       },
       {
-        "entity": "Schiff-base intermediate",
+        "entity": "L-Trp",
         "type": "compound"
       },
       {
-        "entity": "norbelladine",
+        "entity": "3-methyl-2-indolic acid",
         "type": "compound"
       },
       {
-        "entity": "4'-O-methylnorbelladine",
+        "entity": "formaldehyde",
         "type": "compound"
       },
       {
-        "entity": "phenylalanine ammonia-lyase",
+        "entity": "ammonia",
+        "type": "compound"
+      },
+      {
+        "entity": "MIA-AMP",
+        "type": "compound"
+      },
+      {
+        "entity": "AMP",
+        "type": "compound"
+      },
+      {
+        "entity": "PPi",
+        "type": "compound"
+      },
+      {
+        "entity": "ATP",
+        "type": "compound"
+      },
+      {
+        "entity": "NosJ-S-indoyl thioester",
+        "type": "compound"
+      },
+      {
+        "entity": "linear pentathiazolyl nosiheptide intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "Cys-indoyl pentathiazolyl intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "SAM",
+        "type": "compound"
+      },
+      {
+        "entity": "methylene radical pentathiazolyl intermediate",
+        "type": "compound"
+      },
+      {
+        "entity": "nosiheptide",
+        "type": "compound"
+      },
+      {
+        "entity": "ObaG",
         "type": "protein"
       },
       {
-        "entity": "cinnamate 4-hydroxylase (CYP73A1)",
+        "entity": "NosL",
         "type": "protein"
       },
       {
-        "entity": "tyrosine decarboxylase",
+        "entity": "NosI",
         "type": "protein"
       },
       {
-        "entity": "N4OMT",
+        "entity": "NosJ",
+        "type": "protein"
+      },
+      {
+        "entity": "NosK",
+        "type": "protein"
+      },
+      {
+        "entity": "NosN",
         "type": "protein"
       }
     ],
@@ -77,9 +154,9 @@
     "duplicate_species": [],
     "inconsistent_class": [
       {
-        "entity": "CYP98A3",
-        "assigned_class": "compound",
-        "conflict": "compound used as catalyst in reaction '3-hydroxylation of 4-hydroxycinnamic acid to 3,4-dihydroxycinnamic acid'"
+        "entity": "NosJ",
+        "assigned_class": "protein",
+        "conflict": "protein listed as product in reaction 'NosK indoyl transfer to pentathiazolyl Cys'"
       }
     ]
   }

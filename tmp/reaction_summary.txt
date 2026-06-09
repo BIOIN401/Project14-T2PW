@@ -1,50 +1,68 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: deamination of phenylalanine to trans-cinnamic acid
-  Reactants: phenylalanine [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  trans-cinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Modifier:  phenylalanine ammonia-lyase [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
+REACTION 1: ObaG-catalysed retro-aldol/aldol formation of AHNB
+  Reactants: L-threonine [P. fluorescens cytosol], 4-nitrophenylacetaldehyde [P. fluorescens cytosol]
+  Products:  AHNB [P. fluorescens cytosol]
+  Modifier:  ObaG [P. fluorescens cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: hydroxylation of trans-cinnamic acid to 4-hydroxycinnamic acid
-  Reactants: trans-cinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  4-hydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Modifier:  cinnamate 4-hydroxylase (CYP73A1) [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
+REACTION 2: NosL-catalysed rearrangement of L-Trp to MIA
+  Reactants: L-Trp [Streptomyces cytosol]
+  Products:  3-methyl-2-indolic acid [Streptomyces cytosol], formaldehyde [unknown], ammonia [unknown]
+  Modifier:  NosL [Streptomyces cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: 3-hydroxylation of 4-hydroxycinnamic acid to 3,4-dihydroxycinnamic acid
-  Reactants: 4-hydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  3,4-dihydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Modifier:  CYP98A3 [unknown] (role=catalyst, confidence=1.0)
+REACTION 3: NosI ATP-dependent adenylation of MIA
+  Reactants: 3-methyl-2-indolic acid [Streptomyces cytosol], ATP [unknown]
+  Products:  MIA-AMP [Streptomyces cytosol], PPi [unknown]
+  Modifier:  NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosL [Streptomyces cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: conversion of 3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde
-  Reactants: 3,4-dihydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  3,4-dihydroxybenzaldehyde [cytosol of Narcissus sp. aff. pseudonarcissus]
+REACTION 4: NosJ indoyl thiolation
+  Reactants: MIA-AMP [Streptomyces cytosol]
+  Products:  NosJ-S-indoyl thioester [Streptomyces cytosol], AMP [unknown]
+  Modifier:  NosJ [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 5: NosK indoyl transfer to pentathiazolyl Cys
+  Reactants: NosJ-S-indoyl thioester [Streptomyces cytosol], linear pentathiazolyl nosiheptide intermediate [Streptomyces cytosol]
+  Products:  Cys-indoyl pentathiazolyl intermediate [Streptomyces cytosol], NosJ [Streptomyces cytosol]
+  Modifier:  NosK [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 6: NosN C4 methylation and ester ring closure to nosiheptide
+  Reactants: Cys-indoyl pentathiazolyl intermediate [Streptomyces cytosol], SAM [unknown]
+  Products:  nosiheptide [Streptomyces cytosol]
+  Modifier:  NosN [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 7: ObaG-catalysed retro-aldol/aldol formation of AHNB
+  Reactants: L-threonine [P. fluorescens cytosol], 4-nitrophenylacetaldehyde [P. fluorescens cytosol]
+  Products:  AHNB [P. fluorescens cytosol], glycine [P. fluorescens cytosol]
+  Modifier:  ObaG [P. fluorescens cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 8: Obafluorin assembly from AHNB and 2,3-dihydroxybenzoic acid
+  Reactants: AHNB [P. fluorescens cytosol], 2,3-dihydroxybenzoic acid [P. fluorescens cytosol]
+  Products:  obafluorin [P. fluorescens cytosol]
   Modifier:  MISSING
   QA flags:  none
 
-REACTION 5: decarboxylation of tyrosine to tyramine
-  Reactants: tyrosine [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  tyramine [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Modifier:  tyrosine decarboxylase [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
+REACTION 9: ObaG PLP-dependent retro-aldol/aldol formation of AHNB
+  Reactants: L-threonine [P. fluorescens cytosol], 4-nitrophenylacetaldehyde [P. fluorescens cytosol], pyridoxal phosphate [P. fluorescens cytosol]
+  Products:  AHNB [P. fluorescens cytosol], pyridoxal phosphate [P. fluorescens cytosol]
+  Modifier:  ObaG [P. fluorescens cytosol] (role=catalyst, confidence=1.0)
+  QA flags:  transport_like — same species appear as both input and output
+
+REACTION 10: NosN class C rSAM methylenation and ester ring closure
+  Reactants: Cys-indoyl pentathiazolyl intermediate [Streptomyces cytosol], SAM [unknown]
+  Products:  methylene radical pentathiazolyl intermediate [Streptomyces cytosol]
+  Modifier:  NosN [Streptomyces cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: condensation of tyramine and 3,4-dihydroxybenzaldehyde to Schiff-base
-  Reactants: tyramine [cytosol of Narcissus sp. aff. pseudonarcissus], 3,4-dihydroxybenzaldehyde [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  Schiff-base intermediate [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Modifier:  MISSING
-  QA flags:  none
-
-REACTION 7: reduction of Schiff-base to norbelladine
-  Reactants: Schiff-base intermediate [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  norbelladine [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Modifier:  MISSING
-  QA flags:  none
-
-REACTION 8: 4'-O-methylation of norbelladine
-  Reactants: norbelladine [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Products:  4'-O-methylnorbelladine [cytosol of Narcissus sp. aff. pseudonarcissus]
-  Modifier:  N4OMT [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
+REACTION 11: NosN ester bond closure forming nosiheptide
+  Reactants: methylene radical pentathiazolyl intermediate [Streptomyces cytosol]
+  Products:  nosiheptide [Streptomyces cytosol]
+  Modifier:  NosN [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
   QA flags:  none

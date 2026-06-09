@@ -1151,7 +1151,9 @@ class DeterministicPwmlBuilder:
         nucleic_acid_loc_by_id: Dict[int, Dict[str, Any]] = {}
         nucleic_acid_loc_by_rxn: Dict[Tuple[int, int, str], Dict[str, Any]] = {}
         protein_loc_by_id: Dict[int, Dict[str, Any]] = {}
+        enzyme_prot_loc_by_rxn: Dict[Tuple[int, int], Dict[str, Any]] = {}
         pc_vis_by_pc_id: Dict[int, Dict[str, Any]] = {}
+        pc_vis_by_pc_rxn: Dict[Tuple[int, int], Dict[str, Any]] = {}
         transport_layouts: Dict[int, Dict[str, int]] = {}
 
         # Bound-visualizations — one per biological state
@@ -1438,6 +1440,8 @@ class DeterministicPwmlBuilder:
             return protein_loc_by_id.get(protein_id)
 
         # Protein locations: enzyme proteins sit at reaction-center positions.
+        # Each reaction gets its own protein-location so that enzymes shared across
+        # reactions are duplicated visually rather than fanning out from one node.
         for reaction_idx, reaction in enumerate(reactions):
             layout = reaction_layouts.get(reaction_idx)
             if not layout:
@@ -1448,13 +1452,24 @@ class DeterministicPwmlBuilder:
             total_w = len(enzyme_protein_ids) * protein_w + (len(enzyme_protein_ids) - 1) * protein_gap_x
             x0 = layout["enzyme-cx"] - total_w // 2
             for j, protein_id in enumerate(enzyme_protein_ids):
-                add_protein_location(
-                    protein_id,
-                    int(layout["biological-state-id"]),
-                    x0 + j * (protein_w + protein_gap_x),
-                    layout["enzyme-y"],
-                    "subunit" if len(enzyme_protein_ids) > 1 else "text",
-                )
+                loc = {
+                    "id": self.ids.next(),
+                    "protein-id": protein_id,
+                    "biological-state-id": int(layout["biological-state-id"]),
+                    "visualization-template-id": 0,
+                    "hidden": False,
+                    "x": x0 + j * (protein_w + protein_gap_x),
+                    "y": layout["enzyme-y"],
+                    "zindex": 10,
+                    "label-type": "subunit" if len(enzyme_protein_ids) > 1 else "text",
+                    "font-size": "regular",
+                    "width": str(protein_w),
+                    "height": str(protein_h),
+                }
+                protein_locations.append(loc)
+                enzyme_prot_loc_by_rxn[(protein_id, reaction_idx)] = loc
+                if protein_id not in protein_loc_by_id:
+                    protein_loc_by_id[protein_id] = loc
 
         # Preserve locations for non-enzyme proteins that may still be referenced elsewhere.
         for bs_id, group_recs in sorted(group_by_bs("proteins").items()):
@@ -1634,40 +1649,81 @@ class DeterministicPwmlBuilder:
                     "subunit" if len(transporter_protein_ids) > 1 else "text",
                 )
 
+        # Build mapping: pc_id → [reaction_idx, ...] where it is used as an enzyme.
+        _pc_reaction_uses: Dict[int, List[int]] = {}
+        for _r_idx, _r in enumerate(reactions):
+            for _enz in _r.get("reaction-enzymes", []) if isinstance(_r.get("reaction-enzymes"), list) else []:
+                _pc_id = _enz.get("protein-complex-id")
+                if _pc_id is not None:
+                    _pc_reaction_uses.setdefault(int(_pc_id), []).append(_r_idx)
+
+        def _resolve_pc_component_protein(component: Any) -> Optional[Dict[str, Any]]:
+            prot: Optional[Dict[str, Any]] = None
+            if isinstance(component, dict):
+                protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
+                if protein_key:
+                    prot = next(
+                        (p for p in self.entity_records.get("proteins", []) if str(p.get("key") or "") == protein_key),
+                        None,
+                    )
+            comp_name = _component_name(component)
+            if prot is None and comp_name:
+                prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
+            return prot
+
         for rec in self.entity_records.get("protein-complexes", []):
-            pc_protein_vis: List[Dict[str, Any]] = []
-            for component in rec.get("components", []) if isinstance(rec.get("components"), list) else []:
-                prot: Optional[Dict[str, Any]] = None
-                if isinstance(component, dict):
-                    protein_key = str(component.get("protein_key") or component.get("entity_key") or "").strip()
-                    if protein_key:
-                        prot = next(
-                            (
-                                p
-                                for p in self.entity_records.get("proteins", [])
-                                if str(p.get("key") or "") == protein_key
-                            ),
-                            None,
-                        )
-                comp_name = _component_name(component)
-                if prot is None and comp_name:
-                    prot = self.entity_lookup.get("proteins", {}).get(_normalize_key(comp_name))
-                if prot:
-                    prot_loc = protein_loc_by_id.get(int(prot["id"]))
-                    if prot_loc:
-                        pc_protein_vis.append({
-                            "id": self.ids.next(),
-                            "protein-location-id": int(prot_loc["id"]),
-                        })
-            visualization = {
-                "id": self.ids.next(),
-                "protein-complex-id": int(rec["id"]),
-                "pathway-visualization-id": self.pathway_visualization_id_int,
-                "biological-state-id": default_state_id,
-                "protein_complex_protein_visualizations": pc_protein_vis,
-            }
-            protein_complex_visualizations.append(visualization)
-            pc_vis_by_pc_id[int(rec["id"])] = visualization
+            pc_id_int = int(rec["id"])
+            rxn_idxs = _pc_reaction_uses.get(pc_id_int, [])
+            components = rec.get("components", []) if isinstance(rec.get("components"), list) else []
+
+            if rxn_idxs:
+                # Enzyme used in one or more reactions — create one visualization per reaction.
+                for r_idx in rxn_idxs:
+                    pc_protein_vis: List[Dict[str, Any]] = []
+                    for component in components:
+                        prot = _resolve_pc_component_protein(component)
+                        if prot:
+                            prot_loc = (
+                                enzyme_prot_loc_by_rxn.get((int(prot["id"]), r_idx))
+                                or protein_loc_by_id.get(int(prot["id"]))
+                            )
+                            if prot_loc:
+                                pc_protein_vis.append({
+                                    "id": self.ids.next(),
+                                    "protein-location-id": int(prot_loc["id"]),
+                                })
+                    visualization = {
+                        "id": self.ids.next(),
+                        "protein-complex-id": pc_id_int,
+                        "pathway-visualization-id": self.pathway_visualization_id_int,
+                        "biological-state-id": default_state_id,
+                        "protein_complex_protein_visualizations": pc_protein_vis,
+                    }
+                    protein_complex_visualizations.append(visualization)
+                    pc_vis_by_pc_rxn[(pc_id_int, r_idx)] = visualization
+                # Fallback for transports or other non-reaction lookups.
+                pc_vis_by_pc_id[pc_id_int] = pc_vis_by_pc_rxn[(pc_id_int, rxn_idxs[0])]
+            else:
+                # Not used as an enzyme — single visualization (original behavior).
+                pc_protein_vis = []
+                for component in components:
+                    prot = _resolve_pc_component_protein(component)
+                    if prot:
+                        prot_loc = protein_loc_by_id.get(int(prot["id"]))
+                        if prot_loc:
+                            pc_protein_vis.append({
+                                "id": self.ids.next(),
+                                "protein-location-id": int(prot_loc["id"]),
+                            })
+                visualization = {
+                    "id": self.ids.next(),
+                    "protein-complex-id": pc_id_int,
+                    "pathway-visualization-id": self.pathway_visualization_id_int,
+                    "biological-state-id": default_state_id,
+                    "protein_complex_protein_visualizations": pc_protein_vis,
+                }
+                protein_complex_visualizations.append(visualization)
+                pc_vis_by_pc_id[pc_id_int] = visualization
 
         def loc_center(loc: Dict[str, Any]) -> Tuple[int, int, int]:
             return (
@@ -1755,7 +1811,7 @@ class DeterministicPwmlBuilder:
 
         def reaction_enzyme_box(reaction_idx: int, reaction: Dict[str, Any]) -> Optional[Tuple[int, int, int, int]]:
             for protein_id in reaction_enzyme_protein_ids(reaction):
-                prot_loc = protein_loc_by_id.get(protein_id)
+                prot_loc = enzyme_prot_loc_by_rxn.get((protein_id, reaction_idx)) or protein_loc_by_id.get(protein_id)
                 if prot_loc:
                     return (
                         int(prot_loc["x"]),
@@ -1860,7 +1916,7 @@ class DeterministicPwmlBuilder:
                 pc_id = enzyme.get("protein-complex-id")
                 prot_id = enzyme.get("protein-id")
                 if pc_id is not None:
-                    pc_vis = pc_vis_by_pc_id.get(int(pc_id))
+                    pc_vis = pc_vis_by_pc_rxn.get((int(pc_id), reaction_idx)) or pc_vis_by_pc_id.get(int(pc_id))
                     if not pc_vis:
                         continue
                     reaction_enzyme_visualizations.append({

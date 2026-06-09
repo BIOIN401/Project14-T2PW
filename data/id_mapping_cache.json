@@ -36620,6 +36620,90 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::lthreonine::109::{\"cas\": \"72-19-5\", \"chebi\": \"CHEBI:16857\", \"hmdb\": \"HMDB0000167\", \"kegg\": \"C00188\", \"pubchem\": \"6288\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000167",
+        "kegg": "C00188",
+        "chebi": "CHEBI:16857",
+        "pubchem": "6288",
+        "cas": "72-19-5",
+        "biocyc": "THR",
+        "chemspider": "6051",
+        "drugbank": "DB00156",
+        "pathbank_compound_id": "109"
+      },
+      "pathbank_compound_id": 109,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 109,
+          "name": "L-Threonine",
+          "short_name": "Thr",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000167",
+            "kegg": "C00188",
+            "chebi": "CHEBI:16857",
+            "pubchem": "6288",
+            "cas": "72-19-5",
+            "biocyc": "THR",
+            "chemspider": "6051",
+            "drugbank": "DB00156",
+            "pathbank_compound_id": "109"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::nosjsindoyl thioester::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::cysindoyl pentathiazolyl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::methylene radical pentathiazolyl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -40019,7 +40103,7 @@
     }
   },
   "enzyme_complexes": {
-    "phenylalanine ammonialyase::::narcissus sp aff pseudonarcissus": {
+    "obag::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -40027,26 +40111,22 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "phenylalanine ammonia-lyase complex",
-      "species_id": null,
+      "name": "ObaG complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "phenylalanine ammonia-lyase",
+          "name": "ObaG",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "B2J528"
+            "uniprot": "A0A1X9LWZ7"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "phenylalanine ammonia-lyase",
+          "component": "ObaG",
           "reason": "no_db_match"
-        },
-        {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
         }
       ],
       "resolution": {
@@ -40055,7 +40135,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "cinnamate 4hydroxylase cyp73a1::::narcissus sp aff pseudonarcissus": {
+    "nosl::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -40063,26 +40143,22 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "cinnamate 4-hydroxylase (CYP73A1) complex",
-      "species_id": null,
+      "name": "NosL complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "cinnamate 4-hydroxylase (CYP73A1)",
+          "name": "NosL",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "A0A2I4JM57"
+            "uniprot": "Q9F0W0"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "cinnamate 4-hydroxylase (CYP73A1)",
+          "component": "NosL",
           "reason": "no_db_match"
-        },
-        {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
         }
       ],
       "resolution": {
@@ -40091,7 +40167,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "cyp98a3::13561::narcissus sp aff pseudonarcissus": {
+    "nosi::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -40099,24 +40175,22 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "CYP98A3 complex",
-      "species_id": null,
+      "name": "NosI complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "CYP98A3",
+          "name": "NosI",
           "stoichiometry": 1,
-          "pathbank_protein_id": 13561,
           "mapped_ids": {
-            "uniprot": "O22203",
-            "pathbank_protein_id": "13561",
-            "gene_name": "CYP98A3"
+            "uniprot": "C6FX48"
           }
         }
       ],
       "issues": [
         {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
+          "issue": "component_protein_unresolved",
+          "component": "NosI",
+          "reason": "no_db_match"
         }
       ],
       "resolution": {
@@ -40125,7 +40199,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "tyrosine decarboxylase::::narcissus sp aff pseudonarcissus": {
+    "nosj::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -40133,26 +40207,22 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "tyrosine decarboxylase complex",
-      "species_id": null,
+      "name": "NosJ complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "tyrosine decarboxylase",
+          "name": "NosJ",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "Q95ZS2"
+            "uniprot": "C6FX49"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "tyrosine decarboxylase",
+          "component": "NosJ",
           "reason": "no_db_match"
-        },
-        {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
         }
       ],
       "resolution": {
@@ -40161,7 +40231,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "n4omt::::narcissus sp aff pseudonarcissus": {
+    "nosk::::pseudomonas fluorescens": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -40169,26 +40239,54 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "N4OMT complex",
-      "species_id": null,
+      "name": "NosK complex",
+      "species_id": 539,
       "components": [
         {
-          "name": "N4OMT",
+          "name": "NosK",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "A0A077EWA5"
+            "uniprot": "C6FX50"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "N4OMT",
+          "component": "NosK",
           "reason": "no_db_match"
-        },
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "nosn::::pseudomonas fluorescens": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "NosN complex",
+      "species_id": 539,
+      "components": [
         {
-          "issue": "protein_complex_missing_species",
-          "reason": "enzyme_protein_species_missing"
+          "name": "NosN",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "C6FX53"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NosN",
+          "reason": "no_db_match"
         }
       ],
       "resolution": {
