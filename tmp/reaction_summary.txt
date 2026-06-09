@@ -1,44 +1,50 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: Phenylalanine deamination to trans-cinnamic acid
-  Reactants: phenylalanine [Narcissus cytosol]
-  Products:  trans-cinnamic acid [Narcissus cytosol]
-  Modifier:  phenylalanine ammonia-lyase [Narcissus cytosol] (role=catalyst, confidence=1.0)
+REACTION 1: deamination of phenylalanine to trans-cinnamic acid
+  Reactants: phenylalanine [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  trans-cinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Modifier:  phenylalanine ammonia-lyase [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: trans-Cinnamic acid hydroxylation to 4-hydroxycinnamic acid
-  Reactants: trans-cinnamic acid [Narcissus cytosol]
-  Products:  4-hydroxycinnamic acid [Narcissus cytosol]
-  Modifier:  cinnamate 4-hydroxylase (CYP73A1) [Narcissus cytosol] (role=catalyst, confidence=1.0)
+REACTION 2: hydroxylation of trans-cinnamic acid to 4-hydroxycinnamic acid
+  Reactants: trans-cinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  4-hydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Modifier:  cinnamate 4-hydroxylase (CYP73A1) [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: 4-Hydroxycinnamic acid hydroxylation to 3,4-dihydroxycinnamic acid
-  Reactants: 4-hydroxycinnamic acid [Narcissus cytosol]
-  Products:  3,4-dihydroxycinnamic acid [Narcissus cytosol]
+REACTION 3: 3-hydroxylation of 4-hydroxycinnamic acid to 3,4-dihydroxycinnamic acid
+  Reactants: 4-hydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  3,4-dihydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Modifier:  CYP98A3 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 4: conversion of 3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde
+  Reactants: 3,4-dihydroxycinnamic acid [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  3,4-dihydroxybenzaldehyde [cytosol of Narcissus sp. aff. pseudonarcissus]
   Modifier:  MISSING
   QA flags:  none
 
-REACTION 4: 3,4-Dihydroxycinnamic acid conversion to 3,4-dihydroxybenzaldehyde
-  Reactants: 3,4-dihydroxycinnamic acid [Narcissus cytosol]
-  Products:  3,4-dihydroxybenzaldehyde [Narcissus cytosol]
+REACTION 5: decarboxylation of tyrosine to tyramine
+  Reactants: tyrosine [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  tyramine [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Modifier:  tyrosine decarboxylase [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 6: condensation of tyramine and 3,4-dihydroxybenzaldehyde to Schiff-base
+  Reactants: tyramine [cytosol of Narcissus sp. aff. pseudonarcissus], 3,4-dihydroxybenzaldehyde [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  Schiff-base intermediate [cytosol of Narcissus sp. aff. pseudonarcissus]
   Modifier:  MISSING
   QA flags:  none
 
-REACTION 5: Tyrosine decarboxylation to tyramine
-  Reactants: tyrosine [Narcissus cytosol]
-  Products:  tyramine [Narcissus cytosol]
-  Modifier:  tyrosine decarboxylase [Narcissus cytosol] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 6: Condensation and reduction of tyramine and 3,4-dihydroxybenzaldehyde to norbelladine
-  Reactants: tyramine [Narcissus cytosol], 3,4-dihydroxybenzaldehyde [Narcissus cytosol]
-  Products:  norbelladine [Narcissus cytosol]
+REACTION 7: reduction of Schiff-base to norbelladine
+  Reactants: Schiff-base intermediate [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  norbelladine [cytosol of Narcissus sp. aff. pseudonarcissus]
   Modifier:  MISSING
   QA flags:  none
 
-REACTION 7: Methylation of norbelladine to 4'-O-methylnorbelladine
-  Reactants: norbelladine [Narcissus cytosol], S-adenosyl-L-methionine [unknown]
-  Products:  4'-O-methylnorbelladine [Narcissus cytosol], S-adenosyl-L-homocysteine [unknown]
-  Modifier:  norbelladine 4'-O-methyltransferase (N4OMT) [Narcissus cytosol] (role=catalyst, confidence=1.0)
+REACTION 8: 4'-O-methylation of norbelladine
+  Reactants: norbelladine [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Products:  4'-O-methylnorbelladine [cytosol of Narcissus sp. aff. pseudonarcissus]
+  Modifier:  N4OMT [cytosol of Narcissus sp. aff. pseudonarcissus] (role=catalyst, confidence=1.0)
   QA flags:  none

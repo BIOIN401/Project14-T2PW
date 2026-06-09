@@ -17189,6 +17189,1012 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "db::phenylalanine ammonialyase::narcissus pseudonarcissus::::{\"uniprot\": \"A0A2H5AIW0\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::phenylalanine ammonialyase::narcissus pseudonarcissus::::{\"uniprot\": \"A0A2H5AIW0\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"phenylalanine ammonia lyase\" OR gene:\"phenylalanine ammonia lyase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\") | (protein_name:\"phenylalanine ammonia lyase\" OR gene:\"phenylalanine ammonia lyase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "B2J528",
+          "protein_name": "Phenylalanine ammonia-lyase",
+          "gene_names": [],
+          "organism": "Nostoc punctiforme (strain ATCC 29133 / PCC 73102)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q3M5Z3",
+          "protein_name": "Phenylalanine ammonia-lyase",
+          "gene_names": [],
+          "organism": "Trichormus variabilis (strain ATCC 29413 / PCC 7937)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6GZ04",
+          "protein_name": "Phenylalanine aminomutase (L-beta-phenylalanine forming)",
+          "gene_names": [
+            "pam"
+          ],
+          "organism": "Taxus canadensis",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q68G84",
+          "protein_name": "Phenylalanine aminomutase (L-beta-phenylalanine forming)",
+          "gene_names": [
+            "pam"
+          ],
+          "organism": "Taxus chinensis",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2H5AIW0",
+          "protein_name": "Phenylalanine ammonia-lyase 1",
+          "gene_names": [
+            "PAL1"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.5333,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2H5AIY6",
+          "protein_name": "Phenylalanine ammonia-lyase 2",
+          "gene_names": [
+            "PAL2"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.5333,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P35510",
+          "protein_name": "Phenylalanine ammonia-lyase 1",
+          "gene_names": [
+            "PAL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P45725",
+          "protein_name": "Phenylalanine ammonia-lyase 3",
+          "gene_names": [
+            "PAL3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433,
+          "matched_query": "phenylalanine ammonia-lyase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"phenylalanine ammonia lyase\" OR gene:\"phenylalanine ammonia lyase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"phenylalanine ammonia-lyase\" OR gene:\"phenylalanine ammonia-lyase\")",
+        "(protein_name:\"phenylalanine ammonia lyase\" OR gene:\"phenylalanine ammonia lyase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::cinnamate 4hydroxylase cyp73a1::narcissus pseudonarcissus::::{\"uniprot\": \"A0A2I4JM57\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::cinnamate 4hydroxylase cyp73a1::narcissus pseudonarcissus::::{\"uniprot\": \"A0A2I4JM57\"}::[{\"alias\": \"cinnamate 4-hydroxylase\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"cinnamate 4 hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4 hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") | \"cinnamate 4-hydroxylase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"cinnamate 4-hydroxylase\" | (protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\") | \"cinnamate 4 hydroxylase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"cinnamate 4 hydroxylase\"",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "A0A2I4JM57",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [
+            "C4H"
+          ],
+          "organism": "Sesamum indicum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A385Z7Z4",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [
+            "C4H"
+          ],
+          "organism": "Vaccinium corymbosum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A4S4DRC9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis var. sinensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5S9MNH2",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [
+            "C4H-A",
+            "DcC4H-A"
+          ],
+          "organism": "Dianthus caryophyllus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7J7HQ38",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Camellia sinensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9D5D4E9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Dioscorea zingiberensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9Q1QFF8",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Carnegiea gigantea",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AA38FKR9",
+          "protein_name": "Cinnamate 4-hydroxylase",
+          "gene_names": [],
+          "organism": "Taxus chinensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "cinnamate 4-hydroxylase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4 hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4 hydroxylase (CYP73A1)\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4-hydroxylase (CYP73A1)\" OR gene:\"cinnamate 4-hydroxylase (CYP73A1)\")",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4-hydroxylase\" OR gene:\"cinnamate 4-hydroxylase\")",
+        "\"cinnamate 4-hydroxylase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"cinnamate 4-hydroxylase\"",
+        "(protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"cinnamate 4 hydroxylase\" OR gene:\"cinnamate 4 hydroxylase\")",
+        "\"cinnamate 4 hydroxylase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"cinnamate 4 hydroxylase\""
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::cyp98a3::narcissus pseudonarcissus::::{\"uniprot\": \"O22203\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"CYP98A3\" OR gene:\"CYP98A3\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"CYP98A3\" OR gene:\"CYP98A3\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "O22203",
+          "protein_name": "Cytochrome P450 98A3",
+          "gene_names": [
+            "C3'H",
+            "CYP98A3",
+            "REF8"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7LFV5",
+          "protein_name": "CYP98A3",
+          "gene_names": [],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5P8H637",
+          "protein_name": "Cytochrome P450 98A3",
+          "gene_names": [
+            "CYP98A3"
+          ],
+          "organism": "Lycoris radiata",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A8F0FRT5",
+          "protein_name": "Cytochrome P450 98A3",
+          "gene_names": [
+            "CYP98A3"
+          ],
+          "organism": "Isatis tinctoria",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A178VTT8",
+          "protein_name": "CYP98A3",
+          "gene_names": [],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAK9",
+          "protein_name": "Cytochrome P450 98A3",
+          "gene_names": [
+            "cyp98a3"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAV9EYF4",
+          "protein_name": "Cytochrome P450 98A3",
+          "gene_names": [
+            "CYP98A3"
+          ],
+          "organism": "Acorus calamus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A314L9E2",
+          "protein_name": "Cytochrome p450 98a3",
+          "gene_names": [
+            "CYP98A3_0"
+          ],
+          "organism": "Nicotiana attenuata",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "CYP98A3",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"CYP98A3\" OR gene:\"CYP98A3\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"CYP98A3\" OR gene:\"CYP98A3\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::vanillin synthaselike hydrataselyase::narcissus pseudonarcissus::::{\"uniprot\": \"A0A0F7G352\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::vanillin synthaselike hydrataselyase::narcissus pseudonarcissus::::{\"uniprot\": \"A0A0F7G352\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"vanillin synthase-like hydratase/lyase\" OR gene:\"vanillin synthase-like hydratase/lyase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"vanillin synthase like hydratase lyase\" OR gene:\"vanillin synthase like hydratase lyase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"vanillin synthase-like hydratase/lyase\" OR gene:\"vanillin synthase-like hydratase/lyase\") | (protein_name:\"vanillin synthase like hydratase lyase\" OR gene:\"vanillin synthase like hydratase lyase\") | (protein_name:\"VpVAN\" OR gene:\"VpVAN\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"VpVAN\" OR gene:\"VpVAN\") | \"VpVAN\" AND organism_name:\"Narcissus pseudonarcissus\" | \"VpVAN\" | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") | \"vanillin synthase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"vanillin synthase\" | (protein_name:\"VAN\" OR gene:\"VAN\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"VAN\" OR gene:\"VAN\") | \"VAN\" AND organism_name:\"Narcissus pseudonarcissus\" | \"VAN\" | (protein_name:\"hydratase/lyase\" OR gene:\"hydratase/lyase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"hydratase/lyase\" OR gene:\"hydratase/lyase\") | \"hydratase/lyase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"hydratase/lyase\" | (protein_name:\"hydratase lyase\" OR gene:\"hydratase lyase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"hydratase lyase\" OR gene:\"hydratase lyase\") | \"hydratase lyase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"hydratase lyase\"",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A0F7G352",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Vanilla planifolia",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "VAN",
+          "alias_source": "gene_name",
+          "matched_alias": "VAN"
+        },
+        {
+          "accession": "A0A068CNX1",
+          "protein_name": "Vanillin synthase, chloroplastic",
+          "gene_names": [
+            "VAN"
+          ],
+          "organism": "Glechoma hederacea",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "VAN",
+          "alias_source": "gene_name",
+          "matched_alias": "VAN"
+        },
+        {
+          "accession": "Q9LZM8",
+          "protein_name": "BEL1-like homeodomain protein 9",
+          "gene_names": [
+            "BLH9",
+            "BLR",
+            "LSN",
+            "PNY",
+            "RPL",
+            "VAN"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "VAN",
+          "alias_source": "gene_name",
+          "matched_alias": "VAN"
+        },
+        {
+          "accession": "A0A2U9K4U5",
+          "protein_name": "Vanillin synthase",
+          "gene_names": [],
+          "organism": "Decalepis hamiltonii",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "vanillin synthase",
+          "alias_source": "synonym",
+          "matched_alias": "vanillin synthase"
+        },
+        {
+          "accession": "A0A6P6SI29",
+          "protein_name": "Vanillin synthase",
+          "gene_names": [
+            "LOC113691700"
+          ],
+          "organism": "Coffea arabica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "vanillin synthase",
+          "alias_source": "synonym",
+          "matched_alias": "vanillin synthase"
+        },
+        {
+          "accession": "C0HM45",
+          "protein_name": "Mannose-specific lectin",
+          "gene_names": [],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "VAN",
+          "alias_source": "gene_name",
+          "matched_alias": "VAN"
+        },
+        {
+          "accession": "K4I6J7",
+          "protein_name": "Maturase K",
+          "gene_names": [
+            "matK"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "VAN",
+          "alias_source": "gene_name",
+          "matched_alias": "VAN"
+        },
+        {
+          "accession": "J9Z5Y8",
+          "protein_name": "NADH dehydrogenase subunit 1",
+          "gene_names": [
+            "NAD1"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "VAN",
+          "alias_source": "gene_name",
+          "matched_alias": "VAN"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"vanillin synthase-like hydratase/lyase\" OR gene:\"vanillin synthase-like hydratase/lyase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"vanillin synthase like hydratase lyase\" OR gene:\"vanillin synthase like hydratase lyase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"vanillin synthase-like hydratase/lyase\" OR gene:\"vanillin synthase-like hydratase/lyase\")",
+        "(protein_name:\"vanillin synthase like hydratase lyase\" OR gene:\"vanillin synthase like hydratase lyase\")",
+        "(protein_name:\"VpVAN\" OR gene:\"VpVAN\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"VpVAN\" OR gene:\"VpVAN\")",
+        "\"VpVAN\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"VpVAN\"",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"vanillin synthase\" OR gene:\"vanillin synthase\")",
+        "\"vanillin synthase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"vanillin synthase\"",
+        "(protein_name:\"VAN\" OR gene:\"VAN\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"VAN\" OR gene:\"VAN\")",
+        "\"VAN\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"VAN\"",
+        "(protein_name:\"hydratase/lyase\" OR gene:\"hydratase/lyase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"hydratase/lyase\" OR gene:\"hydratase/lyase\")",
+        "\"hydratase/lyase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"hydratase/lyase\"",
+        "(protein_name:\"hydratase lyase\" OR gene:\"hydratase lyase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"hydratase lyase\" OR gene:\"hydratase lyase\")",
+        "\"hydratase lyase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"hydratase lyase\""
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::tyrosine decarboxylase::narcissus pseudonarcissus::::{\"uniprot\": \"A0A2H5AIY2\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "Q95ZS2",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "tdc-1"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O82415",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TYDC",
+            "TYDC9"
+          ],
+          "organism": "Papaver somniferum",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q94EE9",
+          "protein_name": "Tyrosine decarboxylase",
+          "gene_names": [
+            "TDC",
+            "TYDC"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2H5AIY2",
+          "protein_name": "Tyrosine decarboxylase 2",
+          "gene_names": [
+            "TYDC2"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.5333,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2H5AIY0",
+          "protein_name": "Tyrosine decarboxylase 1",
+          "gene_names": [
+            "TYDC1"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.5333,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9M0G4",
+          "protein_name": "Tyrosine decarboxylase 2",
+          "gene_names": [
+            "TYDC",
+            "TYRDC"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.2433,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "J7GQ11",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "tdc"
+          ],
+          "organism": "Levilactobacillus brevis",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A481NV25",
+          "protein_name": "L-tyrosine decarboxylase",
+          "gene_names": [
+            "mfnA_1",
+            "tdc"
+          ],
+          "organism": "Enterococcus faecium",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "tyrosine decarboxylase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"tyrosine decarboxylase\" OR gene:\"tyrosine decarboxylase\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::norbelladine synthase noncovalent reductase::narcissus pseudonarcissus::::{\"uniprot\": \"A0A3G5BB24\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::norbelladine synthase noncovalent reductase::narcissus pseudonarcissus::::{\"uniprot\": \"A0A3G5BB24\"}::[{\"alias\": \"norbelladine synthase\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "mapped",
+      "query": "(protein_name:\"norbelladine synthase (noncovalent reductase)\" OR gene:\"norbelladine synthase (noncovalent reductase)\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine synthase (noncovalent reductase)\" OR gene:\"norbelladine synthase (noncovalent reductase)\") | (protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\") | (protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\") | \"norbelladine synthase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"norbelladine synthase\"",
+      "mapped_ids": {
+        "uniprot": "A0A3G5BB24"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "accession": "A0A3G5BB24",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "NBS"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U8J8J0",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "LOC107902916"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U8NIW3",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "LOC107947936"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U8NPZ5",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "LOC107950543"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U8JA80",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "LOC107903554"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U8JBY1",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "LOC107904361"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U8JWK6",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "LOC107911312"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U8KIY1",
+          "protein_name": "Norbelladine synthase",
+          "gene_names": [
+            "LOC107917590"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine synthase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"norbelladine synthase (noncovalent reductase)\" OR gene:\"norbelladine synthase (noncovalent reductase)\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine synthase (noncovalent reductase)\" OR gene:\"norbelladine synthase (noncovalent reductase)\")",
+        "(protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\")",
+        "(protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine synthase\" OR gene:\"norbelladine synthase\")",
+        "\"norbelladine synthase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"norbelladine synthase\""
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Norbelladine synthase",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::norbelladine 4omethyltransferase n4omt::narcissus pseudonarcissus::::{\"uniprot\": \"A0A2H5AIZ6\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::norbelladine 4omethyltransferase n4omt::narcissus pseudonarcissus::::{\"uniprot\": \"A0A2H5AIZ6\"}::[{\"alias\": \"norbelladine 4'-O-methyltransferase\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "mapped",
+      "query": "(protein_name:\"norbelladine 4'-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4'-O-methyltransferase (N4OMT)\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine 4' O methyltransferase (N4OMT)\" OR gene:\"norbelladine 4' O methyltransferase (N4OMT)\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine 4'-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4'-O-methyltransferase (N4OMT)\") | (protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\") | (protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\") | \"norbelladine 4'-O-methyltransferase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"norbelladine 4'-O-methyltransferase\" | (protein_name:\"norbelladine 4' O methyltransferase\" OR gene:\"norbelladine 4' O methyltransferase\") AND organism_name:\"Narcissus pseudonarcissus\" | (protein_name:\"norbelladine 4' O methyltransferase\" OR gene:\"norbelladine 4' O methyltransferase\") | \"norbelladine 4' O methyltransferase\" AND organism_name:\"Narcissus pseudonarcissus\" | \"norbelladine 4' O methyltransferase\"",
+      "mapped_ids": {
+        "uniprot": "A0A2H5AIZ6"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "accession": "A0A2H5AIZ6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A077EWA5",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6J0PMM0",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "LOC105051182"
+          ],
+          "organism": "Elaeis guineensis var. tenera",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6J0PMF1",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "LOC105051171"
+          ],
+          "organism": "Elaeis guineensis var. tenera",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6I9RPH1",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "LOC105051169"
+          ],
+          "organism": "Elaeis guineensis var. tenera",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6I9Q9R6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "LOC105032439"
+          ],
+          "organism": "Elaeis guineensis var. tenera",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A077ES70",
+          "protein_name": "Norbelladine 4'-O-methyltransferase 4",
+          "gene_names": [
+            "N4OMT4"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.2433,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A077EYL8",
+          "protein_name": "Norbelladine 4'-O-methyltransferase 3",
+          "gene_names": [
+            "N4OMT3"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.2433,
+          "matched_query": "norbelladine 4'-O-methyltransferase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"norbelladine 4'-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4'-O-methyltransferase (N4OMT)\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4' O methyltransferase (N4OMT)\" OR gene:\"norbelladine 4' O methyltransferase (N4OMT)\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4'-O-methyltransferase (N4OMT)\" OR gene:\"norbelladine 4'-O-methyltransferase (N4OMT)\")",
+        "(protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\")",
+        "(protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4'-O-methyltransferase\" OR gene:\"norbelladine 4'-O-methyltransferase\")",
+        "\"norbelladine 4'-O-methyltransferase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"norbelladine 4'-O-methyltransferase\"",
+        "(protein_name:\"norbelladine 4' O methyltransferase\" OR gene:\"norbelladine 4' O methyltransferase\") AND organism_name:\"Narcissus pseudonarcissus\"",
+        "(protein_name:\"norbelladine 4' O methyltransferase\" OR gene:\"norbelladine 4' O methyltransferase\")",
+        "\"norbelladine 4' O methyltransferase\" AND organism_name:\"Narcissus pseudonarcissus\"",
+        "\"norbelladine 4' O methyltransferase\""
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Norbelladine 4'-O-methyltransferase",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::n4omt::narcissus sp aff pseudonarcissus::::{\"uniprot\": \"A0A077EWA5\"}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\" | (protein_name:\"N4OMT\" OR gene:\"N4OMT\")",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "accession": "A0A077EWA5",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus aff. pseudonarcissus MK-2014",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "N4OMT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2H5AIZ6",
+          "protein_name": "Norbelladine 4'-O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus pseudonarcissus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "N4OMT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5P8H727",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Lycoris radiata",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "N4OMT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A346TLF5",
+          "protein_name": "norbelladine O-methyltransferase",
+          "gene_names": [
+            "N4OMT"
+          ],
+          "organism": "Narcissus papyraceus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "N4OMT",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\") AND organism_name:\"Narcissus sp. aff. pseudonarcissus\"",
+        "(protein_name:\"N4OMT\" OR gene:\"N4OMT\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -35210,6 +36216,410 @@
         "status": "matched",
         "order_step": "external_id:direct_id_match:kegg"
       }
+    },
+    "db::norbelladine schiffbase::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::nadph::146::{\"cas\": \"53-57-6\", \"chebi\": \"CHEBI:16474\", \"hmdb\": \"HMDB0000221\", \"kegg\": \"C00005\", \"pubchem\": \"22833512\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000221",
+        "kegg": "C00005",
+        "chebi": "CHEBI:16474",
+        "pubchem": "22833512",
+        "cas": "53-57-6",
+        "biocyc": "NADPH",
+        "chemspider": "17215925",
+        "pathbank_compound_id": "146"
+      },
+      "pathbank_compound_id": 146,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 146,
+          "name": "NADPH",
+          "short_name": "NADPH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000221",
+            "kegg": "C00005",
+            "chebi": "CHEBI:16474",
+            "pubchem": "22833512",
+            "cas": "53-57-6",
+            "biocyc": "NADPH",
+            "chemspider": "17215925",
+            "pathbank_compound_id": "146"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::sadenosyllmethionine::::{\"kegg\": \"C00019\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001185",
+        "kegg": "C00019",
+        "chebi": "CHEBI:15414",
+        "pubchem": "24762165",
+        "cas": "485-80-3",
+        "biocyc": "S-ADENOSYLMETHIONINE",
+        "chemspider": "31983",
+        "drugbank": "DB00118",
+        "pathbank_compound_id": "921"
+      },
+      "pathbank_compound_id": 921,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 921,
+          "name": "S-Adenosylmethionine",
+          "short_name": "SAMe",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001185",
+            "kegg": "C00019",
+            "chebi": "CHEBI:15414",
+            "pubchem": "24762165",
+            "cas": "485-80-3",
+            "biocyc": "S-ADENOSYLMETHIONINE",
+            "chemspider": "31983",
+            "drugbank": "DB00118"
+          }
+        },
+        {
+          "pathbank_compound_id": 108955,
+          "name": "N1,N5-Di(hydroxyferuloyl)-N10-sinapoyl spermidine",
+          "short_name": "",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C00019",
+            "chebi": "CHEBI:61516",
+            "pubchem": "96024291"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::h2o::::{\"kegg\": \"C00001\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002111",
+        "kegg": "C00001",
+        "chebi": "CHEBI:15377",
+        "pubchem": "962",
+        "cas": "7732-18-5",
+        "chemspider": "937",
+        "pathbank_compound_id": "1420"
+      },
+      "pathbank_compound_id": 1420,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1420,
+          "name": "Water",
+          "short_name": "H2O",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002111",
+            "kegg": "C00001",
+            "chebi": "CHEBI:15377",
+            "pubchem": "962",
+            "cas": "7732-18-5",
+            "chemspider": "937"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::co2::::{\"kegg\": \"C00011\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001967",
+        "kegg": "C00011",
+        "chebi": "CHEBI:16526",
+        "pubchem": "280",
+        "cas": "124-38-9",
+        "chemspider": "274",
+        "pathbank_compound_id": "1316"
+      },
+      "pathbank_compound_id": 1316,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1316,
+          "name": "Carbon dioxide",
+          "short_name": "CO2",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001967",
+            "kegg": "C00011",
+            "chebi": "CHEBI:16526",
+            "pubchem": "280",
+            "cas": "124-38-9",
+            "chemspider": "274"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::norbelladine schiff base::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glycine::78::{\"cas\": \"56-40-6\", \"chebi\": \"CHEBI:15428\", \"hmdb\": \"HMDB0000123\", \"kegg\": \"C00037\", \"pubchem\": \"5257127\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000123",
+        "kegg": "C00037",
+        "chebi": "CHEBI:15428",
+        "pubchem": "5257127",
+        "cas": "56-40-6",
+        "biocyc": "GLY",
+        "chemspider": "730",
+        "drugbank": "DB00145",
+        "pathbank_compound_id": "78"
+      },
+      "pathbank_compound_id": 78,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 78,
+          "name": "Glycine",
+          "short_name": "Gly",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000123",
+            "kegg": "C00037",
+            "chebi": "CHEBI:15428",
+            "pubchem": "5257127",
+            "cas": "56-40-6",
+            "biocyc": "GLY",
+            "chemspider": "730",
+            "drugbank": "DB00145",
+            "pathbank_compound_id": "78"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::acetaldehyde::784::{\"cas\": \"75-07-0\", \"chebi\": \"CHEBI:15343\", \"hmdb\": \"HMDB0000990\", \"kegg\": \"C00084\", \"pubchem\": \"177\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000990",
+        "kegg": "C00084",
+        "chebi": "CHEBI:15343",
+        "pubchem": "177",
+        "cas": "75-07-0",
+        "biocyc": "ACETALD",
+        "chemspider": "172",
+        "pathbank_compound_id": "784"
+      },
+      "pathbank_compound_id": 784,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 784,
+          "name": "Acetaldehyde",
+          "short_name": "Ethanal",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000990",
+            "kegg": "C00084",
+            "chebi": "CHEBI:15343",
+            "pubchem": "177",
+            "cas": "75-07-0",
+            "biocyc": "ACETALD",
+            "chemspider": "172",
+            "pathbank_compound_id": "784"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::23dihydroxybenzoic acid::296::{\"cas\": \"303-38-8\", \"chebi\": \"CHEBI:18026\", \"hmdb\": \"HMDB0000397\", \"kegg\": \"C00196\", \"pubchem\": \"19\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000397",
+        "kegg": "C00196",
+        "chebi": "CHEBI:18026",
+        "pubchem": "19",
+        "cas": "303-38-8",
+        "chemspider": "18",
+        "drugbank": "DB01672",
+        "pathbank_compound_id": "296"
+      },
+      "pathbank_compound_id": 296,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 296,
+          "name": "2-Pyrocatechuic acid",
+          "short_name": "DHBA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000397",
+            "kegg": "C00196",
+            "chebi": "CHEBI:18026",
+            "pubchem": "19",
+            "cas": "303-38-8",
+            "chemspider": "18",
+            "drugbank": "DB01672",
+            "pathbank_compound_id": "296"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::formaldehyde::1102::{\"cas\": \"50-00-0\", \"chebi\": \"CHEBI:16842\", \"hmdb\": \"HMDB0001426\", \"kegg\": \"C00067\", \"pubchem\": \"712\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001426",
+        "kegg": "C00067",
+        "chebi": "CHEBI:16842",
+        "pubchem": "712",
+        "cas": "50-00-0",
+        "biocyc": "FORMALDEHYDE",
+        "chemspider": "692",
+        "drugbank": "DB03843",
+        "pathbank_compound_id": "1102"
+      },
+      "pathbank_compound_id": 1102,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1102,
+          "name": "Formaldehyde",
+          "short_name": "Formol",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001426",
+            "kegg": "C00067",
+            "chebi": "CHEBI:16842",
+            "pubchem": "712",
+            "cas": "50-00-0",
+            "biocyc": "FORMALDEHYDE",
+            "chemspider": "692",
+            "drugbank": "DB03843",
+            "pathbank_compound_id": "1102"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::nosjsmia::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::pentathiazolyl nosiheptide intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::indoylcys pentathiazolyl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -38441,6 +39851,171 @@
         "status": "unresolved",
         "issue": "species_not_found"
       }
+    },
+    "db::phenylalanine ammonialyase complex::narcissus pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A2H5AIW0\"}, \"name\": \"phenylalanine ammonia-lyase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "phenylalanine ammonia-lyase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A2H5AIW0"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "phenylalanine ammonia-lyase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::cinnamate 4hydroxylase cyp73a1 complex::narcissus pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A2I4JM57\"}, \"name\": \"cinnamate 4-hydroxylase (CYP73A1)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "cinnamate 4-hydroxylase (CYP73A1)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A2I4JM57"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "cinnamate 4-hydroxylase (CYP73A1)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::vanillin synthaselike hydrataselyase complex::narcissus pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A0F7G352\"}, \"name\": \"vanillin synthase-like hydratase/lyase\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "vanillin synthase-like hydratase/lyase",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A0F7G352"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "vanillin synthase-like hydratase/lyase",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::norbelladine synthase noncovalent reductase complex::narcissus pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A3G5BB24\"}, \"name\": \"norbelladine synthase (noncovalent reductase)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "norbelladine synthase (noncovalent reductase)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A3G5BB24"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "norbelladine synthase (noncovalent reductase)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::norbelladine 4omethyltransferase n4omt complex::narcissus pseudonarcissus::::[{\"ids\": {\"uniprot\": \"A0A2H5AIZ6\"}, \"name\": \"norbelladine 4'-O-methyltransferase (N4OMT)\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "norbelladine 4'-O-methyltransferase (N4OMT)",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A0A2H5AIZ6"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "norbelladine 4'-O-methyltransferase (N4OMT)",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
     }
   },
   "enzyme_complexes": {
@@ -38516,6 +40091,40 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
+    "cyp98a3::13561::narcissus sp aff pseudonarcissus": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "CYP98A3 complex",
+      "species_id": null,
+      "components": [
+        {
+          "name": "CYP98A3",
+          "stoichiometry": 1,
+          "pathbank_protein_id": 13561,
+          "mapped_ids": {
+            "uniprot": "O22203",
+            "pathbank_protein_id": "13561",
+            "gene_name": "CYP98A3"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "protein_complex_missing_species",
+          "reason": "enzyme_protein_species_missing"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
     "tyrosine decarboxylase::::narcissus sp aff pseudonarcissus": {
       "status": "unmapped",
       "reason": "novel_complex",
@@ -38552,7 +40161,7 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "norbelladine 4omethyltransferase n4omt::::narcissus sp aff pseudonarcissus": {
+    "n4omt::::narcissus sp aff pseudonarcissus": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -38560,11 +40169,11 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "norbelladine 4'-O-methyltransferase (N4OMT) complex",
+      "name": "N4OMT complex",
       "species_id": null,
       "components": [
         {
-          "name": "norbelladine 4'-O-methyltransferase (N4OMT)",
+          "name": "N4OMT",
           "stoichiometry": 1,
           "mapped_ids": {
             "uniprot": "A0A077EWA5"
@@ -38574,7 +40183,7 @@
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "norbelladine 4'-O-methyltransferase (N4OMT)",
+          "component": "N4OMT",
           "reason": "no_db_match"
         },
         {

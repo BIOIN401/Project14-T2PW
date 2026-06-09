@@ -20,7 +20,11 @@ def normalize_chebi_id(value: Any) -> Optional[str]:
     text = normalize_empty(value)
     if not text:
         return None
-    return re.sub(r"^CHEBI:", "", text, flags=re.IGNORECASE).strip() or None
+    text = re.sub(r"^CHEBI:", "", text, flags=re.IGNORECASE).strip()
+    # Some DB rows store multiple space-separated ChEBI IDs (e.g. "15378 24636").
+    # Take only the first numeric token so we emit a single valid ID.
+    first = text.split()[0] if text else text
+    return first or None
 
 
 def normalize_hmdb_id(value: Any) -> Optional[str]:

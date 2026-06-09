@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
+import re
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -542,3 +544,85 @@ def test_ir_writer_integration_validates_and_has_no_fatal_qa_errors() -> None:
     assert "protein-location-id" not in enzyme_viz
     assert validation["ok"], validation["issues"][:3]
     assert qa["ok"], qa["errors"]
+
+
+def test_ir_writer_keeps_long_reaction_layout_on_positive_canvas() -> None:
+    compound_names = [f"Compound {idx}" for idx in range(9)]
+    protein_names = [f"Enzyme {idx}" for idx in range(8)]
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": name, "pathbank_compound_id": 1000 + idx}
+                for idx, name in enumerate(compound_names)
+            ],
+            "proteins": [
+                {"name": name, "pathbank_protein_id": 2000 + idx}
+                for idx, name in enumerate(protein_names)
+            ],
+        },
+        "biological_states": [
+            {"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"},
+        ],
+        "processes": {
+            "reactions": [
+                {
+                    "name": f"Reaction {idx}",
+                    "inputs": [compound_names[idx]],
+                    "outputs": [compound_names[idx + 1]],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": protein_names[idx]}],
+                }
+                for idx in range(8)
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    ref_path = ROOT / "reference" / "PW000001.pwml"
+    signature = discover_structure_signature(ref_path)
+    args = SimpleNamespace(
+        name="Generated Pathway",
+        description="",
+        subject="Metabolic",
+        pw_id="PW000000",
+        height=1400,
+        width=3200,
+        background_color="#FFFFFF",
+        ref=str(ref_path),
+    )
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args)
+    builder.build()
+
+    xs: list[float] = []
+    path_number_re = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?")
+    for items in builder.section_items.values():
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            if "x" in item and "y" in item:
+                x = float(item["x"])
+                width = float(item.get("width") or 0)
+                xs.extend([x, x + width])
+            for path in [item.get("path")]:
+                if isinstance(path, str):
+                    nums = [float(match.group(0)) for match in path_number_re.finditer(path)]
+                    xs.extend(nums[0::2])
+            options = item.get("options")
+            if isinstance(options, str):
+                options = json.loads(options)
+            if isinstance(options, dict):
+                for key, value in options.items():
+                    if isinstance(key, str) and key.endswith("_path") and isinstance(value, str):
+                        nums = [float(match.group(0)) for match in path_number_re.finditer(value)]
+                        xs.extend(nums[0::2])
+
+    assert xs
+    assert min(xs) >= 0
+    assert max(xs) <= args.width
+    assert args.width > 3200

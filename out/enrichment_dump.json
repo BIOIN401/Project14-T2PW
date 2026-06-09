@@ -1196,285 +1196,6 @@
       }
     ]
   },
-  "compound:S-adenosyl-L-methionine|HMDB0001185": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "S-Adenosyl-L-methionine",
-    "synonyms": [
-      "S-Adenosyl-L-methionine",
-      "S-Adenosylmethionine",
-      "AdoMet",
-      "SAM"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C15H22N6O5S",
-    "charge": 0,
-    "mass_monoisotopic": 398.1372,
-    "mass_average": 398.44,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Vitamins and cofactors",
-      "Cofactors",
-      "Coenzymes",
-      "C00019 SAM"
-    ],
-    "pathways": [
-      "Monobactam biosynthesis",
-      "Cysteine and methionine metabolism",
-      "Arginine and proline metabolism",
-      "One carbon pool by folate",
-      "Zeatin biosynthesis",
-      "Biosynthesis of various plant secondary metabolites",
-      "Biosynthesis of plant secondary metabolites",
-      "Biosynthesis of plant hormones",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Biosynthesis of amino acids",
-      "Biosynthesis of cofactors",
-      "Sulfur relay system",
-      "Efferocytosis",
-      "Folate transport and metabolism",
-      "Chemical carcinogenesis - reactive oxygen species"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001185",
-      "kegg_id": "C00019",
-      "chebi_id": "CHEBI:15414",
-      "pubchem_id": "24762165",
-      "cas": "485-80-3",
-      "biocyc": "S-ADENOSYLMETHIONINE",
-      "chemspider": "31983",
-      "drugbank_id": "DB00118",
-      "pathbank_compound_id": "921"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00019",
-      "primary_name": "S-Adenosyl-L-methionine",
-      "synonyms": [
-        "S-Adenosyl-L-methionine",
-        "S-Adenosylmethionine",
-        "AdoMet",
-        "SAM"
-      ],
-      "formula": "C15H22N6O5S",
-      "mass_monoisotopic": 398.1372,
-      "mass_average": 398.44,
-      "pathways": [
-        "Monobactam biosynthesis",
-        "Cysteine and methionine metabolism",
-        "Arginine and proline metabolism",
-        "One carbon pool by folate",
-        "Zeatin biosynthesis",
-        "Biosynthesis of various plant secondary metabolites",
-        "Biosynthesis of plant secondary metabolites",
-        "Biosynthesis of plant hormones",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Biosynthesis of amino acids",
-        "Biosynthesis of cofactors",
-        "Sulfur relay system",
-        "Efferocytosis",
-        "Folate transport and metabolism",
-        "Chemical carcinogenesis - reactive oxygen species"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Vitamins and cofactors",
-        "Cofactors",
-        "Coenzymes",
-        "C00019 SAM"
-      ],
-      "cross_references": {
-        "kegg_id": "C00019",
-        "pubchem_id": "3321",
-        "chebi_id": "15414"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00019",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00019",
-        "retrieved_at": "2026-05-27T22:04:08Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:15414",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-05-27T22:04:07Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001185",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001185",
-        "retrieved_at": "2026-05-27T22:04:08Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:15414",
-        "retrieved_at": "2026-05-27T22:04:07Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001185",
-        "retrieved_at": "2026-05-27T22:04:08Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00019",
-        "retrieved_at": "2026-05-27T22:04:08Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:S-adenosyl-L-homocysteine|HMDB0000939": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "S-Adenosyl-L-homocysteine",
-    "synonyms": [
-      "S-Adenosyl-L-homocysteine",
-      "S-Adenosylhomocysteine"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C14H20N6O5S",
-    "charge": 0,
-    "mass_monoisotopic": 384.1216,
-    "mass_average": 384.41,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "Cysteine and methionine metabolism",
-      "One carbon pool by folate",
-      "Metabolic pathways",
-      "Biosynthesis of amino acids",
-      "Biosynthesis of cofactors",
-      "Folate transport and metabolism",
-      "Chemical carcinogenesis - reactive oxygen species"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C00021",
-      "hmdb_id": "HMDB0000939",
-      "chebi_id": "CHEBI:16680",
-      "pubchem_id": "25246222",
-      "cas": "979-92-0",
-      "biocyc": "ADENOSYL-HOMO-CYS",
-      "chemspider": "388301",
-      "pathbank_compound_id": "749"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00021",
-      "primary_name": "S-Adenosyl-L-homocysteine",
-      "synonyms": [
-        "S-Adenosyl-L-homocysteine",
-        "S-Adenosylhomocysteine"
-      ],
-      "formula": "C14H20N6O5S",
-      "mass_monoisotopic": 384.1216,
-      "mass_average": 384.41,
-      "pathways": [
-        "Cysteine and methionine metabolism",
-        "One carbon pool by folate",
-        "Metabolic pathways",
-        "Biosynthesis of amino acids",
-        "Biosynthesis of cofactors",
-        "Folate transport and metabolism",
-        "Chemical carcinogenesis - reactive oxygen species"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00021",
-        "pubchem_id": "3323",
-        "chebi_id": "16680"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00021",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00021",
-        "retrieved_at": "2026-06-08T18:23:54Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:16680",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-06-08T18:23:53Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000939",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000939",
-        "retrieved_at": "2026-06-08T18:23:53Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:16680",
-        "retrieved_at": "2026-06-08T18:23:53Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0000939",
-        "retrieved_at": "2026-06-08T18:23:53Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00021",
-        "retrieved_at": "2026-06-08T18:23:54Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
   "protein:phenylalanine ammonia-lyase|B2J528": {
     "status": "ok",
     "uniprot_id": "B2J528",
@@ -1657,7 +1378,7 @@
       "retrieved_at": "2026-05-25T17:01:35Z"
     }
   },
-  "protein:norbelladine 4'-O-methyltransferase (N4OMT)|A0A077EWA5": {
+  "protein:N4OMT|A0A077EWA5": {
     "status": "ok",
     "uniprot_id": "A0A077EWA5",
     "recommended_name": "Norbelladine 4'-O-methyltransferase",
@@ -1722,6 +1443,76 @@
       "query": "A0A077EWA5",
       "source_url": "https://rest.uniprot.org/uniprotkb/A0A077EWA5.json",
       "retrieved_at": "2026-05-25T16:13:55Z"
+    }
+  },
+  "protein:CYP98A3|O22203": {
+    "status": "ok",
+    "uniprot_id": "O22203",
+    "recommended_name": "Cytochrome P450 98A3",
+    "alternative_names": [
+      "Protein REDUCED EPIDERMAL FLUORESCENCE 8",
+      "p-coumaroylshikimate/quinate 3'-hydrolxylase"
+    ],
+    "gene_names": [
+      "CYP98A3",
+      "C3'H",
+      "REF8"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Cytochrome P450 which catalyzes 3'-hydroxylation of p-coumaric esters of shikimic/quinic acids to form lignin monomers. Can use p-coumarate, p-coumaraldehyde, p-coumaroyl methyl ester, 5-O-(4-coumaroyl) D-quinate and 5-O-(4-coumaroyl) shikimate as substrates, but not p-coumaryl alcohol, p-coumaroyl CoA, 1-O-p-coumaroyl-beta-D-glucose, p-hydroxy-cinnamyl alcohol, cinnamate, caffeate or ferulate. Has a weak activity on tri(p-coumaroyl)spermidine, but none on triferuloylspermidine. Hydroxylates preferentially the 5-O-isomer, but can also convert the 4-O- and 3-O-isomers with a lower efficiency. Involved in the biosynthesis of the coumarins scopoletin and scopolin. Essential for the biosynthesis of lignin",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "Heme",
+      "Iron",
+      "Membrane",
+      "Metal-binding",
+      "Monooxygenase",
+      "Oxidoreductase",
+      "Reference proteome",
+      "Transmembrane",
+      "Transmembrane helix"
+    ],
+    "subcellular_locations": [
+      "Membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0020037",
+      "GO:0042802",
+      "GO:0005506",
+      "GO:0004497",
+      "GO:0016709",
+      "GO:0046409"
+    ],
+    "go_bp_ids": [
+      "GO:0009805",
+      "GO:0009813",
+      "GO:0009809",
+      "GO:0009699"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005829",
+      "GO:0005783",
+      "GO:0016020",
+      "GO:0005739"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 508,
+    "transmembrane_regions_count": 1,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "3702.O22203",
+    "provenance": {
+      "source": "UniProt",
+      "query": "O22203",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O22203.json",
+      "retrieved_at": "2026-05-01T18:45:23Z"
     }
   }
 }

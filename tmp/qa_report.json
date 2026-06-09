@@ -1,17 +1,13 @@
 {
   "summary": {
     "total_species": 15,
-    "total_reactions": 7,
-    "completeness_score": 0.227
+    "total_reactions": 8,
+    "completeness_score": 0.304
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "S-adenosyl-L-methionine",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "S-adenosyl-L-homocysteine",
+        "entity": "CYP98A3",
         "reason": "no subcellular location recorded"
       }
     ],
@@ -49,19 +45,15 @@
         "type": "compound"
       },
       {
+        "entity": "Schiff-base intermediate",
+        "type": "compound"
+      },
+      {
         "entity": "norbelladine",
         "type": "compound"
       },
       {
         "entity": "4'-O-methylnorbelladine",
-        "type": "compound"
-      },
-      {
-        "entity": "S-adenosyl-L-methionine",
-        "type": "compound"
-      },
-      {
-        "entity": "S-adenosyl-L-homocysteine",
         "type": "compound"
       },
       {
@@ -77,12 +69,18 @@
         "type": "protein"
       },
       {
-        "entity": "norbelladine 4'-O-methyltransferase (N4OMT)",
+        "entity": "N4OMT",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
     "duplicate_species": [],
-    "inconsistent_class": []
+    "inconsistent_class": [
+      {
+        "entity": "CYP98A3",
+        "assigned_class": "compound",
+        "conflict": "compound used as catalyst in reaction '3-hydroxylation of 4-hydroxycinnamic acid to 3,4-dihydroxycinnamic acid'"
+      }
+    ]
   }
 }

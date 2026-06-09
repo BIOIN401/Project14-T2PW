@@ -28,6 +28,8 @@ from t2pw.pwml.validate import (
 OPTION_TAG_NS = "urn:pathwhiz-option"
 ARROW_ANGLE = math.pi / 6
 ARROW_LENGTH = 30
+GEOMETRY_CANVAS_PADDING = 40
+_SVG_PATH_NUMBER_RE = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?")
 
 
 def _format_path_number(value: float) -> str:
@@ -85,6 +87,32 @@ def _add_end_arrow(edge: Dict[str, Any], x2: int, y2: int, cp2x: int, cp2y: int)
 def _add_no_arrow(edge: Dict[str, Any]) -> None:
     opts: Dict[str, Any] = {"end_arrow": False, "end_flat_arrow": False, "start_arrow": False, "start_flat_arrow": False}
     edge["options"] = json.dumps(opts)
+
+
+def _to_path_float(value: str) -> float:
+    return float(value)
+
+
+def _translate_svg_path(path: Any, dx: int, dy: int) -> Any:
+    if not isinstance(path, str) or not path.strip() or (dx == 0 and dy == 0):
+        return path
+    coord_idx = 0
+
+    def repl(match: re.Match[str]) -> str:
+        nonlocal coord_idx
+        value = _to_path_float(match.group(0))
+        value += dx if coord_idx % 2 == 0 else dy
+        coord_idx += 1
+        return _format_path_number(value)
+
+    return _SVG_PATH_NUMBER_RE.sub(repl, path)
+
+
+def _path_points(path: Any) -> List[Tuple[float, float]]:
+    if not isinstance(path, str) or not path.strip():
+        return []
+    nums = [_to_path_float(match.group(0)) for match in _SVG_PATH_NUMBER_RE.finditer(path)]
+    return [(nums[i], nums[i + 1]) for i in range(0, len(nums) - 1, 2)]
 
 
 def is_non_blocking_pwml_ir_error(issue: Any) -> bool:
@@ -254,8 +282,8 @@ def _is_currency_compound_record(record: Dict[str, Any]) -> bool:
     kegg_id = str(record.get("kegg-id") or record.get("kegg_id") or "").strip().upper()
     if kegg_id in _CURRENCY_COMPOUND_KEGG_IDS:
         return True
-    chebi_id = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
-    return chebi_id in _CURRENCY_COMPOUND_CHEBI_IDS
+    chebi_raw = str(record.get("chebi-id") or record.get("chebi_id") or "").replace("CHEBI:", "").strip()
+    return any(token in _CURRENCY_COMPOUND_CHEBI_IDS for token in chebi_raw.split())
 
 
 def _singularize(tag: str) -> str:
@@ -2257,6 +2285,8 @@ class DeterministicPwmlBuilder:
             )
             if chebi_id is not None:
                 chebi_id = str(chebi_id).replace("CHEBI:", "").strip()
+                # Guard against space-separated multi-value DB rows (e.g. "15378 24636")
+                chebi_id = chebi_id.split()[0] if chebi_id else chebi_id
             pwc_id = _trusted_compound_pwc_id(record, db_row, mapped_ids)
             short_name = _trusted_compound_short_name(record, db_row)
             compound_item = {
@@ -3503,12 +3533,14 @@ class DeterministicPwmlBuilder:
                 compound_item["pwc-id"] = pwc_id
             if short_name is not None:
                 compound_item["short-name"] = short_name
+            _raw_chebi = str(mapped_ids.get("chebi") or "").replace("CHEBI:", "").strip()
+            _chebi = _raw_chebi.split()[0] if _raw_chebi else None
             compound_item.update(
                 {
                     "element-states": [],
                     "hmdb-id": mapped_ids.get("hmdb") or None,
                     "kegg-id": mapped_ids.get("kegg") or None,
-                    "chebi-id": mapped_ids.get("chebi") or None,
+                    "chebi-id": _chebi or None,
                     "pubchem-cid": mapped_ids.get("pubchem") or None,
                 }
             )
@@ -3729,6 +3761,96 @@ class DeterministicPwmlBuilder:
             item_node = etree.SubElement(section_node, item_tag)
             self._emit_item(item_node, item, section_sig)
 
+    def _normalize_geometry_to_canvas(self) -> None:
+        points: List[Tuple[float, float]] = []
+
+        def as_float(value: Any) -> Optional[float]:
+            if value is None or isinstance(value, bool):
+                return None
+            try:
+                return float(str(value).strip())
+            except (TypeError, ValueError):
+                return None
+
+        def format_coord(value: float) -> int | float:
+            rounded = round(value)
+            if abs(value - rounded) < 0.000001:
+                return int(rounded)
+            return value
+
+        def option_path_points(options: Any) -> List[Tuple[float, float]]:
+            opts: Any = options
+            if isinstance(options, str):
+                try:
+                    opts = json.loads(options)
+                except json.JSONDecodeError:
+                    return []
+            if not isinstance(opts, dict):
+                return []
+            out: List[Tuple[float, float]] = []
+            for key, value in opts.items():
+                if isinstance(key, str) and key.endswith("_path"):
+                    out.extend(_path_points(value))
+            return out
+
+        for items in self.section_items.values():
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                x = as_float(item.get("x"))
+                y = as_float(item.get("y"))
+                if x is not None and y is not None:
+                    w = as_float(item.get("width")) or 0.0
+                    h = as_float(item.get("height")) or 0.0
+                    points.append((x, y))
+                    points.append((x + w, y + h))
+                points.extend(_path_points(item.get("path")))
+                points.extend(option_path_points(item.get("options")))
+
+        if not points:
+            return
+
+        min_x = min(x for x, _ in points)
+        min_y = min(y for _, y in points)
+        max_x = max(x for x, _ in points)
+        max_y = max(y for _, y in points)
+        dx = int(math.ceil(-min_x + GEOMETRY_CANVAS_PADDING)) if min_x < 0 else 0
+        dy = int(math.ceil(-min_y + GEOMETRY_CANVAS_PADDING)) if min_y < 0 else 0
+
+        if dx or dy:
+            for items in self.section_items.values():
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    x = as_float(item.get("x"))
+                    y = as_float(item.get("y"))
+                    if x is not None and y is not None:
+                        item["x"] = format_coord(x + dx)
+                        item["y"] = format_coord(y + dy)
+                    if isinstance(item.get("path"), str):
+                        item["path"] = _translate_svg_path(item["path"], dx, dy)
+                    options = item.get("options")
+                    opts: Any = options
+                    if isinstance(options, str):
+                        try:
+                            opts = json.loads(options)
+                        except json.JSONDecodeError:
+                            opts = None
+                    if isinstance(opts, dict):
+                        changed = False
+                        for key, value in list(opts.items()):
+                            if isinstance(key, str) and key.endswith("_path") and isinstance(value, str):
+                                opts[key] = _translate_svg_path(value, dx, dy)
+                                changed = True
+                        if changed:
+                            item["options"] = json.dumps(opts)
+
+        self.args.width = max(int(self.args.width), int(math.ceil(max_x + dx + GEOMETRY_CANVAS_PADDING)))
+        self.args.height = max(int(self.args.height), int(math.ceil(max_y + dy + GEOMETRY_CANVAS_PADDING)))
+        if dx or dy:
+            self.layout_debug_counts["geometry_canvas_shift_x"] = dx
+            self.layout_debug_counts["geometry_canvas_shift_y"] = dy
+
     def _emit_pathway(self, pv: etree._Element) -> None:
         pathway = etree.SubElement(pv, "pathway")
         first_species_id = (
@@ -3775,6 +3897,7 @@ class DeterministicPwmlBuilder:
         self._make_compound_identity_fields_optional()
         self._make_biological_state_identity_fields_optional()
         counts = self._populate_sections()
+        self._normalize_geometry_to_canvas()
 
         root = etree.Element(self.signature.root_tag, nsmap={"option": OPTION_TAG_NS})
         for tag in self.signature.root_children:

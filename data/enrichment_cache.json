@@ -345953,6 +345953,785 @@
           "uniParcId": "UPI000CA09E09"
         }
       }
+    },
+    "uniprot:A0A3G5BB24": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "A0A3G5BB24",
+        "recommended_name": "Norbelladine synthase",
+        "alternative_names": [],
+        "gene_names": [
+          "NBS"
+        ],
+        "organism": "Narcissus pseudonarcissus",
+        "taxonomy_id": "39639",
+        "function_text": "Catalyzes the condensation of tyramine and 3,4-dihydroxybenzaldehyde (3,4-DHBA) to form norbelladine, the common precursor to all Amaryllidaceae alkaloids such as galanthamine, lycorine and haemanthamine, and including haemanthamine- and crinamine-type alkaloids, promising anticancer agents",
+        "catalytic_activity": [
+          "3,4-dihydroxybenzaldehyde + tyramine + AH2 = norbelladine + A + H2O"
+        ],
+        "enzyme_commission": [],
+        "pathways": [
+          "Alkaloid biosynthesis"
+        ],
+        "keywords": [
+          "Alkaloid metabolism",
+          "Lyase"
+        ],
+        "subcellular_locations": [],
+        "go_mf_ids": [
+          "GO:0010427",
+          "GO:0016829",
+          "GO:0004864",
+          "GO:0038023"
+        ],
+        "go_bp_ids": [
+          "GO:0009738",
+          "GO:0009820",
+          "GO:0006952"
+        ],
+        "go_cellular_component_ids": [
+          "GO:0005737",
+          "GO:0005634"
+        ],
+        "protein_existence": "1: Evidence at protein level",
+        "sequence_length": 163,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [],
+        "reactome_ids": [],
+        "string_id": "",
+        "provenance": {
+          "source": "UniProt",
+          "query": "A0A3G5BB24",
+          "source_url": "https://rest.uniprot.org/uniprotkb/A0A3G5BB24.json",
+          "retrieved_at": "2026-06-08T19:26:56Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "A0A3G5BB24",
+        "uniProtkbId": "NBS_NARPS",
+        "entryAudit": {
+          "firstPublicDate": "2020-08-12",
+          "lastAnnotationUpdateDate": "2025-02-05",
+          "lastSequenceUpdateDate": "2019-02-13",
+          "entryVersion": 16,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 3.0,
+        "organism": {
+          "scientificName": "Narcissus pseudonarcissus",
+          "commonName": "Daffodil",
+          "taxonId": 39639,
+          "lineage": [
+            "Eukaryota",
+            "Viridiplantae",
+            "Streptophyta",
+            "Embryophyta",
+            "Tracheophyta",
+            "Spermatophyta",
+            "Magnoliopsida",
+            "Liliopsida",
+            "Asparagales",
+            "Amaryllidaceae",
+            "Amaryllidoideae",
+            "Narcissus"
+          ]
+        },
+        "proteinExistence": "1: Evidence at protein level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "30526483"
+                }
+              ],
+              "value": "Norbelladine synthase"
+            },
+            "shortNames": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "30526483"
+                  }
+                ],
+                "value": "NpNBS"
+              }
+            ],
+            "ecNumbers": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "30526483"
+                  }
+                ],
+                "value": "4.2.1.-"
+              }
+            ]
+          }
+        },
+        "genes": [
+          {
+            "geneName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "30526483"
+                }
+              ],
+              "value": "NBS"
+            }
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "30526483"
+                  }
+                ],
+                "value": "Catalyzes the condensation of tyramine and 3,4-dihydroxybenzaldehyde (3,4-DHBA) to form norbelladine, the common precursor to all Amaryllidaceae alkaloids such as galanthamine, lycorine and haemanthamine, and including haemanthamine- and crinamine-type alkaloids, promising anticancer agents"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "3,4-dihydroxybenzaldehyde + tyramine + AH2 = norbelladine + A + H2O",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:63188"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:13193"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15377"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:17499"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:50205"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:134001"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:327995"
+                }
+              ],
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000269",
+                  "source": "PubMed",
+                  "id": "30526483"
+                }
+              ]
+            },
+            "physiologicalReactions": [
+              {
+                "directionType": "left-to-right",
+                "reactionCrossReference": {
+                  "database": "Rhea",
+                  "id": "RHEA:63189"
+                },
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "30526483"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "commentType": "BIOPHYSICOCHEMICAL PROPERTIES",
+            "phDependence": {
+              "texts": [
+                {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "30526483"
+                    }
+                  ],
+                  "value": "Optimum pH is 4."
+                }
+              ]
+            }
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "30526483"
+                  }
+                ],
+                "value": "Alkaloid biosynthesis"
+              }
+            ],
+            "commentType": "PATHWAY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "30526483"
+                  }
+                ],
+                "value": "Mostly expressed in bulbs, and, to a lower extent, in roots, stems, leaves and flowers"
+              }
+            ],
+            "commentType": "TISSUE SPECIFICITY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "Belongs to the BetVI family"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          }
+        ],
+        "features": [
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 163,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Norbelladine synthase",
+            "featureId": "PRO_0000450640"
+          },
+          {
+            "type": "Active site",
+            "location": {
+              "start": {
+                "value": 83,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 83,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Proton donor",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q67A25"
+              }
+            ]
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 68,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 71,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:327995"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q67A25"
+              }
+            ],
+            "ligand": {
+              "name": "tyramine",
+              "id": "ChEBI:CHEBI:327995"
+            }
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0017",
+            "category": "Biological process",
+            "name": "Alkaloid metabolism"
+          },
+          {
+            "id": "KW-0456",
+            "category": "Molecular function",
+            "name": "Lyase"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "30526483",
+              "citationType": "journal article",
+              "authors": [
+                "Singh A.",
+                "Massicotte M.-A.",
+                "Garand A.",
+                "Tousignant L.",
+                "Ouellette V.",
+                "Berube G.",
+                "Desgagne-Penix I."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "30526483"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1186/s12870-018-1570-4"
+                }
+              ],
+              "title": "Cloning and characterization of norbelladine synthase catalyzing the first committed reaction in Amaryllidaceae alkaloid biosynthesis.",
+              "publicationDate": "2018",
+              "journal": "BMC Plant Biol.",
+              "firstPage": "338",
+              "lastPage": "338",
+              "volume": "18"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [MRNA]",
+              "FUNCTION",
+              "CATALYTIC ACTIVITY",
+              "PATHWAY",
+              "TISSUE SPECIFICITY",
+              "BIOPHYSICOCHEMICAL PROPERTIES"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. King Alfred",
+                "type": "STRAIN"
+              },
+              {
+                "value": "Bulb",
+                "type": "TISSUE"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 2,
+            "citation": {
+              "id": "29229969",
+              "citationType": "journal article",
+              "authors": [
+                "Singh A.",
+                "Desgagne-Penix I."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "29229969"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1038/s41598-017-17724-0"
+                }
+              ],
+              "title": "Transcriptome and metabolome profiling of Narcissus pseudonarcissus 'King Alfred' reveal components of Amaryllidaceae alkaloid metabolism.",
+              "publicationDate": "2017",
+              "journal": "Sci. Rep.",
+              "firstPage": "17356",
+              "lastPage": "17356",
+              "volume": "7"
+            },
+            "referencePositions": [
+              "REVIEW ON THE AMARYLLIDACEAE ALKALOID METABOLISM"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. King Alfred",
+                "type": "STRAIN"
+              },
+              {
+                "value": "Bulb",
+                "type": "TISSUE"
+              }
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "MG948545",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AYV96792.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "mRNA"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "A0A3G5BB24",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "A0A3G5BB24",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BioCyc",
+            "id": "MetaCyc:MONOMER-124407",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005737",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:cytoplasm"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005634",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:nucleus"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0010427",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:abscisic acid binding"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0016829",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:lyase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0004864",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:protein phosphatase inhibitor activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0038023",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:signaling receptor activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009738",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:abscisic acid-activated signaling pathway"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:TreeGrafter"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009820",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:alkaloid metabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0006952",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:defense response"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd07816",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Bet_v1-like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "3.30.530.20",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "-"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR000916",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Bet_v_I/MLP"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR050279",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Plant_def-hormone_signal"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR023393",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "START-like_dom_sf"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR31213:SF19",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "BET V I_MAJOR LATEX PROTEIN DOMAIN-CONTAINING PROTEIN"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR31213",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "OS08G0374000 PROTEIN-RELATED"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00407",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Bet_v_1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SMART",
+            "id": "SM01037",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Bet_v_1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF55961",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Bet v1-like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MKGSLSHELEVSLPADQLWQVYSTLRLAQLSAELLPTVISKVEVEEGDGGVGTLLRVTYALGIPGMKYHKERFVKIDHEKRLKEALFVEGGHLDLGFSSYLIRLEILEKGHNSSVIKSTVEYEVDEEHAANASFATTDPFMIIGGAVSEHLLQKKSNCSIMLL",
+          "length": 163,
+          "molWeight": 18040,
+          "crc64": "F9D71B6F0466B59F",
+          "md5": "0EBA7C7EDEBBD2062E4A4C5BFBE06E39"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "CATALYTIC ACTIVITY": 1,
+            "BIOPHYSICOCHEMICAL PROPERTIES": 1,
+            "PATHWAY": 1,
+            "TISSUE SPECIFICITY": 1,
+            "SIMILARITY": 1
+          },
+          "countByFeatureType": {
+            "Chain": 1,
+            "Active site": 1,
+            "Binding site": 1
+          },
+          "uniParcId": "UPI000F6C39A4"
+        }
+      }
     }
   },
   "compounds": {
@@ -356393,6 +357172,176 @@
         "id": "C00021",
         "source_url": "https://rest.kegg.jp/get/cpd:C00021",
         "retrieved_at": "2026-06-08T18:23:54Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:15428": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15428",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-06-09T15:40:39Z"
+      }
+    },
+    "hmdb:HMDB0000123": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000123",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000123",
+        "retrieved_at": "2026-06-09T15:40:39Z"
+      }
+    },
+    "kegg:C00037": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00037",
+      "primary_name": "Glycine",
+      "synonyms": [
+        "Glycine",
+        "Aminoacetic acid",
+        "Gly"
+      ],
+      "formula": "C2H5NO2",
+      "mass_monoisotopic": 75.032,
+      "mass_average": 75.07,
+      "pathways": [
+        "Primary bile acid biosynthesis",
+        "Purine metabolism",
+        "Glycine, serine and threonine metabolism",
+        "Lysine degradation",
+        "Phosphonate and phosphinate metabolism",
+        "Cyanoamino acid metabolism",
+        "D-Amino acid metabolism",
+        "Glutathione metabolism",
+        "Glyoxylate and dicarboxylate metabolism",
+        "One carbon pool by folate",
+        "Methane metabolism",
+        "Thiamine metabolism",
+        "Lipoic acid metabolism",
+        "Porphyrin metabolism",
+        "Aminoacyl-tRNA biosynthesis",
+        "Biosynthesis of plant secondary metabolites",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Biosynthesis of amino acids",
+        "Biosynthesis of cofactors",
+        "Vancomycin resistance",
+        "ABC transporters",
+        "Biofilm formation - Escherichia coli",
+        "Neuroactive ligand-receptor interaction",
+        "Neuroactive ligand signaling",
+        "Synaptic vesicle cycle",
+        "Protein digestion and absorption",
+        "Mineral absorption",
+        "Central carbon metabolism in cancer"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Peptides",
+        "Amino acids",
+        "Common amino acids",
+        "C00037 Glycine (Gly)",
+        "Hormones and transmitters",
+        "Neurotransmitters",
+        "C00037 Glycine",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00011)]",
+        "B BLOOD AND BLOOD FORMING ORGANS",
+        "B05 BLOOD SUBSTITUTES AND PERFUSION SOLUTIONS",
+        "B05C IRRIGATING SOLUTIONS",
+        "B05CX Other irrigating solutions",
+        "B05CX03 Glycine",
+        "D00011 Glycine (JP19/USP) &lt;US&gt;",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00011)]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Glycine",
+        "D00011 Glycine (JP19/USP)",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00011)]",
+        "Chemicals",
+        "D00011 Glycine"
+      ],
+      "cross_references": {
+        "kegg_id": "C00037",
+        "pubchem_id": "3339",
+        "chebi_id": "15428"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00037",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00037",
+        "retrieved_at": "2026-06-09T15:40:40Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:15343": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15343",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-06-09T15:40:44Z"
+      }
+    },
+    "hmdb:HMDB0000990": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000990",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000990",
+        "retrieved_at": "2026-06-09T15:40:45Z"
+      }
+    },
+    "kegg:C00084": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00084",
+      "primary_name": "Acetaldehyde",
+      "synonyms": [
+        "Acetaldehyde",
+        "Ethanal"
+      ],
+      "formula": "C2H4O",
+      "mass_monoisotopic": 44.0262,
+      "mass_average": 44.05,
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Phenylalanine metabolism",
+        "Benzoate degradation",
+        "Taurine and hypotaurine metabolism",
+        "Phosphonate and phosphinate metabolism",
+        "D-Amino acid metabolism",
+        "Glycerophospholipid metabolism",
+        "Pyruvate metabolism",
+        "Dioxin degradation",
+        "Xylene degradation",
+        "Chloroalkane and chloroalkene degradation",
+        "Sulfur metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Degradation of aromatic compounds",
+        "Alcoholic liver disease",
+        "Chemical carcinogenesis - reactive oxygen species"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00084",
+        "pubchem_id": "3384",
+        "chebi_id": "15343"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00084",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00084",
+        "retrieved_at": "2026-06-09T15:40:45Z",
         "status": "ok"
       }
     }
