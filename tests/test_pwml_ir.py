@@ -120,6 +120,42 @@ def test_reaction_ir_construction_refs_resolve() -> None:
     }
 
 
+def test_reused_reaction_enzyme_gets_distinct_complex_visual_locations() -> None:
+    payload = _base_payload()
+    payload["entities"]["compounds"].append(
+        {"name": "Fructose 6-phosphate", "pathbank_compound_id": 103}
+    )
+    payload["processes"]["reactions"].append(
+        {
+            "name": "Second phosphorylation",
+            "inputs": ["Glucose 6-phosphate"],
+            "outputs": ["Fructose 6-phosphate"],
+            "biological_state": "cytosol",
+            "enzymes": [{"protein": "Hexokinase"}],
+        }
+    )
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert not report["errors"]
+    assert validation["ok"], validation["errors"]
+    complex_keys = {rx["enzymes"][0]["entity_key"] for rx in ir["processes"]["reactions"]}
+    assert len(complex_keys) == 1
+    enzyme_locations = [
+        member["location_key"]
+        for viz in ir["process_visualizations"]
+        for member in viz["members"]
+        if member.get("role") == "enzyme"
+    ]
+    assert len(enzyme_locations) == 2
+    assert len(set(enzyme_locations)) == 2
+    complex_viz_locations = {
+        viz["location_key"] for viz in ir["protein_complex_visualizations"]
+    }
+    assert set(enzyme_locations) <= complex_viz_locations
+
+
 def test_compound_catalyst_modifier_is_not_exported_as_reaction_enzyme() -> None:
     payload = _base_payload()
     payload["entities"]["compounds"].append({"name": "pyridoxal-phosphate", "pathbank_compound_id": 103})

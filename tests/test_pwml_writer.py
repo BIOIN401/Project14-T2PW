@@ -588,6 +588,37 @@ def test_writer_emits_visible_complex_and_reaction_enzyme_visualization() -> Non
     assert "protein-location-id" not in enzyme_viz
 
 
+def test_writer_binds_reused_enzyme_to_distinct_complex_visualizations() -> None:
+    payload = _payload_with_complex_enzyme()
+    payload["entities"]["compounds"].append(
+        {"name": "Fructose 6-phosphate", "pathbank_compound_id": 103}
+    )
+    payload["processes"]["reactions"].append(
+        {
+            "name": "Second phosphorylation",
+            "inputs": ["Glucose 6-phosphate"],
+            "outputs": ["Fructose 6-phosphate"],
+            "biological_state": "cytosol",
+            "enzymes": [{"protein": "Hexokinase"}],
+        }
+    )
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    complex_visualizations = builder.section_items["protein-complex-visualizations"]
+    assert len(complex_visualizations) == 2
+    assert len({viz["protein-complex-id"] for viz in complex_visualizations}) == 1
+    enzyme_viz_ids = [
+        rx_viz["reaction_enzyme_visualizations"][0]["protein-complex-visualization-id"]
+        for rx_viz in builder.section_items["reaction-visualizations"]
+    ]
+    assert len(enzyme_viz_ids) == 2
+    assert len(set(enzyme_viz_ids)) == 2
+    assert set(enzyme_viz_ids) == {viz["id"] for viz in complex_visualizations}
+
+
 def test_writer_places_reaction_elements_around_enzyme_center() -> None:
     ir, report = build_pwml_ir(_payload_with_complex_enzyme(), strict_db=True)
     assert not report["errors"]

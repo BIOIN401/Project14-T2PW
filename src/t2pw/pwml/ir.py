@@ -1065,6 +1065,7 @@ def build_pwml_ir(
         *,
         x: int,
         y: int,
+        unique: bool = False,
     ) -> Optional[Dict[str, Any]]:
         if not biological_state_key:
             return None
@@ -1072,7 +1073,7 @@ def build_pwml_ir(
         if not entity:
             return None
         cache_key = (entity_type, entity_key, biological_state_key)
-        if cache_key in location_by_tuple:
+        if not unique and cache_key in location_by_tuple:
             return location_by_tuple[cache_key]
         location_type = {
             "compound": "compound_location",
@@ -1107,7 +1108,8 @@ def build_pwml_ir(
             "hidden": False,
         }
         ir["locations"].append(loc)
-        location_by_tuple[cache_key] = loc
+        if not unique:
+            location_by_tuple[cache_key] = loc
         return loc
 
     def add_edge(x1: int, y1: int, x2: int, y2: int) -> Dict[str, Any]:
@@ -1313,6 +1315,7 @@ def build_pwml_ir(
                 bs_key,
                 x=rx_x - enzyme_w // 2,
                 y=rx_y - 150 - enzyme_h // 2,
+                unique=entity["entity_type"] == "protein_complex",
             )
             enzyme_edge_key: Optional[str] = None
             if loc:

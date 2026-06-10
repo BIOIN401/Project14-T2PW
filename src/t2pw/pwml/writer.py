@@ -2768,6 +2768,7 @@ class DeterministicPwmlBuilder:
         self.section_items["protein-complex-visualizations"] = []
         protein_complex_viz_by_entity: Dict[str, int] = {}
         protein_complex_viz_by_entity_state: Dict[Tuple[str, str], int] = {}
+        protein_complex_viz_by_location_key: Dict[str, int] = {}
         for item in ir.get("protein_complex_visualizations", []) if isinstance(ir.get("protein_complex_visualizations"), list) else []:
             if not isinstance(item, dict):
                 continue
@@ -2778,8 +2779,11 @@ class DeterministicPwmlBuilder:
             remember("protein_complex_visualizations", item.get("key"), vid)
             entity_key = str(item.get("entity_key"))
             biological_state_key = str(item.get("biological_state_key"))
+            complex_location_key = str(item.get("location_key") or "")
             protein_complex_viz_by_entity[entity_key] = vid
             protein_complex_viz_by_entity_state[(entity_key, biological_state_key)] = vid
+            if complex_location_key:
+                protein_complex_viz_by_location_key[complex_location_key] = vid
             pc_protein_vis: List[Dict[str, Any]] = []
             raw_pc = raw_entity_by_key.get(entity_key, {})
             for component in raw_pc.get("components", []) if isinstance(raw_pc.get("components"), list) else []:
@@ -2795,14 +2799,17 @@ class DeterministicPwmlBuilder:
                 comp_name = _component_name(component)
                 if not protein_key and comp_name:
                     protein_key = protein_key_by_name.get(_normalize_key(comp_name), "")
-                protein_location_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
+                protein_location_id = None
+                if not complex_location_key:
+                    protein_location_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
                 if protein_location_id is None and protein_key:
                     protein_info = entity_info(protein_key)
                     biological_state_id = lookup("biological_states", item.get("biological_state_key"))
                     if protein_info is not None and biological_state_id is not None:
                         protein_location_id = self.ids.next()
-                        protein_location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
-                        location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
+                        if not complex_location_key:
+                            protein_location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
+                            location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
                         self.section_items["protein-locations"].append(
                             {
                                 "id": protein_location_id,
@@ -2935,6 +2942,18 @@ class DeterministicPwmlBuilder:
             loc_by_id[loc_id] = loc
             return loc_id
 
+        enzyme_member_location_key_by_member_key: Dict[str, str] = {}
+        for viz in ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []:
+            if not isinstance(viz, dict) or str(viz.get("type") or "") != "reaction_visualization":
+                continue
+            for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
+                if not isinstance(member, dict) or str(member.get("role") or "") != "enzyme":
+                    continue
+                member_key = str(member.get("process_member_key") or "")
+                location_key = str(member.get("location_key") or "")
+                if member_key and location_key:
+                    enzyme_member_location_key_by_member_key[member_key] = location_key
+
         def enzyme_protein_location_ids(reaction: Dict[str, Any], biological_state_key: str) -> List[int]:
             loc_ids: List[int] = []
             for member in reaction.get("enzymes", []) if isinstance(reaction.get("enzymes"), list) else []:
@@ -2949,7 +2968,14 @@ class DeterministicPwmlBuilder:
                     if loc_id is not None and loc_id not in loc_ids:
                         loc_ids.append(loc_id)
                 elif info["entity_type"] == "protein_complex":
-                    pcv_id = protein_complex_viz_by_entity_state.get((entity_key, biological_state_key))
+                    location_key = enzyme_member_location_key_by_member_key.get(str(member.get("key") or ""))
+                    pcv_id = (
+                        protein_complex_viz_by_location_key.get(location_key)
+                        if location_key
+                        else None
+                    )
+                    if pcv_id is None:
+                        pcv_id = protein_complex_viz_by_entity_state.get((entity_key, biological_state_key))
                     if pcv_id is None:
                         pcv_id = protein_complex_viz_by_entity.get(entity_key)
                     pcv = protein_complex_viz_by_id.get(int(pcv_id)) if pcv_id is not None else None
@@ -3446,11 +3472,17 @@ class DeterministicPwmlBuilder:
                     if role == "enzyme":
                         ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
                         entity_key = minfo.get("entity_key")
-                        pcv_id = None
+                        location_key = str(member.get("location_key") or "")
+                        pcv_id = (
+                            protein_complex_viz_by_location_key.get(location_key)
+                            if location_key
+                            else None
+                        )
                         if entity_key is not None:
-                            pcv_id = protein_complex_viz_by_entity_state.get(
-                                (str(entity_key), str(viz.get("biological_state_key")))
-                            )
+                            if pcv_id is None:
+                                pcv_id = protein_complex_viz_by_entity_state.get(
+                                    (str(entity_key), str(viz.get("biological_state_key")))
+                                )
                             if pcv_id is None:
                                 pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
                         if mtype == "protein_complex" and pcv_id:
