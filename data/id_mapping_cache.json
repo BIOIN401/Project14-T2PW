@@ -18195,6 +18195,2252 @@
         "issue": "api_ambiguous",
         "order_step": "api_uniprot"
       }
+    },
+    "db::lox::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 22867,
+          "name": "Lipoxygenase 2, chloroplastic",
+          "gene_name": "LOX2",
+          "uniprot": "P38418",
+          "species_id": 4,
+          "score": 0.65
+        },
+        {
+          "pathbank_protein_id": 22958,
+          "name": "Lipoxygenase 3, chloroplastic",
+          "gene_name": "LOX3",
+          "uniprot": "Q9LNR3",
+          "species_id": 4,
+          "score": 0.65
+        },
+        {
+          "pathbank_protein_id": 22965,
+          "name": "Linoleate 9S-lipoxygenase 5",
+          "gene_name": "LOX5",
+          "uniprot": "Q9LUW0",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::aos::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::aos::arabidopsis thaliana::::{}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"AOS\" OR gene:\"AOS\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"AOS\" OR gene:\"AOS\")",
+      "mapped_ids": {
+        "uniprot": "Q96242"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "accession": "Q96242",
+          "protein_name": "Allene oxide synthase, chloroplastic",
+          "gene_names": [
+            "AOS",
+            "CYP74A"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q00805",
+          "protein_name": "Protein giant-lens",
+          "gene_names": [
+            "aos",
+            "gil",
+            "sty"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0U2KH01",
+          "protein_name": "AOS",
+          "gene_names": [
+            "AOS"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q7KSM5",
+          "protein_name": "SUMO-activating enzyme subunit 1",
+          "gene_names": [
+            "AOS1",
+            "Aos",
+            "Aos1",
+            "DmAos1",
+            "DmSAE1",
+            "DmSae1",
+            "Dmaos1",
+            "Dmel\\CG12276"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q86SB5",
+          "protein_name": "Argos",
+          "gene_names": [
+            "aos"
+          ],
+          "organism": "Drosophila virilis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9M4C7",
+          "protein_name": "hydroperoxide dehydratase",
+          "gene_names": [
+            "aos"
+          ],
+          "organism": "Hordeum vulgare",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "H6UV49",
+          "protein_name": "hydroperoxide dehydratase",
+          "gene_names": [
+            "AOS"
+          ],
+          "organism": "Triticum aestivum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O16025",
+          "protein_name": "Allene oxide synthase-lipoxygenase protein",
+          "gene_names": [],
+          "organism": "Plexaura homomalla",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"AOS\" OR gene:\"AOS\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"AOS\" OR gene:\"AOS\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Allene oxide synthase, chloroplastic",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::aoc::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 22870,
+          "name": "Allene oxide cyclase 2, chloroplastic",
+          "gene_name": "AOC2",
+          "uniprot": "Q9LS02",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::opr3::arabidopsis thaliana::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9FUP0",
+        "pathbank_protein_id": "22871"
+      },
+      "pathbank_protein_id": 22871,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 22871,
+          "name": "12-oxophytodienoate reductase 3",
+          "gene_name": "OPR3",
+          "uniprot": "Q9FUP0",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::opcl1::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::opcl1::arabidopsis thaliana::::{}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"OPCL1\" OR gene:\"OPCL1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPCL1\" OR gene:\"OPCL1\")",
+      "confidence": 0.85,
+      "candidates": [
+        {
+          "accession": "Q84P21",
+          "protein_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+          "gene_names": [
+            "4CLL5",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4HST9",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1P8AUM2",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD3DFF9",
+          "protein_name": "4-coumarate--CoA ligase-like 5",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Castilleja foliolosa",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD1FNN9",
+          "protein_name": "4-coumarate--CoA ligase-like 5",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Salvia divinorum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7KJ24",
+          "protein_name": "Opc-8:0 CoA ligase1",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A251T171",
+          "protein_name": "AMP-dependent synthetase/ligase, AMP-binding enzyme domain-containing protein",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Helianthus annuus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABS8SHJ7",
+          "protein_name": "4-coumarate--CoA ligase-like 5",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Datura stramonium",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"OPCL1\" OR gene:\"OPCL1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPCL1\" OR gene:\"OPCL1\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      },
+      "mapped_ids": {
+        "uniprot": "Q84P21"
+      },
+      "chosen_rule": "exact_reviewed_match",
+      "reviewed": true,
+      "resolved_name": "Peroxisomal OPC-8:0-CoA ligase 1"
+    },
+    "db::cts::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::cts::arabidopsis thaliana::::{}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"CTS\" OR gene:\"CTS\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"CTS\" OR gene:\"CTS\")",
+      "confidence": 0.85,
+      "candidates": [
+        {
+          "accession": "Q94FB9",
+          "protein_name": "ABC transporter D family member 1",
+          "gene_names": [
+            "ABCD1",
+            "ACN2",
+            "CTS",
+            "PED3",
+            "PMP2",
+            "PXA1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4JJ27",
+          "protein_name": "Peroxisomal ABC transporter 1",
+          "gene_names": [
+            "ABCD1",
+            "ACN2",
+            "ATP-binding cassette D1",
+            "AtABCD1",
+            "COMATOSE",
+            "CTS",
+            "PED3",
+            "PEROXISOME DEFECTIVE 3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4JJ28",
+          "protein_name": "Peroxisomal ABC transporter 1",
+          "gene_names": [
+            "ABCD1",
+            "ACN2",
+            "ATP-binding cassette D1",
+            "AtABCD1",
+            "COMATOSE",
+            "CTS",
+            "PED3",
+            "PEROXISOME DEFECTIVE 3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6H3C8",
+          "protein_name": "Acidic phospholipase A2 Ts-A6",
+          "gene_names": [],
+          "organism": "Trimeresurus stejnegeri",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6H3D7",
+          "protein_name": "Basic phospholipase A2 homolog CTs-R6",
+          "gene_names": [],
+          "organism": "Trimeresurus stejnegeri",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6H3D1",
+          "protein_name": "Basic phospholipase A2 homolog CTs-K49b",
+          "gene_names": [],
+          "organism": "Trimeresurus stejnegeri",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6H3C6",
+          "protein_name": "Acidic phospholipase A2 CTs-A3",
+          "gene_names": [],
+          "organism": "Trimeresurus stejnegeri",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8RQV0",
+          "protein_name": "Isomaltosyltransferase",
+          "gene_names": [
+            "ctsY"
+          ],
+          "organism": "Sporosarcina globispora",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "CTS",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"CTS\" OR gene:\"CTS\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"CTS\" OR gene:\"CTS\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      },
+      "mapped_ids": {
+        "uniprot": "Q94FB9"
+      },
+      "chosen_rule": "exact_reviewed_match",
+      "reviewed": true,
+      "resolved_name": "ABC transporter D family member 1"
+    },
+    "db::acx1::arabidopsis thaliana::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O65202",
+        "pathbank_protein_id": "11618"
+      },
+      "pathbank_protein_id": 11618,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11618,
+          "name": "acyl coenzyme A oxidase",
+          "gene_name": "ACX1",
+          "uniprot": "O65202",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::acx5::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::acx5::arabidopsis thaliana::::{}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"ACX5\" OR gene:\"ACX5\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"ACX5\" OR gene:\"ACX5\")",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "accession": "J7KEC0",
+          "protein_name": "acyl-CoA oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Prunus persica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9P5VR59",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Podila minutissima",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9P6FXQ1",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Lunasporangiospora selenospora",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9P6T3D1",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Entomortierella chlamydospora",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD1GY09",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Salvia divinorum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A367K6P5",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Rhizopus stolonifer",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9P6QDN7",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Actinomortierella ambigua",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7LIJ4",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX5"
+          ],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX5",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"ACX5\" OR gene:\"ACX5\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"ACX5\" OR gene:\"ACX5\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::aim1::arabidopsis thaliana::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9ZPI6",
+        "pathbank_protein_id": "11614"
+      },
+      "pathbank_protein_id": 11614,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11614,
+          "name": "peroxisomal fatty acid beta-oxidation multifunctional protein A1M1",
+          "gene_name": "AIM1",
+          "uniprot": "Q9ZPI6",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::kat2::arabidopsis thaliana::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q56WD9",
+        "pathbank_protein_id": "11616"
+      },
+      "pathbank_protein_id": 11616,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11616,
+          "name": "OPC4-3-ketoacyl-CoA thiolase",
+          "gene_name": "KAT2",
+          "uniprot": "Q56WD9",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::opc8::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::opc8::arabidopsis thaliana::::{}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"OPC-8\" OR gene:\"OPC-8\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPC 8\" OR gene:\"OPC 8\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPC-8\" OR gene:\"OPC-8\") | (protein_name:\"OPC 8\" OR gene:\"OPC 8\")",
+      "confidence": 0.3,
+      "candidates": [
+        {
+          "accession": "Q84P21",
+          "protein_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+          "gene_names": [
+            "4CLL5",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4HST9",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1P8AUM2",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2U1MKR6",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [],
+          "organism": "Artemisia annua",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7J0GIE5",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [],
+          "organism": "Actinidia rufa",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7KJ24",
+          "protein_name": "Opc-8:0 CoA ligase1",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2Z7ALN4",
+          "protein_name": "OPC-8:0 CoA ligase1 isoform 1",
+          "gene_names": [],
+          "organism": "Dorcoceras hygrometricum",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A251T171",
+          "protein_name": "AMP-dependent synthetase/ligase, AMP-binding enzyme domain-containing protein",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Helianthus annuus",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-8",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"OPC-8\" OR gene:\"OPC-8\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPC 8\" OR gene:\"OPC 8\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPC-8\" OR gene:\"OPC-8\")",
+        "(protein_name:\"OPC 8\" OR gene:\"OPC 8\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::opc6::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::opc6::arabidopsis thaliana::::{}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"OPC-6\" OR gene:\"OPC-6\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPC 6\" OR gene:\"OPC 6\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPC-6\" OR gene:\"OPC-6\") | (protein_name:\"OPC 6\" OR gene:\"OPC 6\")",
+      "confidence": 0.3,
+      "candidates": [
+        {
+          "accession": "P0C5B6",
+          "protein_name": "OPC-6:CoA ligase",
+          "gene_names": [
+            "4CLL4"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD0ZEU1",
+          "protein_name": "OPC-6:CoA ligase",
+          "gene_names": [],
+          "organism": "Cardamine amara subsp. amara",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD1AS25",
+          "protein_name": "OPC-6:CoA ligase",
+          "gene_names": [],
+          "organism": "Cardamine amara subsp. amara",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD0ZFN5",
+          "protein_name": "OPC-6:CoA ligase",
+          "gene_names": [],
+          "organism": "Cardamine amara subsp. amara",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD1ATC0",
+          "protein_name": "OPC-6:CoA ligase",
+          "gene_names": [],
+          "organism": "Cardamine amara subsp. amara",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD0ZET2",
+          "protein_name": "OPC-6:CoA ligase",
+          "gene_names": [],
+          "organism": "Cardamine amara subsp. amara",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD1A764",
+          "protein_name": "OPC-6:CoA ligase",
+          "gene_names": [],
+          "organism": "Cardamine amara subsp. amara",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9W3C0F3",
+          "protein_name": "OPC-6:CoA ligase isoform X5",
+          "gene_names": [
+            "LOC108829319"
+          ],
+          "organism": "Raphanus sativus",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "OPC-6",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"OPC-6\" OR gene:\"OPC-6\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPC 6\" OR gene:\"OPC 6\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPC-6\" OR gene:\"OPC-6\")",
+        "(protein_name:\"OPC 6\" OR gene:\"OPC 6\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::opc4::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.56,
+      "candidates": [
+        {
+          "pathbank_protein_id": 11616,
+          "name": "OPC4-3-ketoacyl-CoA thiolase",
+          "gene_name": "KAT2",
+          "uniprot": "Q56WD9",
+          "species_id": 4,
+          "score": 0.56
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::0coa::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::0coa::arabidopsis thaliana::::{}::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "query": "(protein_name:\"0-CoA\" OR gene:\"0-CoA\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"0 CoA\" OR gene:\"0 CoA\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"0-CoA\" OR gene:\"0-CoA\") | (protein_name:\"0 CoA\" OR gene:\"0 CoA\")",
+      "confidence": 0.3375,
+      "candidates": [
+        {
+          "accession": "F4HST9",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "0 CoA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1P8AUM2",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.3375,
+          "matched_query": "0 CoA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q84P21",
+          "protein_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+          "gene_names": [
+            "4CLL5",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "0-CoA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2U1MKR6",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [],
+          "organism": "Artemisia annua",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "0 CoA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7J0GIE5",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [],
+          "organism": "Actinidia rufa",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "0 CoA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7KJ24",
+          "protein_name": "Opc-8:0 CoA ligase1",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "0 CoA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2U1MKL3",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [],
+          "organism": "Artemisia annua",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "0 CoA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A9W7MQ40",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [],
+          "organism": "Hibiscus trionum",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "0 CoA",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"0-CoA\" OR gene:\"0-CoA\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"0 CoA\" OR gene:\"0 CoA\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"0-CoA\" OR gene:\"0-CoA\")",
+        "(protein_name:\"0 CoA\" OR gene:\"0 CoA\")"
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::aos::arabidopsis thaliana::::{\"uniprot\": \"Q96242\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::opr3::arabidopsis thaliana::22871::{\"uniprot\": \"Q9FUP0\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::acx1::arabidopsis thaliana::11618::{\"uniprot\": \"O65202\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::aim1::arabidopsis thaliana::11614::{\"uniprot\": \"Q9ZPI6\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::kat2::arabidopsis thaliana::11616::{\"uniprot\": \"Q56WD9\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::lox::arabidopsis thaliana::::{\"uniprot\": \"Q8Z0C8\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 22867,
+          "name": "Lipoxygenase 2, chloroplastic",
+          "gene_name": "LOX2",
+          "uniprot": "P38418",
+          "species_id": 4,
+          "score": 0.65
+        },
+        {
+          "pathbank_protein_id": 22958,
+          "name": "Lipoxygenase 3, chloroplastic",
+          "gene_name": "LOX3",
+          "uniprot": "Q9LNR3",
+          "species_id": 4,
+          "score": 0.65
+        },
+        {
+          "pathbank_protein_id": 22965,
+          "name": "Linoleate 9S-lipoxygenase 5",
+          "gene_name": "LOX5",
+          "uniprot": "Q9LUW0",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "api-v6::aos::arabidopsis thaliana::::{\"uniprot\": \"Q96242\"}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"AOS\" OR gene:\"AOS\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"AOS\" OR gene:\"AOS\")",
+      "mapped_ids": {
+        "uniprot": "Q96242"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "exact_reviewed_match",
+      "candidates": [
+        {
+          "accession": "Q96242",
+          "protein_name": "Allene oxide synthase, chloroplastic",
+          "gene_names": [
+            "AOS",
+            "CYP74A"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q00805",
+          "protein_name": "Protein giant-lens",
+          "gene_names": [
+            "aos",
+            "gil",
+            "sty"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0U2KH01",
+          "protein_name": "AOS",
+          "gene_names": [
+            "AOS"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q7KSM5",
+          "protein_name": "SUMO-activating enzyme subunit 1",
+          "gene_names": [
+            "AOS1",
+            "Aos",
+            "Aos1",
+            "DmAos1",
+            "DmSAE1",
+            "DmSae1",
+            "Dmaos1",
+            "Dmel\\CG12276"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q86SB5",
+          "protein_name": "Argos",
+          "gene_names": [
+            "aos"
+          ],
+          "organism": "Drosophila virilis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9M4C7",
+          "protein_name": "hydroperoxide dehydratase",
+          "gene_names": [
+            "aos"
+          ],
+          "organism": "Hordeum vulgare",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "H6UV49",
+          "protein_name": "hydroperoxide dehydratase",
+          "gene_names": [
+            "AOS"
+          ],
+          "organism": "Triticum aestivum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O16025",
+          "protein_name": "Allene oxide synthase-lipoxygenase protein",
+          "gene_names": [],
+          "organism": "Plexaura homomalla",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "AOS",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"AOS\" OR gene:\"AOS\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"AOS\" OR gene:\"AOS\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Allene oxide synthase, chloroplastic",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::aoc::arabidopsis thaliana::::{\"uniprot\": \"A2XID3\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 22870,
+          "name": "Allene oxide cyclase 2, chloroplastic",
+          "gene_name": "AOC2",
+          "uniprot": "Q9LS02",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "api-v6::opr3::arabidopsis thaliana::22871::{\"uniprot\": \"Q9FUP0\"}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"OPR3\" OR gene:\"OPR3\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPR3\" OR gene:\"OPR3\")",
+      "mapped_ids": {
+        "uniprot": "Q9FUP0"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "exact_reviewed_match",
+      "candidates": [
+        {
+          "accession": "Q9FUP0",
+          "protein_name": "12-oxophytodienoate reductase 3",
+          "gene_names": [
+            "DDE1",
+            "OPR3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9FEW9",
+          "protein_name": "12-oxophytodienoate reductase 3",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Solanum lycopersicum",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6Z965",
+          "protein_name": "12-oxophytodienoate reductase 7",
+          "gene_names": [
+            "OG1",
+            "OPR13",
+            "OPR3",
+            "OPR7"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B9FSC8",
+          "protein_name": "Putative 12-oxophytodienoate reductase 11",
+          "gene_names": [
+            "OPR11",
+            "OPR3"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q69TH6",
+          "protein_name": "Putative 12-oxophytodienoate reductase 3",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0U2KSJ3",
+          "protein_name": "OPR3",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Gossypium hirsutum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "V9TI00",
+          "protein_name": "12-oxophytodienoate reductase",
+          "gene_names": [
+            "opr3"
+          ],
+          "organism": "Nicotiana tabacum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A8K1DU67",
+          "protein_name": "12-oxophytodienoate reductase",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Salvia miltiorrhiza",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "OPR3",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"OPR3\" OR gene:\"OPR3\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPR3\" OR gene:\"OPR3\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "12-oxophytodienoate reductase 3",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::opcl1::arabidopsis thaliana::::{\"uniprot\": \"Q84P21\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q84P21",
+        "pathbank_protein_id": "22872"
+      },
+      "pathbank_protein_id": 22872,
+      "confidence": 1.08,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 22872,
+          "name": "4-coumarate--CoA ligase-like 5",
+          "uniprot": "Q84P21",
+          "gene_name": "4CLL5",
+          "species_id": 4,
+          "matched_on": "uniprot_id",
+          "score": 1.08
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "db::cts::arabidopsis thaliana::::{\"uniprot\": \"Q94FB9\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q94FB9",
+        "pathbank_protein_id": "23562"
+      },
+      "pathbank_protein_id": 23562,
+      "confidence": 1.08,
+      "chosen_rule": "direct_id_match:uniprot_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 23562,
+          "name": "ABC transporter D family member 1",
+          "uniprot": "Q94FB9",
+          "gene_name": "ABCD1",
+          "species_id": 4,
+          "matched_on": "uniprot_id",
+          "score": 1.08
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "uniprot"
+      }
+    },
+    "api-v6::acx1::arabidopsis thaliana::11618::{\"uniprot\": \"O65202\"}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"ACX1\" OR gene:\"ACX1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"ACX1\" OR gene:\"ACX1\")",
+      "mapped_ids": {
+        "uniprot": "O65202"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "exact_reviewed_match",
+      "candidates": [
+        {
+          "accession": "O65202",
+          "protein_name": "Peroxisomal acyl-coenzyme A oxidase 1",
+          "gene_names": [
+            "ACX1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4JMK8",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX1",
+            "ATACX1",
+            "DL4405C",
+            "acyl-CoA oxidase 1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A812QBJ9",
+          "protein_name": "ACX1 protein",
+          "gene_names": [
+            "ACX1"
+          ],
+          "organism": "Symbiodinium necroappetens",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAV6P2A2",
+          "protein_name": "acyl-CoA oxidase",
+          "gene_names": [
+            "ACX1"
+          ],
+          "organism": "Cucurbita argyrosperma subsp. sororia",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "J7K6M3",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX1"
+          ],
+          "organism": "Prunus persica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9ZQP2",
+          "protein_name": "Putative peroxisomal acyl-coenzyme A oxidase 1.2",
+          "gene_names": [
+            "ACX1.2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A559MAH5",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX1_0"
+          ],
+          "organism": "Lachnellula willkommii",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A8T9CDD4",
+          "protein_name": "Acyl-coenzyme A oxidase",
+          "gene_names": [
+            "ACX1_0"
+          ],
+          "organism": "Lachnellula suecica",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "ACX1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"ACX1\" OR gene:\"ACX1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"ACX1\" OR gene:\"ACX1\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Peroxisomal acyl-coenzyme A oxidase 1",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "api-v6::aim1::arabidopsis thaliana::11614::{\"uniprot\": \"Q9ZPI6\"}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"AIM1\" OR gene:\"AIM1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"AIM1\" OR gene:\"AIM1\")",
+      "mapped_ids": {
+        "uniprot": "Q9ZPI6"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "exact_reviewed_match",
+      "candidates": [
+        {
+          "accession": "Q9ZPI6",
+          "protein_name": "Peroxisomal fatty acid beta-oxidation multifunctional protein AIM1",
+          "gene_names": [
+            "AIM1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9UMX9",
+          "protein_name": "Membrane-associated transporter protein",
+          "gene_names": [
+            "AIM1",
+            "MATP",
+            "SLC45A2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P58355",
+          "protein_name": "Membrane-associated transporter protein",
+          "gene_names": [
+            "Aim1",
+            "Matp",
+            "Slc45a2",
+            "uw"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q96GD4",
+          "protein_name": "Aurora kinase B",
+          "gene_names": [
+            "AIK2",
+            "AIM1",
+            "AIRK2",
+            "ARK2",
+            "AURKB",
+            "STK1",
+            "STK12",
+            "STK5"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9Y4K1",
+          "protein_name": "Beta/gamma crystallin domain-containing protein 1",
+          "gene_names": [
+            "AIM1",
+            "CRYBG1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O55099",
+          "protein_name": "Aurora kinase B",
+          "gene_names": [
+            "Aik2",
+            "Aim1",
+            "Airk2",
+            "Ark2",
+            "Aurkb",
+            "Stk1",
+            "Stk12",
+            "Stk5"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O70126",
+          "protein_name": "Aurora kinase B",
+          "gene_names": [
+            "Aik2",
+            "Aim1",
+            "Airk2",
+            "Ark2",
+            "Aurkb",
+            "Stk1",
+            "Stk12",
+            "Stk5"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q7YRC6",
+          "protein_name": "Aurora kinase B",
+          "gene_names": [
+            "AIK2",
+            "AIM1",
+            "AIRK2",
+            "ARK2",
+            "AURKB",
+            "STK1",
+            "STK12",
+            "STK5"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "AIM1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"AIM1\" OR gene:\"AIM1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"AIM1\" OR gene:\"AIM1\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Peroxisomal fatty acid beta-oxidation multifunctional protein AIM1",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::kat2::arabidopsis thaliana::::{\"uniprot\": \"Q38849\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q56WD9",
+        "pathbank_protein_id": "11616"
+      },
+      "pathbank_protein_id": 11616,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11616,
+          "name": "OPC4-3-ketoacyl-CoA thiolase",
+          "gene_name": "KAT2",
+          "uniprot": "Q56WD9",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "api-v6::kat2::arabidopsis thaliana::11616::{\"uniprot\": \"Q56WD9\"}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"KAT2\" OR gene:\"KAT2\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"KAT2\" OR gene:\"KAT2\")",
+      "mapped_ids": {
+        "uniprot": "Q38849"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "exact_reviewed_match",
+      "candidates": [
+        {
+          "accession": "Q38849",
+          "protein_name": "Potassium channel KAT2",
+          "gene_names": [
+            "KAT2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q56WD9",
+          "protein_name": "3-ketoacyl-CoA thiolase 2, peroxisomal",
+          "gene_names": [
+            "KAT2",
+            "PED1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1P8B8U1",
+          "protein_name": "Potassium channel",
+          "gene_names": [
+            "KAT2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8N5Z0",
+          "protein_name": "Kynurenine/alpha-aminoadipate aminotransferase, mitochondrial",
+          "gene_names": [
+            "AADAT",
+            "KAT2",
+            "KYAT2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q64602",
+          "protein_name": "Kynurenine/alpha-aminoadipate aminotransferase, mitochondrial",
+          "gene_names": [
+            "Aadat",
+            "Kat2"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9WVM8",
+          "protein_name": "Kynurenine/alpha-aminoadipate aminotransferase, mitochondrial",
+          "gene_names": [
+            "Aadat",
+            "Kat2"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9UUK2",
+          "protein_name": "Histone acetyltransferase gcn5",
+          "gene_names": [
+            "gcn5",
+            "kat2"
+          ],
+          "organism": "Schizosaccharomyces pombe (strain 972 / ATCC 24843)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9X576",
+          "protein_name": "Catalase C",
+          "gene_names": [
+            "catC",
+            "katC",
+            "katE"
+          ],
+          "organism": "Rhizobium meliloti (strain 1021)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "KAT2",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"KAT2\" OR gene:\"KAT2\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"KAT2\" OR gene:\"KAT2\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Potassium channel KAT2",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::mfp::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 11216,
+          "name": "Peroxisomal fatty acid beta-oxidation multifunctional protein MFP2",
+          "gene_name": "MFP2",
+          "uniprot": "Q9ZPI5",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::0coa enoyl intermediate::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v6::0coa enoyl intermediate::arabidopsis thaliana::::{}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"0-CoA enoyl intermediate\" OR gene:\"0-CoA enoyl intermediate\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"0 CoA enoyl intermediate\" OR gene:\"0 CoA enoyl intermediate\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"0-CoA enoyl intermediate\" OR gene:\"0-CoA enoyl intermediate\") | (protein_name:\"0 CoA enoyl intermediate\" OR gene:\"0 CoA enoyl intermediate\") | (protein_name:\"enoyl-CoA hydratase\" OR gene:\"enoyl-CoA hydratase\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"enoyl-CoA hydratase\" OR gene:\"enoyl-CoA hydratase\") | \"enoyl-CoA hydratase\" AND organism_name:\"Arabidopsis thaliana\" | \"enoyl-CoA hydratase\" | (protein_name:\"enoyl CoA hydratase\" OR gene:\"enoyl CoA hydratase\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"enoyl CoA hydratase\" OR gene:\"enoyl CoA hydratase\") | \"enoyl CoA hydratase\" AND organism_name:\"Arabidopsis thaliana\" | \"enoyl CoA hydratase\" | (protein_name:\"ECH\" OR gene:\"ECH\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"ECH\" OR gene:\"ECH\") | \"ECH\" AND organism_name:\"Arabidopsis thaliana\" | \"ECH\" | (protein_name:\"enoyl coenzyme A hydratase\" OR gene:\"enoyl coenzyme A hydratase\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"enoyl coenzyme A hydratase\" OR gene:\"enoyl coenzyme A hydratase\") | \"enoyl coenzyme A hydratase\" AND organism_name:\"Arabidopsis thaliana\" | \"enoyl coenzyme A hydratase\" | (protein_name:\"crotonase\" OR gene:\"crotonase\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"crotonase\" OR gene:\"crotonase\") | \"crotonase\" AND organism_name:\"Arabidopsis thaliana\" | \"crotonase\" | (protein_name:\"AtECH\" OR gene:\"AtECH\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"AtECH\" OR gene:\"AtECH\") | \"AtECH\" AND organism_name:\"Arabidopsis thaliana\" | \"AtECH\" | (protein_name:\"enoyl-CoA hydratase 1\" OR gene:\"enoyl-CoA hydratase 1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"enoyl-CoA hydratase 1\" OR gene:\"enoyl-CoA hydratase 1\") | \"enoyl-CoA hydratase 1\" AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"enoyl CoA hydratase 1\" OR gene:\"enoyl CoA hydratase 1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"enoyl CoA hydratase 1\" OR gene:\"enoyl CoA hydratase 1\") | \"enoyl CoA hydratase 1\" AND organism_name:\"Arabidopsis thaliana\"",
+      "mapped_ids": {
+        "uniprot": "Q8LEK2"
+      },
+      "confidence": 0.85,
+      "chosen_rule": "exact_reviewed_match",
+      "candidates": [
+        {
+          "accession": "Q8LEK2",
+          "protein_name": "Golgi apparatus membrane protein-like protein ECHIDNA",
+          "gene_names": [
+            "ECH"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.85,
+          "matched_query": "ECH",
+          "alias_source": "alternate_abbreviation",
+          "matched_alias": "ECH"
+        },
+        {
+          "accession": "A0A1P8ANI1",
+          "protein_name": "Golgi apparatus membrane protein TVP23",
+          "gene_names": [
+            "ECH",
+            "ECHIDNA"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.8,
+          "matched_query": "ECH",
+          "alias_source": "alternate_abbreviation",
+          "matched_alias": "ECH"
+        },
+        {
+          "accession": "P76082",
+          "protein_name": "2,3-dehydroadipyl-CoA hydratase",
+          "gene_names": [
+            "paaF",
+            "ydbR"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "enoyl-CoA hydratase",
+          "alias_source": "synonym",
+          "matched_alias": "enoyl-CoA hydratase"
+        },
+        {
+          "accession": "P30084",
+          "protein_name": "Enoyl-CoA hydratase, mitochondrial",
+          "gene_names": [
+            "ECHS1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "enoyl-CoA hydratase 1",
+          "alias_source": "synonym",
+          "matched_alias": "enoyl-CoA hydratase 1"
+        },
+        {
+          "accession": "P14604",
+          "protein_name": "Enoyl-CoA hydratase, mitochondrial",
+          "gene_names": [
+            "Echs1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "enoyl-CoA hydratase 1",
+          "alias_source": "synonym",
+          "matched_alias": "enoyl-CoA hydratase 1"
+        },
+        {
+          "accession": "Q8BH95",
+          "protein_name": "Enoyl-CoA hydratase, mitochondrial",
+          "gene_names": [
+            "Echs1"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "enoyl-CoA hydratase 1",
+          "alias_source": "synonym",
+          "matched_alias": "enoyl-CoA hydratase 1"
+        },
+        {
+          "accession": "Q58DM8",
+          "protein_name": "Enoyl-CoA hydratase, mitochondrial",
+          "gene_names": [
+            "ECHS1"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "enoyl-CoA hydratase 1",
+          "alias_source": "synonym",
+          "matched_alias": "enoyl-CoA hydratase 1"
+        },
+        {
+          "accession": "Q5R646",
+          "protein_name": "Enoyl-CoA hydratase, mitochondrial",
+          "gene_names": [
+            "ECHS1"
+          ],
+          "organism": "Pongo abelii",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "enoyl-CoA hydratase 1",
+          "alias_source": "synonym",
+          "matched_alias": "enoyl-CoA hydratase 1"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"0-CoA enoyl intermediate\" OR gene:\"0-CoA enoyl intermediate\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"0 CoA enoyl intermediate\" OR gene:\"0 CoA enoyl intermediate\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"0-CoA enoyl intermediate\" OR gene:\"0-CoA enoyl intermediate\")",
+        "(protein_name:\"0 CoA enoyl intermediate\" OR gene:\"0 CoA enoyl intermediate\")",
+        "(protein_name:\"enoyl-CoA hydratase\" OR gene:\"enoyl-CoA hydratase\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"enoyl-CoA hydratase\" OR gene:\"enoyl-CoA hydratase\")",
+        "\"enoyl-CoA hydratase\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"enoyl-CoA hydratase\"",
+        "(protein_name:\"enoyl CoA hydratase\" OR gene:\"enoyl CoA hydratase\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"enoyl CoA hydratase\" OR gene:\"enoyl CoA hydratase\")",
+        "\"enoyl CoA hydratase\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"enoyl CoA hydratase\"",
+        "(protein_name:\"ECH\" OR gene:\"ECH\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"ECH\" OR gene:\"ECH\")",
+        "\"ECH\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"ECH\"",
+        "(protein_name:\"enoyl coenzyme A hydratase\" OR gene:\"enoyl coenzyme A hydratase\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"enoyl coenzyme A hydratase\" OR gene:\"enoyl coenzyme A hydratase\")",
+        "\"enoyl coenzyme A hydratase\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"enoyl coenzyme A hydratase\"",
+        "(protein_name:\"crotonase\" OR gene:\"crotonase\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"crotonase\" OR gene:\"crotonase\")",
+        "\"crotonase\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"crotonase\"",
+        "(protein_name:\"AtECH\" OR gene:\"AtECH\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"AtECH\" OR gene:\"AtECH\")",
+        "\"AtECH\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"AtECH\"",
+        "(protein_name:\"enoyl-CoA hydratase 1\" OR gene:\"enoyl-CoA hydratase 1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"enoyl-CoA hydratase 1\" OR gene:\"enoyl-CoA hydratase 1\")",
+        "\"enoyl-CoA hydratase 1\" AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"enoyl CoA hydratase 1\" OR gene:\"enoyl CoA hydratase 1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"enoyl CoA hydratase 1\" OR gene:\"enoyl CoA hydratase 1\")",
+        "\"enoyl CoA hydratase 1\" AND organism_name:\"Arabidopsis thaliana\""
+      ],
+      "matched_alias": "ECH",
+      "alias_source": "alternate_abbreviation",
+      "resolved_name": "Golgi apparatus membrane protein-like protein ECHIDNA",
+      "literature_aliases": [
+        {
+          "alias": "enoyl-CoA hydratase",
+          "source": "synonym"
+        },
+        {
+          "alias": "ECH",
+          "source": "alternate_abbreviation"
+        },
+        {
+          "alias": "enoyl coenzyme A hydratase",
+          "source": "synonym"
+        },
+        {
+          "alias": "crotonase",
+          "source": "synonym"
+        },
+        {
+          "alias": "AtECH",
+          "source": "gene_name"
+        },
+        {
+          "alias": "enoyl-CoA hydratase 1",
+          "source": "synonym"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::acx::arabidopsis thaliana::::{\"uniprot\": \"O64894\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 11618,
+          "name": "acyl coenzyme A oxidase",
+          "gene_name": "ACX1",
+          "uniprot": "O65202",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::mfp::arabidopsis thaliana::::{\"uniprot\": \"Q8W1L6\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 11216,
+          "name": "Peroxisomal fatty acid beta-oxidation multifunctional protein MFP2",
+          "gene_name": "MFP2",
+          "uniprot": "Q9ZPI5",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
     }
   },
   "compounds": {
@@ -36704,6 +38950,1331 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::miasnosj::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::c4methylene pentathiazolyl intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glyoxylate::75::{\"cas\": \"298-12-4\", \"chebi\": \"CHEBI:16891\", \"hmdb\": \"HMDB0000119\", \"kegg\": \"C00048\", \"pubchem\": \"760\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000119",
+        "kegg": "C00048",
+        "chebi": "CHEBI:16891",
+        "pubchem": "760",
+        "cas": "298-12-4",
+        "biocyc": "GLYOX",
+        "chemspider": "740",
+        "drugbank": "DB04343",
+        "pathbank_compound_id": "75"
+      },
+      "pathbank_compound_id": 75,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 75,
+          "name": "Glyoxylic acid",
+          "short_name": "Glyoxal",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000119",
+            "kegg": "C00048",
+            "chebi": "CHEBI:16891",
+            "pubchem": "760",
+            "cas": "298-12-4",
+            "biocyc": "GLYOX",
+            "chemspider": "740",
+            "drugbank": "DB04343",
+            "pathbank_compound_id": "75"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::linolenic acid::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001388",
+        "kegg": "C06427",
+        "chebi": "CHEBI:27432",
+        "pubchem": "5280934",
+        "cas": "463-40-1",
+        "biocyc": "LINOLENIC_ACID",
+        "chemspider": "4444437",
+        "drugbank": "DB00132",
+        "pathbank_compound_id": "1073"
+      },
+      "pathbank_compound_id": 1073,
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1073,
+          "name": "α-Linolenic acid",
+          "short_name": "ALA",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0001388",
+            "kegg": "C06427",
+            "chebi": "CHEBI:27432",
+            "pubchem": "5280934",
+            "cas": "463-40-1",
+            "biocyc": "LINOLENIC_ACID",
+            "chemspider": "4444437",
+            "drugbank": "DB00132",
+            "pathbank_compound_id": "1073"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym"
+      }
+    },
+    "db::hexadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::13shydroperoxyoctadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::11shydroperoxyhexadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1213sepoxyoctadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1011sepoxyhexadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::9s13s12oxophytodienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::7s11sdinor12oxophytodienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1octanoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1hexanoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::jasmonic acid::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0032797",
+        "kegg": "C08491",
+        "chebi": "CHEBI:18292",
+        "pubchem": "5281166",
+        "cas": "6894-38-8",
+        "chemspider": "4444606",
+        "pathbank_compound_id": "13883"
+      },
+      "pathbank_compound_id": 13883,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 13883,
+          "name": "Jasmonic acid",
+          "short_name": "Jasmona",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0032797",
+            "kegg": "C08491",
+            "chebi": "CHEBI:18292",
+            "pubchem": "5281166",
+            "cas": "6894-38-8",
+            "chemspider": "4444606",
+            "pathbank_compound_id": "13883"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::jasmonoylcoa::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.705,
+      "candidates": [
+        {
+          "pathbank_compound_id": 104739,
+          "name": "(+)-7-epi-jasmonoyl-CoA",
+          "short_name": "7EJC",
+          "score": 0.705,
+          "mapped_ids": {
+            "pubchem": "126961028"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::nadph::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000221",
+        "kegg": "C00005",
+        "chebi": "CHEBI:16474",
+        "pubchem": "22833512",
+        "cas": "53-57-6",
+        "biocyc": "NADPH",
+        "chemspider": "17215925",
+        "pathbank_compound_id": "146"
+      },
+      "pathbank_compound_id": 146,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 146,
+          "name": "NADPH",
+          "short_name": "NADPH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000221",
+            "kegg": "C00005",
+            "chebi": "CHEBI:16474",
+            "pubchem": "22833512",
+            "cas": "53-57-6",
+            "biocyc": "NADPH",
+            "chemspider": "17215925",
+            "pathbank_compound_id": "146"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::fad::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001248",
+        "kegg": "C00016",
+        "chebi": "CHEBI:16238",
+        "pubchem": "643975",
+        "cas": "146-14-5",
+        "biocyc": "FAD",
+        "chemspider": "559059",
+        "drugbank": "DB03147",
+        "pathbank_compound_id": "964"
+      },
+      "pathbank_compound_id": 964,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 964,
+          "name": "FAD",
+          "short_name": "FAD",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001248",
+            "kegg": "C00016",
+            "chebi": "CHEBI:16238",
+            "pubchem": "643975",
+            "cas": "146-14-5",
+            "biocyc": "FAD",
+            "chemspider": "559059",
+            "drugbank": "DB03147",
+            "pathbank_compound_id": "964"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::atp::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000538",
+        "kegg": "C00002",
+        "chebi": "CHEBI:15422",
+        "pubchem": "5957",
+        "cas": "56-65-5",
+        "biocyc": "ATP",
+        "chemspider": "5742",
+        "drugbank": "DB00171",
+        "pathbank_compound_id": "414"
+      },
+      "pathbank_compound_id": 414,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 414,
+          "name": "Adenosine triphosphate",
+          "short_name": "ATP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000538",
+            "kegg": "C00002",
+            "chebi": "CHEBI:15422",
+            "pubchem": "5957",
+            "cas": "56-65-5",
+            "biocyc": "ATP",
+            "chemspider": "5742",
+            "drugbank": "DB00171",
+            "pathbank_compound_id": "414"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::coa::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1099,
+          "name": "Coenzyme A",
+          "short_name": "CoA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001423",
+            "kegg": "C00010",
+            "chebi": "CHEBI:1146900",
+            "pubchem": "6816",
+            "cas": "85-61-0",
+            "biocyc": "CO-A",
+            "chemspider": "6557",
+            "pathbank_compound_id": "1099"
+          }
+        },
+        {
+          "pathbank_compound_id": 112812,
+          "name": "CoA",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "pathbank_compound_id": "112812"
+          }
+        },
+        {
+          "pathbank_compound_id": 112813,
+          "name": "CoenzymeA",
+          "short_name": "CoA",
+          "score": 1.0,
+          "mapped_ids": {
+            "cas": "85-61-0",
+            "pathbank_compound_id": "112813"
+          }
+        },
+        {
+          "pathbank_compound_id": 112818,
+          "name": "coenzymeA",
+          "short_name": "CoA",
+          "score": 1.0,
+          "mapped_ids": {
+            "pathbank_compound_id": "112818"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_exact_name",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1butanoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::13shydroperoxyoctadecatrienoic acid 13hpot::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::11shydroperoxyhexadecatrienoic acid 11hpht::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1213sepoxyoctadecatrienoic acid 1213eot::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1011sepoxyhexadecatrienoic acid 1011eht::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::9s13s12oxophytodienoic acid opda::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::7s11sdinoropda dnopda::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::jasmonic acid ja::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.6567,
+      "candidates": [
+        {
+          "pathbank_compound_id": 13883,
+          "name": "Jasmonic acid",
+          "short_name": "Jasmona",
+          "score": 0.6567,
+          "mapped_ids": {
+            "hmdb": "HMDB0032797",
+            "kegg": "C08491",
+            "chebi": "CHEBI:18292",
+            "pubchem": "5281166",
+            "cas": "6894-38-8",
+            "chemspider": "4444606"
+          }
+        },
+        {
+          "pathbank_compound_id": 17474,
+          "name": "Methyl jasmonate",
+          "short_name": "Fema",
+          "score": 0.565,
+          "mapped_ids": {
+            "hmdb": "HMDB0036583",
+            "kegg": "C11512",
+            "chebi": "CHEBI:15929",
+            "pubchem": "5367719",
+            "cas": "1211-29-6",
+            "chemspider": "4519204"
+          }
+        },
+        {
+          "pathbank_compound_id": 14663,
+          "name": "Dihydrojasmonic acid",
+          "short_name": "DA",
+          "score": 0.4275,
+          "mapped_ids": {
+            "hmdb": "HMDB0033601",
+            "pubchem": "107126",
+            "cas": "98674-52-3",
+            "chemspider": "96397"
+          }
+        },
+        {
+          "pathbank_compound_id": 20794,
+          "name": "β-D-Glucopyranosyl-11-hydroxyjasmonic acid",
+          "short_name": "βDGHA",
+          "score": 0.4275,
+          "mapped_ids": {
+            "hmdb": "HMDB0039964"
+          }
+        },
+        {
+          "pathbank_compound_id": 104740,
+          "name": "(+)-7-epi-jasmonate",
+          "short_name": "IJA",
+          "score": 0.4275,
+          "mapped_ids": {
+            "kegg": "C16317",
+            "chebi": "CHEBI:136179",
+            "pubchem": "7251182",
+            "chemspider": "5584838"
+          }
+        },
+        {
+          "pathbank_compound_id": 11366,
+          "name": "Jasmine ketolactone",
+          "short_name": "JK",
+          "score": 0.4,
+          "mapped_ids": {
+            "hmdb": "HMDB0030150",
+            "cas": "70981-24-7",
+            "chemspider": "19240450"
+          }
+        },
+        {
+          "pathbank_compound_id": 21504,
+          "name": "7-Epi-12-hydroxyjasmonic acid glucoside",
+          "short_name": "7EHAG",
+          "score": 0.4,
+          "mapped_ids": {
+            "hmdb": "HMDB0040706",
+            "cas": "124649-25-8"
+          }
+        },
+        {
+          "pathbank_compound_id": 40791,
+          "name": "(+)-7-Isojasmonic acid CoA",
+          "short_name": "7IAC",
+          "score": 0.4,
+          "mapped_ids": {
+            "chebi": "CHEBI:80460"
+          }
+        },
+        {
+          "pathbank_compound_id": 12917,
+          "name": "Methyl dihydrojasmonate",
+          "short_name": "Hedione",
+          "score": 0.3817,
+          "mapped_ids": {
+            "hmdb": "HMDB0031740",
+            "pubchem": "1738124",
+            "cas": "24851-98-7",
+            "chemspider": "1376701"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::jasmonoylcoa jacoa::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.51,
+      "candidates": [
+        {
+          "pathbank_compound_id": 104739,
+          "name": "(+)-7-epi-jasmonoyl-CoA",
+          "short_name": "7EJC",
+          "score": 0.51,
+          "mapped_ids": {
+            "pubchem": "126961028"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::nadp::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000217",
+        "kegg": "C00006",
+        "chebi": "CHEBI:18009",
+        "pubchem": "5886",
+        "cas": "53-59-8",
+        "biocyc": "NAD(P)",
+        "chemspider": "5675",
+        "pathbank_compound_id": "143"
+      },
+      "pathbank_compound_id": 143,
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 143,
+          "name": "NADP",
+          "short_name": "NADP",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0000217",
+            "kegg": "C00006",
+            "chebi": "CHEBI:18009",
+            "pubchem": "5886",
+            "cas": "53-59-8",
+            "biocyc": "NAD(P)",
+            "chemspider": "5675",
+            "pathbank_compound_id": "143"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym"
+      }
+    },
+    "db::linolenic acid::1073::{\"cas\": \"463-40-1\", \"chebi\": \"CHEBI:27432\", \"hmdb\": \"HMDB0001388\", \"kegg\": \"C06427\", \"pubchem\": \"5280934\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::jasmonic acid::13883::{\"cas\": \"6894-38-8\", \"chebi\": \"CHEBI:18292\", \"hmdb\": \"HMDB0032797\", \"kegg\": \"C08491\", \"pubchem\": \"5281166\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::fad::964::{\"cas\": \"146-14-5\", \"chebi\": \"CHEBI:16238\", \"hmdb\": \"HMDB0001248\", \"kegg\": \"C00016\", \"pubchem\": \"643975\"}": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::jasmonic acid ja::::{\"kegg\": \"C08491\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0032797",
+        "kegg": "C08491",
+        "chebi": "CHEBI:18292",
+        "pubchem": "5281166",
+        "cas": "6894-38-8",
+        "chemspider": "4444606",
+        "pathbank_compound_id": "13883"
+      },
+      "pathbank_compound_id": 13883,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 13883,
+          "name": "Jasmonic acid",
+          "short_name": "Jasmona",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0032797",
+            "kegg": "C08491",
+            "chebi": "CHEBI:18292",
+            "pubchem": "5281166",
+            "cas": "6894-38-8",
+            "chemspider": "4444606"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "api::linolenic acid::1073::{\"cas\": \"463-40-1\", \"chebi\": \"CHEBI:27432\", \"hmdb\": \"HMDB0001388\", \"kegg\": \"C06427\", \"pubchem\": \"5280934\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "confidence": 0.55,
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C03242",
+          "name": "Dihomo-gamma-linolenate",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C06426",
+          "name": "(6Z,9Z,12Z)-Octadecatrienoic acid",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C06427",
+          "name": "(9Z,12Z,15Z)-Octadecatrienoic acid",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C16344",
+          "name": "Norlinolenic acid",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C16346",
+          "name": "17-Hydroxylinolenic acid",
+          "score": 0.55
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api",
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "api_ambiguous",
+        "order_step": "api_external_id"
+      }
+    },
+    "api::jasmonic acid::13883::{\"cas\": \"6894-38-8\", \"chebi\": \"CHEBI:18292\", \"hmdb\": \"HMDB0032797\", \"kegg\": \"C08491\", \"pubchem\": \"5281166\"}": {
+      "status": "mapped",
+      "mapped_ids": {
+        "kegg": "C08491"
+      },
+      "confidence": 0.95,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "database": "kegg",
+          "id": "C08491",
+          "name": "(-)-Jasmonic acid",
+          "score": 0.95
+        },
+        {
+          "database": "kegg",
+          "id": "C16317",
+          "name": "(+)-7-Isojasmonic acid",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C21385",
+          "name": "trans-12-Hydroxyjasmonic acid",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C21669",
+          "name": "12-Hydroxyjasmonate",
+          "score": 0.55
+        },
+        {
+          "database": "kegg",
+          "id": "C08558",
+          "name": "Tuberonic acid glucoside",
+          "score": 0.5
+        },
+        {
+          "database": "kegg",
+          "id": "C16339",
+          "name": "(+)-7-Isojasmonic acid CoA",
+          "score": 0.5
+        }
+      ],
+      "provider": "ChEBI/KEGG/HMDB",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_external_id"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1octanoic acidcoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1hexanoic acidcoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1butanoic acidcoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::adp::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001341",
+        "kegg": "C00008",
+        "chebi": "CHEBI:16761",
+        "pubchem": "6022",
+        "cas": "58-64-0",
+        "biocyc": "ADP",
+        "chemspider": "5800",
+        "pathbank_compound_id": "1034"
+      },
+      "pathbank_compound_id": 1034,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1034,
+          "name": "Adenosine diphosphate",
+          "short_name": "ADP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001341",
+            "kegg": "C00008",
+            "chebi": "CHEBI:16761",
+            "pubchem": "6022",
+            "cas": "58-64-0",
+            "biocyc": "ADP",
+            "chemspider": "5800",
+            "pathbank_compound_id": "1034"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::fadh2::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "chebi": "CHEBI:17877",
+        "pubchem": "4556",
+        "pathbank_compound_id": "109018"
+      },
+      "pathbank_compound_id": 109018,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 109018,
+          "name": "FADH2",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "chebi": "CHEBI:17877",
+            "pubchem": "4556",
+            "pathbank_compound_id": "109018"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::nad::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 721,
+          "name": "NAD",
+          "short_name": "NAD",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000902",
+            "kegg": "C00003",
+            "chebi": "CHEBI:15846",
+            "pubchem": "5893",
+            "cas": "53-84-9",
+            "biocyc": "NAD",
+            "chemspider": "5682",
+            "pathbank_compound_id": "721"
+          }
+        },
+        {
+          "pathbank_compound_id": 7808,
+          "name": "N-Acetylglucosaminyl-diphosphodolichol",
+          "short_name": "NAD",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0012264",
+            "pubchem": "53481397",
+            "pathbank_compound_id": "7808"
+          }
+        },
+        {
+          "pathbank_compound_id": 41426,
+          "name": "N-amino DAP",
+          "short_name": "NAD",
+          "score": 1.0,
+          "mapped_ids": {
+            "pubchem": "25201959",
+            "pathbank_compound_id": "41426"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_exact_name",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::nadh::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001487",
+        "kegg": "C00004",
+        "chebi": "CHEBI:16908",
+        "pubchem": "439153",
+        "cas": "58-68-4",
+        "biocyc": "NADH",
+        "chemspider": "388299",
+        "drugbank": "DB00157",
+        "pathbank_compound_id": "1144"
+      },
+      "pathbank_compound_id": 1144,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1144,
+          "name": "NADH",
+          "short_name": "NADH",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001487",
+            "kegg": "C00004",
+            "chebi": "CHEBI:16908",
+            "pubchem": "439153",
+            "cas": "58-68-4",
+            "biocyc": "NADH",
+            "chemspider": "388299",
+            "drugbank": "DB00157",
+            "pathbank_compound_id": "1144"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::coa::1099::{\"cas\": \"85-61-0\", \"chebi\": \"CHEBI:1146900\", \"hmdb\": \"HMDB0001423\", \"kegg\": \"C00010\", \"pubchem\": \"6816\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001423",
+        "kegg": "C00010",
+        "chebi": "CHEBI:1146900",
+        "pubchem": "6816",
+        "cas": "85-61-0",
+        "biocyc": "CO-A",
+        "chemspider": "6557",
+        "pathbank_compound_id": "1099"
+      },
+      "pathbank_compound_id": 1099,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1099,
+          "name": "Coenzyme A",
+          "short_name": "CoA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001423",
+            "kegg": "C00010",
+            "chebi": "CHEBI:1146900",
+            "pubchem": "6816",
+            "cas": "85-61-0",
+            "biocyc": "CO-A",
+            "chemspider": "6557",
+            "pathbank_compound_id": "1099"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1hexanoylcoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::12oxophytodienoic acid opda::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::dinoropda dnopda::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::coa::::{\"kegg\": \"C00010\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001423",
+        "kegg": "C00010",
+        "chebi": "CHEBI:1146900",
+        "pubchem": "6816",
+        "cas": "85-61-0",
+        "biocyc": "CO-A",
+        "chemspider": "6557",
+        "pathbank_compound_id": "1099"
+      },
+      "pathbank_compound_id": 1099,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1099,
+          "name": "Coenzyme A",
+          "short_name": "CoA",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001423",
+            "kegg": "C00010",
+            "chebi": "CHEBI:1146900",
+            "pubchem": "6816",
+            "cas": "85-61-0",
+            "biocyc": "CO-A",
+            "chemspider": "6557"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::fad::::{\"kegg\": \"C00016\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001248",
+        "kegg": "C00016",
+        "chebi": "CHEBI:16238",
+        "pubchem": "643975",
+        "cas": "146-14-5",
+        "biocyc": "FAD",
+        "chemspider": "559059",
+        "drugbank": "DB03147",
+        "pathbank_compound_id": "964"
+      },
+      "pathbank_compound_id": 964,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 964,
+          "name": "FAD",
+          "short_name": "FAD",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001248",
+            "kegg": "C00016",
+            "chebi": "CHEBI:16238",
+            "pubchem": "643975",
+            "cas": "146-14-5",
+            "biocyc": "FAD",
+            "chemspider": "559059",
+            "drugbank": "DB03147"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::opdacoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::dnopdacoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -40100,10 +43671,858 @@
         "status": "unresolved",
         "issue": "component_proteins_unresolved"
       }
+    },
+    "db::opc80coa::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"OPC-8\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"0-CoA\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "OPC-8",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        },
+        {
+          "name": "0-CoA",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "OPC-8",
+          "component_index": 0,
+          "reason": "novel_protein"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "0-CoA",
+          "component_index": 1,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::opc60coa::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"OPC-6\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"0-CoA\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "OPC-6",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        },
+        {
+          "name": "0-CoA",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "OPC-6",
+          "component_index": 0,
+          "reason": "novel_protein"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "0-CoA",
+          "component_index": 1,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::opc40coa::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"OPC-4\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"0-CoA\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "OPC-4",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "ambiguous"
+        },
+        {
+          "name": "0-CoA",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "OPC-4",
+          "component_index": 0,
+          "reason": "ambiguous"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "0-CoA",
+          "component_index": 1,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::lox complex::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"LOX\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "LOX",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "ambiguous"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "LOX",
+          "component_index": 0,
+          "reason": "ambiguous"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::allene oxide synthase::arabidopsis thaliana::13426::[{\"ids\": {\"gene_name\": \"CYP74A\", \"pathbank_protein_id\": \"22869\", \"uniprot\": \"Q96242\"}, \"name\": \"AOS\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 13426,
+      "pathbank_protein_complex_id": 13426,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "AOS",
+          "pathbank_protein_id": 22869,
+          "stoichiometry": 1,
+          "uniprot": "Q96242",
+          "mapped_ids": {
+            "uniprot": "Q96242",
+            "pathbank_protein_id": "22869"
+          },
+          "gene_name": "CYP74A",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 13426,
+          "pathbank_protein_complex_id": 13426,
+          "name": "Allene oxide synthase",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::aoc complex::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"AOC\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "AOC",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "ambiguous"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "AOC",
+          "component_index": 0,
+          "reason": "ambiguous"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::12oxophytodienoate reductase::arabidopsis thaliana::13428::[{\"ids\": {\"gene_name\": \"OPR3\", \"pathbank_protein_id\": \"22871\", \"uniprot\": \"Q9FUP0\"}, \"name\": \"OPR3\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 13428,
+      "pathbank_protein_complex_id": 13428,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "OPR3",
+          "pathbank_protein_id": 22871,
+          "stoichiometry": 1,
+          "uniprot": "Q9FUP0",
+          "mapped_ids": {
+            "uniprot": "Q9FUP0",
+            "pathbank_protein_id": "22871"
+          },
+          "gene_name": "OPR3",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 13428,
+          "pathbank_protein_complex_id": 13428,
+          "name": "12-oxophytodienoate reductase",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::opcl1 complex::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"OPCL1\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "OPCL1",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "OPCL1",
+          "component_index": 0,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::acyl coenzyme a oxidase::arabidopsis thaliana::5495::[{\"ids\": {\"gene_name\": \"ACX1\", \"pathbank_protein_id\": \"11618\", \"uniprot\": \"O65202\"}, \"name\": \"ACX1\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 5495,
+      "pathbank_protein_complex_id": 5495,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "ACX1",
+          "pathbank_protein_id": 11618,
+          "stoichiometry": 1,
+          "uniprot": "O65202",
+          "mapped_ids": {
+            "uniprot": "O65202",
+            "pathbank_protein_id": "11618"
+          },
+          "gene_name": "ACX1",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 5495,
+          "pathbank_protein_complex_id": 5495,
+          "name": "acyl coenzyme A oxidase",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::acx5 complex::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"ACX5\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "ACX5",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "ACX5",
+          "component_index": 0,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::peroxisomal fatty acid betaoxidation multifunctional protein aim1::arabidopsis thaliana::5492::[{\"ids\": {\"gene_name\": \"AIM1\", \"pathbank_protein_id\": \"11614\", \"uniprot\": \"Q9ZPI6\"}, \"name\": \"AIM1\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 5492,
+      "pathbank_protein_complex_id": 5492,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "AIM1",
+          "pathbank_protein_id": 11614,
+          "stoichiometry": 1,
+          "uniprot": "Q9ZPI6",
+          "mapped_ids": {
+            "uniprot": "Q9ZPI6",
+            "pathbank_protein_id": "11614"
+          },
+          "gene_name": "AIM1",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 5492,
+          "pathbank_protein_complex_id": 5492,
+          "name": "peroxisomal fatty acid beta-oxidation multifunctional protein AIM1",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::opc43ketoacylcoa thiolase::arabidopsis thaliana::5493::[{\"ids\": {\"gene_name\": \"KAT2\", \"pathbank_protein_id\": \"11616\", \"uniprot\": \"Q56WD9\"}, \"name\": \"KAT2\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 5493,
+      "pathbank_protein_complex_id": 5493,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "KAT2",
+          "pathbank_protein_id": 11616,
+          "stoichiometry": 1,
+          "uniprot": "Q56WD9",
+          "mapped_ids": {
+            "uniprot": "Q56WD9",
+            "pathbank_protein_id": "11616"
+          },
+          "gene_name": "KAT2",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 5493,
+          "pathbank_protein_complex_id": 5493,
+          "name": "OPC4-3-ketoacyl-CoA thiolase ",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::acx1aim1kat2 betaoxidation complex::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"ACX1\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"AIM1\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"KAT2\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.55,
+      "chosen_rule": "resolved_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 5495,
+          "pathbank_protein_complex_id": 5495,
+          "name": "acyl coenzyme A oxidase",
+          "species_id": 4,
+          "component_protein_id": 11618,
+          "score": 0.55
+        },
+        {
+          "pathbank_complex_id": 5492,
+          "pathbank_protein_complex_id": 5492,
+          "name": "peroxisomal fatty acid beta-oxidation multifunctional protein AIM1",
+          "species_id": 4,
+          "component_protein_id": 11614,
+          "score": 0.55
+        },
+        {
+          "pathbank_complex_id": 5493,
+          "pathbank_protein_complex_id": 5493,
+          "name": "OPC4-3-ketoacyl-CoA thiolase ",
+          "species_id": 4,
+          "component_protein_id": 11616,
+          "score": 0.55
+        }
+      ],
+      "components": [
+        {
+          "name": "ACX1",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 11618,
+          "mapped_ids": {
+            "uniprot": "O65202",
+            "pathbank_protein_id": "11618"
+          }
+        },
+        {
+          "name": "AIM1",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 11614,
+          "mapped_ids": {
+            "uniprot": "Q9ZPI6",
+            "pathbank_protein_id": "11614"
+          }
+        },
+        {
+          "name": "KAT2",
+          "stoichiometry": 1,
+          "mapping_status": "mapped",
+          "mapping_rule": "db_top_candidate_relaxed",
+          "pathbank_protein_id": 11616,
+          "mapped_ids": {
+            "uniprot": "Q56WD9",
+            "pathbank_protein_id": "11616"
+          }
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_component_complex_species",
+        "order_step": "resolved_component_species"
+      }
+    },
+    "db::allene oxide synthase::arabidopsis thaliana::13426::[{\"ids\": {}, \"name\": \"AOS\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        "AOS"
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::12oxophytodienoate reductase::arabidopsis thaliana::13428::[{\"ids\": {}, \"name\": \"OPR3\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        "OPR3"
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::acyl coenzyme a oxidase::arabidopsis thaliana::5495::[{\"ids\": {}, \"name\": \"ACX1\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        "ACX1"
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::peroxisomal fatty acid betaoxidation multifunctional protein aim1::arabidopsis thaliana::5492::[{\"ids\": {}, \"name\": \"AIM1\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        "AIM1"
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::opc43ketoacylcoa thiolase::arabidopsis thaliana::5493::[{\"ids\": {}, \"name\": \"KAT2\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "db_unavailable:db_not_configured",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        "KAT2"
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "db_unavailable"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1octanoate coa ligase::arabidopsis thaliana::13429::[{\"ids\": {\"gene_name\": \"4CLL5\", \"pathbank_protein_id\": \"22872\", \"uniprot\": \"Q84P21\"}, \"name\": \"OPCL1\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 13429,
+      "pathbank_protein_complex_id": 13429,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "OPCL1",
+          "pathbank_protein_id": 22872,
+          "stoichiometry": 1,
+          "uniprot": "Q84P21",
+          "mapped_ids": {
+            "uniprot": "Q84P21",
+            "pathbank_protein_id": "22872"
+          },
+          "gene_name": "4CLL5",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 13429,
+          "pathbank_protein_complex_id": 13429,
+          "name": "3-oxo-2-(2'-[Z]-pentenyl)cyclopentane-1-octanoate CoA ligase",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::lox complex::arabidopsis thaliana::::[{\"ids\": {\"uniprot\": \"Q8Z0C8\"}, \"name\": \"LOX\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "LOX",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q8Z0C8"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "LOX",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::aoc complex::arabidopsis thaliana::::[{\"ids\": {\"uniprot\": \"A2XID3\"}, \"name\": \"AOC\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "AOC",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "A2XID3"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "AOC",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::opc60coa enoyl intermediate::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"OPC-6\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"0-CoA enoyl intermediate\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "OPC-6",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        },
+        {
+          "name": "0-CoA enoyl intermediate",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "OPC-6",
+          "component_index": 0,
+          "reason": "novel_protein"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "0-CoA enoyl intermediate",
+          "component_index": 1,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::mfp complex::arabidopsis thaliana::::[{\"ids\": {}, \"name\": \"MFP\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "MFP",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "ambiguous"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "MFP",
+          "component_index": 0,
+          "reason": "ambiguous"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::acx complex::arabidopsis thaliana::::[{\"ids\": {\"uniprot\": \"O64894\"}, \"name\": \"ACX\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "ACX",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "O64894"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "ACX",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::mfp complex::arabidopsis thaliana::::[{\"ids\": {\"uniprot\": \"Q8W1L6\"}, \"name\": \"MFP\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "MFP",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "mapped_ids": {
+            "uniprot": "Q8W1L6"
+          },
+          "reason": "no_db_match"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "MFP",
+          "component_index": 0,
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
     }
   },
   "enzyme_complexes": {
-    "obag::::pseudomonas fluorescens": {
+    "lox::::arabidopsis thaliana": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -40111,22 +44530,19 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "ObaG complex",
-      "species_id": 539,
+      "name": "LOX complex",
+      "species_id": 4,
       "components": [
         {
-          "name": "ObaG",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "A0A1X9LWZ7"
-          }
+          "name": "LOX",
+          "stoichiometry": 1
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "ObaG",
-          "reason": "no_db_match"
+          "component": "LOX",
+          "reason": "ambiguous"
         }
       ],
       "resolution": {
@@ -40135,7 +44551,46 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "nosl::::pseudomonas fluorescens": {
+    "aos::::arabidopsis thaliana": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 13426,
+      "pathbank_protein_complex_id": 13426,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "AOS",
+          "pathbank_protein_id": 22869,
+          "stoichiometry": 1,
+          "uniprot": "Q96242",
+          "mapped_ids": {
+            "uniprot": "Q96242",
+            "pathbank_protein_id": "22869"
+          },
+          "gene_name": "CYP74A",
+          "species_id": 4
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 13426,
+          "pathbank_protein_complex_id": 13426,
+          "name": "Allene oxide synthase",
+          "species_id": 4,
+          "component_protein_id": 22869,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "aoc::::arabidopsis thaliana": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -40143,22 +44598,19 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "NosL complex",
-      "species_id": 539,
+      "name": "AOC complex",
+      "species_id": 4,
       "components": [
         {
-          "name": "NosL",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "Q9F0W0"
-          }
+          "name": "AOC",
+          "stoichiometry": 1
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "NosL",
-          "reason": "no_db_match"
+          "component": "AOC",
+          "reason": "ambiguous"
         }
       ],
       "resolution": {
@@ -40167,132 +44619,199 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "nosi::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
+    "opr3::22871::arabidopsis thaliana": {
+      "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosI complex",
-      "species_id": 539,
+      "pathbank_complex_id": 13428,
+      "pathbank_protein_complex_id": 13428,
+      "species_id": 4,
       "components": [
         {
-          "name": "NosI",
+          "name": "OPR3",
+          "pathbank_protein_id": 22871,
           "stoichiometry": 1,
+          "uniprot": "Q9FUP0",
           "mapped_ids": {
-            "uniprot": "C6FX48"
-          }
+            "uniprot": "Q9FUP0",
+            "pathbank_protein_id": "22871"
+          },
+          "gene_name": "OPR3",
+          "species_id": 4
         }
       ],
-      "issues": [
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
         {
-          "issue": "component_protein_unresolved",
-          "component": "NosI",
-          "reason": "no_db_match"
+          "pathbank_complex_id": 13428,
+          "pathbank_protein_complex_id": 13428,
+          "name": "12-oxophytodienoate reductase",
+          "species_id": 4,
+          "component_protein_id": 22871,
+          "score": 0.9
         }
       ],
+      "issues": [],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "matched",
+        "order_step": "enzyme_component_species"
       }
     },
-    "nosj::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
+    "opcl1::::arabidopsis thaliana": {
+      "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosJ complex",
-      "species_id": 539,
+      "pathbank_complex_id": 13429,
+      "pathbank_protein_complex_id": 13429,
+      "species_id": 4,
       "components": [
         {
-          "name": "NosJ",
+          "name": "OPCL1",
+          "pathbank_protein_id": 22872,
           "stoichiometry": 1,
+          "uniprot": "Q84P21",
           "mapped_ids": {
-            "uniprot": "C6FX49"
-          }
+            "uniprot": "Q84P21",
+            "pathbank_protein_id": "22872"
+          },
+          "gene_name": "4CLL5",
+          "species_id": 4
         }
       ],
-      "issues": [
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
         {
-          "issue": "component_protein_unresolved",
-          "component": "NosJ",
-          "reason": "no_db_match"
+          "pathbank_complex_id": 13429,
+          "pathbank_protein_complex_id": 13429,
+          "name": "3-oxo-2-(2'-[Z]-pentenyl)cyclopentane-1-octanoate CoA ligase",
+          "species_id": 4,
+          "component_protein_id": 22872,
+          "score": 0.9
         }
       ],
+      "issues": [],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "matched",
+        "order_step": "enzyme_component_species"
       }
     },
-    "nosk::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
+    "acx1::11618::arabidopsis thaliana": {
+      "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosK complex",
-      "species_id": 539,
+      "pathbank_complex_id": 5495,
+      "pathbank_protein_complex_id": 5495,
+      "species_id": 4,
       "components": [
         {
-          "name": "NosK",
+          "name": "ACX1",
+          "pathbank_protein_id": 11618,
           "stoichiometry": 1,
+          "uniprot": "O65202",
           "mapped_ids": {
-            "uniprot": "C6FX50"
-          }
+            "uniprot": "O65202",
+            "pathbank_protein_id": "11618"
+          },
+          "gene_name": "ACX1",
+          "species_id": 4
         }
       ],
-      "issues": [
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
         {
-          "issue": "component_protein_unresolved",
-          "component": "NosK",
-          "reason": "no_db_match"
+          "pathbank_complex_id": 5495,
+          "pathbank_protein_complex_id": 5495,
+          "name": "acyl coenzyme A oxidase",
+          "species_id": 4,
+          "component_protein_id": 11618,
+          "score": 0.9
         }
       ],
+      "issues": [],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "matched",
+        "order_step": "enzyme_component_species"
       }
     },
-    "nosn::::pseudomonas fluorescens": {
-      "status": "unmapped",
-      "reason": "novel_complex",
+    "aim1::11614::arabidopsis thaliana": {
+      "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "NosN complex",
-      "species_id": 539,
+      "pathbank_complex_id": 5492,
+      "pathbank_protein_complex_id": 5492,
+      "species_id": 4,
       "components": [
         {
-          "name": "NosN",
+          "name": "AIM1",
+          "pathbank_protein_id": 11614,
           "stoichiometry": 1,
+          "uniprot": "Q9ZPI6",
           "mapped_ids": {
-            "uniprot": "C6FX53"
-          }
+            "uniprot": "Q9ZPI6",
+            "pathbank_protein_id": "11614"
+          },
+          "gene_name": "AIM1",
+          "species_id": 4
         }
       ],
-      "issues": [
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
         {
-          "issue": "component_protein_unresolved",
-          "component": "NosN",
-          "reason": "no_db_match"
+          "pathbank_complex_id": 5492,
+          "pathbank_protein_complex_id": 5492,
+          "name": "peroxisomal fatty acid beta-oxidation multifunctional protein AIM1",
+          "species_id": 4,
+          "component_protein_id": 11614,
+          "score": 0.9
         }
       ],
+      "issues": [],
       "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
+        "status": "matched",
+        "order_step": "enzyme_component_species"
+      }
+    },
+    "kat2::11616::arabidopsis thaliana": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 5493,
+      "pathbank_protein_complex_id": 5493,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "KAT2",
+          "pathbank_protein_id": 11616,
+          "stoichiometry": 1,
+          "uniprot": "Q56WD9",
+          "mapped_ids": {
+            "uniprot": "Q56WD9",
+            "pathbank_protein_id": "11616"
+          },
+          "gene_name": "KAT2",
+          "species_id": 4
+        }
+      ],
+      "confidence": 0.9,
+      "chosen_rule": "enzyme_component_species",
+      "candidates": [
+        {
+          "pathbank_complex_id": 5493,
+          "pathbank_protein_complex_id": 5493,
+          "name": "OPC4-3-ketoacyl-CoA thiolase ",
+          "species_id": 4,
+          "component_protein_id": 11616,
+          "score": 0.9
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "enzyme_component_species"
       }
     }
   }

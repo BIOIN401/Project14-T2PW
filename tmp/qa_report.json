@@ -1,100 +1,107 @@
 {
   "summary": {
     "total_species": 27,
-    "total_reactions": 11,
-    "completeness_score": 0.105
+    "total_reactions": 18,
+    "completeness_score": 0.4
   },
   "flags": {
-    "missing_compartments": [
-      {
-        "entity": "formaldehyde",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "ammonia",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "AMP",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "PPi",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "ATP",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "SAM",
-        "reason": "no subcellular location recorded"
-      }
-    ],
+    "missing_compartments": [],
     "missing_modifiers": [],
-    "possible_complexes": [],
-    "transport_like_reactions": [
+    "possible_complexes": [
       {
-        "reaction": "ObaG PLP-dependent retro-aldol/aldol formation of AHNB",
-        "reason": "same species appear as both input and output"
+        "entity": "linolenic acid (18:3)",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "hexadecatrienoic acid (16:3)",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0)",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid (OPC-6:0)",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-8:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-4:0-CoA",
+        "reason": "name suggests a complex or subunit"
       }
     ],
+    "transport_like_reactions": [],
     "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "L-threonine",
+        "entity": "linolenic acid (18:3)",
         "type": "compound"
       },
       {
-        "entity": "4-nitrophenylacetaldehyde",
+        "entity": "hexadecatrienoic acid (16:3)",
         "type": "compound"
       },
       {
-        "entity": "glycine",
+        "entity": "13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
         "type": "compound"
       },
       {
-        "entity": "AHNB",
+        "entity": "11(S)-hydroperoxy-hexadecatrienoic acid (11-HPHT)",
         "type": "compound"
       },
       {
-        "entity": "2,3-dihydroxybenzoic acid",
+        "entity": "12,13(S)-epoxy-octadecatrienoic acid (12,13-EOT)",
         "type": "compound"
       },
       {
-        "entity": "obafluorin",
+        "entity": "10,11(S)-epoxy-hexadecatrienoic acid (10,11-EHT)",
         "type": "compound"
       },
       {
-        "entity": "pyridoxal phosphate",
+        "entity": "(9S,13S)-12-oxophytodienoic acid (OPDA)",
         "type": "compound"
       },
       {
-        "entity": "L-Trp",
+        "entity": "(7S,11S)-dinor-OPDA (dnOPDA)",
         "type": "compound"
       },
       {
-        "entity": "3-methyl-2-indolic acid",
+        "entity": "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0)",
         "type": "compound"
       },
       {
-        "entity": "formaldehyde",
+        "entity": "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid (OPC-6:0)",
         "type": "compound"
       },
       {
-        "entity": "ammonia",
+        "entity": "jasmonic acid (JA)",
         "type": "compound"
       },
       {
-        "entity": "MIA-AMP",
+        "entity": "jasmonoyl-CoA (JA-CoA)",
         "type": "compound"
       },
       {
-        "entity": "AMP",
+        "entity": "OPC-8:0-CoA",
         "type": "compound"
       },
       {
-        "entity": "PPi",
+        "entity": "OPC-6:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-4:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "NADPH",
         "type": "compound"
       },
       {
@@ -102,62 +109,48 @@
         "type": "compound"
       },
       {
-        "entity": "NosJ-S-indoyl thioester",
+        "entity": "CoA",
         "type": "compound"
       },
       {
-        "entity": "linear pentathiazolyl nosiheptide intermediate",
-        "type": "compound"
-      },
-      {
-        "entity": "Cys-indoyl pentathiazolyl intermediate",
-        "type": "compound"
-      },
-      {
-        "entity": "SAM",
-        "type": "compound"
-      },
-      {
-        "entity": "methylene radical pentathiazolyl intermediate",
-        "type": "compound"
-      },
-      {
-        "entity": "nosiheptide",
-        "type": "compound"
-      },
-      {
-        "entity": "ObaG",
+        "entity": "LOX",
         "type": "protein"
       },
       {
-        "entity": "NosL",
+        "entity": "AOS",
         "type": "protein"
       },
       {
-        "entity": "NosI",
+        "entity": "AOC",
         "type": "protein"
       },
       {
-        "entity": "NosJ",
+        "entity": "OPR3",
         "type": "protein"
       },
       {
-        "entity": "NosK",
+        "entity": "OPCL1",
         "type": "protein"
       },
       {
-        "entity": "NosN",
+        "entity": "CTS",
+        "type": "protein"
+      },
+      {
+        "entity": "ACX1",
+        "type": "protein"
+      },
+      {
+        "entity": "AIM1",
+        "type": "protein"
+      },
+      {
+        "entity": "KAT2",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
     "duplicate_species": [],
-    "inconsistent_class": [
-      {
-        "entity": "NosJ",
-        "assigned_class": "protein",
-        "conflict": "protein listed as product in reaction 'NosK indoyl transfer to pentathiazolyl Cys'"
-      }
-    ]
+    "inconsistent_class": []
   }
 }

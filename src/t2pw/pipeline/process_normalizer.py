@@ -75,9 +75,9 @@ def apply_biochemical_aliases(
     consistent names and don't create phantom duplicate nodes for e.g.
     "Acetyl-CoA" vs "acetyl coa" vs "Acetyl CoA".
 
-    Only the entity registry rows and reaction input/output token lists are
-    rewritten here; full pointer-based rewriting is left to the existing
-    rewrite_process_references / canonicalize_same_as_aliases passes.
+    Entity registry rows and all direct compound reference fields are rewritten
+    here so visible locations cannot drift away from canonical cofactor names
+    such as "NADP+".
     """
     rep = report if isinstance(report, dict) else _new_report()
     rewrites: List[Dict[str, Any]] = []
@@ -96,11 +96,19 @@ def apply_biochemical_aliases(
                 row["name"] = canon
                 rewrites.append({"from": orig, "to": canon})
 
+    def _alias_field(row: Dict[str, Any], field: str) -> None:
+        orig = _canonical(str(row.get(field, "")))
+        if not orig:
+            return
+        canon = _alias(orig)
+        if canon != orig:
+            row[field] = canon
+            rewrites.append({"from": orig, "to": canon})
+
     entities = _safe_dict(payload.get("entities", {}))
     _alias_list(_safe_list(entities.get("compounds")))
     _alias_list(_safe_list(entities.get("proteins")))
 
-    # Rewrite tokens in reaction inputs / outputs
     processes = _safe_dict(payload.get("processes", {}))
     for rxn in _safe_list(processes.get("reactions")):
         if not isinstance(rxn, dict):
@@ -110,6 +118,23 @@ def apply_biochemical_aliases(
             if not isinstance(tokens, list):
                 continue
             rxn[side] = [_alias(t) if isinstance(t, str) else t for t in tokens]
+
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        for field in ("cargo", "cargo_complex"):
+            _alias_field(transport, field)
+        elements = transport.get("transport_elements")
+        if isinstance(elements, list):
+            for element in elements:
+                if isinstance(element, dict):
+                    for field in ("element", "compound", "cargo"):
+                        _alias_field(element, field)
+
+    element_locations = _safe_dict(payload.get("element_locations", {}))
+    for row in _safe_list(element_locations.get("compound_locations")):
+        if isinstance(row, dict):
+            _alias_field(row, "compound")
 
     if rewrites:
         rep.setdefault("actions", []).append({
@@ -202,6 +227,35 @@ def _dedupe_preserve(values: Sequence[str]) -> List[str]:
     return out
 
 
+def _trailing_parenthetical_aliases(value: Any) -> List[str]:
+    text = _canonical(str(value or ""))
+    aliases: List[str] = []
+    while text.endswith(")"):
+        start = text.rfind("(")
+        if start < 0:
+            break
+        alias = text[start + 1 : -1].strip()
+        if alias:
+            aliases.append(alias)
+        text = text[:start].rstrip()
+    return aliases
+
+
+def _entity_aliases(row: Dict[str, Any]) -> List[str]:
+    values: List[str] = []
+    for key in ["name", "raw_name", "short_name", "common_name"]:
+        value = row.get(key)
+        if isinstance(value, str):
+            values.append(value)
+    for key in ["aliases", "synonyms"]:
+        for value in _safe_list(row.get(key)):
+            if isinstance(value, str):
+                values.append(value)
+    for value in list(values):
+        values.extend(_trailing_parenthetical_aliases(value))
+    return _dedupe_preserve(values)
+
+
 def _entity_lists(payload: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]]]:
     entities = _safe_dict(payload.setdefault("entities", {}))
     if not isinstance(entities.get("compounds"), list):
@@ -234,6 +288,7 @@ def _new_report() -> Dict[str, Any]:
             "entities_added_as_proteins": 0,
             "catalysts_promoted_to_enzymes": 0,
             "interaction_enzymes_promoted": 0,
+            "process_interactions_removed": 0,
             "scaffold_inputs_added": 0,
             "scaffold_in_modifiers_count": 0,
             "n_plus_tokens_remaining": 0,
@@ -318,8 +373,12 @@ def _select_default_species_name(entities: Dict[str, Any]) -> str:
 def _entity_name_norms(rows: Sequence[Any]) -> Set[str]:
     out: Set[str] = set()
     for row in rows:
-        if isinstance(row, dict) and isinstance(row.get("name"), str) and row.get("name").strip():
-            out.add(_normalize(row["name"]))
+        if not isinstance(row, dict):
+            continue
+        for alias in _entity_aliases(row):
+            norm = _normalize(alias)
+            if norm:
+                out.add(norm)
     return out
 
 
@@ -328,7 +387,7 @@ def _find_entity_row(rows: Sequence[Any], name: str) -> Optional[Dict[str, Any]]
     if not target:
         return None
     for row in rows:
-        if isinstance(row, dict) and isinstance(row.get("name"), str) and _normalize(row["name"]) == target:
+        if isinstance(row, dict) and target in {_normalize(alias) for alias in _entity_aliases(row)}:
             return row
     return None
 
@@ -477,12 +536,18 @@ def _ensure_protein(name: str, payload: Dict[str, Any], report: Dict[str, Any]) 
     return c_name
 
 
-def _ensure_compound(name: str, payload: Dict[str, Any], report: Dict[str, Any]) -> str:
+def _ensure_compound(
+    name: str,
+    payload: Dict[str, Any],
+    report: Dict[str, Any],
+    *,
+    allow_entity_shadow: bool = False,
+) -> str:
     c_name = _canonical(name)
     if not c_name:
         return ""
     compounds, proteins, complexes = _entity_lists(payload)
-    if _find_entity_row(proteins, c_name) or _find_entity_row(complexes, c_name):
+    if not allow_entity_shadow and (_find_entity_row(proteins, c_name) or _find_entity_row(complexes, c_name)):
         return c_name
     if _find_entity_row(compounds, c_name) is None:
         compounds.append({"name": c_name, "class": "compound", "confidence": 0.8, "provenance": "inferred"})
@@ -497,6 +562,12 @@ def _complex_components(name: str) -> List[str]:
     if ":" not in text:
         return []
     return [part.strip() for part in text.split(":") if part.strip()]
+
+
+def _is_reaction_participant_pointer(pointer: str) -> bool:
+    return "/processes/reactions/" in pointer and (
+        pointer.endswith("/inputs") or pointer.endswith("/outputs")
+    )
 
 
 def _is_likely_byproduct(token: str) -> bool:
@@ -658,6 +729,17 @@ def _rewrite_token(
         return [rewrite_map[ckey]]
 
     if not _has_plus_token(text):
+        compounds, proteins, complexes = _entity_lists(payload)
+        if ":" in text and _find_entity_row(compounds, text) is not None:
+            _ensure_compound(text, payload, report)
+            return [text]
+        if (
+            ":" in text
+            and _is_reaction_participant_pointer(pointer)
+            and _find_entity_row(proteins, text) is None
+        ):
+            _ensure_compound(text, payload, report, allow_entity_shadow=True)
+            return [text]
         if ":" in text and len(_complex_components(text)) >= 2:
             parts = _complex_components(text)
             complex_name = materialize_complex(
@@ -877,8 +959,13 @@ def _rewrite_element_locations(payload: Dict[str, Any], rewrite_map: Dict[str, s
         if not raw_name:
             continue
         rewritten = _rewrite_token(raw_name, payload, report, rewrite_map, f"/element_locations/compound_locations/{idx}/compound")
+        compounds, _, _ = _entity_lists(payload)
         for token in rewritten:
-            if ":" in token or _is_protein_like(token, payload):
+            if ":" in token and _find_entity_row(compounds, token) is not None:
+                kept = dict(row)
+                kept["compound"] = token
+                kept_compounds.append(kept)
+            elif ":" in token or _is_protein_like(token, payload):
                 moved = dict(row)
                 moved.pop("compound", None)
                 moved["protein"] = token
@@ -1096,6 +1183,7 @@ def cleanup_disallowed_complexes(
     rep = report if isinstance(report, dict) else _new_report()
     summary = _safe_dict(rep.setdefault("summary", {}))
     summary.setdefault("forbidden_complexes_removed", 0)
+    summary.setdefault("compound_shadowed_complexes_removed", 0)
     compounds, _, complexes = _entity_lists(payload)
     reactions, transports = _process_lists(payload)
     element_locations = _safe_dict(payload.setdefault("element_locations", {}))
@@ -1159,17 +1247,23 @@ def cleanup_disallowed_complexes(
         )
         forbidden = norm in forbidden_norms
         byproduct_block = _is_likely_byproduct(right) and not explicit_supported
-        if forbidden or byproduct_block:
+        compound_shadowed = _find_entity_row(compounds, name) is not None
+        if forbidden or byproduct_block or compound_shadowed:
             disallowed_by_norm[norm] = {
                 "name": name,
                 "left": left,
                 "right": right,
                 "forbidden": forbidden,
                 "byproduct_block": byproduct_block,
+                "compound_shadowed": compound_shadowed,
+                "replacement": name if compound_shadowed else "",
                 "explicit_supported": explicit_supported,
                 "entity_pointer": f"/entities/protein_complexes/{idx}/name",
             }
-            summary["forbidden_complexes_removed"] += 1
+            if compound_shadowed:
+                summary["compound_shadowed_complexes_removed"] += 1
+            else:
+                summary["forbidden_complexes_removed"] += 1
             rep["actions"].append(
                 {
                     "type": "forbidden_or_byproduct_complex_removed",
@@ -1179,11 +1273,15 @@ def cleanup_disallowed_complexes(
                     "right": right,
                     "forbidden": forbidden,
                     "byproduct_block": byproduct_block,
+                    "compound_shadowed": compound_shadowed,
                     "explicit_composite_support": explicit_supported,
                 }
             )
-            _ensure_compound(right, payload, rep)
-            _ensure_protein(left, payload, rep)
+            if compound_shadowed:
+                _ensure_compound(name, payload, rep)
+            else:
+                _ensure_compound(right, payload, rep)
+                _ensure_protein(left, payload, rep)
             continue
         kept_complexes.append(row)
     complexes[:] = kept_complexes
@@ -1197,6 +1295,17 @@ def cleanup_disallowed_complexes(
         info = disallowed_by_norm.get(norm)
         if info is None:
             return [_canonical(token)]
+        replacement_name = _canonical(str(info.get("replacement", "")))
+        if replacement_name:
+            rep["actions"].append(
+                {
+                    "type": "compound_shadowed_complex_reference_rewritten",
+                    "json_pointer": pointer,
+                    "from": token_name,
+                    "to": [replacement_name],
+                }
+            )
+            return [replacement_name]
         left = _canonical(str(info.get("left", "")))
         right = _canonical(str(info.get("right", "")))
         if side == "outputs":
@@ -1234,7 +1343,7 @@ def cleanup_disallowed_complexes(
         cargo_norm = _normalize(_canonical_complex_name(cargo))
         cargo_info = disallowed_by_norm.get(cargo_norm)
         if cargo_info is not None:
-            right = _canonical(str(cargo_info.get("right", "")))
+            right = _canonical(str(cargo_info.get("replacement") or cargo_info.get("right") or ""))
             if right:
                 transport["cargo"] = right
                 transport.pop("cargo_complex", None)
@@ -1251,7 +1360,7 @@ def cleanup_disallowed_complexes(
             norm = _normalize(_canonical_complex_name(cargo_complex))
             info = disallowed_by_norm.get(norm)
             if info is not None:
-                right = _canonical(str(info.get("right", "")))
+                right = _canonical(str(info.get("replacement") or info.get("right") or ""))
                 if right:
                     transport["cargo"] = right
                     transport.pop("cargo_complex", None)
@@ -1271,7 +1380,7 @@ def cleanup_disallowed_complexes(
         info = disallowed_by_norm.get(_normalize(cname))
         if info is None:
             continue
-        right = _canonical(str(info.get("right", "")))
+        right = _canonical(str(info.get("replacement") or info.get("right") or ""))
         if right:
             row["compound"] = right
             rep["actions"].append(
@@ -1293,7 +1402,7 @@ def cleanup_disallowed_complexes(
         if info is None:
             new_protein_locations.append(row)
             continue
-        right = _canonical(str(info.get("right", "")))
+        right = _canonical(str(info.get("replacement") or info.get("right") or ""))
         if right:
             moved = dict(row)
             moved.pop("protein", None)
@@ -1311,6 +1420,107 @@ def cleanup_disallowed_complexes(
     element_locations["compound_locations"] = compound_locations
     _dedupe_named_rows(compounds)
     _dedupe_named_rows(complexes)
+    return payload
+
+
+def remove_stale_colon_fragment_proteins(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("stale_colon_fragment_proteins_removed", 0)
+    compounds, proteins, complexes = _entity_lists(payload)
+
+    fragment_norms: Set[str] = set()
+    fragment_source: Dict[str, str] = {}
+    for row in compounds:
+        if not isinstance(row, dict):
+            continue
+        name = _canonical(str(row.get("name", "")))
+        parts = _complex_components(name)
+        if len(parts) < 2:
+            continue
+        left = _canonical(parts[0])
+        norm = _normalize(left)
+        if norm:
+            fragment_norms.add(norm)
+            fragment_source.setdefault(norm, name)
+
+    if not fragment_norms:
+        return payload
+
+    protected_refs: Set[str] = set()
+    element_locations = _safe_dict(payload.get("element_locations"))
+    for row in _safe_list(element_locations.get("protein_locations")):
+        if isinstance(row, dict):
+            protected_refs.add(_normalize(_canonical(str(row.get("protein", "")))))
+
+    processes = _safe_dict(payload.get("processes"))
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for enzyme in _safe_list(reaction.get("enzymes")):
+            if isinstance(enzyme, dict):
+                protected_refs.add(_normalize(_canonical(str(enzyme.get("protein", "")))))
+        for modifier in _safe_list(reaction.get("modifiers")):
+            if not isinstance(modifier, dict):
+                continue
+            if str(modifier.get("entity_type") or "").strip().casefold() == "protein":
+                protected_refs.add(_normalize(_canonical(str(modifier.get("entity", "")))))
+
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        for transporter in _safe_list(transport.get("transporters")):
+            if isinstance(transporter, dict):
+                protected_refs.add(_normalize(_canonical(str(transporter.get("protein", "")))))
+
+    for interaction in _safe_list(processes.get("interactions")):
+        if not isinstance(interaction, dict):
+            continue
+        protected_refs.add(_normalize(_canonical(str(interaction.get("entity_1", "")))))
+        protected_refs.add(_normalize(_canonical(str(interaction.get("entity_2", "")))))
+
+    for complex_row in complexes:
+        if not isinstance(complex_row, dict):
+            continue
+        for component in _safe_list(complex_row.get("components")):
+            if isinstance(component, str):
+                protected_refs.add(_normalize(_canonical(component)))
+            elif isinstance(component, dict):
+                protected_refs.add(_normalize(_canonical(str(component.get("name", "")))))
+
+    removed_names: List[str] = []
+    kept_proteins: List[Dict[str, Any]] = []
+    for row in proteins:
+        if not isinstance(row, dict):
+            kept_proteins.append(row)
+            continue
+        name = _canonical(str(row.get("name", "")))
+        norm = _normalize(name)
+        if norm in fragment_norms and norm not in protected_refs:
+            removed_names.append(name)
+            summary["stale_colon_fragment_proteins_removed"] += 1
+            rep["actions"].append(
+                {
+                    "type": "stale_colon_fragment_protein_removed",
+                    "name": name,
+                    "compound_source": fragment_source.get(norm, ""),
+                }
+            )
+            continue
+        kept_proteins.append(row)
+
+    if not removed_names:
+        return payload
+
+    proteins[:] = kept_proteins
+    for name in removed_names:
+        _ensure_compound(name, payload, rep)
+    _dedupe_named_rows(compounds)
+    _dedupe_named_rows(proteins)
     return payload
 
 
@@ -1652,6 +1862,8 @@ def canonicalize_same_as_aliases(
             )
             return ":".join(rewritten)
         if "+" in text:
+            if not _has_plus_token(text):
+                return _rewrite_name(text)
             parts = _split_composite(text)
             rewritten = _dedupe_preserve(
                 [
@@ -2393,6 +2605,14 @@ _TRANSPORT_REL_RE = re.compile(
     r"(transport|carry|carri|shuttle|translocat)",
     flags=re.IGNORECASE,
 )
+_PROCESS_ENDPOINT_RE = re.compile(
+    r"(^|[\s:/_-])("
+    r"formation|activation|conversion|biosynthesis|synthesis|degradation|"
+    r"oxidation|reduction|transport|import|export|metabolism|"
+    r"beta[-\s]?oxidation|reaction|pathway|cycle|process"
+    r")($|[\s:/_-])",
+    flags=re.IGNORECASE,
+)
 
 
 def _modifier_role_from_relationship(relationship: str) -> str:
@@ -2407,6 +2627,50 @@ def _modifier_role_from_relationship(relationship: str) -> str:
     return "catalyst"
 
 
+def _is_process_endpoint(value: str) -> bool:
+    """Return true when an interaction endpoint is an event/process phrase."""
+    text = _canonical(value)
+    if not text:
+        return False
+    return bool(_PROCESS_ENDPOINT_RE.search(text))
+
+
+def _reaction_name_norm_map(reactions: Sequence[Any]) -> Dict[str, int]:
+    rxn_norm_to_idx: Dict[str, int] = {}
+    for ridx, rxn in enumerate(reactions):
+        if not isinstance(rxn, dict):
+            continue
+        rname = _canonical(str(rxn.get("name", "")))
+        if rname:
+            rxn_norm_to_idx[_normalize(rname)] = ridx
+    return rxn_norm_to_idx
+
+
+def _find_matching_reaction_idx(process_phrase: str, rxn_norm_to_idx: Dict[str, int]) -> Optional[int]:
+    phrase_norm = _normalize(process_phrase)
+    if not phrase_norm:
+        return None
+    if phrase_norm in rxn_norm_to_idx:
+        return rxn_norm_to_idx[phrase_norm]
+    for rnorm, ridx in rxn_norm_to_idx.items():
+        if rnorm and (rnorm in phrase_norm or phrase_norm in rnorm):
+            return ridx
+    return None
+
+
+def _interaction_endpoint_entity_norms(payload: Dict[str, Any]) -> Set[str]:
+    compounds, proteins, complexes = _entity_lists(payload)
+    entities = _safe_dict(payload.setdefault("entities", {}))
+    return (
+        _entity_name_norms(compounds)
+        | _entity_name_norms(proteins)
+        | _entity_name_norms(complexes)
+        | _entity_name_norms(_safe_list(entities.get("nucleic_acids")))
+        | _entity_name_norms(_safe_list(entities.get("element_collections")))
+        | _entity_name_norms(_safe_list(entities.get("bounds")))
+    )
+
+
 def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """Move protein-catalysis interactions into reaction enzymes lists.
 
@@ -2419,7 +2683,9 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
     """
     rep = report if isinstance(report, dict) else _new_report()
     _, proteins, complexes = _entity_lists(payload)
-    protein_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+    protein_name_norms = _entity_name_norms(proteins)
+    complex_name_norms = _entity_name_norms(complexes)
+    protein_norms = protein_name_norms | complex_name_norms
 
     processes = _safe_dict(payload.setdefault("processes", {}))
     reactions = _safe_list(processes.get("reactions", []))
@@ -2470,17 +2736,13 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
         elif e1_norm in protein_norms:
             # Protein is clear but reaction name doesn't match exactly —
             # try fuzzy: does any reaction name appear as substring of e2?
-            for rnorm, ridx in rxn_norm_to_idx.items():
-                if rnorm and (rnorm in e2_norm or e2_norm in rnorm):
-                    protein_name = e1
-                    rxn_idx = ridx
-                    break
+            rxn_idx = _find_matching_reaction_idx(e2, rxn_norm_to_idx)
+            if rxn_idx is not None:
+                protein_name = e1
         elif e2_norm in protein_norms:
-            for rnorm, ridx in rxn_norm_to_idx.items():
-                if rnorm and (rnorm in e1_norm or e1_norm in rnorm):
-                    protein_name = e2
-                    rxn_idx = ridx
-                    break
+            rxn_idx = _find_matching_reaction_idx(e1, rxn_norm_to_idx)
+            if rxn_idx is not None:
+                protein_name = e2
 
         if protein_name is None or rxn_idx is None:
             kept_interactions.append(inter)
@@ -2502,7 +2764,7 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
         pnorm = _normalize(protein_name)
         if pnorm not in modifier_entity_norms:
             role = _modifier_role_from_relationship(relationship)
-            entity_type = "protein_complex" if ":" in protein_name else "protein"
+            entity_type = "protein_complex" if pnorm in complex_name_norms else "protein"
             new_mod: Dict[str, Any] = {
                 "entity": protein_name,
                 "entity_type": entity_type,
@@ -2531,10 +2793,72 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
     return payload
 
 
+def remove_process_phrase_interactions(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Remove interactions whose endpoints are processes rather than entities."""
+    rep = report if isinstance(report, dict) else _new_report()
+    processes = _safe_dict(payload.setdefault("processes", {}))
+    interactions = _safe_list(processes.get("interactions", []))
+    if not interactions:
+        return payload
+
+    entity_norms = _interaction_endpoint_entity_norms(payload)
+    kept: List[Dict[str, Any]] = []
+    removed = 0
+    for iidx, inter in enumerate(interactions):
+        if not isinstance(inter, dict):
+            kept.append(inter)
+            continue
+
+        e1 = _canonical(str(inter.get("entity_1", "")))
+        e2 = _canonical(str(inter.get("entity_2", "")))
+        e1_norm = _normalize(e1)
+        e2_norm = _normalize(e2)
+        e1_is_process = _is_process_endpoint(e1)
+        e2_is_process = _is_process_endpoint(e2)
+
+        if e1_is_process or e2_is_process:
+            removed += 1
+            if isinstance(rep.get("actions"), list):
+                rep["actions"].append({
+                    "type": "process_interaction_removed",
+                    "json_pointer": f"/processes/interactions/{iidx}",
+                    "entity_1": e1,
+                    "entity_2": e2,
+                    "relationship": _canonical(str(inter.get("relationship", ""))),
+                    "evidence": _canonical(str(inter.get("evidence", ""))),
+                    "reason": "process_phrase_endpoint",
+                })
+            continue
+
+        if (e1_norm and e1_norm not in entity_norms) or (e2_norm and e2_norm not in entity_norms):
+            removed += 1
+            if isinstance(rep.get("actions"), list):
+                rep["actions"].append({
+                    "type": "process_interaction_removed",
+                    "json_pointer": f"/processes/interactions/{iidx}",
+                    "entity_1": e1,
+                    "entity_2": e2,
+                    "relationship": _canonical(str(inter.get("relationship", ""))),
+                    "evidence": _canonical(str(inter.get("evidence", ""))),
+                    "reason": "undeclared_interaction_endpoint",
+                })
+            continue
+
+        kept.append(inter)
+
+    processes["interactions"] = kept
+    if removed and isinstance(rep.get("summary"), dict):
+        rep["summary"]["process_interactions_removed"] = (
+            int(rep["summary"].get("process_interactions_removed", 0)) + removed
+        )
+    return payload
+
+
 def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     reactions, _ = _process_lists(payload)
-    _, proteins, complexes = _entity_lists(payload)
+    compounds, proteins, complexes = _entity_lists(payload)
+    compound_norms = _entity_name_norms(compounds)
     protein_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
     scaffold_norms = _scaffold_norms(payload)
 
@@ -2564,6 +2888,9 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
         kept_inputs: List[str] = []
         for token in inputs:
             norm = _normalize(token)
+            if norm in compound_norms:
+                kept_inputs.append(token)
+                continue
             is_protein_token = norm in protein_norms or _is_protein_like(token, payload)
             if not is_protein_token:
                 kept_inputs.append(token)
@@ -3126,6 +3453,7 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     normalize_composites(data, report=report)
     rewrite_reactions_to_complex_states(data, report=report)
     cleanup_disallowed_complexes(data, report=report)
+    remove_stale_colon_fragment_proteins(data, report=report)
     ensure_autostates(data, report=report)
     # Backfill missing reaction compartments from participant entity locations (Issue 4).
     backfill_reaction_compartments(data, report=report)
@@ -3133,6 +3461,7 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     promote_interaction_enzymes(data, report=report)
     promote_catalysts(data, report=report)
     canonicalize_same_as_aliases(data, report=report)
+    remove_process_phrase_interactions(data, report=report)
     normalize_process_actor_schema(data, report=report)
     dedupe_processes(data, report=report)
     run_strict_post_normalization_gates(data, report=report, enforce_all_proteins_connected=True)

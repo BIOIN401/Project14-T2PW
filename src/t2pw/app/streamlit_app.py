@@ -7,6 +7,7 @@ import sys
 import time
 import shutil
 import copy
+import traceback
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
@@ -2980,6 +2981,8 @@ if st.session_state.get("pipeline_ready"):
                     st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
+                st.exception(exc)
+                st.session_state["post_pipeline_last_traceback"] = traceback.format_exc()
 
     _refinement_mapping_cache_path = _safe_dict(post_artifacts).get("mapping_cache_path")
     if not _refinement_mapping_cache_path:

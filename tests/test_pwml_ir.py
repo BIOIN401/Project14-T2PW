@@ -120,6 +120,74 @@ def test_reaction_ir_construction_refs_resolve() -> None:
     }
 
 
+def test_pwml_ir_skips_interaction_with_process_phrase_endpoint() -> None:
+    payload = _base_payload()
+    payload["processes"]["interactions"] = [
+        {
+            "entity_1": "Hexokinase",
+            "entity_2": "Glucose phosphorylation activation",
+            "relationship": "activates",
+        }
+    ]
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+
+    assert not report["errors"]
+    assert ir["processes"]["interactions"] == []
+    warning_codes = {warning["code"] for warning in report["warnings"]}
+    assert "interaction_process_endpoint_skipped" in warning_codes
+
+
+def test_pwml_ir_resolves_interaction_endpoint_by_parenthetical_compound_alias() -> None:
+    payload = _base_payload()
+    compound_name = "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0)"
+    payload["entities"]["compounds"].append({"name": compound_name, "pathbank_compound_id": 103})
+    payload["processes"]["interactions"] = [
+        {
+            "entity_1": "Hexokinase",
+            "entity_2": "OPC-8:0",
+            "relationship": "binding",
+        }
+    ]
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert not report["errors"]
+    assert validation["ok"], validation["errors"]
+    opc = next(compound for compound in ir["entities"]["compounds"] if compound["name"] == compound_name)
+    interaction = ir["processes"]["interactions"][0]
+    assert interaction["right"] == {"entity_type": "compound", "entity_key": opc["key"]}
+
+
+def test_required_contract_accepts_db_candidate_alias_in_compound_location() -> None:
+    payload = _base_payload()
+    payload["entities"]["compounds"].append(
+        {
+            "name": "NADP+",
+            "pathbank_compound_id": 143,
+            "mapping_meta": {
+                "candidates": [
+                    {"name": "NADP", "short_name": "NADP", "pathbank_compound_id": 143}
+                ]
+            },
+        }
+    )
+    payload["element_locations"] = {
+        "compound_locations": [
+            {"compound": "NADP", "biological_state": "cytosol"}
+        ]
+    }
+
+    report = validate_required_pwml_contract(payload, strict_db=True)
+
+    assert not any(
+        err["code"] == "location_entity_not_found"
+        and err.get("entity_name") == "NADP"
+        for err in report["errors"]
+    )
+
+
 def test_reused_reaction_enzyme_gets_distinct_complex_visual_locations() -> None:
     payload = _base_payload()
     payload["entities"]["compounds"].append(
@@ -350,9 +418,11 @@ def test_required_contract_protein_needs_species_and_uniprot_or_drugbank() -> No
     report = validate_required_pwml_contract(payload, strict_db=True)
 
     codes = {err["code"] for err in report["errors"]}
+    warning_codes = {warn["code"] for warn in report["warnings"]}
     assert "protein_missing_db_identity" not in codes
     assert "protein_species_missing_db_identity" not in codes
-    assert "protein_missing_external_identity" in codes
+    assert "protein_missing_external_identity" not in codes
+    assert "protein_missing_external_identity" in warning_codes
 
 
 def test_required_contract_accepts_protein_with_species_and_drugbank() -> None:

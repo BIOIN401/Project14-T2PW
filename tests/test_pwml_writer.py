@@ -434,28 +434,128 @@ def test_fallback_transport_visualization_populates_edges_and_transporter() -> N
     protein_loc = builder.section_items["protein-locations"][0]
     transporter_top = int(protein_loc["x"]) + int(protein_loc["width"]) // 2, int(protein_loc["y"])
     transporter_bottom = transporter_top[0], int(protein_loc["y"]) + int(protein_loc["height"])
-    assert int(protein_loc["y"]) == int(builder.args.height) // 2
+    bounds = sorted(builder.section_items["bound-visualizations"], key=lambda bound: int(bound["y"]))
+    boundary_y = int(bounds[0]["y"]) + int(bounds[0]["height"])
+    assert int(protein_loc["y"]) == boundary_y - int(protein_loc["height"]) // 2
     assert transporter_viz[0]["protein-location-id"] == protein_loc["id"]
 
     left_viz = next(item for item in compound_viz if item["side"] == "Left")
     left_loc = loc_by_id[left_viz["compound-location-id"]]
     left_edge = edge_by_id[left_viz["edge-id"]]
     left_anchor = int(left_loc["x"]) + int(left_loc["width"]) // 2, int(left_loc["y"]) + int(left_loc["height"])
-    assert left_edge["path"] == f"M{left_anchor[0]} {left_anchor[1]} L{transporter_top[0]} {transporter_top[1]}"
+    assert left_anchor[1] < boundary_y
+    assert left_edge["path"].startswith(f"M{left_anchor[0]} {left_anchor[1]} C")
+    assert left_edge["path"].endswith(f" {transporter_top[0]} {transporter_top[1]}")
     assert left_edge["visualization-template-id"] == 83
-    assert left_edge["option:end_arrow"] is True
-    assert "option:start_arrow" not in left_edge
+    assert '"end_arrow": true' in left_edge["options"]
 
     right_viz = next(item for item in compound_viz if item["side"] == "Right")
     right_loc = loc_by_id[right_viz["compound-location-id"]]
     right_edge = edge_by_id[right_viz["edge-id"]]
     right_anchor = int(right_loc["x"]) + int(right_loc["width"]) // 2, int(right_loc["y"])
-    assert right_edge["path"] == (
-        f"M{right_anchor[0]} {right_anchor[1]} L{transporter_bottom[0]} {transporter_bottom[1]}"
-    )
+    assert right_anchor[1] > boundary_y
+    assert right_edge["path"].startswith(f"M{right_anchor[0]} {right_anchor[1]} C")
+    assert right_edge["path"].endswith(f" {transporter_bottom[0]} {transporter_bottom[1]}")
     assert right_edge["visualization-template-id"] == 83
-    assert right_edge["option:start_arrow"] is True
-    assert "option:end_arrow" not in right_edge
+    assert '"start_arrow": true' in right_edge["options"]
+
+
+def test_structured_ir_transport_visualizations_reference_emitted_compound_locations() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [
+                {"name": "extracellular", "pathwhiz_id": 2},
+                {"name": "cytosol", "pathwhiz_id": 3},
+            ],
+            "compounds": [
+                {"name": "Glucose", "pathbank_compound_id": 101},
+                {"name": "Glucose 6-phosphate", "pathbank_compound_id": 102},
+            ],
+            "proteins": [
+                {"name": "Hexokinase", "pathbank_protein_id": 201},
+                {"name": "GLUT1", "pathbank_protein_id": 301},
+            ],
+        },
+        "biological_states": [
+            {"name": "extracellular", "species": "Homo sapiens", "subcellular_location": "extracellular"},
+            {"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"},
+        ],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "Glucose phosphorylation",
+                    "inputs": ["Glucose"],
+                    "outputs": ["Glucose 6-phosphate"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": "Hexokinase"}],
+                }
+            ],
+            "transports": [
+                {
+                    "name": "Glucose import",
+                    "cargo": "Glucose",
+                    "from_biological_state": "extracellular",
+                    "to_biological_state": "cytosol",
+                    "transporters": [{"protein": "GLUT1", "biological_state": "cytosol"}],
+                }
+            ],
+            "interactions": [],
+        },
+    }
+    ir, report = build_pwml_ir(payload, strict_db=False)
+    assert not report["errors"]
+
+    builder, root = _build_pwml_for_ir(ir)
+
+    emitted_location_ids = {
+        int(node.findtext("id"))
+        for node in root.findall(".//compound-locations/compound-location")
+    }
+    transport_location_refs = [
+        int(node.findtext("compound-location-id"))
+        for node in root.findall(
+            ".//transport_compound_visualizations/transport-compound-visualization"
+        )
+    ]
+    assert transport_location_refs
+    assert set(transport_location_refs) <= emitted_location_ids
+
+    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+    glucose_locations = [
+        loc
+        for loc in builder.section_items["compound-locations"]
+        if loc["compound-id"] == compound_id_by_name["Glucose"]
+    ]
+    assert len(glucose_locations) == 3
+    assert len({loc["id"] for loc in glucose_locations}) == 3
+
+    transport_viz = builder.section_items["transport-visualizations"][0]
+    transport_edges = {edge["id"]: edge for edge in builder.section_items["edges"]}
+    transport_locs = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+    transporter_loc_id = transport_viz["transport_transporter_visualizations"][0]["protein-location-id"]
+    transporter_loc = next(loc for loc in builder.section_items["protein-locations"] if loc["id"] == transporter_loc_id)
+    bounds = sorted(builder.section_items["bound-visualizations"], key=lambda bound: int(bound["y"]))
+    boundary_y = int(bounds[0]["y"]) + int(bounds[0]["height"])
+    transporter_top = int(transporter_loc["x"]) + int(transporter_loc["width"]) // 2, int(transporter_loc["y"])
+    transporter_bottom = transporter_top[0], int(transporter_loc["y"]) + int(transporter_loc["height"])
+    assert int(transporter_loc["y"]) == boundary_y - int(transporter_loc["height"]) // 2
+
+    left_viz = next(item for item in transport_viz["transport_compound_visualizations"] if item["side"] == "Left")
+    left_loc = transport_locs[left_viz["compound-location-id"]]
+    left_anchor = int(left_loc["x"]) + int(left_loc["width"]) // 2, int(left_loc["y"]) + int(left_loc["height"])
+    assert left_anchor[1] < boundary_y
+    assert transport_edges[left_viz["edge-id"]]["path"].startswith(f"M{left_anchor[0]} {left_anchor[1]} C")
+    assert transport_edges[left_viz["edge-id"]]["path"].endswith(f" {transporter_top[0]} {transporter_top[1]}")
+
+    right_viz = next(item for item in transport_viz["transport_compound_visualizations"] if item["side"] == "Right")
+    right_loc = transport_locs[right_viz["compound-location-id"]]
+    right_anchor = int(right_loc["x"]) + int(right_loc["width"]) // 2, int(right_loc["y"])
+    assert right_anchor[1] > boundary_y
+    assert transport_edges[right_viz["edge-id"]]["path"].startswith(f"M{right_anchor[0]} {right_anchor[1]} C")
+    assert transport_edges[right_viz["edge-id"]]["path"].endswith(
+        f" {transporter_bottom[0]} {transporter_bottom[1]}"
+    )
 
 
 def test_structured_ir_generated_biological_state_omits_pwbs_id_but_keeps_local_context_and_refs() -> None:
@@ -876,6 +976,81 @@ def test_writer_uses_per_reaction_locations_for_shared_compounds() -> None:
     }
 
 
+def test_structured_ir_reaction_layout_wraps_within_biological_state_region() -> None:
+    reaction_count = 5
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {
+                    "name": f"Substrate {idx}",
+                    "pathbank_compound_id": 3000 + idx * 2,
+                }
+                for idx in range(reaction_count)
+            ]
+            + [
+                {
+                    "name": f"Product {idx}",
+                    "pathbank_compound_id": 3001 + idx * 2,
+                }
+                for idx in range(reaction_count)
+            ],
+            "proteins": [
+                {
+                    "name": f"Grid enzyme {idx}",
+                    "pathbank_protein_id": 4000 + idx,
+                }
+                for idx in range(reaction_count)
+            ],
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {
+            "reactions": [
+                {
+                    "name": f"Grid reaction {idx}",
+                    "inputs": [f"Substrate {idx}"],
+                    "outputs": [f"Product {idx}"],
+                    "biological_state": "cytosol",
+                    "enzymes": [{"protein": f"Grid enzyme {idx}"}],
+                }
+                for idx in range(reaction_count)
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    bound = builder.section_items["bound-visualizations"][0]
+    bound_x = int(bound["x"])
+    bound_y = int(bound["y"])
+    bound_right = bound_x + int(bound["width"])
+    bound_bottom = bound_y + int(bound["height"])
+
+    enzyme_centers = {
+        (int(loc["x"]) + int(loc["width"]) // 2, int(loc["y"]) + int(loc["height"]) // 2)
+        for loc in builder.section_items["protein-locations"]
+    }
+    assert len(enzyme_centers) == reaction_count
+    assert len({center_y for _, center_y in enzyme_centers}) == 2
+
+    for section in ["compound-locations", "protein-locations"]:
+        for loc in builder.section_items[section]:
+            x = int(loc["x"])
+            y = int(loc["y"])
+            assert x >= bound_x
+            assert y >= bound_y
+            assert x + int(loc["width"]) <= bound_right
+            assert y + int(loc["height"]) <= bound_bottom
+
+    assert "geometry_canvas_shift_x" not in builder.layout_debug_counts
+    assert int(builder.args.width) <= 3240
+
+
 def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
     payload = {
         "entities": {
@@ -994,6 +1169,128 @@ def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
         and item["compound_name"] == "4a-Carbinolamine tetrahydrobiopterin"
         for item in builder.layout_debug_shared_intermediates
     )
+
+
+def test_writer_reuses_nonadjacent_linear_intermediate_but_keeps_cofactors_duplicated() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Arabidopsis thaliana", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "chloroplast", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "Linolenic acid", "pathbank_compound_id": 2001},
+                {"name": "OPDA", "pathbank_compound_id": 2002},
+                {"name": "OPC-8", "pathbank_compound_id": 2003},
+                {"name": "Side substrate", "pathbank_compound_id": 2004},
+                {"name": "Side product", "pathbank_compound_id": 2005},
+                {"name": "ATP", "pathbank_compound_id": 2006},
+                {"name": "ADP", "pathbank_compound_id": 2007},
+                {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 2008},
+                {"name": "Side substrate 2", "pathbank_compound_id": 2009},
+                {"name": "Side product 2", "pathbank_compound_id": 2010},
+                {"name": "Side substrate 3", "pathbank_compound_id": 2011},
+                {"name": "Side product 3", "pathbank_compound_id": 2012},
+            ],
+            "proteins": [
+                {"name": "OPDA synthase", "pathbank_protein_id": 3001},
+                {"name": "Unrelated enzyme", "pathbank_protein_id": 3002},
+                {"name": "OPR3", "pathbank_protein_id": 3003},
+                {"name": "Unrelated enzyme 2", "pathbank_protein_id": 3004},
+                {"name": "Unrelated enzyme 3", "pathbank_protein_id": 3005},
+            ],
+        },
+        "biological_states": [
+            {"name": "chloroplast", "species": "Arabidopsis thaliana", "subcellular_location": "chloroplast"}
+        ],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "OPDA formation",
+                    "inputs": ["Linolenic acid", "ATP"],
+                    "outputs": ["OPDA", "ADP", "Water"],
+                    "biological_state": "chloroplast",
+                    "enzymes": [{"protein": "OPDA synthase"}],
+                },
+                {
+                    "name": "Unrelated side reaction",
+                    "inputs": ["Side substrate"],
+                    "outputs": ["Side product"],
+                    "biological_state": "chloroplast",
+                    "enzymes": [{"protein": "Unrelated enzyme"}],
+                },
+                {
+                    "name": "Unrelated side reaction 2",
+                    "inputs": ["Side substrate 2"],
+                    "outputs": ["Side product 2"],
+                    "biological_state": "chloroplast",
+                    "enzymes": [{"protein": "Unrelated enzyme 2"}],
+                },
+                {
+                    "name": "Unrelated side reaction 3",
+                    "inputs": ["Side substrate 3"],
+                    "outputs": ["Side product 3"],
+                    "biological_state": "chloroplast",
+                    "enzymes": [{"protein": "Unrelated enzyme 3"}],
+                },
+                {
+                    "name": "OPC-8 formation",
+                    "inputs": ["OPDA", "ATP", "Water"],
+                    "outputs": ["OPC-8", "ADP"],
+                    "biological_state": "chloroplast",
+                    "enzymes": [{"protein": "OPR3"}],
+                },
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+
+    def compound_viz(reaction_idx: int, name: str, side: str) -> dict:
+        compound_id = compound_id_by_name[name]
+        reaction_viz = builder.section_items["reaction-visualizations"][reaction_idx]
+        return next(
+            rcv
+            for rcv in reaction_viz["reaction_compound_visualizations"]
+            if rcv["side"] == side and loc_by_id[rcv["compound-location-id"]]["compound-id"] == compound_id
+        )
+
+    opda_product = compound_viz(0, "OPDA", "Right")
+    opda_substrate = compound_viz(4, "OPDA", "Left")
+
+    # OPDA is produced by reaction 0 and consumed by reaction 4, which are not adjacent in
+    # reaction_sequence (unrelated reactions sit between them). The new logic should
+    # still reuse the producer's location for the consumer when the two reactions land in
+    # grid-adjacent cells (here, row 0 col 0 and row 1 col 0).
+    assert opda_product["compound-location-id"] == opda_substrate["compound-location-id"]
+
+    location_compound_ids = [loc["compound-id"] for loc in builder.section_items["compound-locations"]]
+    assert location_compound_ids.count(compound_id_by_name["OPDA"]) == 1
+
+    # ATP/ADP are currency compounds and must remain duplicated near each reaction that
+    # uses them, even though they appear as both an input/output of reactions 0 and 2.
+    assert location_compound_ids.count(compound_id_by_name["ATP"]) == 2
+    assert location_compound_ids.count(compound_id_by_name["ADP"]) == 2
+
+    # Water is also produced by reaction 0 and consumed (non-adjacently) by reaction 4, but
+    # it is a currency compound and must not be reused - it stays duplicated.
+    assert location_compound_ids.count(compound_id_by_name["Water"]) == 2
+    assert any(
+        item["action"] == "skipped_cofactor" and item["compound_name"] == "Water"
+        for item in builder.layout_debug_shared_intermediates
+    )
+
+    assert any(
+        item["action"] == "detected_shared_intermediate_nonadjacent"
+        and item["compound_name"] == "OPDA"
+        for item in builder.layout_debug_shared_intermediates
+    )
+    assert builder.layout_debug_counts["shared_intermediate_locations_reused"] >= 1
 
 
 def test_direct_writer_skips_reaction_compounds_in_initial_grid_only() -> None:

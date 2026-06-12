@@ -43,6 +43,23 @@ def _norm(value: Any) -> str:
     return re.sub(r"[^a-z0-9:+ ]+", " ", text).strip()
 
 
+_PROCESS_ENDPOINT_RE = re.compile(
+    r"(^|[\s:/_-])("
+    r"formation|activation|conversion|biosynthesis|synthesis|degradation|"
+    r"oxidation|reduction|transport|import|export|metabolism|"
+    r"beta[-\s]?oxidation|reaction|pathway|cycle|process"
+    r")($|[\s:/_-])",
+    flags=re.IGNORECASE,
+)
+
+
+def _is_process_endpoint(value: Any) -> bool:
+    text = _canonical(value)
+    if not text:
+        return False
+    return bool(_PROCESS_ENDPOINT_RE.search(text))
+
+
 def _to_int(value: Any) -> Optional[int]:
     if value is None:
         return None
@@ -108,6 +125,40 @@ def _dedupe_aliases(values: Iterable[Any]) -> List[str]:
         seen.add(norm)
         aliases.append(text)
     return aliases
+
+
+def _trailing_parenthetical_aliases(value: Any) -> List[str]:
+    text = _canonical(value)
+    aliases: List[str] = []
+    while text.endswith(")"):
+        start = text.rfind("(")
+        if start < 0:
+            break
+        alias = text[start + 1 : -1].strip()
+        if alias:
+            aliases.append(alias)
+        text = text[:start].rstrip()
+    return aliases
+
+
+def _entity_lookup_aliases(record: Dict[str, Any]) -> List[str]:
+    values: List[Any] = [
+        record.get("name"),
+        record.get("raw_name"),
+        record.get("short_name"),
+        record.get("common_name"),
+        *_safe_list(record.get("aliases")),
+        *_safe_list(record.get("synonyms")),
+    ]
+    for source in [_safe_dict(record.get("db_row")), _safe_dict(record.get("db_match"))]:
+        values.extend([source.get("name"), source.get("short_name")])
+    meta = _safe_dict(record.get("mapping_meta"))
+    for candidate in _safe_list(meta.get("candidates")):
+        if isinstance(candidate, dict):
+            values.extend([candidate.get("name"), candidate.get("short_name")])
+    for value in list(values):
+        values.extend(_trailing_parenthetical_aliases(value))
+    return _dedupe_aliases(values)
 
 
 def _create_default_key(value: Any) -> str:
@@ -276,11 +327,152 @@ def _dedupe_named_rows(
     return out, by_norm
 
 
+_AUTO_STATE_NAME = "__auto_state__"
+
+
+def _merge_duplicate_biological_states(
+    ir: Dict[str, Any],
+    state_by_name: Dict[str, Dict[str, Any]],
+    report: Dict[str, Any],
+) -> None:
+    """Collapse biological states that resolve to the same
+    (species, subcellular location, cell type, tissue) combination.
+
+    A biological state represents a *compartment*, not an individual entity.
+    PathWhiz can only draw reaction/transport visualizations between
+    participants that share a single biological-state id, so giving each
+    compound/protein its own state (e.g. "X in Streptomyces cytosol",
+    "Y in Streptomyces cytosol") makes those reactions impossible to render.
+    """
+    groups: Dict[Tuple[Optional[str], Optional[str], Optional[str], Optional[str]], List[Dict[str, Any]]] = {}
+    order: List[Tuple[Optional[str], Optional[str], Optional[str], Optional[str]]] = []
+    for state in ir["biological_states"]:
+        comp_key = (
+            state.get("species_key"),
+            state.get("subcellular_location_key"),
+            state.get("cell_type_key"),
+            state.get("tissue_key"),
+        )
+        if comp_key not in groups:
+            groups[comp_key] = []
+            order.append(comp_key)
+        groups[comp_key].append(state)
+
+    kept_states: List[Dict[str, Any]] = []
+    remap: Dict[str, str] = {}
+    for comp_key in order:
+        group = groups[comp_key]
+        if comp_key == (None, None, None, None) or len(group) == 1:
+            kept_states.extend(group)
+            continue
+        # Prefer the shortest name as the surviving state's name — per-entity
+        # names like "PntM in Streptomyces cytosol" are longer than the
+        # shared compartment name "Streptomyces cytosol".
+        primary = min(group, key=lambda s: len(s.get("name") or ""))
+        kept_states.append(primary)
+        for state in group:
+            if state is primary:
+                continue
+            remap[state["key"]] = primary["key"]
+            _add_issue(
+                report,
+                "warning",
+                "duplicate_biological_state_merged",
+                f"Biological state '{state.get('name')}' shares its species/location/cell-type/tissue "
+                f"with '{primary.get('name')}'; merged into the latter.",
+                pointer="/biological_states",
+                merged_state_key=state["key"],
+                surviving_state_key=primary["key"],
+            )
+
+    if not remap:
+        return
+
+    ir["biological_states"] = kept_states
+    kept_by_key = {state["key"]: state for state in kept_states}
+    for norm_name, state in list(state_by_name.items()):
+        new_key = remap.get(state["key"])
+        if new_key is not None:
+            state_by_name[norm_name] = kept_by_key[new_key]
+
+
+def _merge_duplicate_compound_entities(
+    ir: Dict[str, Any],
+    entity_by_key: Dict[str, Dict[str, Any]],
+    entity_by_name: Dict[str, List[Dict[str, Any]]],
+    report: Dict[str, Any],
+) -> None:
+    """Collapse compound entities that resolved to the same PathWhiz/PathBank
+    compound id (e.g. "Water" and "H2O" both resolving to compound 1420).
+
+    Without this, the writer emits two <compound> elements with the same
+    <id>, which PathWhiz rejects/mishandles on import.
+    """
+    compounds = ir["entities"]["compounds"]
+    seen_by_db_id: Dict[int, Dict[str, Any]] = {}
+    kept: List[Dict[str, Any]] = []
+    remap: Dict[str, str] = {}
+    for rec in compounds:
+        db_id = rec.get("pathwhiz_id")
+        if db_id is None:
+            kept.append(rec)
+            continue
+        primary = seen_by_db_id.get(db_id)
+        if primary is None:
+            seen_by_db_id[db_id] = rec
+            kept.append(rec)
+            continue
+        remap[rec["key"]] = primary["key"]
+        _add_issue(
+            report,
+            "warning",
+            "duplicate_compound_merged",
+            f"Compound '{rec.get('name')}' and '{primary.get('name')}' both resolved to PathWhiz "
+            f"compound id {db_id}; merged into '{primary.get('name')}'.",
+            pointer="/entities/compounds",
+            merged_entity_key=rec["key"],
+            surviving_entity_key=primary["key"],
+        )
+
+    if not remap:
+        return
+
+    ir["entities"]["compounds"] = kept
+    for old_key, new_key in remap.items():
+        primary_typed = entity_by_key.get(new_key)
+        if primary_typed is not None:
+            entity_by_key[old_key] = primary_typed
+
+    for records in entity_by_name.values():
+        for idx, rec in enumerate(records):
+            new_key = remap.get(rec.get("key"))
+            if new_key is not None and new_key in entity_by_key:
+                records[idx] = entity_by_key[new_key]
+
+
+def _rename_auto_states(ir: Dict[str, Any]) -> None:
+    """Replace the internal '__auto_state__' placeholder name with a
+    human-readable name before it reaches the PWML output."""
+    species_name_by_key = {row["key"]: row.get("name") for row in ir.get("species", []) if isinstance(row, dict)}
+    location_name_by_key = {
+        row["key"]: row.get("name") for row in ir.get("subcellular_locations", []) if isinstance(row, dict)
+    }
+    for state in ir["biological_states"]:
+        name = state.get("name") or ""
+        if _norm(name) != _norm(_AUTO_STATE_NAME):
+            continue
+        species_name = species_name_by_key.get(state.get("species_key"))
+        location_name = location_name_by_key.get(state.get("subcellular_location_key"))
+        parts = [part for part in [species_name, location_name] if part]
+        state["name"] = " ".join(parts) if parts else "Unlocalized"
+
+
 def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> None:
     for key in [
         "mapped_ids",
         "mapping_meta",
         "raw_name",
+        "aliases",
         "db_status",
         "db_id",
         "db_row",
@@ -715,19 +907,12 @@ def build_pwml_ir(
             typed = dict(rec)
             typed["entity_type"] = entity_type
             entity_by_key[typed["key"]] = typed
-            for alias in [
-                rec.get("name"),
-                rec.get("raw_name"),
-                rec.get("short_name"),
-                rec.get("common_name"),
-            ]:
+            for alias in _entity_lookup_aliases(rec):
                 alias_norm = _norm(alias)
                 if alias_norm:
                     entity_by_name[alias_norm].append(typed)
-            for alias in _safe_list(rec.get("synonyms")):
-                alias_norm = _norm(alias)
-                if alias_norm:
-                    entity_by_name[alias_norm].append(typed)
+
+    _merge_duplicate_compound_entities(ir, entity_by_key, entity_by_name, report)
 
     proteins_by_key = {
         str(protein.get("key")): protein
@@ -944,6 +1129,9 @@ def build_pwml_ir(
             )
         ir["biological_states"].append(state)
         state_by_name[_norm(name)] = state
+
+    _merge_duplicate_biological_states(ir, state_by_name, report)
+    _rename_auto_states(ir)
 
     default_bs_key = ir["biological_states"][0]["key"] if ir["biological_states"] else None
 
@@ -1274,6 +1462,22 @@ def build_pwml_ir(
             role = _canonical(mod.get("role")).lower()
             if role in {"catalyst", "activator", "inhibitor", "enzyme"}:
                 enzyme_sources.append(mod)
+
+        # The same catalyst is often listed in both "enzymes" and "modifiers"
+        # (e.g. an LLM extraction emits "ObaG complex" as catalyst in both
+        # lists). Dedupe by (normalized name, role) so it isn't turned into
+        # two separate enzyme entries / visualizations for one reaction.
+        seen_enzyme_sources: set = set()
+        deduped_enzyme_sources: List[Any] = []
+        for actor in enzyme_sources:
+            name, _hint, role = _actor_name_and_hint(actor)
+            dedupe_key = (_norm(name), role or "catalyst")
+            if dedupe_key in seen_enzyme_sources:
+                continue
+            seen_enzyme_sources.add(dedupe_key)
+            deduped_enzyme_sources.append(actor)
+        enzyme_sources = deduped_enzyme_sources
+
         for eidx, actor in enumerate(enzyme_sources):
             name, hint, role = _actor_name_and_hint(actor)
             if not name:
@@ -1475,6 +1679,17 @@ def build_pwml_ir(
             continue
         left_name = _canonical(raw.get("left") or raw.get("entity_1") or raw.get("source"))
         right_name = _canonical(raw.get("right") or raw.get("entity_2") or raw.get("target"))
+        if _is_process_endpoint(left_name) or _is_process_endpoint(right_name):
+            _add_issue(
+                report,
+                "warning",
+                "interaction_process_endpoint_skipped",
+                "Interaction skipped because one endpoint is a process phrase, not an entity.",
+                pointer=f"/processes/interactions/{iidx}",
+                left=left_name,
+                right=right_name,
+            )
+            continue
         left_entity = resolve_entity(left_name, "interaction", f"/processes/interactions/{iidx}/entity_1")
         right_entity = resolve_entity(right_name, "interaction", f"/processes/interactions/{iidx}/entity_2")
         interaction_index += 1
@@ -1738,13 +1953,16 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
     for bucket in ENTITY_BUCKETS.values():
         for e in _safe_list(entities.get(bucket)):
             if isinstance(e, dict):
+                alias_norms = {_norm(alias) for alias in _entity_lookup_aliases(e)}
+                alias_norms.discard("")
+                all_entity_names.update(alias_norms)
                 n = _canonical(e.get("name"))
+                name_norm = _norm(n)
                 if n:
-                    all_entity_names.add(_norm(n))
                     if bucket == "proteins":
-                        protein_names.add(_norm(n))
+                        protein_names.update(alias_norms or {name_norm})
                     if bucket == "protein_complexes":
-                        protein_complex_names.add(_norm(n))
+                        protein_complex_names.update(alias_norms or {name_norm})
                 k = e.get("key")
                 if k:
                     all_entity_keys.add(k)
@@ -1792,7 +2010,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 entity_name=pname,
             )
         if not protein_external_id(prot):
-            err(
+            warn(
                 "protein_missing_external_identity",
                 f"Protein '{pname}' is missing a UniProt or DrugBank identifier.",
                 f"/entities/proteins/{idx}",

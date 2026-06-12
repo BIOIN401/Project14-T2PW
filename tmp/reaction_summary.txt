@@ -1,68 +1,124 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: ObaG-catalysed retro-aldol/aldol formation of AHNB
-  Reactants: L-threonine [P. fluorescens cytosol], 4-nitrophenylacetaldehyde [P. fluorescens cytosol]
-  Products:  AHNB [P. fluorescens cytosol]
-  Modifier:  ObaG [P. fluorescens cytosol] (role=catalyst, confidence=1.0)
+REACTION 1: LOX oxidation of linolenic acid to 13-HPOT
+  Reactants: linolenic acid (18:3) [chloroplast_Arabidopsis_thaliana]
+  Products:  13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT) [chloroplast_Arabidopsis_thaliana]
+  Modifier:  LOX [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: NosL-catalysed rearrangement of L-Trp to MIA
-  Reactants: L-Trp [Streptomyces cytosol]
-  Products:  3-methyl-2-indolic acid [Streptomyces cytosol], formaldehyde [unknown], ammonia [unknown]
-  Modifier:  NosL [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+REACTION 2: LOX oxidation of hexadecatrienoic acid to 11-HPHT
+  Reactants: hexadecatrienoic acid (16:3) [chloroplast_Arabidopsis_thaliana]
+  Products:  11(S)-hydroperoxy-hexadecatrienoic acid (11-HPHT) [chloroplast_Arabidopsis_thaliana]
+  Modifier:  LOX [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: NosI ATP-dependent adenylation of MIA
-  Reactants: 3-methyl-2-indolic acid [Streptomyces cytosol], ATP [unknown]
-  Products:  MIA-AMP [Streptomyces cytosol], PPi [unknown]
-  Modifier:  NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosL [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+REACTION 3: AOS dehydration of 13-HPOT to 12,13-EOT
+  Reactants: 13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT) [chloroplast_Arabidopsis_thaliana]
+  Products:  12,13(S)-epoxy-octadecatrienoic acid (12,13-EOT) [chloroplast_Arabidopsis_thaliana]
+  Modifier:  AOS [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: NosJ indoyl thiolation
-  Reactants: MIA-AMP [Streptomyces cytosol]
-  Products:  NosJ-S-indoyl thioester [Streptomyces cytosol], AMP [unknown]
-  Modifier:  NosJ [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+REACTION 4: AOS dehydration of 11-HPHT to 10,11-EHT
+  Reactants: 11(S)-hydroperoxy-hexadecatrienoic acid (11-HPHT) [chloroplast_Arabidopsis_thaliana]
+  Products:  10,11(S)-epoxy-hexadecatrienoic acid (10,11-EHT) [chloroplast_Arabidopsis_thaliana]
+  Modifier:  AOS [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0), AOC [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: NosK indoyl transfer to pentathiazolyl Cys
-  Reactants: NosJ-S-indoyl thioester [Streptomyces cytosol], linear pentathiazolyl nosiheptide intermediate [Streptomyces cytosol]
-  Products:  Cys-indoyl pentathiazolyl intermediate [Streptomyces cytosol], NosJ [Streptomyces cytosol]
-  Modifier:  NosK [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+REACTION 5: AOC cyclization of 12,13-EOT to OPDA
+  Reactants: 12,13(S)-epoxy-octadecatrienoic acid (12,13-EOT) [chloroplast_Arabidopsis_thaliana]
+  Products:  (9S,13S)-12-oxophytodienoic acid (OPDA) [chloroplast_Arabidopsis_thaliana]
+  Modifier:  AOC [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: NosN C4 methylation and ester ring closure to nosiheptide
-  Reactants: Cys-indoyl pentathiazolyl intermediate [Streptomyces cytosol], SAM [unknown]
-  Products:  nosiheptide [Streptomyces cytosol]
-  Modifier:  NosN [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+REACTION 6: AOC cyclization of 10,11-EHT to dnOPDA
+  Reactants: 10,11(S)-epoxy-hexadecatrienoic acid (10,11-EHT) [chloroplast_Arabidopsis_thaliana]
+  Products:  (7S,11S)-dinor-OPDA (dnOPDA) [chloroplast_Arabidopsis_thaliana]
+  Modifier:  AOC [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0), AOS [chloroplast_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: ObaG-catalysed retro-aldol/aldol formation of AHNB
-  Reactants: L-threonine [P. fluorescens cytosol], 4-nitrophenylacetaldehyde [P. fluorescens cytosol]
-  Products:  AHNB [P. fluorescens cytosol], glycine [P. fluorescens cytosol]
-  Modifier:  ObaG [P. fluorescens cytosol] (role=catalyst, confidence=1.0)
+REACTION 7: OPR3 reduction of OPDA to OPC-8:0
+  Reactants: (9S,13S)-12-oxophytodienoic acid (OPDA) [chloroplast_Arabidopsis_thaliana]
+  Products:  3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0) [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPR3 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: Obafluorin assembly from AHNB and 2,3-dihydroxybenzoic acid
-  Reactants: AHNB [P. fluorescens cytosol], 2,3-dihydroxybenzoic acid [P. fluorescens cytosol]
-  Products:  obafluorin [P. fluorescens cytosol]
+REACTION 8: OPR3 reduction of dnOPDA to OPC-6:0
+  Reactants: (7S,11S)-dinor-OPDA (dnOPDA) [chloroplast_Arabidopsis_thaliana]
+  Products:  3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid (OPC-6:0) [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPR3 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 9: OPCL1 activation of OPC-8:0 to OPC-8:0-CoA
+  Reactants: 3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0) [peroxisome_Arabidopsis_thaliana]
+  Products:  OPC-8:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPCL1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 10: OPCL1 activation of OPC-6:0 to OPC-6:0-CoA
+  Reactants: 3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid (OPC-6:0) [peroxisome_Arabidopsis_thaliana]
+  Products:  OPC-6:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPCL1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 11: ACX1 beta-oxidation of OPC-8:0-CoA to OPC-6:0-CoA
+  Reactants: OPC-8:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Products:  OPC-6:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Modifier:  ACX1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0), AIM1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 12: AIM1 beta-oxidation of OPC-6:0-CoA to OPC-4:0-CoA
+  Reactants: OPC-6:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Products:  OPC-4:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Modifier:  AIM1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0), ACX1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0), KAT2 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 13: KAT2 beta-oxidation of OPC-4:0-CoA to JA-CoA
+  Reactants: OPC-4:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Products:  jasmonoyl-CoA (JA-CoA) [peroxisome_Arabidopsis_thaliana]
+  Modifier:  KAT2 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: Hydrolysis of JA-CoA to JA
+  Reactants: jasmonoyl-CoA (JA-CoA) [peroxisome_Arabidopsis_thaliana]
+  Products:  jasmonic acid (JA) [peroxisome_Arabidopsis_thaliana]
   Modifier:  MISSING
   QA flags:  none
 
-REACTION 9: ObaG PLP-dependent retro-aldol/aldol formation of AHNB
-  Reactants: L-threonine [P. fluorescens cytosol], 4-nitrophenylacetaldehyde [P. fluorescens cytosol], pyridoxal phosphate [P. fluorescens cytosol]
-  Products:  AHNB [P. fluorescens cytosol], pyridoxal phosphate [P. fluorescens cytosol]
-  Modifier:  ObaG [P. fluorescens cytosol] (role=catalyst, confidence=1.0)
-  QA flags:  transport_like — same species appear as both input and output
-
-REACTION 10: NosN class C rSAM methylenation and ester ring closure
-  Reactants: Cys-indoyl pentathiazolyl intermediate [Streptomyces cytosol], SAM [unknown]
-  Products:  methylene radical pentathiazolyl intermediate [Streptomyces cytosol]
-  Modifier:  NosN [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+REACTION 15: OPCL1 activation of OPC-8:0 to OPC-8:0-CoA using ATP and CoA
+  Reactants: 3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0) [peroxisome_Arabidopsis_thaliana], ATP [peroxisome_Arabidopsis_thaliana], CoA [peroxisome_Arabidopsis_thaliana]
+  Products:  OPC-8:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPCL1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 11: NosN ester bond closure forming nosiheptide
-  Reactants: methylene radical pentathiazolyl intermediate [Streptomyces cytosol]
-  Products:  nosiheptide [Streptomyces cytosol]
-  Modifier:  NosN [Streptomyces cytosol] (role=catalyst, confidence=1.0), NosI [Streptomyces cytosol] (role=catalyst, confidence=1.0)
+REACTION 16: OPCL1 activation of OPC-6:0 to OPC-6:0-CoA using ATP and CoA
+  Reactants: 3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid (OPC-6:0) [peroxisome_Arabidopsis_thaliana], ATP [peroxisome_Arabidopsis_thaliana], CoA [peroxisome_Arabidopsis_thaliana]
+  Products:  OPC-6:0-CoA [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPCL1 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 17: OPR3 reduction of OPDA to OPC-8:0 using NADPH
+  Reactants: (9S,13S)-12-oxophytodienoic acid (OPDA) [chloroplast_Arabidopsis_thaliana], NADPH [peroxisome_Arabidopsis_thaliana]
+  Products:  3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0) [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPR3 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 18: OPR3 reduction of dnOPDA to OPC-6:0 using NADPH
+  Reactants: (7S,11S)-dinor-OPDA (dnOPDA) [chloroplast_Arabidopsis_thaliana], NADPH [peroxisome_Arabidopsis_thaliana]
+  Products:  3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid (OPC-6:0) [peroxisome_Arabidopsis_thaliana]
+  Modifier:  OPR3 [peroxisome_Arabidopsis_thaliana] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 1: CTS transport of OPDA from chloroplast to peroxisome
+  From: chloroplast_Arabidopsis_thaliana
+  To:   peroxisome_Arabidopsis_thaliana
+  Cargo: (9S,13S)-12-oxophytodienoic acid (OPDA) [chloroplast_Arabidopsis_thaliana]
+  Transporter: CTS [peroxisome_Arabidopsis_thaliana] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 2: CTS transport of dnOPDA from chloroplast to peroxisome
+  From: chloroplast_Arabidopsis_thaliana
+  To:   peroxisome_Arabidopsis_thaliana
+  Cargo: (7S,11S)-dinor-OPDA (dnOPDA) [chloroplast_Arabidopsis_thaliana]
+  Transporter: CTS [peroxisome_Arabidopsis_thaliana] (role=transporter, confidence=1.0)
   QA flags:  none

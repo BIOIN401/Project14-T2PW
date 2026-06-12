@@ -17,6 +17,7 @@ from t2pw.mapping.map_ids import (  # noqa: E402
     _extract_aliases_from_literature_text,
     _extract_uniprot_candidates,
     _map_protein_with_strategy,
+    _promote_cached_exact_reviewed_uniprot_result,
     _reconcile_components_against_local_proteins,
     _rewrite_reaction_protein_enzymes_to_complexes,
     map_protein_uniprot,
@@ -169,6 +170,42 @@ class _NocBDomainUniProtClient:
                         "genes": [{"geneName": {"value": "NocB"}}],
                         "organism": {"scientificName": "Nocardia uniformis subsp. tsuyamanensis"},
                     }
+                ]
+            }
+        )
+
+
+class _ExactReviewedTieUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if 'gene:"OPCL1"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "Q84P21",
+                        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+                        "proteinDescription": {
+                            "recommendedName": {"fullName": {"value": "OPC-8:0 CoA ligase 1"}},
+                        },
+                        "genes": [{"geneName": {"value": "OPCL1"}}],
+                        "organism": {"scientificName": "Arabidopsis thaliana"},
+                    },
+                    {
+                        "primaryAccession": "A0A0000000",
+                        "entryType": "UniProtKB unreviewed (TrEMBL)",
+                        "proteinDescription": {
+                            "recommendedName": {"fullName": {"value": "OPC-8:0 CoA ligase-like protein"}},
+                        },
+                        "genes": [{"geneName": {"value": "OPCL1"}}],
+                        "organism": {"scientificName": "Arabidopsis thaliana"},
+                    },
                 ]
             }
         )
@@ -420,6 +457,46 @@ def test_uniprot_candidate_parser_uses_submission_names_and_unreviewed_flag() ->
     assert result[0]["protein_name"] == "Threonine aldolase"
     assert result[0]["reviewed"] is False
     assert result[0]["score"] == 0.8
+
+
+def test_uniprot_mapping_accepts_exact_reviewed_match_over_close_unreviewed_duplicate() -> None:
+    client = _ExactReviewedTieUniProtClient()
+
+    result = map_protein_uniprot(client, "OPCL1", "Arabidopsis thaliana")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q84P21"
+    assert result["confidence"] == 0.85
+    assert result["chosen_rule"] == "exact_reviewed_match"
+    assert result["candidates"][1]["score"] == 0.8
+
+
+def test_cached_uniprot_ambiguous_result_promotes_exact_reviewed_match() -> None:
+    result = _promote_cached_exact_reviewed_uniprot_result(
+        {
+            "status": "unmapped",
+            "reason": "ambiguous",
+            "confidence": 0.85,
+            "candidates": [
+                {
+                    "accession": "Q84P21",
+                    "protein_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+                    "reviewed": True,
+                    "score": 0.85,
+                },
+                {
+                    "accession": "A0A0000000",
+                    "protein_name": "OPC-8:0 CoA ligase1",
+                    "reviewed": False,
+                    "score": 0.8,
+                },
+            ],
+        }
+    )
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q84P21"
+    assert result["chosen_rule"] == "exact_reviewed_match"
 
 
 def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:

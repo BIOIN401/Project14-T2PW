@@ -47,6 +47,10 @@ SAME HARD RULES APPLY
 • No composite entity names. No empty placeholder objects.
 • Do not add taxonomy/ontology IDs or compartments not supported by the text.
 • Do not duplicate additions: same inputs+outputs+modifiers = same reaction.
+• Interaction endpoints must be real entities only. Never put process/event phrases
+  such as "X formation", "X activation", "Y conversion", "Z biosynthesis",
+  "A degradation", "transport", "reaction", "pathway", "cycle", or "process"
+  in entity_1/entity_2; use them only as reaction names or evidence.
 • Mark all additions: confidence 0.0–1.0, provenance "inferred".
 
 ════════════════════════════════════════════════════════════

@@ -105,6 +105,13 @@ scope_membership:   core | anaplerotic | cataplerotic | auxiliary | out_of_scope
 confidence:         1.0 for extracted, 0.0–1.0 for inferred
 provenance:         extracted | enriched | inferred
 
+Interaction endpoints must be real entities only. Never put process/event phrases
+such as "X formation", "X activation", "Y conversion", "Z biosynthesis",
+"A degradation", "transport", "reaction", "pathway", "cycle", or "process" in
+entity_1/entity_2. If a protein catalyzes a process, model it as a reaction with
+compound inputs/outputs and put the protein/protein_complex in modifiers[] with
+role "catalyst"; use the process phrase only as the reaction name or evidence.
+
 ════════════════════════════════════════════════════════════
 OUTPUT JSON SCHEMA (must match exactly)
 Output ONLY this JSON object. No markdown, no code fences, no extra text.

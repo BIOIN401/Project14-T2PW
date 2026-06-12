@@ -17,6 +17,7 @@ from t2pw.sbml.json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species
 from t2pw.mapping.map_ids import route_entity_for_mapping  # noqa: E402
 from t2pw.pipeline.qa_graph import build_graph, connected_components  # noqa: E402
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
+    apply_biochemical_aliases,
     attach_transporters_from_evidence,
     canonicalize_same_as_aliases,
     cleanup_disallowed_complexes,
@@ -25,6 +26,9 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     normalize_composites,
     normalize_process_actor_schema,
     promote_catalysts,
+    promote_interaction_enzymes,
+    remove_stale_colon_fragment_proteins,
+    remove_process_phrase_interactions,
     rewrite_reactions_to_complex_states,
     run_strict_post_normalization_gates,
 )
@@ -146,6 +150,8 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "entities_added_as_compounds": 0,
             "entities_added_as_proteins": 0,
             "catalysts_promoted_to_enzymes": 0,
+            "interaction_enzymes_promoted": 0,
+            "process_interactions_removed": 0,
             "scaffold_inputs_added": 0,
             "scaffold_in_modifiers_count": 0,
             "n_plus_tokens_remaining": 0,
@@ -165,6 +171,8 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "n_aliases_rewritten": 0,
             "n_entities_deduped": 0,
             "n_single_protein_complexes_removed": 0,
+            "compound_shadowed_complexes_removed": 0,
+            "stale_colon_fragment_proteins_removed": 0,
             "alias_example_mappings": [],
         },
         "actions": [],
@@ -173,10 +181,13 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     normalize_composites(data, report=report)
     rewrite_reactions_to_complex_states(data, report=report)
     cleanup_disallowed_complexes(data, report=report)
+    remove_stale_colon_fragment_proteins(data, report=report)
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
+    promote_interaction_enzymes(data, report=report)
     promote_catalysts(data, report=report)
     canonicalize_same_as_aliases(data, report=report)
+    remove_process_phrase_interactions(data, report=report)
     normalize_process_actor_schema(data, report=report)
     dedupe_processes(data, report=report)
     run_strict_post_normalization_gates(
@@ -500,6 +511,286 @@ def test_alias_enzyme_names_canonicalized_and_attached() -> None:
     alias_stats = report.get("summary", {}).get("alias_canonicalization", {})
     assert int(alias_stats.get("n_same_as_groups", 0)) >= 1
     assert int(alias_stats.get("n_aliases_rewritten", 0)) >= 1
+
+
+def test_registered_colon_compound_is_not_rewritten_as_protein_complex() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "substrate"}, {"name": "OPC-8:0-CoA"}],
+            "proteins": [],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cytosol"}],
+        },
+        "biological_states": [{"name": "cyto_state", "subcellular_location": "cytosol"}],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "substrate", "biological_state": "cyto_state"},
+                {"compound": "OPC-8:0-CoA", "biological_state": "cyto_state"},
+            ],
+            "protein_locations": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "R_opc",
+                    "inputs": ["substrate"],
+                    "outputs": ["OPC-8:0-CoA"],
+                    "biological_state": "cyto_state",
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    normalized, _ = _run_normalization(payload)
+
+    protein_names = {
+        str(row.get("name") or "").strip()
+        for row in normalized["entities"]["proteins"]
+        if isinstance(row, dict)
+    }
+    complex_names = {
+        str(row.get("name") or "").strip()
+        for row in normalized["entities"]["protein_complexes"]
+        if isinstance(row, dict)
+    }
+    compound_names = {
+        str(row.get("name") or "").strip()
+        for row in normalized["entities"]["compounds"]
+        if isinstance(row, dict)
+    }
+    assert "OPC-8" not in protein_names
+    assert "OPC-8:0-CoA" not in complex_names
+    assert "OPC-8:0-CoA" in compound_names
+    assert normalized["processes"]["reactions"][0]["outputs"] == ["OPC-8:0-CoA"]
+
+
+def test_stale_colon_lipid_complex_artifacts_are_repaired_as_compounds() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "OPC-6:0"}, {"name": "FAD"}],
+            "proteins": [{"name": "OPC-6"}],
+            "protein_complexes": [
+                {
+                    "name": "OPC-6:0-CoA enoyl intermediate",
+                    "components": ["OPC-6", "0-CoA enoyl intermediate"],
+                }
+            ],
+            "subcellular_locations": [{"name": "peroxisome"}],
+        },
+        "biological_states": [{"name": "perox_state", "subcellular_location": "peroxisome"}],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "OPC-6:0", "biological_state": "perox_state"},
+                {"compound": "FAD", "biological_state": "perox_state"},
+            ],
+            "protein_locations": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "OPC-6 enoyl intermediate formation",
+                    "inputs": ["OPC-6", "FAD"],
+                    "outputs": ["OPC-6:0-CoA enoyl intermediate"],
+                    "biological_state": "perox_state",
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    normalized, report = _run_normalization(payload)
+
+    protein_names = {
+        str(row.get("name") or "").strip()
+        for row in normalized["entities"]["proteins"]
+        if isinstance(row, dict)
+    }
+    complex_names = {
+        str(row.get("name") or "").strip()
+        for row in normalized["entities"]["protein_complexes"]
+        if isinstance(row, dict)
+    }
+    compound_names = {
+        str(row.get("name") or "").strip()
+        for row in normalized["entities"]["compounds"]
+        if isinstance(row, dict)
+    }
+    reaction = normalized["processes"]["reactions"][0]
+
+    assert "OPC-6" not in protein_names
+    assert "OPC-6:0-CoA enoyl intermediate" not in complex_names
+    assert {"OPC-6", "OPC-6:0-CoA enoyl intermediate"} <= compound_names
+    assert reaction["inputs"] == ["OPC-6", "FAD"]
+    assert reaction["outputs"] == ["OPC-6:0-CoA enoyl intermediate"]
+    assert report["summary"]["stale_colon_fragment_proteins_removed"] == 1
+    assert report["summary"]["compound_shadowed_complexes_removed"] == 1
+
+
+def test_process_phrase_catalysis_interaction_is_promoted_to_reaction_modifier() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "OPC-6:0"}, {"name": "OPC-6:0-CoA"}],
+            "proteins": [{"name": "OPCL1"}],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cytosol"}],
+        },
+        "biological_states": [{"name": "cyto_state", "subcellular_location": "cytosol"}],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "OPC-6:0", "biological_state": "cyto_state"},
+                {"compound": "OPC-6:0-CoA", "biological_state": "cyto_state"},
+            ],
+            "protein_locations": [{"protein": "OPCL1", "biological_state": "cyto_state"}],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "OPC-6:0-CoA formation",
+                    "inputs": ["OPC-6:0"],
+                    "outputs": ["OPC-6:0-CoA"],
+                    "biological_state": "cyto_state",
+                }
+            ],
+            "transports": [],
+            "interactions": [
+                {
+                    "entity_1": "OPCL1",
+                    "entity_2": "OPC-6:0-CoA formation",
+                    "relationship": "catalyzes",
+                    "evidence": "OPCL1 catalyzes OPC-6:0-CoA formation.",
+                }
+            ],
+        },
+    }
+
+    normalized, report = _run_normalization(payload)
+
+    assert normalized["processes"]["interactions"] == []
+    reaction = normalized["processes"]["reactions"][0]
+    assert reaction["inputs"] == ["OPC-6:0"]
+    assert reaction["outputs"] == ["OPC-6:0-CoA"]
+    assert reaction["modifiers"] == [
+        {
+            "entity": "OPCL1",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "OPCL1 catalyzes OPC-6:0-CoA formation.",
+            "confidence": 1.0,
+            "provenance": "inferred",
+        }
+    ]
+    assert report["summary"]["interaction_enzymes_promoted"] == 1
+
+
+def test_process_phrase_interactions_are_removed_but_entity_interactions_remain() -> None:
+    payload = {
+        "entities": {
+            "compounds": [],
+            "proteins": [{"name": "Protein A"}, {"name": "Protein B"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "interactions": [
+                {"entity_1": "Protein A", "entity_2": "Protein B", "relationship": "binding"},
+                {"entity_1": "Protein A", "entity_2": "Protein B activation", "relationship": "activates"},
+                {"entity_1": "Protein A", "entity_2": "Undeclared entity", "relationship": "binding"},
+            ]
+        },
+    }
+    report = {"summary": {"process_interactions_removed": 0}, "actions": []}
+
+    remove_process_phrase_interactions(payload, report=report)
+
+    assert payload["processes"]["interactions"] == [
+        {"entity_1": "Protein A", "entity_2": "Protein B", "relationship": "binding"}
+    ]
+    assert report["summary"]["process_interactions_removed"] == 2
+    reasons = [action["reason"] for action in report["actions"]]
+    assert reasons == ["process_phrase_endpoint", "undeclared_interaction_endpoint"]
+
+
+def test_parenthetical_compound_alias_counts_as_declared_interaction_endpoint() -> None:
+    payload = {
+        "entities": {
+            "compounds": [
+                {
+                    "name": "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid (OPC-6:0)"
+                }
+            ],
+            "proteins": [{"name": "Protein A"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "interactions": [
+                {"entity_1": "Protein A", "entity_2": "OPC-6:0", "relationship": "binding"}
+            ]
+        },
+    }
+    report = {"summary": {"process_interactions_removed": 0}, "actions": []}
+
+    remove_process_phrase_interactions(payload, report=report)
+
+    assert payload["processes"]["interactions"] == [
+        {"entity_1": "Protein A", "entity_2": "OPC-6:0", "relationship": "binding"}
+    ]
+    assert report["summary"]["process_interactions_removed"] == 0
+
+
+def test_biochemical_aliases_rewrite_compound_locations() -> None:
+    payload = {
+        "entities": {"compounds": [{"name": "NADP"}], "proteins": []},
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "NADP", "biological_state": "peroxisome"}
+            ]
+        },
+        "processes": {
+            "reactions": [
+                {"name": "Redox", "inputs": ["NADPH"], "outputs": ["NADP"]}
+            ],
+            "transports": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    apply_biochemical_aliases(payload, report=report)
+
+    assert payload["entities"]["compounds"][0]["name"] == "NADP+"
+    assert payload["element_locations"]["compound_locations"][0]["compound"] == "NADP+"
+    assert payload["processes"]["reactions"][0]["outputs"] == ["NADP+"]
+
+
+def test_same_as_canonicalizer_preserves_charged_cofactor_names() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "NADP+"}, {"name": "NADPH"}],
+            "proteins": [],
+            "protein_complexes": [],
+        },
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "NADP+", "biological_state": "peroxisome"}
+            ],
+            "protein_locations": [],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "Redox", "inputs": ["NADPH"], "outputs": ["NADP+"]}
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    canonicalize_same_as_aliases(payload, report=report)
+
+    assert payload["entities"]["compounds"][0]["name"] == "NADP+"
+    assert payload["element_locations"]["compound_locations"][0]["compound"] == "NADP+"
+    assert payload["processes"]["reactions"][0]["outputs"] == ["NADP+"]
 
 
 def test_reverse_alias_direction_still_attaches() -> None:

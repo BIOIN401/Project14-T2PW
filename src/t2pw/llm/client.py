@@ -102,6 +102,45 @@ def reset_token_stats() -> None:
     _token_stats["calls"] = 0
 
 
+class _MalformedLLMResponseError(RuntimeError):
+    """Raised when an OpenAI-compatible provider returns a success-shaped object without a chat choice."""
+
+
+def _response_debug_summary(resp: Any) -> str:
+    if resp is None:
+        return "response=None"
+    choices = getattr(resp, "choices", None)
+    choices_len = len(choices) if isinstance(choices, list) else "unknown"
+    parts = [
+        f"type={type(resp).__name__}",
+        f"id={getattr(resp, 'id', None)!r}",
+        f"model={getattr(resp, 'model', None)!r}",
+        f"object={getattr(resp, 'object', None)!r}",
+        f"choices_type={type(choices).__name__}",
+        f"choices_len={choices_len}",
+    ]
+    error = getattr(resp, "error", None)
+    if error is not None:
+        parts.append(f"error={error!r}")
+    return ", ".join(parts)
+
+
+def _first_chat_message(resp: Any) -> Any:
+    choices = getattr(resp, "choices", None)
+    if not choices:
+        raise _MalformedLLMResponseError(
+            "LLM provider returned no chat choices. "
+            f"{_response_debug_summary(resp)}"
+        )
+    message = getattr(choices[0], "message", None)
+    if message is None:
+        raise _MalformedLLMResponseError(
+            "LLM provider returned a choice without a message. "
+            f"{_response_debug_summary(resp)}"
+        )
+    return message
+
+
 # -----------------------------------------------------------------------------
 # Chat function (NOW supports response_json=True)
 # -----------------------------------------------------------------------------
@@ -144,13 +183,15 @@ def chat(
     spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
 
     last_err: Exception | None = None
+    tried_without_response_format = False
 
     for attempt in range(max_retries):
         try:
             resp = _client.chat.completions.create(**kwargs)
             _record_usage(resp)
             time.sleep(spacing)
-            return (resp.choices[0].message.content or "").strip()
+            message = _first_chat_message(resp)
+            return (message.content or "").strip()
 
         except AuthenticationError as e:
             raise RuntimeError(
@@ -178,6 +219,13 @@ def chat(
             # OpenAI SDK fails to parse a malformed HTTP response (e.g. local server
             # returned truncated or non-JSON body). Treat as transient and retry.
             last_err = e
+            time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+
+        except _MalformedLLMResponseError as e:
+            last_err = e
+            if response_json and "response_format" in kwargs and not tried_without_response_format:
+                tried_without_response_format = True
+                kwargs.pop("response_format", None)
             time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
 
     raise RuntimeError(f"LLM failed after {max_retries} retries. Last error: {last_err}")
@@ -246,7 +294,7 @@ def chat_with_tools(
 
     for _ in range(max_tool_rounds):
         resp = _call_once(working_messages, include_tools=True)
-        message = resp.choices[0].message
+        message = _first_chat_message(resp)
 
         if not message.tool_calls:
             return (message.content or "").strip()
@@ -280,4 +328,5 @@ def chat_with_tools(
 
     # Max rounds reached — force a final text response without tools
     final_resp = _call_once(working_messages, include_tools=False)
-    return (final_resp.choices[0].message.content or "").strip()
+    final_message = _first_chat_message(final_resp)
+    return (final_message.content or "").strip()

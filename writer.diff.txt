@@ -1,0 +1,766 @@
+diff --git a/src/t2pw/pwml/writer.py b/src/t2pw/pwml/writer.py
+index f0295c9..73470bc 100644
+--- a/src/t2pw/pwml/writer.py
++++ b/src/t2pw/pwml/writer.py
+@@ -572,6 +572,76 @@ def _grid_positions(
+     return coords
+ 
+ 
++def _clamp_int(value: int, lower: int, upper: int) -> int:
++    if upper < lower:
++        return lower
++    return max(lower, min(value, upper))
++
++
++def _region_bounds(region: Dict[str, Any]) -> Tuple[int, int, int, int]:
++    x = int(region.get("x") or 0)
++    y = int(region.get("y") or 0)
++    return x, y, x + int(region.get("w") or region.get("width") or 0), y + int(region.get("h") or region.get("height") or 0)
++
++
++def _transport_boundary_point(
++    source_region: Dict[str, Any],
++    target_region: Dict[str, Any],
++    fallback_x: int,
++    fallback_y: int,
++) -> Tuple[int, int]:
++    sx1, sy1, sx2, sy2 = _region_bounds(source_region)
++    tx1, ty1, tx2, ty2 = _region_bounds(target_region)
++    overlap_x1, overlap_x2 = max(sx1, tx1), min(sx2, tx2)
++    overlap_y1, overlap_y2 = max(sy1, ty1), min(sy2, ty2)
++
++    if sy2 <= ty1:
++        return _clamp_int(fallback_x, overlap_x1, overlap_x2), (sy2 + ty1) // 2
++    if ty2 <= sy1:
++        return _clamp_int(fallback_x, overlap_x1, overlap_x2), (ty2 + sy1) // 2
++    if sx2 <= tx1:
++        return (sx2 + tx1) // 2, _clamp_int(fallback_y, overlap_y1, overlap_y2)
++    if tx2 <= sx1:
++        return (tx2 + sx1) // 2, _clamp_int(fallback_y, overlap_y1, overlap_y2)
++    return fallback_x, fallback_y
++
++
++def _transport_endpoint_xy(
++    region: Dict[str, Any],
++    peer_region: Dict[str, Any],
++    center_x: int,
++    width: int,
++    height: int,
++    pad: int,
++) -> Tuple[int, int]:
++    rx1, ry1, rx2, ry2 = _region_bounds(region)
++    px1, py1, px2, py2 = _region_bounds(peer_region)
++    x = _clamp_int(center_x - width // 2, rx1 + pad, rx2 - pad - width)
++
++    if ry2 <= py1:
++        y = ry2 - pad - height
++    elif py2 <= ry1:
++        y = ry1 + pad
++    else:
++        peer_center_y = (py1 + py2) // 2
++        y = _clamp_int(peer_center_y - height // 2, ry1 + pad, ry2 - pad - height)
++    return x, y
++
++
++def _location_anchor_toward(loc: Dict[str, Any], target_x: int, target_y: int) -> Tuple[int, int]:
++    x = int(loc["x"])
++    y = int(loc["y"])
++    width = int(loc["width"])
++    height = int(loc["height"])
++    cx = x + width // 2
++    cy = y + height // 2
++    dx = target_x - cx
++    dy = target_y - cy
++    if abs(dx) * max(height, 1) > abs(dy) * max(width, 1):
++        return (x + width, cy) if dx >= 0 else (x, cy)
++    return (cx, y + height) if dy >= 0 else (cx, y)
++
++
+ _CANONICAL_MATCH_RULES: List[Tuple[str, str]] = [
+     ("extracellular", "extracellular"),
+     ("plasma membrane", "plasma membrane"),
+@@ -1588,25 +1658,25 @@ class DeterministicPwmlBuilder:
+                 continue
+ 
+             source_bs_id = int(first_compound.get("left-biological-state-id") or default_state_id)
++            target_bs_id = int(first_compound.get("right-biological-state-id") or default_state_id)
+             source_region = region_for(source_bs_id)
+-            membrane_y = int(source_region["y"] + source_region["h"])
+-            center_x = int(source_region["x"] + source_region["w"] // 2)
++            target_region = region_for(target_bs_id)
++            source_center_x = int(source_region["x"] + source_region["w"] // 2)
++            target_center_x = int(target_region["x"] + target_region["w"] // 2)
++            center_x = (source_center_x + target_center_x) // 2
+             center_x += (transport_idx - (len(transports) - 1) // 2) * rxn_step_x
+-            center_x = max(source_region["x"] + pad + protein_w // 2, center_x)
+-            center_x = min(source_region["x"] + source_region["w"] - pad - protein_w // 2, center_x)
+-
+-            transporter_x = center_x - protein_w // 2
+-            transporter_y = membrane_y
+-            transport_layouts[int(transport["id"])] = {
+-                "x": transporter_x,
+-                "y": transporter_y,
+-                "width": protein_w,
+-                "height": protein_h,
+-                "center-x": center_x,
+-            }
++            center_x = _clamp_int(
++                center_x,
++                max(source_region["x"], target_region["x"]) + pad + protein_w // 2,
++                min(
++                    source_region["x"] + source_region["w"],
++                    target_region["x"] + target_region["w"],
++                ) - pad - protein_w // 2,
++            )
+ 
+             compound_count = sum(1 for element in elements if str(element.get("element-type") or "") == "Compound")
+             compound_idx = 0
++            endpoint_midpoints: List[Tuple[int, int]] = []
+             for element in elements:
+                 if str(element.get("element-type") or "") != "Compound":
+                     continue
+@@ -1616,14 +1686,66 @@ class DeterministicPwmlBuilder:
+                 left_bs_id = int(element.get("left-biological-state-id") or default_state_id)
+                 right_bs_id = int(element.get("right-biological-state-id") or default_state_id)
+                 cargo_center_x = center_x + (compound_idx - (compound_count - 1) // 2) * node_spacing_y
++                left_region = region_for(left_bs_id)
++                right_region = region_for(right_bs_id)
+                 source_loc = ensure_compound_location(compound_id, left_bs_id)
+                 dest_loc = ensure_compound_location(compound_id, right_bs_id)
+-                source_loc["x"] = cargo_center_x - int(source_loc["width"]) // 2
+-                source_loc["y"] = membrane_y - int(source_loc["height"]) - pad
+-                dest_loc["x"] = cargo_center_x - int(dest_loc["width"]) // 2
+-                dest_loc["y"] = membrane_y + protein_h + pad
++                source_loc["x"], source_loc["y"] = _transport_endpoint_xy(
++                    left_region,
++                    right_region,
++                    cargo_center_x,
++                    int(source_loc["width"]),
++                    int(source_loc["height"]),
++                    pad,
++                )
++                dest_loc["x"], dest_loc["y"] = _transport_endpoint_xy(
++                    right_region,
++                    left_region,
++                    cargo_center_x,
++                    int(dest_loc["width"]),
++                    int(dest_loc["height"]),
++                    pad,
++                )
++                source_anchor = _location_anchor_toward(
++                    source_loc,
++                    int(dest_loc["x"]) + int(dest_loc["width"]) // 2,
++                    int(dest_loc["y"]) + int(dest_loc["height"]) // 2,
++                )
++                target_anchor = _location_anchor_toward(
++                    dest_loc,
++                    int(source_loc["x"]) + int(source_loc["width"]) // 2,
++                    int(source_loc["y"]) + int(source_loc["height"]) // 2,
++                )
++                endpoint_midpoints.append(
++                    (
++                        (source_anchor[0] + target_anchor[0]) // 2,
++                        (source_anchor[1] + target_anchor[1]) // 2,
++                    )
++                )
+                 compound_idx += 1
+ 
++            if endpoint_midpoints:
++                midpoint_x = sum(point[0] for point in endpoint_midpoints) // len(endpoint_midpoints)
++                midpoint_y = sum(point[1] for point in endpoint_midpoints) // len(endpoint_midpoints)
++            else:
++                midpoint_x, midpoint_y = center_x, int(source_region["y"] + source_region["h"])
++            transporter_center_x, transporter_center_y = _transport_boundary_point(
++                source_region,
++                target_region,
++                midpoint_x,
++                midpoint_y,
++            )
++            transporter_x = transporter_center_x - protein_w // 2
++            transporter_y = transporter_center_y - protein_h // 2
++            transport_layouts[int(transport["id"])] = {
++                "x": transporter_x,
++                "y": transporter_y,
++                "width": protein_w,
++                "height": protein_h,
++                "center-x": transporter_center_x,
++                "center-y": transporter_center_y,
++            }
++
+             transporters = transport.get("transport-transporters", [])
+             transporter_protein_ids: List[int] = []
+             for transporter in transporters if isinstance(transporters, list) else []:
+@@ -1639,7 +1761,7 @@ class DeterministicPwmlBuilder:
+                             transporter_protein_ids.append(protein_id)
+ 
+             total_w = len(transporter_protein_ids) * protein_w + max(0, len(transporter_protein_ids) - 1) * protein_gap_x
+-            x0 = center_x - total_w // 2 if transporter_protein_ids else transporter_x
++            x0 = transporter_center_x - total_w // 2 if transporter_protein_ids else transporter_x
+             for j, protein_id in enumerate(transporter_protein_ids):
+                 place_protein_location(
+                     protein_id,
+@@ -1973,18 +2095,20 @@ class DeterministicPwmlBuilder:
+                 for bs_id, side in [(left_bs_id, "Left"), (right_bs_id, "Right")]:
+                     loc = ensure_compound_location(compound_id, bs_id)
+                     location_id = int(loc["id"])
+-                    loc_x = int(loc["x"])
+-                    loc_y = int(loc["y"])
+-                    loc_w = int(loc["width"])
+-                    loc_h = int(loc["height"])
+                     edge_id = self.ids.next()
+                     if side == "Left":
+-                        anchor_x = loc_x + loc_w // 2
+-                        anchor_y = loc_y + loc_h
++                        anchor_x, anchor_y = _location_anchor_toward(
++                            loc,
++                            transporter_top_x,
++                            transporter_top_y,
++                        )
+                         x1, y1, x2, y2 = anchor_x, anchor_y, transporter_top_x, transporter_top_y
+                     else:
+-                        anchor_x = loc_x + loc_w // 2
+-                        anchor_y = loc_y
++                        anchor_x, anchor_y = _location_anchor_toward(
++                            loc,
++                            transporter_bottom_x,
++                            transporter_bottom_y,
++                        )
+                         x1, y1, x2, y2 = anchor_x, anchor_y, transporter_bottom_x, transporter_bottom_y
+                     path, cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
+                     edge = {
+@@ -2591,6 +2715,9 @@ class DeterministicPwmlBuilder:
+                     "id": mid,
+                     "entity_type": member.get("entity_type"),
+                     "process_key": transport.get("key"),
++                    "entity_key": member.get("entity_key"),
++                    "left_biological_state_key": member.get("left_biological_state_key"),
++                    "right_biological_state_key": member.get("right_biological_state_key"),
+                 }
+                 elements_out.append(
+                     {
+@@ -2859,6 +2986,9 @@ class DeterministicPwmlBuilder:
+         layout_product_gap = 51
+         layout_compound_gap_y = 30
+         layout_rxn_step_x = 800
++        layout_rxn_step_y = 360
++        layout_reaction_margin_x = 40
++        layout_reaction_margin_y = 40
+         layout_protein_w, layout_protein_h = 150, 70
+         layout_protein_gap_x = 10
+ 
+@@ -2886,6 +3016,19 @@ class DeterministicPwmlBuilder:
+             for reaction in process_items.get("reactions", [])
+             if isinstance(reaction, dict) and reaction.get("key") is not None
+         }
++        raw_transports_by_key = {
++            str(transport.get("key")): transport
++            for transport in process_items.get("transports", [])
++            if isinstance(transport, dict) and transport.get("key") is not None
++        }
++        raw_transport_element_by_key: Dict[str, Dict[str, Any]] = {}
++        for transport in raw_transports_by_key.values():
++            transport_elements = transport.get("transport_elements", [])
++            if not isinstance(transport_elements, list):
++                continue
++            for member in transport_elements:
++                if isinstance(member, dict) and member.get("key") is not None:
++                    raw_transport_element_by_key[str(member.get("key"))] = member
+         reaction_keys_by_state: Dict[str, List[str]] = defaultdict(list)
+         for reaction in process_items.get("reactions", []) if isinstance(process_items.get("reactions"), list) else []:
+             if not isinstance(reaction, dict):
+@@ -2895,23 +3038,146 @@ class DeterministicPwmlBuilder:
+             if reaction_key:
+                 reaction_keys_by_state[biological_state_key].append(reaction_key)
+ 
++        def base_location_for_member(member: Dict[str, Any], biological_state_key: str) -> Optional[Dict[str, Any]]:
++            entity_key = str(member.get("entity_key") or "")
++            member_state_key = str(member.get("biological_state_key") or biological_state_key)
++            base_loc_id = location_by_entity_state.get((entity_key, member_state_key))
++            if base_loc_id is None:
++                base_loc_id = lookup("locations", member.get("location_key"))
++            if base_loc_id is None:
++                return None
++            return loc_by_id.get(base_loc_id)
++
++        def reaction_member_dims(member: Dict[str, Any], loc: Dict[str, Any]) -> Tuple[int, int]:
++            info = entity_info(member.get("entity_key"))
++            if info and info.get("entity_type") == "compound":
++                template_id = _to_positive_int(info.get("template_id"))
++                if template_id is None:
++                    template_id = _to_positive_int(loc.get("visualization-template-id"))
++                return TEMPLATE_DIMS.get(template_id or 3, TEMPLATE_DIMS[3])
++            return int(loc["width"]), int(loc["height"])
++
++        def reaction_side_dims(
++            reaction: Dict[str, Any],
++            side_key: str,
++            biological_state_key: str,
++        ) -> List[Tuple[int, int]]:
++            members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
++            dims: List[Tuple[int, int]] = []
++            for member in members:
++                if not isinstance(member, dict):
++                    continue
++                base_loc = base_location_for_member(member, biological_state_key)
++                if base_loc is None:
++                    continue
++                dims.append(reaction_member_dims(member, base_loc))
++            return dims
++
++        def reaction_layout_extents(reaction_key: str, reaction: Dict[str, Any]) -> Dict[str, int]:
++            biological_state_key = str(reaction.get("biological_state_key") or "")
++            left_dims = reaction_side_dims(reaction, "left", biological_state_key)
++            right_dims = reaction_side_dims(reaction, "right", biological_state_key)
++
++            def stack_height(dims: List[Tuple[int, int]]) -> int:
++                if not dims:
++                    return 0
++                return sum(height for _, height in dims) + layout_compound_gap_y * (len(dims) - 1)
++
++            left_width = max((width for width, _ in left_dims), default=0)
++            right_width = max((width for width, _ in right_dims), default=0)
++            max_stack_height = max(stack_height(left_dims), stack_height(right_dims), layout_protein_h)
++            return {
++                "reaction-key": reaction_key,
++                "left": layout_protein_w // 2 + layout_substrate_gap + left_width,
++                "right": layout_protein_w // 2 + layout_product_gap + right_width,
++                "vertical": (max_stack_height + 1) // 2,
++            }
++
+         reaction_layout_by_key: Dict[str, Dict[str, int]] = {}
+         for biological_state_key, reaction_keys in reaction_keys_by_state.items():
+             region = ir_region_for_state(biological_state_key)
+             n_rxns = len(reaction_keys)
+-            enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * layout_rxn_step_x // 2
+-            enzyme_cy = max(region["y"] + region["h"] // 2, 360)
+-            for k, reaction_key in enumerate(reaction_keys):
+-                enzyme_cx = enzyme_cx_base + k * layout_rxn_step_x
+-                enzyme_x = enzyme_cx - layout_protein_w // 2
+-                enzyme_y = enzyme_cy - layout_protein_h // 2
+-                reaction_layout_by_key[reaction_key] = {
+-                    "enzyme-cx": enzyme_cx,
+-                    "enzyme-cy": enzyme_cy,
+-                    "enzyme-x": enzyme_x,
+-                    "enzyme-y": enzyme_y,
+-                    "compound-stack-cy": enzyme_cy,
+-                }
++            if n_rxns == 0:
++                continue
++            max_columns = max(1, region["w"] // layout_rxn_step_x)
++            columns = max(1, min(n_rxns, max_columns))
++            rows = math.ceil(n_rxns / columns)
++            layout_extents = {
++                reaction_key: reaction_layout_extents(reaction_key, raw_reactions_by_key.get(reaction_key, {}))
++                for reaction_key in reaction_keys
++            }
++
++            max_vertical_extent = max(
++                (item["vertical"] for item in layout_extents.values()),
++                default=layout_protein_h // 2,
++            )
++            min_cy = region["y"] + layout_reaction_margin_y + max_vertical_extent
++            max_cy = region["y"] + region["h"] - layout_reaction_margin_y - max_vertical_extent
++            region_cy = region["y"] + region["h"] // 2
++            if rows == 1:
++                row_centers = [_clamp_int(region_cy, min_cy, max_cy)]
++            elif max_cy <= min_cy:
++                row_centers = [region_cy for _ in range(rows)]
++            else:
++                row_step_y = min(layout_rxn_step_y, max(1, (max_cy - min_cy) // (rows - 1)))
++                row_span_y = row_step_y * (rows - 1)
++                first_row_cy = region_cy - row_span_y // 2
++                first_row_cy = _clamp_int(first_row_cy, min_cy, max_cy - row_span_y)
++                row_centers = [first_row_cy + row * row_step_y for row in range(rows)]
++
++            for row in range(rows):
++                row_start = row * columns
++                row_keys = reaction_keys[row_start : row_start + columns]
++                row_count = len(row_keys)
++                if row_count == 1:
++                    raw_centers = [region["x"] + region["w"] // 2]
++                else:
++                    row_span_x = (row_count - 1) * layout_rxn_step_x
++                    first_center_x = region["x"] + region["w"] // 2 - row_span_x // 2
++                    raw_centers = [first_center_x + col * layout_rxn_step_x for col in range(row_count)]
++
++                left_limit = region["x"] + layout_reaction_margin_x
++                right_limit = region["x"] + region["w"] - layout_reaction_margin_x
++                row_min_x = min(
++                    raw_centers[col] - layout_extents[row_keys[col]]["left"]
++                    for col in range(row_count)
++                )
++                row_max_x = max(
++                    raw_centers[col] + layout_extents[row_keys[col]]["right"]
++                    for col in range(row_count)
++                )
++                shift_x = 0
++                if row_min_x < left_limit:
++                    shift_x = left_limit - row_min_x
++                if row_max_x + shift_x > right_limit:
++                    shift_x -= row_max_x + shift_x - right_limit
++
++                for col, reaction_key in enumerate(row_keys):
++                    extents = layout_extents[reaction_key]
++                    min_cx = left_limit + extents["left"]
++                    max_cx = right_limit - extents["right"]
++                    raw_cx = raw_centers[col] + shift_x
++                    enzyme_cx = (
++                        region["x"] + region["w"] // 2
++                        if max_cx < min_cx
++                        else _clamp_int(raw_cx, min_cx, max_cx)
++                    )
++                    enzyme_cy = row_centers[row]
++                    min_member_cy = region["y"] + layout_reaction_margin_y + extents["vertical"]
++                    max_member_cy = region["y"] + region["h"] - layout_reaction_margin_y - extents["vertical"]
++                    if max_member_cy >= min_member_cy:
++                        enzyme_cy = _clamp_int(enzyme_cy, min_member_cy, max_member_cy)
++                    enzyme_x = enzyme_cx - layout_protein_w // 2
++                    enzyme_y = enzyme_cy - layout_protein_h // 2
++                    reaction_layout_by_key[reaction_key] = {
++                        "enzyme-cx": enzyme_cx,
++                        "enzyme-cy": enzyme_cy,
++                        "enzyme-x": enzyme_x,
++                        "enzyme-y": enzyme_y,
++                        "compound-stack-cy": enzyme_cy,
++                        "row": row,
++                        "col": col,
++                    }
+ 
+         def ensure_protein_location(protein_key: str, biological_state_key: str) -> Optional[int]:
+             loc_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
+@@ -3008,6 +3274,8 @@ class DeterministicPwmlBuilder:
+                 loc["height"] = str(layout_protein_h)
+ 
+         reaction_member_location_by_key: Dict[str, int] = {}
++        transport_member_location_by_key: Dict[Tuple[str, str], int] = {}
++        transport_layout_by_process_key: Dict[str, Dict[str, int]] = {}
+ 
+         def location_section_for_record(loc: Dict[str, Any]) -> Optional[str]:
+             if "compound-id" in loc:
+@@ -3058,14 +3326,28 @@ class DeterministicPwmlBuilder:
+                 reaction_member_location_by_key[member_key] = loc_id
+             return loc_id
+ 
+-        def reaction_member_dims(member: Dict[str, Any], loc: Dict[str, Any]) -> Tuple[int, int]:
+-            info = entity_info(member.get("entity_key"))
+-            if info and info.get("entity_type") == "compound":
+-                template_id = _to_positive_int(info.get("template_id"))
+-                if template_id is None:
+-                    template_id = _to_positive_int(loc.get("visualization-template-id"))
+-                return TEMPLATE_DIMS.get(template_id or 3, TEMPLATE_DIMS[3])
+-            return int(loc["width"]), int(loc["height"])
++        def add_transport_member_location(member: Dict[str, Any]) -> Optional[int]:
++            member_key = str(member.get("process_member_key") or "")
++            role = str(member.get("role") or "")
++            map_key = (member_key, role)
++            if not member_key or map_key in transport_member_location_by_key:
++                return transport_member_location_by_key.get(map_key)
++            base_loc_id = lookup("locations", member.get("location_key"))
++            if base_loc_id is None:
++                return None
++            base_loc = loc_by_id.get(base_loc_id)
++            if not base_loc:
++                return None
++            section = location_section_for_record(base_loc)
++            if section != "compound-locations":
++                return None
++            loc_id = self.ids.next()
++            loc = dict(base_loc)
++            loc["id"] = loc_id
++            self.section_items[section].append(loc)
++            loc_by_id[loc_id] = loc
++            transport_member_location_by_key[map_key] = loc_id
++            return loc_id
+ 
+         compound_record_by_id = {
+             int(compound["id"]): compound
+@@ -3316,6 +3598,196 @@ class DeterministicPwmlBuilder:
+             if item.get("action") == "reused_location"
+         )
+ 
++        process_visualization_items = (
++            ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []
++        )
++        transport_visualization_items = [
++            viz
++            for viz in process_visualization_items
++            if isinstance(viz, dict) and str(viz.get("type") or "") == "transport_visualization"
++        ]
++        for transport_idx, viz in enumerate(transport_visualization_items):
++            members = viz.get("members", []) if isinstance(viz.get("members"), list) else []
++            compound_members = [
++                member
++                for member in members
++                if isinstance(member, dict) and str(member.get("member_type") or "") == "compound"
++            ]
++            endpoint_groups: Dict[str, Dict[str, Dict[str, Any]]] = defaultdict(dict)
++            for member in compound_members:
++                role = str(member.get("role") or "")
++                if role not in {"left", "right"}:
++                    continue
++                loc_id = add_transport_member_location(member)
++                if loc_id is None:
++                    continue
++                endpoint_groups[str(member.get("process_member_key") or "")][role] = {
++                    "member": member,
++                    "loc_id": loc_id,
++                }
++
++            pair_count = sum(1 for group in endpoint_groups.values() if "left" in group and "right" in group)
++            pair_idx = 0
++            endpoint_midpoints: List[Tuple[int, int]] = []
++            first_source_region: Optional[Dict[str, int]] = None
++            first_target_region: Optional[Dict[str, int]] = None
++            for member_key, group in endpoint_groups.items():
++                if "left" not in group or "right" not in group:
++                    continue
++                raw_element = raw_transport_element_by_key.get(member_key, {})
++                source_state_key = str(raw_element.get("left_biological_state_key") or "")
++                target_state_key = str(raw_element.get("right_biological_state_key") or "")
++                source_region = ir_region_for_state(source_state_key)
++                target_region = ir_region_for_state(target_state_key)
++                if first_source_region is None:
++                    first_source_region = source_region
++                    first_target_region = target_region
++
++                source_loc = loc_by_id.get(int(group["left"]["loc_id"]))
++                target_loc = loc_by_id.get(int(group["right"]["loc_id"]))
++                if not source_loc or not target_loc:
++                    continue
++
++                source_center_x = source_region["x"] + source_region["w"] // 2
++                target_center_x = target_region["x"] + target_region["w"] // 2
++                cargo_center_x = (source_center_x + target_center_x) // 2
++                cargo_center_x += (pair_idx - (pair_count - 1) // 2) * 220
++                cargo_center_x += (transport_idx - (len(transport_visualization_items) - 1) // 2) * min(
++                    layout_rxn_step_x,
++                    300,
++                )
++                cargo_center_x = _clamp_int(
++                    cargo_center_x,
++                    max(source_region["x"], target_region["x"]) + 30,
++                    min(
++                        source_region["x"] + source_region["w"],
++                        target_region["x"] + target_region["w"],
++                    ) - 30,
++                )
++
++                source_loc["x"], source_loc["y"] = _transport_endpoint_xy(
++                    source_region,
++                    target_region,
++                    cargo_center_x,
++                    int(source_loc["width"]),
++                    int(source_loc["height"]),
++                    30,
++                )
++                target_loc["x"], target_loc["y"] = _transport_endpoint_xy(
++                    target_region,
++                    source_region,
++                    cargo_center_x,
++                    int(target_loc["width"]),
++                    int(target_loc["height"]),
++                    30,
++                )
++                source_state_id = lookup("biological_states", source_state_key)
++                target_state_id = lookup("biological_states", target_state_key)
++                if source_state_id is not None:
++                    source_loc["biological-state-id"] = source_state_id
++                if target_state_id is not None:
++                    target_loc["biological-state-id"] = target_state_id
++
++                source_anchor = _location_anchor_toward(
++                    source_loc,
++                    int(target_loc["x"]) + int(target_loc["width"]) // 2,
++                    int(target_loc["y"]) + int(target_loc["height"]) // 2,
++                )
++                target_anchor = _location_anchor_toward(
++                    target_loc,
++                    int(source_loc["x"]) + int(source_loc["width"]) // 2,
++                    int(source_loc["y"]) + int(source_loc["height"]) // 2,
++                )
++                endpoint_midpoints.append(
++                    (
++                        (source_anchor[0] + target_anchor[0]) // 2,
++                        (source_anchor[1] + target_anchor[1]) // 2,
++                    )
++                )
++                pair_idx += 1
++
++            if endpoint_midpoints:
++                midpoint_x = sum(point[0] for point in endpoint_midpoints) // len(endpoint_midpoints)
++                midpoint_y = sum(point[1] for point in endpoint_midpoints) // len(endpoint_midpoints)
++                if first_source_region is not None and first_target_region is not None:
++                    center_x, center_y = _transport_boundary_point(
++                        first_source_region,
++                        first_target_region,
++                        midpoint_x,
++                        midpoint_y,
++                    )
++                else:
++                    center_x, center_y = midpoint_x, midpoint_y
++            else:
++                center_x = int(viz.get("x") or self.args.width // 2)
++                center_y = int(viz.get("y") or self.args.height // 2)
++
++            process_key = str(viz.get("process_key") or "")
++            transporter_members = [
++                member
++                for member in members
++                if isinstance(member, dict) and str(member.get("role") or "") == "transporter"
++            ]
++            transport_layout_by_process_key[process_key] = {
++                "x": center_x - layout_protein_w // 2,
++                "y": center_y - layout_protein_h // 2,
++                "width": layout_protein_w,
++                "height": layout_protein_h,
++                "center-x": center_x,
++                "center-y": center_y,
++            }
++            total_w = (
++                len(transporter_members) * layout_protein_w
++                + max(0, len(transporter_members) - 1) * layout_protein_gap_x
++            )
++            x0 = center_x - total_w // 2 if transporter_members else center_x - layout_protein_w // 2
++            for j, member in enumerate(transporter_members):
++                minfo = member_ids.get(str(member.get("process_member_key") or ""))
++                mtype = str(member.get("member_type") or (minfo or {}).get("entity_type") or "")
++                entity_key = str((minfo or {}).get("entity_key") or "")
++                target_x = x0 + j * (layout_protein_w + layout_protein_gap_x)
++                target_y = center_y - layout_protein_h // 2
++                location_key = str(member.get("location_key") or "")
++                if mtype == "protein_complex":
++                    pcv_id = protein_complex_viz_by_location_key.get(location_key) if location_key else None
++                    if pcv_id is None and entity_key:
++                        pcv_id = protein_complex_viz_by_entity_state.get(
++                            (entity_key, str(viz.get("biological_state_key") or ""))
++                        )
++                    if pcv_id is None and entity_key:
++                        pcv_id = protein_complex_viz_by_entity.get(entity_key)
++                    pcv = protein_complex_viz_by_id.get(int(pcv_id)) if pcv_id is not None else None
++                    if not pcv:
++                        continue
++                    component_locs = [
++                        loc_by_id.get(int(protein_viz.get("protein-location-id") or 0))
++                        for protein_viz in pcv.get("protein_complex_protein_visualizations", [])
++                    ]
++                    component_locs = [loc for loc in component_locs if loc]
++                    component_total_w = (
++                        len(component_locs) * layout_protein_w
++                        + max(0, len(component_locs) - 1) * layout_protein_gap_x
++                    )
++                    component_x0 = center_x - component_total_w // 2 if component_locs else target_x
++                    for k, loc in enumerate(component_locs):
++                        loc["x"] = component_x0 + k * (layout_protein_w + layout_protein_gap_x)
++                        loc["y"] = target_y
++                        loc["width"] = str(layout_protein_w)
++                        loc["height"] = str(layout_protein_h)
++                    continue
++
++                loc_id = lookup("locations", location_key)
++                if loc_id is None and entity_key:
++                    loc_id = protein_location_by_entity_state.get(
++                        (entity_key, str(viz.get("biological_state_key") or ""))
++                    )
++                loc = loc_by_id.get(loc_id) if loc_id is not None else None
++                if loc:
++                    loc["x"] = target_x
++                    loc["y"] = target_y
++                    loc["width"] = str(layout_protein_w)
++                    loc["height"] = str(layout_protein_h)
++
+         self.section_items["edges"] = []
+         for edge in ir.get("edges", []) if isinstance(ir.get("edges"), list) else []:
+             if not isinstance(edge, dict):
+@@ -3432,6 +3904,50 @@ class DeterministicPwmlBuilder:
+                 else:
+                     _add_start_arrow(edge, x1, y1, cp1x, cp1y)
+ 
++        for viz in ir.get("process_visualizations", []) if isinstance(ir.get("process_visualizations"), list) else []:
++            if not isinstance(viz, dict) or str(viz.get("type") or "") != "transport_visualization":
++                continue
++            layout = transport_layout_by_process_key.get(str(viz.get("process_key") or ""))
++            if not layout:
++                continue
++            transporter_top = (layout["x"] + layout["width"] // 2, layout["y"])
++            transporter_bottom = (transporter_top[0], layout["y"] + layout["height"])
++            for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
++                if not isinstance(member, dict):
++                    continue
++                role = str(member.get("role") or "")
++                if role not in {"left", "right"}:
++                    continue
++                minfo = member_ids.get(str(member.get("process_member_key") or ""))
++                mtype = str(member.get("member_type") or (minfo or {}).get("entity_type") or "")
++                if mtype != "compound":
++                    continue
++                loc_id = transport_member_location_by_key.get(
++                    (str(member.get("process_member_key") or ""), role)
++                )
++                if loc_id is None:
++                    fallback_loc_id = lookup("locations", member.get("location_key"))
++                    if fallback_loc_id is not None and fallback_loc_id not in skipped_base_location_by_id:
++                        loc_id = fallback_loc_id
++                edge_id = lookup("edges", member.get("edge_key"))
++                loc = loc_by_id.get(loc_id) if loc_id is not None else None
++                edge = edge_by_id.get(edge_id) if edge_id is not None else None
++                if not loc or not edge:
++                    continue
++                edge["visualization-template-id"] = 83
++                edge["hidden"] = False
++                edge.pop("options", None)
++                if role == "left":
++                    x2, y2 = transporter_top
++                    x1, y1 = _location_anchor_toward(loc, x2, y2)
++                    edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
++                    _add_end_arrow(edge, x2, y2, cp2x, cp2y)
++                else:
++                    x2, y2 = transporter_bottom
++                    x1, y1 = _location_anchor_toward(loc, x2, y2)
++                    edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
++                    _add_start_arrow(edge, x1, y1, cp1x, cp1y)
++
+         self.section_items["reaction-visualizations"] = []
+         self.section_items["transport-visualizations"] = []
+         self.section_items["reaction-coupled-transport-visualizations"] = []
+@@ -3520,11 +4036,17 @@ class DeterministicPwmlBuilder:
+                     if not isinstance(member, dict):
+                         continue
+                     minfo = member_ids.get(str(member.get("process_member_key")))
+-                    loc_id = lookup("locations", member.get("location_key"))
++                    role = str(member.get("role") or "")
++                    loc_id = transport_member_location_by_key.get(
++                        (str(member.get("process_member_key") or ""), role)
++                    )
++                    if loc_id is None:
++                        fallback_loc_id = lookup("locations", member.get("location_key"))
++                        if fallback_loc_id is not None and fallback_loc_id not in skipped_base_location_by_id:
++                            loc_id = fallback_loc_id
+                     edge_id = lookup("edges", member.get("edge_key"))
+                     if not minfo:
+                         continue
+-                    role = str(member.get("role") or "")
+                     side = "Left" if role == "left" else "Right" if role == "right" else ""
+                     mtype = str(member.get("member_type") or minfo.get("entity_type") or "")
+                     if mtype == "compound" and loc_id is not None and edge_id is not None:
+@@ -3534,11 +4056,17 @@ class DeterministicPwmlBuilder:
+                     elif role == "transporter":
+                         tv = {"id": self.ids.next(), "transport-transporter-id": int(minfo["id"])}
+                         entity_key = minfo.get("entity_key")
+-                        pcv_id = None
++                        location_key = str(member.get("location_key") or "")
++                        pcv_id = (
++                            protein_complex_viz_by_location_key.get(location_key)
++                            if location_key
++                            else None
++                        )
+                         if entity_key is not None:
+-                            pcv_id = protein_complex_viz_by_entity_state.get(
+-                                (str(entity_key), str(viz.get("biological_state_key")))
+-                            )
++                            if pcv_id is None:
++                                pcv_id = protein_complex_viz_by_entity_state.get(
++                                    (str(entity_key), str(viz.get("biological_state_key")))
++                                )
+                             if pcv_id is None:
+                                 pcv_id = protein_complex_viz_by_entity.get(str(entity_key))
+                         if mtype == "protein_complex" and pcv_id:

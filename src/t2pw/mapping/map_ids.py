@@ -3326,9 +3326,13 @@ def map_protein_uniprot(
     second_score = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
     strong_unique = best["score"] >= 0.78 and best["score"] >= second_score + 0.08
     reviewed_unique = bool(best.get("reviewed")) and best["score"] >= 0.74 and best["score"] >= second_score + 0.06
-    if strong_unique or reviewed_unique:
+    exact_reviewed_match = bool(best.get("reviewed")) and best["score"] >= 0.85
+    if strong_unique or reviewed_unique or exact_reviewed_match:
         matched_alias = str(best.get("matched_alias") or "").strip()
-        chosen_rule = "top_unique_alias_candidate" if matched_alias else "top_unique_candidate"
+        if exact_reviewed_match:
+            chosen_rule = "exact_reviewed_match"
+        else:
+            chosen_rule = "top_unique_alias_candidate" if matched_alias else "top_unique_candidate"
         return {
             "status": "mapped",
             "query": " | ".join(queries_tried),
@@ -3351,6 +3355,33 @@ def map_protein_uniprot(
         "candidates": candidates[:8],
         "queries_tried": queries_tried,
     }
+
+
+def _promote_cached_exact_reviewed_uniprot_result(result: Dict[str, Any]) -> Dict[str, Any]:
+    if result.get("status") == "mapped" or result.get("reason") != "ambiguous":
+        return result
+    candidates = _safe_list(result.get("candidates"))
+    if not candidates or not isinstance(candidates[0], dict):
+        return result
+    best = candidates[0]
+    try:
+        score = float(best.get("score") or 0.0)
+    except (TypeError, ValueError):
+        score = 0.0
+    accession = str(best.get("accession") or "").strip()
+    if not accession or not bool(best.get("reviewed")) or score < 0.85:
+        return result
+
+    promoted = dict(result)
+    promoted["status"] = "mapped"
+    promoted.pop("reason", None)
+    promoted["mapped_ids"] = {"uniprot": accession}
+    promoted["confidence"] = score
+    promoted["chosen_rule"] = "exact_reviewed_match"
+    promoted["reviewed"] = True
+    promoted["resolved_name"] = str(best.get("protein_name") or "").strip()
+    _with_resolution(promoted, "matched", order_step="api_uniprot")
+    return promoted
 
 
 def _score_compound_candidate(query: str, candidate_name: str) -> float:
@@ -3819,6 +3850,13 @@ def _map_protein_with_strategy(
             else:
                 _with_resolution(api_result, "unresolved", issue=str(api_result.get("reason") or "api_unmapped"), order_step="api_uniprot")
             cache.set("proteins", api_key, api_result)
+        else:
+            promoted = _promote_cached_exact_reviewed_uniprot_result(api_result)
+            if promoted is not api_result:
+                api_result = promoted
+                api_result.setdefault("provider", "UniProt")
+                api_result.setdefault("source", "api")
+                cache.set("proteins", api_key, api_result)
         return api_result
 
     return _with_resolution(
