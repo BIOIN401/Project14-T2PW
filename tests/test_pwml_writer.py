@@ -15,7 +15,11 @@ if str(SRC) not in sys.path:
 
 from t2pw.pwml.ir import build_pwml_ir  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature, repair_tree  # noqa: E402
-from t2pw.pwml.writer import DeterministicPwmlBuilder, blocking_pwml_ir_errors  # noqa: E402
+from t2pw.pwml.writer import (  # noqa: E402
+    DeterministicPwmlBuilder,
+    blocking_pwml_ir_errors,
+    get_rect_anchor_toward_target,
+)
 
 
 HEXOKINASE_COMPOUND_ROWS = [
@@ -199,6 +203,10 @@ def _path_start_y(path: str) -> int:
 
 def _edge_options(edge: dict) -> dict:
     return json.loads(edge.get("options") or "{}")
+
+
+def _loc_anchor_toward(loc: dict, target: tuple[int, int]) -> tuple[int, int]:
+    return get_rect_anchor_toward_target(loc, target[0], target[1])
 
 
 def _compound_xml(root: object) -> bytes:
@@ -651,6 +659,84 @@ def test_writer_places_reaction_elements_around_enzyme_center() -> None:
     assert right_options["end_arrow"] is False
 
 
+def test_writer_places_odd_row_reaction_members_upstream_for_rtl_flow() -> None:
+    reactions = []
+    compounds = []
+    proteins = []
+    for idx in range(4):
+        substrate = f"Substrate {idx + 1}"
+        product = f"Product {idx + 1}"
+        enzyme = f"Enzyme {idx + 1}"
+        compounds.extend(
+            [
+                {"name": substrate, "pathbank_compound_id": 100 + idx * 2},
+                {"name": product, "pathbank_compound_id": 101 + idx * 2},
+            ]
+        )
+        proteins.append({"name": enzyme, "pathbank_protein_id": 200 + idx})
+        reactions.append(
+            {
+                "name": f"Reaction {idx + 1}",
+                "inputs": [substrate],
+                "outputs": [product],
+                "biological_state": "cytosol",
+                "enzymes": [{"protein": enzyme}],
+            }
+        )
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": compounds,
+            "proteins": proteins,
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {"reactions": reactions, "transports": [], "interactions": []},
+    }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+    edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+    enzyme = builder.section_items["protein-locations"][3]
+    enzyme_x = int(enzyme["x"])
+    enzyme_w = int(enzyme["width"])
+    enzyme_cy = int(enzyme["y"]) + int(enzyme["height"]) // 2
+
+    reaction_viz = builder.section_items["reaction-visualizations"][3]
+    by_compound_id = {
+        loc_by_id[rcv["compound-location-id"]]["compound-id"]: rcv
+        for rcv in reaction_viz["reaction_compound_visualizations"]
+    }
+    substrate_viz = by_compound_id[compound_id_by_name["Substrate 4"]]
+    product_viz = by_compound_id[compound_id_by_name["Product 4"]]
+    substrate_loc = loc_by_id[substrate_viz["compound-location-id"]]
+    product_loc = loc_by_id[product_viz["compound-location-id"]]
+
+    assert substrate_viz["side"] == "Right"
+    assert product_viz["side"] == "Left"
+    assert int(substrate_loc["x"]) - (enzyme_x + enzyme_w) == 46
+    assert enzyme_x - (int(product_loc["x"]) + int(product_loc["width"])) == 51
+
+    substrate_target = (enzyme_x + enzyme_w, enzyme_cy)
+    product_target = (enzyme_x, enzyme_cy)
+    _assert_path_endpoints(
+        edge_by_id[substrate_viz["edge-id"]]["path"],
+        _loc_anchor_toward(substrate_loc, substrate_target),
+        substrate_target,
+    )
+    _assert_path_endpoints(
+        edge_by_id[product_viz["edge-id"]]["path"],
+        _loc_anchor_toward(product_loc, product_target),
+        product_target,
+    )
+    assert _edge_options(edge_by_id[substrate_viz["edge-id"]])["start_arrow"] is False
+    assert _edge_options(edge_by_id[product_viz["edge-id"]])["start_arrow"] is True
+
+
 def test_writer_places_stacked_reaction_members_from_side_anchors() -> None:
     ir, report = build_pwml_ir(_payload_with_stacked_reaction_members(), strict_db=True)
     assert not report["errors"]
@@ -692,8 +778,14 @@ def test_writer_places_stacked_reaction_members_from_side_anchors() -> None:
             actual_anchor_y = int(loc["y"]) + int(loc["height"]) // 2
             assert actual_anchor_x == expected_anchor_x
             assert abs(actual_anchor_y - expected_anchor_y) <= 1
+            edge_target = (
+                (enzyme_x, enzyme_cy)
+                if side == "Left"
+                else (enzyme_x + enzyme_w, enzyme_cy)
+            )
+            edge_anchor = _loc_anchor_toward(loc, edge_target)
             assert edge_by_id[rcv["edge-id"]]["path"].startswith(
-                f"M{actual_anchor_x} {actual_anchor_y} "
+                f"M{edge_anchor[0]} {edge_anchor[1]} "
             )
 
 
@@ -758,8 +850,9 @@ def test_writer_size_packs_mixed_compound_stack() -> None:
             int(loc["y"]) + int(loc["height"]) // 2,
         )
         assert actual_anchor == (enzyme_x - 46, expected_anchor_y)
+        edge_anchor = _loc_anchor_toward(loc, (enzyme_x, enzyme_cy))
         assert edge_by_id[rcv["edge-id"]]["path"].startswith(
-            f"M{actual_anchor[0]} {actual_anchor[1]} "
+            f"M{edge_anchor[0]} {edge_anchor[1]} "
         )
 
     left_debug = next(
@@ -959,22 +1052,19 @@ def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
     enzyme_1 = enzyme_box(0)
     enzyme_2 = enzyme_box(1)
     tyrosine_loc = loc_by_id[tyrosine_product["compound-location-id"]]
-    tyrosine_left_anchor = (int(tyrosine_loc["x"]), int(tyrosine_loc["y"]) + int(tyrosine_loc["height"]) // 2)
-    tyrosine_right_anchor = (
-        int(tyrosine_loc["x"]) + int(tyrosine_loc["width"]),
-        int(tyrosine_loc["y"]) + int(tyrosine_loc["height"]) // 2,
-    )
     enzyme_1_right = (enzyme_1[0] + enzyme_1[2], enzyme_1[1] + enzyme_1[3] // 2)
     enzyme_2_left = (enzyme_2[0], enzyme_2[1] + enzyme_2[3] // 2)
+    tyrosine_product_anchor = _loc_anchor_toward(tyrosine_loc, enzyme_1_right)
+    tyrosine_substrate_anchor = _loc_anchor_toward(tyrosine_loc, enzyme_2_left)
 
     _assert_path_endpoints(
         edge_by_id[tyrosine_product["edge-id"]]["path"],
-        tyrosine_left_anchor,
+        tyrosine_product_anchor,
         enzyme_1_right,
     )
     _assert_path_endpoints(
         edge_by_id[tyrosine_substrate["edge-id"]]["path"],
-        tyrosine_right_anchor,
+        tyrosine_substrate_anchor,
         enzyme_2_left,
     )
     assert builder.layout_debug_counts["shared_intermediates_detected"] == 2
@@ -1071,14 +1161,15 @@ def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
 
     left_edge = edge_by_side["Left"]
     virtual_y = _path_start_y(left_edge["path"])
-    _assert_path_endpoints(left_edge["path"], (virtual_right, virtual_y), (virtual_right, virtual_y))
+    _assert_path_endpoints(left_edge["path"], (virtual_left, virtual_y), (virtual_left, virtual_y))
     assert left_edge["visualization-template-id"] == 5
     assert left_edge["hidden"] is True
     left_options = _edge_options(left_edge)
     assert left_options["start_arrow"] is False
 
     right_edge = edge_by_side["Right"]
-    _assert_path_endpoints(right_edge["path"], (product_left, virtual_y), (virtual_left, virtual_y))
+    product_anchor = _loc_anchor_toward(product, (virtual_right, virtual_y))
+    _assert_path_endpoints(right_edge["path"], product_anchor, (virtual_right, virtual_y))
     assert right_edge["visualization-template-id"] == 5
     assert right_edge["hidden"] is False
     right_options = _edge_options(right_edge)
