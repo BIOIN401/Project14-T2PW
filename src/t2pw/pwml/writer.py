@@ -55,6 +55,17 @@ def _curved_edge_path(
     return path, cp1x, cp1y, cp2x, cp2y
 
 
+def _elbow_edge_path(
+    x1: int,
+    y1: int,
+    x2: int,
+    y2: int,
+) -> Tuple[str, int, int, int, int]:
+    mid_y = int(round((y1 + y2) / 2))
+    path = f"M{x1} {y1} L{x1} {mid_y} L{x2} {mid_y} L{x2} {y2}"
+    return path, x1, mid_y, x2, mid_y
+
+
 def _compute_arrow_path(tip_x: int, tip_y: int, from_x: int, from_y: int) -> Optional[str]:
     dx = from_x - tip_x
     dy = from_y - tip_y
@@ -127,6 +138,7 @@ def get_rect_anchor_toward_target(
     loc: Dict[str, Any],
     target_x: int,
     target_y: int,
+    mode: str = "auto",
 ) -> Tuple[int, int]:
     x = int(loc["x"])
     y = int(loc["y"])
@@ -134,6 +146,14 @@ def get_rect_anchor_toward_target(
     height = int(loc["height"])
     center_x = x + width / 2
     center_y = y + height / 2
+
+    if mode == "horizontal":
+        return x + (width if target_x >= center_x else 0), int(round(center_y))
+    if mode == "vertical":
+        return int(round(center_x)), y + (height if target_y >= center_y else 0)
+    if mode != "auto":
+        raise ValueError(f"Unsupported rectangle anchor mode: {mode}")
+
     dx = target_x - center_x
     dy = target_y - center_y
     half_w = width / 2
@@ -3309,6 +3329,7 @@ class DeterministicPwmlBuilder:
             }
         )
         compound_loc_by_rxn_side: Dict[Tuple[int, str, int, str], int] = {}
+        row_transition_source_by_member_key: Dict[str, str] = {}
 
         for reaction_key, reaction in raw_reactions_by_key.items():
             layout = reaction_layout_by_key.get(reaction_key)
@@ -3344,6 +3365,7 @@ class DeterministicPwmlBuilder:
                                 member_key = str(member.get("key") or "")
                                 if member_key:
                                     reaction_member_location_by_key[member_key] = shared_loc_id
+                                    row_transition_source_by_member_key[member_key] = reaction_sequence[producer_idx][0]
                                 compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = shared_loc_id
                                 compound_record = compound_record_by_id.get(compound_id, {})
                                 self.layout_debug_shared_intermediates.append(
@@ -3460,11 +3482,16 @@ class DeterministicPwmlBuilder:
                 x += int(loc["width"])
             return x, int(loc["y"]) + int(loc["height"]) // 2
 
-        def loc_connection_point(loc_id: int, target_x: int, target_y: int) -> Optional[Tuple[int, int]]:
+        def loc_connection_point(
+            loc_id: int,
+            target_x: int,
+            target_y: int,
+            mode: str = "auto",
+        ) -> Optional[Tuple[int, int]]:
             loc = loc_by_id.get(loc_id)
             if not loc:
                 return None
-            return get_rect_anchor_toward_target(loc, target_x, target_y)
+            return get_rect_anchor_toward_target(loc, target_x, target_y, mode=mode)
 
         def reaction_key_has_enzyme(reaction_key: str) -> bool:
             reaction = raw_reactions_by_key.get(reaction_key)
@@ -3521,6 +3548,16 @@ class DeterministicPwmlBuilder:
                         enzyme_right = enzyme_left + 70
                         break
             no_enzyme = enzyme_box is None
+            target_box = {
+                "x": enzyme_left,
+                "y": enzyme_cy - (
+                    enzyme_box[3] // 2 if enzyme_box is not None else layout_protein_h // 2
+                ),
+                "width": str(
+                    enzyme_box[2] if enzyme_box is not None else enzyme_right - enzyme_left
+                ),
+                "height": str(enzyme_box[3] if enzyme_box is not None else layout_protein_h),
+            }
             for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
                 if not isinstance(member, dict):
                     continue
@@ -3542,7 +3579,26 @@ class DeterministicPwmlBuilder:
                 edge_id = lookup("edges", member.get("edge_key"))
                 if loc_id is None or edge_id is None:
                     continue
-                point = loc_connection_point(loc_id, target[0], target[1])
+                member_key = str(member.get("process_member_key") or "")
+                source_reaction_key = row_transition_source_by_member_key.get(member_key)
+                source_layout = (
+                    reaction_layout_by_key.get(source_reaction_key)
+                    if source_reaction_key is not None
+                    else None
+                )
+                target_layout = reaction_layout_by_key.get(reaction_key)
+                is_row_transition = (
+                    source_layout is not None
+                    and target_layout is not None
+                    and int(source_layout.get("row", -1)) != int(target_layout.get("row", -1))
+                    and not no_enzyme
+                )
+                point = loc_connection_point(
+                    loc_id,
+                    target[0],
+                    target[1],
+                    mode="vertical" if is_row_transition else "auto",
+                )
                 edge = edge_by_id.get(edge_id)
                 if point is None or edge is None:
                     continue
@@ -3555,10 +3611,17 @@ class DeterministicPwmlBuilder:
                 elif no_enzyme:
                     x1, y1, x2, y2 = px, py, target[0], target[1]
                     edge["hidden"] = False
+                elif is_row_transition:
+                    target_anchor = get_rect_anchor_toward_target(target_box, px, py, mode="vertical")
+                    x1, y1, x2, y2 = px, py, target_anchor[0], target_anchor[1]
+                    edge["hidden"] = False
                 else:
                     x1, y1, x2, y2 = px, py, target[0], target[1]
                     edge["hidden"] = False
-                edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
+                if is_row_transition:
+                    edge["path"], cp1x, cp1y, cp2x, cp2y = _elbow_edge_path(x1, y1, x2, y2)
+                else:
+                    edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
                 if is_substrate_side:
                     _add_no_arrow(edge)
                 else:

@@ -1076,6 +1076,109 @@ def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
     )
 
 
+def test_writer_routes_shared_intermediate_across_serpentine_rows_with_elbow_path() -> None:
+    compounds = [
+        {"name": "Start metabolite", "pathbank_compound_id": 1101},
+        {"name": "Intermediate B", "pathbank_compound_id": 1102},
+        {"name": "Intermediate C", "pathbank_compound_id": 1103},
+        {"name": "Row transition intermediate", "pathbank_compound_id": 1104},
+        {"name": "Final metabolite", "pathbank_compound_id": 1105},
+    ]
+    proteins = [
+        {"name": "Enzyme 1", "pathbank_protein_id": 2101},
+        {"name": "Enzyme 2", "pathbank_protein_id": 2102},
+        {"name": "Enzyme 3", "pathbank_protein_id": 2103},
+        {"name": "Enzyme 4", "pathbank_protein_id": 2104},
+    ]
+    reactions = [
+        {
+            "name": "Reaction 1",
+            "inputs": ["Start metabolite"],
+            "outputs": ["Intermediate B"],
+            "biological_state": "cytosol",
+            "enzymes": [{"protein": "Enzyme 1"}],
+        },
+        {
+            "name": "Reaction 2",
+            "inputs": ["Intermediate B"],
+            "outputs": ["Intermediate C"],
+            "biological_state": "cytosol",
+            "enzymes": [{"protein": "Enzyme 2"}],
+        },
+        {
+            "name": "Reaction 3",
+            "inputs": ["Intermediate C"],
+            "outputs": ["Row transition intermediate"],
+            "biological_state": "cytosol",
+            "enzymes": [{"protein": "Enzyme 3"}],
+        },
+        {
+            "name": "Reaction 4",
+            "inputs": ["Row transition intermediate"],
+            "outputs": ["Final metabolite"],
+            "biological_state": "cytosol",
+            "enzymes": [{"protein": "Enzyme 4"}],
+        },
+    ]
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": compounds,
+            "proteins": proteins,
+        },
+        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
+        "processes": {"reactions": reactions, "transports": [], "interactions": []},
+    }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+
+    builder, _root = _build_pwml_for_ir(ir)
+
+    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
+    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
+    edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
+
+    transition_compound_id = compound_id_by_name["Row transition intermediate"]
+
+    producer_viz = builder.section_items["reaction-visualizations"][2]
+    consumer_viz = builder.section_items["reaction-visualizations"][3]
+    producer_member = next(
+        rcv
+        for rcv in producer_viz["reaction_compound_visualizations"]
+        if loc_by_id[rcv["compound-location-id"]]["compound-id"] == transition_compound_id
+    )
+    consumer_member = next(
+        rcv
+        for rcv in consumer_viz["reaction_compound_visualizations"]
+        if loc_by_id[rcv["compound-location-id"]]["compound-id"] == transition_compound_id
+    )
+    assert producer_member["compound-location-id"] == consumer_member["compound-location-id"]
+    assert producer_member["side"] == "Right"
+    assert consumer_member["side"] == "Right"
+
+    shared_loc = loc_by_id[consumer_member["compound-location-id"]]
+    consumer_enzyme = builder.section_items["protein-locations"][3]
+    start = get_rect_anchor_toward_target(
+        shared_loc,
+        int(consumer_enzyme["x"]) + int(consumer_enzyme["width"]) // 2,
+        int(consumer_enzyme["y"]) + int(consumer_enzyme["height"]) // 2,
+        mode="vertical",
+    )
+    end = get_rect_anchor_toward_target(consumer_enzyme, start[0], start[1], mode="vertical")
+    mid_y = round((start[1] + end[1]) / 2)
+
+    transition_edge = edge_by_id[consumer_member["edge-id"]]
+    assert transition_edge["path"] == (
+        f"M{start[0]} {start[1]} "
+        f"L{start[0]} {mid_y} "
+        f"L{end[0]} {mid_y} "
+        f"L{end[0]} {end[1]}"
+    )
+    assert " C" not in transition_edge["path"]
+    assert edge_by_id[producer_member["edge-id"]]["path"].count(" C") == 1
+
+
 def test_direct_writer_skips_reaction_compounds_in_initial_grid_only() -> None:
     payload = {
         "entities": {
