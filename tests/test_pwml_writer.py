@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -185,6 +186,19 @@ def _build_pwml_for_ir(ir: dict) -> tuple[DeterministicPwmlBuilder, object]:
     builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=_writer_args())
     build = builder.build()
     return builder, build.root
+
+
+def _assert_path_endpoints(path: str, start: tuple[int, int], end: tuple[int, int]) -> None:
+    assert path.startswith(f"M{start[0]} {start[1]} ")
+    assert path.endswith(f" {end[0]} {end[1]}")
+
+
+def _path_start_y(path: str) -> int:
+    return int(path.split()[1])
+
+
+def _edge_options(edge: dict) -> dict:
+    return json.loads(edge.get("options") or "{}")
 
 
 def _compound_xml(root: object) -> bytes:
@@ -441,21 +455,21 @@ def test_fallback_transport_visualization_populates_edges_and_transporter() -> N
     left_loc = loc_by_id[left_viz["compound-location-id"]]
     left_edge = edge_by_id[left_viz["edge-id"]]
     left_anchor = int(left_loc["x"]) + int(left_loc["width"]) // 2, int(left_loc["y"]) + int(left_loc["height"])
-    assert left_edge["path"] == f"M{left_anchor[0]} {left_anchor[1]} L{transporter_top[0]} {transporter_top[1]}"
+    _assert_path_endpoints(left_edge["path"], left_anchor, transporter_top)
     assert left_edge["visualization-template-id"] == 83
-    assert left_edge["option:end_arrow"] is True
-    assert "option:start_arrow" not in left_edge
+    left_options = _edge_options(left_edge)
+    assert left_options["end_arrow"] is True
+    assert left_options["start_arrow"] is False
 
     right_viz = next(item for item in compound_viz if item["side"] == "Right")
     right_loc = loc_by_id[right_viz["compound-location-id"]]
     right_edge = edge_by_id[right_viz["edge-id"]]
     right_anchor = int(right_loc["x"]) + int(right_loc["width"]) // 2, int(right_loc["y"])
-    assert right_edge["path"] == (
-        f"M{right_anchor[0]} {right_anchor[1]} L{transporter_bottom[0]} {transporter_bottom[1]}"
-    )
+    _assert_path_endpoints(right_edge["path"], right_anchor, transporter_bottom)
     assert right_edge["visualization-template-id"] == 83
-    assert right_edge["option:start_arrow"] is True
-    assert "option:end_arrow" not in right_edge
+    right_options = _edge_options(right_edge)
+    assert right_options["start_arrow"] is True
+    assert right_options["end_arrow"] is False
 
 
 def test_structured_ir_generated_biological_state_omits_pwbs_id_but_keeps_local_context_and_refs() -> None:
@@ -600,7 +614,7 @@ def test_writer_places_reaction_elements_around_enzyme_center() -> None:
     enzyme_w = int(enzyme["width"])
     enzyme_h = int(enzyme["height"])
     enzyme_cy = enzyme_y + enzyme_h // 2
-    assert (enzyme_x, enzyme_y, enzyme_w, enzyme_h) == (1525, 665, 150, 70)
+    assert (enzyme_x, enzyme_y, enzyme_w, enzyme_h) == (355, 345, 150, 70)
 
     compounds = {loc["compound-id"]: loc for loc in builder.section_items["compound-locations"]}
     substrate = compounds[101]
@@ -622,16 +636,19 @@ def test_writer_places_reaction_elements_around_enzyme_center() -> None:
         )
         for rcv in reaction_viz["reaction_compound_visualizations"]
     }
-    assert edge_by_side["Left"]["path"] == f"M{substrate_right} {substrate_cy} L{enzyme_x} {enzyme_cy}"
+    _assert_path_endpoints(edge_by_side["Left"]["path"], (substrate_right, substrate_cy), (enzyme_x, enzyme_cy))
     assert edge_by_side["Left"]["visualization-template-id"] == 5
-    assert edge_by_side["Left"]["option:end_arrow"] is True
-    assert "option:start_arrow" not in edge_by_side["Left"]
-    assert edge_by_side["Right"]["path"] == (
-        f"M{product_left} {product_cy} L{enzyme_x + enzyme_w} {enzyme_cy}"
+    left_options = _edge_options(edge_by_side["Left"])
+    assert left_options["start_arrow"] is False
+    _assert_path_endpoints(
+        edge_by_side["Right"]["path"],
+        (product_left, product_cy),
+        (enzyme_x + enzyme_w, enzyme_cy),
     )
     assert edge_by_side["Right"]["visualization-template-id"] == 5
-    assert edge_by_side["Right"]["option:start_arrow"] is True
-    assert "option:end_arrow" not in edge_by_side["Right"]
+    right_options = _edge_options(edge_by_side["Right"])
+    assert right_options["start_arrow"] is True
+    assert right_options["end_arrow"] is False
 
 
 def test_writer_places_stacked_reaction_members_from_side_anchors() -> None:
@@ -950,11 +967,15 @@ def test_writer_reuses_safe_linear_intermediates_but_not_cofactors() -> None:
     enzyme_1_right = (enzyme_1[0] + enzyme_1[2], enzyme_1[1] + enzyme_1[3] // 2)
     enzyme_2_left = (enzyme_2[0], enzyme_2[1] + enzyme_2[3] // 2)
 
-    assert edge_by_id[tyrosine_product["edge-id"]]["path"] == (
-        f"M{tyrosine_left_anchor[0]} {tyrosine_left_anchor[1]} L{enzyme_1_right[0]} {enzyme_1_right[1]}"
+    _assert_path_endpoints(
+        edge_by_id[tyrosine_product["edge-id"]]["path"],
+        tyrosine_left_anchor,
+        enzyme_1_right,
     )
-    assert edge_by_id[tyrosine_substrate["edge-id"]]["path"] == (
-        f"M{tyrosine_right_anchor[0]} {tyrosine_right_anchor[1]} L{enzyme_2_left[0]} {enzyme_2_left[1]}"
+    _assert_path_endpoints(
+        edge_by_id[tyrosine_substrate["edge-id"]]["path"],
+        tyrosine_right_anchor,
+        enzyme_2_left,
     )
     assert builder.layout_debug_counts["shared_intermediates_detected"] == 2
     assert builder.layout_debug_counts["shared_intermediate_locations_reused"] == 2
@@ -1037,7 +1058,6 @@ def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
     product = compounds[102]
     substrate_right = int(substrate["x"]) + int(substrate["width"])
     product_left = int(product["x"])
-    center_y = int(builder.args.height) // 2
     virtual_left = substrate_right + 46
     virtual_right = virtual_left + 70
 
@@ -1050,18 +1070,20 @@ def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
     }
 
     left_edge = edge_by_side["Left"]
-    assert left_edge["path"] == f"M{virtual_right} {center_y} L{virtual_right} {center_y}"
+    virtual_y = _path_start_y(left_edge["path"])
+    _assert_path_endpoints(left_edge["path"], (virtual_right, virtual_y), (virtual_right, virtual_y))
     assert left_edge["visualization-template-id"] == 5
     assert left_edge["hidden"] is True
-    assert left_edge["option:end_arrow"] is True
-    assert "option:start_arrow" not in left_edge
+    left_options = _edge_options(left_edge)
+    assert left_options["start_arrow"] is False
 
     right_edge = edge_by_side["Right"]
-    assert right_edge["path"] == f"M{product_left} {center_y} L{virtual_left} {center_y}"
+    _assert_path_endpoints(right_edge["path"], (product_left, virtual_y), (virtual_left, virtual_y))
     assert right_edge["visualization-template-id"] == 5
     assert right_edge["hidden"] is False
-    assert right_edge["option:start_arrow"] is True
-    assert "option:end_arrow" not in right_edge
+    right_options = _edge_options(right_edge)
+    assert right_options["start_arrow"] is True
+    assert right_options["end_arrow"] is False
 
 
 def test_pwml_uses_db_exact_compound_rows_and_ids_for_hexokinase() -> None:

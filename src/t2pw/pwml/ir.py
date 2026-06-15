@@ -571,7 +571,7 @@ def build_pwml_ir(
     pathway_subject: str = "Metabolic",
     strict_db: bool = True,
     db_resolver: Any = None,
-    width: int = 3200,
+    width: int = 6400,
     height: int = 1400,
 ) -> tuple[dict, dict]:
     report = _new_report()
