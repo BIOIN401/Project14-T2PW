@@ -28,6 +28,13 @@ from t2pw.pwml.validate import (
 OPTION_TAG_NS = "urn:pathwhiz-option"
 ARROW_ANGLE = math.pi / 6
 ARROW_LENGTH = 30
+DEFAULT_CANVAS_WIDTH = 6400
+DEFAULT_CANVAS_HEIGHT = 1400
+LAYOUT_PAD = 30
+REACTION_STEP_X = 800
+REACTION_ROW_HEIGHT = 700
+REACTION_PROTEIN_W = 150
+REACTION_PROTEIN_H = 70
 
 
 def _format_path_number(value: float) -> str:
@@ -46,6 +53,17 @@ def _curved_edge_path(
     cp2y = y1 + 2 * (y2 - y1) // 3
     path = f"M{x1} {y1} C{cp1x} {cp1y} {cp2x} {cp2y} {x2} {y2}"
     return path, cp1x, cp1y, cp2x, cp2y
+
+
+def _elbow_edge_path(
+    x1: int,
+    y1: int,
+    x2: int,
+    y2: int,
+) -> Tuple[str, int, int, int, int]:
+    mid_y = int(round((y1 + y2) / 2))
+    path = f"M{x1} {y1} L{x1} {mid_y} L{x2} {mid_y} L{x2} {y2}"
+    return path, x1, mid_y, x2, mid_y
 
 
 def _compute_arrow_path(tip_x: int, tip_y: int, from_x: int, from_y: int) -> Optional[str]:
@@ -114,6 +132,62 @@ def _assert_reaction_member_anchor(
     actual_anchor_y = int(loc["y"]) + int(loc["height"]) // 2
     assert actual_anchor_x == expected_anchor_x
     assert abs(actual_anchor_y - expected_anchor_y) <= 1
+
+
+def get_rect_anchor_toward_target(
+    loc: Dict[str, Any],
+    target_x: int,
+    target_y: int,
+    mode: str = "auto",
+) -> Tuple[int, int]:
+    x = int(loc["x"])
+    y = int(loc["y"])
+    width = int(loc["width"])
+    height = int(loc["height"])
+    center_x = x + width / 2
+    center_y = y + height / 2
+
+    if mode == "horizontal":
+        return x + (width if target_x >= center_x else 0), int(round(center_y))
+    if mode == "vertical":
+        return int(round(center_x)), y + (height if target_y >= center_y else 0)
+    if mode != "auto":
+        raise ValueError(f"Unsupported rectangle anchor mode: {mode}")
+
+    dx = target_x - center_x
+    dy = target_y - center_y
+    half_w = width / 2
+    half_h = height / 2
+
+    if dx == 0 and dy == 0:
+        return int(round(center_x)), y
+    if dx == 0:
+        return int(round(center_x)), y + (height if dy > 0 else 0)
+    if dy == 0:
+        return x + (width if dx > 0 else 0), int(round(center_y))
+
+    scale = min(half_w / abs(dx), half_h / abs(dy))
+    return int(round(center_x + dx * scale)), int(round(center_y + dy * scale))
+
+
+def _reaction_visual_side(layout: Dict[str, int], substrate_side: bool) -> str:
+    ltr = int(layout.get("row-dir", 1)) >= 0
+    if substrate_side:
+        return "Left" if ltr else "Right"
+    return "Right" if ltr else "Left"
+
+
+def _reaction_side_anchor_x(
+    visual_side: str,
+    gap: int,
+    enzyme_left_x: int,
+    enzyme_right_x: int,
+) -> int:
+    return enzyme_left_x - gap if visual_side == "Left" else enzyme_right_x + gap
+
+
+def _reaction_member_x_for_anchor(anchor_x: int, width: int, visual_side: str) -> int:
+    return anchor_x - width if visual_side == "Left" else anchor_x
 
 
 def _packed_reaction_stack_tops(
@@ -581,6 +655,68 @@ def _match_canonical_type(compartment_canonical: str) -> str:
     return "unrecognized"
 
 
+def _reaction_cols_for_region_width(
+    region_w: int,
+    *,
+    pad: int = LAYOUT_PAD,
+    rxn_step_x: int = REACTION_STEP_X,
+) -> int:
+    return max(1, (max(0, int(region_w)) - 2 * pad) // rxn_step_x)
+
+
+def _reaction_row_count(
+    n_rxns: int,
+    region_w: int,
+    *,
+    pad: int = LAYOUT_PAD,
+    rxn_step_x: int = REACTION_STEP_X,
+) -> int:
+    cols = _reaction_cols_for_region_width(region_w, pad=pad, rxn_step_x=rxn_step_x)
+    return max(1, math.ceil(max(0, n_rxns) / cols))
+
+
+def _reaction_region_height(
+    n_rxns: int,
+    region_w: int,
+    *,
+    pad: int = LAYOUT_PAD,
+    rxn_step_x: int = REACTION_STEP_X,
+    row_height: int = REACTION_ROW_HEIGHT,
+) -> int:
+    if n_rxns <= 0:
+        return 0
+    return _reaction_row_count(n_rxns, region_w, pad=pad, rxn_step_x=rxn_step_x) * row_height + 2 * pad
+
+
+def _serpentine_reaction_position(
+    region: Dict[str, Any],
+    index_in_state: int,
+    *,
+    pad: int = LAYOUT_PAD,
+    rxn_step_x: int = REACTION_STEP_X,
+    row_height: int = REACTION_ROW_HEIGHT,
+    protein_w: int = REACTION_PROTEIN_W,
+    protein_h: int = REACTION_PROTEIN_H,
+) -> Dict[str, int]:
+    cols = _reaction_cols_for_region_width(int(region["w"]), pad=pad, rxn_step_x=rxn_step_x)
+    row = index_in_state // cols
+    col_in_row = index_in_state % cols
+    if row % 2 == 0:
+        enzyme_cx = int(region["x"]) + pad + rxn_step_x // 2 + col_in_row * rxn_step_x
+    else:
+        enzyme_cx = int(region["x"]) + int(region["w"]) - pad - rxn_step_x // 2 - col_in_row * rxn_step_x
+    enzyme_cy = int(region["y"]) + pad + row_height // 2 + row * row_height
+    return {
+        "row": row,
+        "row-dir": 1 if row % 2 == 0 else -1,
+        "enzyme-cx": enzyme_cx,
+        "enzyme-cy": enzyme_cy,
+        "enzyme-x": enzyme_cx - protein_w // 2,
+        "enzyme-y": enzyme_cy - protein_h // 2,
+        "compound-stack-cy": enzyme_cy,
+    }
+
+
 @dataclass
 class IdFactory:
     value: int = 1
@@ -1015,6 +1151,7 @@ class DeterministicPwmlBuilder:
         raw_states: List[Dict[str, Any]],
         canvas_w: int,
         canvas_h: int,
+        reaction_counts_by_state_key: Optional[Dict[str, int]] = None,
     ) -> Dict[str, Dict[str, Any]]:
         extra_h = int(canvas_h * 0.18)
         pm_h = int(canvas_h * 0.05)
@@ -1028,16 +1165,16 @@ class DeterministicPwmlBuilder:
         bottom_h = max(canvas_h - bottom_y, 100)
 
         type_to_region: Dict[str, Dict[str, Any]] = {
-            "extracellular":         {"x": 0,                 "y": 0,              "w": canvas_w,       "h": extra_h,  "label": "Extracellular"},
-            "plasma membrane":       {"x": 0,                 "y": extra_h,        "w": canvas_w,       "h": pm_h,     "label": "Plasma Membrane"},
-            "cytosol":               {"x": 0,                 "y": cyto_y,         "w": canvas_w,       "h": cyto_h,   "label": "Cytosol"},
-            "endoplasmic reticulum": {"x": canvas_w // 2,     "y": cyto_y,         "w": canvas_w // 2,  "h": nuc_h,    "label": "Endoplasmic Reticulum"},
-            "nucleus":               {"x": 0,                 "y": cyto_y,         "w": canvas_w // 2,  "h": nuc_h,    "label": "Nucleus"},
-            "mitochondria":          {"x": 0,                 "y": cyto_y + nuc_h, "w": canvas_w,       "h": mito_h,   "label": "Mitochondria"},
-            "lysosome":              {"x": 0,                 "y": lyso_y,         "w": canvas_w // 3,  "h": lyso_h,   "label": "Lysosome"},
-            "peroxisome":            {"x": canvas_w // 3,     "y": lyso_y,         "w": canvas_w // 3,  "h": lyso_h,   "label": "Peroxisome"},
-            "golgi":                 {"x": 2 * canvas_w // 3, "y": lyso_y,         "w": canvas_w // 3,  "h": lyso_h,   "label": "Golgi"},
-            "unrecognized":          {"x": 0,                 "y": bottom_y,       "w": canvas_w,       "h": bottom_h, "label": "Other"},
+            "extracellular":         {"x": 0,                 "y": 0,              "w": canvas_w,       "h": extra_h,  "label": "Extracellular", "ctype": "extracellular"},
+            "plasma membrane":       {"x": 0,                 "y": extra_h,        "w": canvas_w,       "h": pm_h,     "label": "Plasma Membrane", "ctype": "plasma membrane"},
+            "cytosol":               {"x": 0,                 "y": cyto_y,         "w": canvas_w,       "h": cyto_h,   "label": "Cytosol", "ctype": "cytosol"},
+            "endoplasmic reticulum": {"x": canvas_w // 2,     "y": cyto_y,         "w": canvas_w // 2,  "h": nuc_h,    "label": "Endoplasmic Reticulum", "ctype": "endoplasmic reticulum"},
+            "nucleus":               {"x": 0,                 "y": cyto_y,         "w": canvas_w // 2,  "h": nuc_h,    "label": "Nucleus", "ctype": "nucleus"},
+            "mitochondria":          {"x": 0,                 "y": cyto_y + nuc_h, "w": canvas_w,       "h": mito_h,   "label": "Mitochondria", "ctype": "mitochondria"},
+            "lysosome":              {"x": 0,                 "y": lyso_y,         "w": canvas_w // 3,  "h": lyso_h,   "label": "Lysosome", "ctype": "lysosome"},
+            "peroxisome":            {"x": canvas_w // 3,     "y": lyso_y,         "w": canvas_w // 3,  "h": lyso_h,   "label": "Peroxisome", "ctype": "peroxisome"},
+            "golgi":                 {"x": 2 * canvas_w // 3, "y": lyso_y,         "w": canvas_w // 3,  "h": lyso_h,   "label": "Golgi", "ctype": "golgi"},
+            "unrecognized":          {"x": 0,                 "y": bottom_y,       "w": canvas_w,       "h": bottom_h, "label": "Other", "ctype": "unrecognized"},
         }
 
         state_ctype: Dict[str, str] = {}
@@ -1045,22 +1182,63 @@ class DeterministicPwmlBuilder:
             name_norm = _normalize_key(str(s.get("name", "")))
             if not name_norm:
                 continue
-            comp = str(s.get("compartment_canonical", ""))
+            comp = str(
+                s.get("compartment_canonical")
+                or s.get("subcellular_location")
+                or s.get("name")
+                or ""
+            )
             state_ctype[name_norm] = _match_canonical_type(comp)
 
         unique_ctypes = set(state_ctype.values())
         n = len(unique_ctypes)
 
+        if reaction_counts_by_state_key is not None and unique_ctypes:
+            ctype_required_h: Dict[str, int] = defaultdict(int)
+            for name_norm, ctype in state_ctype.items():
+                n_rxns = int(reaction_counts_by_state_key.get(name_norm, 0))
+                region_w = canvas_w if n <= 2 else int(type_to_region[ctype]["w"])
+                ctype_required_h[ctype] = max(
+                    ctype_required_h[ctype],
+                    _reaction_region_height(n_rxns, region_w),
+                )
+
+            sorted_ctypes = sorted(unique_ctypes, key=lambda t: _CANONICAL_TYPE_ORDER.get(t, 99))
+            stacked_regions: Dict[str, Dict[str, Any]] = {}
+            y = 0
+            band_h = canvas_h // max(n, 1)
+            for ctype in sorted_ctypes:
+                base_region = type_to_region[ctype]
+                base_h = band_h if n <= 2 else int(base_region["h"])
+                h = max(base_h, ctype_required_h.get(ctype, 0))
+                stacked_regions[ctype] = {
+                    "x": 0,
+                    "y": y,
+                    "w": canvas_w,
+                    "h": h,
+                    "label": base_region["label"],
+                    "ctype": ctype,
+                }
+                y += h
+            if y < canvas_h and sorted_ctypes:
+                stacked_regions[sorted_ctypes[-1]]["h"] += canvas_h - y
+                y = canvas_h
+            type_to_region.update(stacked_regions)
+            self.args.height = y
+
         if n <= 2:
             sorted_ctypes = sorted(unique_ctypes, key=lambda t: _CANONICAL_TYPE_ORDER.get(t, 99))
             band_h = canvas_h // max(n, 1)
             for i, ctype in enumerate(sorted_ctypes):
+                if reaction_counts_by_state_key is not None:
+                    continue
                 type_to_region[ctype] = {
                     "x": 0,
                     "y": i * band_h,
                     "w": canvas_w,
                     "h": band_h,
                     "label": ctype.title(),
+                    "ctype": ctype,
                 }
 
         result: Dict[str, Dict[str, Any]] = {}
@@ -1076,21 +1254,41 @@ class DeterministicPwmlBuilder:
     ) -> Dict[str, Any]:
         canvas_w: int = self.args.width
         canvas_h: int = self.args.height
-        pad = 30
+        pad = LAYOUT_PAD
         dx_left, dy_left = 200, 100
         substrate_gap = 46
         product_gap = 51
         node_spacing_y = 220
         compound_gap_y = 30
-        rxn_step_x = 800
-        protein_w, protein_h = 150, 70
+        rxn_step_x = REACTION_STEP_X
+        protein_w, protein_h = REACTION_PROTEIN_W, REACTION_PROTEIN_H
         protein_gap_x = 10
 
         raw_bio_states = _as_named_records(self.extraction.get("biological_states", []))
-        compartment_regions = self._assign_compartment_regions(raw_bio_states, canvas_w, canvas_h)
 
         bs_id_to_region_key: Dict[int, str] = {v: k for k, v in self._state_id_map.items()}
-        fallback_region: Dict[str, Any] = {"x": 0, "y": 0, "w": canvas_w, "h": canvas_h, "label": "Default"}
+        raw_reactions = _as_process_list(self.processes, "reactions")
+        reaction_bs_ids: Dict[int, int] = {}
+        reaction_indices_by_bs: Dict[int, List[int]] = defaultdict(list)
+        for idx, _reaction in enumerate(reactions):
+            raw_rx = raw_reactions[idx] if idx < len(raw_reactions) else {}
+            bs_name = str(raw_rx.get("biological_state", "")).strip()
+            bs_id = self._state_id_map.get(bs_name.casefold(), default_state_id)
+            reaction_bs_ids[idx] = bs_id
+            reaction_indices_by_bs[bs_id].append(idx)
+        reaction_counts_by_state_key = {
+            bs_id_to_region_key.get(bs_id, ""): len(reaction_indices)
+            for bs_id, reaction_indices in reaction_indices_by_bs.items()
+            if bs_id_to_region_key.get(bs_id, "")
+        }
+        compartment_regions = self._assign_compartment_regions(
+            raw_bio_states,
+            canvas_w,
+            canvas_h,
+            reaction_counts_by_state_key,
+        )
+        canvas_h = int(self.args.height)
+        fallback_region: Dict[str, Any] = {"x": 0, "y": 0, "w": canvas_w, "h": canvas_h, "label": "Default", "ctype": "unrecognized"}
 
         def region_for(bs_id: int) -> Dict[str, Any]:
             key = bs_id_to_region_key.get(bs_id, "")
@@ -1148,33 +1346,20 @@ class DeterministicPwmlBuilder:
                 groups[bsid].append(rec)
             return groups
 
-        raw_reactions = _as_process_list(self.processes, "reactions")
-        reaction_bs_ids: Dict[int, int] = {}
-        reaction_indices_by_bs: Dict[int, List[int]] = defaultdict(list)
-        for idx, _reaction in enumerate(reactions):
-            raw_rx = raw_reactions[idx] if idx < len(raw_reactions) else {}
-            bs_name = str(raw_rx.get("biological_state", "")).strip()
-            bs_id = self._state_id_map.get(bs_name.casefold(), default_state_id)
-            reaction_bs_ids[idx] = bs_id
-            reaction_indices_by_bs[bs_id].append(idx)
-
         reaction_layouts: Dict[int, Dict[str, int]] = {}
         for bs_id, reaction_indices in sorted(reaction_indices_by_bs.items()):
             region = region_for(bs_id)
-            n_rxns = len(reaction_indices)
-            enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * rxn_step_x // 2
-            enzyme_cy = max(region["y"] + region["h"] // 2, 360)
             for k, reaction_idx in enumerate(reaction_indices):
-                enzyme_cx = enzyme_cx_base + k * rxn_step_x
-                enzyme_x = enzyme_cx - protein_w // 2
-                enzyme_y = enzyme_cy - protein_h // 2
                 reaction_layouts[reaction_idx] = {
                     "biological-state-id": bs_id,
-                    "enzyme-cx": enzyme_cx,
-                    "enzyme-cy": enzyme_cy,
-                    "enzyme-x": enzyme_x,
-                    "enzyme-y": enzyme_y,
-                    "compound-stack-cy": enzyme_cy,
+                    **_serpentine_reaction_position(
+                        region,
+                        k,
+                        pad=pad,
+                        rxn_step_x=rxn_step_x,
+                        protein_w=protein_w,
+                        protein_h=protein_h,
+                    ),
                 }
 
         # Compound locations — left half of each compartment region
@@ -1446,7 +1631,9 @@ class DeterministicPwmlBuilder:
             enzyme_right_x = enzyme_left_x + protein_w
             compound_stack_cy = layout["compound-stack-cy"]
             for side_key in ["reaction-left-elements", "reaction-right-elements"]:
-                side = "Left" if side_key == "reaction-left-elements" else "Right"
+                is_substrate_side = side_key == "reaction-left-elements"
+                side = _reaction_visual_side(layout, is_substrate_side)
+                gap = substrate_gap if is_substrate_side else product_gap
                 elements = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
                 stack_members: List[Dict[str, Any]] = []
                 for rel in elements:
@@ -1488,13 +1675,14 @@ class DeterministicPwmlBuilder:
                     eid = int(member["eid"])
                     width = int(member["width"])
                     height = int(member["height"])
-                    expected_anchor_x = (
-                        enzyme_left_x - substrate_gap
-                        if side_key == "reaction-left-elements"
-                        else enzyme_right_x + product_gap
+                    expected_anchor_x = _reaction_side_anchor_x(
+                        side,
+                        gap,
+                        enzyme_left_x,
+                        enzyme_right_x,
                     )
                     expected_anchor_y = y + height // 2
-                    x = expected_anchor_x - width if side == "Left" else expected_anchor_x
+                    x = _reaction_member_x_for_anchor(expected_anchor_x, width, side)
                     if y < 0:
                         import warnings
                         warnings.warn(
@@ -1651,6 +1839,10 @@ class DeterministicPwmlBuilder:
                 int(loc["y"]) + int(loc["height"]) // 2,
             )
 
+        def loc_anchor_toward(loc: Dict[str, Any], target_x: int, target_y: int) -> Tuple[int, int, int]:
+            anchor_x, anchor_y = get_rect_anchor_toward_target(loc, target_x, target_y)
+            return int(loc["id"]), anchor_x, anchor_y
+
         def _rxn_loc(
             by_rxn: Dict,
             by_id: Dict,
@@ -1685,6 +1877,7 @@ class DeterministicPwmlBuilder:
             element_id: int,
             side: Optional[str] = None,
             reaction_idx: Optional[int] = None,
+            target: Optional[Tuple[int, int]] = None,
         ) -> Optional[Tuple[int, int, int]]:
             if element_type == "Compound":
                 loc = _rxn_loc(
@@ -1692,6 +1885,8 @@ class DeterministicPwmlBuilder:
                     "compound", element_id, side, reaction_idx,
                 )
                 if loc:
+                    if target is not None:
+                        return loc_anchor_toward(loc, target[0], target[1])
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "ElementCollection":
                 loc = _rxn_loc(
@@ -1699,6 +1894,8 @@ class DeterministicPwmlBuilder:
                     "element-collection", element_id, side, reaction_idx,
                 )
                 if loc:
+                    if target is not None:
+                        return loc_anchor_toward(loc, target[0], target[1])
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "NucleicAcid":
                 loc = _rxn_loc(
@@ -1706,10 +1903,14 @@ class DeterministicPwmlBuilder:
                     "nucleic-acid", element_id, side, reaction_idx,
                 )
                 if loc:
+                    if target is not None:
+                        return loc_anchor_toward(loc, target[0], target[1])
                     return loc_side_center(loc, side) if side else loc_center(loc)
             elif element_type == "Protein":
                 loc = protein_loc_by_id.get(element_id)
                 if loc:
+                    if target is not None:
+                        return loc_anchor_toward(loc, target[0], target[1])
                     return loc_side_center(loc, side) if side else loc_center(loc)
             return None
 
@@ -1753,6 +1954,8 @@ class DeterministicPwmlBuilder:
             no_enzyme = enzyme_box is None
             no_enzyme_virtual_left = enzyme_left_x
             if no_enzyme:
+                layout = reaction_layouts.get(reaction_idx, {"row-dir": 1})
+                substrate_side = _reaction_visual_side(layout, True)
                 left_elements = (
                     reaction.get("reaction-left-elements", [])
                     if isinstance(reaction.get("reaction-left-elements"), list)
@@ -1761,9 +1964,12 @@ class DeterministicPwmlBuilder:
                 for rel in left_elements:
                     etype = str(rel.get("element-type") or "")
                     eid = int(rel.get("element-id") or 0)
-                    loc = location_info(etype, eid, "Left", reaction_idx)
+                    loc = location_info(etype, eid, substrate_side, reaction_idx)
                     if loc:
-                        no_enzyme_virtual_left = loc[1] + substrate_gap
+                        if substrate_side == "Left":
+                            no_enzyme_virtual_left = loc[1] + substrate_gap
+                        else:
+                            no_enzyme_virtual_left = loc[1] - substrate_gap - 70
                         break
                 enzyme_left_x = no_enzyme_virtual_left
                 enzyme_right_x = no_enzyme_virtual_left + 70
@@ -1776,22 +1982,27 @@ class DeterministicPwmlBuilder:
                 for rel in reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []:
                     etype = str(rel.get("element-type") or "")
                     eid = int(rel.get("element-id") or 0)
-                    loc = location_info(etype, eid, side, reaction_idx)
+                    layout = reaction_layouts.get(reaction_idx, {"row-dir": 1})
+                    is_substrate_side = side_key == "reaction-left-elements"
+                    side = _reaction_visual_side(layout, is_substrate_side)
+                    target = (
+                        (enzyme_left_x, enzyme_cy)
+                        if side == "Left"
+                        else (enzyme_right_x, enzyme_cy)
+                    )
+                    loc = location_info(etype, eid, side, reaction_idx, target)
                     if not loc:
                         continue
                     location_id, lx, ly = loc
                     edge_id = self.ids.next()
-                    if no_enzyme and side == "Left":
-                        x1, y1, x2, y2 = enzyme_right_x, enzyme_cy, enzyme_right_x, enzyme_cy
+                    if no_enzyme and is_substrate_side:
+                        x1, y1, x2, y2 = target[0], target[1], target[0], target[1]
                         hidden = True
                     elif no_enzyme:
-                        x1, y1, x2, y2 = lx, enzyme_cy, no_enzyme_virtual_left, enzyme_cy
-                        hidden = False
-                    elif side == "Left":
-                        x1, y1, x2, y2 = lx, ly, enzyme_left_x, enzyme_cy
+                        x1, y1, x2, y2 = lx, ly, target[0], target[1]
                         hidden = False
                     else:
-                        x1, y1, x2, y2 = lx, ly, enzyme_right_x, enzyme_cy
+                        x1, y1, x2, y2 = lx, ly, target[0], target[1]
                         hidden = False
                     path, cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
                     edge = {
@@ -1801,7 +2012,7 @@ class DeterministicPwmlBuilder:
                         "hidden": hidden,
                         "zindex": 18,
                     }
-                    if side == "Left":
+                    if is_substrate_side:
                         _add_no_arrow(edge)
                     else:
                         _add_start_arrow(edge, x1, y1, cp1x, cp1y)
@@ -1953,22 +2164,16 @@ class DeterministicPwmlBuilder:
 
         # Membrane-visualizations at compartment boundaries
         present_ctypes: Set[str] = {
-            _match_canonical_type(str(s.get("compartment_canonical", "")))
+            _match_canonical_type(
+                str(s.get("compartment_canonical") or s.get("subcellular_location") or s.get("name") or "")
+            )
             for s in raw_bio_states
         }
-
-        extra_h = int(canvas_h * 0.18)
-        pm_h = int(canvas_h * 0.05)
-        cyto_y = extra_h + pm_h
-        cyto_h = int(canvas_h * 0.40)
-        nuc_h = int(cyto_h * 0.35)
-
-        # For 1-2 compartments the bands were redistributed; recompute boundary y
-        if len(present_ctypes) <= 2:
-            sorted_ctypes = sorted(present_ctypes, key=lambda t: _CANONICAL_TYPE_ORDER.get(t, 99))
-            band_h = canvas_h // max(len(present_ctypes), 1)
-            cyto_y = band_h if len(sorted_ctypes) >= 2 else 0
-            nuc_h = band_h // 3
+        region_by_ctype: Dict[str, Dict[str, Any]] = {}
+        for region in compartment_regions.values():
+            ctype = str(region.get("ctype") or "")
+            if ctype:
+                region_by_ctype.setdefault(ctype, region)
 
         cytosol_group = {"cytosol", "nucleus", "endoplasmic reticulum", "mitochondria", "lysosome", "peroxisome", "golgi"}
         has_extracellular = "extracellular" in present_ctypes
@@ -1977,31 +2182,35 @@ class DeterministicPwmlBuilder:
         has_mitochondria = "mitochondria" in present_ctypes
 
         if has_extracellular and has_cytosol:
+            cytosol_regions = [region_by_ctype[ctype] for ctype in cytosol_group if ctype in region_by_ctype]
+            membrane_y = min((int(region["y"]) for region in cytosol_regions), default=0)
             membrane_visualizations.append({
                 "id": self.ids.next(),
                 "complete-membrane": True,
                 "x": 0,
-                "y": cyto_y,
+                "y": membrane_y,
                 "width": str(canvas_w),
                 "height": "8",
                 "zindex": 5,
             })
         if has_nucleus and has_cytosol:
+            nucleus_region = region_by_ctype.get("nucleus", {"y": 0, "h": 0})
             membrane_visualizations.append({
                 "id": self.ids.next(),
                 "complete-membrane": True,
                 "x": 0,
-                "y": cyto_y + nuc_h,
+                "y": int(nucleus_region["y"]) + int(nucleus_region["h"]),
                 "width": str(canvas_w // 2),
                 "height": "8",
                 "zindex": 5,
             })
         if has_mitochondria and has_cytosol:
+            mitochondria_region = region_by_ctype.get("mitochondria", {"y": 0})
             membrane_visualizations.append({
                 "id": self.ids.next(),
                 "complete-membrane": True,
                 "x": 0,
-                "y": cyto_y + nuc_h,
+                "y": int(mitochondria_region["y"]),
                 "width": str(canvas_w),
                 "height": "8",
                 "zindex": 5,
@@ -2758,28 +2967,9 @@ class DeterministicPwmlBuilder:
         layout_substrate_gap = 46
         layout_product_gap = 51
         layout_compound_gap_y = 30
-        layout_rxn_step_x = 800
-        layout_protein_w, layout_protein_h = 150, 70
+        layout_rxn_step_x = REACTION_STEP_X
+        layout_protein_w, layout_protein_h = REACTION_PROTEIN_W, REACTION_PROTEIN_H
         layout_protein_gap_x = 10
-
-        state_region_by_key: Dict[str, Dict[str, int]] = {}
-        for bound in ir.get("bound_visualizations", []) if isinstance(ir.get("bound_visualizations"), list) else []:
-            if not isinstance(bound, dict):
-                continue
-            biological_state_key = str(bound.get("biological_state_key") or "")
-            if biological_state_key:
-                state_region_by_key[biological_state_key] = {
-                    "x": int(bound.get("x") or 0),
-                    "y": int(bound.get("y") or 0),
-                    "w": int(bound.get("width") or self.args.width),
-                    "h": int(bound.get("height") or self.args.height),
-                }
-
-        def ir_region_for_state(state_key: str) -> Dict[str, int]:
-            return state_region_by_key.get(
-                state_key,
-                {"x": 0, "y": 0, "w": int(self.args.width), "h": int(self.args.height)},
-            )
 
         raw_reactions_by_key = {
             str(reaction.get("key")): reaction
@@ -2795,23 +2985,84 @@ class DeterministicPwmlBuilder:
             if reaction_key:
                 reaction_keys_by_state[biological_state_key].append(reaction_key)
 
+        existing_region_by_key: Dict[str, Dict[str, int]] = {}
+        for bound in ir.get("bound_visualizations", []) if isinstance(ir.get("bound_visualizations"), list) else []:
+            if not isinstance(bound, dict):
+                continue
+            biological_state_key = str(bound.get("biological_state_key") or "")
+            if biological_state_key:
+                existing_region_by_key[biological_state_key] = {
+                    "x": int(bound.get("x") or 0),
+                    "y": int(bound.get("y") or 0),
+                    "w": int(bound.get("width") or self.args.width),
+                    "h": int(bound.get("height") or self.args.height),
+                }
+
+        state_region_by_key: Dict[str, Dict[str, int]] = {}
+        state_keys = [
+            str(state.get("key") or "")
+            for state in ir.get("biological_states", [])
+            if isinstance(state, dict) and state.get("key") is not None
+        ]
+        y = 0
+        for state_key in state_keys:
+            existing_region = existing_region_by_key.get(
+                state_key,
+                {"x": 0, "y": y, "w": int(self.args.width), "h": int(self.args.height) // max(1, len(state_keys))},
+            )
+            n_rxns = len(reaction_keys_by_state.get(state_key, []))
+            region_h = max(
+                int(existing_region.get("h", 0)),
+                _reaction_region_height(n_rxns, int(self.args.width)),
+            )
+            state_region_by_key[state_key] = {
+                "x": 0,
+                "y": y,
+                "w": int(self.args.width),
+                "h": region_h,
+            }
+            y += region_h
+        if y < int(self.args.height) and state_keys:
+            state_region_by_key[state_keys[-1]]["h"] += int(self.args.height) - y
+            y = int(self.args.height)
+        if y > int(self.args.height):
+            self.args.height = y
+
+        biological_state_id_by_key = {
+            state_key: lookup("biological_states", state_key)
+            for state_key in state_keys
+        }
+        for bound in self.section_items.get("bound-visualizations", []):
+            bound_bs_id = bound.get("biological-state-id")
+            for state_key, bs_id in biological_state_id_by_key.items():
+                if bs_id != bound_bs_id:
+                    continue
+                region = state_region_by_key.get(state_key)
+                if region:
+                    bound["x"] = region["x"]
+                    bound["y"] = region["y"]
+                    bound["width"] = str(region["w"])
+                    bound["height"] = str(region["h"])
+                break
+
+        def ir_region_for_state(state_key: str) -> Dict[str, int]:
+            return state_region_by_key.get(
+                state_key,
+                {"x": 0, "y": 0, "w": int(self.args.width), "h": int(self.args.height)},
+            )
+
         reaction_layout_by_key: Dict[str, Dict[str, int]] = {}
         for biological_state_key, reaction_keys in reaction_keys_by_state.items():
             region = ir_region_for_state(biological_state_key)
-            n_rxns = len(reaction_keys)
-            enzyme_cx_base = region["x"] + region["w"] // 2 - (n_rxns - 1) * layout_rxn_step_x // 2
-            enzyme_cy = max(region["y"] + region["h"] // 2, 360)
             for k, reaction_key in enumerate(reaction_keys):
-                enzyme_cx = enzyme_cx_base + k * layout_rxn_step_x
-                enzyme_x = enzyme_cx - layout_protein_w // 2
-                enzyme_y = enzyme_cy - layout_protein_h // 2
-                reaction_layout_by_key[reaction_key] = {
-                    "enzyme-cx": enzyme_cx,
-                    "enzyme-cy": enzyme_cy,
-                    "enzyme-x": enzyme_x,
-                    "enzyme-y": enzyme_y,
-                    "compound-stack-cy": enzyme_cy,
-                }
+                reaction_layout_by_key[reaction_key] = _serpentine_reaction_position(
+                    region,
+                    k,
+                    pad=LAYOUT_PAD,
+                    rxn_step_x=layout_rxn_step_x,
+                    protein_w=layout_protein_w,
+                    protein_h=layout_protein_h,
+                )
 
         def ensure_protein_location(protein_key: str, biological_state_key: str) -> Optional[int]:
             loc_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
@@ -3078,6 +3329,7 @@ class DeterministicPwmlBuilder:
             }
         )
         compound_loc_by_rxn_side: Dict[Tuple[int, str, int, str], int] = {}
+        row_transition_source_by_member_key: Dict[str, str] = {}
 
         for reaction_key, reaction in raw_reactions_by_key.items():
             layout = reaction_layout_by_key.get(reaction_key)
@@ -3090,7 +3342,9 @@ class DeterministicPwmlBuilder:
             compound_stack_cy = layout["compound-stack-cy"]
             for side_key in ["left", "right"]:
                 members = reaction.get(side_key, []) if isinstance(reaction.get(side_key), list) else []
-                side = "Left" if side_key == "left" else "Right"
+                is_substrate_side = side_key == "left"
+                side = _reaction_visual_side(layout, is_substrate_side)
+                gap = layout_substrate_gap if is_substrate_side else layout_product_gap
                 stack_members: List[Dict[str, Any]] = []
                 for member in members:
                     if not isinstance(member, dict):
@@ -3102,14 +3356,17 @@ class DeterministicPwmlBuilder:
                         compound_id, state_key = identity
                         producer_idx = shared_from_previous.get((compound_id, state_key, reaction_idx))
                         if producer_idx is not None:
+                            producer_layout = reaction_layout_by_key.get(reaction_sequence[producer_idx][0], layout)
+                            producer_side = _reaction_visual_side(producer_layout, False)
                             shared_loc_id = compound_loc_by_rxn_side.get(
-                                (compound_id, state_key, producer_idx, "Right")
+                                (compound_id, state_key, producer_idx, producer_side)
                             )
                             if shared_loc_id is not None:
                                 member_key = str(member.get("key") or "")
                                 if member_key:
                                     reaction_member_location_by_key[member_key] = shared_loc_id
-                                compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, "Left")] = shared_loc_id
+                                    row_transition_source_by_member_key[member_key] = reaction_sequence[producer_idx][0]
+                                compound_loc_by_rxn_side[(compound_id, state_key, reaction_idx, side)] = shared_loc_id
                                 compound_record = compound_record_by_id.get(compound_id, {})
                                 self.layout_debug_shared_intermediates.append(
                                     {
@@ -3162,13 +3419,14 @@ class DeterministicPwmlBuilder:
                     member = stack_member["member"]
                     width = int(stack_member["width"])
                     height = int(stack_member["height"])
-                    expected_anchor_x = (
-                        enzyme_left_x - layout_substrate_gap
-                        if side_key == "left"
-                        else enzyme_right_x + layout_product_gap
+                    expected_anchor_x = _reaction_side_anchor_x(
+                        side,
+                        gap,
+                        enzyme_left_x,
+                        enzyme_right_x,
                     )
                     expected_anchor_y = y + height // 2
-                    x = expected_anchor_x - width if side == "Left" else expected_anchor_x
+                    x = _reaction_member_x_for_anchor(expected_anchor_x, width, side)
                     if y < 0:
                         import warnings
                         warnings.warn(
@@ -3215,7 +3473,7 @@ class DeterministicPwmlBuilder:
 
         edge_by_id = {int(edge["id"]): edge for edge in self.section_items["edges"]}
 
-        def loc_connection_point(loc_id: int, side: str) -> Optional[Tuple[int, int]]:
+        def loc_side_connection_point(loc_id: int, side: str) -> Optional[Tuple[int, int]]:
             loc = loc_by_id.get(loc_id)
             if not loc:
                 return None
@@ -3223,6 +3481,17 @@ class DeterministicPwmlBuilder:
             if side == "Left":
                 x += int(loc["width"])
             return x, int(loc["y"]) + int(loc["height"]) // 2
+
+        def loc_connection_point(
+            loc_id: int,
+            target_x: int,
+            target_y: int,
+            mode: str = "auto",
+        ) -> Optional[Tuple[int, int]]:
+            loc = loc_by_id.get(loc_id)
+            if not loc:
+                return None
+            return get_rect_anchor_toward_target(loc, target_x, target_y, mode=mode)
 
         def reaction_key_has_enzyme(reaction_key: str) -> bool:
             reaction = raw_reactions_by_key.get(reaction_key)
@@ -3261,6 +3530,7 @@ class DeterministicPwmlBuilder:
                 enzyme_left = layout["enzyme-x"] if layout else region["x"] + region["w"] // 2
                 enzyme_right = enzyme_left + 70
                 enzyme_cy = layout["enzyme-cy"] if layout else region["y"] + region["h"] // 2
+                substrate_side = _reaction_visual_side(layout or {"row-dir": 1}, True)
                 for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
                     if not isinstance(member, dict) or str(member.get("role") or "") != "left":
                         continue
@@ -3269,46 +3539,90 @@ class DeterministicPwmlBuilder:
                         loc_id = lookup("locations", member.get("location_key"))
                     if loc_id is None:
                         continue
-                    point = loc_connection_point(loc_id, "Left")
+                    point = loc_side_connection_point(loc_id, substrate_side)
                     if point is not None:
-                        enzyme_left = point[0] + layout_substrate_gap
+                        if substrate_side == "Left":
+                            enzyme_left = point[0] + layout_substrate_gap
+                        else:
+                            enzyme_left = point[0] - layout_substrate_gap - 70
                         enzyme_right = enzyme_left + 70
                         break
             no_enzyme = enzyme_box is None
+            target_box = {
+                "x": enzyme_left,
+                "y": enzyme_cy - (
+                    enzyme_box[3] // 2 if enzyme_box is not None else layout_protein_h // 2
+                ),
+                "width": str(
+                    enzyme_box[2] if enzyme_box is not None else enzyme_right - enzyme_left
+                ),
+                "height": str(enzyme_box[3] if enzyme_box is not None else layout_protein_h),
+            }
             for member in viz.get("members", []) if isinstance(viz.get("members"), list) else []:
                 if not isinstance(member, dict):
                     continue
                 role = str(member.get("role") or "")
-                side = "Left" if role == "left" else "Right" if role == "right" else ""
-                if not side:
+                is_substrate_side = role == "left"
+                is_product_side = role == "right"
+                if not is_substrate_side and not is_product_side:
                     continue
+                layout = reaction_layout_by_key.get(reaction_key, {"row-dir": 1})
+                side = _reaction_visual_side(layout, is_substrate_side)
+                target = (
+                    (enzyme_left, enzyme_cy)
+                    if side == "Left"
+                    else (enzyme_right, enzyme_cy)
+                )
                 loc_id = reaction_member_location_by_key.get(str(member.get("process_member_key") or ""))
                 if loc_id is None:
                     loc_id = lookup("locations", member.get("location_key"))
                 edge_id = lookup("edges", member.get("edge_key"))
                 if loc_id is None or edge_id is None:
                     continue
-                point = loc_connection_point(loc_id, side)
+                member_key = str(member.get("process_member_key") or "")
+                source_reaction_key = row_transition_source_by_member_key.get(member_key)
+                source_layout = (
+                    reaction_layout_by_key.get(source_reaction_key)
+                    if source_reaction_key is not None
+                    else None
+                )
+                target_layout = reaction_layout_by_key.get(reaction_key)
+                is_row_transition = (
+                    source_layout is not None
+                    and target_layout is not None
+                    and int(source_layout.get("row", -1)) != int(target_layout.get("row", -1))
+                    and not no_enzyme
+                )
+                point = loc_connection_point(
+                    loc_id,
+                    target[0],
+                    target[1],
+                    mode="vertical" if is_row_transition else "auto",
+                )
                 edge = edge_by_id.get(edge_id)
                 if point is None or edge is None:
                     continue
                 px, py = point
                 edge["visualization-template-id"] = 5
                 edge.pop("options", None)
-                if no_enzyme and side == "Left":
-                    x1, y1, x2, y2 = enzyme_right, enzyme_cy, enzyme_right, enzyme_cy
+                if no_enzyme and is_substrate_side:
+                    x1, y1, x2, y2 = target[0], target[1], target[0], target[1]
                     edge["hidden"] = True
                 elif no_enzyme:
-                    x1, y1, x2, y2 = px, enzyme_cy, enzyme_left, enzyme_cy
+                    x1, y1, x2, y2 = px, py, target[0], target[1]
                     edge["hidden"] = False
-                elif side == "Left":
-                    x1, y1, x2, y2 = px, py, enzyme_left, enzyme_cy
+                elif is_row_transition:
+                    target_anchor = get_rect_anchor_toward_target(target_box, px, py, mode="vertical")
+                    x1, y1, x2, y2 = px, py, target_anchor[0], target_anchor[1]
                     edge["hidden"] = False
                 else:
-                    x1, y1, x2, y2 = px, py, enzyme_right, enzyme_cy
+                    x1, y1, x2, y2 = px, py, target[0], target[1]
                     edge["hidden"] = False
-                edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
-                if side == "Left":
+                if is_row_transition:
+                    edge["path"], cp1x, cp1y, cp2x, cp2y = _elbow_edge_path(x1, y1, x2, y2)
+                else:
+                    edge["path"], cp1x, cp1y, cp2x, cp2y = _curved_edge_path(x1, y1, x2, y2)
+                if is_substrate_side:
                     _add_no_arrow(edge)
                 else:
                     _add_start_arrow(edge, x1, y1, cp1x, cp1y)
@@ -3348,7 +3662,14 @@ class DeterministicPwmlBuilder:
                     if not minfo:
                         continue
                     role = str(member.get("role") or "")
-                    side = "Left" if role == "left" else "Right" if role == "right" else ""
+                    layout = reaction_layout_by_key.get(str(viz.get("process_key") or ""), {"row-dir": 1})
+                    side = (
+                        _reaction_visual_side(layout, True)
+                        if role == "left"
+                        else _reaction_visual_side(layout, False)
+                        if role == "right"
+                        else ""
+                    )
                     mtype = str(member.get("member_type") or minfo.get("entity_type") or "")
                     if role == "enzyme":
                         ev = {"id": self.ids.next(), "reaction-enzyme-id": int(minfo["id"])}
@@ -3983,7 +4304,7 @@ def build_pwml_pipeline_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--name", default="Generated Pathway", help="Pathway name")
     parser.add_argument("--subject", default="Metabolic", help="Pathway subject")
     parser.add_argument("--description", default="", help="Pathway description")
-    parser.add_argument("--width", type=int, default=3200, help="PWML canvas width")
+    parser.add_argument("--width", type=int, default=DEFAULT_CANVAS_WIDTH, help="PWML canvas width")
     parser.add_argument("--height", type=int, default=1400, help="PWML canvas height")
     parser.add_argument("--background-color", default="#FFFFFF", help="PWML background color")
     parser.add_argument("--non-strict-db", action="store_true", help="Warn instead of erroring on missing DB identities")
@@ -4009,8 +4330,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--name", default="Generated Pathway", help="Pathway name")
     parser.add_argument("--description", default="", help="Pathway description")
     parser.add_argument("--subject", default="Metabolic", help="Pathway subject")
-    parser.add_argument("--height", type=int, default=1400, help="Pathway visualization height")
-    parser.add_argument("--width", type=int, default=3200, help="Pathway visualization width")
+    parser.add_argument("--height", type=int, default=DEFAULT_CANVAS_HEIGHT, help="Pathway visualization height")
+    parser.add_argument("--width", type=int, default=DEFAULT_CANVAS_WIDTH, help="Pathway visualization width")
     parser.add_argument("--background-color", default="#FFFFFF", help="Pathway visualization background color")
     parser.add_argument("--report", default="", help="Validation mismatch report path")
     parser.add_argument("--snapshot", default="", help="Optional path to write discovered signature JSON")
