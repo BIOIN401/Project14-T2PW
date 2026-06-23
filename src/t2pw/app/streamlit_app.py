@@ -70,6 +70,7 @@ from t2pw.pipeline.pipeline import (
 from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
+from t2pw.pipeline.reaction_preservation_validator import write_reaction_preservation_report_if_manifest
 from t2pw.pipeline.preprocessor import is_ambiguous_multi_example_review_context, preprocess
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
@@ -235,6 +236,26 @@ def _save_pipeline_outputs(
 
 def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
+
+
+def _write_reaction_preservation_report(stage: str, payload: Any) -> Optional[Dict[str, Any]]:
+    try:
+        return write_reaction_preservation_report_if_manifest(
+            payload,
+            PROJECT_ROOT / "tmp",
+            stage=stage,
+        )
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "stage": stage,
+            "error": str(exc),
+            "locked_reaction_count": 0,
+            "preserved_count": 0,
+            "missing_count": 0,
+            "changed_count": 0,
+            "quarantined_count": 0,
+            "details": [],
+        }
 
 
 def _json_dump(value: Any) -> str:
@@ -662,6 +683,17 @@ def _json_artifact_entries(
                     post_artifacts.get("gap_resolution_iterations"),
                 )
             )
+        preservation_reports = post_artifacts.get("reaction_preservation_reports")
+        if isinstance(preservation_reports, dict):
+            for stage, report in preservation_reports.items():
+                if report not in (None, "", [], {}):
+                    entries.append(
+                        (
+                            f"Reaction preservation {stage}",
+                            f"reaction_preservation_{stage}.json",
+                            report,
+                        )
+                    )
     if isinstance(pwml_result, dict):
         for label, filename, key in [
             ("PWML IR", "final.pwml_ir.json", "pwml_ir"),
@@ -669,6 +701,8 @@ def _json_artifact_entries(
             ("PWML IR validation", "pwml_ir_validation.json", "pwml_ir_validation"),
             ("PWML validation report", "pwml_validation_report.json", "validation_report"),
             ("PWML QA", "pwml_qa.json", "qa"),
+            ("Reaction preservation before final export", "final_reaction_preservation_report.json", "reaction_preservation_before_final_export"),
+            ("Reaction preservation after final export", "reaction_preservation_report_after_final_export.json", "reaction_preservation_after_final_export"),
         ]:
             value = pwml_result.get(key)
             if value not in (None, "", [], {}):
@@ -1003,6 +1037,7 @@ def run_post_pipeline_sbml_artifacts(
         post_transport_attachment_probe: Dict[str, Any] = {}
         post_dedupe_probe: Dict[str, Any] = {}
         gate_connectivity_summary: Dict[str, Any] = {}
+        reaction_preservation_reports: Dict[str, Any] = {}
         try:
             normalize_composites(normalized_input, report=normalization_report)
             rewrite_reactions_to_complex_states(normalized_input, report=normalization_report)
@@ -1108,6 +1143,9 @@ def run_post_pipeline_sbml_artifacts(
                     json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
                     encoding="utf-8",
                 )
+        preservation_after_normalization = _write_reaction_preservation_report("after_normalization", normalized_input)
+        if preservation_after_normalization is not None:
+            reaction_preservation_reports["after_normalization"] = preservation_after_normalization
         if gate_fail_report:
             gate_fail_report_path.write_text(json.dumps(gate_fail_report, indent=2, ensure_ascii=False), encoding="utf-8")
             return {
@@ -1151,6 +1189,7 @@ def run_post_pipeline_sbml_artifacts(
                 "example_index_entry_count": 0,
                 "audit_iterations": [],
                 "gap_resolution_iterations": [],
+                "reaction_preservation_reports": reaction_preservation_reports,
                 "audit_loop_summary": {
                     "rounds_executed": 0,
                     "max_rounds": 0,
@@ -1503,6 +1542,15 @@ def run_post_pipeline_sbml_artifacts(
 
         audited_json.write_text(current_input.read_text(encoding="utf-8"), encoding="utf-8")
         loop_duration = round(time.time() - audit_started_at, 3)
+        try:
+            preservation_after_audit = _write_reaction_preservation_report(
+                "after_audit",
+                json.loads(audited_json.read_text(encoding="utf-8")),
+            )
+            if preservation_after_audit is not None:
+                reaction_preservation_reports["after_audit"] = preservation_after_audit
+        except Exception:
+            pass
 
         # Rebuild draft graph from the fully-audited payload so the PNG shown
         # in the UI and the reaction summary both reflect the corrected state.
@@ -1587,6 +1635,13 @@ def run_post_pipeline_sbml_artifacts(
                 "error": str(exc),
             }
             sbml_input_path = mapped_json
+        final_export_payload = json.loads(sbml_input_path.read_text(encoding="utf-8"))
+        preservation_before_final_export = _write_reaction_preservation_report(
+            "before_final_export",
+            final_export_payload,
+        )
+        if preservation_before_final_export is not None:
+            reaction_preservation_reports["before_final_export"] = preservation_before_final_export
         sbml_overwatch_report: Dict[str, Any] = {}
         sbml_diagram_png_bytes = b""
         sbml_diagram_error = ""
@@ -1647,9 +1702,9 @@ def run_post_pipeline_sbml_artifacts(
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
             "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
-            "final_mapped": json.loads(sbml_input_path.read_text(encoding="utf-8")),
+            "final_mapped": final_export_payload,
             "final_mapped_db": json.loads(mapped_json.read_text(encoding="utf-8")),
-            "final_export_input": json.loads(sbml_input_path.read_text(encoding="utf-8")),
+            "final_export_input": final_export_payload,
             "mapping_report": mapping_report,
             "enrichment_report": enrichment_report,
             "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8"))
@@ -1694,6 +1749,7 @@ def run_post_pipeline_sbml_artifacts(
             "stoich_audit_log": stoich_audit_log,
             "audit_iterations": audit_iterations,
             "gap_resolution_iterations": gap_iterations,
+            "reaction_preservation_reports": reaction_preservation_reports,
             "audit_loop_summary": {
                 "rounds_executed": len(audit_iterations),
                 "max_rounds": max_rounds,
@@ -1719,7 +1775,9 @@ def run_pwml_export(
     grounding_dict: Optional[Dict[str, Any]] = None,
     strict_db: bool = True,
 ) -> Dict[str, Any]:
+    before_export_report: Optional[Dict[str, Any]] = None
     try:
+        before_export_report = _write_reaction_preservation_report("before_final_export", final_payload)
         payload = deepcopy(final_payload)
         grounding_report: Dict[str, Any] = {}
         if grounding_dict:
@@ -1766,6 +1824,7 @@ def run_pwml_export(
                 "grounding_report": grounding_report,
                 "required_gate_report": required_gate_report,
                 "required_gate_report_path": str(required_gate_path),
+                "reaction_preservation_before_final_export": before_export_report,
             }
 
         pwml_ir, ir_report = build_pwml_ir(
@@ -1793,6 +1852,7 @@ def run_pwml_export(
                 "pwml_ir": pwml_ir,
                 "pwml_ir_report": ir_report,
                 "pwml_ir_validation": ir_validation,
+                "reaction_preservation_before_final_export": before_export_report,
             }
         signature = discover_structure_signature(ref_path)
         args = SimpleNamespace(
@@ -1817,6 +1877,7 @@ def run_pwml_export(
         out_path = project_root / "outputs" / "pathway.pwml"
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_bytes(xml_bytes)
+        after_export_report = _write_reaction_preservation_report("after_final_export", payload)
         return {
             "ok": True,
             "counts": build_result.counts,
@@ -1831,10 +1892,13 @@ def run_pwml_export(
             "pwml_ir": pwml_ir,
             "pwml_ir_report": ir_report,
             "pwml_ir_validation": ir_validation,
+            "reaction_preservation_before_final_export": before_export_report,
+            "reaction_preservation_after_final_export": after_export_report,
         }
     except Exception as exc:
         return {"ok": False, "error": str(exc), "counts": {}, "issues": 0,
-                "output_path": "", "qa": {}, "grounding_report": {}}
+                "output_path": "", "qa": {}, "grounding_report": {},
+                "reaction_preservation_before_final_export": before_export_report}
 
 
 # ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
@@ -2161,6 +2225,8 @@ if submit:
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
         final_payload = merge_additions(stage_one, stage_two if isinstance(stage_two, dict) else {})
 
+    stage2_preservation_report = _write_reaction_preservation_report("after_stage2", final_payload)
+
     draft_graph, qa_report, reaction_summary = build_and_save_draft_graph(final_payload)
     st.session_state["draft_graph"] = draft_graph.to_dict()
     st.session_state.pop("draft_graph_png_bytes", None)
@@ -2180,6 +2246,7 @@ if submit:
     st.session_state["qa_hints"] = qa_hints
     st.session_state["final_payload"] = final_payload
     st.session_state["final_payload_snapshot"] = final_payload
+    st.session_state["reaction_preservation_after_stage2"] = stage2_preservation_report
     st.session_state.pop("post_pipeline_artifacts", None)
     st.session_state["token_stats"] = llm_client_module.get_token_stats()
 
