@@ -1,13 +1,13 @@
 {
   "summary": {
-    "total_species": 29,
-    "total_reactions": 16,
-    "completeness_score": 0.333
+    "total_species": 25,
+    "total_reactions": 15,
+    "completeness_score": 0.35
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "3-oxo-2-(2(Z)-pentenyl)cyclopentane-1-octanoic acid (OPC-8:0)",
+        "entity": "OPC-8:0-CoA",
         "reason": "no subcellular location recorded"
       }
     ],
@@ -18,15 +18,11 @@
         "reason": "name suggests a complex or subunit"
       },
       {
-        "entity": "linoleic acid (18:2)",
-        "reason": "name suggests a complex or subunit"
-      },
-      {
         "entity": "hexadecatrienoic acid (16:3)",
         "reason": "name suggests a complex or subunit"
       },
       {
-        "entity": "3-oxo-2-(2(Z)-pentenyl)cyclopentane-1-octanoic acid (OPC-8:0)",
+        "entity": "OPC-8:0",
         "reason": "name suggests a complex or subunit"
       },
       {
@@ -38,7 +34,11 @@
         "reason": "name suggests a complex or subunit"
       },
       {
-        "entity": "OPC-8:CoA ligase 1 (OPCL1)",
+        "entity": "OPC-8:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
         "reason": "name suggests a complex or subunit"
       }
     ],
@@ -50,47 +50,31 @@
         "type": "compound"
       },
       {
-        "entity": "linoleic acid (18:2)",
-        "type": "compound"
-      },
-      {
         "entity": "hexadecatrienoic acid (16:3)",
         "type": "compound"
       },
       {
-        "entity": "13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+        "entity": "13-HPOT",
         "type": "compound"
       },
       {
-        "entity": "11(S)-hydroperoxy-hexadecatrienoic acid (11-HPHT)",
+        "entity": "11-HPHT",
         "type": "compound"
       },
       {
-        "entity": "12,13(S)-epoxy-octadecatrienoic acid (12,13-EOT)",
+        "entity": "12,13-EOT",
         "type": "compound"
       },
       {
-        "entity": "12-oxophytodienoic acid (OPDA)",
+        "entity": "OPDA",
         "type": "compound"
       },
       {
-        "entity": "dinor-OPDA (dnOPDA)",
+        "entity": "dnOPDA",
         "type": "compound"
       },
       {
-        "entity": "3-oxo-2-(2(Z)-pentenyl)cyclopentane-1-octanoic acid (OPC-8:0)",
-        "type": "compound"
-      },
-      {
-        "entity": "jasmonic acid (JA)",
-        "type": "compound"
-      },
-      {
-        "entity": "jasmonoyl-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "10,11-(S)-epoxyhexadecatrienoic acid (10,11-EHT)",
+        "entity": "OPC-8:0",
         "type": "compound"
       },
       {
@@ -102,15 +86,19 @@
         "type": "compound"
       },
       {
-        "entity": "OPC-8-CoA",
+        "entity": "jasmonic acid",
         "type": "compound"
       },
       {
-        "entity": "OPC-6-CoA",
+        "entity": "jasmonoyl-CoA",
         "type": "compound"
       },
       {
-        "entity": "OPC-4-CoA",
+        "entity": "OPC-8:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
         "type": "compound"
       },
       {
@@ -122,43 +110,39 @@
         "type": "compound"
       },
       {
-        "entity": "lipoxygenase (LOX)",
+        "entity": "LOX",
         "type": "protein"
       },
       {
-        "entity": "allene oxide synthase (AOS)",
+        "entity": "AOS",
         "type": "protein"
       },
       {
-        "entity": "allene oxide cyclase (AOC)",
+        "entity": "AOC",
         "type": "protein"
       },
       {
-        "entity": "12-oxophytodienoate reductase 3 (OPR3)",
+        "entity": "OPR3",
         "type": "protein"
       },
       {
-        "entity": "COMATOSE (CTS)",
+        "entity": "OPCL1",
         "type": "protein"
       },
       {
-        "entity": "OPC-8:CoA ligase 1 (OPCL1)",
+        "entity": "ACX1",
         "type": "protein"
       },
       {
-        "entity": "acyl-CoA oxidase 1 (ACX1)",
+        "entity": "MFP",
         "type": "protein"
       },
       {
-        "entity": "multifunctional protein (MFP)",
+        "entity": "KAT2",
         "type": "protein"
       },
       {
-        "entity": "3-ketoacyl-CoA thiolase (KAT2)",
-        "type": "protein"
-      },
-      {
-        "entity": "acyl-thioesterase (AtACH1)",
+        "entity": "CTS",
         "type": "protein"
       }
     ],

@@ -107,6 +107,91 @@ def _sort_key(entry: Dict[str, Any]) -> Tuple[str, str, str, str, str, str]:
     )
 
 
+def _match_key_from_parts(
+    source_reaction_id: Any,
+    name: Any,
+    inputs: Iterable[str],
+    outputs: Iterable[str],
+    source_chunk: Any,
+) -> Tuple[str, str, Tuple[str, ...], Tuple[str, ...], str]:
+    def _norm(value: Any) -> str:
+        return str(value or "").strip().casefold()
+
+    return (
+        _norm(source_reaction_id),
+        _norm(name),
+        tuple(_norm(item) for item in inputs),
+        tuple(_norm(item) for item in outputs),
+        _norm(source_chunk),
+    )
+
+
+def _match_key_from_entry(entry: Dict[str, Any]) -> Tuple[str, str, Tuple[str, ...], Tuple[str, ...], str]:
+    return _match_key_from_parts(
+        entry.get("source_reaction_id"),
+        entry.get("name"),
+        _safe_list(entry.get("inputs")),
+        _safe_list(entry.get("outputs")),
+        entry.get("source_chunk"),
+    )
+
+
+def _match_key_from_reaction(
+    reaction: Dict[str, Any],
+    fallback_chunk: Optional[str],
+) -> Tuple[str, str, Tuple[str, ...], Tuple[str, ...], str]:
+    return _match_key_from_parts(
+        _source_reaction_id(reaction),
+        reaction.get("name") if isinstance(reaction.get("name"), str) else "",
+        _as_string_items(reaction.get("inputs")),
+        _as_string_items(reaction.get("outputs")),
+        _source_chunk(reaction, fallback_chunk),
+    )
+
+
+def apply_locked_reaction_ids(
+    payloads: Dict[str, Any] | Iterable[Dict[str, Any]],
+    locked_manifest: Iterable[Dict[str, Any]],
+    *,
+    source_chunk: Optional[str] = None,
+) -> None:
+    """Mutate raw Stage-1 reactions with their deterministic lock IDs."""
+    lock_ids_by_key: Dict[Tuple[str, str, Tuple[str, ...], Tuple[str, ...], str], List[str]] = {}
+    for entry in locked_manifest:
+        if not isinstance(entry, dict):
+            continue
+        locked_id = entry.get("locked_reaction_id")
+        if not isinstance(locked_id, str) or not locked_id.strip():
+            continue
+        lock_ids_by_key.setdefault(_match_key_from_entry(entry), []).append(locked_id.strip())
+
+    if isinstance(payloads, dict):
+        payload_entries: Iterable[Dict[str, Any]] = [{"payload": payloads, "source_chunk": source_chunk}]
+    else:
+        payload_entries = payloads
+
+    for payload_entry in payload_entries:
+        has_wrapper_payload = isinstance(payload_entry, dict) and "payload" in payload_entry
+        payload = _safe_dict(payload_entry.get("payload") if has_wrapper_payload else payload_entry)
+        fallback_chunk = ""
+        if has_wrapper_payload:
+            raw_chunk = payload_entry.get("source_chunk", source_chunk)
+            if raw_chunk not in (None, ""):
+                fallback_chunk = str(raw_chunk)
+
+        reactions = _safe_list(_safe_dict(payload.get("processes")).get("reactions"))
+        for reaction in reactions:
+            if not isinstance(reaction, dict):
+                continue
+            if _scope_membership(reaction).casefold() == "out_of_scope":
+                continue
+            ids = lock_ids_by_key.get(_match_key_from_reaction(reaction, fallback_chunk))
+            if not ids:
+                continue
+            reaction["locked_reaction_id"] = ids.pop(0)
+            reaction["locked"] = True
+
+
 def build_locked_reaction_manifest(
     payloads: Dict[str, Any] | Iterable[Dict[str, Any]],
     *,
@@ -214,6 +299,7 @@ def write_locked_reaction_manifest(
     out_path.mkdir(parents=True, exist_ok=True)
 
     manifest, report = build_locked_reaction_manifest(payloads, source_chunk=source_chunk)
+    apply_locked_reaction_ids(payloads, manifest, source_chunk=source_chunk)
     manifest_path = out_path / MANIFEST_FILENAME
     report_path = out_path / REPORT_FILENAME
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -237,8 +323,8 @@ def write_stage1_lock_artifacts(
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
 
+    result = write_locked_reaction_manifest(payloads, out_path, source_chunk=source_chunk)
     raw_path = out_path / RAW_STAGE1_FILENAME
     raw_path.write_text(json.dumps(payloads, indent=2, ensure_ascii=False), encoding="utf-8")
-    result = write_locked_reaction_manifest(payloads, out_path, source_chunk=source_chunk)
     result["raw_stage1_path"] = str(raw_path)
     return result

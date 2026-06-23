@@ -1,105 +1,106 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: LOX reaction on linolenic acid (18:3)
-  Reactants: linolenic acid (18:3) [plastid state]
-  Products:  13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT) [plastid state]
-  Modifier:  lipoxygenase (LOX) [plastid state] (role=catalyst, confidence=1.0)
+REACTION 1: LOX reaction on linolenic acid
+  Reactants: linolenic acid (18:3) [chloroplast state]
+  Products:  13-HPOT [chloroplast state]
+  Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: LOX reaction on hexadecatrienoic acid (16:3)
-  Reactants: hexadecatrienoic acid (16:3) [plastid state]
-  Products:  11(S)-hydroperoxy-hexadecatrienoic acid (11-HPHT) [plastid state]
-  Modifier:  lipoxygenase (LOX) [plastid state] (role=catalyst, confidence=1.0)
+REACTION 2: LOX reaction on hexadecatrienoic acid
+  Reactants: hexadecatrienoic acid (16:3) [chloroplast state]
+  Products:  11-HPHT [chloroplast state]
+  Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 REACTION 3: AOS reaction on 13-HPOT
-  Reactants: 13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT) [plastid state]
-  Products:  12,13(S)-epoxy-octadecatrienoic acid (12,13-EOT) [plastid state]
-  Modifier:  allene oxide synthase (AOS) [plastid state] (role=catalyst, confidence=1.0)
+  Reactants: 13-HPOT [chloroplast state]
+  Products:  12,13-EOT [chloroplast state]
+  Modifier:  AOS [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: AOS reaction on 11-HPHT
-  Reactants: 11(S)-hydroperoxy-hexadecatrienoic acid (11-HPHT) [plastid state]
-  Products:  10,11-(S)-epoxyhexadecatrienoic acid (10,11-EHT) [plastid state]
-  Modifier:  allene oxide synthase (AOS) [plastid state] (role=catalyst, confidence=1.0)
+REACTION 4: AOC reaction on 12,13-EOT to OPDA
+  Reactants: 12,13-EOT [chloroplast state]
+  Products:  OPDA [chloroplast state]
+  Modifier:  AOC [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: AOC reaction on 12,13-EOT
-  Reactants: 12,13(S)-epoxy-octadecatrienoic acid (12,13-EOT) [plastid state]
-  Products:  12-oxophytodienoic acid (OPDA) [plastid state]
-  Modifier:  allene oxide cyclase (AOC) [plastid state] (role=catalyst, confidence=1.0)
+REACTION 5: OPR3 reaction on OPDA
+  Reactants: OPDA [chloroplast state]
+  Products:  OPC-8:0 [peroxisome state]
+  Modifier:  OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: AOC reaction on 10,11-EHT
-  Reactants: 10,11-(S)-epoxyhexadecatrienoic acid (10,11-EHT) [plastid state]
-  Products:  dinor-OPDA (dnOPDA) [plastid state]
-  Modifier:  allene oxide cyclase (AOC) [plastid state] (role=catalyst, confidence=1.0)
+REACTION 6: OPR3 reaction on dnOPDA
+  Reactants: dnOPDA [chloroplast state]
+  Products:  OPC-6:0 [peroxisome state]
+  Modifier:  OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: OPR3 reaction on OPDA
-  Reactants: 12-oxophytodienoic acid (OPDA) [plastid state]
-  Products:  3-oxo-2-(2(Z)-pentenyl)cyclopentane-1-octanoic acid (OPC-8:0) [unknown]
-  Modifier:  12-oxophytodienoate reductase 3 (OPR3) [peroxisomal state] (role=catalyst, confidence=1.0)
+REACTION 7: OPCL1 reaction on OPC-8:0
+  Reactants: OPC-8:0 [peroxisome state]
+  Products:  OPC-8:0-CoA [unknown]
+  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: OPR3 reaction on dnOPDA
-  Reactants: dinor-OPDA (dnOPDA) [plastid state]
-  Products:  OPC-6:0 [peroxisomal state]
-  Modifier:  12-oxophytodienoate reductase 3 (OPR3) [peroxisomal state] (role=catalyst, confidence=1.0)
+REACTION 8: ACX1 reaction in beta-oxidation
+  Reactants: OPC-8:0-CoA [unknown]
+  Products:  jasmonoyl-CoA [peroxisome state]
+  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: OPCL1 reaction on OPC-8:0
-  Reactants: 3-oxo-2-(2(Z)-pentenyl)cyclopentane-1-octanoic acid (OPC-8:0) [unknown]
-  Products:  OPC-8-CoA [peroxisomal state]
-  Modifier:  OPC-8:CoA ligase 1 (OPCL1) [peroxisomal state] (role=catalyst, confidence=1.0) [possible_complex]
+REACTION 9: jasmonoyl-CoA hydrolysis
+  Reactants: jasmonoyl-CoA [peroxisome state]
+  Products:  jasmonic acid [peroxisome state]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 10: ACX1 reaction in beta-oxidation
-  Reactants: OPC-8-CoA [peroxisomal state]
-  Products:  jasmonoyl-CoA [peroxisomal state]
-  Modifier:  acyl-CoA oxidase 1 (ACX1) [peroxisomal state] (role=catalyst, confidence=1.0), multifunctional protein (MFP) [peroxisomal state] (role=catalyst, confidence=1.0), 3-ketoacyl-CoA thiolase (KAT2) [peroxisomal state] (role=catalyst, confidence=1.0)
+REACTION 10: OPCL1 reaction on OPC-6:0
+  Reactants: OPC-6:0 [peroxisome state]
+  Products:  OPC-6:0-CoA [peroxisome state]
+  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 11: AtACH1 hydrolysis of jasmonoyl-CoA
-  Reactants: jasmonoyl-CoA [peroxisomal state]
-  Products:  jasmonic acid (JA) [peroxisomal state]
-  Modifier:  acyl-thioesterase (AtACH1) [peroxisomal state] (role=catalyst, confidence=1.0)
+REACTION 11: ACX1 reaction in beta-oxidation on OPC-6:0-CoA
+  Reactants: OPC-6:0-CoA [peroxisome state]
+  Products:  jasmonoyl-CoA [peroxisome state]
+  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 12: OPCL1 reaction on OPC-6:0
-  Reactants: OPC-6:0 [peroxisomal state]
-  Products:  OPC-6-CoA [peroxisomal state]
-  Modifier:  OPC-8:CoA ligase 1 (OPCL1) [peroxisomal state] (role=catalyst, confidence=1.0) [possible_complex]
+REACTION 12: OPCL1 reaction on OPDA
+  Reactants: OPDA [chloroplast state]
+  Products:  OPDA-CoA [peroxisome state]
+  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0), OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 13: OPCL1 reaction on OPC-4:0
-  Reactants: OPC-4:0 [peroxisomal state]
-  Products:  OPC-4-CoA [peroxisomal state]
-  Modifier:  OPC-8:CoA ligase 1 (OPCL1) [peroxisomal state] (role=catalyst, confidence=1.0) [possible_complex]
+REACTION 13: OPCL1 reaction on dnOPDA
+  Reactants: dnOPDA [chloroplast state]
+  Products:  dnOPDA-CoA [peroxisome state]
+  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0), OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 14: OPR3 reaction on dnOPDA-CoA
-  Reactants: dnOPDA-CoA [peroxisomal state]
-  Products:  OPC-6-CoA [peroxisomal state]
-  Modifier:  12-oxophytodienoate reductase 3 (OPR3) [peroxisomal state] (role=catalyst, confidence=1.0)
+REACTION 14: beta-oxidation of OPC-8:0-CoA to OPC-6:0-CoA
+  Reactants: OPC-8:0-CoA [unknown]
+  Products:  OPC-6:0-CoA [peroxisome state]
+  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 15: OPR3 reaction on OPDA-CoA
-  Reactants: OPDA-CoA [peroxisomal state]
-  Products:  OPC-8-CoA [peroxisomal state]
-  Modifier:  12-oxophytodienoate reductase 3 (OPR3) [peroxisomal state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 16: LOX reaction on linoleic acid (18:2)
-  Reactants: linoleic acid (18:2) [plastid state]
-  Products:  13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT) [plastid state]
-  Modifier:  lipoxygenase (LOX) [plastid state] (role=catalyst, confidence=1.0)
+REACTION 15: beta-oxidation of OPC-6:0-CoA to OPC-4:0-CoA
+  Reactants: OPC-6:0-CoA [peroxisome state]
+  Products:  OPC-4:0 [peroxisome state]
+  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 TRANSPORT 1: OPDA import into peroxisomes
-  From: plastid state
-  To:   peroxisomal state
-  Cargo: 12-oxophytodienoic acid (OPDA) [plastid state]
-  Transporter: COMATOSE (CTS) [peroxisomal state] (role=transporter, confidence=1.0)
+  From: chloroplast state
+  To:   peroxisome state
+  Cargo: OPDA [chloroplast state]
+  Transporter: CTS [peroxisome state] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 2: dnOPDA import into peroxisomes
+  From: chloroplast state
+  To:   peroxisome state
+  Cargo: dnOPDA [chloroplast state]
+  Transporter: CTS [peroxisome state] (role=transporter, confidence=1.0)
   QA flags:  none

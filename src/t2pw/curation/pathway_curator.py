@@ -21,9 +21,15 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from t2pw.curation.apply_audit_patch import apply_patch_with_policy
+from t2pw.curation.apply_audit_patch import (
+    APPLIED_PATCH_LOG_FILENAME,
+    REJECTED_PATCH_LOG_FILENAME,
+    apply_patch_with_policy,
+)
 from t2pw.llm.client import chat_with_tools
 from t2pw.paths import PROMPTS_DIR
+from t2pw.pipeline.reaction_preservation_validator import load_locked_reaction_manifest
+from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
 
 # ---------------------------------------------------------------------------
@@ -36,6 +42,19 @@ def _safe_dict(v: Any) -> Dict[str, Any]:
 
 def _safe_list(v: Any) -> List[Any]:
     return v if isinstance(v, list) else []
+
+
+def _load_nearby_locked_manifest(*paths: Path) -> Any | None:
+    seen_dirs: set[Path] = set()
+    for path in paths:
+        parent = path if path.is_dir() else path.parent
+        if parent in seen_dirs:
+            continue
+        seen_dirs.add(parent)
+        manifest = load_locked_reaction_manifest(parent / MANIFEST_FILENAME)
+        if manifest is not None:
+            return manifest
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -249,11 +268,21 @@ def run_pathway_curator(
     report["patches"] = deduped
 
     if deduped:
-        patched_payload, apply_report = apply_patch_with_policy(payload, deduped)
+        locked_manifest = _load_nearby_locked_manifest(input_path, output_path, report_path)
+        patched_payload, apply_report = apply_patch_with_policy(
+            payload,
+            deduped,
+            locked_manifest=locked_manifest,
+            stage="curator",
+            applied_log_path=(report_path.parent / APPLIED_PATCH_LOG_FILENAME) if locked_manifest is not None else None,
+            rejected_log_path=(report_path.parent / REJECTED_PATCH_LOG_FILENAME) if locked_manifest is not None else None,
+        )
         apply_summary = _safe_dict(apply_report.get("summary", {}))
         report["summary"]["patches_accepted"] = int(apply_summary.get("accepted_count", 0))
         report["summary"]["patches_rejected"] = int(apply_summary.get("rejected_count", 0))
         report["apply_summary"] = apply_summary
+        if "lock_policy" in apply_report:
+            report["lock_policy"] = apply_report["lock_policy"]
     else:
         patched_payload = deepcopy(payload)
 

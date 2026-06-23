@@ -4,6 +4,7 @@ from t2pw.pipeline.reaction_lock_manifest import (
     MANIFEST_FILENAME,
     RAW_STAGE1_FILENAME,
     REPORT_FILENAME,
+    apply_locked_reaction_ids,
     build_locked_reaction_manifest,
     write_stage1_lock_artifacts,
     write_locked_reaction_manifest,
@@ -184,3 +185,27 @@ def test_manifest_accepts_iterable_of_raw_payloads():
 
     assert report["locked_reaction_count"] == 1
     assert manifest[0]["name"] == "reaction"
+
+
+def test_apply_locked_reaction_ids_annotates_matching_raw_reactions():
+    payload = {
+        "processes": {
+            "reactions": [
+                {
+                    "reaction_id": "R1",
+                    "name": "reaction",
+                    "inputs": ["A"],
+                    "outputs": ["B"],
+                    "evidence": "A produces B",
+                    "scope_membership": "core",
+                }
+            ]
+        }
+    }
+
+    manifest, _report = build_locked_reaction_manifest(payload)
+    apply_locked_reaction_ids(payload, manifest)
+
+    reaction = payload["processes"]["reactions"][0]
+    assert reaction["locked_reaction_id"] == "rxn_lock_001"
+    assert reaction["locked"] is True

@@ -130,6 +130,34 @@ def test_validate_reaction_preservation_marks_merged_candidates():
     assert {detail["status"] for detail in report["details"]} == {"merged_candidate"}
 
 
+def test_validate_reaction_preservation_reads_locked_quarantine_records():
+    current = {
+        "processes": {"reactions": []},
+        "quarantined_locked_reactions": [
+            {
+                "locked_reaction_id": "rxn_lock_001",
+                "reaction_name": "A to B",
+                "reason": "missing_outputs",
+                "missing_entities": ["<missing outputs>"],
+                "original_reaction": {
+                    "locked_reaction_id": "rxn_lock_001",
+                    "source_reaction_id": "R1",
+                    "name": "A to B",
+                    "inputs": ["A"],
+                    "outputs": ["B"],
+                    "evidence": "Enzyme 1 converts A to B.",
+                },
+            }
+        ],
+    }
+
+    report = validate_reaction_preservation(current, [_manifest()[0]], stage="after_stage2")
+
+    assert report["quarantined_count"] == 1
+    assert report["details"][0]["status"] == "quarantined"
+    assert report["details"][0]["matched_reaction_id"] == "R1"
+
+
 def test_write_report_skips_absent_manifest_and_writes_expected_names(tmp_path):
     current = {
         "processes": {

@@ -71,6 +71,7 @@ from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
 from t2pw.pipeline.reaction_preservation_validator import write_reaction_preservation_report_if_manifest
+from t2pw.curation.completeness_audit import run_final_completeness_audit
 from t2pw.pipeline.preprocessor import is_ambiguous_multi_example_review_context, preprocess
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
@@ -2246,6 +2247,7 @@ if submit:
     st.session_state["qa_hints"] = qa_hints
     st.session_state["final_payload"] = final_payload
     st.session_state["final_payload_snapshot"] = final_payload
+    st.session_state["pipeline_source_text"] = text
     st.session_state["reaction_preservation_after_stage2"] = stage2_preservation_report
     st.session_state.pop("post_pipeline_artifacts", None)
     st.session_state["token_stats"] = llm_client_module.get_token_stats()
@@ -3293,6 +3295,84 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_pwml_ir_failed",
                 )
+
+    # ── Final Completeness Audit (optional, non-mutating) ───────────────────
+    with st.expander("Final Completeness Audit", expanded=False):
+        st.caption(
+            "Run a stronger model to verify the final pathway JSON against the "
+            "locked reaction manifest and source text. This is read-only and "
+            "produces a report only."
+        )
+        _completeness_enabled = st.checkbox(
+            "Enable final completeness audit",
+            value=bool(os.getenv("ENABLE_FINAL_COMPLETENESS_AUDIT", "")),
+            key="completeness_audit_enabled",
+        )
+        if st.button("Run Completeness Audit", key="run_completeness_audit_btn"):
+            _source_text_for_audit = st.session_state.get("pipeline_source_text", "")
+            if not _source_text_for_audit:
+                st.warning("No source text available. Run the pipeline first.")
+            else:
+                _audit_final_json = (
+                    st.session_state.get("refinement_working_json")
+                    or st.session_state.get("final_payload")
+                    or final_payload
+                )
+                _audit_manifest_dir = PROJECT_ROOT / "tmp"
+                _audit_manifest_path = _audit_manifest_dir / "locked_reaction_manifest.json"
+                _audit_pres_reports = _safe_dict(
+                    _safe_dict(st.session_state.get("post_pipeline_artifacts")).get(
+                        "reaction_preservation_reports"
+                    )
+                )
+                _audit_pres_report = (
+                    _audit_pres_reports.get("before_final_export")
+                    or _audit_pres_reports.get("after_audit")
+                )
+                with st.spinner("Running final completeness audit..."):
+                    try:
+                        _completeness_report = run_final_completeness_audit(
+                            source_text=_source_text_for_audit,
+                            preprocessor_context=st.session_state.get("pathway_context"),
+                            locked_manifest_path=_audit_manifest_path if _audit_manifest_path.exists() else None,
+                            final_pathway_json=_audit_final_json,
+                            final_preservation_report=_audit_pres_report,
+                            output_path=_audit_manifest_dir,
+                            enabled=_completeness_enabled,
+                        )
+                    except Exception as _ca_exc:
+                        _completeness_report = {"enabled": True, "error": str(_ca_exc), "llm_ok": False}
+                st.session_state["completeness_audit_report"] = _completeness_report
+        _ca_report = st.session_state.get("completeness_audit_report")
+        if isinstance(_ca_report, dict):
+            if _ca_report.get("skipped"):
+                _skip_reason = _ca_report.get("reason", "disabled")
+                st.info(f"Completeness audit skipped: {_skip_reason}")
+            elif _ca_report.get("llm_ok") is False:
+                st.error(f"Completeness audit error: {_ca_report.get('error', 'unknown')}")
+            else:
+                _oc = _ca_report.get("overall_completeness", "unknown")
+                _conf = _ca_report.get("confidence", 0.0)
+                _pres = _ca_report.get("preserved_count", 0)
+                _locked = _ca_report.get("locked_reaction_count", 0)
+                if _oc in ("complete", "mostly_complete"):
+                    st.success(f"Completeness: {_oc} (confidence {_conf:.2f}) - {_pres}/{_locked} locked reactions preserved")
+                else:
+                    st.warning(f"Completeness: {_oc} (confidence {_conf:.2f}) - {_pres}/{_locked} locked reactions preserved")
+                _missing = _safe_list(_ca_report.get("missing_locked_reactions"))
+                if _missing:
+                    st.warning(f"{len(_missing)} missing locked reactions detected.")
+                _possible_missed = _safe_list(_ca_report.get("possible_missed_in_scope_reactions"))
+                if _possible_missed:
+                    st.info(f"{len(_possible_missed)} possible missed in-scope reactions found.")
+            st.json(_ca_report)
+            st.download_button(
+                "Download completeness audit report",
+                data=json.dumps(_ca_report, indent=2, ensure_ascii=False),
+                file_name="final_completeness_audit.json",
+                mime="application/json",
+                key="dl_completeness_audit",
+            )
 
     render_pathwhiz_converter_section(llm_client_module)
 

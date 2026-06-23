@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.llm.client import PROVIDER, chat
+from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,25 @@ Cross-cutting constraints:
 - Named genes/proteins outrank generic enzyme class names.
 - Cofactors are compounds. Proteins/genes are not compounds.
 - Do not wrap a single enzyme into a protein_complex unless complex evidence exists in the payload.
+"""
+
+LOCK_AWARE_SYSTEM_PROMPT_FRAGMENT = """
+
+LOCKED REACTION PRESERVATION POLICY:
+The reaction set is locked. You may not delete, merge, split, reorder, or replace locked reactions.
+Return patches only. Prefer additive repairs. If a locked reaction appears invalid, flag it for
+quarantine instead of deleting it.
+
+Specifically:
+- Do NOT propose "remove" patches targeting any locked reaction index.
+- Do NOT propose "replace" patches on /processes/reactions that would eliminate a locked reaction.
+- Do NOT merge two or more locked reactions into a single reaction.
+- Do NOT split a locked reaction into multiple new reactions.
+- If a locked reaction has a structural issue, emit a warning/suggestion with quarantine recommendation
+  rather than a remove/replace patch.
+- Additive patches (adding missing entities, fixing enzyme references, etc.) are encouraged.
+- Replacing individual fields within a locked reaction (name normalization, enzyme ref fixes) is
+  acceptable as long as the reaction identity (inputs, outputs, core semantics) is preserved.
 """
 
 
@@ -243,7 +263,88 @@ def _location_alias_suggestions(locations: Sequence[str]) -> List[Dict[str, str]
     return out
 
 
-def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[str, Any]]], List[Dict[str, Any]]]:
+def _load_locked_manifest(path: Optional[Path]) -> Optional[List[Dict[str, Any]]]:
+    """Load a locked reaction manifest file, returning None on failure."""
+    if path is None or not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(data, list):
+            return [entry for entry in data if isinstance(entry, dict)]
+        return None
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _discover_locked_manifest_path(input_path: Path) -> Optional[Path]:
+    """Auto-discover the locked manifest in the same directory as *input_path*."""
+    parent = input_path.parent if not input_path.is_dir() else input_path
+    candidate = parent / MANIFEST_FILENAME
+    if candidate.exists():
+        return candidate
+    return None
+
+
+def _locked_reaction_indices(
+    payload: Dict[str, Any],
+    locked_manifest: List[Dict[str, Any]],
+) -> set:
+    """Return the set of reaction indices that correspond to locked reactions.
+
+    Matching uses locked_reaction_id, then source_reaction_id, then
+    (name + inputs + outputs) fingerprint.
+    """
+    reactions = payload.get("processes", {}).get("reactions", []) if isinstance(payload.get("processes"), dict) else []
+    if not isinstance(reactions, list):
+        return set()
+
+    locked_ids = set()
+    source_ids = set()
+    fingerprints: set = set()
+    for entry in locked_manifest:
+        lid = str(entry.get("locked_reaction_id", "")).strip()
+        if lid:
+            locked_ids.add(lid)
+        sid = str(entry.get("source_reaction_id", "")).strip()
+        if sid:
+            source_ids.add(sid)
+        name = _normalize_name(str(entry.get("name", "")))
+        inputs = tuple(sorted(_normalize_name(i) for i in (entry.get("inputs") or []) if isinstance(i, str)))
+        outputs = tuple(sorted(_normalize_name(o) for o in (entry.get("outputs") or []) if isinstance(o, str)))
+        if name or inputs or outputs:
+            fingerprints.add((name, inputs, outputs))
+
+    indices: set = set()
+    for idx, reaction in enumerate(reactions):
+        if not isinstance(reaction, dict):
+            continue
+        # Match by locked_reaction_id
+        rid = str(reaction.get("locked_reaction_id", "")).strip()
+        if rid and rid in locked_ids:
+            indices.add(idx)
+            continue
+        # Match by source_reaction_id
+        for key in ("reaction_id", "id", "key", "source_reaction_id", "pathwhiz_reaction_id", "pathbank_reaction_id"):
+            sid = reaction.get(key)
+            if isinstance(sid, str) and sid.strip() in source_ids:
+                indices.add(idx)
+                break
+            if isinstance(sid, (int, float)) and str(sid) in source_ids:
+                indices.add(idx)
+                break
+        else:
+            # Match by fingerprint
+            name = _normalize_name(str(reaction.get("name", "") or ""))
+            raw_inputs = reaction.get("inputs", [])
+            raw_outputs = reaction.get("outputs", [])
+            inputs = tuple(sorted(_normalize_name(i) for i in (raw_inputs if isinstance(raw_inputs, list) else []) if isinstance(i, str)))
+            outputs = tuple(sorted(_normalize_name(o) for o in (raw_outputs if isinstance(raw_outputs, list) else []) if isinstance(o, str)))
+            if (name, inputs, outputs) in fingerprints:
+                indices.add(idx)
+    return indices
+
+
+def _deterministic_audit(payload: Dict[str, Any], *, locked_reaction_indices: Optional[set] = None) -> Tuple[Dict[str, List[Dict[str, Any]]], List[Dict[str, Any]]]:
     issues: Dict[str, List[Dict[str, Any]]] = {"errors": [], "warnings": [], "suggestions": []}
     patch_ops: List[Dict[str, Any]] = []
 
@@ -442,15 +543,27 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
             outputs = list(eq_outputs)
 
         if inputs and outputs and _same_multiset(inputs, outputs):
-            issues["errors"].append(
-                {
-                    "path": ptr,
-                    "reason": "Reaction has identical inputs and outputs with no transformation.",
-                    "evidence": json.dumps({"inputs": inputs, "outputs": outputs}, ensure_ascii=False)[:220],
-                    "source": "deterministic",
-                }
-            )
-            reaction_remove_indices.append(idx)
+            is_locked = locked_reaction_indices is not None and idx in locked_reaction_indices
+            if is_locked:
+                issues["warnings"].append(
+                    {
+                        "path": ptr,
+                        "reason": "Locked reaction has identical inputs and outputs; flagged for quarantine instead of removal.",
+                        "evidence": json.dumps({"inputs": inputs, "outputs": outputs}, ensure_ascii=False)[:220],
+                        "source": "deterministic",
+                        "locked_preservation": True,
+                    }
+                )
+            else:
+                issues["errors"].append(
+                    {
+                        "path": ptr,
+                        "reason": "Reaction has identical inputs and outputs with no transformation.",
+                        "evidence": json.dumps({"inputs": inputs, "outputs": outputs}, ensure_ascii=False)[:220],
+                        "source": "deterministic",
+                    }
+                )
+                reaction_remove_indices.append(idx)
             continue
 
         if inputs != raw_inputs and inputs:
@@ -928,6 +1041,9 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
         )
 
     for idx in sorted(set(reaction_remove_indices), reverse=True):
+        if locked_reaction_indices is not None and idx in locked_reaction_indices:
+            # Locked reactions are protected; the warning was already emitted above.
+            continue
         patch_ops.append(
             {
                 "op": "remove",
@@ -942,10 +1058,36 @@ def _deterministic_audit(payload: Dict[str, Any]) -> Tuple[Dict[str, List[Dict[s
     return issues, patch_ops
 
 
-def _build_llm_prompt(payload: Dict[str, Any], *, context_note: str = "", retrieval_context: str = "") -> str:
+def _build_llm_prompt(
+    payload: Dict[str, Any],
+    *,
+    context_note: str = "",
+    retrieval_context: str = "",
+    locked_reaction_indices: Optional[set] = None,
+    locked_manifest: Optional[List[Dict[str, Any]]] = None,
+) -> str:
     payload_str = json.dumps(payload, indent=2, ensure_ascii=False)
     note = (context_note or "").strip()
     references = (retrieval_context or "").strip()
+
+    lock_section = ""
+    if locked_reaction_indices and locked_manifest:
+        locked_ids = []
+        for entry in locked_manifest:
+            lid = str(entry.get("locked_reaction_id", "")).strip()
+            if lid:
+                locked_ids.append(lid)
+        sorted_indices = sorted(locked_reaction_indices)
+        lock_section = "\n".join([
+            "LOCKED REACTIONS:",
+            f"Total locked reactions: {len(locked_manifest)}",
+            f"Locked reaction IDs: {', '.join(locked_ids[:50])}{'...' if len(locked_ids) > 50 else ''}",
+            f"Locked reaction indices in processes.reactions[]: {sorted_indices}",
+            "Do NOT propose remove patches for any of these indices.",
+            "Do NOT propose patches that merge, split, or replace these reactions.",
+            "If a locked reaction has issues, flag for quarantine instead of deletion.",
+        ])
+
     return "\n".join(
         [
             "Audit this pathway JSON for SBML conversion readiness.",
@@ -954,6 +1096,7 @@ def _build_llm_prompt(payload: Dict[str, Any], *, context_note: str = "", retrie
             "Use action add/replace/remove and include confidence 0..1.",
             "repair_rationale must be short and concrete.",
             f"Retry context: {note if note else 'none'}",
+            lock_section if lock_section else "",
             "Reference motifs:",
             "<<<",
             references if references else "none",
@@ -1022,27 +1165,51 @@ def run_audit(
     llm_max_tokens: int = 3200,
     context_note: str = "",
     retrieval_context: str = "",
+    locked_manifest_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
 
-    deterministic_issues, deterministic_patch = _deterministic_audit(payload)
+    # --- Locked manifest discovery and loading ---
+    effective_manifest_path = locked_manifest_path
+    if effective_manifest_path is None:
+        effective_manifest_path = _discover_locked_manifest_path(input_path)
+    locked_manifest = _load_locked_manifest(effective_manifest_path)
+    locked_indices: Optional[set] = None
+    if locked_manifest is not None:
+        locked_indices = _locked_reaction_indices(payload, locked_manifest)
+        logger.info(
+            "Locked manifest loaded: %d entries, %d matched reaction indices",
+            len(locked_manifest),
+            len(locked_indices),
+        )
+
+    deterministic_issues, deterministic_patch = _deterministic_audit(
+        payload, locked_reaction_indices=locked_indices
+    )
     llm_raw = ""
     llm_error = ""
     llm_payload: Optional[Dict[str, Any]] = None
 
     if use_llm:
+        # Build lock-aware system prompt when manifest is available
+        effective_system_prompt = SYSTEM_PROMPT
+        if locked_manifest is not None:
+            effective_system_prompt = SYSTEM_PROMPT + LOCK_AWARE_SYSTEM_PROMPT_FRAGMENT
+
         try:
             llm_raw = chat(
                 [
-                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "system", "content": effective_system_prompt},
                     {
                         "role": "user",
                         "content": _build_llm_prompt(
                             payload,
                             context_note=context_note,
                             retrieval_context=retrieval_context,
+                            locked_reaction_indices=locked_indices,
+                            locked_manifest=locked_manifest,
                         ),
                     },
                 ],
@@ -1092,11 +1259,163 @@ def run_audit(
             "temperature": float(llm_temperature),
             "max_tokens": int(llm_max_tokens),
         },
+        "lock_policy": {
+            "enabled": locked_manifest is not None,
+            "locked_reaction_count": len(locked_manifest) if locked_manifest is not None else 0,
+            "locked_reaction_indices_matched": len(locked_indices) if locked_indices is not None else 0,
+            "manifest_path": str(effective_manifest_path) if effective_manifest_path is not None else "",
+        },
     }
+
+    # Compute and attach preservation scoring if manifest available
+    if locked_manifest is not None:
+        candidate_score = score_audit_candidate(payload, patch_ops, locked_manifest)
+        audit_report["preservation_score"] = candidate_score
 
     audit_report_path.write_text(json.dumps(audit_report, indent=2, ensure_ascii=False), encoding="utf-8")
     audit_patch_path.write_text(json.dumps(patch_ops, indent=2, ensure_ascii=False), encoding="utf-8")
     return audit_report
+
+
+def score_audit_candidate(
+    payload: Dict[str, Any],
+    patch_ops: List[Dict[str, Any]],
+    locked_manifest: Optional[List[Dict[str, Any]]],
+) -> Dict[str, Any]:
+    """Score an audit candidate for locked-reaction preservation.
+
+    Scoring rules:
+    - -10000 if candidate deletes any locked reaction
+    - -5000  if candidate replaces full reactions array
+    - -1000  per missing locked reaction
+    - -250   per destructive input/output change on a locked reaction
+    - +100   if all locked reactions preserved
+    - Then subtract schema_error_count from the total
+
+    Returns a dict with detailed scoring breakdown. When no locked manifest
+    is available, returns a neutral score of 0 with all counters zeroed.
+    """
+    if locked_manifest is None or not locked_manifest:
+        return {
+            "schema_error_count": 0,
+            "locked_reactions_preserved": 0,
+            "locked_reactions_missing": 0,
+            "locked_reactions_changed": 0,
+            "quarantined_locked_reactions": 0,
+            "reaction_preservation_score": 0,
+            "final_candidate_score": 0,
+        }
+
+    locked_indices = _locked_reaction_indices(payload, locked_manifest)
+
+    # Simulate patch application to detect deletions and changes
+    deletes_locked = False
+    replaces_reactions_array = False
+    destructive_io_changes = 0
+    schema_error_count = 0
+    quarantined_count = 0
+
+    for op in patch_ops:
+        if not isinstance(op, dict):
+            continue
+        action = str(op.get("op", op.get("action", ""))).lower()
+        path = str(op.get("path", op.get("json_pointer", "")))
+
+        # Check for full reactions array replacement
+        if path in ("/processes/reactions", "/reactions") and action == "replace":
+            replaces_reactions_array = True
+
+        # Check for locked reaction deletion
+        if action == "remove" and re.match(r"^/processes/reactions/(\d+)$", path):
+            match = re.match(r"^/processes/reactions/(\d+)$", path)
+            if match:
+                idx = int(match.group(1))
+                if idx in locked_indices:
+                    deletes_locked = True
+
+        # Check for destructive input/output changes on locked reactions
+        if action in ("remove", "replace"):
+            io_match = re.match(r"^/processes/reactions/(\d+)/(inputs|outputs)$", path)
+            if io_match:
+                idx = int(io_match.group(1))
+                if idx in locked_indices:
+                    if action == "remove":
+                        destructive_io_changes += 1
+                    elif action == "replace":
+                        # A replace of the entire inputs/outputs array is destructive
+                        destructive_io_changes += 1
+
+    # Count schema errors from the deterministic audit issues
+    # We re-check the payload structure for common schema issues
+    processes = payload.get("processes") if isinstance(payload.get("processes"), dict) else {}
+    reactions = processes.get("reactions") if isinstance(processes.get("reactions"), list) else []
+    for reaction in reactions:
+        if not isinstance(reaction, dict):
+            schema_error_count += 1
+            continue
+        if not reaction.get("inputs") or not isinstance(reaction.get("inputs"), list):
+            schema_error_count += 1
+        if not reaction.get("outputs") or not isinstance(reaction.get("outputs"), list):
+            schema_error_count += 1
+
+    # Count preserved, missing, and changed locked reactions
+    # Build the set of reaction indices that would survive after patch application
+    removed_indices: set = set()
+    for op in patch_ops:
+        if not isinstance(op, dict):
+            continue
+        action = str(op.get("op", op.get("action", ""))).lower()
+        path = str(op.get("path", op.get("json_pointer", "")))
+        if action == "remove":
+            match = re.match(r"^/processes/reactions/(\d+)$", path)
+            if match:
+                removed_indices.add(int(match.group(1)))
+
+    preserved_count = 0
+    missing_count = 0
+    changed_count = 0
+    for idx in locked_indices:
+        if idx in removed_indices:
+            missing_count += 1
+        else:
+            preserved_count += 1
+
+    # Check for locked reactions that had IO changes proposed
+    io_changed_indices: set = set()
+    for op in patch_ops:
+        if not isinstance(op, dict):
+            continue
+        action = str(op.get("op", op.get("action", ""))).lower()
+        path = str(op.get("path", op.get("json_pointer", "")))
+        if action in ("remove", "replace"):
+            io_match = re.match(r"^/processes/reactions/(\d+)/(inputs|outputs)", path)
+            if io_match:
+                idx = int(io_match.group(1))
+                if idx in locked_indices and idx not in removed_indices:
+                    io_changed_indices.add(idx)
+    changed_count = len(io_changed_indices)
+
+    # Compute score
+    score = 0
+    if deletes_locked:
+        score -= 10000
+    if replaces_reactions_array:
+        score -= 5000
+    score -= 1000 * missing_count
+    score -= 250 * destructive_io_changes
+    if missing_count == 0 and len(locked_indices) > 0 and not replaces_reactions_array:
+        score += 100
+    final_score = score - schema_error_count
+
+    return {
+        "schema_error_count": schema_error_count,
+        "locked_reactions_preserved": preserved_count,
+        "locked_reactions_missing": missing_count,
+        "locked_reactions_changed": changed_count,
+        "quarantined_locked_reactions": quarantined_count,
+        "reaction_preservation_score": score,
+        "final_candidate_score": final_score,
+    }
 
 
 def main() -> None:
@@ -1117,6 +1436,12 @@ def main() -> None:
     parser.add_argument("--no-llm", action="store_true", help="Disable LLM auditing and run deterministic checks only.")
     parser.add_argument("--temperature", type=float, default=0.0, help="LLM temperature for audit call")
     parser.add_argument("--max-tokens", type=int, default=3200, help="LLM max tokens for audit call")
+    parser.add_argument(
+        "--locked-manifest",
+        dest="locked_manifest_path",
+        default=None,
+        help="Optional locked_reaction_manifest.json path. Auto-discovered beside input when omitted.",
+    )
     args = parser.parse_args()
 
     run_audit(
@@ -1126,6 +1451,7 @@ def main() -> None:
         use_llm=not args.no_llm,
         llm_temperature=float(args.temperature),
         llm_max_tokens=int(args.max_tokens),
+        locked_manifest_path=Path(args.locked_manifest_path) if args.locked_manifest_path else None,
     )
     print(f"Wrote audit report: {args.audit_report_path}")
     print(f"Wrote audit patch: {args.audit_patch_path}")

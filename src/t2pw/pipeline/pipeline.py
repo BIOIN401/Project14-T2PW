@@ -709,15 +709,28 @@ def _normalize_reaction_actors(payload: Dict[str, Any]) -> None:
             reaction["enzymes"] = _clean_enzymes(existing)
 
 
-def filter_unresolvable_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+def filter_unresolvable_reactions(
+    payload: Dict[str, Any],
+    *,
+    locked_manifest: Optional[Any] = None,
+    quarantine_output_path: Optional[Path | str] = None,
+) -> Tuple[Dict[str, Any], List[str]]:
     """
     Remove reactions whose left or right side has no resolvable entity.
 
     This catches hallucinated reaction rows that survive basic cleaning because
     their participant lists are non-empty strings, while preserving reactions
     that include extra cofactors alongside at least one known entity.
+
+    Locked reactions are never silently removed. If their missing input/output
+    names can be repaired as direct compound declarations, they are kept. If
+    not, they are moved to ``quarantined_locked_reactions`` and optionally
+    written as ``quarantined_locked_reactions.json``.
     """
     entities = payload.setdefault("entities", {})
+    if not isinstance(entities, dict):
+        entities = {}
+        payload["entities"] = entities
     entity_names: set[str] = set()
     compound_names: set[str] = set()
 
@@ -744,6 +757,32 @@ def filter_unresolvable_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, An
                 names.add(normalized)
                 entity_names.add(normalized)
 
+    def _manifest_entries(manifest: Any) -> List[Dict[str, Any]]:
+        if isinstance(manifest, list):
+            return [entry for entry in manifest if isinstance(entry, dict)]
+        if isinstance(manifest, dict):
+            for key in ("locked_reactions", "reactions", "manifest", "details"):
+                value = manifest.get(key)
+                if isinstance(value, list):
+                    return [entry for entry in value if isinstance(entry, dict)]
+        return []
+
+    def _source_reaction_id(reaction: Dict[str, Any]) -> str:
+        for key in (
+            "reaction_id",
+            "id",
+            "key",
+            "source_reaction_id",
+            "pathwhiz_reaction_id",
+            "pathbank_reaction_id",
+        ):
+            value = reaction.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+            if isinstance(value, (int, float)):
+                return str(value)
+        return ""
+
     processes = payload.setdefault("processes", {})
     reactions = processes.get("reactions") if isinstance(processes, dict) else None
     if not isinstance(reactions, list):
@@ -763,8 +802,88 @@ def filter_unresolvable_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, An
     def _has_resolved_participant(names: List[str]) -> bool:
         return any(_normalize_name(name) in entity_names for name in names)
 
+    def _unresolved_participants(names: List[str]) -> List[str]:
+        return [
+            name
+            for name in names
+            if _normalize_name(name) not in entity_names
+        ]
+
+    def _reaction_match_key(
+        reaction: Dict[str, Any],
+        inputs: List[str],
+        outputs: List[str],
+    ) -> Tuple[str, str, Tuple[str, ...], Tuple[str, ...]]:
+        return (
+            _normalize_name(_source_reaction_id(reaction)),
+            _normalize_name(reaction.get("name") or ""),
+            tuple(_normalize_name(item) for item in inputs),
+            tuple(_normalize_name(item) for item in outputs),
+        )
+
+    def _manifest_match_key(entry: Dict[str, Any]) -> Tuple[str, str, Tuple[str, ...], Tuple[str, ...]]:
+        inputs = [item for item in _safe_list(entry.get("inputs")) if isinstance(item, str)]
+        outputs = [item for item in _safe_list(entry.get("outputs")) if isinstance(item, str)]
+        return (
+            _normalize_name(str(entry.get("source_reaction_id") or "")),
+            _normalize_name(str(entry.get("name") or "")),
+            tuple(_normalize_name(item) for item in inputs),
+            tuple(_normalize_name(item) for item in outputs),
+        )
+
+    manifest_entries = _manifest_entries(locked_manifest)
+    lock_ids_by_key: Dict[Tuple[str, str, Tuple[str, ...], Tuple[str, ...]], List[str]] = {}
+    for entry in manifest_entries:
+        locked_id = entry.get("locked_reaction_id")
+        if isinstance(locked_id, str) and locked_id.strip():
+            lock_ids_by_key.setdefault(_manifest_match_key(entry), []).append(locked_id.strip())
+
+    def _locked_id_for_reaction(
+        reaction: Dict[str, Any],
+        inputs: List[str],
+        outputs: List[str],
+    ) -> str:
+        value = reaction.get("locked_reaction_id")
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+        if isinstance(value, (int, float)):
+            return str(value)
+        lock_ids = lock_ids_by_key.get(_reaction_match_key(reaction, inputs, outputs))
+        if lock_ids:
+            return lock_ids.pop(0)
+        return ""
+
+    def _add_missing_compound(name: str) -> bool:
+        normalized = _normalize_name(name)
+        if not normalized or normalized in entity_names:
+            return False
+        compounds = entities.setdefault("compounds", []) if isinstance(entities, dict) else []
+        if not isinstance(compounds, list):
+            compounds = []
+            entities["compounds"] = compounds
+        compounds.append({"name": name})
+        compound_names.add(normalized)
+        entity_names.add(normalized)
+        return True
+
+    def _quarantine_reason(inputs: List[str], outputs: List[str], missing_inputs: List[str], missing_outputs: List[str]) -> str:
+        if not inputs:
+            return "missing_inputs"
+        if not outputs:
+            return "missing_outputs"
+        if missing_inputs and missing_outputs:
+            return "unresolved_input_output_entity"
+        if missing_inputs:
+            return "unresolved_input_entity"
+        if missing_outputs:
+            return "unresolved_output_entity"
+        return "unresolved_entity"
+
     kept_reactions: List[Any] = []
     removed_names: List[str] = []
+    quarantined_locked_reactions: List[Dict[str, Any]] = []
+    locked_reactions_seen = 0
+    exported_locked_reactions = 0
     for reaction in reactions:
         if not isinstance(reaction, dict):
             kept_reactions.append(reaction)
@@ -772,6 +891,28 @@ def filter_unresolvable_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, An
 
         inputs = _participant_names(reaction, ["inputs", "left", "substrates"])
         outputs = _participant_names(reaction, ["outputs", "right", "products"])
+        locked_reaction_id = _locked_id_for_reaction(reaction, inputs, outputs)
+        is_locked = bool(locked_reaction_id)
+        original_reaction = deepcopy(reaction)
+
+        missing_inputs = _unresolved_participants(inputs)
+        missing_outputs = _unresolved_participants(outputs)
+
+        if is_locked:
+            locked_reactions_seen += 1
+            if reaction.get("locked_reaction_id") != locked_reaction_id:
+                reaction["locked_reaction_id"] = locked_reaction_id
+            if missing_inputs or missing_outputs:
+                reaction["preservation_status"] = "unresolved"
+                reaction["unresolved_entities"] = _dedupe_preserve_order(missing_inputs + missing_outputs)
+                for missing_name in reaction["unresolved_entities"]:
+                    _add_missing_compound(missing_name)
+                missing_inputs = _unresolved_participants(inputs)
+                missing_outputs = _unresolved_participants(outputs)
+                if not missing_inputs and not missing_outputs:
+                    reaction["preservation_status"] = "entity_repaired"
+                    reaction["repaired_missing_compound_entities"] = reaction.pop("unresolved_entities", [])
+
         remove = (
             not inputs
             or not outputs
@@ -781,13 +922,57 @@ def filter_unresolvable_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, An
 
         if remove:
             name = (reaction.get("name") or "<unnamed>").strip() or "<unnamed>"
-            removed_names.append(name)
-            logger.info("filter_unresolvable_reactions: removed reaction %s", name)
+            if is_locked:
+                missing_entities = _dedupe_preserve_order(missing_inputs + missing_outputs)
+                if not inputs:
+                    missing_entities.append("<missing inputs>")
+                if not outputs:
+                    missing_entities.append("<missing outputs>")
+                quarantined_locked_reactions.append(
+                    {
+                        "locked_reaction_id": locked_reaction_id,
+                        "reaction_name": name,
+                        "reason": _quarantine_reason(inputs, outputs, missing_inputs, missing_outputs),
+                        "missing_entities": missing_entities,
+                        "original_reaction": original_reaction,
+                    }
+                )
+                logger.info(
+                    "filter_unresolvable_reactions: quarantined locked reaction %s (%s)",
+                    name,
+                    locked_reaction_id,
+                )
+            else:
+                removed_names.append(name)
+                logger.info("filter_unresolvable_reactions: removed reaction %s", name)
         else:
+            if is_locked:
+                exported_locked_reactions += 1
             kept_reactions.append(reaction)
 
     if isinstance(processes, dict):
         processes["reactions"] = kept_reactions
+
+    locked_reaction_count = len(manifest_entries) if manifest_entries else locked_reactions_seen
+    if locked_reaction_count or quarantined_locked_reactions:
+        payload["quarantined_locked_reactions"] = quarantined_locked_reactions
+        payload["locked_reaction_filter_report"] = {
+            "locked_reactions_found": locked_reaction_count,
+            "exported_locked_reactions": exported_locked_reactions,
+            "quarantined_locked_reactions": len(quarantined_locked_reactions),
+        }
+
+    if quarantine_output_path is not None:
+        path = Path(quarantine_output_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps(
+                {"quarantined_locked_reactions": quarantined_locked_reactions},
+                indent=2,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
 
     protein_complexes = entities.get("protein_complexes") if isinstance(entities, dict) else None
     if isinstance(protein_complexes, list):
@@ -930,9 +1115,41 @@ def build_and_save_draft_graph(
     )
 
     reaction_summary = generate_reaction_summary(graph, qa_report)
+    filter_report = merged_json.get("locked_reaction_filter_report") if isinstance(merged_json, dict) else None
+    if isinstance(filter_report, dict):
+        locked_count = int(filter_report.get("locked_reactions_found") or 0)
+        exported_count = int(filter_report.get("exported_locked_reactions") or 0)
+        quarantined_count = int(filter_report.get("quarantined_locked_reactions") or 0)
+        if locked_count or quarantined_count:
+            locked_noun = "reaction" if locked_count == 1 else "reactions"
+            quarantine_noun = "reaction" if quarantined_count == 1 else "reactions"
+            reaction_summary = "\n".join(
+                [
+                    reaction_summary.rstrip(),
+                    "",
+                    "LOCKED REACTION FILTER",
+                    f"{locked_count} locked {locked_noun} found",
+                    f"{exported_count} exported",
+                    f"{quarantined_count} quarantined {quarantine_noun} due to unresolved compound reference",
+                    "",
+                ]
+            )
     summary_path = output_path.parent / "reaction_summary.txt"
     summary_path.write_text(reaction_summary, encoding="utf-8")
     logger.info("Reaction summary saved to %s", summary_path)
+
+    quarantine_records = merged_json.get("quarantined_locked_reactions") if isinstance(merged_json, dict) else None
+    if isinstance(quarantine_records, list):
+        quarantine_path = output_path.parent / "quarantined_locked_reactions.json"
+        quarantine_path.write_text(
+            json.dumps(
+                {"quarantined_locked_reactions": quarantine_records},
+                indent=2,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        logger.info("Quarantined locked reactions saved to %s", quarantine_path)
 
     return graph, qa_report, reaction_summary
 
@@ -1451,6 +1668,11 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         if not inputs or not outputs:
             continue
         entry: Dict[str, Any] = {"inputs": inputs, "outputs": outputs}
+        locked_reaction_id = item.get("locked_reaction_id")
+        if isinstance(locked_reaction_id, str) and locked_reaction_id.strip():
+            entry["locked_reaction_id"] = locked_reaction_id.strip()
+        elif isinstance(locked_reaction_id, (int, float)):
+            entry["locked_reaction_id"] = str(locked_reaction_id)
         name = (item.get("name") or "").strip()
         if name:
             entry["name"] = name
@@ -1783,6 +2005,12 @@ def run_stage_one_with_chunking(
 
     if artifact_dir is not None:
         write_stage1_lock_artifacts(raw_stage_one_chunks, artifact_dir)
+        outputs = []
+        for index, raw_entry in enumerate(raw_stage_one_chunks):
+            cleaned_output = clean_stage_one(_safe_dict(raw_entry.get("payload")))
+            if index < len(chunk_results):
+                chunk_results[index]["output"] = cleaned_output
+            outputs.append(cleaned_output)
 
     merged = merge_stage_one_outputs(outputs)
     merged = clean_stage_one(merged)

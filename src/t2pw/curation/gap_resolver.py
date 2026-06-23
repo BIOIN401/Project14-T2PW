@@ -7,7 +7,13 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from t2pw.curation.apply_audit_patch import apply_patch_with_policy
+from t2pw.curation.apply_audit_patch import (
+    APPLIED_PATCH_LOG_FILENAME,
+    REJECTED_PATCH_LOG_FILENAME,
+    apply_patch_with_policy,
+)
+from t2pw.pipeline.reaction_preservation_validator import load_locked_reaction_manifest
+from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 try:
     from t2pw.llm.client import chat, chat_with_tools
 except ModuleNotFoundError as exc:  # pragma: no cover - exercised only when optional LLM deps are absent
@@ -36,6 +42,19 @@ def _safe_dict(value: Any) -> Dict[str, Any]:
 
 def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
+
+
+def _load_nearby_locked_manifest(*paths: Path) -> Any | None:
+    seen_dirs: set[Path] = set()
+    for path in paths:
+        parent = path if path.is_dir() else path.parent
+        if parent in seen_dirs:
+            continue
+        seen_dirs.add(parent)
+        manifest = load_locked_reaction_manifest(parent / MANIFEST_FILENAME)
+        if manifest is not None:
+            return manifest
+    return None
 
 
 def _normalize(value: str) -> str:
@@ -2303,6 +2322,8 @@ def resolve_gaps(
     enable_id_resolution: bool = True,
     qa_report: Optional[Dict[str, Any]] = None,
     reaction_summary: Optional[str] = None,
+    locked_manifest: Any | None = None,
+    patch_log_dir: Path | None = None,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     working = deepcopy(payload)
     report: Dict[str, Any] = {
@@ -2611,7 +2632,18 @@ def resolve_gaps(
         report["enrichment"] = enrichment_report
 
         if enrichment_patches:
-            working, patch_apply_report = apply_patch_with_policy(working, enrichment_patches)
+            working, patch_apply_report = apply_patch_with_policy(
+                working,
+                enrichment_patches,
+                locked_manifest=locked_manifest,
+                stage="gap_resolver",
+                applied_log_path=(patch_log_dir / APPLIED_PATCH_LOG_FILENAME)
+                if locked_manifest is not None and patch_log_dir is not None
+                else None,
+                rejected_log_path=(patch_log_dir / REJECTED_PATCH_LOG_FILENAME)
+                if locked_manifest is not None and patch_log_dir is not None
+                else None,
+            )
             report["enrichment"]["patch_application"] = patch_apply_report
             report["summary"]["enrichment_patches_accepted"] = patch_apply_report.get("summary", {}).get("accepted_count", 0)
             report["summary"]["enrichment_patches_rejected"] = patch_apply_report.get("summary", {}).get("rejected_count", 0)
@@ -2646,6 +2678,7 @@ def run_gap_resolution(
     qa_report: Optional[Dict[str, Any]] = None,
     qa_report_path: Optional[Path] = None,
     reaction_summary: Optional[str] = None,
+    locked_manifest_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -2656,6 +2689,12 @@ def run_gap_resolution(
     if effective_qa_report is None and qa_report_path is not None and qa_report_path.exists():
         raw_qa = json.loads(qa_report_path.read_text(encoding="utf-8"))
         effective_qa_report = raw_qa if isinstance(raw_qa, dict) else None
+
+    locked_manifest = (
+        load_locked_reaction_manifest(locked_manifest_path)
+        if locked_manifest_path is not None
+        else _load_nearby_locked_manifest(input_path, output_path, report_path)
+    )
 
     resolved, report = resolve_gaps(
         payload,
@@ -2668,6 +2707,8 @@ def run_gap_resolution(
         enable_id_resolution=enable_id_resolution,
         qa_report=effective_qa_report,
         reaction_summary=reaction_summary,
+        locked_manifest=locked_manifest,
+        patch_log_dir=report_path.parent if locked_manifest is not None else None,
     )
     output_path.write_text(json.dumps(resolved, indent=2, ensure_ascii=False), encoding="utf-8")
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -2694,6 +2735,7 @@ def main() -> None:
     parser.add_argument("--temperature", type=float, default=0.15)
     parser.add_argument("--max-tokens", type=int, default=900)
     parser.add_argument("--max-items", type=int, default=80)
+    parser.add_argument("--locked-manifest", dest="locked_manifest_path", default=None)
     args = parser.parse_args()
 
     run_gap_resolution(
@@ -2713,6 +2755,7 @@ def main() -> None:
         llm_max_tokens=int(args.max_tokens),
         max_items=int(args.max_items),
         enable_id_resolution=not args.skip_id_resolution,
+        locked_manifest_path=Path(args.locked_manifest_path) if args.locked_manifest_path else None,
     )
 
 

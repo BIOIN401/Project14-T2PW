@@ -171,19 +171,32 @@ def _iter_reactions(payload: Any) -> List[Dict[str, Any]]:
 def _iter_quarantine_records(payload: Any) -> List[Dict[str, Any]]:
     payload_dict = _safe_dict(payload)
     containers: List[Any] = []
-    for key in ("quarantined_reactions", "quarantine", "quarantined", "reaction_quarantine"):
+    for key in ("quarantined_locked_reactions", "quarantined_reactions", "quarantine", "quarantined", "reaction_quarantine"):
         containers.append(payload_dict.get(key))
     processes = _safe_dict(payload_dict.get("processes"))
-    for key in ("quarantined_reactions", "quarantine", "quarantined", "reaction_quarantine"):
+    for key in ("quarantined_locked_reactions", "quarantined_reactions", "quarantine", "quarantined", "reaction_quarantine"):
         containers.append(processes.get(key))
 
     records: List[Dict[str, Any]] = []
+    def _record_with_original(record: Dict[str, Any]) -> Dict[str, Any]:
+        original = _safe_dict(record.get("original_reaction"))
+        if original:
+            merged = dict(original)
+            for key, value in record.items():
+                if key != "original_reaction":
+                    merged[key] = value
+        else:
+            merged = dict(record)
+        if not merged.get("name") and isinstance(record.get("reaction_name"), str):
+            merged["name"] = record["reaction_name"]
+        return merged
+
     for container in containers:
         if isinstance(container, dict):
-            records.append(container)
-            records.extend(item for item in container.values() if isinstance(item, dict))
+            records.append(_record_with_original(container))
+            records.extend(_record_with_original(item) for item in container.values() if isinstance(item, dict))
         elif isinstance(container, list):
-            records.extend(item for item in container if isinstance(item, dict))
+            records.extend(_record_with_original(item) for item in container if isinstance(item, dict))
             for item in container:
                 if isinstance(item, str):
                     records.append({"name": item})

@@ -2,8 +2,8 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 46,
-    "edge_count": 52
+    "node_count": 43,
+    "edge_count": 60
   },
   "nodes": [
     {
@@ -11,16 +11,7 @@
       "label": "linolenic acid (18:3)",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "plastid state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:linoleic acid (18:2)",
-      "label": "linoleic acid (18:2)",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -29,88 +20,61 @@
       "label": "hexadecatrienoic acid (16:3)",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:13(s)-hydroperoxy-octadecatrienoic acid (13-hpot)",
-      "label": "13(S)-hydroperoxy-octadecatrienoic acid (13-HPOT)",
+      "id": "compound:13-hpot",
+      "label": "13-HPOT",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:11(s)-hydroperoxy-hexadecatrienoic acid (11-hpht)",
-      "label": "11(S)-hydroperoxy-hexadecatrienoic acid (11-HPHT)",
+      "id": "compound:11-hpht",
+      "label": "11-HPHT",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:12,13(s)-epoxy-octadecatrienoic acid (12,13-eot)",
-      "label": "12,13(S)-epoxy-octadecatrienoic acid (12,13-EOT)",
+      "id": "compound:12,13-eot",
+      "label": "12,13-EOT",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:12-oxophytodienoic acid (opda)",
-      "label": "12-oxophytodienoic acid (OPDA)",
+      "id": "compound:opda",
+      "label": "OPDA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:dinor-opda (dnopda)",
-      "label": "dinor-OPDA (dnOPDA)",
+      "id": "compound:dnopda",
+      "label": "dnOPDA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:3-oxo-2-(2(z)-pentenyl)cyclopentane-1-octanoic acid (opc-8:0)",
-      "label": "3-oxo-2-(2(Z)-pentenyl)cyclopentane-1-octanoic acid (OPC-8:0)",
+      "id": "compound:opc-8:0",
+      "label": "OPC-8:0",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:jasmonic acid (ja)",
-      "label": "jasmonic acid (JA)",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "peroxisomal state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:jasmonoyl-coa",
-      "label": "jasmonoyl-CoA",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "peroxisomal state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:10,11-(s)-epoxyhexadecatrienoic acid (10,11-eht)",
-      "label": "10,11-(S)-epoxyhexadecatrienoic acid (10,11-EHT)",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "plastid state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -119,7 +83,7 @@
       "label": "OPC-6:0",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -128,34 +92,43 @@
       "label": "OPC-4:0",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:opc-8-coa",
-      "label": "OPC-8-CoA",
+      "id": "compound:jasmonic acid",
+      "label": "jasmonic acid",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:opc-6-coa",
-      "label": "OPC-6-CoA",
+      "id": "compound:jasmonoyl-coa",
+      "label": "jasmonoyl-CoA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "compound:opc-4-coa",
-      "label": "OPC-4-CoA",
+      "id": "compound:opc-8:0-coa",
+      "label": "OPC-8:0-CoA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "peroxisomal state",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:opc-6:0-coa",
+      "label": "OPC-6:0-CoA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -164,7 +137,7 @@
       "label": "OPDA-CoA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -173,115 +146,106 @@
       "label": "dnOPDA-CoA",
       "kind": "compound",
       "cls": "compound",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:lipoxygenase (lox)",
-      "label": "lipoxygenase (LOX)",
+      "id": "protein:lox",
+      "label": "LOX",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:allene oxide synthase (aos)",
-      "label": "allene oxide synthase (AOS)",
+      "id": "protein:aos",
+      "label": "AOS",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:allene oxide cyclase (aoc)",
-      "label": "allene oxide cyclase (AOC)",
+      "id": "protein:aoc",
+      "label": "AOC",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:12-oxophytodienoate reductase 3 (opr3)",
-      "label": "12-oxophytodienoate reductase 3 (OPR3)",
+      "id": "protein:opr3",
+      "label": "OPR3",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:comatose (cts)",
-      "label": "COMATOSE (CTS)",
+      "id": "protein:opcl1",
+      "label": "OPCL1",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:opc-8:coa ligase 1 (opcl1)",
-      "label": "OPC-8:CoA ligase 1 (OPCL1)",
+      "id": "protein:acx1",
+      "label": "ACX1",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:acyl-coa oxidase 1 (acx1)",
-      "label": "acyl-CoA oxidase 1 (ACX1)",
+      "id": "protein:mfp",
+      "label": "MFP",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:multifunctional protein (mfp)",
-      "label": "multifunctional protein (MFP)",
+      "id": "protein:kat2",
+      "label": "KAT2",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:3-ketoacyl-coa thiolase (kat2)",
-      "label": "3-ketoacyl-CoA thiolase (KAT2)",
+      "id": "protein:cts",
+      "label": "CTS",
       "kind": "protein",
       "cls": "protein",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "protein:acyl-thioesterase (atach1)",
-      "label": "acyl-thioesterase (AtACH1)",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "peroxisomal state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:lox reaction on linolenic acid (18:3)",
-      "label": "LOX reaction on linolenic acid (18:3)",
+      "id": "reaction:lox reaction on linolenic acid",
+      "label": "LOX reaction on linolenic acid",
       "kind": "reaction",
       "cls": "",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:lox reaction on hexadecatrienoic acid (16:3)",
-      "label": "LOX reaction on hexadecatrienoic acid (16:3)",
+      "id": "reaction:lox reaction on hexadecatrienoic acid",
+      "label": "LOX reaction on hexadecatrienoic acid",
       "kind": "reaction",
       "cls": "",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -290,34 +254,16 @@
       "label": "AOS reaction on 13-HPOT",
       "kind": "reaction",
       "cls": "",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:aos reaction on 11-hpht",
-      "label": "AOS reaction on 11-HPHT",
+      "id": "reaction:aoc reaction on 12,13-eot to opda",
+      "label": "AOC reaction on 12,13-EOT to OPDA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "plastid state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:aoc reaction on 12,13-eot",
-      "label": "AOC reaction on 12,13-EOT",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "plastid state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:aoc reaction on 10,11-eht",
-      "label": "AOC reaction on 10,11-EHT",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "plastid state",
+      "compartment": "chloroplast state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -326,7 +272,7 @@
       "label": "OPR3 reaction on OPDA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -335,7 +281,7 @@
       "label": "OPR3 reaction on dnOPDA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -344,7 +290,7 @@
       "label": "OPCL1 reaction on OPC-8:0",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -353,16 +299,16 @@
       "label": "ACX1 reaction in beta-oxidation",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:atach1 hydrolysis of jasmonoyl-coa",
-      "label": "AtACH1 hydrolysis of jasmonoyl-CoA",
+      "id": "reaction:jasmonoyl-coa hydrolysis",
+      "label": "jasmonoyl-CoA hydrolysis",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -371,43 +317,52 @@
       "label": "OPCL1 reaction on OPC-6:0",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:opcl1 reaction on opc-4:0",
-      "label": "OPCL1 reaction on OPC-4:0",
+      "id": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
+      "label": "ACX1 reaction in beta-oxidation on OPC-6:0-CoA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:opr3 reaction on dnopda-coa",
-      "label": "OPR3 reaction on dnOPDA-CoA",
+      "id": "reaction:opcl1 reaction on opda",
+      "label": "OPCL1 reaction on OPDA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:opr3 reaction on opda-coa",
-      "label": "OPR3 reaction on OPDA-CoA",
+      "id": "reaction:opcl1 reaction on dnopda",
+      "label": "OPCL1 reaction on dnOPDA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "peroxisomal state",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
     {
-      "id": "reaction:lox reaction on linoleic acid (18:2)",
-      "label": "LOX reaction on linoleic acid (18:2)",
+      "id": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
+      "label": "beta-oxidation of OPC-8:0-CoA to OPC-6:0-CoA",
       "kind": "reaction",
       "cls": "",
-      "compartment": "plastid state",
+      "compartment": "peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
+      "label": "beta-oxidation of OPC-6:0-CoA to OPC-4:0-CoA",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -416,7 +371,25 @@
       "label": "OPDA import into peroxisomes",
       "kind": "transport",
       "cls": "",
-      "compartment": "plastid state → peroxisomal state",
+      "compartment": "chloroplast state → peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "transport:dnopda import into peroxisomes",
+      "label": "dnOPDA import into peroxisomes",
+      "kind": "transport",
+      "cls": "",
+      "compartment": "chloroplast state → peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "interaction:opc-8:0-coa and opc-6:0-coa are intermediates in jasmonate biosynthesis",
+      "label": "OPC-8:0-CoA and OPC-6:0-CoA are intermediates in jasmonate biosynthesis",
+      "kind": "interaction",
+      "cls": "SAME_AS",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     }
@@ -424,132 +397,96 @@
   "edges": [
     {
       "source": "compound:linolenic acid (18:3)",
-      "target": "reaction:lox reaction on linolenic acid (18:3)",
+      "target": "reaction:lox reaction on linolenic acid",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:lox reaction on linolenic acid (18:3)",
-      "target": "compound:13(s)-hydroperoxy-octadecatrienoic acid (13-hpot)",
+      "source": "reaction:lox reaction on linolenic acid",
+      "target": "compound:13-hpot",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:lipoxygenase (lox)",
-      "target": "reaction:lox reaction on linolenic acid (18:3)",
+      "source": "protein:lox",
+      "target": "reaction:lox reaction on linolenic acid",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:hexadecatrienoic acid (16:3)",
-      "target": "reaction:lox reaction on hexadecatrienoic acid (16:3)",
+      "target": "reaction:lox reaction on hexadecatrienoic acid",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:lox reaction on hexadecatrienoic acid (16:3)",
-      "target": "compound:11(s)-hydroperoxy-hexadecatrienoic acid (11-hpht)",
+      "source": "reaction:lox reaction on hexadecatrienoic acid",
+      "target": "compound:11-hpht",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:lipoxygenase (lox)",
-      "target": "reaction:lox reaction on hexadecatrienoic acid (16:3)",
+      "source": "protein:lox",
+      "target": "reaction:lox reaction on hexadecatrienoic acid",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:13(s)-hydroperoxy-octadecatrienoic acid (13-hpot)",
+      "source": "compound:13-hpot",
       "target": "reaction:aos reaction on 13-hpot",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "reaction:aos reaction on 13-hpot",
-      "target": "compound:12,13(s)-epoxy-octadecatrienoic acid (12,13-eot)",
+      "target": "compound:12,13-eot",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:allene oxide synthase (aos)",
+      "source": "protein:aos",
       "target": "reaction:aos reaction on 13-hpot",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:11(s)-hydroperoxy-hexadecatrienoic acid (11-hpht)",
-      "target": "reaction:aos reaction on 11-hpht",
+      "source": "compound:12,13-eot",
+      "target": "reaction:aoc reaction on 12,13-eot to opda",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:aos reaction on 11-hpht",
-      "target": "compound:10,11-(s)-epoxyhexadecatrienoic acid (10,11-eht)",
+      "source": "reaction:aoc reaction on 12,13-eot to opda",
+      "target": "compound:opda",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:allene oxide synthase (aos)",
-      "target": "reaction:aos reaction on 11-hpht",
+      "source": "protein:aoc",
+      "target": "reaction:aoc reaction on 12,13-eot to opda",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:12,13(s)-epoxy-octadecatrienoic acid (12,13-eot)",
-      "target": "reaction:aoc reaction on 12,13-eot",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:aoc reaction on 12,13-eot",
-      "target": "compound:12-oxophytodienoic acid (opda)",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:allene oxide cyclase (aoc)",
-      "target": "reaction:aoc reaction on 12,13-eot",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:10,11-(s)-epoxyhexadecatrienoic acid (10,11-eht)",
-      "target": "reaction:aoc reaction on 10,11-eht",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:aoc reaction on 10,11-eht",
-      "target": "compound:dinor-opda (dnopda)",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:allene oxide cyclase (aoc)",
-      "target": "reaction:aoc reaction on 10,11-eht",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:12-oxophytodienoic acid (opda)",
+      "source": "compound:opda",
       "target": "reaction:opr3 reaction on opda",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "reaction:opr3 reaction on opda",
-      "target": "compound:3-oxo-2-(2(z)-pentenyl)cyclopentane-1-octanoic acid (opc-8:0)",
+      "target": "compound:opc-8:0",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:12-oxophytodienoate reductase 3 (opr3)",
+      "source": "protein:opr3",
       "target": "reaction:opr3 reaction on opda",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:dinor-opda (dnopda)",
+      "source": "compound:dnopda",
       "target": "reaction:opr3 reaction on dnopda",
       "role": "reactant",
       "confidence": 1.0
@@ -561,31 +498,31 @@
       "confidence": 1.0
     },
     {
-      "source": "protein:12-oxophytodienoate reductase 3 (opr3)",
+      "source": "protein:opr3",
       "target": "reaction:opr3 reaction on dnopda",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:3-oxo-2-(2(z)-pentenyl)cyclopentane-1-octanoic acid (opc-8:0)",
+      "source": "compound:opc-8:0",
       "target": "reaction:opcl1 reaction on opc-8:0",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "reaction:opcl1 reaction on opc-8:0",
-      "target": "compound:opc-8-coa",
+      "target": "compound:opc-8:0-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:opc-8:coa ligase 1 (opcl1)",
+      "source": "protein:opcl1",
       "target": "reaction:opcl1 reaction on opc-8:0",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:opc-8-coa",
+      "source": "compound:opc-8:0-coa",
       "target": "reaction:acx1 reaction in beta-oxidation",
       "role": "reactant",
       "confidence": 1.0
@@ -597,39 +534,33 @@
       "confidence": 1.0
     },
     {
-      "source": "protein:acyl-coa oxidase 1 (acx1)",
+      "source": "protein:acx1",
       "target": "reaction:acx1 reaction in beta-oxidation",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "protein:multifunctional protein (mfp)",
+      "source": "protein:mfp",
       "target": "reaction:acx1 reaction in beta-oxidation",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "protein:3-ketoacyl-coa thiolase (kat2)",
+      "source": "protein:kat2",
       "target": "reaction:acx1 reaction in beta-oxidation",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:jasmonoyl-coa",
-      "target": "reaction:atach1 hydrolysis of jasmonoyl-coa",
+      "target": "reaction:jasmonoyl-coa hydrolysis",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:atach1 hydrolysis of jasmonoyl-coa",
-      "target": "compound:jasmonic acid (ja)",
+      "source": "reaction:jasmonoyl-coa hydrolysis",
+      "target": "compound:jasmonic acid",
       "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:acyl-thioesterase (atach1)",
-      "target": "reaction:atach1 hydrolysis of jasmonoyl-coa",
-      "role": "catalyst",
       "confidence": 1.0
     },
     {
@@ -640,98 +571,188 @@
     },
     {
       "source": "reaction:opcl1 reaction on opc-6:0",
-      "target": "compound:opc-6-coa",
+      "target": "compound:opc-6:0-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:opc-8:coa ligase 1 (opcl1)",
+      "source": "protein:opcl1",
       "target": "reaction:opcl1 reaction on opc-6:0",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:opc-4:0",
-      "target": "reaction:opcl1 reaction on opc-4:0",
+      "source": "compound:opc-6:0-coa",
+      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:opcl1 reaction on opc-4:0",
-      "target": "compound:opc-4-coa",
+      "source": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
+      "target": "compound:jasmonoyl-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:opc-8:coa ligase 1 (opcl1)",
-      "target": "reaction:opcl1 reaction on opc-4:0",
+      "source": "protein:acx1",
+      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:dnopda-coa",
-      "target": "reaction:opr3 reaction on dnopda-coa",
+      "source": "protein:mfp",
+      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:kat2",
+      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:opda",
+      "target": "reaction:opcl1 reaction on opda",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:opr3 reaction on dnopda-coa",
-      "target": "compound:opc-6-coa",
+      "source": "reaction:opcl1 reaction on opda",
+      "target": "compound:opda-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:12-oxophytodienoate reductase 3 (opr3)",
-      "target": "reaction:opr3 reaction on dnopda-coa",
+      "source": "protein:opcl1",
+      "target": "reaction:opcl1 reaction on opda",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:opda-coa",
-      "target": "reaction:opr3 reaction on opda-coa",
+      "source": "protein:opr3",
+      "target": "reaction:opcl1 reaction on opda",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:dnopda",
+      "target": "reaction:opcl1 reaction on dnopda",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:opr3 reaction on opda-coa",
-      "target": "compound:opc-8-coa",
+      "source": "reaction:opcl1 reaction on dnopda",
+      "target": "compound:dnopda-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:12-oxophytodienoate reductase 3 (opr3)",
-      "target": "reaction:opr3 reaction on opda-coa",
+      "source": "protein:opcl1",
+      "target": "reaction:opcl1 reaction on dnopda",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:linoleic acid (18:2)",
-      "target": "reaction:lox reaction on linoleic acid (18:2)",
+      "source": "protein:opr3",
+      "target": "reaction:opcl1 reaction on dnopda",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:opc-8:0-coa",
+      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:lox reaction on linoleic acid (18:2)",
-      "target": "compound:13(s)-hydroperoxy-octadecatrienoic acid (13-hpot)",
+      "source": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
+      "target": "compound:opc-6:0-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:lipoxygenase (lox)",
-      "target": "reaction:lox reaction on linoleic acid (18:2)",
+      "source": "protein:acx1",
+      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:12-oxophytodienoic acid (opda)",
+      "source": "protein:mfp",
+      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:kat2",
+      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:opc-6:0-coa",
+      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
+      "target": "compound:opc-4:0",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:acx1",
+      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:mfp",
+      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:kat2",
+      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:opda",
       "target": "transport:opda import into peroxisomes",
       "role": "cargo",
       "confidence": 1.0
     },
     {
-      "source": "protein:comatose (cts)",
+      "source": "protein:cts",
       "target": "transport:opda import into peroxisomes",
       "role": "transporter",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:dnopda",
+      "target": "transport:dnopda import into peroxisomes",
+      "role": "cargo",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:cts",
+      "target": "transport:dnopda import into peroxisomes",
+      "role": "transporter",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:opc-8:0-coa",
+      "target": "interaction:opc-8:0-coa and opc-6:0-coa are intermediates in jasmonate biosynthesis",
+      "role": "participant",
+      "confidence": 1.0
+    },
+    {
+      "source": "interaction:opc-8:0-coa and opc-6:0-coa are intermediates in jasmonate biosynthesis",
+      "target": "compound:opc-8:0-coa",
+      "role": "participant",
       "confidence": 1.0
     }
   ]
