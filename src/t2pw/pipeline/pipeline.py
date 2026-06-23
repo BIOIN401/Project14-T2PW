@@ -12,6 +12,7 @@ from t2pw.pipeline.preprocessor import format_context_header, is_ambiguous_multi
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
+from t2pw.pipeline.reaction_lock_manifest import write_stage1_lock_artifacts
 
 logger = logging.getLogger(__name__)
 
@@ -1707,6 +1708,7 @@ def run_stage_one_with_chunking(
     *,
     pathway_context: Optional[Dict[str, Any]] = None,
     user_task_context: Optional[str] = None,
+    artifact_dir: Optional[Path | str] = None,
     enable_chunking: bool,
     chunk_word_limit: int = 8000,
     chunk_overlap: int = 1200,
@@ -1733,6 +1735,8 @@ def run_stage_one_with_chunking(
             temperature=temperature,
             max_tokens=max_tokens,
         )
+        if artifact_dir is not None:
+            write_stage1_lock_artifacts(output, artifact_dir)
         output = clean_stage_one(output)
         chunk_meta = {
             "chunk_id": 1,
@@ -1747,6 +1751,7 @@ def run_stage_one_with_chunking(
     chunks = chunk_text(input_text, chunk_word_limit, chunk_overlap)
     chunk_results: List[Dict[str, Any]] = []
     outputs: List[Dict[str, Any]] = []
+    raw_stage_one_chunks: List[Dict[str, Any]] = []
 
     for chunk in chunks:
         try:
@@ -1765,10 +1770,19 @@ def run_stage_one_with_chunking(
                 attempts=failure.attempts,
             ) from failure
 
+        raw_stage_one_chunks.append(
+            {
+                "payload": parsed,
+                "source_chunk": f"chunk_{int(chunk['chunk_id']):03d}",
+            }
+        )
         parsed = clean_stage_one(parsed)
         chunk_entry = {**chunk, "output": parsed, "attempts": attempts}
         chunk_results.append(chunk_entry)
         outputs.append(parsed)
+
+    if artifact_dir is not None:
+        write_stage1_lock_artifacts(raw_stage_one_chunks, artifact_dir)
 
     merged = merge_stage_one_outputs(outputs)
     merged = clean_stage_one(merged)

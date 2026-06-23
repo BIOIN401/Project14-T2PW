@@ -2115,6 +2115,7 @@ if submit:
                 text,
                 pathway_context=pathway_context,
                 user_task_context=user_task_context,
+                artifact_dir=PROJECT_ROOT / "tmp",
                 enable_chunking=enable_chunking,
                 chunk_word_limit=int(chunk_size),
                 chunk_overlap=int(chunk_overlap),
