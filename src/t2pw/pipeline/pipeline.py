@@ -220,6 +220,7 @@ def run_extraction_pipeline(
 
     return _run_json_stage(
         stage_name="extraction",
+        model_env_var="OPENROUTER_EXTRACTION_MODEL",
         system_prompt=(PROMPTS_DIR / "pwml_system.txt").read_text(encoding="utf-8"),
         build_user_prompt=lambda prev_output, last_error: _build_extraction_prompt(
             input_text, prev_output, last_error,
@@ -294,6 +295,7 @@ def run_inference_pipeline(
     stage_one_str = json.dumps(stage_one, indent=2, ensure_ascii=False)
     return _run_json_stage(
         stage_name="inference",
+        model_env_var="OPENROUTER_INFERENCE_MODEL",
         system_prompt=(PROMPTS_DIR / "pwml_infer_system.txt").read_text(encoding="utf-8"),
         build_user_prompt=lambda prev_output, last_error: _build_inference_prompt(
             input_text,
@@ -2193,10 +2195,15 @@ def _run_json_stage(
     max_attempts: int,
     temperature: float,
     max_tokens: int,
+    model_env_var: Optional[str] = None,
 ) -> Tuple[Dict[str, Any], AttemptLogs]:
     attempts: AttemptLogs = []
     prev_output: Optional[str] = None
     last_error: Optional[str] = None
+    stage_label = {
+        "extraction": "Stage 1 extraction",
+        "inference": "Stage 2 inference",
+    }.get(stage_name, stage_name)
 
     for attempt in range(1, max_attempts + 1):
         user_prompt = build_user_prompt(prev_output, last_error)
@@ -2205,7 +2212,14 @@ def _run_json_stage(
             {"role": "user", "content": user_prompt},
         ]
 
-        raw = chat(messages, temperature=temperature, max_tokens=max_tokens, response_json=True)
+        raw = chat(
+            messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            response_json=True,
+            model_env_var=model_env_var,
+            stage_name=stage_label,
+        )
         log_entry: AttemptLog = {"attempt": attempt, "raw": raw, "error": None}
 
         try:

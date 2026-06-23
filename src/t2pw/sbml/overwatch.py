@@ -204,6 +204,8 @@ def run_sbml_overwatch(
                 temperature=0.0,
                 max_tokens=llm_max_tokens,
                 response_json=True,
+                model_env_var="OPENROUTER_OVERWATCH_MODEL",
+                stage_name="overwatch",
             )
             parsed = _parse_llm_json(raw)
             if parsed is None:

@@ -1049,6 +1049,8 @@ def run_audit(
                 temperature=llm_temperature,
                 max_tokens=llm_max_tokens,
                 response_json=True,
+                model_env_var="OPENROUTER_AUDIT_MODEL",
+                stage_name="audit loop",
             )
             llm_payload = _extract_json_object(llm_raw)
             if llm_payload is None:

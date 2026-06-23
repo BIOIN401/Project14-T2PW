@@ -48,7 +48,14 @@ def preprocess(
     ]
 
     try:
-        raw = chat(messages, temperature=temperature, max_tokens=max_tokens, response_json=True)
+        raw = chat(
+            messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            response_json=True,
+            model_env_var="OPENROUTER_PREPROCESSOR_MODEL",
+            stage_name="preprocessor",
+        )
         result = _parse_json(raw)
         if isinstance(result, dict):
             return {**_EMPTY_CONTEXT, **result}

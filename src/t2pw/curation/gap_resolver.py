@@ -211,6 +211,8 @@ def infer_entity_species(
             temperature=float(temperature),
             max_tokens=int(max_tokens),
             response_json=True,
+            model_env_var="OPENROUTER_GAP_MODEL",
+            stage_name="gap resolver",
         )
         parsed = _extract_json_object(raw) or {}
         species_name = _canonical(str(parsed.get("name") or parsed.get("species") or ""))
@@ -512,6 +514,8 @@ def _llm_choose_location(
             temperature=float(temperature),
             max_tokens=int(max_tokens),
             response_json=True,
+            model_env_var="OPENROUTER_GAP_MODEL",
+            stage_name="gap resolver",
         )
         parsed = _extract_json_object(raw) or {}
         choice = _canonical(str(parsed.get("choice", "")))
@@ -1002,6 +1006,8 @@ def _llm_plan_stage3(
             temperature=float(temperature),
             max_tokens=int(max_tokens),
             response_json=True,
+            model_env_var="OPENROUTER_GAP_MODEL",
+            stage_name="gap resolver",
         )
         parsed = _extract_json_object(raw) or {}
         operations_raw = _safe_list(parsed.get("operations"))
@@ -1124,6 +1130,8 @@ def _llm_choose_id_candidate(
             temperature=float(temperature),
             max_tokens=int(max_tokens),
             response_json=True,
+            model_env_var="OPENROUTER_GAP_MODEL",
+            stage_name="gap resolver",
         )
         parsed = _extract_json_object(raw) or {}
         selected_index = int(parsed.get("selected_index", -1))
@@ -2230,6 +2238,8 @@ def _run_enrichment_agent(
             temperature=llm_temperature,
             max_tokens=llm_max_tokens,
             max_tool_rounds=15,
+            model_env_var="OPENROUTER_GAP_MODEL",
+            stage_name="gap resolver",
         )
 
         # Also try to parse patches from the final text response

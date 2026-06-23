@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import time
 from typing import Any, Callable, Dict, List, Optional
@@ -7,6 +8,8 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from openai import RateLimitError, APIError, APITimeoutError, AuthenticationError, BadRequestError
 from t2pw.paths import PROJECT_ROOT
+
+logger = logging.getLogger(__name__)
 
 # -----------------------------------------------------------------------------
 # Load .env reliably (project root = folder containing "src")
@@ -33,8 +36,6 @@ if PROVIDER == "openrouter":
 
     if not api_key:
         raise RuntimeError(f"OPENROUTER_API_KEY not loaded. Looked for .env at: {ENV_PATH}")
-    if not model:
-        raise RuntimeError("Missing OPENROUTER_MODEL in .env")
     if not api_key.startswith("sk-or-"):
         raise RuntimeError(
             f"OPENROUTER_API_KEY looks wrong ({_mask(api_key)}). "
@@ -102,6 +103,39 @@ def reset_token_stats() -> None:
     _token_stats["calls"] = 0
 
 
+def _resolve_model(
+    *,
+    model_override: Optional[str] = None,
+    model_env_var: Optional[str] = None,
+) -> str:
+    """
+    Resolve the model for a call.
+
+    Priority:
+      1. explicit model_override
+      2. stage-specific OpenRouter env var named by the caller
+      3. OPENROUTER_MODEL
+      4. provider default captured during client setup
+    """
+    override = (model_override or "").strip()
+    if override:
+        return override
+
+    if PROVIDER == "openrouter":
+        if model_env_var:
+            stage_model = (os.getenv(model_env_var) or "").strip()
+            if stage_model:
+                return stage_model
+        global_model = (os.getenv("OPENROUTER_MODEL") or "").strip()
+        if global_model:
+            return global_model
+
+    if _model:
+        return _model
+
+    raise RuntimeError("Missing OPENROUTER_MODEL in .env")
+
+
 # -----------------------------------------------------------------------------
 # Chat function (NOW supports response_json=True)
 # -----------------------------------------------------------------------------
@@ -111,15 +145,23 @@ def chat(
     max_tokens: int = 800,
     response_json: bool = False,
     json_schema: Optional[Dict[str, Any]] = None,
+    model_override: Optional[str] = None,
+    model_env_var: Optional[str] = None,
+    stage_name: Optional[str] = None,
 ) -> str:
     """
     response_json=True:
       - If json_schema is provided, requests structured JSON using the schema.
       - Otherwise requests a JSON object output.
     """
+    resolved_model = _resolve_model(
+        model_override=model_override,
+        model_env_var=model_env_var,
+    )
+    logger.info("LLM model for %s: %s", stage_name or "chat", resolved_model)
 
     kwargs: Dict[str, Any] = {
-        "model": _model,
+        "model": resolved_model,
         "messages": messages,
         "temperature": temperature,
         "max_tokens": max_tokens,
@@ -193,6 +235,9 @@ def chat_with_tools(
     temperature: float = 0.0,
     max_tokens: int = 1200,
     max_tool_rounds: int = 8,
+    model_override: Optional[str] = None,
+    model_env_var: Optional[str] = None,
+    stage_name: Optional[str] = None,
 ) -> str:
     """
     Agentic tool-calling loop using the OpenAI function-calling protocol.
@@ -209,12 +254,17 @@ def chat_with_tools(
     max_retries = int(os.getenv("LLM_MAX_RETRIES", "8"))
     base_sleep = float(os.getenv("LLM_RETRY_BASE_SLEEP", "1.0"))
     max_sleep = float(os.getenv("LLM_RETRY_MAX_SLEEP", "20.0"))
+    resolved_model = _resolve_model(
+        model_override=model_override,
+        model_env_var=model_env_var,
+    )
+    logger.info("LLM model for %s: %s", stage_name or "chat_with_tools", resolved_model)
 
     working_messages: List[Dict[str, Any]] = list(messages)
 
     def _call_once(msgs: List[Dict[str, Any]], include_tools: bool) -> Any:
         kwargs: Dict[str, Any] = {
-            "model": _model,
+            "model": resolved_model,
             "messages": msgs,
             "temperature": temperature,
             "max_tokens": max_tokens,

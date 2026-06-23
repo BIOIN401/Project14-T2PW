@@ -228,6 +228,8 @@ def run_pathway_curator(
             temperature=llm_temperature,
             max_tokens=llm_max_tokens,
             max_tool_rounds=20,
+            model_env_var="OPENROUTER_CURATOR_MODEL",
+            stage_name="curator",
         )
         report["raw"] = final_text[:600]
     except Exception as exc:  # noqa: BLE001
