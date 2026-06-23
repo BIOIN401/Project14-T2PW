@@ -1,26 +1,34 @@
 {
   "summary": {
-    "total_species": 25,
-    "total_reactions": 15,
-    "completeness_score": 0.35
+    "total_species": 32,
+    "total_reactions": 13,
+    "completeness_score": 0.044
   },
   "flags": {
     "missing_compartments": [
       {
+        "entity": "linoleic acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "OPC-4:0",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "OPC-4-CoA",
+        "reason": "no subcellular location recorded"
+      },
+      {
         "entity": "OPC-8:0-CoA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [
-      {
-        "entity": "linolenic acid (18:3)",
-        "reason": "name suggests a complex or subunit"
-      },
-      {
-        "entity": "hexadecatrienoic acid (16:3)",
-        "reason": "name suggests a complex or subunit"
-      },
       {
         "entity": "OPC-8:0",
         "reason": "name suggests a complex or subunit"
@@ -43,14 +51,43 @@
       }
     ],
     "transport_like_reactions": [],
-    "orphan_nodes": [],
+    "orphan_nodes": [
+      {
+        "entity": "linoleic acid",
+        "degree": 0
+      },
+      {
+        "entity": "OPC-4:0",
+        "degree": 0
+      },
+      {
+        "entity": "OPDA-CoA",
+        "degree": 0
+      },
+      {
+        "entity": "dnOPDA-CoA",
+        "degree": 0
+      },
+      {
+        "entity": "MFP",
+        "degree": 0
+      },
+      {
+        "entity": "AtACH2",
+        "degree": 0
+      }
+    ],
     "missing_ids": [
       {
-        "entity": "linolenic acid (18:3)",
+        "entity": "linoleic acid",
         "type": "compound"
       },
       {
-        "entity": "hexadecatrienoic acid (16:3)",
+        "entity": "linolenic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "hexadecatrienoic acid",
         "type": "compound"
       },
       {
@@ -63,6 +100,10 @@
       },
       {
         "entity": "12,13-EOT",
+        "type": "compound"
+      },
+      {
+        "entity": "10,11-EHT",
         "type": "compound"
       },
       {
@@ -86,6 +127,18 @@
         "type": "compound"
       },
       {
+        "entity": "OPC-8-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-6-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-4-CoA",
+        "type": "compound"
+      },
+      {
         "entity": "jasmonic acid",
         "type": "compound"
       },
@@ -94,19 +147,19 @@
         "type": "compound"
       },
       {
-        "entity": "OPC-8:0-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "OPC-6:0-CoA",
-        "type": "compound"
-      },
-      {
         "entity": "OPDA-CoA",
         "type": "compound"
       },
       {
         "entity": "dnOPDA-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-8:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
         "type": "compound"
       },
       {
@@ -126,6 +179,10 @@
         "type": "protein"
       },
       {
+        "entity": "CTS",
+        "type": "protein"
+      },
+      {
         "entity": "OPCL1",
         "type": "protein"
       },
@@ -134,15 +191,19 @@
         "type": "protein"
       },
       {
-        "entity": "MFP",
-        "type": "protein"
-      },
-      {
         "entity": "KAT2",
         "type": "protein"
       },
       {
-        "entity": "CTS",
+        "entity": "MFP",
+        "type": "protein"
+      },
+      {
+        "entity": "AtACH1",
+        "type": "protein"
+      },
+      {
+        "entity": "AtACH2",
         "type": "protein"
       }
     ],

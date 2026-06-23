@@ -2227,6 +2227,13 @@ def ensure_autostates(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
         if auto_species_name and not _canonical(str(auto_state.get("species") or auto_state.get("organism") or "")):
             auto_state["species"] = auto_species_name
 
+    if auto_species_name:
+        for row in biological_states:
+            if not isinstance(row, dict):
+                continue
+            if not _canonical(str(row.get("species") or row.get("organism") or "")):
+                row["species"] = auto_species_name
+
     element_locations = _safe_dict(payload.setdefault("element_locations", {}))
     for list_key in ["compound_locations", "protein_locations"]:
         rows = _safe_list(element_locations.get(list_key))

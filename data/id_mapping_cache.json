@@ -18865,6 +18865,396 @@
         "issue": "ambiguous",
         "order_step": "synonym_or_fuzzy_species"
       }
+    },
+    "db::lox::arabidopsis thaliana::::{\"uniprot\": \"Q8Z0C8\"}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_protein_id": 22867,
+          "name": "Lipoxygenase 2, chloroplastic",
+          "gene_name": "LOX2",
+          "uniprot": "P38418",
+          "species_id": 4,
+          "score": 0.65
+        },
+        {
+          "pathbank_protein_id": 22958,
+          "name": "Lipoxygenase 3, chloroplastic",
+          "gene_name": "LOX3",
+          "uniprot": "Q9LNR3",
+          "species_id": 4,
+          "score": 0.65
+        },
+        {
+          "pathbank_protein_id": 22965,
+          "name": "Linoleate 9S-lipoxygenase 5",
+          "gene_name": "LOX5",
+          "uniprot": "Q9LUW0",
+          "species_id": 4,
+          "score": 0.65
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::acx1::arabidopsis thaliana::11618::{\"uniprot\": \"O65202\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "O65202",
+        "pathbank_protein_id": "11618",
+        "gene_name": "ACX1"
+      },
+      "pathbank_protein_id": 11618,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_id",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11618,
+          "name": "acyl coenzyme A oxidase",
+          "uniprot": "O65202",
+          "gene_name": "ACX1",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_id"
+      }
+    },
+    "db::kat2::arabidopsis thaliana::::{\"uniprot\": \"Q38849\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q56WD9",
+        "pathbank_protein_id": "11616"
+      },
+      "pathbank_protein_id": 11616,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11616,
+          "name": "OPC4-3-ketoacyl-CoA thiolase",
+          "gene_name": "KAT2",
+          "uniprot": "Q56WD9",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::atach1::arabidopsis thaliana::::{\"uniprot\": \"Q5FYU1\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::atach1::arabidopsis thaliana::::{\"uniprot\": \"Q5FYU1\"}::[{\"alias\": \"ACH1\", \"source\": \"arabidopsis_at_prefix_gene_symbol\"}]": {
+      "status": "mapped",
+      "query": "(protein_name:\"AtACH1\" OR gene:\"AtACH1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"AtACH1\" OR gene:\"AtACH1\") | (protein_name:\"ACH1\" OR gene:\"ACH1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"ACH1\" OR gene:\"ACH1\") | \"ACH1\" AND organism_name:\"Arabidopsis thaliana\" | \"ACH1\"",
+      "mapped_ids": {
+        "uniprot": "Q5FYU1"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_alias_candidate",
+      "candidates": [
+        {
+          "accession": "Q5FYU1",
+          "protein_name": "Acyl-CoA hydrolase 1",
+          "gene_names": [
+            "ACH1",
+            "CNTE1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 1.0,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        },
+        {
+          "accession": "O82811",
+          "protein_name": "High-affinity nitrate transporter 2.1",
+          "gene_names": [
+            "ACH1",
+            "LIN1",
+            "NRT2.1",
+            "NRT2;1AT"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 1.0,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        },
+        {
+          "accession": "P32316",
+          "protein_name": "Acetyl-CoA hydrolase",
+          "gene_names": [
+            "ACH1"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        },
+        {
+          "accession": "P83773",
+          "protein_name": "Acetyl-CoA hydrolase",
+          "gene_names": [
+            "ACH1"
+          ],
+          "organism": "Candida albicans (strain SC5314 / ATCC MYA-2876)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        },
+        {
+          "accession": "Q6BKW1",
+          "protein_name": "Acetyl-CoA hydrolase",
+          "gene_names": [
+            "ACH1"
+          ],
+          "organism": "Debaryomyces hansenii (strain ATCC 36239 / CBS 767 / BCRC 21394 / JCM 1990 / NBRC 0083 / IGC 2968)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        },
+        {
+          "accession": "Q6FPF3",
+          "protein_name": "Acetyl-CoA hydrolase",
+          "gene_names": [
+            "ACH1"
+          ],
+          "organism": "Candida glabrata (strain ATCC 2001 / BCRC 20586 / JCM 3761 / NBRC 0622 / NRRL Y-65 / CBS 138)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        },
+        {
+          "accession": "Q9UUJ9",
+          "protein_name": "Acetyl-CoA hydrolase",
+          "gene_names": [
+            "ach1"
+          ],
+          "organism": "Schizosaccharomyces pombe (strain 972 / ATCC 24843)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        },
+        {
+          "accession": "Q54K91",
+          "protein_name": "Acetyl-CoA hydrolase",
+          "gene_names": [
+            "ach1"
+          ],
+          "organism": "Dictyostelium discoideum",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACH1",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH1"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"AtACH1\" OR gene:\"AtACH1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"AtACH1\" OR gene:\"AtACH1\")",
+        "(protein_name:\"ACH1\" OR gene:\"ACH1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"ACH1\" OR gene:\"ACH1\")",
+        "\"ACH1\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"ACH1\""
+      ],
+      "matched_alias": "ACH1",
+      "alias_source": "arabidopsis_at_prefix_gene_symbol",
+      "resolved_name": "Acyl-CoA hydrolase 1",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::atach2::arabidopsis thaliana::::{\"uniprot\": \"F4HU51\"}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::atach2::arabidopsis thaliana::::{\"uniprot\": \"F4HU51\"}::[{\"alias\": \"ACH2\", \"source\": \"arabidopsis_at_prefix_gene_symbol\"}]": {
+      "status": "mapped",
+      "query": "(protein_name:\"AtACH2\" OR gene:\"AtACH2\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"AtACH2\" OR gene:\"AtACH2\") | (protein_name:\"ACH2\" OR gene:\"ACH2\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"ACH2\" OR gene:\"ACH2\") | \"ACH2\" AND organism_name:\"Arabidopsis thaliana\" | \"ACH2\"",
+      "mapped_ids": {
+        "uniprot": "F4HU51"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_alias_candidate",
+      "candidates": [
+        {
+          "accession": "F4HU51",
+          "protein_name": "Acyl-CoA hydrolase 2",
+          "gene_names": [
+            "ACH2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 1.0,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        },
+        {
+          "accession": "Q9LMZ9",
+          "protein_name": "High-affinity nitrate transporter 2.2",
+          "gene_names": [
+            "ACH2",
+            "NRT2.2",
+            "NRT2;2AT"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 1.0,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        },
+        {
+          "accession": "W8BLF1",
+          "protein_name": "Acetylcholine receptor subunit alpha-like 2",
+          "gene_names": [
+            "ACH2"
+          ],
+          "organism": "Ceratitis capitata",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        },
+        {
+          "accession": "A0A836K7S4",
+          "protein_name": "ACH2 protein",
+          "gene_names": [
+            "Ach2"
+          ],
+          "organism": "Acromyrmex charruanus",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        },
+        {
+          "accession": "A0A836ESC9",
+          "protein_name": "ACH2 protein",
+          "gene_names": [
+            "Ach2"
+          ],
+          "organism": "Acromyrmex insinuator",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        },
+        {
+          "accession": "A0A836EHV8",
+          "protein_name": "ACH2 protein",
+          "gene_names": [],
+          "organism": "Acromyrmex heyeri",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        },
+        {
+          "accession": "A0A836EEN8",
+          "protein_name": "ACH2 protein",
+          "gene_names": [],
+          "organism": "Acromyrmex insinuator",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        },
+        {
+          "accession": "O88267",
+          "protein_name": "Acyl-coenzyme A thioesterase 1",
+          "gene_names": [
+            "Acot1",
+            "Cte1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "ACH2",
+          "alias_source": "arabidopsis_at_prefix_gene_symbol",
+          "matched_alias": "ACH2"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"AtACH2\" OR gene:\"AtACH2\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"AtACH2\" OR gene:\"AtACH2\")",
+        "(protein_name:\"ACH2\" OR gene:\"ACH2\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"ACH2\" OR gene:\"ACH2\")",
+        "\"ACH2\" AND organism_name:\"Arabidopsis thaliana\"",
+        "\"ACH2\""
+      ],
+      "matched_alias": "ACH2",
+      "alias_source": "arabidopsis_at_prefix_gene_symbol",
+      "resolved_name": "Acyl-CoA hydrolase 2",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -36945,6 +37335,126 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::13hpot::::{\"kegg\": \"C04785\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "kegg": "C04785",
+        "chebi": "CHEBI:58757",
+        "pubchem": "45266757",
+        "pathbank_compound_id": "104719"
+      },
+      "pathbank_compound_id": 104719,
+      "confidence": 1.0,
+      "chosen_rule": "direct_id_match:kegg",
+      "candidates": [
+        {
+          "pathbank_compound_id": 104719,
+          "name": "13(S)-HPOTE",
+          "short_name": "SHPOTE",
+          "matched_on": "kegg",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C04785",
+            "chebi": "CHEBI:58757",
+            "pubchem": "45266757"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "external_id:direct_id_match:kegg"
+      }
+    },
+    "db::11hpht::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1213eot::104721::{\"chebi\": \"CHEBI:134055\", \"kegg\": \"C04672\", \"pubchem\": \"20843327\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "kegg": "C04672",
+        "chebi": "CHEBI:134055",
+        "pubchem": "20843327",
+        "pathbank_compound_id": "104721"
+      },
+      "pathbank_compound_id": 104721,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 104721,
+          "name": "(9Z,13S,15Z)-12,13-epoxyoctadeca-9,11,15-trienoate",
+          "short_name": "EOT",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C04672",
+            "chebi": "CHEBI:134055",
+            "pubchem": "20843327",
+            "pathbank_compound_id": "104721"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::opc80coa::104725::{\"pubchem\": \"126961170\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "pubchem": "126961170",
+        "pathbank_compound_id": "104725"
+      },
+      "pathbank_compound_id": 104725,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 104725,
+          "name": "3-oxo-2-(cis-2'-pentenyl)-cyclopentane-1-octanoyl-CoA",
+          "short_name": "OPC8COA",
+          "score": 1.0,
+          "mapped_ids": {
+            "pubchem": "126961170",
+            "pathbank_compound_id": "104725"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::opc60coa::::{\"kegg\": \"C16330\"}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -40947,49 +41457,41 @@
         "status": "unresolved",
         "issue": "component_proteins_unresolved"
       }
-    }
-  },
-  "enzyme_complexes": {
-    "lipoxygenase::22965::arabidopsis thaliana": {
-      "status": "mapped",
+    },
+    "db::lox complex::arabidopsis thaliana::::[{\"ids\": {\"uniprot\": \"Q8Z0C8\"}, \"name\": \"LOX\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
       "provider": "PathBankDB",
       "source": "db",
-      "pathbank_complex_id": 13493,
-      "pathbank_protein_complex_id": 13493,
-      "species_id": 4,
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
       "components": [
         {
-          "name": "Lipoxygenase",
-          "pathbank_protein_id": 22965,
+          "name": "LOX",
           "stoichiometry": 1,
-          "uniprot": "Q9LUW0",
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
           "mapped_ids": {
-            "uniprot": "Q9LUW0",
-            "pathbank_protein_id": "22965"
+            "uniprot": "Q8Z0C8"
           },
-          "gene_name": "LOX5",
-          "species_id": 4
+          "reason": "no_db_match"
         }
       ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
+      "issues": [
         {
-          "pathbank_complex_id": 13493,
-          "pathbank_protein_complex_id": 13493,
-          "name": "Linoleate 9S-lipoxygenase 5",
-          "species_id": 4,
-          "component_protein_id": 22965,
-          "score": 0.9
+          "issue": "component_protein_unresolved",
+          "component": "LOX",
+          "component_index": 0,
+          "reason": "no_db_match"
         }
       ],
-      "issues": [],
       "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
       }
     },
-    "allene oxide synthase::22869::arabidopsis thaliana": {
+    "db::allene oxide synthase::arabidopsis thaliana::13426::[{\"ids\": {\"gene_name\": \"CYP74A\", \"pathbank_protein_id\": \"22869\", \"uniprot\": \"Q96242\"}, \"name\": \"AOS\", \"stoichiometry\": 1}]": {
       "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
@@ -40998,7 +41500,7 @@
       "species_id": 4,
       "components": [
         {
-          "name": "Allene oxide synthase",
+          "name": "AOS",
           "pathbank_protein_id": 22869,
           "stoichiometry": 1,
           "uniprot": "Q96242",
@@ -41010,22 +41512,212 @@
           "species_id": 4
         }
       ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
       "candidates": [
         {
           "pathbank_complex_id": 13426,
           "pathbank_protein_complex_id": 13426,
           "name": "Allene oxide synthase",
           "species_id": 4,
-          "component_protein_id": 22869,
-          "score": 0.9
+          "score": 1.0,
+          "component_count": 1
         }
       ],
       "issues": [],
       "resolution": {
         "status": "matched",
-        "order_step": "enzyme_component_species"
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::12oxophytodienoate reductase::arabidopsis thaliana::13428::[{\"ids\": {\"gene_name\": \"OPR3\", \"pathbank_protein_id\": \"22871\", \"uniprot\": \"Q9FUP0\"}, \"name\": \"OPR3\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 13428,
+      "pathbank_protein_complex_id": 13428,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "OPR3",
+          "pathbank_protein_id": 22871,
+          "stoichiometry": 1,
+          "uniprot": "Q9FUP0",
+          "mapped_ids": {
+            "uniprot": "Q9FUP0",
+            "pathbank_protein_id": "22871"
+          },
+          "gene_name": "OPR3",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 13428,
+          "pathbank_protein_complex_id": 13428,
+          "name": "12-oxophytodienoate reductase",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1octanoate coa ligase::arabidopsis thaliana::13429::[{\"ids\": {\"gene_name\": \"4CLL5\", \"pathbank_protein_id\": \"22872\", \"uniprot\": \"Q84P21\"}, \"name\": \"OPCL1\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 13429,
+      "pathbank_protein_complex_id": 13429,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "OPCL1",
+          "pathbank_protein_id": 22872,
+          "stoichiometry": 1,
+          "uniprot": "Q84P21",
+          "mapped_ids": {
+            "uniprot": "Q84P21",
+            "pathbank_protein_id": "22872"
+          },
+          "gene_name": "4CLL5",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 13429,
+          "pathbank_protein_complex_id": 13429,
+          "name": "3-oxo-2-(2'-[Z]-pentenyl)cyclopentane-1-octanoate CoA ligase",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::acyl coenzyme a oxidase::arabidopsis thaliana::5495::[{\"ids\": {\"gene_name\": \"ACX1\", \"pathbank_protein_id\": \"11618\", \"uniprot\": \"O65202\"}, \"name\": \"ACX1\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 5495,
+      "pathbank_protein_complex_id": 5495,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "ACX1",
+          "pathbank_protein_id": 11618,
+          "stoichiometry": 1,
+          "uniprot": "O65202",
+          "mapped_ids": {
+            "uniprot": "O65202",
+            "pathbank_protein_id": "11618"
+          },
+          "gene_name": "ACX1",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 5495,
+          "pathbank_protein_complex_id": 5495,
+          "name": "acyl coenzyme A oxidase",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    },
+    "db::opc43ketoacylcoa thiolase::arabidopsis thaliana::5493::[{\"ids\": {\"gene_name\": \"KAT2\", \"pathbank_protein_id\": \"11616\", \"uniprot\": \"Q56WD9\"}, \"name\": \"KAT2\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 5493,
+      "pathbank_protein_complex_id": 5493,
+      "species_id": 4,
+      "components": [
+        {
+          "name": "KAT2",
+          "pathbank_protein_id": 11616,
+          "stoichiometry": 1,
+          "uniprot": "Q56WD9",
+          "mapped_ids": {
+            "uniprot": "Q56WD9",
+            "pathbank_protein_id": "11616"
+          },
+          "gene_name": "KAT2",
+          "species_id": 4
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_protein_complex_id",
+      "candidates": [
+        {
+          "pathbank_complex_id": 5493,
+          "pathbank_protein_complex_id": 5493,
+          "name": "OPC4-3-ketoacyl-CoA thiolase ",
+          "species_id": 4,
+          "score": 1.0,
+          "component_count": 1
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_protein_complex_id"
+      }
+    }
+  },
+  "enzyme_complexes": {
+    "lox::::arabidopsis thaliana": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "LOX complex",
+      "species_id": 4,
+      "components": [
+        {
+          "name": "LOX",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "Q8Z0C8"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "LOX",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
       }
     },
     "aos::22869::arabidopsis thaliana": {
@@ -41037,7 +41729,7 @@
       "species_id": 4,
       "components": [
         {
-          "name": "Allene oxide synthase",
+          "name": "AOS",
           "pathbank_protein_id": 22869,
           "stoichiometry": 1,
           "uniprot": "Q96242",
@@ -41058,45 +41750,6 @@
           "name": "Allene oxide synthase",
           "species_id": 4,
           "component_protein_id": 22869,
-          "score": 0.9
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
-      }
-    },
-    "allene oxide cyclase::22870::arabidopsis thaliana": {
-      "status": "mapped",
-      "provider": "PathBankDB",
-      "source": "db",
-      "pathbank_complex_id": 13427,
-      "pathbank_protein_complex_id": 13427,
-      "species_id": 4,
-      "components": [
-        {
-          "name": "Allene oxide cyclase",
-          "pathbank_protein_id": 22870,
-          "stoichiometry": 1,
-          "uniprot": "Q9LS02",
-          "mapped_ids": {
-            "uniprot": "Q9LS02",
-            "pathbank_protein_id": "22870"
-          },
-          "gene_name": "AOC2",
-          "species_id": 4
-        }
-      ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
-        {
-          "pathbank_complex_id": 13427,
-          "pathbank_protein_complex_id": 13427,
-          "name": "Allene oxide cyclase",
-          "species_id": 4,
-          "component_protein_id": 22870,
           "score": 0.9
         }
       ],
@@ -41138,45 +41791,6 @@
         "order_step": "novel_enzyme_single_component_complex"
       }
     },
-    "12oxophytodienoate reductase 3::22871::arabidopsis thaliana": {
-      "status": "mapped",
-      "provider": "PathBankDB",
-      "source": "db",
-      "pathbank_complex_id": 13428,
-      "pathbank_protein_complex_id": 13428,
-      "species_id": 4,
-      "components": [
-        {
-          "name": "12-oxophytodienoate reductase 3",
-          "pathbank_protein_id": 22871,
-          "stoichiometry": 1,
-          "uniprot": "Q9FUP0",
-          "mapped_ids": {
-            "uniprot": "Q9FUP0",
-            "pathbank_protein_id": "22871"
-          },
-          "gene_name": "OPR3",
-          "species_id": 4
-        }
-      ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
-        {
-          "pathbank_complex_id": 13428,
-          "pathbank_protein_complex_id": 13428,
-          "name": "12-oxophytodienoate reductase",
-          "species_id": 4,
-          "component_protein_id": 22871,
-          "score": 0.9
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
-      }
-    },
     "opr3::22871::arabidopsis thaliana": {
       "status": "mapped",
       "provider": "PathBankDB",
@@ -41186,7 +41800,7 @@
       "species_id": 4,
       "components": [
         {
-          "name": "12-oxophytodienoate reductase 3",
+          "name": "OPR3",
           "pathbank_protein_id": 22871,
           "stoichiometry": 1,
           "uniprot": "Q9FUP0",
@@ -41207,45 +41821,6 @@
           "name": "12-oxophytodienoate reductase",
           "species_id": 4,
           "component_protein_id": 22871,
-          "score": 0.9
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
-      }
-    },
-    "opc8coa ligase 1::22872::arabidopsis thaliana": {
-      "status": "mapped",
-      "provider": "PathBankDB",
-      "source": "db",
-      "pathbank_complex_id": 13429,
-      "pathbank_protein_complex_id": 13429,
-      "species_id": 4,
-      "components": [
-        {
-          "name": "OPC-8:CoA ligase 1",
-          "pathbank_protein_id": 22872,
-          "stoichiometry": 1,
-          "uniprot": "Q84P21",
-          "mapped_ids": {
-            "uniprot": "Q84P21",
-            "pathbank_protein_id": "22872"
-          },
-          "gene_name": "4CLL5",
-          "species_id": 4
-        }
-      ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
-        {
-          "pathbank_complex_id": 13429,
-          "pathbank_protein_complex_id": 13429,
-          "name": "3-oxo-2-(2'-[Z]-pentenyl)cyclopentane-1-octanoate CoA ligase",
-          "species_id": 4,
-          "component_protein_id": 22872,
           "score": 0.9
         }
       ],
@@ -41264,7 +41839,7 @@
       "species_id": 4,
       "components": [
         {
-          "name": "OPC-8:CoA ligase 1",
+          "name": "OPCL1",
           "pathbank_protein_id": 22872,
           "stoichiometry": 1,
           "uniprot": "Q84P21",
@@ -41294,24 +41869,24 @@
         "order_step": "enzyme_component_species"
       }
     },
-    "acylcoa oxidase::11613::arabidopsis thaliana": {
+    "acx1::11618::arabidopsis thaliana": {
       "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
-      "pathbank_complex_id": 5491,
-      "pathbank_protein_complex_id": 5491,
+      "pathbank_complex_id": 5495,
+      "pathbank_protein_complex_id": 5495,
       "species_id": 4,
       "components": [
         {
-          "name": "Acyl-CoA oxidase",
-          "pathbank_protein_id": 11613,
+          "name": "ACX1",
+          "pathbank_protein_id": 11618,
           "stoichiometry": 1,
-          "uniprot": "Z0Z000",
+          "uniprot": "O65202",
           "mapped_ids": {
-            "uniprot": "Z0Z000",
-            "pathbank_protein_id": "11613"
+            "uniprot": "O65202",
+            "pathbank_protein_id": "11618"
           },
-          "gene_name": "?",
+          "gene_name": "ACX1",
           "species_id": 4
         }
       ],
@@ -41319,11 +41894,11 @@
       "chosen_rule": "enzyme_component_species",
       "candidates": [
         {
-          "pathbank_complex_id": 5491,
-          "pathbank_protein_complex_id": 5491,
-          "name": "acyl-CoA oxidase",
+          "pathbank_complex_id": 5495,
+          "pathbank_protein_complex_id": 5495,
+          "name": "acyl coenzyme A oxidase",
           "species_id": 4,
-          "component_protein_id": 11613,
+          "component_protein_id": 11618,
           "score": 0.9
         }
       ],
@@ -41333,118 +41908,7 @@
         "order_step": "enzyme_component_species"
       }
     },
-    "acx::::arabidopsis thaliana": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "ACX complex",
-      "species_id": 4,
-      "components": [
-        {
-          "name": "ACX",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "O64894"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "ACX",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "multifunctional protein::11216::arabidopsis thaliana": {
-      "status": "mapped",
-      "provider": "PathBankDB",
-      "source": "db",
-      "pathbank_complex_id": 4966,
-      "pathbank_protein_complex_id": 4966,
-      "species_id": 4,
-      "components": [
-        {
-          "name": "Multifunctional protein",
-          "pathbank_protein_id": 11216,
-          "stoichiometry": 1,
-          "uniprot": "Q9ZPI5",
-          "mapped_ids": {
-            "uniprot": "Q9ZPI5",
-            "pathbank_protein_id": "11216"
-          },
-          "gene_name": "MFP2",
-          "species_id": 4
-        }
-      ],
-      "confidence": 0.9,
-      "chosen_rule": "enzyme_component_species",
-      "candidates": [
-        {
-          "pathbank_complex_id": 4965,
-          "pathbank_protein_complex_id": 4965,
-          "name": "Enoyl-CoA hydratase",
-          "species_id": 4,
-          "component_protein_id": 11216,
-          "score": 0.9
-        },
-        {
-          "pathbank_complex_id": 4966,
-          "pathbank_protein_complex_id": 4966,
-          "name": "Peroxisomal fatty acid beta-oxidation multifunctional protein MFP2",
-          "species_id": 4,
-          "component_protein_id": 11216,
-          "score": 0.9
-        }
-      ],
-      "issues": [],
-      "resolution": {
-        "status": "matched",
-        "order_step": "enzyme_component_species"
-      }
-    },
-    "mfp::::arabidopsis thaliana": {
-      "status": "unmapped",
-      "reason": "novel_complex",
-      "provider": "PathBankDB",
-      "source": "db",
-      "confidence": 0.0,
-      "chosen_rule": "novel_enzyme_single_component_complex",
-      "candidates": [],
-      "name": "MFP complex",
-      "species_id": 4,
-      "components": [
-        {
-          "name": "MFP",
-          "stoichiometry": 1,
-          "mapped_ids": {
-            "uniprot": "Q8W1L6"
-          }
-        }
-      ],
-      "issues": [
-        {
-          "issue": "component_protein_unresolved",
-          "component": "MFP",
-          "reason": "no_db_match"
-        }
-      ],
-      "resolution": {
-        "status": "novel",
-        "issue": "no_db_candidates",
-        "order_step": "novel_enzyme_single_component_complex"
-      }
-    },
-    "3ketoacylcoa thiolase::11616::arabidopsis thaliana": {
+    "kat2::11616::arabidopsis thaliana": {
       "status": "mapped",
       "provider": "PathBankDB",
       "source": "db",
@@ -41453,7 +41917,7 @@
       "species_id": 4,
       "components": [
         {
-          "name": "3-ketoacyl-CoA thiolase",
+          "name": "KAT2",
           "pathbank_protein_id": 11616,
           "stoichiometry": 1,
           "uniprot": "Q56WD9",
@@ -41483,7 +41947,7 @@
         "order_step": "enzyme_component_species"
       }
     },
-    "kat::::arabidopsis thaliana": {
+    "atach1::::arabidopsis thaliana": {
       "status": "unmapped",
       "reason": "novel_complex",
       "provider": "PathBankDB",
@@ -41491,21 +41955,21 @@
       "confidence": 0.0,
       "chosen_rule": "novel_enzyme_single_component_complex",
       "candidates": [],
-      "name": "KAT complex",
+      "name": "AtACH1 complex",
       "species_id": 4,
       "components": [
         {
-          "name": "KAT",
+          "name": "AtACH1",
           "stoichiometry": 1,
           "mapped_ids": {
-            "uniprot": "Q8NFU3"
+            "uniprot": "Q5FYU1"
           }
         }
       ],
       "issues": [
         {
           "issue": "component_protein_unresolved",
-          "component": "KAT",
+          "component": "AtACH1",
           "reason": "no_db_match"
         }
       ],

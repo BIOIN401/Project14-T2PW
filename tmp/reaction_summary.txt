@@ -1,94 +1,82 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: LOX reaction on linolenic acid
-  Reactants: linolenic acid (18:3) [chloroplast state]
+REACTION 1: LOX oxidation of linolenic acid to 13-HPOT
+  Reactants: linolenic acid [chloroplast state]
   Products:  13-HPOT [chloroplast state]
   Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: LOX reaction on hexadecatrienoic acid
-  Reactants: hexadecatrienoic acid (16:3) [chloroplast state]
+REACTION 2: LOX oxidation of hexadecatrienoic acid to 11-HPHT
+  Reactants: hexadecatrienoic acid [chloroplast state]
   Products:  11-HPHT [chloroplast state]
-  Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0)
+  Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0), AOS [chloroplast state] (role=catalyst, confidence=1.0), AOC [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: AOS reaction on 13-HPOT
+REACTION 3: AOS dehydration of 13-HPOT to 12,13-EOT
   Reactants: 13-HPOT [chloroplast state]
   Products:  12,13-EOT [chloroplast state]
   Modifier:  AOS [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: AOC reaction on 12,13-EOT to OPDA
+REACTION 4: AOS dehydration of 11-HPHT to 10,11-EHT
+  Reactants: 11-HPHT [chloroplast state]
+  Products:  10,11-EHT [chloroplast state]
+  Modifier:  AOS [chloroplast state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 5: AOC cyclization of 12,13-EOT to OPDA
   Reactants: 12,13-EOT [chloroplast state]
   Products:  OPDA [chloroplast state]
   Modifier:  AOC [chloroplast state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: OPR3 reaction on OPDA
+REACTION 6: AOC cyclization of 10,11-EHT to dnOPDA
+  Reactants: 10,11-EHT [chloroplast state]
+  Products:  dnOPDA [chloroplast state]
+  Modifier:  AOC [chloroplast state] (role=catalyst, confidence=1.0), AOS [chloroplast state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 7: OPR3 reduction of OPDA to OPC-8:0
   Reactants: OPDA [chloroplast state]
   Products:  OPC-8:0 [peroxisome state]
   Modifier:  OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: OPR3 reaction on dnOPDA
+REACTION 8: OPR3 reduction of dnOPDA to OPC-6:0
   Reactants: dnOPDA [chloroplast state]
   Products:  OPC-6:0 [peroxisome state]
   Modifier:  OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: OPCL1 reaction on OPC-8:0
+REACTION 9: OPCL1 activation of OPC-8:0 to OPC-8-CoA
   Reactants: OPC-8:0 [peroxisome state]
-  Products:  OPC-8:0-CoA [unknown]
+  Products:  OPC-8-CoA [peroxisome state]
   Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: ACX1 reaction in beta-oxidation
+REACTION 10: ACX1 first step of beta-oxidation of OPC-8:0-CoA
   Reactants: OPC-8:0-CoA [unknown]
-  Products:  jasmonoyl-CoA [peroxisome state]
-  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
+  Products:  OPC-6:0-CoA [unknown]
+  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: jasmonoyl-CoA hydrolysis
+REACTION 11: KAT2-mediated thiolase step in beta-oxidation to produce jasmonic acid
+  Reactants: OPC-4-CoA [unknown]
+  Products:  jasmonic acid [peroxisome state]
+  Modifier:  KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 12: Hydrolysis of jasmonoyl-CoA to jasmonic acid
   Reactants: jasmonoyl-CoA [peroxisome state]
   Products:  jasmonic acid [peroxisome state]
-  Modifier:  MISSING
+  Modifier:  AtACH1 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 10: OPCL1 reaction on OPC-6:0
+REACTION 13: OPCL1 activation of OPC-6:0 to OPC-6-CoA
   Reactants: OPC-6:0 [peroxisome state]
-  Products:  OPC-6:0-CoA [peroxisome state]
+  Products:  OPC-6-CoA [peroxisome state]
   Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 11: ACX1 reaction in beta-oxidation on OPC-6:0-CoA
-  Reactants: OPC-6:0-CoA [peroxisome state]
-  Products:  jasmonoyl-CoA [peroxisome state]
-  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 12: OPCL1 reaction on OPDA
-  Reactants: OPDA [chloroplast state]
-  Products:  OPDA-CoA [peroxisome state]
-  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0), OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 13: OPCL1 reaction on dnOPDA
-  Reactants: dnOPDA [chloroplast state]
-  Products:  dnOPDA-CoA [peroxisome state]
-  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0), OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 14: beta-oxidation of OPC-8:0-CoA to OPC-6:0-CoA
-  Reactants: OPC-8:0-CoA [unknown]
-  Products:  OPC-6:0-CoA [peroxisome state]
-  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 15: beta-oxidation of OPC-6:0-CoA to OPC-4:0-CoA
-  Reactants: OPC-6:0-CoA [peroxisome state]
-  Products:  OPC-4:0 [peroxisome state]
-  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0), MFP [peroxisome state] (role=catalyst, confidence=1.0), KAT2 [peroxisome state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 TRANSPORT 1: OPDA import into peroxisomes
@@ -104,3 +92,8 @@ TRANSPORT 2: dnOPDA import into peroxisomes
   Cargo: dnOPDA [chloroplast state]
   Transporter: CTS [peroxisome state] (role=transporter, confidence=1.0)
   QA flags:  none
+
+LOCKED REACTION FILTER
+12 locked reactions found
+12 exported
+0 quarantined reactions due to unresolved compound reference

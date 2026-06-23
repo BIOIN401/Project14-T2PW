@@ -154,6 +154,7 @@ D) Protein complex inference
 
 E) Biological state and location linking
 - You may add biological_states and element_locations when explicitly supported.
+- Every biological_state MUST include a "species" field. Use the Organism from the PATHWAY CONTEXT header; if unavailable, default to "Homo sapiens".
 - Prefer linking existing entities to states over inventing new entities.
 - If an inferred product/input phrase is composite, split it into multiple entities and keep the process stoichiometry explicit.
 
@@ -176,7 +177,7 @@ G) Compartment assignment inference
 - Never invent compartments unsupported by the text.
 
 NOT ALLOWED
-- No species/cell type/tissue/subcellular location unless explicitly stated.
+- No cell type/tissue/subcellular location unless explicitly stated (species is always required on biological_states — see rule E).
 - No taxonomy/ontology IDs unless explicitly stated.
 - No pathway steps not supported by text.
 - No diagram/layout coordinate inventions.

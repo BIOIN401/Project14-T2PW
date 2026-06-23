@@ -117,8 +117,10 @@ COFACTOR RULE (MANDATORY — supersedes any conflicting rule above):
 
 
 BIOLOGICAL STATE RULE
-A biological_state is a context tuple (species/cell_type/tissue/subcellular_location) ONLY when the text explicitly states it.
-Do not infer missing context. A biological_state may include any subset of the four fields.
+A biological_state is a context tuple (species/cell_type/tissue/subcellular_location).
+Every biological_state MUST include a "species" field. If the text explicitly states a species, use that.
+Otherwise, use the Organism from the PATHWAY CONTEXT header. If no organism is available, use "Homo sapiens" as the default.
+Do not infer cell_type or tissue unless the text explicitly states them.
 Every biological_state that has a subcellular_location MUST also set compartment_canonical (see COMPARTMENT RULE below).
 
 
@@ -145,8 +147,8 @@ COMPARTMENT EXAMPLE — for text "pyruvate in the cytosol is transported into th
     { "name": "mitochondrial matrix", "canonical_name": "mitochondrial_matrix", "go_id": "" }
   ]
   biological_states: [
-    { "name": "cytosolic state", "subcellular_location": "cytosol", "compartment_canonical": "cytosol", "evidence": "in the cytosol" },
-    { "name": "mitochondrial state", "subcellular_location": "mitochondrial matrix", "compartment_canonical": "mitochondrial_matrix", "evidence": "into the mitochondrial matrix" }
+    { "name": "cytosolic state", "species": "Homo sapiens", "subcellular_location": "cytosol", "compartment_canonical": "cytosol", "evidence": "in the cytosol" },
+    { "name": "mitochondrial state", "species": "Homo sapiens", "subcellular_location": "mitochondrial matrix", "compartment_canonical": "mitochondrial_matrix", "evidence": "into the mitochondrial matrix" }
   ]
   compound_locations for pyruvate — TWO entries (not two compounds):
     { "compound": "pyruvate", "biological_state": "cytosolic state", "evidence": "pyruvate in the cytosol" }

@@ -375787,6 +375787,3591 @@
           "uniParcId": "UPI000007148A"
         }
       }
+    },
+    "uniprot:Q8Z0C8": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "Q8Z0C8",
+        "recommended_name": "L-lactate oxidase",
+        "alternative_names": [
+          "Glyoxylate oxidase",
+          "No-LOX"
+        ],
+        "gene_names": [
+          "lox"
+        ],
+        "organism": "Nostoc sp. (strain PCC 7120 / SAG 25.82 / UTEX 2576)",
+        "taxonomy_id": "103690",
+        "function_text": "Catalyzes the oxidation of (S)-lactate (L-lactate) to pyruvate, with a reduction of O2 to H2O2. In extant N2-fixing cyanobacteria such as Nostoc, this enzyme primarily serves as an O2-scavenging enzyme, protecting nitrogenase that is extremely sensitive to O2, and is therefore an essential partner in N2 fixation. Also shows clear oxidase activity with glyoxylate in vitro, and low activity with glycerate, hydroxypyruvate and glycolate. The very low glycolate oxidase activity indicates that this enzyme is unlikely to be involved in photorespiratory glycolate metabolism, a pathway that seems to exist in this cyanobacterium, but in which the oxidation of glycolate is taken over by glycolate dehydrogenase (GlcD). Is not able to use D-lactate as substrate and does not show any dehydrogenase activity with NAD(+) or NADP(+)",
+        "catalytic_activity": [
+          "(S)-lactate + O2 = pyruvate + H2O2",
+          "glyoxylate + O2 + H2O = oxalate + H2O2 + H(+)"
+        ],
+        "enzyme_commission": [
+          "1.2.3.5"
+        ],
+        "pathways": [],
+        "keywords": [
+          "Flavoprotein",
+          "FMN",
+          "Oxidoreductase",
+          "Reference proteome"
+        ],
+        "subcellular_locations": [],
+        "go_mf_ids": [
+          "GO:0010181",
+          "GO:0047969"
+        ],
+        "go_bp_ids": [],
+        "go_cellular_component_ids": [
+          "GO:0005737"
+        ],
+        "protein_existence": "1: Evidence at protein level",
+        "sequence_length": 365,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [],
+        "reactome_ids": [],
+        "string_id": "103690.gene:10492176",
+        "provenance": {
+          "source": "UniProt",
+          "query": "Q8Z0C8",
+          "source_url": "https://rest.uniprot.org/uniprotkb/Q8Z0C8.json",
+          "retrieved_at": "2026-06-23T20:41:57Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "Q8Z0C8",
+        "secondaryAccessions": [
+          "D4P2J5"
+        ],
+        "uniProtkbId": "LOX_NOSS1",
+        "entryAudit": {
+          "firstPublicDate": "2022-02-23",
+          "lastAnnotationUpdateDate": "2026-06-10",
+          "lastSequenceUpdateDate": "2002-03-01",
+          "entryVersion": 120,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 5.0,
+        "organism": {
+          "scientificName": "Nostoc sp. (strain PCC 7120 / SAG 25.82 / UTEX 2576)",
+          "taxonId": 103690,
+          "lineage": [
+            "Bacteria",
+            "Bacillati",
+            "Cyanobacteriota",
+            "Cyanophyceae",
+            "Nostocales",
+            "Nostocaceae",
+            "Nostoc"
+          ]
+        },
+        "proteinExistence": "1: Evidence at protein level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "21828292"
+                }
+              ],
+              "value": "L-lactate oxidase"
+            },
+            "shortNames": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ],
+                "value": "LOX"
+              }
+            ],
+            "ecNumbers": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ],
+                "value": "1.1.3.-"
+              }
+            ]
+          },
+          "alternativeNames": [
+            {
+              "fullName": {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ],
+                "value": "Glyoxylate oxidase"
+              },
+              "ecNumbers": [
+                {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21828292"
+                    }
+                  ],
+                  "value": "1.2.3.5"
+                }
+              ]
+            },
+            {
+              "fullName": {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ],
+                "value": "No-LOX"
+              }
+            }
+          ]
+        },
+        "genes": [
+          {
+            "geneName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "21828292"
+                }
+              ],
+              "value": "lox"
+            },
+            "orderedLocusNames": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000312",
+                    "source": "EMBL",
+                    "id": "BAB77694.1"
+                  }
+                ],
+                "value": "all0170"
+              }
+            ]
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ],
+                "value": "Catalyzes the oxidation of (S)-lactate (L-lactate) to pyruvate, with a reduction of O2 to H2O2. In extant N2-fixing cyanobacteria such as Nostoc, this enzyme primarily serves as an O2-scavenging enzyme, protecting nitrogenase that is extremely sensitive to O2, and is therefore an essential partner in N2 fixation. Also shows clear oxidase activity with glyoxylate in vitro, and low activity with glycerate, hydroxypyruvate and glycolate. The very low glycolate oxidase activity indicates that this enzyme is unlikely to be involved in photorespiratory glycolate metabolism, a pathway that seems to exist in this cyanobacterium, but in which the oxidation of glycolate is taken over by glycolate dehydrogenase (GlcD). Is not able to use D-lactate as substrate and does not show any dehydrogenase activity with NAD(+) or NADP(+)"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "(S)-lactate + O2 = pyruvate + H2O2",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:55868"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15361"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15379"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:16240"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:16651"
+                }
+              ],
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000269",
+                  "source": "PubMed",
+                  "id": "21828292"
+                }
+              ]
+            },
+            "physiologicalReactions": [
+              {
+                "directionType": "left-to-right",
+                "reactionCrossReference": {
+                  "database": "Rhea",
+                  "id": "RHEA:55869"
+                },
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "glyoxylate + O2 + H2O = oxalate + H2O2 + H(+)",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:14837"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15377"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15378"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15379"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:16240"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:30623"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:36655"
+                }
+              ],
+              "ecNumber": "1.2.3.5",
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000269",
+                  "source": "PubMed",
+                  "id": "21828292"
+                }
+              ]
+            },
+            "physiologicalReactions": [
+              {
+                "directionType": "left-to-right",
+                "reactionCrossReference": {
+                  "database": "Rhea",
+                  "id": "RHEA:14838"
+                },
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "commentType": "COFACTOR",
+            "cofactors": [
+              {
+                "name": "FMN",
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "Q44467"
+                  }
+                ],
+                "cofactorCrossReference": {
+                  "database": "ChEBI",
+                  "id": "CHEBI:58210"
+                }
+              }
+            ],
+            "note": {
+              "texts": [
+                {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000250",
+                      "source": "UniProtKB",
+                      "id": "Q44467"
+                    }
+                  ],
+                  "value": "Binds 1 FMN per subunit."
+                }
+              ]
+            }
+          },
+          {
+            "commentType": "BIOPHYSICOCHEMICAL PROPERTIES",
+            "kineticParameters": {
+              "maximumVelocities": [
+                {
+                  "velocity": 12.73,
+                  "unit": "umol/min/mg",
+                  "enzyme": "enzyme with (S)-lactate as substrate",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21828292"
+                    }
+                  ]
+                },
+                {
+                  "velocity": 0.049,
+                  "unit": "umol/min/mg",
+                  "enzyme": "enzyme with glycolate as substrate",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21828292"
+                    }
+                  ]
+                }
+              ],
+              "michaelisConstants": [
+                {
+                  "constant": 0.039,
+                  "unit": "mM",
+                  "substrate": "(S)-lactate",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21828292"
+                    }
+                  ]
+                },
+                {
+                  "constant": 0.233,
+                  "unit": "mM",
+                  "substrate": "glycolate",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21828292"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250",
+                    "source": "UniProtKB",
+                    "id": "Q44467"
+                  }
+                ],
+                "value": "Homotetramer"
+              }
+            ],
+            "commentType": "SUBUNIT"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21163840"
+                  }
+                ],
+                "value": "Up-regulated by high salinity conditions (NaCl exposure)"
+              }
+            ],
+            "commentType": "INDUCTION"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21828292"
+                  }
+                ],
+                "value": "Deletion of this gene does not affect growth in nitrate-containing medium under normal photorespiratory conditions. However, the mutant is unable to grow diazotrophically, caused by its inability to protect nitrogenase from O2 inhibition"
+              }
+            ],
+            "commentType": "DISRUPTION PHENOTYPE"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "Belongs to the FMN-dependent alpha-hydroxy acid dehydrogenase family"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          }
+        ],
+        "features": [
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 365,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "L-lactate oxidase",
+            "featureId": "PRO_0000454868"
+          },
+          {
+            "type": "Domain",
+            "location": {
+              "start": {
+                "value": 2,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 365,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "FMN hydroxy acid dehydrogenase",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255",
+                "source": "PROSITE-ProRule",
+                "id": "PRU00683"
+              }
+            ]
+          },
+          {
+            "type": "Active site",
+            "location": {
+              "start": {
+                "value": 263,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 263,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Proton acceptor",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ]
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 28,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 28,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15361"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "pyruvate",
+              "id": "ChEBI:CHEBI:15361"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 81,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 83,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 110,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 110,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 135,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 135,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 137,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 137,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15361"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "pyruvate",
+              "id": "ChEBI:CHEBI:15361"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 163,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 163,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 172,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 172,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15361"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "pyruvate",
+              "id": "ChEBI:CHEBI:15361"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 239,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 239,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 261,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 261,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 263,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 263,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15361"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "pyruvate",
+              "id": "ChEBI:CHEBI:15361"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 266,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 266,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:15361"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "pyruvate",
+              "id": "ChEBI:CHEBI:15361"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 294,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 298,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 318,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 318,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58210"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q44467"
+              }
+            ],
+            "ligand": {
+              "name": "FMN",
+              "id": "ChEBI:CHEBI:58210"
+            }
+          },
+          {
+            "type": "Mutagenesis",
+            "location": {
+              "start": {
+                "value": 82,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 82,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Increases oxidation activity with both L-lactate and glycolate. Shows a 6-fold decrease in the L-lactate/glycolate oxidase activity ratio.",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000269",
+                "source": "PubMed",
+                "id": "21828292"
+              }
+            ],
+            "alternativeSequence": {
+              "originalSequence": "M",
+              "alternativeSequences": [
+                "T"
+              ]
+            }
+          },
+          {
+            "type": "Mutagenesis",
+            "location": {
+              "start": {
+                "value": 112,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 112,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Impairs oxidation of L-lactate. Shows a 2-fold decrease in the L-lactate/glycolate oxidase activity ratio.",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000269",
+                "source": "PubMed",
+                "id": "21828292"
+              }
+            ],
+            "alternativeSequence": {
+              "originalSequence": "L",
+              "alternativeSequences": [
+                "W"
+              ]
+            }
+          },
+          {
+            "type": "Mutagenesis",
+            "location": {
+              "start": {
+                "value": 212,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 212,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Impairs oxidation of L-lactate. Shows a 27-fold decrease in the L-lactate/glycolate oxidase activity ratio.",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000269",
+                "source": "PubMed",
+                "id": "21828292"
+              }
+            ],
+            "alternativeSequence": {
+              "originalSequence": "F",
+              "alternativeSequences": [
+                "V"
+              ]
+            }
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0285",
+            "category": "Ligand",
+            "name": "Flavoprotein"
+          },
+          {
+            "id": "KW-0288",
+            "category": "Ligand",
+            "name": "FMN"
+          },
+          {
+            "id": "KW-0560",
+            "category": "Molecular function",
+            "name": "Oxidoreductase"
+          },
+          {
+            "id": "KW-1185",
+            "category": "Technical term",
+            "name": "Reference proteome"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "11759840",
+              "citationType": "journal article",
+              "authors": [
+                "Kaneko T.",
+                "Nakamura Y.",
+                "Wolk C.P.",
+                "Kuritz T.",
+                "Sasamoto S.",
+                "Watanabe A.",
+                "Iriguchi M.",
+                "Ishikawa A.",
+                "Kawashima K.",
+                "Kimura T.",
+                "Kishida Y.",
+                "Kohara M.",
+                "Matsumoto M.",
+                "Matsuno A.",
+                "Muraki A.",
+                "Nakazaki N.",
+                "Shimpo S.",
+                "Sugimoto M.",
+                "Takazawa M.",
+                "Yamada M.",
+                "Yasuda M.",
+                "Tabata S."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "11759840"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1093/dnares/8.5.205"
+                }
+              ],
+              "title": "Complete genomic sequence of the filamentous nitrogen-fixing cyanobacterium Anabaena sp. strain PCC 7120.",
+              "publicationDate": "2001",
+              "journal": "DNA Res.",
+              "firstPage": "205",
+              "lastPage": "213",
+              "volume": "8"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "PCC 7120 / SAG 25.82 / UTEX 2576",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 2,
+            "citation": {
+              "id": "21163840",
+              "citationType": "journal article",
+              "authors": [
+                "Srivastava A.K.",
+                "Alexova R.",
+                "Jeon Y.J.",
+                "Kohli G.S.",
+                "Neilan B.A."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "21163840"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1099/mic.0.045682-0"
+                }
+              ],
+              "title": "Assessment of salinity-induced photorespiratory glycolate metabolism in Anabaena sp. PCC 7120.",
+              "publicationDate": "2011",
+              "journal": "Microbiology",
+              "firstPage": "911",
+              "lastPage": "917",
+              "volume": "157"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [GENOMIC DNA] OF 82-171",
+              "INDUCTION"
+            ],
+            "referenceComments": [
+              {
+                "value": "PCC 7120 / SAG 25.82 / UTEX 2576",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 3,
+            "citation": {
+              "id": "21828292",
+              "citationType": "journal article",
+              "authors": [
+                "Hackenberg C.",
+                "Kern R.",
+                "Huge J.",
+                "Stal L.J.",
+                "Tsuji Y.",
+                "Kopka J.",
+                "Shiraiwa Y.",
+                "Bauwe H.",
+                "Hagemann M."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "21828292"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1105/tpc.111.088070"
+                }
+              ],
+              "title": "Cyanobacterial lactate oxidases serve as essential partners in N2 fixation and evolved into photorespiratory glycolate oxidases in plants.",
+              "publicationDate": "2011",
+              "journal": "Plant Cell",
+              "firstPage": "2978",
+              "lastPage": "2990",
+              "volume": "23"
+            },
+            "referencePositions": [
+              "FUNCTION",
+              "CATALYTIC ACTIVITY",
+              "SUBSTRATE SPECIFICITY",
+              "BIOPHYSICOCHEMICAL PROPERTIES",
+              "MUTAGENESIS OF MET-82; LEU-112 AND PHE-212",
+              "DISRUPTION PHENOTYPE"
+            ],
+            "referenceComments": [
+              {
+                "value": "PCC 7120 / SAG 25.82 / UTEX 2576",
+                "type": "STRAIN"
+              }
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "BA000019",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "BAB77694.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "GU560732",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "ADD64504.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "PIR",
+            "id": "AB1828",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "AB1828"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "WP_010994347.1",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "NC_003272.1"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "Q8Z0C8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "Q8Z0C8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "STRING",
+            "id": "103690.gene:10492176",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "ana:all0170",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "eggNOG",
+            "id": "COG1304",
+            "properties": [
+              {
+                "key": "ToxonomicScope",
+                "value": "Bacteria"
+              }
+            ]
+          },
+          {
+            "database": "OrthoDB",
+            "id": "9770452at2",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BRENDA",
+            "id": "1.1.3.2",
+            "properties": [
+              {
+                "key": "OrganismId",
+                "value": "8113"
+              }
+            ]
+          },
+          {
+            "database": "Proteomes",
+            "id": "UP000002483",
+            "properties": [
+              {
+                "key": "Component",
+                "value": "Chromosome"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005737",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:cytoplasm"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-ARBA"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0010181",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:FMN binding"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0047969",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:glyoxylate oxidase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-EC"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd02809",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "alpha_hydroxyacid_oxid_FMN"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "3.20.20.70:FF:000056",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "hydroxyacid oxidase 2"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "3.20.20.70",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Aldolase class I"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR013785",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Aldolase_TIM"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR012133",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Alpha-hydoxy_acid_DH_FMN"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR000262",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "FMN-dep_DH"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR037396",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "FMN_HAD"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR008259",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "FMN_hydac_DH_AS"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR10578:SF107",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "2-HYDROXYACID OXIDASE 1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR10578",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "S -2-HYDROXY-ACID OXIDASE-RELATED"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF01070",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "FMN_dh"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PIRSF",
+            "id": "PIRSF000138",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Al-hdrx_acd_dh"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF51395",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "FMN-linked oxidoreductases"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS00557",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "FMN_HYDROXY_ACID_DH_1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS51349",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "FMN_HYDROXY_ACID_DH_2"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MTAISSPINLFEYEQLAKTHLSQMAFDYYISGAGDEITLQENRAVFERIKLRPRMLVDVSQINLTTSVLGQPLQLPLLIAPMAFQCLAHTEGELATAMAAASAGTGMVLSTLSTKSLEEVAEVGSKFSPSLQWFQLYIHKDRGLTRALVERAYAAGYKALCLTVDAPVLGQRERDRRNEFVLPPGLHLANLTTISGLNIPHAPGESGLFTYFAQQLNPALTWDDLEWLQSLSPLPLVLKGILRGDDAARAVEYGAKAIVVSNHGGRQLDGAIASLDALPEIVAAVNGKAEVLLDGGIRRGTDIIKALAIGAQAVLIGRPVLWGLAVGGQAGVSHVISLLQKELNVAMALIGCSQLQDIDTSFLHL",
+          "length": 365,
+          "molWeight": 39165,
+          "crc64": "D31BCE31565E6622",
+          "md5": "A2CBD61AEC91E52902C1CA54AAF29620"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "CATALYTIC ACTIVITY": 2,
+            "COFACTOR": 1,
+            "BIOPHYSICOCHEMICAL PROPERTIES": 1,
+            "SUBUNIT": 1,
+            "INDUCTION": 1,
+            "DISRUPTION PHENOTYPE": 1,
+            "SIMILARITY": 1
+          },
+          "countByFeatureType": {
+            "Chain": 1,
+            "Domain": 1,
+            "Active site": 1,
+            "Binding site": 13,
+            "Mutagenesis": 3
+          },
+          "uniParcId": "UPI00000CDC61"
+        }
+      }
+    },
+    "uniprot:Q38849": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "Q38849",
+        "recommended_name": "Potassium channel KAT2",
+        "alternative_names": [],
+        "gene_names": [
+          "KAT2"
+        ],
+        "organism": "Arabidopsis thaliana",
+        "taxonomy_id": "3702",
+        "function_text": "Highly selective inward-rectifying potassium channel. This voltage-dependent channel could mediate long-term potassium influx into guard cells leading to stomatal opening. Assuming opened or closed conformations in response to the voltage difference across the membrane, the channel is activated by hyperpolarization. The channel activity is enhanced upon external acidification",
+        "catalytic_activity": [],
+        "enzyme_commission": [],
+        "pathways": [],
+        "keywords": [
+          "Glycoprotein",
+          "Ion channel",
+          "Ion transport",
+          "Membrane",
+          "Potassium",
+          "Potassium channel",
+          "Potassium transport",
+          "Reference proteome",
+          "Transmembrane",
+          "Transmembrane helix",
+          "Transport",
+          "Voltage-gated channel"
+        ],
+        "subcellular_locations": [
+          "Membrane"
+        ],
+        "go_mf_ids": [
+          "GO:0005242"
+        ],
+        "go_bp_ids": [
+          "GO:0007623",
+          "GO:0009644",
+          "GO:0010118"
+        ],
+        "go_cellular_component_ids": [
+          "GO:0009507",
+          "GO:0034702",
+          "GO:0005634"
+        ],
+        "protein_existence": "1: Evidence at protein level",
+        "sequence_length": 697,
+        "transmembrane_regions_count": 6,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [],
+        "reactome_ids": [],
+        "string_id": "3702.Q38849",
+        "provenance": {
+          "source": "UniProt",
+          "query": "Q38849",
+          "source_url": "https://rest.uniprot.org/uniprotkb/Q38849.json",
+          "retrieved_at": "2026-06-23T20:41:57Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "Q38849",
+        "secondaryAccessions": [
+          "O49732",
+          "Q9C5V9"
+        ],
+        "uniProtkbId": "KAT2_ARATH",
+        "entryAudit": {
+          "firstPublicDate": "2004-03-01",
+          "lastAnnotationUpdateDate": "2026-06-10",
+          "lastSequenceUpdateDate": "2011-05-31",
+          "entryVersion": 176,
+          "sequenceVersion": 3
+        },
+        "annotationScore": 5.0,
+        "organism": {
+          "scientificName": "Arabidopsis thaliana",
+          "commonName": "Mouse-ear cress",
+          "taxonId": 3702,
+          "lineage": [
+            "Eukaryota",
+            "Viridiplantae",
+            "Streptophyta",
+            "Embryophyta",
+            "Tracheophyta",
+            "Spermatophyta",
+            "Magnoliopsida",
+            "eudicotyledons",
+            "Gunneridae",
+            "Pentapetalae",
+            "rosids",
+            "malvids",
+            "Brassicales",
+            "Brassicaceae",
+            "Camelineae",
+            "Arabidopsis"
+          ]
+        },
+        "proteinExistence": "1: Evidence at protein level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "value": "Potassium channel KAT2"
+            }
+          }
+        },
+        "genes": [
+          {
+            "geneName": {
+              "value": "KAT2"
+            },
+            "orderedLocusNames": [
+              {
+                "value": "At4g18290"
+              }
+            ],
+            "orfNames": [
+              {
+                "value": "T9A21.140"
+              }
+            ]
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "value": "Highly selective inward-rectifying potassium channel. This voltage-dependent channel could mediate long-term potassium influx into guard cells leading to stomatal opening. Assuming opened or closed conformations in response to the voltage difference across the membrane, the channel is activated by hyperpolarization. The channel activity is enhanced upon external acidification"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "27002025"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "The potassium channel is probably composed of a homo- or heterotetrameric complex of pore-forming subunits. May interact with KAT1 (Probable). Interacts with SLAC1 (PubMed:27002025)"
+              }
+            ],
+            "commentType": "SUBUNIT"
+          },
+          {
+            "commentType": "INTERACTION",
+            "interactions": [
+              {
+                "interactantOne": {
+                  "uniProtKBAccession": "Q38849",
+                  "intActId": "EBI-2117720"
+                },
+                "interactantTwo": {
+                  "uniProtKBAccession": "Q38898",
+                  "geneName": "AKT2",
+                  "intActId": "EBI-1552774"
+                },
+                "numberOfExperiments": 3,
+                "organismDiffer": false
+              },
+              {
+                "interactantOne": {
+                  "uniProtKBAccession": "Q38849",
+                  "intActId": "EBI-2117720"
+                },
+                "interactantTwo": {
+                  "uniProtKBAccession": "Q39128",
+                  "geneName": "KAT1",
+                  "intActId": "EBI-1552490"
+                },
+                "numberOfExperiments": 3,
+                "organismDiffer": false
+              }
+            ]
+          },
+          {
+            "commentType": "SUBCELLULAR LOCATION",
+            "subcellularLocations": [
+              {
+                "location": {
+                  "value": "Membrane",
+                  "id": "SL-0162"
+                },
+                "topology": {
+                  "value": "Multi-pass membrane protein",
+                  "id": "SL-9909"
+                }
+              }
+            ]
+          },
+          {
+            "texts": [
+              {
+                "value": "Expressed in guard cells of hypocotyls, stems leaves and petioles. Detected also in the phloem of minor veins and in flower at a lower level"
+              }
+            ],
+            "commentType": "TISSUE SPECIFICITY"
+          },
+          {
+            "texts": [
+              {
+                "value": "The segment S4 is probably the voltage-sensor and is characterized by a series of positively charged amino acids. The pore-forming region H5 is enclosed by the transmembrane segments S5 and S6 in the Shaker-type (1P/6TM) and contains the GYGD signature motif which seems to be involved in potassium selectivity"
+              }
+            ],
+            "commentType": "DOMAIN"
+          },
+          {
+            "texts": [
+              {
+                "value": "The KHA domain (rich in hydrophobic and acidic residues) present in the C-terminal part is likely to be important for tetramerization"
+              }
+            ],
+            "commentType": "DOMAIN"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "Belongs to the potassium channel family. Plant (TC 1.A.1.4) subfamily"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          },
+          {
+            "commentType": "SEQUENCE CAUTION",
+            "sequenceCautionType": "Erroneous initiation",
+            "sequence": "CAC28122.1",
+            "note": "Extended N-terminus.",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000305"
+              }
+            ]
+          }
+        ],
+        "features": [
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 697,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Potassium channel KAT2",
+            "featureId": "PRO_0000054126"
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 63,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Cytoplasmic",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Transmembrane",
+            "location": {
+              "start": {
+                "value": 64,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 84,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Helical; Name=Segment S1",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 85,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 91,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Extracellular",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Transmembrane",
+            "location": {
+              "start": {
+                "value": 92,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 112,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Helical; Name=Segment S2",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 113,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 134,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Cytoplasmic",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Transmembrane",
+            "location": {
+              "start": {
+                "value": 135,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 155,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Helical; Name=Segment S3",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 156,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 165,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Extracellular",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Transmembrane",
+            "location": {
+              "start": {
+                "value": 166,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 186,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Helical; Voltage-sensor; Name=Segment S4",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 187,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 200,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Cytoplasmic",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Transmembrane",
+            "location": {
+              "start": {
+                "value": 201,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 221,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Helical; Name=Segment S5",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 222,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 248,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Extracellular",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Intramembrane",
+            "location": {
+              "start": {
+                "value": 249,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 268,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Pore-forming; Name=Segment H5",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 269,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 272,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Extracellular",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Transmembrane",
+            "location": {
+              "start": {
+                "value": 273,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 293,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Helical; Name=Segment S6",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Topological domain",
+            "location": {
+              "start": {
+                "value": 294,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 697,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Cytoplasmic",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ]
+          },
+          {
+            "type": "Domain",
+            "location": {
+              "start": {
+                "value": 629,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 697,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "KHA",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255",
+                "source": "PROSITE-ProRule",
+                "id": "PRU00823"
+              }
+            ]
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 377,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 496,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:58464"
+              }
+            ],
+            "ligand": {
+              "name": "a nucleoside 3',5'-cyclic phosphate",
+              "id": "ChEBI:CHEBI:58464"
+            }
+          },
+          {
+            "type": "Glycosylation",
+            "location": {
+              "start": {
+                "value": 158,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 158,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "N-linked (GlcNAc...) asparagine",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255"
+              }
+            ],
+            "featureId": ""
+          },
+          {
+            "type": "Sequence conflict",
+            "location": {
+              "start": {
+                "value": 358,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 358,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "in Ref. 4; AAA67070",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000305"
+              }
+            ],
+            "alternativeSequence": {
+              "originalSequence": "A",
+              "alternativeSequences": [
+                "R"
+              ]
+            }
+          },
+          {
+            "type": "Sequence conflict",
+            "location": {
+              "start": {
+                "value": 612,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 612,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "in Ref. 4; AAA67070",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000305"
+              }
+            ],
+            "alternativeSequence": {
+              "originalSequence": "R",
+              "alternativeSequences": [
+                "S"
+              ]
+            }
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0325",
+            "category": "PTM",
+            "name": "Glycoprotein"
+          },
+          {
+            "id": "KW-0407",
+            "category": "Molecular function",
+            "name": "Ion channel"
+          },
+          {
+            "id": "KW-0406",
+            "category": "Biological process",
+            "name": "Ion transport"
+          },
+          {
+            "id": "KW-0472",
+            "category": "Cellular component",
+            "name": "Membrane"
+          },
+          {
+            "id": "KW-0630",
+            "category": "Ligand",
+            "name": "Potassium"
+          },
+          {
+            "id": "KW-0631",
+            "category": "Molecular function",
+            "name": "Potassium channel"
+          },
+          {
+            "id": "KW-0633",
+            "category": "Biological process",
+            "name": "Potassium transport"
+          },
+          {
+            "id": "KW-1185",
+            "category": "Technical term",
+            "name": "Reference proteome"
+          },
+          {
+            "id": "KW-0812",
+            "category": "Domain",
+            "name": "Transmembrane"
+          },
+          {
+            "id": "KW-1133",
+            "category": "Domain",
+            "name": "Transmembrane helix"
+          },
+          {
+            "id": "KW-0813",
+            "category": "Biological process",
+            "name": "Transport"
+          },
+          {
+            "id": "KW-0851",
+            "category": "Molecular function",
+            "name": "Voltage-gated channel"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "11042178",
+              "citationType": "journal article",
+              "authors": [
+                "Pilot G.",
+                "Lacombe B.",
+                "Gaymard F.",
+                "Cherel I.",
+                "Boucherez J.",
+                "Thibaud J.-B.",
+                "Sentenac H."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "11042178"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1074/jbc.m007303200"
+                }
+              ],
+              "title": "Guard cell inward K+ channel activity in Arabidopsis involves expression of the twin channel subunits KAT1 and KAT2.",
+              "publicationDate": "2001",
+              "journal": "J. Biol. Chem.",
+              "firstPage": "3215",
+              "lastPage": "3221",
+              "volume": "276"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [GENOMIC DNA]",
+              "CHARACTERIZATION",
+              "INTERACTION WITH KAT1"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. Columbia",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 2,
+            "citation": {
+              "id": "10617198",
+              "citationType": "journal article",
+              "authors": [
+                "Mayer K.F.X.",
+                "Schueller C.",
+                "Wambutt R.",
+                "Murphy G.",
+                "Volckaert G.",
+                "Pohl T.",
+                "Duesterhoeft A.",
+                "Stiekema W.",
+                "Entian K.-D.",
+                "Terryn N.",
+                "Harris B.",
+                "Ansorge W.",
+                "Brandt P.",
+                "Grivell L.A.",
+                "Rieger M.",
+                "Weichselgartner M.",
+                "de Simone V.",
+                "Obermaier B.",
+                "Mache R.",
+                "Mueller M.",
+                "Kreis M.",
+                "Delseny M.",
+                "Puigdomenech P.",
+                "Watson M.",
+                "Schmidtheini T.",
+                "Reichert B.",
+                "Portetelle D.",
+                "Perez-Alonso M.",
+                "Boutry M.",
+                "Bancroft I.",
+                "Vos P.",
+                "Hoheisel J.",
+                "Zimmermann W.",
+                "Wedler H.",
+                "Ridley P.",
+                "Langham S.-A.",
+                "McCullagh B.",
+                "Bilham L.",
+                "Robben J.",
+                "van der Schueren J.",
+                "Grymonprez B.",
+                "Chuang Y.-J.",
+                "Vandenbussche F.",
+                "Braeken M.",
+                "Weltjens I.",
+                "Voet M.",
+                "Bastiaens I.",
+                "Aert R.",
+                "Defoor E.",
+                "Weitzenegger T.",
+                "Bothe G.",
+                "Ramsperger U.",
+                "Hilbert H.",
+                "Braun M.",
+                "Holzer E.",
+                "Brandt A.",
+                "Peters S.",
+                "van Staveren M.",
+                "Dirkse W.",
+                "Mooijman P.",
+                "Klein Lankhorst R.",
+                "Rose M.",
+                "Hauf J.",
+                "Koetter P.",
+                "Berneiser S.",
+                "Hempel S.",
+                "Feldpausch M.",
+                "Lamberth S.",
+                "Van den Daele H.",
+                "De Keyser A.",
+                "Buysshaert C.",
+                "Gielen J.",
+                "Villarroel R.",
+                "De Clercq R.",
+                "van Montagu M.",
+                "Rogers J.",
+                "Cronin A.",
+                "Quail M.A.",
+                "Bray-Allen S.",
+                "Clark L.",
+                "Doggett J.",
+                "Hall S.",
+                "Kay M.",
+                "Lennard N.",
+                "McLay K.",
+                "Mayes R.",
+                "Pettett A.",
+                "Rajandream M.A.",
+                "Lyne M.",
+                "Benes V.",
+                "Rechmann S.",
+                "Borkova D.",
+                "Bloecker H.",
+                "Scharfe M.",
+                "Grimm M.",
+                "Loehnert T.-H.",
+                "Dose S.",
+                "de Haan M.",
+                "Maarse A.C.",
+                "Schaefer M.",
+                "Mueller-Auer S.",
+                "Gabel C.",
+                "Fuchs M.",
+                "Fartmann B.",
+                "Granderath K.",
+                "Dauner D.",
+                "Herzl A.",
+                "Neumann S.",
+                "Argiriou A.",
+                "Vitale D.",
+                "Liguori R.",
+                "Piravandi E.",
+                "Massenet O.",
+                "Quigley F.",
+                "Clabauld G.",
+                "Muendlein A.",
+                "Felber R.",
+                "Schnabl S.",
+                "Hiller R.",
+                "Schmidt W.",
+                "Lecharny A.",
+                "Aubourg S.",
+                "Chefdor F.",
+                "Cooke R.",
+                "Berger C.",
+                "Monfort A.",
+                "Casacuberta E.",
+                "Gibbons T.",
+                "Weber N.",
+                "Vandenbol M.",
+                "Bargues M.",
+                "Terol J.",
+                "Torres A.",
+                "Perez-Perez A.",
+                "Purnelle B.",
+                "Bent E.",
+                "Johnson S.",
+                "Tacon D.",
+                "Jesse T.",
+                "Heijnen L.",
+                "Schwarz S.",
+                "Scholler P.",
+                "Heber S.",
+                "Francs P.",
+                "Bielke C.",
+                "Frishman D.",
+                "Haase D.",
+                "Lemcke K.",
+                "Mewes H.-W.",
+                "Stocker S.",
+                "Zaccaria P.",
+                "Bevan M.",
+                "Wilson R.K.",
+                "de la Bastide M.",
+                "Habermann K.",
+                "Parnell L.",
+                "Dedhia N.",
+                "Gnoj L.",
+                "Schutz K.",
+                "Huang E.",
+                "Spiegel L.",
+                "Sekhon M.",
+                "Murray J.",
+                "Sheet P.",
+                "Cordes M.",
+                "Abu-Threideh J.",
+                "Stoneking T.",
+                "Kalicki J.",
+                "Graves T.",
+                "Harmon G.",
+                "Edwards J.",
+                "Latreille P.",
+                "Courtney L.",
+                "Cloud J.",
+                "Abbott A.",
+                "Scott K.",
+                "Johnson D.",
+                "Minx P.",
+                "Bentley D.",
+                "Fulton B.",
+                "Miller N.",
+                "Greco T.",
+                "Kemp K.",
+                "Kramer J.",
+                "Fulton L.",
+                "Mardis E.",
+                "Dante M.",
+                "Pepin K.",
+                "Hillier L.W.",
+                "Nelson J.",
+                "Spieth J.",
+                "Ryan E.",
+                "Andrews S.",
+                "Geisel C.",
+                "Layman D.",
+                "Du H.",
+                "Ali J.",
+                "Berghoff A.",
+                "Jones K.",
+                "Drone K.",
+                "Cotton M.",
+                "Joshu C.",
+                "Antonoiu B.",
+                "Zidanic M.",
+                "Strong C.",
+                "Sun H.",
+                "Lamar B.",
+                "Yordan C.",
+                "Ma P.",
+                "Zhong J.",
+                "Preston R.",
+                "Vil D.",
+                "Shekher M.",
+                "Matero A.",
+                "Shah R.",
+                "Swaby I.K.",
+                "O'Shaughnessy A.",
+                "Rodriguez M.",
+                "Hoffman J.",
+                "Till S.",
+                "Granat S.",
+                "Shohdy N.",
+                "Hasegawa A.",
+                "Hameed A.",
+                "Lodhi M.",
+                "Johnson A.",
+                "Chen E.",
+                "Marra M.A.",
+                "Martienssen R.",
+                "McCombie W.R."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "10617198"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1038/47134"
+                }
+              ],
+              "title": "Sequence and analysis of chromosome 4 of the plant Arabidopsis thaliana.",
+              "publicationDate": "1999",
+              "journal": "Nature",
+              "firstPage": "769",
+              "lastPage": "777",
+              "volume": "402"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. Columbia",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 3,
+            "citation": {
+              "id": "27862469",
+              "citationType": "journal article",
+              "authors": [
+                "Cheng C.Y.",
+                "Krishnakumar V.",
+                "Chan A.P.",
+                "Thibaud-Nissen F.",
+                "Schobel S.",
+                "Town C.D."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "27862469"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1111/tpj.13415"
+                }
+              ],
+              "title": "Araport11: a complete reannotation of the Arabidopsis thaliana reference genome.",
+              "publicationDate": "2017",
+              "journal": "Plant J.",
+              "firstPage": "789",
+              "lastPage": "804",
+              "volume": "89"
+            },
+            "referencePositions": [
+              "GENOME REANNOTATION"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. Columbia",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 4,
+            "citation": {
+              "id": "CI-8O1VSC5S463UA",
+              "citationType": "journal article",
+              "authors": [
+                "Butt A.D.",
+                "Blatt M.R.",
+                "Ainsworth C.C."
+              ],
+              "title": "Expression, evolution and genomic complexity of potassium ion channel genes of Arabidopsis thaliana.",
+              "publicationDate": "1997",
+              "journal": "J. Plant Physiol.",
+              "firstPage": "652",
+              "lastPage": "660",
+              "volume": "150"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [MRNA] OF 133-697"
+            ],
+            "referenceComments": [
+              {
+                "value": "cv. Columbia",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 5,
+            "citation": {
+              "id": "11500563",
+              "citationType": "journal article",
+              "authors": [
+                "Maeser P.",
+                "Thomine S.",
+                "Schroeder J.I.",
+                "Ward J.M.",
+                "Hirschi K.",
+                "Sze H.",
+                "Talke I.N.",
+                "Amtmann A.",
+                "Maathuis F.J.M.",
+                "Sanders D.",
+                "Harper J.F.",
+                "Tchieu J.",
+                "Gribskov M.",
+                "Persans M.W.",
+                "Salt D.E.",
+                "Kim S.A.",
+                "Guerinot M.L."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "11500563"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1104/pp.126.4.1646"
+                }
+              ],
+              "title": "Phylogenetic relationships within cation transporter families of Arabidopsis.",
+              "publicationDate": "2001",
+              "journal": "Plant Physiol.",
+              "firstPage": "1646",
+              "lastPage": "1667",
+              "volume": "126"
+            },
+            "referencePositions": [
+              "GENE FAMILY",
+              "NOMENCLATURE"
+            ]
+          },
+          {
+            "referenceNumber": 6,
+            "citation": {
+              "id": "27002025",
+              "citationType": "journal article",
+              "authors": [
+                "Zhang A.",
+                "Ren H.M.",
+                "Tan Y.Q.",
+                "Qi G.N.",
+                "Yao F.Y.",
+                "Wu G.L.",
+                "Yang L.W.",
+                "Hussain J.",
+                "Sun S.J.",
+                "Wang Y.F."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "27002025"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1105/tpc.16.01050"
+                }
+              ],
+              "title": "S-type anion channels SLAC1 and SLAH3 function as essential negative regulators of inward K+ channels and stomatal opening in Arabidopsis.",
+              "publicationDate": "2016",
+              "journal": "Plant Cell",
+              "firstPage": "949",
+              "lastPage": "955",
+              "volume": "28"
+            },
+            "referencePositions": [
+              "INTERACTION WITH SLAC1"
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "AJ288900",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "CAC28122.1"
+              },
+              {
+                "key": "Status",
+                "value": "ALT_INIT"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "AL021713",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "CAA16801.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "AL161548",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "CAB78831.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "CP002687",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AEE84021.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "U25694",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AAA67070.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "mRNA"
+              }
+            ]
+          },
+          {
+            "database": "PIR",
+            "id": "H85205",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "H85205"
+              }
+            ]
+          },
+          {
+            "database": "PIR",
+            "id": "T04931",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "T04931"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "NP_001329801.1",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "NM_001341273.1"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "NP_193563.3",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "NM_117939.5"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BioGRID",
+            "id": "12848",
+            "properties": [
+              {
+                "key": "Interactions",
+                "value": "3"
+              }
+            ]
+          },
+          {
+            "database": "FunCoup",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "Number of interactors",
+                "value": "115"
+              }
+            ]
+          },
+          {
+            "database": "IntAct",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "Interactions",
+                "value": "2"
+              }
+            ]
+          },
+          {
+            "database": "STRING",
+            "id": "3702.Q38849",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "TCDB",
+            "id": "1.A.1.4.6",
+            "properties": [
+              {
+                "key": "FamilyName",
+                "value": "the voltage-gated ion channel (vic) superfamily"
+              }
+            ]
+          },
+          {
+            "database": "GlyCosmos",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "glycosylation",
+                "value": "1 site, No reported glycans"
+              }
+            ]
+          },
+          {
+            "database": "GlyGen",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "glycosylation",
+                "value": "1 site"
+              }
+            ]
+          },
+          {
+            "database": "iPTMnet",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PaxDb",
+            "id": "3702-Q38849",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "ProteomicsDB",
+            "id": "232243",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "GeneID",
+            "id": "827555",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "ath:AT4G18290",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "Araport",
+            "id": "AT4G18290",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "TAIR",
+            "id": "AT4G18290",
+            "properties": [
+              {
+                "key": "GeneName",
+                "value": "KAT2"
+              }
+            ]
+          },
+          {
+            "database": "eggNOG",
+            "id": "KOG0498",
+            "properties": [
+              {
+                "key": "ToxonomicScope",
+                "value": "Eukaryota"
+              }
+            ]
+          },
+          {
+            "database": "HOGENOM",
+            "id": "CLU_005746_8_2_1",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "InParanoid",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "OMA",
+            "id": "YFGLDYP",
+            "properties": [
+              {
+                "key": "Fingerprint",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PRO",
+            "id": "PR:Q38849",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "Proteomes",
+            "id": "UP000006548",
+            "properties": [
+              {
+                "key": "Component",
+                "value": "Chromosome 4"
+              }
+            ]
+          },
+          {
+            "database": "ExpressionAtlas",
+            "id": "Q38849",
+            "properties": [
+              {
+                "key": "ExpressionPatterns",
+                "value": "baseline and differential"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009507",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:chloroplast"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "ISM:TAIR"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0034702",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:monoatomic ion channel complex"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005634",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:nucleus"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "ISM:TAIR"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005242",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:inward rectifier potassium channel activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IDA:TIGR"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000314",
+                "source": "PubMed",
+                "id": "11042178"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0007623",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:circadian rhythm"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IMP:TAIR"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000315",
+                "source": "PubMed",
+                "id": "18367672"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009644",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:response to high light intensity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IMP:TAIR"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000315",
+                "source": "PubMed",
+                "id": "18367672"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0010118",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:stomatal movement"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IMP:TAIR"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000315",
+                "source": "PubMed",
+                "id": "18367672"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd00038",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "CAP_ED"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "2.60.120.10:FF:000074",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Potassium channel KAT2"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "1.10.287.70:FF:000123",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Potassium channel KAT3"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.10.287.70",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "-"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.10.287.630",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Helix hairpin bin"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "2.60.120.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Jelly Rolls"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR000595",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "cNMP-bd_dom"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR018490",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "cNMP-bd_dom_sf"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR005821",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Ion_trans_dom"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR003938",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "K_chnl_volt-dep_EAG/ELK/ERG"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR045319",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "KAT/AKT"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR021789",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "KHA_dom"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR014710",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "RmlC-like_jellyroll"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR45743",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "POTASSIUM CHANNEL AKT1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR45743:SF6",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "POTASSIUM CHANNEL KAT2"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00027",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "cNMP_binding"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00520",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Ion_trans"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF11834",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "KHA"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PRINTS",
+            "id": "PR01463",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "EAGCHANLFMLY"
+              }
+            ]
+          },
+          {
+            "database": "SMART",
+            "id": "SM00100",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "cNMP"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF51206",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "cAMP-binding domain-like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF81324",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Voltage-gated potassium channels"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS50042",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "CNMP_BINDING_3"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS51490",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "KHA"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MSISCTRNFFKRFCVEEYNMDTFKHSSFLSADLLPSLGARINQSTKLRKHIISPFDPRFRGWEMWLVILVIYSAWICPFEFAFITYKKDALFIIDNIVNGFFAIDIILTFFVAYLDSHSYLLVDKPKKIAIRYLSTWFAFDVCSTAPFQSLSLLFKYNGSEIGFRVLSMLRLWRLRRVSSLFARLEKDIRFNYFWTRCTKLISVTLFAVHCAGCFAYLIADQYHDPTKTWIGAVYPNFKETSVWSRYVTALYWSITTLTTTGYGDLHAENPREMLFFVFFMLFNLGFTSYLIGNMTNLVVHWTSRTRNFRDTVRAASEFASRNQLPPNIQDQMLSHICLKFKTEGLKQQEALNGLPKAIRSSIANYLFFPIVQNVYLFHGVSRNFLFQLVSDIDAEYFPPREDVILQNEAPTDLYILVSGAVDFTVYVGEEDQVQGKAVVGDAFGEIGVLCYTPQPFTVRTTELSQILRISKKSLMSAMRAHVEDGRVIMNNLFMKLRGQQSIAIDDPNSEPESLLKEWLVGGSKTGEGNASDQGHGHKYLQLHDSENIDMGSTEWRDSRRSGYGETKRVREHTIEIEEGEKPNKEFDGKGCSDADLTSFEFHSQEAYPYCRSNIQIKQHEAAKPKDKRVTIHLKSRDKDLSKLIILPASIEELLRLAGEKFGYSFTKVTNAENAEIDDEDVIRDGDHLYILINENS",
+          "length": 697,
+          "molWeight": 80150,
+          "crc64": "55E1DFE6AB2A2453",
+          "md5": "BD4BC34407C53C364C90BEA331A745AC"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "SUBUNIT": 1,
+            "INTERACTION": 2,
+            "SUBCELLULAR LOCATION": 1,
+            "TISSUE SPECIFICITY": 1,
+            "DOMAIN": 2,
+            "SIMILARITY": 1,
+            "SEQUENCE CAUTION": 1
+          },
+          "countByFeatureType": {
+            "Chain": 1,
+            "Topological domain": 8,
+            "Transmembrane": 6,
+            "Intramembrane": 1,
+            "Domain": 1,
+            "Binding site": 1,
+            "Glycosylation": 1,
+            "Sequence conflict": 2
+          },
+          "uniParcId": "UPI000004897C"
+        }
+      }
     }
   },
   "compounds": {
@@ -385879,6 +389464,58 @@
         "id": "C16339",
         "source_url": "https://rest.kegg.jp/get/cpd:C16339",
         "retrieved_at": "2026-06-23T17:43:52Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:58757": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:58757",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-06-23T20:42:01Z"
+      }
+    },
+    "kegg:C04785": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C04785",
+      "primary_name": "13(S)-HPOT",
+      "synonyms": [
+        "13(S)-HPOT",
+        "(9Z,11E,15Z)-(13S)-Hydroperoxyoctadeca-9,11,15-trienoate",
+        "(9Z,11E,15Z)-(13S)-13-Hydroperoxyoctadeca-9,11,15-trienoic acid",
+        "13(S)-HpOTrE",
+        "13-HPOT"
+      ],
+      "formula": "C18H30O4",
+      "mass_monoisotopic": 310.2144,
+      "mass_average": 310.43,
+      "pathways": [
+        "alpha-Linolenic acid metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites"
+      ],
+      "kegg_class": [
+        "Lipids [BR:br08002]",
+        "FA Fatty acyls",
+        "FA01 Fatty Acids and Conjugates",
+        "FA0104 Hydroperoxy fatty acids",
+        "C04785 (9Z,11E,15Z)-(13S)-13-Hydroperoxyoctadeca-9,11,15-trienoic acid",
+        "FA02 Octadecanoids",
+        "FA0200 Other Octadecanoids"
+      ],
+      "cross_references": {
+        "kegg_id": "C04785",
+        "pubchem_id": "7348",
+        "chebi_id": "48905"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C04785",
+        "source_url": "https://rest.kegg.jp/get/cpd:C04785",
+        "retrieved_at": "2026-06-23T20:42:02Z",
         "status": "ok"
       }
     }

@@ -2,13 +2,22 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 43,
-    "edge_count": 60
+    "node_count": 47,
+    "edge_count": 46
   },
   "nodes": [
     {
-      "id": "compound:linolenic acid (18:3)",
-      "label": "linolenic acid (18:3)",
+      "id": "compound:linoleic acid",
+      "label": "linoleic acid",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:linolenic acid",
+      "label": "linolenic acid",
       "kind": "compound",
       "cls": "compound",
       "compartment": "chloroplast state",
@@ -16,8 +25,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:hexadecatrienoic acid (16:3)",
-      "label": "hexadecatrienoic acid (16:3)",
+      "id": "compound:hexadecatrienoic acid",
+      "label": "hexadecatrienoic acid",
       "kind": "compound",
       "cls": "compound",
       "compartment": "chloroplast state",
@@ -45,6 +54,15 @@
     {
       "id": "compound:12,13-eot",
       "label": "12,13-EOT",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "chloroplast state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:10,11-eht",
+      "label": "10,11-EHT",
       "kind": "compound",
       "cls": "compound",
       "compartment": "chloroplast state",
@@ -92,7 +110,34 @@
       "label": "OPC-4:0",
       "kind": "compound",
       "cls": "compound",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:opc-8-coa",
+      "label": "OPC-8-CoA",
+      "kind": "compound",
+      "cls": "compound",
       "compartment": "peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:opc-6-coa",
+      "label": "OPC-6-CoA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:opc-4-coa",
+      "label": "OPC-4-CoA",
+      "kind": "compound",
+      "cls": "compound",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -115,24 +160,6 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:opc-8:0-coa",
-      "label": "OPC-8:0-CoA",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "compound:opc-6:0-coa",
-      "label": "OPC-6:0-CoA",
-      "kind": "compound",
-      "cls": "compound",
-      "compartment": "peroxisome state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
       "id": "compound:opda-coa",
       "label": "OPDA-CoA",
       "kind": "compound",
@@ -147,6 +174,24 @@
       "kind": "compound",
       "cls": "compound",
       "compartment": "peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:opc-8:0-coa",
+      "label": "OPC-8:0-CoA",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:opc-6:0-coa",
+      "label": "OPC-6:0-CoA",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
       "confidence": 1.0,
       "provenance": "extracted"
     },
@@ -187,6 +232,15 @@
       "provenance": "extracted"
     },
     {
+      "id": "protein:cts",
+      "label": "CTS",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
       "id": "protein:opcl1",
       "label": "OPCL1",
       "kind": "protein",
@@ -205,15 +259,6 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:mfp",
-      "label": "MFP",
-      "kind": "protein",
-      "cls": "protein",
-      "compartment": "peroxisome state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
       "id": "protein:kat2",
       "label": "KAT2",
       "kind": "protein",
@@ -223,8 +268,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:cts",
-      "label": "CTS",
+      "id": "protein:mfp",
+      "label": "MFP",
       "kind": "protein",
       "cls": "protein",
       "compartment": "peroxisome state",
@@ -232,8 +277,26 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:lox reaction on linolenic acid",
-      "label": "LOX reaction on linolenic acid",
+      "id": "protein:atach1",
+      "label": "AtACH1",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:atach2",
+      "label": "AtACH2",
+      "kind": "protein",
+      "cls": "protein",
+      "compartment": "peroxisome state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:lox oxidation of linolenic acid to 13-hpot",
+      "label": "LOX oxidation of linolenic acid to 13-HPOT",
       "kind": "reaction",
       "cls": "",
       "compartment": "chloroplast state",
@@ -241,8 +304,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:lox reaction on hexadecatrienoic acid",
-      "label": "LOX reaction on hexadecatrienoic acid",
+      "id": "reaction:lox oxidation of hexadecatrienoic acid to 11-hpht",
+      "label": "LOX oxidation of hexadecatrienoic acid to 11-HPHT",
       "kind": "reaction",
       "cls": "",
       "compartment": "chloroplast state",
@@ -250,8 +313,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:aos reaction on 13-hpot",
-      "label": "AOS reaction on 13-HPOT",
+      "id": "reaction:aos dehydration of 13-hpot to 12,13-eot",
+      "label": "AOS dehydration of 13-HPOT to 12,13-EOT",
       "kind": "reaction",
       "cls": "",
       "compartment": "chloroplast state",
@@ -259,8 +322,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:aoc reaction on 12,13-eot to opda",
-      "label": "AOC reaction on 12,13-EOT to OPDA",
+      "id": "reaction:aos dehydration of 11-hpht to 10,11-eht",
+      "label": "AOS dehydration of 11-HPHT to 10,11-EHT",
       "kind": "reaction",
       "cls": "",
       "compartment": "chloroplast state",
@@ -268,8 +331,26 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:opr3 reaction on opda",
-      "label": "OPR3 reaction on OPDA",
+      "id": "reaction:aoc cyclization of 12,13-eot to opda",
+      "label": "AOC cyclization of 12,13-EOT to OPDA",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "chloroplast state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:aoc cyclization of 10,11-eht to dnopda",
+      "label": "AOC cyclization of 10,11-EHT to dnOPDA",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "chloroplast state",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:opr3 reduction of opda to opc-8:0",
+      "label": "OPR3 reduction of OPDA to OPC-8:0",
       "kind": "reaction",
       "cls": "",
       "compartment": "peroxisome state",
@@ -277,8 +358,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:opr3 reaction on dnopda",
-      "label": "OPR3 reaction on dnOPDA",
+      "id": "reaction:opr3 reduction of dnopda to opc-6:0",
+      "label": "OPR3 reduction of dnOPDA to OPC-6:0",
       "kind": "reaction",
       "cls": "",
       "compartment": "peroxisome state",
@@ -286,8 +367,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:opcl1 reaction on opc-8:0",
-      "label": "OPCL1 reaction on OPC-8:0",
+      "id": "reaction:opcl1 activation of opc-8:0 to opc-8-coa",
+      "label": "OPCL1 activation of OPC-8:0 to OPC-8-CoA",
       "kind": "reaction",
       "cls": "",
       "compartment": "peroxisome state",
@@ -295,8 +376,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:acx1 reaction in beta-oxidation",
-      "label": "ACX1 reaction in beta-oxidation",
+      "id": "reaction:acx1 first step of beta-oxidation of opc-8:0-coa",
+      "label": "ACX1 first step of beta-oxidation of OPC-8:0-CoA",
       "kind": "reaction",
       "cls": "",
       "compartment": "peroxisome state",
@@ -304,8 +385,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:jasmonoyl-coa hydrolysis",
-      "label": "jasmonoyl-CoA hydrolysis",
+      "id": "reaction:kat2-mediated thiolase step in beta-oxidation to produce jasmonic acid",
+      "label": "KAT2-mediated thiolase step in beta-oxidation to produce jasmonic acid",
       "kind": "reaction",
       "cls": "",
       "compartment": "peroxisome state",
@@ -313,8 +394,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:opcl1 reaction on opc-6:0",
-      "label": "OPCL1 reaction on OPC-6:0",
+      "id": "reaction:hydrolysis of jasmonoyl-coa to jasmonic acid",
+      "label": "Hydrolysis of jasmonoyl-CoA to jasmonic acid",
       "kind": "reaction",
       "cls": "",
       "compartment": "peroxisome state",
@@ -322,44 +403,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
-      "label": "ACX1 reaction in beta-oxidation on OPC-6:0-CoA",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "peroxisome state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:opcl1 reaction on opda",
-      "label": "OPCL1 reaction on OPDA",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "peroxisome state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:opcl1 reaction on dnopda",
-      "label": "OPCL1 reaction on dnOPDA",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "peroxisome state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
-      "label": "beta-oxidation of OPC-8:0-CoA to OPC-6:0-CoA",
-      "kind": "reaction",
-      "cls": "",
-      "compartment": "peroxisome state",
-      "confidence": 1.0,
-      "provenance": "extracted"
-    },
-    {
-      "id": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
-      "label": "beta-oxidation of OPC-6:0-CoA to OPC-4:0-CoA",
+      "id": "reaction:opcl1 activation of opc-6:0 to opc-6-coa",
+      "label": "OPCL1 activation of OPC-6:0 to OPC-6-CoA",
       "kind": "reaction",
       "cls": "",
       "compartment": "peroxisome state",
@@ -383,339 +428,258 @@
       "compartment": "chloroplast state → peroxisome state",
       "confidence": 1.0,
       "provenance": "extracted"
-    },
-    {
-      "id": "interaction:opc-8:0-coa and opc-6:0-coa are intermediates in jasmonate biosynthesis",
-      "label": "OPC-8:0-CoA and OPC-6:0-CoA are intermediates in jasmonate biosynthesis",
-      "kind": "interaction",
-      "cls": "SAME_AS",
-      "compartment": "",
-      "confidence": 1.0,
-      "provenance": "extracted"
     }
   ],
   "edges": [
     {
-      "source": "compound:linolenic acid (18:3)",
-      "target": "reaction:lox reaction on linolenic acid",
+      "source": "compound:linolenic acid",
+      "target": "reaction:lox oxidation of linolenic acid to 13-hpot",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:lox reaction on linolenic acid",
+      "source": "reaction:lox oxidation of linolenic acid to 13-hpot",
       "target": "compound:13-hpot",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:lox",
-      "target": "reaction:lox reaction on linolenic acid",
+      "target": "reaction:lox oxidation of linolenic acid to 13-hpot",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:hexadecatrienoic acid (16:3)",
-      "target": "reaction:lox reaction on hexadecatrienoic acid",
+      "source": "compound:hexadecatrienoic acid",
+      "target": "reaction:lox oxidation of hexadecatrienoic acid to 11-hpht",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:lox reaction on hexadecatrienoic acid",
+      "source": "reaction:lox oxidation of hexadecatrienoic acid to 11-hpht",
       "target": "compound:11-hpht",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:lox",
-      "target": "reaction:lox reaction on hexadecatrienoic acid",
+      "target": "reaction:lox oxidation of hexadecatrienoic acid to 11-hpht",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aos",
+      "target": "reaction:lox oxidation of hexadecatrienoic acid to 11-hpht",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aoc",
+      "target": "reaction:lox oxidation of hexadecatrienoic acid to 11-hpht",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:13-hpot",
-      "target": "reaction:aos reaction on 13-hpot",
+      "target": "reaction:aos dehydration of 13-hpot to 12,13-eot",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:aos reaction on 13-hpot",
+      "source": "reaction:aos dehydration of 13-hpot to 12,13-eot",
       "target": "compound:12,13-eot",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:aos",
-      "target": "reaction:aos reaction on 13-hpot",
+      "target": "reaction:aos dehydration of 13-hpot to 12,13-eot",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:11-hpht",
+      "target": "reaction:aos dehydration of 11-hpht to 10,11-eht",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aos dehydration of 11-hpht to 10,11-eht",
+      "target": "compound:10,11-eht",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aos",
+      "target": "reaction:aos dehydration of 11-hpht to 10,11-eht",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:12,13-eot",
-      "target": "reaction:aoc reaction on 12,13-eot to opda",
+      "target": "reaction:aoc cyclization of 12,13-eot to opda",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:aoc reaction on 12,13-eot to opda",
+      "source": "reaction:aoc cyclization of 12,13-eot to opda",
       "target": "compound:opda",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:aoc",
-      "target": "reaction:aoc reaction on 12,13-eot to opda",
+      "target": "reaction:aoc cyclization of 12,13-eot to opda",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:10,11-eht",
+      "target": "reaction:aoc cyclization of 10,11-eht to dnopda",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:aoc cyclization of 10,11-eht to dnopda",
+      "target": "compound:dnopda",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aoc",
+      "target": "reaction:aoc cyclization of 10,11-eht to dnopda",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:aos",
+      "target": "reaction:aoc cyclization of 10,11-eht to dnopda",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:opda",
-      "target": "reaction:opr3 reaction on opda",
+      "target": "reaction:opr3 reduction of opda to opc-8:0",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:opr3 reaction on opda",
+      "source": "reaction:opr3 reduction of opda to opc-8:0",
       "target": "compound:opc-8:0",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:opr3",
-      "target": "reaction:opr3 reaction on opda",
+      "target": "reaction:opr3 reduction of opda to opc-8:0",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:dnopda",
-      "target": "reaction:opr3 reaction on dnopda",
+      "target": "reaction:opr3 reduction of dnopda to opc-6:0",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:opr3 reaction on dnopda",
+      "source": "reaction:opr3 reduction of dnopda to opc-6:0",
       "target": "compound:opc-6:0",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:opr3",
-      "target": "reaction:opr3 reaction on dnopda",
+      "target": "reaction:opr3 reduction of dnopda to opc-6:0",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:opc-8:0",
-      "target": "reaction:opcl1 reaction on opc-8:0",
+      "target": "reaction:opcl1 activation of opc-8:0 to opc-8-coa",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:opcl1 reaction on opc-8:0",
-      "target": "compound:opc-8:0-coa",
+      "source": "reaction:opcl1 activation of opc-8:0 to opc-8-coa",
+      "target": "compound:opc-8-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:opcl1",
-      "target": "reaction:opcl1 reaction on opc-8:0",
+      "target": "reaction:opcl1 activation of opc-8:0 to opc-8-coa",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:opc-8:0-coa",
-      "target": "reaction:acx1 reaction in beta-oxidation",
+      "target": "reaction:acx1 first step of beta-oxidation of opc-8:0-coa",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:acx1 reaction in beta-oxidation",
-      "target": "compound:jasmonoyl-coa",
+      "source": "reaction:acx1 first step of beta-oxidation of opc-8:0-coa",
+      "target": "compound:opc-6:0-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:acx1",
-      "target": "reaction:acx1 reaction in beta-oxidation",
+      "target": "reaction:acx1 first step of beta-oxidation of opc-8:0-coa",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "protein:mfp",
-      "target": "reaction:acx1 reaction in beta-oxidation",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:kat2",
-      "target": "reaction:acx1 reaction in beta-oxidation",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:jasmonoyl-coa",
-      "target": "reaction:jasmonoyl-coa hydrolysis",
+      "source": "compound:opc-4-coa",
+      "target": "reaction:kat2-mediated thiolase step in beta-oxidation to produce jasmonic acid",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:jasmonoyl-coa hydrolysis",
+      "source": "reaction:kat2-mediated thiolase step in beta-oxidation to produce jasmonic acid",
       "target": "compound:jasmonic acid",
       "role": "product",
       "confidence": 1.0
     },
     {
+      "source": "protein:kat2",
+      "target": "reaction:kat2-mediated thiolase step in beta-oxidation to produce jasmonic acid",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:jasmonoyl-coa",
+      "target": "reaction:hydrolysis of jasmonoyl-coa to jasmonic acid",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hydrolysis of jasmonoyl-coa to jasmonic acid",
+      "target": "compound:jasmonic acid",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:atach1",
+      "target": "reaction:hydrolysis of jasmonoyl-coa to jasmonic acid",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
       "source": "compound:opc-6:0",
-      "target": "reaction:opcl1 reaction on opc-6:0",
+      "target": "reaction:opcl1 activation of opc-6:0 to opc-6-coa",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:opcl1 reaction on opc-6:0",
-      "target": "compound:opc-6:0-coa",
+      "source": "reaction:opcl1 activation of opc-6:0 to opc-6-coa",
+      "target": "compound:opc-6-coa",
       "role": "product",
       "confidence": 1.0
     },
     {
       "source": "protein:opcl1",
-      "target": "reaction:opcl1 reaction on opc-6:0",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:opc-6:0-coa",
-      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
-      "target": "compound:jasmonoyl-coa",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:acx1",
-      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:mfp",
-      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:kat2",
-      "target": "reaction:acx1 reaction in beta-oxidation on opc-6:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:opda",
-      "target": "reaction:opcl1 reaction on opda",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:opcl1 reaction on opda",
-      "target": "compound:opda-coa",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:opcl1",
-      "target": "reaction:opcl1 reaction on opda",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:opr3",
-      "target": "reaction:opcl1 reaction on opda",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:dnopda",
-      "target": "reaction:opcl1 reaction on dnopda",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:opcl1 reaction on dnopda",
-      "target": "compound:dnopda-coa",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:opcl1",
-      "target": "reaction:opcl1 reaction on dnopda",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:opr3",
-      "target": "reaction:opcl1 reaction on dnopda",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:opc-8:0-coa",
-      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
-      "target": "compound:opc-6:0-coa",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:acx1",
-      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:mfp",
-      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:kat2",
-      "target": "reaction:beta-oxidation of opc-8:0-coa to opc-6:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:opc-6:0-coa",
-      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
-      "role": "reactant",
-      "confidence": 1.0
-    },
-    {
-      "source": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
-      "target": "compound:opc-4:0",
-      "role": "product",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:acx1",
-      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:mfp",
-      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
-      "role": "catalyst",
-      "confidence": 1.0
-    },
-    {
-      "source": "protein:kat2",
-      "target": "reaction:beta-oxidation of opc-6:0-coa to opc-4:0-coa",
+      "target": "reaction:opcl1 activation of opc-6:0 to opc-6-coa",
       "role": "catalyst",
       "confidence": 1.0
     },
@@ -741,18 +705,6 @@
       "source": "protein:cts",
       "target": "transport:dnopda import into peroxisomes",
       "role": "transporter",
-      "confidence": 1.0
-    },
-    {
-      "source": "compound:opc-8:0-coa",
-      "target": "interaction:opc-8:0-coa and opc-6:0-coa are intermediates in jasmonate biosynthesis",
-      "role": "participant",
-      "confidence": 1.0
-    },
-    {
-      "source": "interaction:opc-8:0-coa and opc-6:0-coa are intermediates in jasmonate biosynthesis",
-      "target": "compound:opc-8:0-coa",
-      "role": "participant",
       "confidence": 1.0
     }
   ]
