@@ -1,8 +1,8 @@
 {
   "summary": {
     "total_species": 32,
-    "total_reactions": 13,
-    "completeness_score": 0.044
+    "total_reactions": 16,
+    "completeness_score": 0.125
   },
   "flags": {
     "missing_compartments": [
@@ -11,24 +11,44 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "OPC-4:0",
+        "entity": "linolenic acid",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "OPC-4-CoA",
+        "entity": "hexadecatrienoic acid",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "OPC-8:0-CoA",
+        "entity": "10,11-epoxyhexadecatrienoic acid",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "OPC-6:0-CoA",
+        "entity": "OPC-4:0-CoA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "AtACH1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "AtACH2",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [
+      {
+        "entity": "OPC-8:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-4:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
       {
         "entity": "OPC-8:0",
         "reason": "name suggests a complex or subunit"
@@ -40,26 +60,10 @@
       {
         "entity": "OPC-4:0",
         "reason": "name suggests a complex or subunit"
-      },
-      {
-        "entity": "OPC-8:0-CoA",
-        "reason": "name suggests a complex or subunit"
-      },
-      {
-        "entity": "OPC-6:0-CoA",
-        "reason": "name suggests a complex or subunit"
       }
     ],
     "transport_like_reactions": [],
     "orphan_nodes": [
-      {
-        "entity": "linoleic acid",
-        "degree": 0
-      },
-      {
-        "entity": "OPC-4:0",
-        "degree": 0
-      },
       {
         "entity": "OPDA-CoA",
         "degree": 0
@@ -70,10 +74,6 @@
       },
       {
         "entity": "MFP",
-        "degree": 0
-      },
-      {
-        "entity": "AtACH2",
         "degree": 0
       }
     ],
@@ -91,27 +91,55 @@
         "type": "compound"
       },
       {
-        "entity": "13-HPOT",
+        "entity": "13-hydroperoxy-octadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "11-HPHT",
+        "entity": "11-hydroperoxy-hexadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "12,13-EOT",
+        "entity": "12,13-epoxy-octadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "10,11-EHT",
+        "entity": "10,11-epoxyhexadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "OPDA",
+        "entity": "12-oxophytodienoic acid",
         "type": "compound"
       },
       {
-        "entity": "dnOPDA",
+        "entity": "dinor-OPDA",
+        "type": "compound"
+      },
+      {
+        "entity": "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "jasmonic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "jasmonoyl-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-8:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-4:0-CoA",
         "type": "compound"
       },
       {
@@ -127,39 +155,11 @@
         "type": "compound"
       },
       {
-        "entity": "OPC-8-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "OPC-6-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "OPC-4-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "jasmonic acid",
-        "type": "compound"
-      },
-      {
-        "entity": "jasmonoyl-CoA",
-        "type": "compound"
-      },
-      {
         "entity": "OPDA-CoA",
         "type": "compound"
       },
       {
         "entity": "dnOPDA-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "OPC-8:0-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "OPC-6:0-CoA",
         "type": "compound"
       },
       {

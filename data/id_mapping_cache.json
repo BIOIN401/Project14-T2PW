@@ -37455,6 +37455,94 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::11hydroperoxyhexadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1213epoxyoctadecatrienoic acid::104721::{\"chebi\": \"CHEBI:134055\", \"kegg\": \"C04672\", \"pubchem\": \"20843327\"}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "kegg": "C04672",
+        "chebi": "CHEBI:134055",
+        "pubchem": "20843327",
+        "pathbank_compound_id": "104721"
+      },
+      "pathbank_compound_id": 104721,
+      "confidence": 1.0,
+      "chosen_rule": "pathbank_compound_id",
+      "candidates": [
+        {
+          "pathbank_compound_id": 104721,
+          "name": "(9Z,13S,15Z)-12,13-epoxyoctadeca-9,11,15-trienoate",
+          "short_name": "EOT",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "C04672",
+            "chebi": "CHEBI:134055",
+            "pubchem": "20843327",
+            "pathbank_compound_id": "104721"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "pathbank_compound_id"
+      }
+    },
+    "db::1011epoxyhexadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1octanoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3oxo22zpentenylcyclopentane1hexanoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -41970,6 +42058,38 @@
         {
           "issue": "component_protein_unresolved",
           "component": "AtACH1",
+          "reason": "no_db_match"
+        }
+      ],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_enzyme_single_component_complex"
+      }
+    },
+    "atach2::::arabidopsis thaliana": {
+      "status": "unmapped",
+      "reason": "novel_complex",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_enzyme_single_component_complex",
+      "candidates": [],
+      "name": "AtACH2 complex",
+      "species_id": 4,
+      "components": [
+        {
+          "name": "AtACH2",
+          "stoichiometry": 1,
+          "mapped_ids": {
+            "uniprot": "F4HU51"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "AtACH2",
           "reason": "no_db_match"
         }
       ],
