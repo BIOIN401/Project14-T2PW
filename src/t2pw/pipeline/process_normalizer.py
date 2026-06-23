@@ -136,6 +136,7 @@ BYPRODUCT_TOKEN_DENYLIST = {
     "phosphate",
     "pyrophosphate",
 }
+BIOCHEMICAL_COLON_RE = re.compile(r"(?<![A-Za-z0-9])\d+\s*:\s*\d+(?![A-Za-z0-9])")
 
 
 class GateValidationError(ValueError):
@@ -424,6 +425,8 @@ def _protein_like_norms(payload: Dict[str, Any]) -> Set[str]:
 
 
 def _is_protein_like(name: str, payload: Dict[str, Any]) -> bool:
+    if _is_biochemical_colon_name(name):
+        return False
     norm = _normalize(name)
     if not norm:
         return False
@@ -448,9 +451,10 @@ def _scaffold_norms(payload: Dict[str, Any]) -> Set[str]:
         if not isinstance(row, dict):
             continue
         name = _canonical(str(row.get("name", "")))
-        if ":" not in name:
+        parts = _complex_components(name, payload=payload, assume_complex=True)
+        if len(parts) < 2:
             continue
-        first = _canonical(name.split(":", 1)[0])
+        first = _canonical(parts[0])
         if first:
             scaffolds.add(_normalize(first))
     return scaffolds
@@ -492,11 +496,74 @@ def _ensure_compound(name: str, payload: Dict[str, Any], report: Dict[str, Any])
     return c_name
 
 
-def _complex_components(name: str) -> List[str]:
+def _colon_parts(name: str) -> List[str]:
     text = _canonical(name)
     if ":" not in text:
         return []
     return [part.strip() for part in text.split(":") if part.strip()]
+
+
+def _is_biochemical_colon_name(name: str) -> bool:
+    text = _canonical(name)
+    if ":" not in text:
+        return False
+    lowered = text.casefold()
+    if re.search(r"\(\s*\d+\s*:\s*\d+\s*\)", lowered):
+        return True
+    if re.search(r"\b[A-Za-z][A-Za-z0-9]*-\d+\s*:\s*\d+-CoA\b", text, flags=re.IGNORECASE):
+        return True
+    return bool(BIOCHEMICAL_COLON_RE.search(text))
+
+
+def _known_complex_norms(payload: Dict[str, Any]) -> Set[str]:
+    entities = _safe_dict(payload.get("entities"))
+    return {
+        _normalize(_canonical(str(row.get("name", ""))))
+        for row in _safe_list(entities.get("protein_complexes"))
+        if isinstance(row, dict) and _canonical(str(row.get("name", ""))) and not _is_biochemical_colon_name(str(row.get("name", "")))
+    }
+
+
+def _is_known_complex_name(name: str, payload: Dict[str, Any]) -> bool:
+    norm = _normalize(_canonical(name))
+    return bool(norm and norm in _known_complex_norms(payload))
+
+
+def _is_explicit_complex_colon_syntax(
+    name: str,
+    payload: Optional[Dict[str, Any]] = None,
+    *,
+    assume_complex: bool = False,
+) -> bool:
+    text = _canonical(name)
+    if ":" not in text or _is_biochemical_colon_name(text):
+        return False
+    parts = _colon_parts(text)
+    if len(parts) < 2:
+        return False
+    if assume_complex:
+        return True
+    if re.search(r"\bcomplex\b", text, flags=re.IGNORECASE):
+        return True
+    if any(PROTEIN_LIKE_RE.search(part) for part in parts):
+        return True
+    if payload is not None:
+        if _is_known_complex_name(text, payload):
+            return True
+        if _is_protein_like(parts[0], payload):
+            return True
+    return False
+
+
+def _complex_components(
+    name: str,
+    payload: Optional[Dict[str, Any]] = None,
+    *,
+    assume_complex: bool = False,
+) -> List[str]:
+    if not _is_explicit_complex_colon_syntax(name, payload, assume_complex=assume_complex):
+        return []
+    return _colon_parts(name)
 
 
 def _is_likely_byproduct(token: str) -> bool:
@@ -579,6 +646,11 @@ def materialize_complex(
     caller: str = "",
 ) -> str:
     rep = report if isinstance(report, dict) else _new_report()
+    source = _canonical(source_token)
+    if source and ":" in source and not _is_explicit_complex_colon_syntax(source, payload):
+        _ensure_compound(source, payload, rep)
+        return source
+
     parts = [nameA, nameB]
     if extra_components:
         parts.extend(list(extra_components))
@@ -658,8 +730,8 @@ def _rewrite_token(
         return [rewrite_map[ckey]]
 
     if not _has_plus_token(text):
-        if ":" in text and len(_complex_components(text)) >= 2:
-            parts = _complex_components(text)
+        if len(_complex_components(text, payload=payload)) >= 2:
+            parts = _complex_components(text, payload=payload)
             complex_name = materialize_complex(
                 parts[0],
                 parts[1],
@@ -878,7 +950,7 @@ def _rewrite_element_locations(payload: Dict[str, Any], rewrite_map: Dict[str, s
             continue
         rewritten = _rewrite_token(raw_name, payload, report, rewrite_map, f"/element_locations/compound_locations/{idx}/compound")
         for token in rewritten:
-            if ":" in token or _is_protein_like(token, payload):
+            if _complex_components(token, payload=payload) or _is_protein_like(token, payload):
                 moved = dict(row)
                 moved.pop("compound", None)
                 moved["protein"] = token
@@ -921,6 +993,10 @@ def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, 
         name = _canonical(str(row.get("name", "")))
         if not name:
             continue
+        if _is_biochemical_colon_name(name):
+            _remove_entity(complexes, name)
+            _ensure_compound(name, payload, rep)
+            continue
         if _has_plus_token(name):
             parts = _split_composite(name)
             if len(parts) >= 2:
@@ -941,7 +1017,7 @@ def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, 
                 rep["rewrite_map"][_normalize(name)] = canonical
                 _remove_entity(complexes, name)
                 continue
-        parts = _complex_components(name)
+        parts = _complex_components(name, payload=payload, assume_complex=True)
         if len(parts) >= 2:
             row["name"] = ":".join(parts)
             row["components"] = _dedupe_preserve(parts)
@@ -1125,7 +1201,7 @@ def cleanup_disallowed_complexes(
         evidence = _canonical(str(reaction.get("evidence", "")))
         for side in ["inputs", "outputs"]:
             for token in _safe_list(reaction.get(side)):
-                if isinstance(token, str) and ":" in token and len(_complex_components(token)) >= 2:
+                if isinstance(token, str) and len(_complex_components(token, payload=payload)) >= 2:
                     _collect_evidence(token, evidence)
 
     for transport in transports:
@@ -1145,7 +1221,19 @@ def cleanup_disallowed_complexes(
         if not name:
             continue
         row["name"] = name
-        parts = _complex_components(name)
+        if _is_biochemical_colon_name(name):
+            summary["forbidden_complexes_removed"] += 1
+            rep["actions"].append(
+                {
+                    "type": "biochemical_colon_complex_removed",
+                    "json_pointer": f"/entities/protein_complexes/{idx}/name",
+                    "name": name,
+                }
+            )
+            _remove_entity(complexes, name)
+            _ensure_compound(name, payload, rep)
+            continue
+        parts = _complex_components(name, payload=payload, assume_complex=True)
         if len(parts) < 2:
             kept_complexes.append(row)
             continue
@@ -1396,7 +1484,7 @@ def _token_parts_for_aliasing(token: str) -> List[str]:
     if not text:
         return []
     parts: List[str] = [text]
-    if ":" in text:
+    if _complex_components(text):
         parts.extend(_complex_components(text))
     elif "+" in text:
         parts.extend(_split_composite(text))
@@ -1641,8 +1729,8 @@ def canonicalize_same_as_aliases(
         text = _canonical(token)
         if not text:
             return ""
-        if ":" in text:
-            parts = _complex_components(text)
+        parts = _complex_components(text, payload=payload)
+        if parts:
             rewritten = _dedupe_preserve(
                 [
                     rewritten_part
@@ -2335,8 +2423,7 @@ def attach_transporters_from_evidence(payload: Dict[str, Any], *, report: Option
         )
         cargo = _canonical(str(cargo_value or ""))
         cargo_tokens = [cargo]
-        if ":" in cargo:
-            cargo_tokens.extend(_complex_components(cargo))
+        cargo_tokens.extend(_complex_components(cargo, payload=payload))
 
         evidence = _canonical(str(transport.get("evidence", "")))
         matched = (
@@ -2502,7 +2589,7 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
         pnorm = _normalize(protein_name)
         if pnorm not in modifier_entity_norms:
             role = _modifier_role_from_relationship(relationship)
-            entity_type = "protein_complex" if ":" in protein_name else "protein"
+            entity_type = "protein_complex" if _is_known_complex_name(protein_name, payload) else "protein"
             new_mod: Dict[str, Any] = {
                 "entity": protein_name,
                 "entity_type": entity_type,
@@ -2536,6 +2623,7 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
     reactions, _ = _process_lists(payload)
     _, proteins, complexes = _entity_lists(payload)
     protein_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+    complex_norms = _entity_name_norms(complexes)
     scaffold_norms = _scaffold_norms(payload)
 
     for ridx, reaction in enumerate(reactions):
@@ -2549,7 +2637,7 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
 
         output_complex_parts: Set[str] = set()
         for token in outputs:
-            for part in _complex_components(token):
+            for part in _complex_components(token, payload=payload):
                 output_complex_parts.add(_normalize(part))
         modifier_entity_norms: Set[str] = set()
         for mod in modifiers_list:
@@ -2575,7 +2663,7 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
                 kept_inputs.append(token)
                 continue
             if norm not in modifier_entity_norms:
-                entity_type = "protein_complex" if ":" in token else "protein"
+                entity_type = "protein_complex" if norm in complex_norms else "protein"
                 modifiers_list.append({
                     "entity": token,
                     "entity_type": entity_type,
@@ -2590,7 +2678,7 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
 
         present_inputs = {_normalize(token) for token in kept_inputs}
         for out_token in outputs:
-            parts = _complex_components(out_token)
+            parts = _complex_components(out_token, payload=payload)
             if len(parts) < 2:
                 continue
             scaffold = parts[0]

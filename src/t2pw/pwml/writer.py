@@ -883,6 +883,7 @@ class DeterministicPwmlBuilder:
         protein_id_by_key: Optional[Dict[str, int]] = None,
         protein_id_by_name: Optional[Dict[str, int]] = None,
         protein_id_by_db_id: Optional[Dict[int, int]] = None,
+        protein_id_by_uniprot: Optional[Dict[str, int]] = None,
     ) -> List[Dict[str, Any]]:
         members: List[Dict[str, Any]] = []
         for idx, component in enumerate(components if isinstance(components, list) else []):
@@ -907,6 +908,18 @@ class DeterministicPwmlBuilder:
                             protein_id = protein_id_by_db_id.get(db_id)
                         if protein_id is not None:
                             break
+                if protein_id is None and protein_id_by_uniprot:
+                    mapped_ids = component.get("mapped_ids") if isinstance(component.get("mapped_ids"), dict) else {}
+                    uniprot = str(
+                        component.get("uniprot")
+                        or component.get("uniprot_id")
+                        or component.get("uniprot-id")
+                        or mapped_ids.get("uniprot")
+                        or mapped_ids.get("uniprot_id")
+                        or ""
+                    ).strip().casefold()
+                    if uniprot:
+                        protein_id = protein_id_by_uniprot.get(uniprot)
 
             name = _component_name(component)
             if protein_id is None and name:
@@ -2536,6 +2549,7 @@ class DeterministicPwmlBuilder:
         protein_id_by_key: Dict[str, int] = {}
         protein_id_by_name: Dict[str, int] = {}
         protein_id_by_db_id: Dict[int, int] = {}
+        protein_id_by_uniprot: Dict[str, int] = {}
         for record in entities.get("proteins", []) if isinstance(entities.get("proteins"), list) else []:
             if not isinstance(record, dict):
                 continue
@@ -2556,6 +2570,9 @@ class DeterministicPwmlBuilder:
                 if db_id is not None:
                     protein_id_by_db_id[db_id] = rid
             mapped_ids = record.get("mapped_ids") if isinstance(record.get("mapped_ids"), dict) else {}
+            mapped_pathbank_id = _to_positive_int(mapped_ids.get("pathbank_protein_id"))
+            if mapped_pathbank_id is not None:
+                protein_id_by_db_id[mapped_pathbank_id] = rid
             uniprot_id = (
                 mapped_ids.get("uniprot")
                 or record.get("uniprot")
@@ -2563,6 +2580,8 @@ class DeterministicPwmlBuilder:
                 or record.get("uniprot-id")
                 or None
             )
+            if uniprot_id:
+                protein_id_by_uniprot[str(uniprot_id).strip().casefold()] = rid
             drugbank_id = (
                 mapped_ids.get("drugbank")
                 or record.get("drugbank")
@@ -2604,6 +2623,7 @@ class DeterministicPwmlBuilder:
                 protein_id_by_key=protein_id_by_key,
                 protein_id_by_name=protein_id_by_name,
                 protein_id_by_db_id=protein_id_by_db_id,
+                protein_id_by_uniprot=protein_id_by_uniprot,
             )
             self.section_items["protein-complexes"].append(
                 {
@@ -3885,11 +3905,25 @@ class DeterministicPwmlBuilder:
             if rec.get("name")
         }
         protein_id_by_db_id: Dict[int, int] = {}
+        protein_id_by_uniprot: Dict[str, int] = {}
         for rec in self.entity_records.get("proteins", []):
             for db_key in ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id"]:
                 db_id = _to_positive_int(rec.get(db_key))
                 if db_id is not None:
                     protein_id_by_db_id[db_id] = int(rec["id"])
+            mapped_ids = rec.get("mapped_ids") if isinstance(rec.get("mapped_ids"), dict) else {}
+            mapped_pathbank_id = _to_positive_int(mapped_ids.get("pathbank_protein_id"))
+            if mapped_pathbank_id is not None:
+                protein_id_by_db_id[mapped_pathbank_id] = int(rec["id"])
+            uniprot_id = (
+                mapped_ids.get("uniprot")
+                or rec.get("uniprot")
+                or rec.get("uniprot_id")
+                or rec.get("uniprot-id")
+                or None
+            )
+            if uniprot_id:
+                protein_id_by_uniprot[str(uniprot_id).strip().casefold()] = int(rec["id"])
         protein_complex_items: List[Dict[str, Any]] = []
         for rec in self.entity_records.get("protein-complexes", []):
             members = self._protein_complex_members(
@@ -3898,6 +3932,7 @@ class DeterministicPwmlBuilder:
                 protein_id_by_key=protein_id_by_key,
                 protein_id_by_name=protein_id_by_name,
                 protein_id_by_db_id=protein_id_by_db_id,
+                protein_id_by_uniprot=protein_id_by_uniprot,
             )
             protein_complex_items.append(
                 {

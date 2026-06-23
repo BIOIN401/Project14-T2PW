@@ -62,6 +62,43 @@ def _name_variants(value: str, *, max_variants: int = 4) -> List[str]:
     return variants or ([base] if base else [])
 
 
+def _looks_like_gene_symbol_token(value: str) -> bool:
+    text = _canonical_name(value)
+    if not re.fullmatch(r"[A-Za-z0-9_.-]{3,24}", text):
+        return False
+    if ":" in text or not re.search(r"[A-Za-z]", text):
+        return False
+    if text.casefold() in {"isoform", "mitochondrial", "chloroplast", "cytosolic", "nuclear", "membrane"}:
+        return False
+    has_digit = bool(re.search(r"\d", text))
+    has_upper = bool(re.search(r"[A-Z]", text))
+    has_lower = bool(re.search(r"[a-z]", text))
+    return bool(has_digit or (has_upper and not has_lower))
+
+
+def _parenthetical_gene_symbol_aliases(name: str) -> List[Dict[str, str]]:
+    aliases: List[Dict[str, str]] = []
+    for match in re.finditer(r"\(([^()]+)\)", _canonical_name(name)):
+        token = _canonical_name(match.group(1)).strip()
+        if _looks_like_gene_symbol_token(token):
+            aliases.append({"alias": token, "source": "parenthetical_gene_symbol"})
+    return aliases
+
+
+def _arabidopsis_at_prefix_gene_aliases(name: str) -> List[Dict[str, str]]:
+    text = _canonical_name(name)
+    # Arabidopsis literature commonly prefixes gene symbols with "At" (for example
+    # AtACH1), while UniProt gene fields often store the unprefixed symbol (ACH1).
+    # Keep this to a single token with an uppercase letter immediately after At so
+    # locus IDs such as At1g20510 and names like At4CL1 are not rewritten.
+    if not re.fullmatch(r"At[A-Z][A-Z0-9_.-]{2,23}", text):
+        return []
+    alias = text[2:]
+    if alias and _looks_like_gene_symbol_token(alias):
+        return [{"alias": alias, "source": "arabidopsis_at_prefix_gene_symbol"}]
+    return []
+
+
 def _protein_alias_entries(name: str, protein_row: Optional[Dict[str, Any]] = None) -> List[Dict[str, str]]:
     row = _safe_dict(protein_row)
     entries: List[Dict[str, str]] = []
@@ -91,6 +128,11 @@ def _protein_alias_entries(name: str, protein_row: Optional[Dict[str, Any]] = No
 
     mapped_ids = _safe_dict(row.get("mapped_ids"))
     add(mapped_ids.get("gene_name"), "mapped_ids:gene_name")
+
+    for entry in _parenthetical_gene_symbol_aliases(name):
+        add(entry["alias"], entry["source"])
+    for entry in _arabidopsis_at_prefix_gene_aliases(name):
+        add(entry["alias"], entry["source"])
 
     name_no_parens = _canonical_name(re.sub(r"\([^)]*\)", " ", name))
     if name_no_parens and _normalize_name(name_no_parens) != _normalize_name(name):
@@ -1623,6 +1665,8 @@ class PathBankDbResolver:
                 "chosen_rule": "",
                 "confidence": 0.0,
             }, "unresolved", issue="needs_species")
+        if _protein_alias_entries(name, {"name": name}):
+            return self.map_protein_row({"name": name}, species)
         return self.map_protein(name, species)
 
     def _map_protein_exact_name_species(self, name: str, species: str) -> Dict[str, Any]:
@@ -1672,6 +1716,61 @@ class PathBankDbResolver:
             chosen_rule="exact_protein_name_species",
             candidates=candidates[:10],
         )
+
+    def _map_protein_aliases_species(
+        self,
+        name: str,
+        row: Dict[str, Any],
+        species: str,
+    ) -> Dict[str, Any]:
+        aliases = _protein_alias_entries(name, row)
+        pending_ambiguous: Optional[Dict[str, Any]] = None
+        for entry in aliases:
+            alias = str(entry.get("alias") or "").strip()
+            source = str(entry.get("source") or "alias").strip() or "alias"
+            if not alias:
+                continue
+            if _looks_like_gene_symbol_token(alias):
+                by_gene = self.map_protein_by_ids({"gene_name": alias}, species=species)
+                if by_gene.get("status") == "mapped":
+                    by_gene["matched_alias"] = alias
+                    by_gene["alias_source"] = source
+                    return _with_resolution(by_gene, "matched", order_step="alias_gene_name_species")
+                if by_gene.get("reason") == "ambiguous" and pending_ambiguous is None:
+                    by_gene["matched_alias"] = alias
+                    by_gene["alias_source"] = source
+                    pending_ambiguous = _with_resolution(
+                        by_gene,
+                        "ambiguous",
+                        issue="ambiguous_alias_gene_name_species",
+                        order_step="alias_gene_name_species",
+                    )
+
+            exact = self._map_protein_exact_name_species(alias, species)
+            if exact.get("status") == "mapped":
+                exact["matched_alias"] = alias
+                exact["alias_source"] = source
+                exact["chosen_rule"] = "exact_protein_alias_species"
+                return _with_resolution(exact, "matched", order_step="exact_protein_alias_species")
+            if exact.get("reason") == "ambiguous" and pending_ambiguous is None:
+                exact["matched_alias"] = alias
+                exact["alias_source"] = source
+                pending_ambiguous = _with_resolution(
+                    exact,
+                    "ambiguous",
+                    issue="ambiguous_exact_protein_alias_species",
+                    order_step="exact_protein_alias_species",
+                )
+
+        return pending_ambiguous or {
+            "status": "unmapped",
+            "reason": "no_alias_match",
+            "provider": "PathBankDB",
+            "source": "db",
+            "confidence": 0.0,
+            "chosen_rule": "",
+            "candidates": [],
+        }
 
     def map_protein_row(self, row: Dict[str, Any], species: str) -> Dict[str, Any]:
         """Protein resolution order: internal ID, UniProt, gene/species, exact name/species, fuzzy/species, novel."""
@@ -1731,8 +1830,22 @@ class PathBankDbResolver:
         exact = self._map_protein_exact_name_species(name, species)
         if exact.get("status") == "mapped":
             return _with_resolution(exact, "matched", order_step="exact_protein_name_species")
+        pending_ambiguous: Optional[Dict[str, Any]] = None
         if exact.get("reason") == "ambiguous":
-            return _with_resolution(exact, "ambiguous", issue="ambiguous_exact_protein_name_species", order_step="exact_protein_name_species")
+            pending_ambiguous = _with_resolution(
+                exact,
+                "ambiguous",
+                issue="ambiguous_exact_protein_name_species",
+                order_step="exact_protein_name_species",
+            )
+
+        alias_result = self._map_protein_aliases_species(name, row, species)
+        if alias_result.get("status") == "mapped":
+            return alias_result
+        if alias_result.get("reason") == "ambiguous":
+            return alias_result
+        if pending_ambiguous is not None:
+            return pending_ambiguous
 
         fuzzy = self.map_protein(name, species)
         if fuzzy.get("status") == "mapped":
@@ -3056,6 +3169,7 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
         candidate_names = [v for v in [fullname] if isinstance(v, str)] + alt_values + submission_values + gene_names
         best_name_score = max((_jaccard(query_name, c) for c in candidate_names), default=0.0)
         exact_name_match = any(_normalize_name(query_name) == _normalize_name(c) for c in candidate_names)
+        exact_gene_match = any(_normalize_name(query_name) == _normalize_name(g) for g in gene_names)
         organism_score = 0.0
         if organism and isinstance(organism_name, str):
             norm_organism = _normalize_name(organism)
@@ -3067,7 +3181,13 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
             elif norm_organism in norm_candidate_organism:
                 organism_score = 0.15
         reviewed_score = 0.05 if reviewed else 0.0
-        score = min(1.0, (0.55 if exact_name_match else 0.35 * best_name_score) + organism_score + reviewed_score)
+        if exact_gene_match and _looks_like_gene_symbol_token(query_name):
+            base_score = 0.72
+        elif exact_name_match:
+            base_score = 0.55
+        else:
+            base_score = 0.35 * best_name_score
+        score = min(1.0, base_score + organism_score + reviewed_score)
 
         out.append(
             {
@@ -3081,6 +3201,118 @@ def _extract_uniprot_candidates(payload: Dict[str, Any], query_name: str, organi
         )
     out.sort(key=lambda item: item.get("score", 0.0), reverse=True)
     return out
+
+
+def _uniprot_organism_matches(candidate: Dict[str, Any], organism: str) -> bool:
+    if not organism:
+        return False
+    norm_requested = _normalize_name(organism)
+    norm_candidate = _normalize_name(str(candidate.get("organism") or ""))
+    return bool(
+        norm_requested
+        and norm_candidate
+        and (norm_requested == norm_candidate or norm_candidate.startswith(f"{norm_requested} "))
+    )
+
+
+def _uniprot_exact_gene_query_match(candidate: Dict[str, Any]) -> bool:
+    query = str(candidate.get("matched_query") or candidate.get("matched_alias") or "").strip()
+    if not query or not _looks_like_gene_symbol_token(query):
+        return False
+    query_norm = _normalize_name(query)
+    return any(query_norm == _normalize_name(str(gene or "")) for gene in _safe_list(candidate.get("gene_names")))
+
+
+def _accepted_uniprot_candidate_result(
+    candidates: List[Dict[str, Any]],
+    organism: str,
+    *,
+    query: str = "",
+    queries_tried: Optional[List[str]] = None,
+    literature_aliases: Optional[List[Dict[str, str]]] = None,
+) -> Optional[Dict[str, Any]]:
+    ranked = sorted([dict(c) for c in candidates if isinstance(c, dict)], key=lambda item: item.get("score", 0.0), reverse=True)
+    if not ranked:
+        return None
+    best = ranked[0]
+    accession = str(best.get("accession") or "").strip()
+    if not accession:
+        return None
+    best_score = float(best.get("score", 0.0))
+    second_score = float(ranked[1].get("score", 0.0)) if len(ranked) > 1 else 0.0
+    strong_unique = best_score >= 0.78 and best_score >= second_score + 0.08
+    reviewed_unique = bool(best.get("reviewed")) and best_score >= 0.74 and best_score >= second_score + 0.06
+    reviewed_exact_gene_match = (
+        bool(best.get("reviewed"))
+        and _uniprot_organism_matches(best, organism)
+        and _uniprot_exact_gene_query_match(best)
+        and best_score >= 0.9
+    )
+    if not (strong_unique or reviewed_unique or reviewed_exact_gene_match):
+        return None
+
+    matched_alias = str(best.get("matched_alias") or "").strip()
+    chosen_rule = "top_unique_alias_candidate" if matched_alias else "top_unique_candidate"
+    return {
+        "status": "mapped",
+        "query": query,
+        "mapped_ids": {"uniprot": accession},
+        "confidence": best_score,
+        "chosen_rule": chosen_rule,
+        "candidates": ranked[:8],
+        "reviewed": bool(best.get("reviewed")),
+        "queries_tried": queries_tried or [],
+        "matched_alias": matched_alias,
+        "alias_source": str(best.get("alias_source") or "").strip(),
+        "resolved_name": str(best.get("protein_name") or "").strip(),
+        "literature_aliases": literature_aliases or [],
+    }
+
+
+def _promote_cached_uniprot_result(result: Dict[str, Any], organism: str) -> Dict[str, Any]:
+    out = dict(result)
+    if out.get("status") == "mapped":
+        return out
+    promoted = _accepted_uniprot_candidate_result(
+        _safe_list(out.get("candidates")),
+        organism,
+        query=str(out.get("query") or ""),
+        queries_tried=[str(q) for q in _safe_list(out.get("queries_tried")) if str(q or "").strip()],
+        literature_aliases=[
+            item for item in _safe_list(out.get("literature_aliases")) if isinstance(item, dict)
+        ],
+    )
+    if promoted is None:
+        return out
+    promoted.setdefault("provider", str(out.get("provider") or "UniProt"))
+    promoted.setdefault("source", str(out.get("source") or "api"))
+    return _with_resolution(promoted, "matched", order_step="api_uniprot_cached_candidate")
+
+
+def _promote_uniprot_result_from_row_metadata(
+    result: Dict[str, Any],
+    protein_row: Optional[Dict[str, Any]],
+    organism: str,
+) -> Dict[str, Any]:
+    if result.get("status") == "mapped":
+        return result
+    row = _safe_dict(protein_row)
+    meta = _safe_dict(row.get("mapping_meta"))
+    if not _safe_list(meta.get("candidates")):
+        return result
+    candidate_result = dict(result)
+    if not _safe_list(candidate_result.get("candidates")):
+        candidate_result["candidates"] = _safe_list(meta.get("candidates"))
+    if not candidate_result.get("query"):
+        candidate_result["query"] = meta.get("query", "")
+    if not _safe_list(candidate_result.get("queries_tried")):
+        candidate_result["queries_tried"] = _safe_list(meta.get("queries_tried"))
+    candidate_result.setdefault("provider", str(meta.get("provider") or "UniProt"))
+    candidate_result.setdefault("source", str(meta.get("source") or "api"))
+    promoted = _promote_cached_uniprot_result(candidate_result, organism)
+    if promoted.get("status") == "mapped":
+        promoted["mapping_meta_promoted"] = True
+    return promoted
 
 
 def map_protein_uniprot(
@@ -3322,27 +3554,16 @@ def map_protein_uniprot(
             "literature_aliases": literature_aliases_used,
         }
 
+    accepted = _accepted_uniprot_candidate_result(
+        candidates,
+        organism,
+        query=" | ".join(queries_tried),
+        queries_tried=queries_tried,
+        literature_aliases=literature_aliases_used,
+    )
+    if accepted is not None:
+        return accepted
     best = candidates[0]
-    second_score = float(candidates[1]["score"]) if len(candidates) > 1 else 0.0
-    strong_unique = best["score"] >= 0.78 and best["score"] >= second_score + 0.08
-    reviewed_unique = bool(best.get("reviewed")) and best["score"] >= 0.74 and best["score"] >= second_score + 0.06
-    if strong_unique or reviewed_unique:
-        matched_alias = str(best.get("matched_alias") or "").strip()
-        chosen_rule = "top_unique_alias_candidate" if matched_alias else "top_unique_candidate"
-        return {
-            "status": "mapped",
-            "query": " | ".join(queries_tried),
-            "mapped_ids": {"uniprot": best["accession"]},
-            "confidence": best["score"],
-            "chosen_rule": chosen_rule,
-            "candidates": candidates[:8],
-            "reviewed": bool(best.get("reviewed")),
-            "queries_tried": queries_tried,
-            "matched_alias": matched_alias,
-            "alias_source": str(best.get("alias_source") or "").strip(),
-            "resolved_name": str(best.get("protein_name") or "").strip(),
-            "literature_aliases": literature_aliases_used,
-        }
     return {
         "status": "unmapped",
         "reason": "ambiguous",
@@ -3671,11 +3892,42 @@ def _looks_protein_like_name(name: str) -> bool:
         return False
     return bool(
         re.search(
-            r"(protein|globulin|peroxidase|deiodinase|kinase|phosphatase|atpase|receptor|transporter|enzyme)",
+            r"(protein|globulin|peroxidase|deiodinase|kinase|phosphatase|ligase|atpase|receptor|transporter|enzyme)",
             norm,
             flags=re.IGNORECASE,
         )
     )
+
+
+BIOCHEMICAL_COLON_RE = re.compile(r"(?<![A-Za-z0-9])\d+\s*:\s*\d+(?![A-Za-z0-9])")
+
+
+def _is_biochemical_colon_name(name: str) -> bool:
+    text = _canonical_name(name)
+    if ":" not in text:
+        return False
+    if re.search(r"\(\s*\d+\s*:\s*\d+\s*\)", text):
+        return True
+    if re.search(r"\b[A-Za-z][A-Za-z0-9]*-\d+\s*:\s*\d+-CoA\b", text, flags=re.IGNORECASE):
+        return True
+    if re.search(r":\s*CoA\b", text, flags=re.IGNORECASE):
+        return True
+    return bool(BIOCHEMICAL_COLON_RE.search(text))
+
+
+def _is_explicit_complex_colon_name(name: str, *, protein_like_names: Optional[Set[str]] = None) -> bool:
+    text = _canonical_name(name)
+    if ":" not in text or _is_biochemical_colon_name(text):
+        return False
+    parts = [part.strip() for part in text.split(":") if part.strip()]
+    if len(parts) < 2:
+        return False
+    if re.search(r"\bcomplex\b", text, flags=re.IGNORECASE):
+        return True
+    if any(_looks_protein_like_name(part) for part in parts):
+        return True
+    protein_like_set = {v for v in (protein_like_names or set()) if v}
+    return any(_normalize_name(part) in protein_like_set for part in parts)
 
 
 def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
@@ -3735,10 +3987,12 @@ def route_entity_for_mapping(
     norm = _normalize_name(name)
     protein_like_set = {v for v in (protein_like_names or set()) if v}
 
-    if ":" in name or hint in {"complex", "protein_complex"}:
+    if hint in {"complex", "protein_complex"}:
         return {"route": "complex", "reason": "complex_entity"}
     if hint in {"protein", "enzyme", "modifier"}:
         return {"route": "protein", "reason": "type_hint"}
+    if ":" in name and _is_explicit_complex_colon_name(name, protein_like_names=protein_like_set):
+        return {"route": "complex", "reason": "complex_entity"}
     if norm in protein_like_set:
         return {"route": "protein", "reason": "known_protein_like"}
     if _looks_protein_like_name(name):
@@ -3764,7 +4018,12 @@ def _map_protein_with_strategy(
     protein_aliases = _protein_alias_entries(name, _safe_dict(protein_row))
     base_key = f"{_normalize_name(name)}::{_normalize_name(organism)}::{pathbank_id}::{json.dumps(row_ids, sort_keys=True)}"
     db_key = f"db::{base_key}"
-    api_key = f"api-v6::{base_key}::{json.dumps(protein_aliases, sort_keys=True)}"
+    alias_key = json.dumps(protein_aliases, sort_keys=True)
+    api_key = f"api-v7::{base_key}::{alias_key}"
+    legacy_api_keys = [
+        f"api-v6::{base_key}::{alias_key}",
+        base_key,
+    ]
 
     if not organism and not row_ids.get("uniprot") and not pathbank_id:
         return _with_resolution(
@@ -3804,10 +4063,14 @@ def _map_protein_with_strategy(
     if id_source in {"api", "hybrid"}:
         api_result = cache.get("proteins", api_key)
         if api_result is None:
-            # Backward-compatible cache key from pre-strategy versions.
-            legacy = cache.get("proteins", base_key)
-            if legacy is not None and id_source == "api" and legacy.get("status") == "mapped":
-                api_result = legacy
+            # Backward-compatible cache keys from earlier resolver semantics.
+            legacy = None
+            for legacy_key in legacy_api_keys:
+                legacy = cache.get("proteins", legacy_key)
+                if legacy is not None:
+                    break
+            if legacy is not None:
+                api_result = _promote_cached_uniprot_result(legacy, organism)
             else:
                 api_result = map_protein_uniprot(client, name, organism, aliases=protein_aliases)
             api_result.setdefault("provider", "UniProt")
@@ -3818,7 +4081,19 @@ def _map_protein_with_strategy(
                 _with_resolution(api_result, "ambiguous", issue="api_ambiguous", order_step="api_uniprot")
             else:
                 _with_resolution(api_result, "unresolved", issue=str(api_result.get("reason") or "api_unmapped"), order_step="api_uniprot")
+            api_result = _promote_uniprot_result_from_row_metadata(api_result, protein_row, organism)
+            if api_result.get("status") == "mapped":
+                _with_resolution(api_result, "matched", order_step="api_uniprot")
             cache.set("proteins", api_key, api_result)
+        else:
+            promoted = _promote_cached_uniprot_result(api_result, organism)
+            if promoted.get("status") == "mapped" and api_result.get("status") != "mapped":
+                api_result = promoted
+                cache.set("proteins", api_key, api_result)
+            api_result = _promote_uniprot_result_from_row_metadata(api_result, protein_row, organism)
+            if api_result.get("status") == "mapped":
+                _with_resolution(api_result, "matched", order_step="api_uniprot")
+                cache.set("proteins", api_key, api_result)
         return api_result
 
     return _with_resolution(

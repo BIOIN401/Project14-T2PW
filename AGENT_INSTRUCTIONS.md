@@ -225,6 +225,22 @@ After `build_sbml()` runs, check the report JSON for:
 
 4. **`pathwhiz:reaction_id`** — reaction IDs are looked up by matching sorted reactant/product PathWhiz compound IDs against `reaction_elements` in MySQL. This will only succeed if all reactants/products have PathWhiz IDs.
 
+5. **PWML required-field gate: LLM over-generates reactions and hallucinates protein complexes from metabolite names containing colons** — Observed during jasmonate biosynthesis export (21 errors, 48 warnings). Two root causes:
+
+   **5a. Reaction inflation + unresolvable participants:**
+   - The LLM generates ~22 reactions for a pathway that has ~9 meaningful steps. The excess reactions often have participants that are either empty or can't be resolved to any known entity in the JSON.
+   - In `ir.py` the required-field gate fires `reaction_missing_left_participants` for reactions where `inputs` is empty after merge. This also happens because the LLM splits compound names at colons (e.g. `OPC-8:0-CoA`) and assigns the fragments as protein complex components, leaving the reaction's reactant list hollow.
+   - **Fix planned:** Add a post-merge `filter_unresolvable_reactions(payload)` function in `src/t2pw/pipeline/pipeline.py` that drops reactions whose participants are not resolvable against the entity set, before the PWML writer sees them. See agent prompt in docs (fix #1).
+
+   **5b. Metabolite names with colons misclassified as protein complexes:**
+   - Compound names like `hexadecatrienoic acid (16:3)`, `OPC-8:0-CoA`, `OPC-6:0-CoA` contain colons. The LLM (or its parsing of the protein complex schema) splits these at the colon, creating fake protein complex entries like `{name: "hexadecatrienoic acid (16:3)", components: ["hexadecatrienoic acid (16", "3)"]}`.
+   - The PWML `ir.py` gate then fires `component_protein_unresolved` for each such fragment.
+   - **Fix planned:** Part of fix #1 above — the reaction filter will remove reactions referencing these ghost entities; additionally the entity cleanup should detect and discard protein complexes whose component names are clearly metabolite fragments (too short, contain digits without letters, or are substrings of a compound name in the entity list).
+
+6. **PWML required-field gate: UniProt IDs missing for plant-specific proteins** — Proteins like `COMATOSE (CTS)`, `AtACH1`, `AtACH2`, `OPCL1`, `KAT2`, `b-hydroxy-acyl-CoA dehydrogenase` are Arabidopsis thaliana enzymes. The current UniProt resolver in `src/t2pw/mapping/map_ids.py` tries exact name match → name variants → EuropePMC literature aliases → LLM synonym generation. When all strategies fail it returns `unmapped`, which causes the `protein_missing_external_identity` gate to fire.
+   - **Root cause:** The resolver never falls back to returning the *best available* UniProt search hit; it only returns a result when it is highly confident. For plant proteins with abbreviated names or hyphenated gene symbols, the search can return good candidates that are being discarded.
+   - **Fix planned:** Add a `_search_uniprot_best_effort(client, name, organism)` fallback that: (1) extracts gene symbol from parentheses (e.g. `CTS` from `COMATOSE (CTS)`), (2) tries `gene:{symbol} AND organism:{taxon}` scoped UniProt REST search, (3) returns the top hit tagged with `confidence: "low"` and `method: "fuzzy_search"` rather than returning nothing. See agent prompt in docs (fix #2).
+
 ---
 
 ## Running the Pipeline

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -17,9 +18,11 @@ from t2pw.mapping.map_ids import (  # noqa: E402
     _extract_aliases_from_literature_text,
     _extract_uniprot_candidates,
     _map_protein_with_strategy,
+    _protein_alias_entries,
     _reconcile_components_against_local_proteins,
     _rewrite_reaction_protein_enzymes_to_complexes,
     map_protein_uniprot,
+    route_entity_for_mapping,
 )
 
 
@@ -169,6 +172,91 @@ class _NocBDomainUniProtClient:
                         "genes": [{"geneName": {"value": "NocB"}}],
                         "organism": {"scientificName": "Nocardia uniformis subsp. tsuyamanensis"},
                     }
+                ]
+            }
+        )
+
+
+class _ParentheticalGeneUniProtClient:
+    def __init__(self) -> None:
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if 'gene:"CTS"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    {
+                        "primaryAccession": "Q9LQ16",
+                        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+                        "proteinDescription": {
+                            "recommendedName": {"fullName": {"value": "Peroxisomal ABC transporter CTS"}},
+                        },
+                        "genes": [{"geneName": {"value": "CTS"}}],
+                        "organism": {"scientificName": "Arabidopsis thaliana"},
+                    }
+                ]
+            }
+        )
+
+
+def _uniprot_result(
+    accession: str,
+    *,
+    protein_name: str,
+    gene: str,
+    organism: str = "Arabidopsis thaliana",
+    reviewed: bool = True,
+) -> Dict[str, Any]:
+    return {
+        "primaryAccession": accession,
+        "entryType": "UniProtKB reviewed (Swiss-Prot)" if reviewed else "UniProtKB unreviewed (TrEMBL)",
+        "proteinDescription": {
+            "recommendedName": {"fullName": {"value": protein_name}},
+        },
+        "genes": [{"geneName": {"value": gene}}],
+        "organism": {"scientificName": organism},
+    }
+
+
+class _ArabidopsisAmbiguousGeneUniProtClient:
+    def __init__(self, gene: str, reviewed_accession: str, protein_name: str) -> None:
+        self.gene = gene
+        self.reviewed_accession = reviewed_accession
+        self.protein_name = protein_name
+        self.queries: List[str] = []
+
+    def get(self, url: str, params: Dict[str, Any] | None = None) -> _FakeResponse:
+        params = params or {}
+        query = str(params.get("query") or "")
+        self.queries.append(query)
+        if f'gene:"{self.gene}"' not in query and f'"{self.gene}"' not in query:
+            return _FakeResponse({"results": []})
+        return _FakeResponse(
+            {
+                "results": [
+                    _uniprot_result(
+                        self.reviewed_accession,
+                        protein_name=self.protein_name,
+                        gene=self.gene,
+                        reviewed=True,
+                    ),
+                    _uniprot_result(
+                        f"A0A{self.reviewed_accession[-3:]}1",
+                        protein_name=self.protein_name,
+                        gene=self.gene,
+                        reviewed=False,
+                    ),
+                    _uniprot_result(
+                        f"A0A{self.reviewed_accession[-3:]}2",
+                        protein_name=self.protein_name,
+                        gene=self.gene,
+                        reviewed=False,
+                    ),
                 ]
             }
         )
@@ -359,6 +447,117 @@ def test_hybrid_protein_mapping_falls_back_to_uniprot_after_db_novel() -> None:
     api_lookup.assert_called_once()
 
 
+def test_cached_ambiguous_reviewed_exact_gene_candidate_is_promoted_without_network() -> None:
+    cache = _MemoryCache()
+    name = "COMATOSE (CTS)"
+    organism = "Arabidopsis thaliana"
+    aliases = _protein_alias_entries(name, {"name": name})
+    base_key = "comatose cts::arabidopsis thaliana::::{}"
+    legacy_key = f"api-v6::{base_key}::{json.dumps(aliases, sort_keys=True)}"
+    cache.set(
+        "proteins",
+        legacy_key,
+        {
+            "status": "unmapped",
+            "reason": "ambiguous",
+            "provider": "UniProt",
+            "source": "api",
+            "confidence": 1.0,
+            "candidates": [
+                {
+                    "accession": "Q94FB9",
+                    "protein_name": "ABC transporter D family member 1",
+                    "gene_names": ["ABCD1", "CTS"],
+                    "organism": "Arabidopsis thaliana",
+                    "reviewed": True,
+                    "score": 1.0,
+                    "matched_query": "CTS",
+                    "matched_alias": "CTS",
+                    "alias_source": "parenthetical_gene_symbol",
+                },
+                {
+                    "accession": "F4JJ27",
+                    "protein_name": "Peroxisomal ABC transporter 1",
+                    "gene_names": ["COMATOSE", "CTS"],
+                    "organism": "Arabidopsis thaliana",
+                    "reviewed": False,
+                    "score": 0.97,
+                    "matched_query": "COMATOSE",
+                    "alias_source": "primary_name",
+                },
+            ],
+        },
+    )
+
+    result = _map_protein_with_strategy(
+        id_source="hybrid",
+        db=_AvailableDb(),  # type: ignore[arg-type]
+        client=object(),  # type: ignore[arg-type]
+        cache=cache,  # type: ignore[arg-type]
+        name=name,
+        organism=organism,
+        protein_row={"name": name, "species": organism},
+    )
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q94FB9"
+    assert result["resolution"]["order_step"] == "api_uniprot"
+
+
+def test_mapping_meta_candidate_is_promoted_when_api_result_has_no_candidates() -> None:
+    api_miss = {
+        "status": "unmapped",
+        "reason": "no_match",
+        "provider": "UniProt",
+        "source": "api",
+        "candidates": [],
+    }
+    protein_row = {
+        "name": "acyl-CoA oxidase 1 (ACX1)",
+        "species": "Arabidopsis thaliana",
+        "mapping_meta": {
+            "candidates": [
+                {
+                    "accession": "O65202",
+                    "protein_name": "Peroxisomal acyl-coenzyme A oxidase 1",
+                    "gene_names": ["ACX1"],
+                    "organism": "Arabidopsis thaliana",
+                    "reviewed": True,
+                    "score": 1.0,
+                    "matched_query": "ACX1",
+                    "matched_alias": "ACX1",
+                    "alias_source": "parenthetical_gene_symbol",
+                },
+                {
+                    "accession": "F4JMK8",
+                    "gene_names": ["ACX1"],
+                    "organism": "Arabidopsis thaliana",
+                    "reviewed": False,
+                    "score": 0.97,
+                    "matched_query": "ACX1",
+                    "matched_alias": "ACX1",
+                    "alias_source": "parenthetical_gene_symbol",
+                },
+            ]
+        },
+    }
+
+    with patch("t2pw.mapping.map_ids.map_protein_uniprot", return_value=api_miss):
+        result = _map_protein_with_strategy(
+            id_source="hybrid",
+            db=_AvailableDb(),  # type: ignore[arg-type]
+            client=object(),  # type: ignore[arg-type]
+            cache=_MemoryCache(),  # type: ignore[arg-type]
+            name="acyl-CoA oxidase 1 (ACX1)",
+            organism="Arabidopsis thaliana",
+            protein_row=protein_row,
+        )
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "O65202"
+    assert result["mapping_meta_promoted"] is True
+
+
 def test_uniprot_mapping_uses_literature_alias_for_obag() -> None:
     client = _AliasUniProtClient()
 
@@ -434,6 +633,148 @@ def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:
     assert result["resolved_name"] == "Nonribosomal peptide synthetase NocB"
     assert result["chosen_rule"] == "top_unique_alias_candidate"
     assert any('gene:"NocB"' in query for query in client.queries)
+
+
+def test_protein_alias_entries_extract_parenthetical_gene_symbols() -> None:
+    comatose_aliases = {entry["alias"] for entry in _protein_alias_entries("COMATOSE (CTS)")}
+    opcl_aliases = {entry["alias"] for entry in _protein_alias_entries("OPC-8:CoA ligase 1 (OPCL1)")}
+    locus_aliases = {entry["alias"] for entry in _protein_alias_entries("4-coumarate-CoA ligase-like 5 (4CLL5)")}
+    arabidopsis_aliases = {entry["alias"] for entry in _protein_alias_entries("example protein (At1g20510)")}
+
+    assert "CTS" in comatose_aliases
+    assert "OPCL1" in opcl_aliases
+    assert "4CLL5" in locus_aliases
+    assert "At1g20510" in arabidopsis_aliases
+    assert "mitochondrial" not in {
+        entry["alias"] for entry in _protein_alias_entries("example protein (mitochondrial)")
+    }
+    assert "16:3" not in {
+        entry["alias"] for entry in _protein_alias_entries("hexadecatrienoic acid (16:3)")
+    }
+    assert "isoform 2" not in {
+        entry["alias"] for entry in _protein_alias_entries("example protein (isoform 2)")
+    }
+
+
+def test_protein_alias_entries_add_conservative_arabidopsis_at_prefix_gene_symbols() -> None:
+    assert {"ACH1"} <= {entry["alias"] for entry in _protein_alias_entries("AtACH1")}
+    assert {"ACH2"} <= {entry["alias"] for entry in _protein_alias_entries("AtACH2")}
+    assert "1g20510" not in {entry["alias"] for entry in _protein_alias_entries("At1g20510")}
+    assert "4CL1" not in {entry["alias"] for entry in _protein_alias_entries("At4CL1")}
+
+
+def test_uniprot_mapping_uses_parenthetical_gene_symbol_alias() -> None:
+    client = _ParentheticalGeneUniProtClient()
+
+    result = map_protein_uniprot(client, "COMATOSE (CTS)", "Arabidopsis thaliana")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q9LQ16"
+    assert result["matched_alias"] == "CTS"
+    assert result["alias_source"] == "parenthetical_gene_symbol"
+    assert any('gene:"CTS"' in query for query in client.queries)
+
+
+def test_uniprot_mapping_accepts_comatose_reviewed_exact_gene_despite_close_duplicates() -> None:
+    client = _ArabidopsisAmbiguousGeneUniProtClient("CTS", "Q94FB9", "ABC transporter D family member 1")
+
+    result = map_protein_uniprot(client, "COMATOSE (CTS)", "Arabidopsis thaliana")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q94FB9"
+    assert result["matched_alias"] == "CTS"
+    assert result["alias_source"] == "parenthetical_gene_symbol"
+    assert any(not candidate["reviewed"] and candidate["score"] >= 0.97 for candidate in result["candidates"])
+
+
+def test_uniprot_mapping_accepts_opcl1_reviewed_exact_gene_despite_close_duplicates() -> None:
+    client = _ArabidopsisAmbiguousGeneUniProtClient("OPCL1", "Q84P21", "OPC-8:CoA ligase 1")
+
+    result = map_protein_uniprot(client, "OPC-8:CoA ligase 1 (OPCL1)", "Arabidopsis thaliana")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q84P21"
+    assert result["matched_alias"] == "OPCL1"
+    assert result["alias_source"] == "parenthetical_gene_symbol"
+
+
+def test_uniprot_mapping_accepts_acx1_reviewed_exact_gene_despite_close_duplicates() -> None:
+    client = _ArabidopsisAmbiguousGeneUniProtClient("ACX1", "O65202", "Peroxisomal acyl-coenzyme A oxidase 1")
+
+    result = map_protein_uniprot(client, "acyl-CoA oxidase 1 (ACX1)", "Arabidopsis thaliana")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "O65202"
+    assert result["matched_alias"] == "ACX1"
+    assert result["alias_source"] == "parenthetical_gene_symbol"
+
+
+def test_uniprot_mapping_uses_atach1_gene_alias() -> None:
+    client = _ArabidopsisAmbiguousGeneUniProtClient("ACH1", "Q5FYU1", "Acyl-CoA hydrolase 1")
+
+    result = map_protein_uniprot(client, "AtACH1", "Arabidopsis thaliana")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q5FYU1"
+    assert result["matched_alias"] == "ACH1"
+    assert result["alias_source"] == "arabidopsis_at_prefix_gene_symbol"
+    assert any('gene:"ACH1"' in query for query in client.queries)
+
+
+def test_uniprot_mapping_uses_atach2_gene_alias() -> None:
+    client = _ArabidopsisAmbiguousGeneUniProtClient("ACH2", "F4HU51", "Acyl-CoA hydrolase 2")
+
+    result = map_protein_uniprot(client, "AtACH2", "Arabidopsis thaliana")
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "F4HU51"
+    assert result["matched_alias"] == "ACH2"
+    assert result["alias_source"] == "arabidopsis_at_prefix_gene_symbol"
+    assert any('gene:"ACH2"' in query for query in client.queries)
+
+
+def test_db_protein_mapping_tries_parenthetical_gene_alias_before_fuzzy() -> None:
+    resolver = _make_resolver()
+    mapped = {
+        "status": "mapped",
+        "provider": "PathBankDB",
+        "source": "db",
+        "mapped_ids": {"uniprot": "Q9ZVH4", "pathbank_protein_id": "42"},
+        "pathbank_protein_id": 42,
+        "confidence": 1.08,
+        "chosen_rule": "direct_id_match:gene_name",
+        "candidates": [{"gene_name": "OPCL1"}],
+    }
+
+    def by_ids(ids: Dict[str, str], *, species: str | None = None) -> Dict[str, Any]:
+        if ids.get("gene_name") == "OPCL1" and species == "Arabidopsis thaliana":
+            return dict(mapped)
+        return _unmapped()
+
+    with patch.object(resolver, "_find_species_ids", return_value=[1]), \
+            patch.object(resolver, "_map_protein_exact_name_species", return_value=_unmapped()), \
+            patch.object(resolver, "map_protein_by_ids", side_effect=by_ids), \
+            patch.object(resolver, "map_protein", side_effect=AssertionError("fuzzy fallback should not run")):
+        result = resolver.map_protein_row(
+            {"name": "OPC-8:CoA ligase 1 (OPCL1)"},
+            "Arabidopsis thaliana",
+        )
+
+    assert result["status"] == "mapped"
+    assert result["mapped_ids"]["uniprot"] == "Q9ZVH4"
+    assert result["matched_alias"] == "OPCL1"
+    assert result["alias_source"] == "parenthetical_gene_symbol"
+    assert result["resolution"]["order_step"] == "alias_gene_name_species"
+
+
+def test_mapping_route_keeps_colon_protein_names_out_of_complex_route() -> None:
+    protein_route = route_entity_for_mapping("OPC-8:CoA ligase 1 (OPCL1)", "protein")
+    weak_route = route_entity_for_mapping("OPC-8:CoA ligase 1 (OPCL1)", "compound")
+    metabolite_route = route_entity_for_mapping("OPC-6:0-CoA", "compound")
+
+    assert protein_route["route"] == "protein"
+    assert weak_route["route"] == "protein"
+    assert metabolite_route["route"] == "compound"
 
 
 def test_complex_maps_by_name_and_species() -> None:

@@ -740,6 +740,7 @@ def build_pwml_ir(
         if isinstance(protein, dict) and _norm(protein.get("name"))
     }
     proteins_by_db_id: Dict[int, Dict[str, Any]] = {}
+    proteins_by_uniprot: Dict[str, Dict[str, Any]] = {}
     for protein in ir["entities"]["proteins"]:
         if not isinstance(protein, dict):
             continue
@@ -747,13 +748,21 @@ def build_pwml_ir(
             db_id = _to_int(protein.get(db_key))
             if db_id is not None:
                 proteins_by_db_id[db_id] = protein
+        uniprot = _canonical(
+            _first_nonempty(
+                protein,
+                ["uniprot", "uniprot_id", "uniprot-id"],
+            )
+        ).casefold()
+        if uniprot:
+            proteins_by_uniprot[uniprot] = protein
 
     for pc_idx, pc in enumerate(ir["entities"]["protein_complexes"]):
         raw_components = _safe_list(pc.get("components"))
         if not raw_components:
             _add_issue(
                 report,
-                "error",
+                "warning",
                 "protein_complex_missing_components",
                 f"Protein complex '{pc.get('name')}' has no protein components.",
                 pointer=f"/entities/protein_complexes/{pc_idx}/components",
@@ -778,6 +787,15 @@ def build_pwml_ir(
                     )
                     if comp_db_id is not None:
                         protein = proteins_by_db_id.get(comp_db_id)
+                if protein is None:
+                    comp_uniprot = _canonical(
+                        _first_nonempty(
+                            component,
+                            ["uniprot", "uniprot_id", "uniprot-id"],
+                        )
+                    ).casefold()
+                    if comp_uniprot:
+                        protein = proteins_by_uniprot.get(comp_uniprot)
             comp_name = _component_protein_name(component)
             if protein is None and comp_name:
                 protein = proteins_by_name.get(_norm(comp_name))
@@ -798,7 +816,7 @@ def build_pwml_ir(
             if protein is None:
                 _add_issue(
                     report,
-                    "error",
+                    "warning",
                     "component_protein_unresolved",
                     f"Component '{comp_name or comp_idx}' in complex '{pc.get('name')}' does not reference an existing protein.",
                     pointer=pointer,
@@ -819,7 +837,7 @@ def build_pwml_ir(
         if not structured_components:
             _add_issue(
                 report,
-                "error",
+                "warning",
                 "protein_complex_missing_components",
                 f"Protein complex '{pc.get('name')}' has no resolved protein components.",
                 pointer=f"/entities/protein_complexes/{pc_idx}/components",
@@ -1148,10 +1166,22 @@ def build_pwml_ir(
         for row_idx, raw in enumerate(_safe_list(rows)):
             if not isinstance(raw, dict):
                 continue
+            pointer_field = name_field if raw.get(name_field) else "entity"
+            entity_name = _canonical(raw.get(name_field) or raw.get("entity"))
+            if entity_name and not entity_by_name.get(_norm(entity_name)):
+                _add_issue(
+                    report,
+                    "warning",
+                    "location_entity_not_found",
+                    f"Location for '{entity_name}' does not reference an existing entity.",
+                    pointer=f"/element_locations/{bucket}/{row_idx}/{pointer_field}",
+                    entity_name=entity_name,
+                )
+                continue
             entity = resolve_entity(
-                raw.get(name_field),
+                entity_name,
                 "reaction_member",
-                f"/element_locations/{bucket}/{row_idx}/{name_field}",
+                f"/element_locations/{bucket}/{row_idx}/{pointer_field}",
                 hint=entity_type,
             )
             if not entity:
@@ -1730,6 +1760,8 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
     all_entity_keys: set = set()
     protein_names: set = set()
     protein_keys: set = set()
+    protein_uniprots: set = set()
+    protein_pathbank_ids: set = set()
     protein_complex_names: set = set()
 
     for bucket in ENTITY_BUCKETS.values():
@@ -1747,6 +1779,13 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                     all_entity_keys.add(k)
                     if bucket == "proteins":
                         protein_keys.add(k)
+                if bucket == "proteins":
+                    uniprot = _canonical(_first_nonempty(e, ["uniprot", "uniprot_id", "uniprot-id"])).casefold()
+                    if uniprot:
+                        protein_uniprots.add(uniprot)
+                    pathbank_id = db_id(e, ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id", "protein_id"])
+                    if pathbank_id is not None:
+                        protein_pathbank_ids.add(pathbank_id)
 
     # ── PROTEINS ─────────────────────────────────────────────────────────────
     for idx, comp in enumerate(_safe_list(entities.get("compounds"))):
@@ -1822,7 +1861,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
             )
         components = _safe_list(pc.get("components"))
         if not components:
-            err(
+            warn(
                 "protein_complex_missing_components",
                 f"Protein complex '{pcname}' has no protein components.",
                 f"/entities/protein_complexes/{idx}/components",
@@ -1846,7 +1885,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                     )
                 if protein_key:
                     if protein_key not in protein_keys:
-                        err(
+                        warn(
                             "component_protein_unresolved",
                             f"Component '{protein_key}' in complex '{pcname}' does not reference an existing protein.",
                             pointer,
@@ -1854,8 +1893,23 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                             protein_key=protein_key,
                         )
                 elif comp_name:
-                    if _norm(comp_name) not in protein_names:
-                        err(
+                    component_matches = _norm(comp_name) in protein_names
+                    if isinstance(comp, dict):
+                        comp_uniprot = _canonical(
+                            _first_nonempty(comp, ["uniprot", "uniprot_id", "uniprot-id"])
+                        ).casefold()
+                        comp_pathbank_id = db_id(
+                            comp,
+                            ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id", "protein_id"],
+                        )
+                        component_matches = component_matches or (
+                            bool(comp_uniprot) and comp_uniprot in protein_uniprots
+                        )
+                        component_matches = component_matches or (
+                            comp_pathbank_id is not None and comp_pathbank_id in protein_pathbank_ids
+                        )
+                    if not component_matches:
+                        warn(
                             "component_protein_unresolved",
                             f"Component '{comp_name}' in complex '{pcname}' does not reference an existing protein.",
                             pointer,
@@ -1863,7 +1917,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                             component_name=comp_name,
                         )
                 else:
-                    err(
+                    warn(
                         "component_protein_unresolved",
                         f"Component[{cidx}] in complex '{pcname}' does not reference an existing protein.",
                         pointer,
@@ -2041,17 +2095,22 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
             "element_collection_locations": "element_collection",
         }
         for bucket, name_field in location_fields.items():
-            for lidx, loc in enumerate(_safe_list(element_locations.get(bucket))):
+            rows = _safe_list(element_locations.get(bucket))
+            kept_locations: List[Any] = []
+            for lidx, loc in enumerate(rows):
                 if not isinstance(loc, dict):
+                    kept_locations.append(loc)
                     continue
                 entity_name = _canonical(loc.get(name_field) or loc.get("entity"))
                 if entity_name and _norm(entity_name) not in all_entity_names:
-                    err(
+                    warn(
                         "location_entity_not_found",
                         f"Location for '{entity_name}' does not reference an existing entity.",
                         f"/element_locations/{bucket}/{lidx}/{name_field}",
                         entity_name=entity_name,
                     )
+                    continue
+                kept_locations.append(loc)
                 if not loc.get("biological_state"):
                     err(
                         "visible_entity_missing_location_state",
@@ -2059,6 +2118,8 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                         f"/element_locations/{bucket}/{lidx}/biological_state",
                         entity_name=entity_name,
                     )
+            if len(kept_locations) != len(rows):
+                element_locations[bucket] = kept_locations
 
     if is_ir:
         bio_state_keys = {
@@ -2177,7 +2238,7 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
             continue
         components = _safe_list(record.get("components"))
         if not components:
-            error(
+            warning(
                 "protein_complex_missing_components",
                 f"Protein complex '{record.get('name') or idx}' has no protein components.",
                 f"/entities/protein_complexes/{idx}/components",
@@ -2195,7 +2256,7 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
             protein_key = component.get("protein_key")
             stoich = _to_int(component.get("stoichiometry"))
             if protein_key not in entity_keys_by_type["protein"]:
-                error(
+                warning(
                     "component_protein_unresolved",
                     f"Protein complex component references unknown protein_key '{protein_key}'.",
                     pointer,

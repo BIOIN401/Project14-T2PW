@@ -624,6 +624,7 @@ def run_stage_two_with_feedback_loop(
         all_outputs.append(output)
         merged_additions = merge_inference_outputs(all_outputs)
         merged_payload = merge_additions(base_stage_one, merged_additions)
+        filter_unresolvable_reactions(merged_payload)
         signature = json.dumps(merged_additions, sort_keys=True)
 
         round_summaries.append(
@@ -705,6 +706,119 @@ def _normalize_reaction_actors(payload: Dict[str, Any]) -> None:
             reaction["enzymes"] = _clean_enzymes(existing)
 
 
+def filter_unresolvable_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Remove reactions whose left or right side has no resolvable entity.
+
+    This catches hallucinated reaction rows that survive basic cleaning because
+    their participant lists are non-empty strings, while preserving reactions
+    that include extra cofactors alongside at least one known entity.
+    """
+    entities = payload.setdefault("entities", {})
+    entity_names: set[str] = set()
+    compound_names: set[str] = set()
+
+    if isinstance(entities, dict):
+        for bucket in [
+            "compounds",
+            "proteins",
+            "protein_complexes",
+            "nucleic_acids",
+            "element_collections",
+        ]:
+            names = entity_names
+            if bucket == "compounds":
+                names = compound_names
+            for item in _safe_list(entities.get(bucket)):
+                name = ""
+                if isinstance(item, dict):
+                    name = item.get("name") or ""
+                elif isinstance(item, str):
+                    name = item
+                normalized = _normalize_name(name)
+                if not normalized:
+                    continue
+                names.add(normalized)
+                entity_names.add(normalized)
+
+    processes = payload.setdefault("processes", {})
+    reactions = processes.get("reactions") if isinstance(processes, dict) else None
+    if not isinstance(reactions, list):
+        reactions = []
+
+    def _participant_names(reaction: Dict[str, Any], keys: List[str]) -> List[str]:
+        values: List[str] = []
+        for key in keys:
+            raw = reaction.get(key)
+            raw_items = [raw] if isinstance(raw, str) else _safe_list(raw)
+            for item in raw_items:
+                if not isinstance(item, str) or not item.strip():
+                    continue
+                values.append(item.strip())
+        return _dedupe_preserve_order(values)
+
+    def _has_resolved_participant(names: List[str]) -> bool:
+        return any(_normalize_name(name) in entity_names for name in names)
+
+    kept_reactions: List[Any] = []
+    removed_names: List[str] = []
+    for reaction in reactions:
+        if not isinstance(reaction, dict):
+            kept_reactions.append(reaction)
+            continue
+
+        inputs = _participant_names(reaction, ["inputs", "left", "substrates"])
+        outputs = _participant_names(reaction, ["outputs", "right", "products"])
+        remove = (
+            not inputs
+            or not outputs
+            or not _has_resolved_participant(inputs)
+            or not _has_resolved_participant(outputs)
+        )
+
+        if remove:
+            name = (reaction.get("name") or "<unnamed>").strip() or "<unnamed>"
+            removed_names.append(name)
+            logger.info("filter_unresolvable_reactions: removed reaction %s", name)
+        else:
+            kept_reactions.append(reaction)
+
+    if isinstance(processes, dict):
+        processes["reactions"] = kept_reactions
+
+    protein_complexes = entities.get("protein_complexes") if isinstance(entities, dict) else None
+    if isinstance(protein_complexes, list):
+        cleaned_complexes: List[Any] = []
+        for complex_entry in protein_complexes:
+            if not isinstance(complex_entry, dict):
+                cleaned_complexes.append(complex_entry)
+                continue
+
+            complex_name = _normalize_name(complex_entry.get("name") or "")
+            components = _safe_list(complex_entry.get("components"))
+            if complex_name in compound_names or any(
+                _looks_like_metabolite_fragment(component, compound_names)
+                for component in components
+            ):
+                continue
+            cleaned_complexes.append(complex_entry)
+        entities["protein_complexes"] = cleaned_complexes
+
+    return payload, removed_names
+
+
+def _looks_like_metabolite_fragment(component: Any, compound_names: set[str]) -> bool:
+    if not isinstance(component, str):
+        return False
+    text = component.strip()
+    normalized = _normalize_name(text)
+    if len(normalized) < 3:
+        return True
+    if not any(ch.isalpha() for ch in text):
+        return True
+    return any(normalized != compound and normalized in compound for compound in compound_names)
+
+
 def merge_additions(
     base: Dict[str, Any],
     inference_additions: Dict[str, Any],
@@ -754,6 +868,7 @@ def merge_additions(
 
     _inject_name_based_modifiers(merged)
     _normalize_reaction_actors(merged)
+    filter_unresolvable_reactions(merged)
     if isinstance(merged.get("element_locations"), dict):
         _dedup_element_locations(merged["element_locations"])
 

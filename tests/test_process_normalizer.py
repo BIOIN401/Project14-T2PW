@@ -23,6 +23,7 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     dedupe_processes,
     ensure_autostates,
     normalize_composites,
+    normalize_process_payload,
     normalize_process_actor_schema,
     promote_catalysts,
     rewrite_reactions_to_complex_states,
@@ -425,6 +426,158 @@ def test_generic_explicit_composite_still_materializes_complex() -> None:
     assert int(report.get("summary", {}).get("n_plus_tokens_remaining", 1)) == 0
     adj, _ = build_graph(normalized)
     assert len(connected_components(adj)) <= 1
+
+
+def test_biochemical_colon_metabolites_remain_compounds_after_full_normalization() -> None:
+    colon_metabolites = {
+        "hexadecatrienoic acid (16:3)",
+        "linoleic acid (18:2)",
+        "OPC-6:0-CoA",
+        "OPC-4:0-CoA",
+    }
+    payload = {
+        "entities": {
+            "compounds": [{"name": name} for name in sorted(colon_metabolites)] + [{"name": "12-OPDA"}],
+            "proteins": [{"name": "allene oxide cyclase"}],
+            "protein_complexes": [
+                {
+                    "name": "hexadecatrienoic acid (16:3)",
+                    "components": ["hexadecatrienoic acid (16", "3)"],
+                },
+                {
+                    "name": "OPC-6:0-CoA",
+                    "components": ["OPC-6", "0-CoA"],
+                },
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "fatty acid conversion",
+                    "inputs": ["hexadecatrienoic acid (16:3)"],
+                    "outputs": ["linoleic acid (18:2)"],
+                    "enzymes": [{"protein": "allene oxide cyclase"}],
+                },
+                {
+                    "name": "opc shortening",
+                    "inputs": ["OPC-4:0-CoA"],
+                    "outputs": ["OPC-6:0-CoA", "12-OPDA"],
+                },
+            ],
+            "transports": [],
+        },
+    }
+
+    normalized, _ = normalize_process_payload(payload)
+    entities = normalized["entities"]
+    compound_names = {
+        str(row.get("name") or "")
+        for row in entities.get("compounds", [])
+        if isinstance(row, dict)
+    }
+    protein_names = {
+        str(row.get("name") or "")
+        for row in entities.get("proteins", [])
+        if isinstance(row, dict)
+    }
+    complex_names = {
+        str(row.get("name") or "")
+        for row in entities.get("protein_complexes", [])
+        if isinstance(row, dict)
+    }
+    complex_components = {
+        str(component)
+        for row in entities.get("protein_complexes", [])
+        if isinstance(row, dict)
+        for component in row.get("components", [])
+    }
+
+    assert colon_metabolites.issubset(compound_names)
+    assert not (colon_metabolites & protein_names)
+    assert not (colon_metabolites & complex_names)
+    assert not {
+        "OPC-6",
+        "0-CoA",
+        "linoleic acid (18",
+        "2)",
+        "hexadecatrienoic acid (16",
+        "3)",
+    } & complex_components
+    reactions = normalized["processes"]["reactions"]
+    assert any("hexadecatrienoic acid (16:3)" in reaction.get("inputs", []) for reaction in reactions)
+    assert any("linoleic acid (18:2)" in reaction.get("outputs", []) for reaction in reactions)
+    assert any("OPC-4:0-CoA" in reaction.get("inputs", []) for reaction in reactions)
+    assert any("OPC-6:0-CoA" in reaction.get("outputs", []) for reaction in reactions)
+
+
+def test_explicit_protein_colon_complex_still_normalizes() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "substrate"}, {"name": "product"}],
+            "proteins": [{"name": "alpha protein"}, {"name": "beta protein"}],
+            "protein_complexes": [{"name": "alpha protein:beta protein"}],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "protein complex reaction",
+                    "inputs": ["substrate", "alpha protein", "beta protein"],
+                    "outputs": ["product", "alpha protein:beta protein"],
+                }
+            ],
+            "transports": [],
+        },
+    }
+
+    normalized, _ = normalize_process_payload(payload)
+    complex_row = next(
+        row
+        for row in normalized["entities"]["protein_complexes"]
+        if isinstance(row, dict) and row.get("name") == "alpha protein:beta protein"
+    )
+
+    assert complex_row["components"] == ["alpha protein", "beta protein"]
+    assert "alpha protein:beta protein" in normalized["processes"]["reactions"][0]["outputs"]
+
+
+def test_biochemical_colon_modifier_is_not_promoted_to_protein_complex() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "OPC-4:0-CoA"}, {"name": "OPC-6:0-CoA"}],
+            "proteins": [{"name": "allene oxide cyclase"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "opc reaction",
+                    "inputs": ["OPC-4:0-CoA"],
+                    "outputs": ["OPC-6:0-CoA"],
+                    "modifiers": [
+                        {"entity": "OPC-4:0-CoA", "entity_type": "protein_complex", "role": "catalyst"},
+                        {"entity": "allene oxide cyclase", "entity_type": "protein", "role": "catalyst"},
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+
+    normalized, _ = normalize_process_payload(payload)
+    reaction = normalized["processes"]["reactions"][0]
+
+    assert "OPC-4:0-CoA" in reaction["inputs"]
+    assert not any(
+        row.get("entity") == "OPC-4:0-CoA" or row.get("protein_complex") == "OPC-4:0-CoA"
+        for key in ("modifiers", "enzymes")
+        for row in reaction.get(key, [])
+        if isinstance(row, dict)
+    )
+    assert all(
+        row.get("entity_type") != "protein_complex" or row.get("entity") != "OPC-4:0-CoA"
+        for row in reaction.get("modifiers", [])
+        if isinstance(row, dict)
+    )
 
 
 def _alias_payload(

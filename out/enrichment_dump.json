@@ -1,13 +1,19 @@
 {
-  "compound:glucose|HMDB0000122": {
+  "compound:linolenic acid (18:3)|HMDB0002925": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "D-Glucose",
+    "primary_name": "Dihomo-gamma-linolenate",
     "synonyms": [
-      "D-Glucose",
-      "Grape sugar",
-      "Dextrose",
-      "Glucose",
-      "D-Glucopyranose"
+      "Dihomo-gamma-linolenate",
+      "Dihomo-gamma-linolenic acid",
+      "(8Z,11Z,14Z)-Icosatrienoic acid",
+      "(Z,Z,Z)-8,11,14-Eicosatrienoic acid",
+      "(Z,Z,Z)-8,11,14-Icosatrienoic acid",
+      "(Z,Z,Z)-8,11,14-Eicosatrienoate",
+      "(Z,Z,Z)-8,11,14-Icosatrienoate",
+      "8,11,14-Eicosatrienoate",
+      "8,11,14-Icosatrienoate",
+      "8Z,11Z,14Z-Eicosatrienoic acid",
+      "(8Z,11Z,14Z)-Icosa-8,11,14-trienoic acid"
     ],
     "description": "",
     "taxonomy": {},
@@ -15,208 +21,244 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C6H12O6",
+    "formula": "C20H34O2",
     "charge": 0,
-    "mass_monoisotopic": 180.0634,
-    "mass_average": 180.16,
+    "mass_monoisotopic": 306.2559,
+    "mass_average": 306.48,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Lipids [BR:br08002]",
+      "FA Fatty acyls",
+      "FA01 Fatty Acids and Conjugates",
+      "FA0103 Unsaturated fatty acids",
+      "Polyunsaturated fatty acids",
+      "C03242 (8Z,11Z,14Z)-Icosa-8,11,14-trienoic acid"
+    ],
+    "pathways": [
+      "Linoleic acid metabolism",
+      "Biosynthesis of unsaturated fatty acids",
+      "Metabolic pathways"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C03242",
+      "hmdb_id": "HMDB0002925",
+      "chebi_id": "CHEBI:53486",
+      "pubchem_id": "5280581",
+      "cas": "1783-84-2",
+      "biocyc": "CPD-7196",
+      "chemspider": "4444199",
+      "drugbank_id": "DB00154",
+      "pathbank_compound_id": "1736"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C03242",
+      "primary_name": "Dihomo-gamma-linolenate",
+      "synonyms": [
+        "Dihomo-gamma-linolenate",
+        "Dihomo-gamma-linolenic acid",
+        "(8Z,11Z,14Z)-Icosatrienoic acid",
+        "(Z,Z,Z)-8,11,14-Eicosatrienoic acid",
+        "(Z,Z,Z)-8,11,14-Icosatrienoic acid",
+        "(Z,Z,Z)-8,11,14-Eicosatrienoate",
+        "(Z,Z,Z)-8,11,14-Icosatrienoate",
+        "8,11,14-Eicosatrienoate",
+        "8,11,14-Icosatrienoate",
+        "8Z,11Z,14Z-Eicosatrienoic acid",
+        "(8Z,11Z,14Z)-Icosa-8,11,14-trienoic acid"
+      ],
+      "formula": "C20H34O2",
+      "mass_monoisotopic": 306.2559,
+      "mass_average": 306.48,
+      "pathways": [
+        "Linoleic acid metabolism",
+        "Biosynthesis of unsaturated fatty acids",
+        "Metabolic pathways"
+      ],
+      "kegg_class": [
+        "Lipids [BR:br08002]",
+        "FA Fatty acyls",
+        "FA01 Fatty Acids and Conjugates",
+        "FA0103 Unsaturated fatty acids",
+        "Polyunsaturated fatty acids",
+        "C03242 (8Z,11Z,14Z)-Icosa-8,11,14-trienoic acid"
+      ],
+      "cross_references": {
+        "kegg_id": "C03242",
+        "pubchem_id": "6112",
+        "chebi_id": "53486"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C03242",
+        "source_url": "https://rest.kegg.jp/get/cpd:C03242",
+        "retrieved_at": "2026-06-23T16:47:20Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:53486",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-06-23T16:47:19Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0002925",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0002925",
+        "retrieved_at": "2026-06-23T16:47:19Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:53486",
+        "retrieved_at": "2026-06-23T16:47:19Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0002925",
+        "retrieved_at": "2026-06-23T16:47:19Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C03242",
+        "retrieved_at": "2026-06-23T16:47:20Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:linoleic acid (18:2)|HMDB0000673": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Linoleate",
+    "synonyms": [
+      "Linoleate",
+      "Linoleic acid",
+      "(9Z,12Z)-Octadecadienoic acid",
+      "9-cis,12-cis-Octadecadienoate",
+      "9-cis,12-cis-Octadecadienoic acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C18H32O2",
+    "charge": 0,
+    "mass_monoisotopic": 280.2402,
+    "mass_average": 280.44,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
       "Compounds with biological roles [BR:br08001]",
-      "Carbohydrates",
-      "Monosaccharides",
-      "Aldoses",
-      "C00031 D-Glucose",
-      "Nucleotide sugars [br08020.html]",
-      "Monosaccharides vs nucleotides",
-      "C00031",
-      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00009)]",
-      "B BLOOD AND BLOOD FORMING ORGANS",
-      "B05 BLOOD SUBSTITUTES AND PERFUSION SOLUTIONS",
-      "B05C IRRIGATING SOLUTIONS",
-      "B05CX Other irrigating solutions",
-      "B05CX01 Glucose",
-      "D00009 Glucose (JP18) &lt;JP&gt;",
-      "V VARIOUS",
-      "V04 DIAGNOSTIC AGENTS",
-      "V04C OTHER DIAGNOSTIC AGENTS",
-      "V04CA Tests for diabetes",
-      "V04CA02 Glucose",
-      "V06 GENERAL NUTRIENTS",
-      "V06D OTHER NUTRIENTS",
-      "V06DC Carbohydrates",
-      "V06DC01 Glucose",
-      "Therapeutic category of drugs in Japan [BR:br08301(D00009)]",
-      "3 Agents affecting metabolism",
-      "32 Nutrients, tonics",
-      "323 Saccharide preparations",
-      "3231 Glucoses",
-      "D00009 Glucose (JP18); Purified glucose (JP18)",
-      "Risk category of Japanese OTC drugs [BR:br08312(D00009)]",
+      "Lipids",
+      "Fatty acids",
+      "Unsaturated fatty acids",
+      "C01595 Linoleic acid (18:2;9,12)",
+      "Lipids [BR:br08002]",
+      "FA Fatty acyls",
+      "FA01 Fatty Acids and Conjugates",
+      "FA0103 Unsaturated fatty acids",
+      "Polyunsaturated fatty acids",
+      "C01595 (9Z,12Z)-Octadeca-9,12-dienoic acid",
+      "Phytochemical compounds [BR:br08003]",
+      "Fatty acids related compounds",
+      "C01595 Linoleic acid",
+      "Risk category of Japanese OTC drugs [BR:br08312]",
       "Third-class OTC drugs",
       "Inorganic and organic chemicals",
-      "Glucose",
-      "D00009 Glucose (JP18)",
-      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00009)]",
-      "Chemicals",
-      "D00009 Glucose",
-      "D00009 Purified glucose",
-      "D00009 Glucose injection"
+      "Linoleate",
+      "C01595 Linoleate"
     ],
     "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Pentose phosphate pathway",
-      "Galactose metabolism",
-      "Mycolic acid biosynthesis",
-      "Starch and sucrose metabolism",
-      "Amino sugar and nucleotide sugar metabolism",
-      "Streptomycin biosynthesis",
-      "Neomycin, kanamycin and gentamicin biosynthesis",
-      "Sulfoquinovose metabolism",
-      "Indole alkaloid biosynthesis",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "ABC transporters",
-      "Two-component system",
-      "Phosphotransferase system (PTS)",
-      "HIF-1 signaling pathway",
-      "FoxO signaling pathway",
-      "Meiosis - yeast",
-      "Efferocytosis",
-      "AMPK signaling pathway",
-      "Taste transduction",
-      "Insulin signaling pathway",
-      "Insulin secretion",
-      "Prolactin signaling pathway",
-      "Glucagon signaling pathway",
-      "Type II diabetes mellitus",
-      "Insulin resistance",
-      "Non-alcoholic fatty liver disease",
-      "AGE-RAGE signaling pathway in diabetic complications",
-      "Carbohydrate digestion and absorption",
-      "Bile secretion",
-      "Mineral absorption",
-      "Biofilm formation - Vibrio cholerae",
-      "Central carbon metabolism in cancer",
-      "Diabetic cardiomyopathy"
+      "Linoleic acid metabolism",
+      "Biosynthesis of unsaturated fatty acids",
+      "Biosynthesis of plant secondary metabolites",
+      "Metabolic pathways"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000122",
-      "kegg_id": "C00031",
-      "chebi_id": "CHEBI:4167",
-      "pubchem_id": "5793",
-      "cas": "2280-44-6",
-      "biocyc": "GLC",
-      "chemspider": "5589",
-      "pathbank_compound_id": "77"
+      "kegg_id": "C01595",
+      "hmdb_id": "HMDB0000673",
+      "chebi_id": "CHEBI:17351",
+      "pubchem_id": "5280450",
+      "cas": "60-33-3",
+      "chemspider": "4444105",
+      "pathbank_compound_id": "530"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00031",
-      "primary_name": "D-Glucose",
+      "id": "C01595",
+      "primary_name": "Linoleate",
       "synonyms": [
-        "D-Glucose",
-        "Grape sugar",
-        "Dextrose",
-        "Glucose",
-        "D-Glucopyranose"
+        "Linoleate",
+        "Linoleic acid",
+        "(9Z,12Z)-Octadecadienoic acid",
+        "9-cis,12-cis-Octadecadienoate",
+        "9-cis,12-cis-Octadecadienoic acid"
       ],
-      "formula": "C6H12O6",
-      "mass_monoisotopic": 180.0634,
-      "mass_average": 180.16,
+      "formula": "C18H32O2",
+      "mass_monoisotopic": 280.2402,
+      "mass_average": 280.44,
       "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Pentose phosphate pathway",
-        "Galactose metabolism",
-        "Mycolic acid biosynthesis",
-        "Starch and sucrose metabolism",
-        "Amino sugar and nucleotide sugar metabolism",
-        "Streptomycin biosynthesis",
-        "Neomycin, kanamycin and gentamicin biosynthesis",
-        "Sulfoquinovose metabolism",
-        "Indole alkaloid biosynthesis",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "ABC transporters",
-        "Two-component system",
-        "Phosphotransferase system (PTS)",
-        "HIF-1 signaling pathway",
-        "FoxO signaling pathway",
-        "Meiosis - yeast",
-        "Efferocytosis",
-        "AMPK signaling pathway",
-        "Taste transduction",
-        "Insulin signaling pathway",
-        "Insulin secretion",
-        "Prolactin signaling pathway",
-        "Glucagon signaling pathway",
-        "Type II diabetes mellitus",
-        "Insulin resistance",
-        "Non-alcoholic fatty liver disease",
-        "AGE-RAGE signaling pathway in diabetic complications",
-        "Carbohydrate digestion and absorption",
-        "Bile secretion",
-        "Mineral absorption",
-        "Biofilm formation - Vibrio cholerae",
-        "Central carbon metabolism in cancer",
-        "Diabetic cardiomyopathy"
+        "Linoleic acid metabolism",
+        "Biosynthesis of unsaturated fatty acids",
+        "Biosynthesis of plant secondary metabolites",
+        "Metabolic pathways"
       ],
       "kegg_class": [
         "Compounds with biological roles [BR:br08001]",
-        "Carbohydrates",
-        "Monosaccharides",
-        "Aldoses",
-        "C00031 D-Glucose",
-        "Nucleotide sugars [br08020.html]",
-        "Monosaccharides vs nucleotides",
-        "C00031",
-        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00009)]",
-        "B BLOOD AND BLOOD FORMING ORGANS",
-        "B05 BLOOD SUBSTITUTES AND PERFUSION SOLUTIONS",
-        "B05C IRRIGATING SOLUTIONS",
-        "B05CX Other irrigating solutions",
-        "B05CX01 Glucose",
-        "D00009 Glucose (JP18) &lt;JP&gt;",
-        "V VARIOUS",
-        "V04 DIAGNOSTIC AGENTS",
-        "V04C OTHER DIAGNOSTIC AGENTS",
-        "V04CA Tests for diabetes",
-        "V04CA02 Glucose",
-        "V06 GENERAL NUTRIENTS",
-        "V06D OTHER NUTRIENTS",
-        "V06DC Carbohydrates",
-        "V06DC01 Glucose",
-        "Therapeutic category of drugs in Japan [BR:br08301(D00009)]",
-        "3 Agents affecting metabolism",
-        "32 Nutrients, tonics",
-        "323 Saccharide preparations",
-        "3231 Glucoses",
-        "D00009 Glucose (JP18); Purified glucose (JP18)",
-        "Risk category of Japanese OTC drugs [BR:br08312(D00009)]",
+        "Lipids",
+        "Fatty acids",
+        "Unsaturated fatty acids",
+        "C01595 Linoleic acid (18:2;9,12)",
+        "Lipids [BR:br08002]",
+        "FA Fatty acyls",
+        "FA01 Fatty Acids and Conjugates",
+        "FA0103 Unsaturated fatty acids",
+        "Polyunsaturated fatty acids",
+        "C01595 (9Z,12Z)-Octadeca-9,12-dienoic acid",
+        "Phytochemical compounds [BR:br08003]",
+        "Fatty acids related compounds",
+        "C01595 Linoleic acid",
+        "Risk category of Japanese OTC drugs [BR:br08312]",
         "Third-class OTC drugs",
         "Inorganic and organic chemicals",
-        "Glucose",
-        "D00009 Glucose (JP18)",
-        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00009)]",
-        "Chemicals",
-        "D00009 Glucose",
-        "D00009 Purified glucose",
-        "D00009 Glucose injection"
+        "Linoleate",
+        "C01595 Linoleate"
       ],
       "cross_references": {
-        "kegg_id": "C00031",
-        "pubchem_id": "3333",
-        "chebi_id": "4167"
+        "kegg_id": "C01595",
+        "pubchem_id": "4750",
+        "chebi_id": "17351"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00031",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00031",
-        "retrieved_at": "2026-03-20T19:31:21Z",
+        "id": "C01595",
+        "source_url": "https://rest.kegg.jp/get/cpd:C01595",
+        "retrieved_at": "2026-06-23T16:47:25Z",
         "status": "ok"
       }
     },
@@ -225,9 +267,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:4167",
+        "id": "CHEBI:17351",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:19Z"
+        "retrieved_at": "2026-06-23T16:47:24Z"
       }
     },
     "hmdb": {
@@ -235,43 +277,45 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000122",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000122",
-        "retrieved_at": "2026-03-20T19:31:19Z"
+        "id": "HMDB0000673",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000673",
+        "retrieved_at": "2026-06-23T16:47:25Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:4167",
-        "retrieved_at": "2026-03-20T19:31:19Z",
+        "id": "CHEBI:17351",
+        "retrieved_at": "2026-06-23T16:47:24Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000122",
-        "retrieved_at": "2026-03-20T19:31:19Z",
+        "id": "HMDB0000673",
+        "retrieved_at": "2026-06-23T16:47:25Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00031",
-        "retrieved_at": "2026-03-20T19:31:21Z",
+        "id": "C01595",
+        "retrieved_at": "2026-06-23T16:47:25Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:glucose-6-phosphate|HMDB0001401": {
+  "compound:jasmonic acid (JA)|HMDB0032797": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "D-Glucose 6-phosphate",
+    "primary_name": "(-)-Jasmonic acid",
     "synonyms": [
-      "D-Glucose 6-phosphate",
-      "Glucose 6-phosphate",
-      "Robison ester"
+      "(-)-Jasmonic acid",
+      "Jasmonic acid",
+      "{(1R,2R)-3-Oxo-2-[(Z)pent-2-enyl]cyclopent-2-enyl}acetic acid",
+      "Jasmonate",
+      "(-)-Jasmonate"
     ],
     "description": "",
     "taxonomy": {},
@@ -279,260 +323,89 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C6H13O9P",
+    "formula": "C12H18O3",
     "charge": 0,
-    "mass_monoisotopic": 260.0297,
-    "mass_average": 260.14,
+    "mass_monoisotopic": 210.1256,
+    "mass_average": 210.27,
     "chebi_roles": [],
     "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "Starch and sucrose metabolism",
-      "Streptomycin biosynthesis",
-      "Neomycin, kanamycin and gentamicin biosynthesis",
-      "Inositol phosphate metabolism",
-      "Biosynthesis of various antibiotics",
-      "Biosynthesis of terpenoids and steroids",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Two-component system",
-      "Phosphotransferase system (PTS)",
-      "Insulin secretion",
-      "Prolactin signaling pathway",
-      "Thyroid hormone synthesis",
-      "Insulin resistance",
-      "Carbohydrate digestion and absorption",
-      "Biofilm formation - Vibrio cholerae",
-      "Central carbon metabolism in cancer",
-      "Diabetic cardiomyopathy"
+    "kegg_class": [
+      "Lipids [BR:br08002]",
+      "FA Fatty acyls",
+      "FA02 Octadecanoids",
+      "FA0202 Jasmonic acids",
+      "C08491 (-)-Jasmonic acid",
+      "Phytochemical compounds [BR:br08003]",
+      "Fatty acids related compounds",
+      "Fatty acids",
+      "Others",
+      "C08491 Jasmonate"
     ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001401",
-      "kegg_id": "C00092",
-      "chebi_id": "CHEBI:4170",
-      "pubchem_id": "5958",
-      "cas": "56-73-5",
-      "biocyc": "GLC-6-P",
-      "chemspider": "5743",
-      "pathbank_compound_id": "1083"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00092",
-      "primary_name": "D-Glucose 6-phosphate",
-      "synonyms": [
-        "D-Glucose 6-phosphate",
-        "Glucose 6-phosphate",
-        "Robison ester"
-      ],
-      "formula": "C6H13O9P",
-      "mass_monoisotopic": 260.0297,
-      "mass_average": 260.14,
-      "pathways": [
-        "Starch and sucrose metabolism",
-        "Streptomycin biosynthesis",
-        "Neomycin, kanamycin and gentamicin biosynthesis",
-        "Inositol phosphate metabolism",
-        "Biosynthesis of various antibiotics",
-        "Biosynthesis of terpenoids and steroids",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Two-component system",
-        "Phosphotransferase system (PTS)",
-        "Insulin secretion",
-        "Prolactin signaling pathway",
-        "Thyroid hormone synthesis",
-        "Insulin resistance",
-        "Carbohydrate digestion and absorption",
-        "Biofilm formation - Vibrio cholerae",
-        "Central carbon metabolism in cancer",
-        "Diabetic cardiomyopathy"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00092",
-        "pubchem_id": "3392",
-        "chebi_id": "4170"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00092",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00092",
-        "retrieved_at": "2026-03-20T19:31:26Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:4170",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:25Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001401",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001401",
-        "retrieved_at": "2026-03-20T19:31:25Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:4170",
-        "retrieved_at": "2026-03-20T19:31:25Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001401",
-        "retrieved_at": "2026-03-20T19:31:25Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00092",
-        "retrieved_at": "2026-03-20T19:31:26Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:fructose-6-phosphate|HMDB0000124": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "D-Fructose 6-phosphate",
-    "synonyms": [
-      "D-Fructose 6-phosphate",
-      "D-Fructose 6-phosphoric acid",
-      "Neuberg ester"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C6H13O9P",
-    "charge": 0,
-    "mass_monoisotopic": 260.0297,
-    "mass_average": 260.14,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
     "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Pentose phosphate pathway",
-      "Fructose and mannose metabolism",
-      "Galactose metabolism",
-      "Starch and sucrose metabolism",
-      "Amino sugar and nucleotide sugar metabolism",
-      "Methane metabolism",
-      "Carbon fixation by Calvin cycle",
-      "Biosynthesis of various other secondary metabolites",
-      "Biosynthesis of various antibiotics",
+      "alpha-Linolenic acid metabolism",
       "Biosynthesis of plant secondary metabolites",
-      "Biosynthesis of phenylpropanoids",
-      "Biosynthesis of terpenoids and steroids",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
-      "Biosynthesis of alkaloids derived from histidine and purine",
-      "Biosynthesis of alkaloids derived from terpenoid and polyketide",
       "Biosynthesis of plant hormones",
       "Metabolic pathways",
       "Biosynthesis of secondary metabolites",
-      "Microbial metabolism in diverse environments",
-      "Carbon metabolism",
-      "Biosynthesis of amino acids",
-      "Biosynthesis of cofactors",
-      "Biosynthesis of nucleotide sugars",
-      "AMPK signaling pathway",
-      "Glucagon signaling pathway",
-      "Insulin resistance",
-      "Central carbon metabolism in cancer",
-      "Diabetic cardiomyopathy"
+      "Plant hormone signal transduction"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000124",
-      "kegg_id": "C00085",
-      "chebi_id": "CHEBI:15946",
-      "pubchem_id": "69507",
-      "cas": "643-13-0",
-      "biocyc": "FRUCTOSE-6P",
-      "chemspider": "62713",
-      "pathbank_compound_id": "79"
+      "kegg_id": "C08491",
+      "hmdb_id": "HMDB0032797",
+      "chebi_id": "CHEBI:18292",
+      "pubchem_id": "5281166",
+      "cas": "6894-38-8",
+      "chemspider": "4444606",
+      "pathbank_compound_id": "13883"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00085",
-      "primary_name": "D-Fructose 6-phosphate",
+      "id": "C08491",
+      "primary_name": "(-)-Jasmonic acid",
       "synonyms": [
-        "D-Fructose 6-phosphate",
-        "D-Fructose 6-phosphoric acid",
-        "Neuberg ester"
+        "(-)-Jasmonic acid",
+        "Jasmonic acid",
+        "{(1R,2R)-3-Oxo-2-[(Z)pent-2-enyl]cyclopent-2-enyl}acetic acid",
+        "Jasmonate",
+        "(-)-Jasmonate"
       ],
-      "formula": "C6H13O9P",
-      "mass_monoisotopic": 260.0297,
-      "mass_average": 260.14,
+      "formula": "C12H18O3",
+      "mass_monoisotopic": 210.1256,
+      "mass_average": 210.27,
       "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Pentose phosphate pathway",
-        "Fructose and mannose metabolism",
-        "Galactose metabolism",
-        "Starch and sucrose metabolism",
-        "Amino sugar and nucleotide sugar metabolism",
-        "Methane metabolism",
-        "Carbon fixation by Calvin cycle",
-        "Biosynthesis of various other secondary metabolites",
-        "Biosynthesis of various antibiotics",
+        "alpha-Linolenic acid metabolism",
         "Biosynthesis of plant secondary metabolites",
-        "Biosynthesis of phenylpropanoids",
-        "Biosynthesis of terpenoids and steroids",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
-        "Biosynthesis of alkaloids derived from histidine and purine",
-        "Biosynthesis of alkaloids derived from terpenoid and polyketide",
         "Biosynthesis of plant hormones",
         "Metabolic pathways",
         "Biosynthesis of secondary metabolites",
-        "Microbial metabolism in diverse environments",
-        "Carbon metabolism",
-        "Biosynthesis of amino acids",
-        "Biosynthesis of cofactors",
-        "Biosynthesis of nucleotide sugars",
-        "AMPK signaling pathway",
-        "Glucagon signaling pathway",
-        "Insulin resistance",
-        "Central carbon metabolism in cancer",
-        "Diabetic cardiomyopathy"
+        "Plant hormone signal transduction"
       ],
-      "kegg_class": [],
+      "kegg_class": [
+        "Lipids [BR:br08002]",
+        "FA Fatty acyls",
+        "FA02 Octadecanoids",
+        "FA0202 Jasmonic acids",
+        "C08491 (-)-Jasmonic acid",
+        "Phytochemical compounds [BR:br08003]",
+        "Fatty acids related compounds",
+        "Fatty acids",
+        "Others",
+        "C08491 Jasmonate"
+      ],
       "cross_references": {
-        "kegg_id": "C00085",
-        "pubchem_id": "3385",
-        "chebi_id": "15946"
+        "kegg_id": "C08491",
+        "pubchem_id": "10684",
+        "chebi_id": "181431"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00085",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00085",
-        "retrieved_at": "2026-03-20T19:31:36Z",
+        "id": "C08491",
+        "source_url": "https://rest.kegg.jp/get/cpd:C08491",
+        "retrieved_at": "2026-06-16T17:07:17Z",
         "status": "ok"
       }
     },
@@ -541,9 +414,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:15946",
+        "id": "CHEBI:18292",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:36Z"
+        "retrieved_at": "2026-06-16T17:07:15Z"
       }
     },
     "hmdb": {
@@ -551,41 +424,41 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000124",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000124",
-        "retrieved_at": "2026-03-20T19:31:36Z"
+        "id": "HMDB0032797",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0032797",
+        "retrieved_at": "2026-06-16T17:07:16Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:15946",
-        "retrieved_at": "2026-03-20T19:31:36Z",
+        "id": "CHEBI:18292",
+        "retrieved_at": "2026-06-16T17:07:15Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000124",
-        "retrieved_at": "2026-03-20T19:31:36Z",
+        "id": "HMDB0032797",
+        "retrieved_at": "2026-06-16T17:07:16Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00085",
-        "retrieved_at": "2026-03-20T19:31:36Z",
+        "id": "C08491",
+        "retrieved_at": "2026-06-16T17:07:17Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:fructose-1,6-bisphosphate|HMDB0001058": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "D-Fructose 1,6-bisphosphate",
+  "compound:OPC-6:0|80451": {
+    "enrichment_status": "ok",
+    "primary_name": "3-Oxo-OPC8-CoA",
     "synonyms": [
-      "D-Fructose 1,6-bisphosphate"
+      "3-Oxo-OPC8-CoA"
     ],
     "description": "",
     "taxonomy": {},
@@ -593,514 +466,78 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C6H14O12P2",
+    "formula": "C39H62N7O19P3S",
     "charge": 0,
-    "mass_monoisotopic": 339.9961,
-    "mass_average": 340.12,
+    "mass_monoisotopic": 1057.3034,
+    "mass_average": 1057.93,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [],
     "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Pentose phosphate pathway",
-      "Fructose and mannose metabolism",
-      "Phenylalanine, tyrosine and tryptophan biosynthesis",
-      "Methane metabolism",
-      "Carbon fixation by Calvin cycle",
-      "Biosynthesis of plant secondary metabolites",
-      "Biosynthesis of phenylpropanoids",
-      "Biosynthesis of terpenoids and steroids",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
+      "alpha-Linolenic acid metabolism",
       "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Microbial metabolism in diverse environments",
-      "Carbon metabolism",
-      "Biosynthesis of amino acids",
-      "Phosphotransferase system (PTS)",
-      "AMPK signaling pathway",
-      "Glucagon signaling pathway",
-      "Central carbon metabolism in cancer"
+      "Biosynthesis of secondary metabolites"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0001058",
-      "kegg_id": "C00354",
-      "chebi_id": "CHEBI:16905",
-      "pubchem_id": "445557",
-      "cas": "488-69-7",
-      "biocyc": "FRUCTOSE-16-DIPHOSPHATE",
-      "chemspider": "393165",
-      "pathbank_compound_id": "833"
+      "kegg_id": "C16330",
+      "pubchem_id": "47205638",
+      "chebi_id": "80451"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00354",
-      "primary_name": "D-Fructose 1,6-bisphosphate",
+      "id": "C16330",
+      "primary_name": "3-Oxo-OPC8-CoA",
       "synonyms": [
-        "D-Fructose 1,6-bisphosphate"
+        "3-Oxo-OPC8-CoA"
       ],
-      "formula": "C6H14O12P2",
-      "mass_monoisotopic": 339.9961,
-      "mass_average": 340.12,
+      "formula": "C39H62N7O19P3S",
+      "mass_monoisotopic": 1057.3034,
+      "mass_average": 1057.93,
       "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Pentose phosphate pathway",
-        "Fructose and mannose metabolism",
-        "Phenylalanine, tyrosine and tryptophan biosynthesis",
-        "Methane metabolism",
-        "Carbon fixation by Calvin cycle",
-        "Biosynthesis of plant secondary metabolites",
-        "Biosynthesis of phenylpropanoids",
-        "Biosynthesis of terpenoids and steroids",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
+        "alpha-Linolenic acid metabolism",
         "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Microbial metabolism in diverse environments",
-        "Carbon metabolism",
-        "Biosynthesis of amino acids",
-        "Phosphotransferase system (PTS)",
-        "AMPK signaling pathway",
-        "Glucagon signaling pathway",
-        "Central carbon metabolism in cancer"
+        "Biosynthesis of secondary metabolites"
       ],
       "kegg_class": [],
       "cross_references": {
-        "kegg_id": "C00354",
-        "pubchem_id": "3647",
-        "chebi_id": "16905"
+        "kegg_id": "C16330",
+        "pubchem_id": "47205638",
+        "chebi_id": "80451"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00354",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00354",
-        "retrieved_at": "2026-03-21T01:12:09Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:16905",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-04-06T22:09:16Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001058",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001058",
-        "retrieved_at": "2026-04-06T22:09:16Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:16905",
-        "retrieved_at": "2026-04-06T22:09:16Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001058",
-        "retrieved_at": "2026-04-06T22:09:16Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00354",
-        "retrieved_at": "2026-03-21T01:12:09Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:glyceraldehyde-3-phosphate|HMDB0001112": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Glyceraldehyde 3-phosphate",
-    "synonyms": [
-      "Glyceraldehyde 3-phosphate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C3H7O6P",
-    "charge": 0,
-    "mass_monoisotopic": 169.998,
-    "mass_average": 170.06,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001112",
-      "kegg_id": "C00661",
-      "chebi_id": "CHEBI:17138",
-      "pubchem_id": "729",
-      "cas": "591-59-3",
-      "biocyc": "GAP",
-      "chemspider": "709",
-      "drugbank_id": "DB02263",
-      "pathbank_compound_id": "869"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00661",
-      "primary_name": "Glyceraldehyde 3-phosphate",
-      "synonyms": [
-        "Glyceraldehyde 3-phosphate"
-      ],
-      "formula": "C3H7O6P",
-      "mass_monoisotopic": 169.998,
-      "mass_average": 170.06,
-      "pathways": [],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00661",
-        "pubchem_id": "3930",
-        "chebi_id": "17138"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00661",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00661",
-        "retrieved_at": "2026-03-20T19:31:41Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:17138",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:40Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001112",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001112",
-        "retrieved_at": "2026-03-20T19:31:41Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:17138",
-        "retrieved_at": "2026-03-20T19:31:40Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001112",
-        "retrieved_at": "2026-03-20T19:31:41Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00661",
-        "retrieved_at": "2026-03-20T19:31:41Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:dihydroxyacetone phosphate|HMDB0001473": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Glycerone phosphate",
-    "synonyms": [
-      "Glycerone phosphate",
-      "Dihydroxyacetone phosphate",
-      "3-Hydroxy-2-oxopropyl phosphate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C3H7O6P",
-    "charge": 0,
-    "mass_monoisotopic": 169.998,
-    "mass_average": 170.06,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Pentose and glucuronate interconversions",
-      "Fructose and mannose metabolism",
-      "Galactose metabolism",
-      "Glycerolipid metabolism",
-      "Inositol phosphate metabolism",
-      "Glycerophospholipid metabolism",
-      "Glyoxylate and dicarboxylate metabolism",
-      "Propanoate metabolism",
-      "Methane metabolism",
-      "Carbon fixation by Calvin cycle",
-      "Nicotinate and nicotinamide metabolism",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Microbial metabolism in diverse environments",
-      "Carbon metabolism",
-      "Biosynthesis of amino acids"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001473",
-      "kegg_id": "C00111",
-      "chebi_id": "CHEBI:16108",
-      "pubchem_id": "668",
-      "cas": "57-04-5",
-      "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
-      "chemspider": "648",
-      "drugbank_id": "DB04326",
-      "pathbank_compound_id": "1134"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00111",
-      "primary_name": "Glycerone phosphate",
-      "synonyms": [
-        "Glycerone phosphate",
-        "Dihydroxyacetone phosphate",
-        "3-Hydroxy-2-oxopropyl phosphate"
-      ],
-      "formula": "C3H7O6P",
-      "mass_monoisotopic": 169.998,
-      "mass_average": 170.06,
-      "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Pentose and glucuronate interconversions",
-        "Fructose and mannose metabolism",
-        "Galactose metabolism",
-        "Glycerolipid metabolism",
-        "Inositol phosphate metabolism",
-        "Glycerophospholipid metabolism",
-        "Glyoxylate and dicarboxylate metabolism",
-        "Propanoate metabolism",
-        "Methane metabolism",
-        "Carbon fixation by Calvin cycle",
-        "Nicotinate and nicotinamide metabolism",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Microbial metabolism in diverse environments",
-        "Carbon metabolism",
-        "Biosynthesis of amino acids"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00111",
-        "pubchem_id": "3411",
-        "chebi_id": "16108"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00111",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00111",
-        "retrieved_at": "2026-03-07T21:34:42Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:16108",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-10T15:49:10Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001473",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001473",
-        "retrieved_at": "2026-03-10T15:49:10Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:16108",
-        "retrieved_at": "2026-03-10T15:49:10Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001473",
-        "retrieved_at": "2026-03-10T15:49:10Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00111",
-        "retrieved_at": "2026-03-07T21:34:42Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:1,3-bisphosphoglycerate|HMDB0001270": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "3-Phospho-D-glyceroyl phosphate",
-    "synonyms": [
-      "3-Phospho-D-glyceroyl phosphate",
-      "1,3-Bisphospho-D-glycerate",
-      "(R)-2-Hydroxy-3-(phosphonooxy)-1-monoanhydride with phosphoric propanoic acid",
-      "D-Glycerate 1,3-diphosphate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C3H8O10P2",
-    "charge": 0,
-    "mass_monoisotopic": 265.9593,
-    "mass_average": 266.04,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Carbon fixation by Calvin cycle",
-      "Biosynthesis of plant secondary metabolites",
-      "Biosynthesis of phenylpropanoids",
-      "Biosynthesis of terpenoids and steroids",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Microbial metabolism in diverse environments",
-      "Carbon metabolism",
-      "Biosynthesis of amino acids",
-      "Diabetic cardiomyopathy"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001270",
-      "kegg_id": "C00236",
-      "pubchem_id": "683",
-      "cas": "1981-49-3",
-      "biocyc": "DPG",
-      "chemspider": "663",
-      "pathbank_compound_id": "983",
-      "chebi_id": "16001"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00236",
-      "primary_name": "3-Phospho-D-glyceroyl phosphate",
-      "synonyms": [
-        "3-Phospho-D-glyceroyl phosphate",
-        "1,3-Bisphospho-D-glycerate",
-        "(R)-2-Hydroxy-3-(phosphonooxy)-1-monoanhydride with phosphoric propanoic acid",
-        "D-Glycerate 1,3-diphosphate"
-      ],
-      "formula": "C3H8O10P2",
-      "mass_monoisotopic": 265.9593,
-      "mass_average": 266.04,
-      "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Carbon fixation by Calvin cycle",
-        "Biosynthesis of plant secondary metabolites",
-        "Biosynthesis of phenylpropanoids",
-        "Biosynthesis of terpenoids and steroids",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Microbial metabolism in diverse environments",
-        "Carbon metabolism",
-        "Biosynthesis of amino acids",
-        "Diabetic cardiomyopathy"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00236",
-        "pubchem_id": "3535",
-        "chebi_id": "16001"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00236",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00236",
-        "retrieved_at": "2026-03-20T19:31:51Z",
+        "id": "C16330",
+        "source_url": "https://rest.kegg.jp/get/cpd:C16330",
+        "retrieved_at": "2026-06-23T16:47:25Z",
         "status": "ok"
       }
     },
     "chebi": {},
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001270",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001270",
-        "retrieved_at": "2026-03-20T19:31:51Z"
-      }
-    },
+    "hmdb": {},
     "is_generic_class": false,
     "sources": [
       {
-        "source": "HMDB",
-        "id": "HMDB0001270",
-        "retrieved_at": "2026-03-20T19:31:51Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
         "source": "KEGG",
-        "id": "C00236",
-        "retrieved_at": "2026-03-20T19:31:51Z",
+        "id": "C16330",
+        "retrieved_at": "2026-06-23T16:47:25Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:3-phosphoglycerate|HMDB0000807": {
+  "compound:OPC-4:0|CHEBI:15720": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Glycerate 3-phosphate",
+    "primary_name": "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
     "synonyms": [
-      "Glycerate 3-phosphate",
-      "3-Phosphoglycerate"
+      "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
+      "8-[(1S,2S)-3-Oxo-2-{(Z)-pent-2-enyl}cyclopentyl]octanoate",
+      "OPC-8:0",
+      "8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid",
+      "(9S,13S)-10,11-Dihydro-12-oxo-15-phytoenoate"
     ],
     "description": "",
     "taxonomy": {},
@@ -1108,51 +545,72 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C3H7O7P",
+    "formula": "C18H30O3",
     "charge": 0,
-    "mass_monoisotopic": 185.9929,
-    "mass_average": 186.06,
+    "mass_monoisotopic": 294.2195,
+    "mass_average": 294.43,
     "chebi_roles": [],
     "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [],
+    "kegg_class": [
+      "Lipids [BR:br08002]",
+      "FA Fatty acyls",
+      "FA02 Octadecanoids",
+      "FA0201 12-oxophytodienoic acid metabolites",
+      "C04780 8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid"
+    ],
+    "pathways": [
+      "alpha-Linolenic acid metabolism",
+      "Biosynthesis of plant hormones",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites"
+    ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000807",
-      "kegg_id": "C00597",
-      "chebi_id": "CHEBI:17050",
-      "pubchem_id": "724",
-      "cas": "820-11-1",
-      "biocyc": "G3P",
-      "chemspider": "704",
-      "pathbank_compound_id": "644"
+      "kegg_id": "C04780",
+      "chebi_id": "CHEBI:15720",
+      "pubchem_id": "126961123",
+      "pathbank_compound_id": "104744"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00597",
-      "primary_name": "Glycerate 3-phosphate",
+      "id": "C04780",
+      "primary_name": "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
       "synonyms": [
-        "Glycerate 3-phosphate",
-        "3-Phosphoglycerate"
+        "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
+        "8-[(1S,2S)-3-Oxo-2-{(Z)-pent-2-enyl}cyclopentyl]octanoate",
+        "OPC-8:0",
+        "8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid",
+        "(9S,13S)-10,11-Dihydro-12-oxo-15-phytoenoate"
       ],
-      "formula": "C3H7O7P",
-      "mass_monoisotopic": 185.9929,
-      "mass_average": 186.06,
-      "pathways": [],
-      "kegg_class": [],
+      "formula": "C18H30O3",
+      "mass_monoisotopic": 294.2195,
+      "mass_average": 294.43,
+      "pathways": [
+        "alpha-Linolenic acid metabolism",
+        "Biosynthesis of plant hormones",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites"
+      ],
+      "kegg_class": [
+        "Lipids [BR:br08002]",
+        "FA Fatty acyls",
+        "FA02 Octadecanoids",
+        "FA0201 12-oxophytodienoic acid metabolites",
+        "C04780 8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid"
+      ],
       "cross_references": {
-        "kegg_id": "C00597",
-        "pubchem_id": "3874",
-        "chebi_id": "17050"
+        "kegg_id": "C04780",
+        "pubchem_id": "7344",
+        "chebi_id": "137132"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00597",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00597",
-        "retrieved_at": "2026-03-20T19:32:01Z",
+        "id": "C04780",
+        "source_url": "https://rest.kegg.jp/get/cpd:C04780",
+        "retrieved_at": "2026-06-23T16:47:29Z",
         "status": "ok"
       }
     },
@@ -1161,47 +619,31 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:17050",
+        "id": "CHEBI:15720",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:32:00Z"
+        "retrieved_at": "2026-06-23T16:47:29Z"
       }
     },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000807",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000807",
-        "retrieved_at": "2026-03-20T19:32:01Z"
-      }
-    },
+    "hmdb": {},
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:17050",
-        "retrieved_at": "2026-03-20T19:32:00Z",
+        "id": "CHEBI:15720",
+        "retrieved_at": "2026-06-23T16:47:29Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
-        "source": "HMDB",
-        "id": "HMDB0000807",
-        "retrieved_at": "2026-03-20T19:32:01Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
         "source": "KEGG",
-        "id": "C00597",
-        "retrieved_at": "2026-03-20T19:32:01Z",
+        "id": "C04780",
+        "retrieved_at": "2026-06-23T16:47:29Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:2-phosphoglycerate|HMDB0000362": {
+  "compound:OPC-8-CoA|HMDB0011115": {
     "enrichment_status": "error",
     "primary_name": "",
     "synonyms": [],
@@ -1223,60 +665,39 @@
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000362",
-      "chebi_id": "CHEBI:24344",
-      "pubchem_id": "59",
-      "cas": "2553-59-5",
-      "biocyc": "2-PG",
-      "chemspider": "58",
-      "pathbank_compound_id": "262"
+      "hmdb_id": "HMDB0011115",
+      "pubchem_id": "53480661",
+      "chemspider": "24766544",
+      "pathbank_compound_id": "6757"
     },
     "kegg": {},
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:24344",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:32:05Z"
-      }
-    },
+    "chebi": {},
     "hmdb": {
       "status": "not_found",
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000362",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000362",
-        "retrieved_at": "2026-03-20T19:32:05Z"
+        "id": "HMDB0011115",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0011115",
+        "retrieved_at": "2026-06-23T16:47:30Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
-        "source": "ChEBI",
-        "id": "CHEBI:24344",
-        "retrieved_at": "2026-03-20T19:32:05Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
         "source": "HMDB",
-        "id": "HMDB0000362",
-        "retrieved_at": "2026-03-20T19:32:05Z",
+        "id": "HMDB0011115",
+        "retrieved_at": "2026-06-23T16:47:30Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       }
     ]
   },
-  "compound:phosphoenolpyruvate|HMDB0000263": {
+  "compound:OPC-6-CoA|HMDB0011114": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Phosphoenolpyruvate",
+    "primary_name": "OPC6-CoA",
     "synonyms": [
-      "Phosphoenolpyruvate",
-      "Phosphoenolpyruvic acid",
-      "PEP"
+      "OPC6-CoA"
     ],
     "description": "",
     "taxonomy": {},
@@ -1284,107 +705,56 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C3H5O6P",
+    "formula": "C37H60N7O18P3S",
     "charge": 0,
-    "mass_monoisotopic": 167.9824,
-    "mass_average": 168.04,
+    "mass_monoisotopic": 1015.2928,
+    "mass_average": 1015.9,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [],
     "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Citrate cycle (TCA cycle)",
-      "Phenylalanine, tyrosine and tryptophan biosynthesis",
-      "Phosphonate and phosphinate metabolism",
-      "Pyruvate metabolism",
-      "Methane metabolism",
-      "Carbon fixation by Calvin cycle",
-      "Other carbon fixation pathways",
-      "Biosynthesis of various alkaloids",
-      "Biosynthesis of various antibiotics",
-      "Biosynthesis of various plant secondary metabolites",
-      "Biosynthesis of plant secondary metabolites",
-      "Biosynthesis of phenylpropanoids",
-      "Biosynthesis of terpenoids and steroids",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Biosynthesis of plant hormones",
+      "alpha-Linolenic acid metabolism",
       "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Microbial metabolism in diverse environments",
-      "Carbon metabolism",
-      "Biosynthesis of amino acids",
-      "Biosynthesis of cofactors",
-      "Phosphotransferase system (PTS)",
-      "Glucagon signaling pathway",
-      "Proximal tubule bicarbonate reclamation",
-      "Central carbon metabolism in cancer"
+      "Biosynthesis of secondary metabolites"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000263",
-      "kegg_id": "C00074",
-      "chebi_id": "CHEBI:44897",
-      "pubchem_id": "1005",
-      "cas": "138-08-9",
-      "biocyc": "PHOSPHO-ENOL-PYRUVATE",
-      "chemspider": "980",
-      "drugbank_id": "DB01819",
-      "pathbank_compound_id": "180"
+      "hmdb_id": "HMDB0011114",
+      "kegg_id": "C16331",
+      "pubchem_id": "53480660",
+      "chemspider": "24766543",
+      "chebi_id": "CHEBI:138431",
+      "pathbank_compound_id": "6756"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00074",
-      "primary_name": "Phosphoenolpyruvate",
+      "id": "C16331",
+      "primary_name": "OPC6-CoA",
       "synonyms": [
-        "Phosphoenolpyruvate",
-        "Phosphoenolpyruvic acid",
-        "PEP"
+        "OPC6-CoA"
       ],
-      "formula": "C3H5O6P",
-      "mass_monoisotopic": 167.9824,
-      "mass_average": 168.04,
+      "formula": "C37H60N7O18P3S",
+      "mass_monoisotopic": 1015.2928,
+      "mass_average": 1015.9,
       "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Citrate cycle (TCA cycle)",
-        "Phenylalanine, tyrosine and tryptophan biosynthesis",
-        "Phosphonate and phosphinate metabolism",
-        "Pyruvate metabolism",
-        "Methane metabolism",
-        "Carbon fixation by Calvin cycle",
-        "Other carbon fixation pathways",
-        "Biosynthesis of various alkaloids",
-        "Biosynthesis of various antibiotics",
-        "Biosynthesis of various plant secondary metabolites",
-        "Biosynthesis of plant secondary metabolites",
-        "Biosynthesis of phenylpropanoids",
-        "Biosynthesis of terpenoids and steroids",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Biosynthesis of plant hormones",
+        "alpha-Linolenic acid metabolism",
         "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Microbial metabolism in diverse environments",
-        "Carbon metabolism",
-        "Biosynthesis of amino acids",
-        "Biosynthesis of cofactors",
-        "Phosphotransferase system (PTS)",
-        "Glucagon signaling pathway",
-        "Proximal tubule bicarbonate reclamation",
-        "Central carbon metabolism in cancer"
+        "Biosynthesis of secondary metabolites"
       ],
       "kegg_class": [],
       "cross_references": {
-        "kegg_id": "C00074",
-        "pubchem_id": "3374",
-        "chebi_id": "18021"
+        "kegg_id": "C16331",
+        "pubchem_id": "47205639",
+        "chebi_id": "139105"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00074",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00074",
-        "retrieved_at": "2026-03-20T19:32:10Z",
+        "id": "C16331",
+        "source_url": "https://rest.kegg.jp/get/cpd:C16331",
+        "retrieved_at": "2026-06-23T16:47:34Z",
         "status": "ok"
       }
     },
@@ -1393,9 +763,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:44897",
+        "id": "CHEBI:138431",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:32:10Z"
+        "retrieved_at": "2026-06-23T16:47:34Z"
       }
     },
     "hmdb": {
@@ -1403,45 +773,41 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000263",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000263",
-        "retrieved_at": "2026-03-20T19:32:10Z"
+        "id": "HMDB0011114",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0011114",
+        "retrieved_at": "2026-06-23T16:47:34Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:44897",
-        "retrieved_at": "2026-03-20T19:32:10Z",
+        "id": "CHEBI:138431",
+        "retrieved_at": "2026-06-23T16:47:34Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000263",
-        "retrieved_at": "2026-03-20T19:32:10Z",
+        "id": "HMDB0011114",
+        "retrieved_at": "2026-06-23T16:47:34Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00074",
-        "retrieved_at": "2026-03-20T19:32:10Z",
+        "id": "C16331",
+        "retrieved_at": "2026-06-23T16:47:34Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:pyruvate|HMDB0000243": {
+  "compound:OPC-4-CoA|HMDB0011113": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Pyruvate",
+    "primary_name": "OPC4-CoA",
     "synonyms": [
-      "Pyruvate",
-      "Pyruvic acid",
-      "2-Oxopropanoate",
-      "2-Oxopropanoic acid",
-      "Pyroracemic acid"
+      "OPC4-CoA"
     ],
     "description": "",
     "taxonomy": {},
@@ -1449,203 +815,170 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C3H4O3",
+    "formula": "C35H56N7O18P3S",
     "charge": 0,
-    "mass_monoisotopic": 88.016,
-    "mass_average": 88.06,
+    "mass_monoisotopic": 987.2615,
+    "mass_average": 987.84,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "alpha-Linolenic acid metabolism",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0011113",
+      "kegg_id": "C16335",
+      "pubchem_id": "53480659",
+      "chemspider": "24766542",
+      "pathbank_compound_id": "6755",
+      "chebi_id": "80456"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C16335",
+      "primary_name": "OPC4-CoA",
+      "synonyms": [
+        "OPC4-CoA"
+      ],
+      "formula": "C35H56N7O18P3S",
+      "mass_monoisotopic": 987.2615,
+      "mass_average": 987.84,
+      "pathways": [
+        "alpha-Linolenic acid metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C16335",
+        "pubchem_id": "47205643",
+        "chebi_id": "80456"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C16335",
+        "source_url": "https://rest.kegg.jp/get/cpd:C16335",
+        "retrieved_at": "2026-06-23T16:47:35Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {},
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0011113",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0011113",
+        "retrieved_at": "2026-06-23T16:47:35Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "HMDB",
+        "id": "HMDB0011113",
+        "retrieved_at": "2026-06-23T16:47:35Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C16335",
+        "retrieved_at": "2026-06-23T16:47:35Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:OPC-8:0|CHEBI:15720": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
+    "synonyms": [
+      "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
+      "8-[(1S,2S)-3-Oxo-2-{(Z)-pent-2-enyl}cyclopentyl]octanoate",
+      "OPC-8:0",
+      "8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid",
+      "(9S,13S)-10,11-Dihydro-12-oxo-15-phytoenoate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C18H30O3",
+    "charge": 0,
+    "mass_monoisotopic": 294.2195,
+    "mass_average": 294.43,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Organic acids",
-      "Carboxylic acids",
-      "2-Oxocarboxylic acids",
-      "C00022 Pyruvate; 2-Oxopropanoate",
       "Lipids [BR:br08002]",
       "FA Fatty acyls",
-      "FA01 Fatty Acids and Conjugates",
-      "FA0106 Oxo fatty acids",
-      "C00022 2-Oxopropanoic acid"
+      "FA02 Octadecanoids",
+      "FA0201 12-oxophytodienoic acid metabolites",
+      "C04780 8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid"
     ],
     "pathways": [
-      "Glycolysis / Gluconeogenesis",
-      "Citrate cycle (TCA cycle)",
-      "Pentose phosphate pathway",
-      "Pentose and glucuronate interconversions",
-      "Ascorbate and aldarate metabolism",
-      "Alanine, aspartate and glutamate metabolism",
-      "Glycine, serine and threonine metabolism",
-      "Monobactam biosynthesis",
-      "Cysteine and methionine metabolism",
-      "Valine, leucine and isoleucine biosynthesis",
-      "Arginine and proline metabolism",
-      "Tyrosine metabolism",
-      "Phenylalanine metabolism",
-      "Benzoate degradation",
-      "Taurine and hypotaurine metabolism",
-      "Phosphonate and phosphinate metabolism",
-      "D-Amino acid metabolism",
-      "Sulfoquinovose metabolism",
-      "Pyruvate metabolism",
-      "Dioxin degradation",
-      "Xylene degradation",
-      "Glyoxylate and dicarboxylate metabolism",
-      "Butanoate metabolism",
-      "C5-Branched dibasic acid metabolism",
-      "Methane metabolism",
-      "Carbon fixation by Calvin cycle",
-      "Other carbon fixation pathways",
-      "Thiamine metabolism",
-      "Nicotinate and nicotinamide metabolism",
-      "Pantothenate and CoA biosynthesis",
-      "Lipoic acid metabolism",
-      "Terpenoid backbone biosynthesis",
-      "Steroid degradation",
-      "Biosynthesis of various other secondary metabolites",
-      "Biosynthesis of various antibiotics",
-      "Biosynthesis of plant secondary metabolites",
-      "Biosynthesis of phenylpropanoids",
-      "Biosynthesis of terpenoids and steroids",
-      "Biosynthesis of alkaloids derived from shikimate pathway",
-      "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
-      "Biosynthesis of alkaloids derived from histidine and purine",
-      "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+      "alpha-Linolenic acid metabolism",
       "Biosynthesis of plant hormones",
       "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Microbial metabolism in diverse environments",
-      "Carbon metabolism",
-      "2-Oxocarboxylic acid metabolism",
-      "Degradation of aromatic compounds",
-      "Biosynthesis of amino acids",
-      "Biosynthesis of cofactors",
-      "Vancomycin resistance",
-      "Two-component system",
-      "Phosphotransferase system (PTS)",
-      "HIF-1 signaling pathway",
-      "AMPK signaling pathway",
-      "Insulin secretion",
-      "Glucagon signaling pathway",
-      "Type II diabetes mellitus",
-      "Insulin resistance",
-      "Central carbon metabolism in cancer",
-      "Diabetic cardiomyopathy"
+      "Biosynthesis of secondary metabolites"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000243",
-      "kegg_id": "C00022",
-      "chebi_id": "CHEBI:32816",
-      "pubchem_id": "1060",
-      "cas": "127-17-3",
-      "biocyc": "PYRUVATE",
-      "chemspider": "1031",
-      "drugbank_id": "DB00119",
-      "pathbank_compound_id": "164"
+      "kegg_id": "C04780",
+      "chebi_id": "CHEBI:15720",
+      "pubchem_id": "126961123",
+      "pathbank_compound_id": "104744"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00022",
-      "primary_name": "Pyruvate",
+      "id": "C04780",
+      "primary_name": "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
       "synonyms": [
-        "Pyruvate",
-        "Pyruvic acid",
-        "2-Oxopropanoate",
-        "2-Oxopropanoic acid",
-        "Pyroracemic acid"
+        "(9S,13S,15Z)-12-Oxo-10,11-dihydrophyto-15-enoate",
+        "8-[(1S,2S)-3-Oxo-2-{(Z)-pent-2-enyl}cyclopentyl]octanoate",
+        "OPC-8:0",
+        "8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid",
+        "(9S,13S)-10,11-Dihydro-12-oxo-15-phytoenoate"
       ],
-      "formula": "C3H4O3",
-      "mass_monoisotopic": 88.016,
-      "mass_average": 88.06,
+      "formula": "C18H30O3",
+      "mass_monoisotopic": 294.2195,
+      "mass_average": 294.43,
       "pathways": [
-        "Glycolysis / Gluconeogenesis",
-        "Citrate cycle (TCA cycle)",
-        "Pentose phosphate pathway",
-        "Pentose and glucuronate interconversions",
-        "Ascorbate and aldarate metabolism",
-        "Alanine, aspartate and glutamate metabolism",
-        "Glycine, serine and threonine metabolism",
-        "Monobactam biosynthesis",
-        "Cysteine and methionine metabolism",
-        "Valine, leucine and isoleucine biosynthesis",
-        "Arginine and proline metabolism",
-        "Tyrosine metabolism",
-        "Phenylalanine metabolism",
-        "Benzoate degradation",
-        "Taurine and hypotaurine metabolism",
-        "Phosphonate and phosphinate metabolism",
-        "D-Amino acid metabolism",
-        "Sulfoquinovose metabolism",
-        "Pyruvate metabolism",
-        "Dioxin degradation",
-        "Xylene degradation",
-        "Glyoxylate and dicarboxylate metabolism",
-        "Butanoate metabolism",
-        "C5-Branched dibasic acid metabolism",
-        "Methane metabolism",
-        "Carbon fixation by Calvin cycle",
-        "Other carbon fixation pathways",
-        "Thiamine metabolism",
-        "Nicotinate and nicotinamide metabolism",
-        "Pantothenate and CoA biosynthesis",
-        "Lipoic acid metabolism",
-        "Terpenoid backbone biosynthesis",
-        "Steroid degradation",
-        "Biosynthesis of various other secondary metabolites",
-        "Biosynthesis of various antibiotics",
-        "Biosynthesis of plant secondary metabolites",
-        "Biosynthesis of phenylpropanoids",
-        "Biosynthesis of terpenoids and steroids",
-        "Biosynthesis of alkaloids derived from shikimate pathway",
-        "Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
-        "Biosynthesis of alkaloids derived from histidine and purine",
-        "Biosynthesis of alkaloids derived from terpenoid and polyketide",
+        "alpha-Linolenic acid metabolism",
         "Biosynthesis of plant hormones",
         "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Microbial metabolism in diverse environments",
-        "Carbon metabolism",
-        "2-Oxocarboxylic acid metabolism",
-        "Degradation of aromatic compounds",
-        "Biosynthesis of amino acids",
-        "Biosynthesis of cofactors",
-        "Vancomycin resistance",
-        "Two-component system",
-        "Phosphotransferase system (PTS)",
-        "HIF-1 signaling pathway",
-        "AMPK signaling pathway",
-        "Insulin secretion",
-        "Glucagon signaling pathway",
-        "Type II diabetes mellitus",
-        "Insulin resistance",
-        "Central carbon metabolism in cancer",
-        "Diabetic cardiomyopathy"
+        "Biosynthesis of secondary metabolites"
       ],
       "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Organic acids",
-        "Carboxylic acids",
-        "2-Oxocarboxylic acids",
-        "C00022 Pyruvate; 2-Oxopropanoate",
         "Lipids [BR:br08002]",
         "FA Fatty acyls",
-        "FA01 Fatty Acids and Conjugates",
-        "FA0106 Oxo fatty acids",
-        "C00022 2-Oxopropanoic acid"
+        "FA02 Octadecanoids",
+        "FA0201 12-oxophytodienoic acid metabolites",
+        "C04780 8-[(1S,2S)-3-Oxo-2-[(Z)-pent-2-enyl]cyclopentyl]octanoic acid"
       ],
       "cross_references": {
-        "kegg_id": "C00022",
-        "pubchem_id": "3324",
-        "chebi_id": "15361"
+        "kegg_id": "C04780",
+        "pubchem_id": "7344",
+        "chebi_id": "137132"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00022",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00022",
-        "retrieved_at": "2026-03-20T19:32:15Z",
+        "id": "C04780",
+        "source_url": "https://rest.kegg.jp/get/cpd:C04780",
+        "retrieved_at": "2026-06-23T16:47:29Z",
         "status": "ok"
       }
     },
@@ -1654,1189 +987,485 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:32816",
+        "id": "CHEBI:15720",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:32:15Z"
+        "retrieved_at": "2026-06-23T16:47:29Z"
       }
     },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000243",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000243",
-        "retrieved_at": "2026-03-20T19:32:15Z"
-      }
-    },
+    "hmdb": {},
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:32816",
-        "retrieved_at": "2026-03-20T19:32:15Z",
+        "id": "CHEBI:15720",
+        "retrieved_at": "2026-06-23T16:47:29Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
-        "source": "HMDB",
-        "id": "HMDB0000243",
-        "retrieved_at": "2026-03-20T19:32:15Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
         "source": "KEGG",
-        "id": "C00022",
-        "retrieved_at": "2026-03-20T19:32:15Z",
+        "id": "C04780",
+        "retrieved_at": "2026-06-23T16:47:29Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:ATP|HMDB0000538": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "ATP",
-    "synonyms": [
-      "ATP",
-      "Adenosine 5'-triphosphate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C10H16N5O13P3",
-    "charge": 0,
-    "mass_monoisotopic": 506.9957,
-    "mass_average": 507.18,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Nucleic acids",
-      "Nucleotides",
-      "Ribonucleotides",
-      "C00002 ATP",
-      "Vitamins and cofactors",
-      "Cofactors",
-      "Coenzymes",
-      "Glycosides [BR:br08021]",
-      "N-glycosides",
-      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D08646)]",
-      "C CARDIOVASCULAR SYSTEM",
-      "C01 CARDIAC THERAPY",
-      "C01E OTHER CARDIAC PREPARATIONS",
-      "C01EB Other cardiac preparations",
-      "C01EB10 Adenosine",
-      "D08646 Triphosadenine (DCF)",
-      "Risk category of Japanese OTC drugs [BR:br08312(D08646)]",
-      "Second-class OTC drugs",
-      "Inorganic and organic chemicals",
-      "Adenosinetriphosphoric acid",
-      "Target-based classification of drugs [BR:br08310(D08646)]",
-      "G Protein-coupled receptors",
-      "Rhodopsin family",
-      "Adenosine",
-      "ADORA"
-    ],
-    "pathways": [
-      "Oxidative phosphorylation",
-      "Photosynthesis",
-      "Purine metabolism",
-      "One carbon pool by folate",
-      "Zeatin biosynthesis",
-      "Biosynthesis of various antibiotics",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Nucleotide metabolism",
-      "Biosynthesis of cofactors",
-      "Bacterial secretion system",
-      "Calcium signaling pathway",
-      "HIF-1 signaling pathway",
-      "Neuroactive ligand-receptor interaction",
-      "Neuroactive ligand signaling",
-      "Lysosome biogenesis",
-      "Efferocytosis",
-      "Necroptosis",
-      "Platelet activation",
-      "NOD-like receptor signaling pathway",
-      "Thermogenesis",
-      "Synaptic vesicle cycle",
-      "Taste transduction",
-      "Inflammatory mediator regulation of TRP channels",
-      "Insulin secretion",
-      "Prolactin signaling pathway",
-      "Renin secretion",
-      "Type II diabetes mellitus",
-      "Parkinson disease",
-      "Pathways of neurodegeneration - multiple diseases",
-      "Pertussis",
-      "Hypertrophic cardiomyopathy",
-      "Diabetic cardiomyopathy"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0000538",
-      "kegg_id": "C00002",
-      "chebi_id": "CHEBI:15422",
-      "pubchem_id": "5957",
-      "cas": "56-65-5",
-      "biocyc": "ATP",
-      "chemspider": "5742",
-      "drugbank_id": "DB00171",
-      "pathbank_compound_id": "414"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00002",
-      "primary_name": "ATP",
-      "synonyms": [
-        "ATP",
-        "Adenosine 5'-triphosphate"
-      ],
-      "formula": "C10H16N5O13P3",
-      "mass_monoisotopic": 506.9957,
-      "mass_average": 507.18,
-      "pathways": [
-        "Oxidative phosphorylation",
-        "Photosynthesis",
-        "Purine metabolism",
-        "One carbon pool by folate",
-        "Zeatin biosynthesis",
-        "Biosynthesis of various antibiotics",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Nucleotide metabolism",
-        "Biosynthesis of cofactors",
-        "Bacterial secretion system",
-        "Calcium signaling pathway",
-        "HIF-1 signaling pathway",
-        "Neuroactive ligand-receptor interaction",
-        "Neuroactive ligand signaling",
-        "Lysosome biogenesis",
-        "Efferocytosis",
-        "Necroptosis",
-        "Platelet activation",
-        "NOD-like receptor signaling pathway",
-        "Thermogenesis",
-        "Synaptic vesicle cycle",
-        "Taste transduction",
-        "Inflammatory mediator regulation of TRP channels",
-        "Insulin secretion",
-        "Prolactin signaling pathway",
-        "Renin secretion",
-        "Type II diabetes mellitus",
-        "Parkinson disease",
-        "Pathways of neurodegeneration - multiple diseases",
-        "Pertussis",
-        "Hypertrophic cardiomyopathy",
-        "Diabetic cardiomyopathy"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Nucleic acids",
-        "Nucleotides",
-        "Ribonucleotides",
-        "C00002 ATP",
-        "Vitamins and cofactors",
-        "Cofactors",
-        "Coenzymes",
-        "Glycosides [BR:br08021]",
-        "N-glycosides",
-        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D08646)]",
-        "C CARDIOVASCULAR SYSTEM",
-        "C01 CARDIAC THERAPY",
-        "C01E OTHER CARDIAC PREPARATIONS",
-        "C01EB Other cardiac preparations",
-        "C01EB10 Adenosine",
-        "D08646 Triphosadenine (DCF)",
-        "Risk category of Japanese OTC drugs [BR:br08312(D08646)]",
-        "Second-class OTC drugs",
-        "Inorganic and organic chemicals",
-        "Adenosinetriphosphoric acid",
-        "Target-based classification of drugs [BR:br08310(D08646)]",
-        "G Protein-coupled receptors",
-        "Rhodopsin family",
-        "Adenosine",
-        "ADORA"
-      ],
-      "cross_references": {
-        "kegg_id": "C00002",
-        "pubchem_id": "3304",
-        "chebi_id": "15422"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00002",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00002",
-        "retrieved_at": "2026-03-20T19:31:31Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:15422",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:30Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000538",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000538",
-        "retrieved_at": "2026-03-20T19:31:30Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:15422",
-        "retrieved_at": "2026-03-20T19:31:30Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0000538",
-        "retrieved_at": "2026-03-20T19:31:30Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00002",
-        "retrieved_at": "2026-03-20T19:31:31Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:ADP|HMDB0001341": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "ADP",
-    "synonyms": [
-      "ADP",
-      "Adenosine 5'-diphosphate"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C10H15N5O10P2",
-    "charge": 0,
-    "mass_monoisotopic": 427.0294,
-    "mass_average": 427.2,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Nucleic acids",
-      "Nucleotides",
-      "Ribonucleotides",
-      "C00008 ADP",
-      "Glycosides [BR:br08021]",
-      "N-glycosides"
-    ],
-    "pathways": [
-      "Oxidative phosphorylation",
-      "Photosynthesis",
-      "Purine metabolism",
-      "Zeatin biosynthesis",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Nucleotide metabolism",
-      "Biosynthesis of cofactors",
-      "FoxO signaling pathway",
-      "Neuroactive ligand-receptor interaction",
-      "Neuroactive ligand signaling",
-      "Lysosome biogenesis",
-      "AMPK signaling pathway",
-      "Platelet activation",
-      "Thermogenesis",
-      "Taste transduction",
-      "Renin secretion",
-      "Parkinson disease",
-      "Amyotrophic lateral sclerosis",
-      "Pathways of neurodegeneration - multiple diseases"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001341",
-      "kegg_id": "C00008",
-      "chebi_id": "CHEBI:16761",
-      "pubchem_id": "6022",
-      "cas": "58-64-0",
-      "biocyc": "ADP",
-      "chemspider": "5800",
-      "pathbank_compound_id": "1034"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00008",
-      "primary_name": "ADP",
-      "synonyms": [
-        "ADP",
-        "Adenosine 5'-diphosphate"
-      ],
-      "formula": "C10H15N5O10P2",
-      "mass_monoisotopic": 427.0294,
-      "mass_average": 427.2,
-      "pathways": [
-        "Oxidative phosphorylation",
-        "Photosynthesis",
-        "Purine metabolism",
-        "Zeatin biosynthesis",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Nucleotide metabolism",
-        "Biosynthesis of cofactors",
-        "FoxO signaling pathway",
-        "Neuroactive ligand-receptor interaction",
-        "Neuroactive ligand signaling",
-        "Lysosome biogenesis",
-        "AMPK signaling pathway",
-        "Platelet activation",
-        "Thermogenesis",
-        "Taste transduction",
-        "Renin secretion",
-        "Parkinson disease",
-        "Amyotrophic lateral sclerosis",
-        "Pathways of neurodegeneration - multiple diseases"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Nucleic acids",
-        "Nucleotides",
-        "Ribonucleotides",
-        "C00008 ADP",
-        "Glycosides [BR:br08021]",
-        "N-glycosides"
-      ],
-      "cross_references": {
-        "kegg_id": "C00008",
-        "pubchem_id": "3310",
-        "chebi_id": "16761"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00008",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00008",
-        "retrieved_at": "2026-03-20T19:31:56Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:16761",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:56Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001341",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001341",
-        "retrieved_at": "2026-03-20T19:31:56Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:16761",
-        "retrieved_at": "2026-03-20T19:31:56Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001341",
-        "retrieved_at": "2026-03-20T19:31:56Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00008",
-        "retrieved_at": "2026-03-20T19:31:56Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:NADH|HMDB0001487": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "NADH",
-    "synonyms": [
-      "NADH",
-      "DPNH",
-      "Reduced nicotinamide adenine dinucleotide"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C21H29N7O14P2",
-    "charge": 0,
-    "mass_monoisotopic": 665.1248,
-    "mass_average": 665.44,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [
-      "Oxidative phosphorylation",
-      "Metabolic pathways",
-      "Calcium signaling pathway",
-      "Thermogenesis",
-      "Aldosterone synthesis and secretion"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0001487",
-      "kegg_id": "C00004",
-      "chebi_id": "CHEBI:16908",
-      "pubchem_id": "439153",
-      "cas": "58-68-4",
-      "biocyc": "NADH",
-      "chemspider": "388299",
-      "drugbank_id": "DB00157",
-      "pathbank_compound_id": "1144"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00004",
-      "primary_name": "NADH",
-      "synonyms": [
-        "NADH",
-        "DPNH",
-        "Reduced nicotinamide adenine dinucleotide"
-      ],
-      "formula": "C21H29N7O14P2",
-      "mass_monoisotopic": 665.1248,
-      "mass_average": 665.44,
-      "pathways": [
-        "Oxidative phosphorylation",
-        "Metabolic pathways",
-        "Calcium signaling pathway",
-        "Thermogenesis",
-        "Aldosterone synthesis and secretion"
-      ],
-      "kegg_class": [],
-      "cross_references": {
-        "kegg_id": "C00004",
-        "pubchem_id": "3306",
-        "chebi_id": "16908"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00004",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00004",
-        "retrieved_at": "2026-03-20T19:31:51Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:16908",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:50Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001487",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001487",
-        "retrieved_at": "2026-03-20T19:31:50Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:16908",
-        "retrieved_at": "2026-03-20T19:31:50Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001487",
-        "retrieved_at": "2026-03-20T19:31:50Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00004",
-        "retrieved_at": "2026-03-20T19:31:51Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:NAD⁺|HMDB0000902": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "NAD+",
-    "synonyms": [
-      "NAD+",
-      "NAD",
-      "Nicotinamide adenine dinucleotide",
-      "DPN",
-      "Diphosphopyridine nucleotide",
-      "Nadide",
-      "beta-NAD+"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C21H28N7O14P2",
-    "charge": 0,
-    "mass_monoisotopic": 664.1169,
-    "mass_average": 664.43,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Vitamins and cofactors",
-      "Cofactors",
-      "Coenzymes",
-      "C00003 NAD",
-      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00002)]",
-      "A ALIMENTARY TRACT AND METABOLISM",
-      "A11 VITAMINS",
-      "A11H OTHER PLAIN VITAMIN PREPARATIONS",
-      "A11HA Other plain vitamin preparations",
-      "A11HA01 Nicotinamide",
-      "D00002 Nadide (JAN/USAN/INN)"
-    ],
-    "pathways": [
-      "Oxidative phosphorylation",
-      "Thiamine metabolism",
-      "Nicotinate and nicotinamide metabolism",
-      "Drug metabolism - other enzymes",
-      "Metabolic pathways",
-      "Biosynthesis of cofactors",
-      "Efferocytosis",
-      "AMPK signaling pathway",
-      "Longevity regulating pathway",
-      "Longevity regulating pathway - worm",
-      "Aldosterone synthesis and secretion",
-      "Alcoholic liver disease",
-      "Vitamin digestion and absorption",
-      "Chemical carcinogenesis - reactive oxygen species"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0000902",
-      "kegg_id": "C00003",
-      "chebi_id": "CHEBI:15846",
-      "pubchem_id": "5893",
-      "cas": "53-84-9",
-      "biocyc": "NAD",
-      "chemspider": "5682",
-      "pathbank_compound_id": "721"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00003",
-      "primary_name": "NAD+",
-      "synonyms": [
-        "NAD+",
-        "NAD",
-        "Nicotinamide adenine dinucleotide",
-        "DPN",
-        "Diphosphopyridine nucleotide",
-        "Nadide",
-        "beta-NAD+"
-      ],
-      "formula": "C21H28N7O14P2",
-      "mass_monoisotopic": 664.1169,
-      "mass_average": 664.43,
-      "pathways": [
-        "Oxidative phosphorylation",
-        "Thiamine metabolism",
-        "Nicotinate and nicotinamide metabolism",
-        "Drug metabolism - other enzymes",
-        "Metabolic pathways",
-        "Biosynthesis of cofactors",
-        "Efferocytosis",
-        "AMPK signaling pathway",
-        "Longevity regulating pathway",
-        "Longevity regulating pathway - worm",
-        "Aldosterone synthesis and secretion",
-        "Alcoholic liver disease",
-        "Vitamin digestion and absorption",
-        "Chemical carcinogenesis - reactive oxygen species"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Vitamins and cofactors",
-        "Cofactors",
-        "Coenzymes",
-        "C00003 NAD",
-        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00002)]",
-        "A ALIMENTARY TRACT AND METABOLISM",
-        "A11 VITAMINS",
-        "A11H OTHER PLAIN VITAMIN PREPARATIONS",
-        "A11HA Other plain vitamin preparations",
-        "A11HA01 Nicotinamide",
-        "D00002 Nadide (JAN/USAN/INN)"
-      ],
-      "cross_references": {
-        "kegg_id": "C00003",
-        "pubchem_id": "3305",
-        "chebi_id": "15846"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00003",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00003",
-        "retrieved_at": "2026-03-20T19:31:46Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:15846",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-20T19:31:45Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0000902",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000902",
-        "retrieved_at": "2026-03-20T19:31:45Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:15846",
-        "retrieved_at": "2026-03-20T19:31:45Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0000902",
-        "retrieved_at": "2026-03-20T19:31:45Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00003",
-        "retrieved_at": "2026-03-20T19:31:46Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:water|HMDB0002111": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "H2O",
-    "synonyms": [
-      "H2O",
-      "Water"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "H2O",
-    "charge": 0,
-    "mass_monoisotopic": 18.0106,
-    "mass_average": 18.02,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Therapeutic category of drugs in Japan [BR:br08301(D00001)]",
-      "7 Agents not mainly for therapeutic purpose",
-      "71 Dispensing medicines",
-      "713 Solvents",
-      "7131 Purified water",
-      "D00001 Water (JP18/USP); Purified water (JP18); Purified water in containers (JP18); Water, purified (USP); Sterile purified water in containers (JP18); Water for injection (JP18); Water for injection in containers (JP18)",
-      "Risk category of Japanese OTC drugs [BR:br08312(D00001)]",
-      "Third-class OTC drugs",
-      "Inorganic and organic chemicals",
-      "Water",
-      "D00001 Water (JP18/USP)",
-      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00001)]",
-      "Chemicals",
-      "D00001 Water",
-      "D00001 Purified water",
-      "D00001 Purified water in containers",
-      "D00001 Sterile purified Water in containers",
-      "D00001 Water for injection",
-      "D00001 Sterile water for injection in containers"
-    ],
-    "pathways": [
-      "Oxidative phosphorylation",
-      "Photosynthesis",
-      "Carbon fixation by Calvin cycle",
-      "Metabolic pathways",
-      "Thyroid hormone synthesis",
-      "Renin secretion",
-      "Vasopressin-regulated water reabsorption",
-      "Proximal tubule bicarbonate reclamation",
-      "Collecting duct acid secretion",
-      "Salivary secretion",
-      "Gastric acid secretion",
-      "Pancreatic secretion",
-      "Bile secretion",
-      "Amyotrophic lateral sclerosis",
-      "Pathways of neurodegeneration - multiple diseases",
-      "Chemical carcinogenesis - reactive oxygen species",
-      "Diabetic cardiomyopathy"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "hmdb_id": "HMDB0002111",
-      "kegg_id": "C00001",
-      "chebi_id": "CHEBI:15377",
-      "pubchem_id": "962",
-      "cas": "7732-18-5",
-      "chemspider": "937",
-      "pathbank_compound_id": "1420"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00001",
-      "primary_name": "H2O",
-      "synonyms": [
-        "H2O",
-        "Water"
-      ],
-      "formula": "H2O",
-      "mass_monoisotopic": 18.0106,
-      "mass_average": 18.02,
-      "pathways": [
-        "Oxidative phosphorylation",
-        "Photosynthesis",
-        "Carbon fixation by Calvin cycle",
-        "Metabolic pathways",
-        "Thyroid hormone synthesis",
-        "Renin secretion",
-        "Vasopressin-regulated water reabsorption",
-        "Proximal tubule bicarbonate reclamation",
-        "Collecting duct acid secretion",
-        "Salivary secretion",
-        "Gastric acid secretion",
-        "Pancreatic secretion",
-        "Bile secretion",
-        "Amyotrophic lateral sclerosis",
-        "Pathways of neurodegeneration - multiple diseases",
-        "Chemical carcinogenesis - reactive oxygen species",
-        "Diabetic cardiomyopathy"
-      ],
-      "kegg_class": [
-        "Therapeutic category of drugs in Japan [BR:br08301(D00001)]",
-        "7 Agents not mainly for therapeutic purpose",
-        "71 Dispensing medicines",
-        "713 Solvents",
-        "7131 Purified water",
-        "D00001 Water (JP18/USP); Purified water (JP18); Purified water in containers (JP18); Water, purified (USP); Sterile purified water in containers (JP18); Water for injection (JP18); Water for injection in containers (JP18)",
-        "Risk category of Japanese OTC drugs [BR:br08312(D00001)]",
-        "Third-class OTC drugs",
-        "Inorganic and organic chemicals",
-        "Water",
-        "D00001 Water (JP18/USP)",
-        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00001)]",
-        "Chemicals",
-        "D00001 Water",
-        "D00001 Purified water",
-        "D00001 Purified water in containers",
-        "D00001 Sterile purified Water in containers",
-        "D00001 Water for injection",
-        "D00001 Sterile water for injection in containers"
-      ],
-      "cross_references": {
-        "kegg_id": "C00001",
-        "pubchem_id": "3303",
-        "chebi_id": "15377"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00001",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00001",
-        "retrieved_at": "2026-03-14T01:12:40Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:15377",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-03-14T01:12:39Z"
-      }
-    },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0002111",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0002111",
-        "retrieved_at": "2026-03-14T01:12:40Z"
-      }
-    },
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:15377",
-        "retrieved_at": "2026-03-14T01:12:39Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0002111",
-        "retrieved_at": "2026-03-14T01:12:40Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00001",
-        "retrieved_at": "2026-03-14T01:12:40Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "protein:hexokinase|P52790": {
+  "protein:lipoxygenase (LOX)|A0A1I9LPH1": {
     "status": "ok",
-    "uniprot_id": "P52790",
-    "recommended_name": "Hexokinase-3",
+    "uniprot_id": "A0A1I9LPH1",
+    "recommended_name": "Lipoxygenase",
+    "alternative_names": [],
+    "gene_names": [
+      "LOX2",
+      "ATLOX2",
+      "lipoxygenase 2"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Plant lipoxygenase may be involved in a number of diverse aspects of plant physiology including growth and development, pest resistance, and senescence or responses to wounding",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [
+      "Lipid metabolism; oxylipin biosynthesis"
+    ],
+    "keywords": [
+      "Chloroplast",
+      "Dioxygenase",
+      "Fatty acid biosynthesis",
+      "Fatty acid metabolism",
+      "Iron",
+      "Lipid biosynthesis",
+      "Lipid metabolism",
+      "Metal-binding",
+      "Oxidoreductase",
+      "Oxylipin biosynthesis",
+      "Plastid",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Plastid, chloroplast"
+    ],
+    "go_mf_ids": [
+      "GO:0016165",
+      "GO:0046872"
+    ],
+    "go_bp_ids": [
+      "GO:0006633",
+      "GO:0034440",
+      "GO:0031408"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009507"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 754,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "A0A1I9LPH1",
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A1I9LPH1.json",
+      "retrieved_at": "2026-06-23T16:47:14Z"
+    }
+  },
+  "protein:allene oxide synthase (AOS)|Q96242": {
+    "status": "ok",
+    "uniprot_id": "Q96242",
+    "recommended_name": "Allene oxide synthase, chloroplastic",
     "alternative_names": [
-      "Hexokinase type III",
-      "Hexokinase-C"
+      "Cytochrome P450 74A",
+      "Hydroperoxide dehydratase"
     ],
     "gene_names": [
-      "HK3"
+      "CYP74A",
+      "AOS"
     ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Catalyzes the phosphorylation of hexose, such as D-glucose and D-fructose, to hexose 6-phosphate (D-glucose 6-phosphate and D-fructose 6-phosphate, respectively) (PubMed:8717435). Mediates the initial step of glycolysis by catalyzing phosphorylation of D-glucose to D-glucose 6-phosphate (PubMed:8717435)",
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Cytochrome P450 enzyme involved in the biosynthesis of oxylipin jasmonates, important phytohormones acting as growth regulators and signaling molecules for plant defense. Functions as an allene oxide synthase that converts hydroperoxy fatty acids to unstable allene epoxides. Catalyzes the dehydration of 13-HPOTE ((13S)-hydroperoxy-(9Z,11E,15Z)-octadecatrienoate), as well as 13-HPODE ((13S)-hydroperoxy-(9Z,11E)-octadecadienoate)",
     "catalytic_activity": [
-      "a D-hexose + ATP = a D-hexose 6-phosphate + ADP + H(+)",
-      "D-fructose + ATP = D-fructose 6-phosphate + ADP + H(+)",
-      "D-glucose + ATP = D-glucose 6-phosphate + ADP + H(+)"
+      "(13S)-hydroperoxy-(9Z,11E,15Z)-octadecatrienoate = (9Z,13S,15Z)-12,13-epoxyoctadeca-9,11,15-trienoate + H2O",
+      "(13S)-hydroperoxy-(9Z,11E)-octadecadienoate = (9Z,13S)-12,13-epoxyoctadeca-9,11-dienoate + H2O"
     ],
     "enzyme_commission": [
-      "2.7.1.1"
+      "4.2.1.92"
     ],
     "pathways": [
-      "Carbohydrate metabolism; hexose metabolism",
-      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 1/4"
+      "Lipid metabolism; oxylipin biosynthesis"
     ],
     "keywords": [
       "3D-structure",
-      "Allosteric enzyme",
+      "Chloroplast",
+      "Fatty acid biosynthesis",
+      "Fatty acid metabolism",
+      "Heme",
+      "Iron",
+      "Lipid biosynthesis",
+      "Lipid metabolism",
+      "Lyase",
+      "Metal-binding",
+      "Oxylipin biosynthesis",
+      "Plastid",
+      "Reference proteome",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Plastid, chloroplast, plastoglobule"
+    ],
+    "go_mf_ids": [
+      "GO:0009978",
+      "GO:0020037",
+      "GO:0016836",
+      "GO:0005506",
+      "GO:0004497",
+      "GO:0016705",
+      "GO:0019825"
+    ],
+    "go_bp_ids": [
+      "GO:0006952",
+      "GO:0050832",
+      "GO:0019373",
+      "GO:0009695",
+      "GO:0031408",
+      "GO:0031407",
+      "GO:0009620",
+      "GO:0009753",
+      "GO:0009611"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009507",
+      "GO:0009941",
+      "GO:0009534",
+      "GO:0009535",
+      "GO:0005739",
+      "GO:0009536",
+      "GO:0010287",
+      "GO:0009579"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 518,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "2RCH",
+      "2RCL",
+      "2RCM",
+      "3CLI",
+      "3DSI",
+      "3DSJ",
+      "3DSK"
+    ],
+    "reactome_ids": [],
+    "string_id": "3702.Q96242",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Q96242",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q96242.json",
+      "retrieved_at": "2026-06-16T17:07:09Z"
+    }
+  },
+  "protein:allene oxide cyclase (AOC)|Q9LS02": {
+    "status": "ok",
+    "uniprot_id": "Q9LS02",
+    "recommended_name": "Allene oxide cyclase 2, chloroplastic",
+    "alternative_names": [],
+    "gene_names": [
+      "AOC2"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Involved in the production of 12-oxo-phytodienoic acid (OPDA), a precursor of jasmonic acid",
+    "catalytic_activity": [
+      "(9Z,13S,15Z)-12,13-epoxyoctadeca-9,11,15-trienoate = (9S,13S,15Z)-12-oxophyto-10,15-dienoate"
+    ],
+    "enzyme_commission": [
+      "5.3.99.6"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Chloroplast",
+      "Isomerase",
+      "Plastid",
+      "Reference proteome",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Plastid, chloroplast"
+    ],
+    "go_mf_ids": [
+      "GO:0046423"
+    ],
+    "go_bp_ids": [
+      "GO:0009695",
+      "GO:0009409"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009507",
+      "GO:0009941",
+      "GO:0009570",
+      "GO:0009535",
+      "GO:0005829",
+      "GO:0010319"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 253,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "1Z8K",
+      "2BRJ",
+      "2DIO",
+      "2GIN",
+      "2Q4I",
+      "4CQ6",
+      "4CQ7"
+    ],
+    "reactome_ids": [],
+    "string_id": "3702.Q9LS02",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Q9LS02",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q9LS02.json",
+      "retrieved_at": "2026-06-16T17:07:10Z"
+    }
+  },
+  "protein:12-oxophytodienoate reductase 3 (OPR3)|Q9FUP0": {
+    "status": "ok",
+    "uniprot_id": "Q9FUP0",
+    "recommended_name": "12-oxophytodienoate reductase 3",
+    "alternative_names": [
+      "12-oxophytodienoate-10,11-reductase 3",
+      "Protein DELAYED DEHISCENCE 1"
+    ],
+    "gene_names": [
+      "OPR3",
+      "DDE1"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Specifically cleaves olefinic bonds in cyclic enones (PubMed:11094980). Involved in the biosynthesis of jasmonic acid (JA) and perhaps in biosynthesis or metabolism of other oxylipin signaling moleclules (PubMed:10872231, PubMed:10973494, PubMed:29291349). Required for the spatial and temporal regulation of JA levels during dehiscence of anthers, promoting the stomium degeneration program (PubMed:10899973, PubMed:10973494). In vitro, reduces 9S,13S-12-oxophytodienoic acid (9S,13S-OPDA) and 9R,13R-OPDA to 9S,13S-OPC-8:0 and 9R,13R-OPC-8:0, respectively (PubMed:10872231). Can detoxify the explosive 2,4,6-trinitrotoluene (TNT) in vitro by catalyzing its nitroreduction to form hydroxylamino-dinitrotoluene (HADNT) (PubMed:19605548)",
+    "catalytic_activity": [
+      "(1S,2S)-OPC-8 + NADP(+) = (9S,13S,15Z)-12-oxophyto-10,15-dienoate + NADPH + H(+)"
+    ],
+    "enzyme_commission": [
+      "1.3.1.42"
+    ],
+    "pathways": [
+      "Lipid metabolism; oxylipin biosynthesis"
+    ],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Fatty acid biosynthesis",
+      "Fatty acid metabolism",
+      "Flavoprotein",
+      "FMN",
+      "Lipid biosynthesis",
+      "Lipid metabolism",
+      "NADP",
+      "Oxidoreductase",
+      "Oxylipin biosynthesis",
+      "Peroxisome",
+      "Reference proteome"
+    ],
+    "subcellular_locations": [
+      "Peroxisome"
+    ],
+    "go_mf_ids": [
+      "GO:0016629",
+      "GO:0010181"
+    ],
+    "go_bp_ids": [
+      "GO:0009695",
+      "GO:0031408",
+      "GO:0009620",
+      "GO:0010193",
+      "GO:0048443"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005777"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 391,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "1Q45",
+      "2G5W",
+      "2Q3O"
+    ],
+    "reactome_ids": [],
+    "string_id": "3702.Q9FUP0",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Q9FUP0",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q9FUP0.json",
+      "retrieved_at": "2026-06-16T17:07:10Z"
+    }
+  },
+  "protein:COMATOSE (CTS)|Q94FB9": {
+    "status": "ok",
+    "uniprot_id": "Q94FB9",
+    "recommended_name": "ABC transporter D family member 1",
+    "alternative_names": [
+      "Peroxisomal ABC transporter 1",
+      "Protein ACETATE NON-UTILIZING 2",
+      "Protein COMATOSE",
+      "Protein PEROXISOME DEFECTIVE 3"
+    ],
+    "gene_names": [
+      "ABCD1",
+      "ACN2",
+      "CTS",
+      "PED3",
+      "PMP2",
+      "PXA1"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Contributes to the transport of fatty acids and their derivatives (acyl CoAs) across the peroxisomal membrane. Provides acetate to the glyoxylate cycle in developing seedlings. Involved in pollen tube elongation, ovule fertilization, and seeds germination after imbibition (controls the switch between the opposing developmental programs of dormancy and germination), probably by promoting beta-oxidation of storage lipids during gluconeogenesis. Required for biosynthesis of jasmonic acid and conversion of indole butyric acid to indole acetic acid. Confers sensitivity to monofluoroacetic acid (FAc), a toxic acetate analog, and to 2,4-dichlorophenoxybutyric acid (2,4-DB) and indole-3-butyric acid (IBA), two precursors of auxin after beta-oxidation",
+    "catalytic_activity": [
+      "an acyl-CoA(out) + ATP + H2O = an acyl-CoA(in) + ADP + phosphate + H(+)"
+    ],
+    "enzyme_commission": [
+      "7.6.2.4"
+    ],
+    "pathways": [],
+    "keywords": [
+      "Alternative splicing",
       "ATP-binding",
-      "Glycolysis",
-      "Kinase",
+      "Glyoxysome",
+      "Membrane",
       "Nucleotide-binding",
-      "Proteomics identification",
+      "Peroxisome",
       "Reference proteome",
       "Repeat",
-      "Transferase"
-    ],
-    "subcellular_locations": [],
-    "go_mf_ids": [
-      "GO:0005524",
-      "GO:0005536",
-      "GO:0008865",
-      "GO:0004340",
-      "GO:0004396",
-      "GO:0019158"
-    ],
-    "go_bp_ids": [
-      "GO:0061621",
-      "GO:0006002",
-      "GO:0051156",
-      "GO:0006006",
-      "GO:0006096",
-      "GO:0001678"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005829",
-      "GO:0005576",
-      "GO:1904813",
-      "GO:0005739",
-      "GO:0034774"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 923,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [
-      "3HM8"
-    ],
-    "reactome_ids": [
-      "R-HSA-6798695",
-      "R-HSA-70171"
-    ],
-    "string_id": "9606.ENSP00000292432",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P52790",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P52790.json",
-      "retrieved_at": "2026-05-12T21:00:53Z"
-    }
-  },
-  "protein:phosphoglucose isomerase|P06744": {
-    "status": "ok",
-    "uniprot_id": "P06744",
-    "recommended_name": "Glucose-6-phosphate isomerase",
-    "alternative_names": [
-      "Autocrine motility factor",
-      "D-hexose-6-phosphate anomerase",
-      "Glucose-6-phosphate C2-epimerase",
-      "Neuroleukin",
-      "Phosphoglucose isomerase",
-      "Phosphohexose isomerase",
-      "Sperm antigen 36"
-    ],
-    "gene_names": [
-      "GPI"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Isomerase that catalyzes the conversion of alpha-D-glucose-6-phosphate to beta-D-fructose-6-phosphate, the second step in glycolysis, and the reverse reaction in gluconeogenesis, within the cytoplasm (PubMed:28803808). Also shows C2-epimerase activity, interconverting D-glucose-6-phosphate (G6P) and D-mannose-6-phosphate (M6P) (By similarity). Also displays anomerase activity, interconverting alpha and beta-anomeric forms of G6P, D-fructose-6-phosphate and M6P (By similarity). In addition to its metabolic role, this enzyme functions extracellularly as a cytokine: acts as autocrine motility factor (AMF), a secreted angiogenic factor that enhances endothelial cell motility (PubMed:11437381). Functions as neuroleukin, a neurotrophic factor supporting the survival of spinal and sensory neurons (PubMed:11004567, PubMed:3352745). Released by lectin-stimulated T-cells to induce immunoglobulin secretion (PubMed:11004567, PubMed:3352745)",
-    "catalytic_activity": [
-      "alpha-D-glucose 6-phosphate = beta-D-fructose 6-phosphate",
-      "alpha-D-glucose 6-phosphate = beta-D-glucose 6-phosphate",
-      "alpha-D-fructose 6-phosphate = beta-D-fructose 6-phosphate",
-      "alpha-D-mannose 6-phosphate = beta-D-mannose 6-phosphate",
-      "D-glucose 6-phosphate = D-mannose 6-phosphate"
-    ],
-    "enzyme_commission": [
-      "5.3.1.9"
-    ],
-    "pathways": [
-      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 2/4"
-    ],
-    "keywords": [
-      "3D-structure",
-      "Acetylation",
-      "Alternative splicing",
-      "Cytokine",
-      "Cytoplasm",
-      "Direct protein sequencing",
-      "Disease variant",
-      "Gluconeogenesis",
-      "Glycolysis",
-      "Growth factor",
-      "Hereditary hemolytic anemia",
-      "Hydroxylation",
-      "Isomerase",
-      "Phosphoprotein",
-      "Proteomics identification",
-      "Reference proteome",
-      "Secreted",
-      "Ubl conjugation"
+      "Translocase",
+      "Transmembrane",
+      "Transmembrane helix",
+      "Transport"
     ],
     "subcellular_locations": [
-      "Cytoplasm",
-      "Secreted"
+      "Peroxisome membrane",
+      "Glyoxysome membrane"
     ],
     "go_mf_ids": [
-      "GO:0097367",
-      "GO:0005125",
-      "GO:0004347",
-      "GO:0008083",
-      "GO:0048029",
-      "GO:0016857",
-      "GO:0031625"
+      "GO:0015607",
+      "GO:0005524",
+      "GO:0016887",
+      "GO:0042626",
+      "GO:0005324"
     ],
     "go_bp_ids": [
-      "GO:0061621",
-      "GO:0005975",
-      "GO:0034101",
-      "GO:0006002",
-      "GO:0006094",
-      "GO:0051156",
-      "GO:0042593",
-      "GO:0006096",
-      "GO:0007599",
-      "GO:0006959",
-      "GO:0001701",
-      "GO:0007611",
-      "GO:0001707",
-      "GO:0043066",
-      "GO:1904539",
-      "GO:0010595",
-      "GO:0002639",
-      "GO:0046686",
-      "GO:0032355",
-      "GO:0035902",
-      "GO:0035994",
-      "GO:0032570",
-      "GO:0033574"
+      "GO:0006635",
+      "GO:0015916",
+      "GO:0016042",
+      "GO:0015910",
+      "GO:0007031",
+      "GO:0010030",
+      "GO:0006744",
+      "GO:0042760"
     ],
     "go_cellular_component_ids": [
-      "GO:0060170",
-      "GO:0005829",
-      "GO:0070062",
-      "GO:0005576",
-      "GO:1904813",
-      "GO:0016020",
-      "GO:0034774"
+      "GO:0046861",
+      "GO:0005778",
+      "GO:0005777"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 558,
-    "transmembrane_regions_count": 0,
+    "sequence_length": 1337,
+    "transmembrane_regions_count": 5,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
-    "pdb_ids": [
-      "1IAT",
-      "1IRI",
-      "1JIQ",
-      "1JLH",
-      "1NUH",
-      "6XUH",
-      "6XUI",
-      "8BBH",
-      "8P2K",
-      "9FCW",
-      "9FHF",
-      "9FKC",
-      "9FKF"
-    ],
-    "reactome_ids": [
-      "R-HSA-5628897",
-      "R-HSA-6798695",
-      "R-HSA-70171",
-      "R-HSA-70263"
-    ],
-    "string_id": "9606.ENSP00000405573",
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "3702.Q94FB9",
     "provenance": {
       "source": "UniProt",
-      "query": "P06744",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P06744.json",
-      "retrieved_at": "2026-03-21T01:12:07Z"
+      "query": "Q94FB9",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q94FB9.json",
+      "retrieved_at": "2026-06-16T21:40:04Z"
     }
   },
-  "protein:phosphofructokinase-1|P21777": {
+  "protein:OPC-8:CoA ligase 1 (OPCL1)|Q84P21": {
     "status": "ok",
-    "uniprot_id": "P21777",
-    "recommended_name": "ATP-dependent 6-phosphofructokinase 1",
+    "uniprot_id": "Q84P21",
+    "recommended_name": "Peroxisomal OPC-8:0-CoA ligase 1",
     "alternative_names": [
-      "Phosphohexokinase 1"
+      "4-coumarate--CoA ligase isoform 9",
+      "4-coumarate--CoA ligase-like 5"
     ],
     "gene_names": [
-      "pfkA"
+      "4CLL5",
+      "OPCL1"
     ],
-    "organism": "Thermus thermophilus (strain ATCC 27634 / DSM 579 / HB8)",
-    "taxonomy_id": "300852",
-    "function_text": "Catalyzes the phosphorylation of D-fructose 6-phosphate to fructose 1,6-bisphosphate by ATP, the first committing step of glycolysis",
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Contributes to jasmonic acid biosynthesis by initiating the beta-oxidative chain shortening of its precursors (PubMed:16963437, PubMed:18267944). Converts 12-oxo-phytodienoic acid (OPDA) and 3-oxo-2-(2'-pentenyl)-cyclopentane-1-octanoic acid (OPC-8:0) into OPDA-CoA and OPC-8:0-CoA, respectively (PubMed:16963437, PubMed:18267944). Follows a two-step reaction mechanism, wherein the carboxylate substrate first undergoes adenylation by ATP, followed by a thioesterification in the presence of CoA to yield the final CoA thioester (By similarity)",
     "catalytic_activity": [
-      "beta-D-fructose 6-phosphate + ATP = beta-D-fructose 1,6-bisphosphate + ADP + H(+)"
+      "(9S,13S,15Z)-12-oxophyto-10,15-dienoate + ATP + CoA = (10Z,15Z)-12-oxophytodienoyl-CoA + AMP + diphosphate",
+      "(1S,2S)-OPC-8 + ATP + CoA = OPC8-CoA + AMP + diphosphate",
+      "hexadecanoate + ATP + CoA = hexadecanoyl-CoA + AMP + diphosphate",
+      "(9Z)-octadecenoate + ATP + CoA = (9Z)-octadecenoyl-CoA + AMP + diphosphate",
+      "tetradecanoate + ATP + CoA = tetradecanoyl-CoA + AMP + diphosphate",
+      "decanoate + ATP + CoA = decanoyl-CoA + AMP + diphosphate",
+      "dodecanoate + ATP + CoA = dodecanoyl-CoA + AMP + diphosphate",
+      "octadecanoate + ATP + CoA = octadecanoyl-CoA + AMP + diphosphate",
+      "OPC-6 + ATP + CoA = OPC-6-CoA + AMP + diphosphate",
+      "dinor-OPDA + ATP + CoA = dinor-OPDA-CoA + AMP + diphosphate"
     ],
-    "enzyme_commission": [
-      "2.7.1.11"
-    ],
-    "pathways": [
-      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 3/4"
-    ],
+    "enzyme_commission": [],
+    "pathways": [],
     "keywords": [
-      "Allosteric enzyme",
+      "Alternative splicing",
       "ATP-binding",
-      "Cytoplasm",
-      "Direct protein sequencing",
-      "Glycolysis",
-      "Kinase",
+      "Jasmonic acid signaling pathway",
+      "Ligase",
       "Magnesium",
-      "Metal-binding",
       "Nucleotide-binding",
-      "Reference proteome",
-      "Transferase"
+      "Peroxisome",
+      "Reference proteome"
     ],
     "subcellular_locations": [
-      "Cytoplasm"
+      "Peroxisome"
     ],
     "go_mf_ids": [
-      "GO:0003872",
-      "GO:0016208",
       "GO:0005524",
-      "GO:0070095",
-      "GO:0042802",
-      "GO:0046872",
-      "GO:0048029"
+      "GO:0016405",
+      "GO:0102391"
     ],
     "go_bp_ids": [
-      "GO:0061621",
-      "GO:0030388",
-      "GO:0006002"
+      "GO:0009695",
+      "GO:0009617",
+      "GO:0009753",
+      "GO:0009611"
     ],
     "go_cellular_component_ids": [
-      "GO:0005945"
+      "GO:0009507",
+      "GO:0005777"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 322,
+    "sequence_length": 546,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
@@ -2844,584 +1473,281 @@
     },
     "pdb_ids": [],
     "reactome_ids": [],
-    "string_id": "",
+    "string_id": "3702.Q84P21",
     "provenance": {
       "source": "UniProt",
-      "query": "P21777",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P21777.json",
-      "retrieved_at": "2026-03-21T01:12:08Z"
+      "query": "Q84P21",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q84P21.json",
+      "retrieved_at": "2026-06-16T21:40:04Z"
     }
   },
-  "protein:aldolase|Q8NHT3": {
+  "protein:acyl-CoA oxidase 1 (ACX1)|O65202": {
     "status": "ok",
-    "uniprot_id": "Q8NHT3",
-    "recommended_name": "Fructose-bisphosphate aldolase",
-    "alternative_names": [],
-    "gene_names": [],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "",
-    "catalytic_activity": [
-      "beta-D-fructose 1,6-bisphosphate = D-glyceraldehyde 3-phosphate + dihydroxyacetone phosphate"
-    ],
-    "enzyme_commission": [
-      "4.1.2.13"
-    ],
-    "pathways": [
-      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate and glycerone phosphate from D-glucose: step 4/4"
-    ],
-    "keywords": [
-      "Glycolysis",
-      "Lyase",
-      "Schiff base"
-    ],
-    "subcellular_locations": [],
-    "go_mf_ids": [
-      "GO:0004332"
-    ],
-    "go_bp_ids": [
-      "GO:0006096"
-    ],
-    "go_cellular_component_ids": [],
-    "protein_existence": "2: Evidence at transcript level",
-    "sequence_length": 316,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "",
-    "provenance": {
-      "source": "UniProt",
-      "query": "Q8NHT3",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q8NHT3.json",
-      "retrieved_at": "2026-05-21T18:09:55Z"
-    }
-  },
-  "protein:triose phosphate isomerase|P60174": {
-    "status": "ok",
-    "uniprot_id": "P60174",
-    "recommended_name": "Triosephosphate isomerase",
+    "uniprot_id": "O65202",
+    "recommended_name": "Peroxisomal acyl-coenzyme A oxidase 1",
     "alternative_names": [
-      "Methylglyoxal synthase",
-      "Triose-phosphate isomerase"
+      "Long-chain acyl-CoA oxidase"
     ],
     "gene_names": [
-      "TPI1",
-      "TPI"
+      "ACX1"
     ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Triosephosphate isomerase is an extremely efficient metabolic enzyme that catalyzes the interconversion between dihydroxyacetone phosphate (DHAP) and D-glyceraldehyde-3-phosphate (G3P) in glycolysis and gluconeogenesis It is also responsible for the non-negligible production of methylglyoxal a reactive cytotoxic side-product that modifies and can alter proteins, DNA and lipids",
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Catalyzes the desaturation of both long- and medium-chain acyl-CoAs to 2-trans-enoyl-CoAs. Most active with C14-CoA. Activity on long-chain mono-unsaturated substrates is 40% higher than with the corresponding saturated substrates. Seems to be an important factor in the general metabolism of root tips. May be involved in the biosynthesis of jasmonic acid",
     "catalytic_activity": [
-      "D-glyceraldehyde 3-phosphate = dihydroxyacetone phosphate",
-      "dihydroxyacetone phosphate = methylglyoxal + phosphate"
+      "a 2,3-saturated acyl-CoA + O2 = a (2E)-enoyl-CoA + H2O2"
     ],
     "enzyme_commission": [
-      "5.3.1.1",
-      "4.2.3.3"
+      "1.3.3.6"
     ],
-    "pathways": [
-      "Carbohydrate degradation; glycolysis; D-glyceraldehyde 3-phosphate from glycerone phosphate: step 1/1",
-      "Carbohydrate biosynthesis; gluconeogenesis"
-    ],
+    "pathways": [],
     "keywords": [
       "3D-structure",
-      "Acetylation",
-      "Alternative promoter usage",
       "Alternative splicing",
-      "Cytoplasm",
-      "Direct protein sequencing",
-      "Disease variant",
-      "Gluconeogenesis",
-      "Glycolysis",
-      "Hereditary hemolytic anemia",
-      "Isomerase",
-      "Isopeptide bond",
-      "Lyase",
-      "Methylation",
-      "Nitration",
-      "Phosphoprotein",
-      "Proteomics identification",
-      "Reference proteome",
-      "Ubl conjugation"
-    ],
-    "subcellular_locations": [
-      "Cytoplasm"
-    ],
-    "go_mf_ids": [
-      "GO:0008929",
-      "GO:0042803",
-      "GO:0004807",
-      "GO:0031625"
-    ],
-    "go_bp_ids": [
-      "GO:0061621",
-      "GO:0006094",
-      "GO:0046166",
-      "GO:0019563",
-      "GO:0006096",
-      "GO:0019242"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005829",
-      "GO:0070062",
-      "GO:0005615",
-      "GO:0005634"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 249,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [
-      "1HTI",
-      "1KLG",
-      "1KLU",
-      "1WYI",
-      "2IAM",
-      "2IAN",
-      "2JK2",
-      "2VOM",
-      "4BR1",
-      "4E41",
-      "4POC",
-      "4POD",
-      "4UNK",
-      "4UNL",
-      "4ZVJ",
-      "6C2G",
-      "6D43",
-      "6NLH",
-      "6UP1",
-      "6UP5",
-      "6UP8",
-      "6UPF",
-      "7RDE",
-      "7SX1",
-      "7T0Q",
-      "7UXB",
-      "7UXV",
-      "9F69",
-      "9FFC"
-    ],
-    "reactome_ids": [
-      "R-HSA-70171",
-      "R-HSA-70263"
-    ],
-    "string_id": "9606.ENSP00000229270",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P60174",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P60174.json",
-      "retrieved_at": "2026-03-20T19:31:14Z"
-    }
-  },
-  "protein:glyceraldehyde-3-phosphate dehydrogenase|P04406": {
-    "status": "ok",
-    "uniprot_id": "P04406",
-    "recommended_name": "Glyceraldehyde-3-phosphate dehydrogenase",
-    "alternative_names": [
-      "Peptidyl-cysteine S-nitrosylase GAPDH"
-    ],
-    "gene_names": [
-      "GAPDH",
-      "GAPD"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Catalyzes the conversion of D-glyceraldehyde 3-phosphate (G3P) into 3-phospho-D-glyceroyl phosphate in glycolysis and the reverse reaction in gluconeogenesis (PubMed:11724794, PubMed:3170585). Also shows nitrosylase activity, thereby playing a role in nuclear functions (PubMed:11724794, PubMed:3170585). Modulates the organization and assembly of the cytoskeleton (By similarity). Facilitates the CHP1-dependent microtubule and membrane associations through its ability to stimulate the binding of CHP1 to microtubules (By similarity). Component of the GAIT (gamma interferon-activated inhibitor of translation) complex which mediates interferon-gamma-induced transcript-selective translation inhibition in inflammation processes (PubMed:23071094). Upon interferon-gamma treatment assembles into the GAIT complex which binds to stem loop-containing GAIT elements in the 3'-UTR of diverse inflammatory mRNAs (such as ceruplasmin) and suppresses their translation (PubMed:23071094). Also plays a role in innate immunity by promoting TNF-induced NF-kappa-B activation and type I interferon production, via interaction with TRAF2 and TRAF3, respectively (PubMed:23332158, PubMed:27387501). Participates in nuclear events including transcription, RNA transport, DNA replication and apoptosis (By similarity). Nuclear functions are probably due to the nitrosylase activity that mediates cysteine S-nitrosylation of nuclear target proteins such as SIRT1, HDAC2 and PRKDC (By similarity)",
-    "catalytic_activity": [
-      "D-glyceraldehyde 3-phosphate + phosphate + NAD(+) = (2R)-3-phospho-glyceroyl phosphate + NADH + H(+)",
-      "S-nitroso-L-cysteinyl-[GAPDH] + L-cysteinyl-[protein] = L-cysteinyl-[GAPDH] + S-nitroso-L-cysteinyl-[protein]"
-    ],
-    "enzyme_commission": [
-      "1.2.1.12"
-    ],
-    "pathways": [
-      "Carbohydrate degradation; glycolysis; pyruvate from D-glyceraldehyde 3-phosphate: step 1/5"
-    ],
-    "keywords": [
-      "3D-structure",
-      "Acetylation",
-      "ADP-ribosylation",
-      "Alternative splicing",
-      "Apoptosis",
-      "Cytoplasm",
-      "Cytoskeleton",
-      "Direct protein sequencing",
-      "Glycolysis",
-      "Glycoprotein",
-      "Immunity",
-      "Innate immunity",
-      "Isopeptide bond",
-      "Membrane",
-      "Methylation",
-      "NAD",
-      "Nucleus",
-      "Oxidation",
+      "Disulfide bond",
+      "FAD",
+      "Fatty acid metabolism",
+      "Flavoprotein",
+      "Lipid metabolism",
       "Oxidoreductase",
-      "Phosphoprotein",
-      "Proteomics identification",
-      "Reference proteome",
-      "S-nitrosylation",
-      "Transferase",
-      "Translation regulation",
-      "Ubl conjugation"
+      "Peroxisome",
+      "Reference proteome"
     ],
     "subcellular_locations": [
-      "Cytoplasm, cytosol",
-      "Nucleus",
-      "Cytoplasm, perinuclear region",
-      "Membrane",
-      "Cytoplasm, cytoskeleton"
+      "Peroxisome"
     ],
     "go_mf_ids": [
-      "GO:0019828",
-      "GO:0097718",
-      "GO:0004365",
-      "GO:0042802",
-      "GO:0008017",
-      "GO:0051287",
-      "GO:0050661",
-      "GO:0035605"
+      "GO:0003997",
+      "GO:0071949",
+      "GO:0005504",
+      "GO:0050660"
     ],
     "go_bp_ids": [
-      "GO:0061844",
-      "GO:0061621",
-      "GO:0071346",
-      "GO:0050832",
-      "GO:0006096",
-      "GO:0051873",
-      "GO:0031640",
-      "GO:0000226",
-      "GO:0010951",
-      "GO:0017148",
-      "GO:0051402",
-      "GO:0035606",
-      "GO:0043123",
-      "GO:0001819",
-      "GO:0032481",
-      "GO:0050821",
-      "GO:0016241"
+      "GO:0006635",
+      "GO:0033540",
+      "GO:0009695",
+      "GO:0001676",
+      "GO:0009620",
+      "GO:0009611"
     ],
     "go_cellular_component_ids": [
       "GO:0005737",
       "GO:0005829",
-      "GO:0070062",
-      "GO:0097452",
-      "GO:0005811",
-      "GO:0016020",
-      "GO:0015630",
-      "GO:0031965",
-      "GO:0005634",
-      "GO:0048471",
-      "GO:0005886",
-      "GO:1990904",
-      "GO:0031982"
+      "GO:0005777",
+      "GO:0009506"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 335,
+    "sequence_length": 664,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "1U8F",
-      "1ZNQ",
-      "3GPD",
-      "4WNC",
-      "4WNI",
-      "6ADE",
-      "6IQ6",
-      "6M61",
-      "6YND",
-      "6YNE",
-      "6YNF",
-      "6YNH",
-      "8DNS",
-      "8G12",
-      "8G13",
-      "8G14",
-      "8G15",
-      "8G16",
-      "8G17",
-      "8P5F",
-      "9L3E"
+      "1W07"
     ],
-    "reactome_ids": [
-      "R-HSA-70171",
-      "R-HSA-70263"
-    ],
-    "string_id": "9606.ENSP00000380070",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P04406",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P04406.json",
-      "retrieved_at": "2026-03-20T19:31:14Z"
-    }
-  },
-  "protein:phosphoglycerate kinase|P07205": {
-    "status": "ok",
-    "uniprot_id": "P07205",
-    "recommended_name": "Phosphoglycerate kinase 2",
-    "alternative_names": [
-      "Phosphoglycerate kinase, testis specific"
-    ],
-    "gene_names": [
-      "PGK2",
-      "PGKB"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Catalyzes the reversible conversion of 1,3-diphosphoglycerate to 3-phosphoglycerate and plays a role in glycolysis and gluconeogenesis (By similarity). Essential for sperm motility and male fertility (PubMed:26677959). Not required for the completion of spermatogenesis (By similarity)",
-    "catalytic_activity": [
-      "(2R)-3-phosphoglycerate + ATP = (2R)-3-phospho-glyceroyl phosphate + ADP"
-    ],
-    "enzyme_commission": [
-      "2.7.2.3"
-    ],
-    "pathways": [
-      "Carbohydrate degradation; glycolysis; pyruvate from D-glyceraldehyde 3-phosphate: step 2/5"
-    ],
-    "keywords": [
-      "Acetylation",
-      "ATP-binding",
-      "Cytoplasm",
-      "Glycolysis",
-      "Kinase",
-      "Magnesium",
-      "Metal-binding",
-      "Nucleotide-binding",
-      "Phosphoprotein",
-      "Proteomics identification",
-      "Reference proteome",
-      "Transferase"
-    ],
-    "subcellular_locations": [
-      "Cytoplasm"
-    ],
-    "go_mf_ids": [
-      "GO:0043531",
-      "GO:0005524",
-      "GO:0046872",
-      "GO:0004618"
-    ],
-    "go_bp_ids": [
-      "GO:0061621",
-      "GO:0030317",
-      "GO:0006094",
-      "GO:0006096",
-      "GO:0016310"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005829",
-      "GO:0070062",
-      "GO:0005634",
-      "GO:0035686"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 417,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [],
-    "reactome_ids": [
-      "R-HSA-70171",
-      "R-HSA-70263"
-    ],
-    "string_id": "9606.ENSP00000305995",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P07205",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P07205.json",
-      "retrieved_at": "2026-05-21T18:09:55Z"
-    }
-  },
-  "protein:phosphoglycerate mutase|A4D2J6": {
-    "status": "ok",
-    "uniprot_id": "A4D2J6",
-    "recommended_name": "Phosphoglycerate mutase",
-    "alternative_names": [],
-    "gene_names": [
-      "PGAM2"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "",
-    "catalytic_activity": [
-      "(2R)-2-phosphoglycerate = (2R)-3-phosphoglycerate",
-      "(2R)-3-phospho-glyceroyl phosphate = (2R)-2,3-bisphosphoglycerate + H(+)"
-    ],
-    "enzyme_commission": [
-      "5.4.2.11",
-      "5.4.2.4"
-    ],
-    "pathways": [],
-    "keywords": [
-      "Glycolysis",
-      "Hydrolase",
-      "Isomerase",
-      "Phosphoprotein"
-    ],
-    "subcellular_locations": [],
-    "go_mf_ids": [
-      "GO:0004082",
-      "GO:0016787",
-      "GO:0004619"
-    ],
-    "go_bp_ids": [
-      "GO:0006096"
-    ],
-    "go_cellular_component_ids": [],
-    "protein_existence": "3: Inferred from homology",
-    "sequence_length": 252,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [],
     "reactome_ids": [],
-    "string_id": "",
+    "string_id": "3702.O65202",
     "provenance": {
       "source": "UniProt",
-      "query": "A4D2J6",
-      "source_url": "https://rest.uniprot.org/uniprotkb/A4D2J6.json",
-      "retrieved_at": "2026-03-20T19:31:14Z"
+      "query": "O65202",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O65202.json",
+      "retrieved_at": "2026-06-16T21:40:05Z"
     }
   },
-  "protein:enolase|P13929": {
+  "protein:multifunctional protein (MFP)|Q9FNB0": {
     "status": "ok",
-    "uniprot_id": "P13929",
-    "recommended_name": "Beta-enolase",
+    "uniprot_id": "Q9FNB0",
+    "recommended_name": "Magnesium-chelatase subunit ChlH, chloroplastic",
     "alternative_names": [
-      "2-phospho-D-glycerate hydro-lyase",
-      "Enolase 3",
-      "Muscle-specific enolase",
-      "Skeletal muscle enolase"
+      "ABA-binding protein",
+      "Mg-protoporphyrin IX chelatase subunit ChlH",
+      "Protein CONDITIONAL CHLORINA",
+      "Protein GENOMES UNCOUPLED 5",
+      "Protein RAPID TRANSPIRATION IN DETACHED LEAVES 1"
     ],
     "gene_names": [
-      "ENO3"
+      "CHLH",
+      "ABAR",
+      "CCH",
+      "GUN5",
+      "RTL1"
     ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Enolase that catalyzes the conversion of 2-phosphoglycerate to phosphoenolpyruvate in glycolysis and the reverse reaction in gluconeogenesis. Appears to have a function in striated muscle development and regeneration",
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Multifunctional protein involved in chlorophyll synthesis, plastid-to-nucleus retrograde signaling and abscisic acid (ABA) perception. In chlorophyll synthesis, catalyzes the insertion of magnesium ion into protoporphyrin IX to yield Mg-protoporphyrin IX. The reaction takes place in two steps, with an ATP-dependent activation followed by an ATP-dependent chelation step. In addition to its function in the Mg-chelatase enzyme, is required for the plastid-to-nucleus retrograde signaling. The plastid-to-nucleus signal plays an important role in the coordinated expression of both nuclear- and chloroplast-localized genes that encode photosynthesis-related proteins. Has a role in mediating ABA signaling in stomatal guard cells and during seed germination. Binds ABA and is a positive regulator of ABA signaling",
     "catalytic_activity": [
-      "(2R)-2-phosphoglycerate = phosphoenolpyruvate + H2O"
+      "protoporphyrin IX + Mg(2+) + ATP + H2O = Mg-protoporphyrin IX + ADP + phosphate + 3 H(+)"
     ],
     "enzyme_commission": [
-      "4.2.1.11"
+      "6.6.1.1"
     ],
     "pathways": [
-      "Carbohydrate degradation; glycolysis; pyruvate from D-glyceraldehyde 3-phosphate: step 4/5"
+      "Porphyrin-containing compound metabolism; chlorophyll biosynthesis"
     ],
     "keywords": [
       "3D-structure",
       "Acetylation",
       "Alternative splicing",
-      "Cytoplasm",
-      "Disease variant",
-      "Glycogen storage disease",
-      "Glycolysis",
-      "Lyase",
-      "Magnesium",
-      "Metal-binding",
-      "Phosphoprotein",
-      "Proteomics identification",
-      "Reference proteome"
+      "ATP-binding",
+      "Chlorophyll biosynthesis",
+      "Chloroplast",
+      "Ligase",
+      "Membrane",
+      "Nucleotide-binding",
+      "Photosynthesis",
+      "Plastid",
+      "Reference proteome",
+      "Transit peptide"
     ],
     "subcellular_locations": [
-      "Cytoplasm"
+      "Plastid, chloroplast stroma",
+      "Plastid, chloroplast membrane"
     ],
     "go_mf_ids": [
-      "GO:0000287",
-      "GO:0004634"
+      "GO:0005524",
+      "GO:0016851",
+      "GO:0003729"
     ],
     "go_bp_ids": [
-      "GO:0061621",
-      "GO:0006094",
-      "GO:0006096"
+      "GO:0015995",
+      "GO:0015979"
     ],
     "go_cellular_component_ids": [
-      "GO:0005829",
-      "GO:0070062",
-      "GO:0005615",
-      "GO:0016020",
-      "GO:0000015",
-      "GO:0005886"
+      "GO:0009507",
+      "GO:0009706",
+      "GO:0009570",
+      "GO:0010007",
+      "GO:0005739",
+      "GO:0009536"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 434,
+    "sequence_length": 1381,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "2XSX"
+      "5EWU"
     ],
-    "reactome_ids": [
-      "R-HSA-70171",
-      "R-HSA-70263"
-    ],
-    "string_id": "9606.ENSP00000324105",
+    "reactome_ids": [],
+    "string_id": "3702.Q9FNB0",
     "provenance": {
       "source": "UniProt",
-      "query": "P13929",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P13929.json",
-      "retrieved_at": "2026-05-21T18:09:56Z"
+      "query": "Q9FNB0",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q9FNB0.json",
+      "retrieved_at": "2026-06-23T16:47:14Z"
     }
   },
-  "protein:pyruvate kinase|Q16715": {
+  "protein:3-ketoacyl-CoA thiolase (KAT2)|Q56WD9": {
     "status": "ok",
-    "uniprot_id": "Q16715",
-    "recommended_name": "Pyruvate kinase",
-    "alternative_names": [],
-    "gene_names": [],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "",
+    "uniprot_id": "Q56WD9",
+    "recommended_name": "3-ketoacyl-CoA thiolase 2, peroxisomal",
+    "alternative_names": [
+      "Acetyl-CoA acyltransferase 2",
+      "Beta-ketothiolase 2",
+      "Peroxisomal 3-oxoacyl-CoA thiolase 2",
+      "Peroxisome defective protein 1"
+    ],
+    "gene_names": [
+      "PED1",
+      "KAT2"
+    ],
+    "organism": "Arabidopsis thaliana",
+    "taxonomy_id": "3702",
+    "function_text": "Involved in long chain fatty-acid beta-oxidation prior to gluconeogenesis during germination and subsequent seedling growth. Confers sensitivity to 2,4-dichlorophenoxybutiric acid (2,4-DB). Required for local and systemic induction of jasmonic acid (JA) biosynthesis after wounding. Seems to be involved in JA biosynthesis during senescence (PubMed:11696182, PubMed:11891244, PubMed:15141068, PubMed:15979881, PubMed:9490742). May be involved in the positive regulation of abscisic acid-activated signaling pathway (PubMed:21257607)",
     "catalytic_activity": [
-      "pyruvate + ATP = phosphoenolpyruvate + ADP + H(+)"
+      "an acyl-CoA + acetyl-CoA = a 3-oxoacyl-CoA + CoA"
     ],
     "enzyme_commission": [
-      "2.7.1.40"
+      "2.3.1.16"
     ],
     "pathways": [
-      "Carbohydrate degradation; glycolysis; pyruvate from D-glyceraldehyde 3-phosphate: step 5/5"
+      "Lipid metabolism; fatty acid metabolism"
     ],
     "keywords": [
-      "Allosteric enzyme",
-      "ATP-binding",
-      "Glycolysis",
-      "Kinase",
-      "Magnesium",
-      "Metal-binding",
-      "Nucleotide-binding",
-      "Potassium",
-      "Pyruvate",
-      "Transferase"
+      "3D-structure",
+      "Acyltransferase",
+      "Disulfide bond",
+      "Fatty acid biosynthesis",
+      "Fatty acid metabolism",
+      "Glyoxysome",
+      "Lipid biosynthesis",
+      "Lipid metabolism",
+      "Oxylipin biosynthesis",
+      "Peroxisome",
+      "Reference proteome",
+      "Transferase",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Peroxisome",
+      "Glyoxysome"
+    ],
+    "go_mf_ids": [
+      "GO:0003988"
+    ],
+    "go_bp_ids": [
+      "GO:0006635",
+      "GO:0010111",
+      "GO:0009695",
+      "GO:0031408",
+      "GO:0010124",
+      "GO:0009789",
+      "GO:0009611"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009507",
+      "GO:0005783",
+      "GO:0009514",
+      "GO:0005739",
+      "GO:0005730",
+      "GO:0005777",
+      "GO:0000325"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 462,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "2C7Y",
+      "2C7Z",
+      "2WU9"
+    ],
+    "reactome_ids": [],
+    "string_id": "3702.Q56WD9",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Q56WD9",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q56WD9.json",
+      "retrieved_at": "2026-06-16T17:07:11Z"
+    }
+  },
+  "protein:acyl-thioesterase (AtACH1)|A0A1B7YM45": {
+    "status": "ok",
+    "uniprot_id": "A0A1B7YM45",
+    "recommended_name": "",
+    "alternative_names": [],
+    "gene_names": [],
+    "organism": "Colletotrichum higginsianum (strain IMI 349063)",
+    "taxonomy_id": "759273",
+    "function_text": "",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "Reference proteome"
     ],
     "subcellular_locations": [],
-    "go_mf_ids": [
-      "GO:0005524",
-      "GO:0016301",
-      "GO:0000287",
-      "GO:0030955",
-      "GO:0004743"
-    ],
+    "go_mf_ids": [],
     "go_bp_ids": [],
     "go_cellular_component_ids": [],
-    "protein_existence": "3: Inferred from homology",
-    "sequence_length": 587,
+    "protein_existence": "4: Predicted",
+    "sequence_length": 278,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
@@ -3432,9 +1758,9 @@
     "string_id": "",
     "provenance": {
       "source": "UniProt",
-      "query": "Q16715",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q16715.json",
-      "retrieved_at": "2026-03-20T19:31:15Z"
+      "query": "A0A1B7YM45",
+      "source_url": "https://rest.uniprot.org/uniprotkb/A0A1B7YM45.json",
+      "retrieved_at": "2026-06-23T16:47:14Z"
     }
   }
 }

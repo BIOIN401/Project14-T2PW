@@ -2720,6 +2720,95 @@ if st.session_state.get("pipeline_ready"):
                     mime="application/json",
                     key="dl_enrichment_dump",
                 )
+    # ── Entity Mapping Debug ─────────────────────────────────────────────────
+    with st.expander("Entity Mapping Debug — per-entity API/DB results", expanded=False):
+        st.caption(
+            "Inspect what each API or DB call returned for every compound and protein, "
+            "the candidate list with scores, and which candidate was chosen by the mapper."
+        )
+        _debug_payload = (post_artifacts or {}).get("final_mapped_db") or (post_artifacts or {}).get("final_mapped")
+        _debug_mapping_report = (post_artifacts or {}).get("mapping_report", {})
+        _debug_entity_logs = _debug_mapping_report.get("entities", [])
+        if not isinstance(_debug_payload, dict):
+            st.info("Run the pipeline first to see entity mapping details.")
+        else:
+            _debug_entities_section = _safe_dict(_debug_payload.get("entities"))
+            _debug_compounds = _safe_list(_debug_entities_section.get("compounds"))
+            _debug_proteins = _safe_list(_debug_entities_section.get("proteins"))
+            _debug_complexes = _safe_list(_debug_entities_section.get("protein_complexes"))
+
+            _debug_items: list = []
+            for _di, _dc in enumerate(_debug_compounds):
+                if isinstance(_dc, dict) and isinstance(_dc.get("name"), str) and _dc["name"].strip():
+                    _debug_items.append(("compound", _di, _dc["name"].strip(), _dc))
+            for _di, _dp in enumerate(_debug_proteins):
+                if isinstance(_dp, dict) and isinstance(_dp.get("name"), str) and _dp["name"].strip():
+                    _debug_items.append(("protein", _di, _dp["name"].strip(), _dp))
+            for _di, _dx in enumerate(_debug_complexes):
+                if isinstance(_dx, dict) and isinstance(_dx.get("name"), str) and _dx["name"].strip():
+                    _debug_items.append(("protein_complex", _di, _dx["name"].strip(), _dx))
+
+            if not _debug_items:
+                st.info("No entities found in the mapped payload.")
+            else:
+                _debug_labels = [f"[{etype}] {ename}" for etype, _, ename, _ in _debug_items]
+                _debug_selected = st.selectbox(
+                    "Select entity to inspect",
+                    _debug_labels,
+                    index=0,
+                    key="entity_mapping_debug_select",
+                )
+                _debug_sel_idx = _debug_labels.index(_debug_selected)
+                _debug_etype, _debug_eidx, _debug_ename, _debug_entity = _debug_items[_debug_sel_idx]
+
+                _debug_meta = _safe_dict(_debug_entity.get("mapping_meta"))
+                _debug_mapped_ids = _safe_dict(_debug_entity.get("mapped_ids"))
+
+                st.markdown(f"**Entity:** `{_debug_ename}` &nbsp; | &nbsp; **Type:** `{_debug_etype}` &nbsp; | &nbsp; **Index:** `{_debug_eidx}`")
+
+                _debug_col1, _debug_col2 = st.columns(2)
+                with _debug_col1:
+                    st.markdown("##### Final Mapped IDs")
+                    if _debug_mapped_ids:
+                        st.json(_debug_mapped_ids)
+                    else:
+                        st.warning("No mapped IDs — entity is unmapped.")
+                with _debug_col2:
+                    st.markdown("##### Mapping Decision")
+                    st.json({
+                        "query": _debug_meta.get("query", {}),
+                        "provider": _debug_meta.get("provider") or _debug_meta.get("providers", ""),
+                        "source": _debug_meta.get("source", ""),
+                        "chosen_rule": _debug_meta.get("chosen_rule", ""),
+                        "confidence": _debug_meta.get("confidence", 0.0),
+                        "route": _debug_meta.get("route", ""),
+                        "route_reason": _debug_meta.get("route_reason", ""),
+                    })
+
+                _debug_candidates = _safe_list(_debug_meta.get("candidates"))
+                st.markdown(f"##### API/DB Candidates Returned ({len(_debug_candidates)} total)")
+                if _debug_candidates:
+                    st.json(_debug_candidates)
+                else:
+                    st.info("No candidates were returned by any API or DB lookup.")
+
+                _debug_resolution = _safe_dict(_debug_meta.get("resolution"))
+                if _debug_resolution:
+                    st.markdown("##### Resolution Details")
+                    st.json(_debug_resolution)
+
+                _debug_log_match = [
+                    e for e in _debug_entity_logs
+                    if e.get("name") == _debug_ename and e.get("entity_type") == _debug_etype
+                ]
+                if _debug_log_match:
+                    st.markdown("##### Mapping Report Log Entry")
+                    st.json(_debug_log_match[0])
+
+                for _extra_key in ["matched_alias", "alias_source", "resolved_name", "queries_tried", "literature_aliases"]:
+                    if _debug_meta.get(_extra_key):
+                        st.markdown(f"**{_extra_key}:** `{_debug_meta[_extra_key]}`")
+
     # ── DB Gap Resolution ─────────────────────────────────────────────────────
     with st.expander("Resolve unmapped entities via DB", expanded=False):
         st.caption(

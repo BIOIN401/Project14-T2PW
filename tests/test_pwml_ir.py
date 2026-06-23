@@ -444,7 +444,45 @@ def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None
     assert complex_members == [{"id": complex_members[0]["id"], "protein-id": protein_id, "stoichiometry": 1}]
 
 
-def test_protein_complex_unresolved_component_is_not_exportable() -> None:
+def test_protein_complex_component_links_by_matching_uniprot_or_pathbank_id() -> None:
+    payload = _base_payload()
+    payload["entities"]["proteins"].append(
+        {
+            "name": "acyl-CoA oxidase 1 (ACX1)",
+            "species": "Arabidopsis thaliana",
+            "pathbank_protein_id": 11618,
+            "mapped_ids": {"uniprot": "O65202", "pathbank_protein_id": "11618"},
+        }
+    )
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "acyl coenzyme A oxidase",
+            "species": "Arabidopsis thaliana",
+            "components": [
+                {
+                    "name": "acyl coenzyme A oxidase",
+                    "stoichiometry": 1,
+                    "mapped_ids": {"uniprot": "O65202", "pathbank_protein_id": "11618"},
+                    "pathbank_protein_id": 11618,
+                    "gene_name": "ACX1",
+                }
+            ],
+        }
+    ]
+
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert not any(err["code"] == "component_protein_unresolved" for err in contract["errors"])
+    assert not any(err["code"] == "component_protein_unresolved" for err in report["errors"])
+    assert ir["entities"]["protein_complexes"][0]["components"] == [
+        {"protein_key": "prot_2", "stoichiometry": 1}
+    ]
+    assert validation["ok"], validation["errors"]
+
+
+def test_protein_complex_unresolved_component_is_exportable_with_warnings() -> None:
     payload = _base_payload()
     payload["entities"]["protein_complexes"] = [
         {
@@ -458,9 +496,12 @@ def test_protein_complex_unresolved_component_is_not_exportable() -> None:
     ir, report = build_pwml_ir(payload, strict_db=True)
     validation = validate_pwml_ir(ir)
 
-    assert any(err["code"] == "component_protein_unresolved" for err in report["errors"])
-    assert any(err["code"] == "protein_complex_missing_components" for err in validation["errors"])
-    assert not validation["ok"]
+    assert any(w["code"] == "component_protein_unresolved" for w in report["warnings"])
+    assert not any(err["code"] == "component_protein_unresolved" for err in report["errors"])
+    assert any(w["code"] == "protein_complex_missing_components" for w in validation["warnings"])
+    assert not any(err["code"] == "protein_complex_missing_components" for err in validation["errors"])
+    assert validation["ok"]
+    assert ir["entities"]["protein_complexes"][0]["components"] == []
 
 
 def test_dangling_process_visualization_references_fail_validation() -> None:
