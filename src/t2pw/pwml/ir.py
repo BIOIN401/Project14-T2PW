@@ -97,6 +97,75 @@ SUBCELLULAR_LOCATION_CREATE_DEFAULTS: Dict[str, Dict[str, Any]] = {
 }
 
 
+def _display_component_name(value: Any) -> str:
+    name = _canonical(value)
+    if name and "_" in name and " " not in name:
+        name = name.replace("_", " ")
+    return _canonical(name)
+
+
+def _biological_state_component_name(raw: Dict[str, Any], source_key: str) -> str:
+    if source_key == "species":
+        return _display_component_name(raw.get("species") or raw.get("organism"))
+    if source_key == "subcellular_locations":
+        return _display_component_name(
+            raw.get("subcellular_location")
+            or raw.get("subcellular-location")
+            or raw.get("compartment")
+            or raw.get("compartment_canonical")
+        )
+    if source_key == "cell_types":
+        return _display_component_name(raw.get("cell_type") or raw.get("cell-type"))
+    if source_key == "tissues":
+        return _display_component_name(raw.get("tissue"))
+    return ""
+
+
+def _hydrate_component_rows_from_biological_states(
+    component_rows: Sequence[Any],
+    *,
+    source_key: str,
+    raw_states: Sequence[Dict[str, Any]],
+    report: Dict[str, Any],
+) -> List[Dict[str, Any]]:
+    rows = [dict(row) for row in component_rows if isinstance(row, dict)]
+    seen = set()
+    for row in rows:
+        for alias in [row.get("name"), *_safe_list(row.get("aliases"))]:
+            norm = _norm(alias)
+            if norm:
+                seen.add(norm)
+
+    for idx, raw in enumerate(raw_states):
+        name = _biological_state_component_name(raw, source_key)
+        norm = _norm(name)
+        if not name or not norm or norm in seen:
+            continue
+        rows.append(
+            {
+                "name": name,
+                "mapping_meta": {
+                    "resolution": {
+                        "status": "novel",
+                        "issue": "inferred_from_biological_state",
+                    }
+                },
+            }
+        )
+        seen.add(norm)
+        _add_issue(
+            report,
+            "warning",
+            "component_inferred_from_biological_state",
+            f"Added missing {source_key} component '{name}' from biological_state context.",
+            pointer=f"/biological_states/{idx}",
+            component_type=source_key,
+            name=name,
+        )
+
+    return rows
+
+
 def _dedupe_aliases(values: Iterable[Any]) -> List[str]:
     aliases: List[str] = []
     seen = set()
@@ -603,8 +672,16 @@ def build_pwml_ir(
         ("tissues", "tissues", "tis", ["pathbank_tissue_id", "pw_tissue_id", "pathwhiz_id"]),
     ]
     component_by_name: Dict[str, Dict[str, Dict[str, Any]]] = {}
+    raw_states_for_components = [
+        row for row in _safe_list(payload.get("biological_states")) if isinstance(row, dict)
+    ]
     for source_key, ir_key, prefix, db_keys in component_specs:
-        component_rows = _safe_list(entities.get(source_key))
+        component_rows = _hydrate_component_rows_from_biological_states(
+            _safe_list(entities.get(source_key)),
+            source_key=source_key,
+            raw_states=raw_states_for_components,
+            report=report,
+        )
         if source_key == "species":
             component_rows = [
                 _apply_create_defaults(row, SPECIES_CREATE_DEFAULTS)
@@ -2024,6 +2101,22 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                     )
 
         # Enzyme references against entity registry
+        valid_canonical_protein_catalyst_norms: set = set()
+        if not is_ir:
+            for mod in _safe_list(rx.get("modifiers")):
+                if not isinstance(mod, dict):
+                    continue
+                mod_name = _canonical(mod.get("entity"))
+                mod_type = _canonical(mod.get("entity_type") or mod.get("type")).casefold()
+                mod_role = _canonical(mod.get("role") or "catalyst").casefold()
+                if (
+                    mod_name
+                    and mod_type == "protein"
+                    and mod_role == "catalyst"
+                    and _norm(mod_name) in protein_names
+                ):
+                    valid_canonical_protein_catalyst_norms.add(_norm(mod_name))
+
         enzyme_raw = _safe_list(rx.get("enzymes") or rx.get("catalysts"))
         for eidx, actor in enumerate(enzyme_raw):
             if is_ir:
@@ -2049,7 +2142,8 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                         or actor.get("entity")
                     )
                     actor_type = _canonical(actor.get("entity_type") or actor.get("type")).casefold()
-                    if actor_type == "protein":
+                    has_canonical_protein_catalyst = _norm(ename) in valid_canonical_protein_catalyst_norms
+                    if actor_type == "protein" and not has_canonical_protein_catalyst:
                         err(
                             "reaction_enzyme_must_be_protein_complex",
                             f"Reaction '{rname}' enzyme '{ename}' is still represented as a direct protein.",
@@ -2068,7 +2162,13 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                         )
                 else:
                     continue
-                if ename and _norm(ename) in protein_names and _norm(ename) not in protein_complex_names:
+                has_canonical_protein_catalyst = _norm(ename) in valid_canonical_protein_catalyst_norms
+                if (
+                    ename
+                    and _norm(ename) in protein_names
+                    and _norm(ename) not in protein_complex_names
+                    and not has_canonical_protein_catalyst
+                ):
                     err(
                         "reaction_enzyme_must_be_protein_complex",
                         f"Reaction '{rname}' enzyme '{ename}' is still represented as a direct protein.",

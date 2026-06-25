@@ -52,6 +52,7 @@ from t2pw.pipeline.process_normalizer import (
     dedupe_processes,
     ensure_autostates,
     normalize_composites,
+    normalize_process_payload,
     normalize_process_actor_schema,
     promote_catalysts,
     prune_disconnected_proteins,
@@ -1784,6 +1785,7 @@ def run_pwml_export(
         if grounding_dict:
             payload, grounding_report = apply_grounding(payload, grounding_dict)
         ensure_autostates(payload)
+        payload, export_normalization_report = normalize_process_payload(payload)
 
         outputs_dir = project_root / "outputs"
         outputs_dir.mkdir(parents=True, exist_ok=True)
@@ -1823,6 +1825,7 @@ def run_pwml_export(
                 "output_path": "",
                 "qa": {},
                 "grounding_report": grounding_report,
+                "export_normalization_report": export_normalization_report,
                 "required_gate_report": required_gate_report,
                 "required_gate_report_path": str(required_gate_path),
                 "reaction_preservation_before_final_export": before_export_report,
@@ -1848,6 +1851,7 @@ def run_pwml_export(
                 "output_path": "",
                 "qa": {},
                 "grounding_report": grounding_report,
+                "export_normalization_report": export_normalization_report,
                 "required_gate_report": required_gate_report,
                 "required_gate_report_path": str(required_gate_path),
                 "pwml_ir": pwml_ir,
@@ -1888,6 +1892,7 @@ def run_pwml_export(
             "validation_report": report,
             "qa": qa_report,
             "grounding_report": grounding_report,
+            "export_normalization_report": export_normalization_report,
             "required_gate_report": required_gate_report,
             "required_gate_report_path": str(required_gate_path),
             "pwml_ir": pwml_ir,

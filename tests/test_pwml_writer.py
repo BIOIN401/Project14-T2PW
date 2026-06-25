@@ -19,6 +19,7 @@ from t2pw.pwml.writer import (  # noqa: E402
     DeterministicPwmlBuilder,
     blocking_pwml_ir_errors,
     get_rect_anchor_toward_target,
+    run_pwml_pipeline_export,
 )
 
 
@@ -138,6 +139,83 @@ def _writer_args() -> SimpleNamespace:
         background_color="#FFFFFF",
         ref=str(ROOT / "reference" / "PW000001.pwml"),
     )
+
+
+def test_pipeline_export_normalizes_reaction_name_catalytic_interactions(tmp_path: Path) -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "norbelladine", "pathbank_compound_id": 101},
+                {"name": "4′-O-methylnorbelladine", "pathbank_compound_id": 102},
+            ],
+            "proteins": [
+                {
+                    "name": "N4OMT",
+                    "species": "Homo sapiens",
+                    "uniprot": "Q00001",
+                    "pathbank_protein_id": 201,
+                }
+            ],
+            "protein_complexes": [],
+        },
+        "biological_states": [
+            {"name": "cyto_state", "species": "Homo sapiens", "subcellular_location": "cytosol"}
+        ],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "norbelladine", "biological_state": "cyto_state"},
+                {"compound": "4′-O-methylnorbelladine", "biological_state": "cyto_state"},
+            ],
+            "protein_locations": [{"protein": "N4OMT", "biological_state": "cyto_state"}],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "norbelladine to 4′-O-methylnorbelladine",
+                    "inputs": ["norbelladine"],
+                    "outputs": ["4′-O-methylnorbelladine"],
+                    "biological_state": "cyto_state",
+                }
+            ],
+            "transports": [],
+            "interactions": [
+                {
+                    "entity_1": "N4OMT",
+                    "entity_2": "norbelladine to 4′-O-methylnorbelladine",
+                    "relationship": "catalyzes",
+                }
+            ],
+        },
+    }
+    input_path = tmp_path / "input.json"
+    out_dir = tmp_path / "out"
+    input_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = run_pwml_pipeline_export(
+        SimpleNamespace(
+            input_path=str(input_path),
+            out_dir=str(out_dir),
+            ref=str(ROOT / "reference" / "PW000001.pwml"),
+            name="Generated Pathway",
+            subject="Metabolic",
+            description="",
+            width=3200,
+            height=1400,
+            background_color="#FFFFFF",
+            non_strict_db=True,
+        )
+    )
+
+    assert "error" not in result
+    ir = json.loads((out_dir / "final.pwml_ir.json").read_text(encoding="utf-8"))
+    normalization_report = json.loads(
+        (out_dir / "pwml_export_normalization_report.json").read_text(encoding="utf-8")
+    )
+    assert ir["processes"]["interactions"] == []
+    assert ir["processes"]["reactions"][0]["enzymes"]
+    assert normalization_report["summary"]["interaction_enzymes_promoted"] == 1
 
 
 def _minimal_pwml_ir_with_compounds(compounds: list[dict]) -> dict:

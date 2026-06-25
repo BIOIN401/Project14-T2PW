@@ -1,117 +1,79 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: LOX reaction
-  Reactants: linolenic acid [unknown]
-  Products:  13-hydroperoxy-octadecatrienoic acid [chloroplast state]
-  Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0)
+REACTION 1: phenylalanine to trans-cinnamic acid
+  Reactants: phenylalanine [unknown]
+  Products:  trans-cinnamic acid [unknown]
+  Modifier:  phenylalanine ammonia-lyase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: LOX reaction on hexadecatrienoic acid
-  Reactants: hexadecatrienoic acid [unknown]
-  Products:  11-hydroperoxy-hexadecatrienoic acid [chloroplast state]
-  Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0), AOS [chloroplast state] (role=catalyst, confidence=1.0), AOC [chloroplast state] (role=catalyst, confidence=1.0)
+REACTION 2: trans-cinnamic acid to 4-hydroxycinnamic acid
+  Reactants: trans-cinnamic acid [unknown]
+  Products:  4-hydroxycinnamic acid [unknown]
+  Modifier:  CYP73A1 [unknown] (role=catalyst, confidence=1.0), cinnamate 4-hydroxylase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: AOS reaction
-  Reactants: 13-hydroperoxy-octadecatrienoic acid [chloroplast state]
-  Products:  12,13-epoxy-octadecatrienoic acid [chloroplast state]
-  Modifier:  AOS [chloroplast state] (role=catalyst, confidence=1.0)
+REACTION 3: 4-hydroxycinnamic acid to 3,4-dihydroxycinnamic acid
+  Reactants: 4-hydroxycinnamic acid [unknown]
+  Products:  3,4-dihydroxycinnamic acid [unknown]
+  Modifier:  CYP98A3 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: AOS reaction on 11-HPHT
-  Reactants: 11-hydroperoxy-hexadecatrienoic acid [chloroplast state]
-  Products:  10,11-epoxyhexadecatrienoic acid [unknown]
-  Modifier:  AOS [chloroplast state] (role=catalyst, confidence=1.0), AOC [chloroplast state] (role=catalyst, confidence=1.0)
+REACTION 4: 3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde
+  Reactants: 3,4-dihydroxycinnamic acid [unknown]
+  Products:  3,4-dihydroxybenzaldehyde [unknown]
+  Modifier:  VpVAN [Vanilla planifolia inner bean pod state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: AOC reaction
-  Reactants: 12,13-epoxy-octadecatrienoic acid [chloroplast state]
-  Products:  12-oxophytodienoic acid [chloroplast state]
-  Modifier:  AOC [chloroplast state] (role=catalyst, confidence=1.0)
+REACTION 5: tyrosine to tyramine
+  Reactants: tyrosine [unknown]
+  Products:  tyramine [unknown]
+  Modifier:  KT378599 [unknown] (role=catalyst, confidence=1.0), tyrosine decarboxylase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: AOC reaction on 10,11-EHT
-  Reactants: 10,11-epoxyhexadecatrienoic acid [unknown]
-  Products:  dinor-OPDA [chloroplast state]
-  Modifier:  AOC [chloroplast state] (role=catalyst, confidence=1.0), AOS [chloroplast state] (role=catalyst, confidence=1.0)
+REACTION 6: norbelladine Schiff-base formation and reduction
+  Reactants: tyramine [unknown], 3,4-dihydroxybenzaldehyde [unknown]
+  Products:  norbelladine [unknown]
+  Modifier:  tetrahydroalstonine synthase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: OPR3 reaction
-  Reactants: 12-oxophytodienoic acid [chloroplast state]
-  Products:  3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid [peroxisome state]
-  Modifier:  OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
+REACTION 7: norbelladine methylation to 4′-O-methylnorbelladine
+  Reactants: norbelladine [unknown]
+  Products:  4′-O-methylnorbelladine [unknown]
+  Modifier:  N4OMT [Narcissus sp. aff. pseudonarcissus state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: OPR3 reaction on dnOPDA
-  Reactants: dinor-OPDA [chloroplast state]
-  Products:  3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-hexanoic acid [peroxisome state]
-  Modifier:  OPR3 [peroxisome state] (role=catalyst, confidence=1.0)
+REACTION 8: para-para' phenol-phenol coupling
+  Reactants: 4′-O-methylnorbelladine [unknown]
+  Products:  crinine [unknown], vittatine [unknown]
+  Modifier:  CYP81Q1 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: OPCL1 reaction
-  Reactants: 3-oxo-2-(2'(Z)-pentenyl)-cyclopentane-1-octanoic acid [peroxisome state]
-  Products:  OPC-8:0-CoA [peroxisome state]
-  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
+REACTION 9: ortho-para' phenol-phenol coupling
+  Reactants: 4′-O-methylnorbelladine [unknown]
+  Products:  lycorine [unknown]
+  Modifier:  CYP81Q1 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 10: ACX reaction
-  Reactants: OPC-8:0-CoA [peroxisome state]
-  Products:  jasmonic acid [peroxisome state]
-  Modifier:  ACX1 [peroxisome state] (role=catalyst, confidence=1.0)
+REACTION 10: para-ortho' phenol-phenol coupling
+  Reactants: 4′-O-methylnorbelladine [unknown]
+  Products:  galanthamine [Lycoris aurea state]
+  Modifier:  CYP81Q1 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 11: KAT reaction
-  Reactants: OPC-8:0-CoA [peroxisome state]
-  Products:  jasmonic acid [peroxisome state]
-  Modifier:  KAT2 [peroxisome state] (role=catalyst, confidence=1.0), ACX1 [peroxisome state] (role=catalyst, confidence=1.0)
+REACTION 11: loganin to secologanin
+  Reactants: loganin [unknown]
+  Products:  secologanin [unknown]
+  Modifier:  secologanin synthase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 12: acyl-thioesterase reaction
-  Reactants: jasmonoyl-CoA [peroxisome state]
-  Products:  jasmonic acid [peroxisome state]
-  Modifier:  AtACH1 [unknown] (role=catalyst, confidence=1.0), AtACH2 [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 13: LOX reaction
-  Reactants: linoleic acid [unknown]
-  Products:  13-hydroperoxy-octadecatrienoic acid [chloroplast state]
-  Modifier:  LOX [chloroplast state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 14: OPC-8:0 activation
-  Reactants: OPC-8:0 [peroxisome state]
-  Products:  OPC-8:0-CoA [peroxisome state]
-  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 15: OPC-6:0 activation
-  Reactants: OPC-6:0 [peroxisome state]
-  Products:  OPC-6:0-CoA [peroxisome state]
-  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 16: OPC-4:0 activation
-  Reactants: OPC-4:0 [peroxisome state]
-  Products:  OPC-4:0-CoA [unknown]
-  Modifier:  OPCL1 [peroxisome state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-TRANSPORT 1: OPDA import into peroxisome
-  From: chloroplast state
-  To:   peroxisome state
-  Cargo: 12-oxophytodienoic acid [chloroplast state]
-  Transporter: CTS [peroxisome state] (role=transporter, confidence=1.0)
-  QA flags:  none
-
-TRANSPORT 2: dnOPDA import into peroxisome
-  From: chloroplast state
-  To:   peroxisome state
-  Cargo: dinor-OPDA [chloroplast state]
-  Transporter: CTS [peroxisome state] (role=transporter, confidence=1.0)
+REACTION 12: strictosidine to tetrahydroalstonine
+  Reactants: strictosidine [unknown]
+  Products:  tetrahydroalstonine [unknown]
+  Modifier:  tetrahydroalstonine synthase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 LOCKED REACTION FILTER
-12 locked reactions found
-12 exported
+10 locked reactions found
+10 exported
 0 quarantined reactions due to unresolved compound reference

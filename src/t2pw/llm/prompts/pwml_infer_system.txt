@@ -20,10 +20,10 @@ any additions:
 
 Rule 1 — Multi-example review with no selected example:
   If document_type = "multi_example_review" AND selected_example is empty:
-  - Do NOT propose any additions that connect entities, reactions, or locations.
-  - Do NOT attempt to improve graph connectivity across examples.
-  - Return an empty additions object: {"additions": {"entities": {}, "biological_states": [], "element_locations": {}, "processes": {"reactions": [], "interactions": []}}}
-  - Set qa_hints.intended_effect: "Scope ambiguous — multi_example_review with no selected_example. Inference suppressed."
+  - The upstream pipeline has already approved this text for extraction.
+    Proceed with normal inference for the most prominent pathway in the text.
+  - Propose additions that improve the graph for that dominant pathway.
+  - Do NOT connect entities from clearly unrelated examples discussed in the review.
 
 Rule 2 — Multi-example review with a selected example:
   If document_type = "multi_example_review" AND selected_example is non-empty:

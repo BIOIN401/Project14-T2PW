@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 from lxml import etree
 
 from t2pw.paths import PROJECT_ROOT
+from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
 from t2pw.pwml.qa import run_pwml_qa
@@ -4256,6 +4257,7 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
+    payload, export_normalization_report = normalize_process_payload(payload)
 
     ir, ir_report = build_pwml_ir(
         payload,
@@ -4271,6 +4273,7 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
     ir_path = out_dir / "final.pwml_ir.json"
     ir_report_path = out_dir / "pwml_ir_report.json"
     ir_validation_path = out_dir / "pwml_ir_validation_report.json"
+    export_normalization_report_path = out_dir / "pwml_export_normalization_report.json"
     pwml_path = out_dir / "pathway.pwml"
     validation_report_path = out_dir / "pwml_validation_report.json"
     qa_report_path = out_dir / "pwml_qa_report.json"
@@ -4278,6 +4281,7 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
     _write_json(ir_path, ir)
     _write_json(ir_report_path, ir_report)
     _write_json(ir_validation_path, ir_validation)
+    _write_json(export_normalization_report_path, export_normalization_report)
 
     blocking_ir_errors = blocking_pwml_ir_errors(ir_report)
     if blocking_ir_errors or ir_validation.get("errors"):
@@ -4286,6 +4290,7 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
             "pwml_ir": str(ir_path),
             "pwml_ir_report": str(ir_report_path),
             "pwml_ir_validation_report": str(ir_validation_path),
+            "export_normalization_report": str(export_normalization_report_path),
             "error": "PWML IR validation failed.",
         }
 
@@ -4322,6 +4327,7 @@ def run_pwml_pipeline_export(args: argparse.Namespace) -> Dict[str, Any]:
         "pwml_ir": str(ir_path),
         "pwml_ir_report": str(ir_report_path),
         "pwml_ir_validation_report": str(ir_validation_path),
+        "export_normalization_report": str(export_normalization_report_path),
         "pwml_file": str(pwml_path),
         "pwml_validation_report": str(validation_report_path),
         "pwml_qa_report": str(qa_report_path),

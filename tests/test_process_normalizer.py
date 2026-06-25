@@ -21,14 +21,17 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     canonicalize_same_as_aliases,
     cleanup_disallowed_complexes,
     dedupe_processes,
+    drop_unresolved_complex_component_proteins,
     ensure_autostates,
     normalize_composites,
     normalize_process_payload,
     normalize_process_actor_schema,
     promote_catalysts,
+    promote_interaction_enzymes,
     rewrite_reactions_to_complex_states,
     run_strict_post_normalization_gates,
 )
+from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract  # noqa: E402
 
 try:
     import libsbml  # type: ignore  # noqa: F401
@@ -154,6 +157,7 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "n_autostate_created": 0,
             "n_entities_assigned_to_autostate": 0,
             "transporters_attached": 0,
+            "interaction_enzymes_promoted": 0,
             "modifier_refs_canonicalized": 0,
             "modifier_refs_dropped": 0,
             "forbidden_complexes_removed": 0,
@@ -166,6 +170,8 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
             "n_aliases_rewritten": 0,
             "n_entities_deduped": 0,
             "n_single_protein_complexes_removed": 0,
+            "unresolved_complex_components_dropped": 0,
+            "component_only_proteins_removed": 0,
             "alias_example_mappings": [],
         },
         "actions": [],
@@ -176,9 +182,11 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     cleanup_disallowed_complexes(data, report=report)
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
+    promote_interaction_enzymes(data, report=report)
     promote_catalysts(data, report=report)
     canonicalize_same_as_aliases(data, report=report)
     normalize_process_actor_schema(data, report=report)
+    drop_unresolved_complex_component_proteins(data, report=report)
     dedupe_processes(data, report=report)
     run_strict_post_normalization_gates(
         data,
@@ -676,6 +684,73 @@ def test_reverse_alias_direction_still_attaches() -> None:
     assert _proteins_degree0(normalized) == 0
 
 
+def test_catalytic_interaction_to_reaction_name_is_promoted_and_removed() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
+            "compounds": [
+                {"name": "norbelladine"},
+                {"name": "4′-O-methylnorbelladine"},
+            ],
+            "proteins": [{"name": "N4OMT", "species": "Homo sapiens", "uniprot": "Q00001"}],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "cytosol"}],
+        },
+        "biological_states": [
+            {"name": "cyto_state", "species": "Homo sapiens", "subcellular_location": "cytosol"}
+        ],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "norbelladine", "biological_state": "cyto_state"},
+                {"compound": "4′-O-methylnorbelladine", "biological_state": "cyto_state"},
+            ],
+            "protein_locations": [{"protein": "N4OMT", "biological_state": "cyto_state"}],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "norbelladine to 4′-O-methylnorbelladine",
+                    "inputs": ["norbelladine"],
+                    "outputs": ["4′-O-methylnorbelladine"],
+                    "biological_state": "cyto_state",
+                }
+            ],
+            "transports": [],
+            "interactions": [
+                {
+                    "entity_1": "N4OMT",
+                    "entity_2": "norbelladine to 4′-O-methylnorbelladine",
+                    "relationship": "catalyzes",
+                }
+            ],
+        },
+    }
+
+    normalized, report = normalize_process_payload(payload)
+
+    assert normalized["processes"]["interactions"] == []
+    modifiers = normalized["processes"]["reactions"][0]["modifiers"]
+    assert modifiers == [
+        {
+            "entity": "N4OMT",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "inferred",
+        }
+    ]
+    assert report["summary"]["interaction_enzymes_promoted"] == 1
+
+    ir, ir_report = build_pwml_ir(normalized, strict_db=False)
+    validation = validate_pwml_ir(ir)
+
+    assert not ir_report["errors"]
+    assert validation["ok"], validation["errors"]
+    assert ir["processes"]["interactions"] == []
+    assert ir["processes"]["reactions"][0]["enzymes"]
+
+
 def test_single_protein_complex_preserved_for_enzyme() -> None:
     payload = _alias_payload(
         proteins=["pendrin"],
@@ -701,6 +776,89 @@ def test_single_protein_complex_preserved_for_enzyme() -> None:
     assert _proteins_degree0(normalized) == 0
     alias_stats = report.get("summary", {}).get("alias_canonicalization", {})
     assert int(alias_stats.get("n_single_protein_complexes_removed", 0)) == 0
+
+
+def test_unidentified_component_only_protein_is_dropped_from_complex_before_export_gate() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Narcissus sp. aff. pseudonarcissus", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [{"name": "norbelladine"}, {"name": "4′-O-methylnorbelladine"}],
+            "proteins": [
+                {
+                    "name": "N4OMT",
+                    "species": "Narcissus sp. aff. pseudonarcissus",
+                    "uniprot": "Q00001",
+                },
+                {"name": "KT378599", "species": "Narcissus sp. aff. pseudonarcissus"},
+            ],
+            "protein_complexes": [
+                {
+                    "name": "N4OMT complex",
+                    "species": "Narcissus sp. aff. pseudonarcissus",
+                    "components": ["N4OMT", "KT378599"],
+                }
+            ],
+        },
+        "biological_states": [
+            {
+                "name": "cyto_state",
+                "species": "Narcissus sp. aff. pseudonarcissus",
+                "subcellular_location": "cytosol",
+            }
+        ],
+        "element_locations": {
+            "protein_locations": [
+                {"protein": "N4OMT", "biological_state": "cyto_state"},
+                {"protein": "KT378599", "biological_state": "cyto_state"},
+            ]
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    normalized, report = normalize_process_payload(payload)
+    contract = validate_required_pwml_contract(normalized, strict_db=True)
+
+    protein_names = {
+        str(row.get("name") or "")
+        for row in normalized["entities"]["proteins"]
+        if isinstance(row, dict)
+    }
+    complex_components = normalized["entities"]["protein_complexes"][0]["components"]
+    assert "KT378599" not in protein_names
+    assert complex_components == ["N4OMT"]
+    assert report["summary"]["component_only_proteins_removed"] == 1
+    assert report["summary"]["unresolved_complex_components_dropped"] == 1
+    assert not any(
+        err["code"] == "protein_missing_external_identity" and err.get("entity_name") == "KT378599"
+        for err in contract["errors"]
+    )
+
+
+def test_identified_complex_component_protein_is_preserved() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {"name": "alpha", "uniprot": "Q00001"},
+                {"name": "beta", "uniprot": "Q00002"},
+            ],
+            "protein_complexes": [{"name": "alpha beta complex", "components": ["alpha", "beta"]}],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+    report = {
+        "summary": {
+            "unresolved_complex_components_dropped": 0,
+            "component_only_proteins_removed": 0,
+        },
+        "actions": [],
+    }
+
+    drop_unresolved_complex_component_proteins(payload, report=report)
+
+    assert [row["name"] for row in payload["entities"]["proteins"]] == ["alpha", "beta"]
+    assert payload["entities"]["protein_complexes"][0]["components"] == ["alpha", "beta"]
+    assert report["summary"]["component_only_proteins_removed"] == 0
 
 
 def test_compound_catalyst_modifier_not_rebuilt_as_legacy_enzyme() -> None:
@@ -780,6 +938,69 @@ def test_mixed_protein_and_plp_catalysts_keep_protein_drop_non_protein() -> None
         and action.get("name") == "pyridoxal-phosphate"
         for action in report["actions"]
     )
+
+
+def test_required_contract_accepts_generated_legacy_protein_enzyme_with_canonical_modifier() -> None:
+    payload = {
+        "metadata": {"name": "Norbelladine methylation", "subject": "metabolic"},
+        "entities": {
+            "species": [{"name": "Narcissus sp. aff. pseudonarcissus", "pathwhiz_id": 1}],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                {"name": "norbelladine", "pathbank_compound_id": 101},
+                {"name": "4-O-methylnorbelladine", "pathbank_compound_id": 102},
+            ],
+            "proteins": [
+                {
+                    "name": "N4OMT",
+                    "species": "Narcissus sp. aff. pseudonarcissus",
+                    "uniprot": "Q00001",
+                }
+            ],
+            "protein_complexes": [],
+        },
+        "biological_states": [
+            {
+                "name": "cyto_state",
+                "species": "Narcissus sp. aff. pseudonarcissus",
+                "subcellular_location": "cytosol",
+            }
+        ],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "norbelladine 4-O-methylation",
+                    "inputs": ["norbelladine"],
+                    "outputs": ["4-O-methylnorbelladine"],
+                    "biological_state": "cyto_state",
+                    "modifiers": [
+                        {"entity": "N4OMT", "entity_type": "protein", "role": "catalyst"}
+                    ],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    normalize_process_actor_schema(payload)
+
+    reaction = payload["processes"]["reactions"][0]
+    assert reaction["modifiers"] == [
+        {"entity": "N4OMT", "entity_type": "protein", "role": "catalyst"}
+    ]
+    assert reaction["enzymes"] == [
+        {"role": "catalyst", "confidence": 1.0, "provenance": "extracted", "protein": "N4OMT"}
+    ]
+
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    assert "reaction_enzyme_must_be_protein_complex" not in {err["code"] for err in contract["errors"]}
+    assert not report["errors"]
+    assert validation["ok"], validation["errors"]
+    assert ir["processes"]["reactions"][0]["enzymes"][0]["entity_type"] == "protein_complex"
 
 
 def test_mapping_route_and_species_id_helpers() -> None:

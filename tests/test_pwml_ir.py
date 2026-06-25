@@ -246,6 +246,47 @@ def test_create_defaults_fill_unmatched_species_and_cell_location() -> None:
     assert ir["biological_states"][0]["subcellular_location_key"] == "scl_1"
 
 
+def test_biological_state_locations_are_hydrated_into_component_registry() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Pseudomonas fluorescens"}],
+            "subcellular_locations": [{"name": "cell"}],
+            "compounds": [{"name": "obafluorin"}],
+            "proteins": [],
+        },
+        "biological_states": [
+            {
+                "name": "AutoState_pseudomonas_fluorescenscytosol",
+                "species": "Pseudomonas fluorescens",
+                "subcellular_location": "Cytosol",
+            },
+            {
+                "name": "AutoState_pseudomonas_fluorescensperiplasmic_space",
+                "species": "Pseudomonas fluorescens",
+                "subcellular_location": "Periplasmic Space",
+            },
+            {
+                "name": "AutoState_pseudomonas_fluorescensmitochondrial_membrane",
+                "species": "Pseudomonas fluorescens",
+                "subcellular_location": "Mitochondrial membrane",
+            },
+        ],
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    ir, report = build_pwml_ir(payload, strict_db=False)
+    validation = validate_pwml_ir(ir)
+
+    assert not any(error["code"].startswith("biological_state_") for error in report["errors"])
+    assert validation["ok"], validation["errors"]
+    assert {row["name"] for row in ir["subcellular_locations"]} >= {
+        "Cytosol",
+        "Periplasmic Space",
+        "Mitochondrial membrane",
+    }
+    assert all(state["subcellular_location_key"] for state in ir["biological_states"])
+
+
 def test_transport_ir_construction_has_state_and_visual_refs() -> None:
     payload = {
         "entities": {
@@ -535,16 +576,22 @@ def test_same_compound_two_states_is_one_entity_two_locations() -> None:
             "compound_locations": [
                 {"compound": "Pyruvate", "biological_state": "cytosol"},
                 {"compound": "Pyruvate", "biological_state": "mitochondria"},
-            ]
+            ],
+            "protein_locations": [
+                {"protein": "KT378599", "biological_state": "cytosol"},
+            ],
         },
         "processes": {"reactions": [], "transports": [], "interactions": []},
     }
 
     ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
     pyruvate_key = ir["entities"]["compounds"][0]["key"]
     pyruvate_locations = [loc for loc in ir["locations"] if loc["entity_key"] == pyruvate_key]
 
     assert not report["errors"]
+    assert any(w["code"] == "location_entity_not_found" for w in report["warnings"])
+    assert validation["ok"], validation["errors"]
     assert len(ir["entities"]["compounds"]) == 1
     assert len(pyruvate_locations) == 2
     assert len({loc["biological_state_key"] for loc in pyruvate_locations}) == 2

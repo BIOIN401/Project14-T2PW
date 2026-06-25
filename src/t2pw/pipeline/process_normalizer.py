@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections import defaultdict
 from copy import deepcopy
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
@@ -254,6 +255,8 @@ def _new_report() -> Dict[str, Any]:
             "n_aliases_rewritten": 0,
             "n_entities_deduped": 0,
             "n_single_protein_complexes_removed": 0,
+            "unresolved_complex_components_dropped": 0,
+            "component_only_proteins_removed": 0,
             "alias_example_mappings": [],
         },
         "rewrite_map": {},
@@ -1477,6 +1480,163 @@ def _component_name_from_row(row: Any) -> str:
         if value:
             return value
     return ""
+
+
+def _has_protein_identity(row: Any) -> bool:
+    if not isinstance(row, dict):
+        return False
+    direct_keys = [
+        "uniprot",
+        "uniprot_id",
+        "uniprot-id",
+        "drugbank",
+        "drugbank_id",
+        "drugbank-id",
+        "pathbank_protein_id",
+        "pw_protein_id",
+        "pathwhiz_id",
+        "protein_id",
+    ]
+    for key in direct_keys:
+        if _canonical(str(row.get(key, ""))):
+            return True
+    for nested_key in ("mapped_ids", "ids", "mapping_meta"):
+        nested = _safe_dict(row.get(nested_key))
+        for key in direct_keys:
+            if _canonical(str(nested.get(key, ""))):
+                return True
+        for key in ("uniprot", "drugbank", "pathbank", "pathbank_protein"):
+            if _canonical(str(nested.get(key, ""))):
+                return True
+    return False
+
+
+def drop_unresolved_complex_component_proteins(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Drop synthetic component-only proteins that cannot satisfy export identity gates."""
+    rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("unresolved_complex_components_dropped", 0)
+    summary.setdefault("component_only_proteins_removed", 0)
+    rep.setdefault("actions", [])
+
+    entities = _safe_dict(payload.setdefault("entities", {}))
+    proteins = _safe_list(entities.get("proteins"))
+    complexes = _safe_list(entities.get("protein_complexes"))
+    processes = _safe_dict(payload.get("processes"))
+
+    process_ref_norms: Set[str] = set()
+
+    def remember_ref(value: Any) -> None:
+        name = _canonical(str(value or ""))
+        norm = _normalize(name)
+        if norm:
+            process_ref_norms.add(norm)
+
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ("inputs", "outputs"):
+            for token in _safe_list(reaction.get(side)):
+                remember_ref(token)
+        for key in ("enzymes", "modifiers", "catalysts"):
+            for row in _safe_list(reaction.get(key)):
+                remember_ref(_actor_name_from_row(row))
+                if isinstance(row, dict):
+                    remember_ref(row.get("entity"))
+        for field in ("enzyme", "modifier", "protein", "protein_name", "protein_complex"):
+            remember_ref(reaction.get(field))
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        remember_ref(transport.get("cargo"))
+        remember_ref(transport.get("cargo_complex"))
+        for row in _safe_list(transport.get("transporters")):
+            remember_ref(_actor_name_from_row(row))
+            if isinstance(row, dict):
+                remember_ref(row.get("entity"))
+    for interaction in _safe_list(processes.get("interactions")):
+        if not isinstance(interaction, dict):
+            continue
+        remember_ref(interaction.get("entity_1") or interaction.get("left") or interaction.get("source"))
+        remember_ref(interaction.get("entity_2") or interaction.get("right") or interaction.get("target"))
+
+    component_refs: Dict[str, List[Tuple[Dict[str, Any], Any]]] = defaultdict(list)
+    identified_component_norms: Set[str] = set()
+    for complex_row in complexes:
+        if not isinstance(complex_row, dict):
+            continue
+        for component in _safe_list(complex_row.get("components")):
+            component_name = _component_name_from_row(component)
+            norm = _normalize(component_name)
+            if not norm:
+                continue
+            component_refs[norm].append((complex_row, component))
+            if isinstance(component, dict) and _has_protein_identity(component):
+                identified_component_norms.add(norm)
+
+    rogue_norms: Set[str] = set()
+    for protein in proteins:
+        if not isinstance(protein, dict):
+            continue
+        name = _canonical(str(protein.get("name", "")))
+        norm = _normalize(name)
+        if (
+            norm
+            and norm in component_refs
+            and norm not in process_ref_norms
+            and norm not in identified_component_norms
+            and not _has_protein_identity(protein)
+        ):
+            rogue_norms.add(norm)
+
+    if not rogue_norms:
+        return payload
+
+    kept_proteins: List[Any] = []
+    for protein in proteins:
+        if not isinstance(protein, dict):
+            kept_proteins.append(protein)
+            continue
+        norm = _normalize(str(protein.get("name", "")))
+        if norm in rogue_norms:
+            summary["component_only_proteins_removed"] += 1
+            rep["actions"].append(
+                {
+                    "type": "component_only_protein_removed",
+                    "name": _canonical(str(protein.get("name", ""))),
+                }
+            )
+            continue
+        kept_proteins.append(protein)
+    entities["proteins"] = kept_proteins
+
+    for complex_idx, complex_row in enumerate(complexes):
+        if not isinstance(complex_row, dict):
+            continue
+        components = _safe_list(complex_row.get("components"))
+        kept_components: List[Any] = []
+        for component_idx, component in enumerate(components):
+            component_name = _component_name_from_row(component)
+            norm = _normalize(component_name)
+            if norm in rogue_norms:
+                summary["unresolved_complex_components_dropped"] += 1
+                rep["actions"].append(
+                    {
+                        "type": "unresolved_complex_component_dropped",
+                        "json_pointer": f"/entities/protein_complexes/{complex_idx}/components/{component_idx}",
+                        "complex": _canonical(str(complex_row.get("name", ""))),
+                        "component": component_name,
+                    }
+                )
+                continue
+            kept_components.append(component)
+        complex_row["components"] = kept_components
+
+    return payload
 
 
 def _token_parts_for_aliasing(token: str) -> List[str]:
@@ -3229,6 +3389,7 @@ def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], 
     promote_catalysts(data, report=report)
     canonicalize_same_as_aliases(data, report=report)
     normalize_process_actor_schema(data, report=report)
+    drop_unresolved_complex_component_proteins(data, report=report)
     dedupe_processes(data, report=report)
     run_strict_post_normalization_gates(data, report=report, enforce_all_proteins_connected=True)
     return data, report

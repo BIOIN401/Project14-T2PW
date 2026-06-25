@@ -22,6 +22,10 @@ def _resolve_output_path(out_dir: Path, filename: str) -> Path:
     return out_dir / filename
 
 
+def _safe_dict(value: Any) -> Dict[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
 def run_legacy_sbml_pipeline(
     input_path: Path | str,
     *,

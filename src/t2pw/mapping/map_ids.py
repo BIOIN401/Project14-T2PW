@@ -4287,6 +4287,16 @@ def _merge_complex_resolution_into_row(
         complex_row["mapping_meta"]["issues"] = _safe_list(result.get("issues"))
 
 
+def _protein_has_external_id(protein_row: Dict[str, Any]) -> bool:
+    """Return True if the protein row has a UniProt or DrugBank identifier."""
+    mapped_ids = _safe_dict(protein_row.get("mapped_ids"))
+    for key in ("uniprot", "uniprot_id", "uniprot-id", "drugbank", "drugbank_id", "drugbank-id"):
+        val = str(protein_row.get(key) or "").strip() or str(mapped_ids.get(key) or "").strip()
+        if val:
+            return True
+    return False
+
+
 def _protein_component_from_row(protein_row: Dict[str, Any], protein_name: str) -> Dict[str, Any]:
     component: Dict[str, Any] = {"name": protein_name, "stoichiometry": 1}
     protein_id = _to_positive_int(protein_row.get("pathbank_protein_id"))
@@ -4419,11 +4429,13 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))
     }
     cache_key_to_name: Dict[str, str] = {}
+    dropped_protein_norms: set = set()
     summary = {
         "reaction_protein_enzymes_rewritten_to_complexes": 0,
         "reaction_enzyme_complexes_db_matched": 0,
         "reaction_enzyme_complexes_novel": 0,
         "reaction_enzyme_complexes_unresolved": 0,
+        "reaction_enzyme_proteins_dropped_no_external_id": 0,
     }
     actions: List[Dict[str, Any]] = []
 
@@ -4497,6 +4509,23 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
 
     def _rewrite_rows(rows: List[Any], pointer_prefix: str, reaction: Dict[str, Any]) -> List[Dict[str, Any]]:
         rewritten: List[Dict[str, Any]] = []
+        # Pre-scan: count how many proteins in this list have external IDs so we
+        # know if it's safe to drop unresolved ones (only drop if others remain).
+        resolved_protein_count = 0
+        for actor in rows:
+            actor_dict = actor if isinstance(actor, dict) else {"entity": actor}
+            if not isinstance(actor_dict, dict):
+                continue
+            aname, atype, _ = _reaction_actor_name_and_type(actor_dict)
+            if not aname:
+                continue
+            aname_norm = _normalize_name(aname)
+            if atype == "protein_complex" or aname_norm in complexes_by_norm:
+                resolved_protein_count += 1
+            elif atype in {"protein", ""} and aname_norm in proteins_by_norm:
+                if _protein_has_external_id(proteins_by_norm[aname_norm]):
+                    resolved_protein_count += 1
+
         for idx, actor in enumerate(rows):
             actor_dict = actor if isinstance(actor, dict) else {"entity": actor}
             if not isinstance(actor_dict, dict):
@@ -4509,8 +4538,27 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 rewritten.append({"entity": complexes_by_norm.get(name_norm, {}).get("name", name), "entity_type": "protein_complex", "role": role or "catalyst"})
                 continue
             protein_row = proteins_by_norm.get(name_norm)
+            if name_norm in dropped_protein_norms:
+                continue
             if actor_type not in {"protein", ""} or protein_row is None:
                 rewritten.append(dict(actor_dict))
+                continue
+            # Drop proteins that have no external ID when other resolved
+            # proteins exist in the same enzyme/modifier list.
+            if not _protein_has_external_id(protein_row) and resolved_protein_count > 0:
+                if protein_row in proteins:
+                    proteins.remove(protein_row)
+                proteins_by_norm.pop(name_norm, None)
+                dropped_protein_norms.add(name_norm)
+                summary["reaction_enzyme_proteins_dropped_no_external_id"] += 1
+                actions.append(
+                    {
+                        "type": "reaction_enzyme_protein_dropped_no_external_id",
+                        "json_pointer": f"{pointer_prefix}/{idx}",
+                        "protein": name,
+                        "reason": "no UniProt or DrugBank identifier; other enzymes remain",
+                    }
+                )
                 continue
             complex_name, result = _resolve_complex_name(name, protein_row, actor_dict, reaction)
             updated = {
