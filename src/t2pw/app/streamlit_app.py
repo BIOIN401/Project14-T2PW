@@ -1904,6 +1904,18 @@ with st.form("pwml_pipeline"):
         help="Use this to tell the model what pathway or scope you want extracted. This guides extraction but does not override the source text or validation rules.",
     )
 
+    species_hint = st.text_input(
+        "Species (optional)",
+        value="",
+        key="species_hint_input",
+        help=(
+            "Organism to attach to biological_states that don't have one "
+            "(e.g. 'Homo sapiens', 'Mus musculus', 'Saccharomyces cerevisiae', "
+            "'Escherichia coli'). Leave blank if the source text names the organism — "
+            "the preprocessor will detect it."
+        ),
+    )
+
     if uses_pdf_input:
         if uploaded_pdfs:
             _pdf_names = ", ".join(_pdf.name for _pdf in uploaded_pdfs)
@@ -2083,6 +2095,12 @@ if submit:
     # Preprocessing: lightweight context summary to guide extraction and inference
     with st.spinner("Running preprocessor..."):
         pathway_context = preprocess(text, temperature=temperature)
+
+    _species_override = (species_hint or "").strip()
+    if _species_override:
+        if not isinstance(pathway_context, dict):
+            pathway_context = {}
+        pathway_context["likely_organism"] = _species_override
 
     if is_ambiguous_multi_example_review_context(pathway_context):
         candidate_examples = pathway_context.get("candidate_examples", [])
