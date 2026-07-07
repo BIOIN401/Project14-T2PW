@@ -1,7 +1,5 @@
 import json
-import inspect
 import os
-import re
 import hashlib
 import sys
 import time
@@ -36,7 +34,7 @@ from t2pw.mapping.grounding import apply_grounding
 from t2pw.curation.gap_resolver import run_gap_resolution
 from t2pw.curation.pathway_curator import run_pathway_curator
 from t2pw.sbml.json_to_sbml import build_sbml
-from t2pw.mapping.map_ids import run_mapping, PathBankDbResolver, resolve_mapping_gaps
+from t2pw.mapping.map_ids import map_payload, PathBankDbResolver, resolve_mapping_gaps
 from t2pw.sbml.render_pathwhiz_like import build_render_artifacts
 from t2pw.pipeline.draft_graph_render import render_draft_graph_to_png_bytes
 from t2pw.sbml.strip_unmapped import strip_unmapped
@@ -44,20 +42,9 @@ from t2pw.sbml.overwatch import run_sbml_overwatch
 from t2pw.sbml.examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from t2pw.tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
 from t2pw.pipeline.process_normalizer import (
-    GateValidationError,
-    attach_transporters_from_evidence,
-    canonicalize_same_as_aliases,
-    cleanup_disallowed_complexes,
     compute_normalization_stats,
-    dedupe_processes,
     ensure_autostates,
-    normalize_composites,
     normalize_process_payload,
-    normalize_process_actor_schema,
-    promote_catalysts,
-    prune_disconnected_proteins,
-    rewrite_reactions_to_complex_states,
-    run_strict_post_normalization_gates,
 )
 from t2pw.pipeline.pipeline import (
     PipelineFailure,
@@ -887,58 +874,6 @@ def run_libsbml_checker(sbml_bytes: bytes) -> Dict[str, Any]:
         },
     }
 
-def _norm_text(value: str) -> str:
-    text = (value or "").strip().lower()
-    text = re.sub(r"[^a-z0-9\-\s]", " ", text)
-    text = re.sub(r"\s+", " ", text)
-    return text
-
-
-def attach_enzymes_from_reaction_evidence(payload, report=None):
-    """
-    Attach proteins as enzymes if their name appears in the reaction evidence.
-    """
-    entities = payload.get("entities", {})
-    processes = payload.get("processes", {})
-
-    proteins = entities.get("proteins", [])
-    reactions = processes.get("reactions", [])
-
-    protein_names = []
-    for p in proteins:
-        if isinstance(p, dict):
-            name = p.get("name")
-            if name:
-                protein_names.append(name)
-
-    attached = 0
-
-    for rxn in reactions:
-
-        rxn.setdefault("enzymes", [])
-        rxn.setdefault("modifiers", [])
-
-        if rxn["enzymes"]:
-            continue
-
-        evidence_text = _norm_text(
-            (rxn.get("name", "") + " " + rxn.get("evidence", ""))
-        )
-
-        matches = []
-
-        for protein in protein_names:
-            if _norm_text(protein) in evidence_text:
-                matches.append(protein)
-
-        if len(matches) == 1:
-            rxn["enzymes"].append(matches[0])
-            attached += 1
-
-    if report is not None:
-        summary = report.setdefault("summary", {})
-        summary["enzymes_attached_from_reaction_evidence"] = attached
-
 def run_post_pipeline_sbml_artifacts(
     final_payload: Dict[str, Any],
     *,
@@ -1040,73 +975,75 @@ def run_post_pipeline_sbml_artifacts(
         post_dedupe_probe: Dict[str, Any] = {}
         gate_connectivity_summary: Dict[str, Any] = {}
         reaction_preservation_reports: Dict[str, Any] = {}
-        try:
-            normalize_composites(normalized_input, report=normalization_report)
-            rewrite_reactions_to_complex_states(normalized_input, report=normalization_report)
-            cleanup_disallowed_complexes(normalized_input, report=normalization_report)
-            compute_normalization_stats(normalized_input, normalization_report)
-            post_normalization_probe = {
-                "normalization_stats": _safe_dict(normalization_report.get("summary")),
-                "graph_summary": graph_summary(normalized_input),
-                "payload": deepcopy(normalized_input),
+
+        def _checkpoint_probe(
+            checkpoint_payload: Dict[str, Any],
+            checkpoint_report: Dict[str, Any],
+            *,
+            gate_snapshot: Optional[Dict[str, Any]] = None,
+        ) -> Dict[str, Any]:
+            probe_report = deepcopy(checkpoint_report)
+            stats = _safe_dict(_safe_dict(gate_snapshot or {}).get("normalization_stats"))
+            if not stats:
+                try:
+                    stats = _safe_dict(compute_normalization_stats(checkpoint_payload, probe_report))
+                except Exception:
+                    stats = _safe_dict(probe_report.get("summary"))
+            graph = _safe_dict(_safe_dict(gate_snapshot or {}).get("connectivity")) or graph_summary(checkpoint_payload)
+            return {
+                "normalization_stats": stats,
+                "graph_summary": graph,
+                "payload": deepcopy(checkpoint_payload),
             }
-            post_normalization_probe_path.write_text(
-                json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
-                encoding="utf-8",
-            )
-            ensure_autostates(normalized_input, report=normalization_report)
-            attach_transporters_from_evidence(normalized_input, report=normalization_report)
-            attach_enzymes_from_reaction_evidence(normalized_input, report=normalization_report)
-            post_transport_attachment_probe = {
-                "normalization_stats": _safe_dict(normalization_report.get("summary")),
-                "graph_summary": graph_summary(normalized_input),
-                "payload": deepcopy(normalized_input),
-            }
-            post_transport_attachment_probe_path.write_text(
-                json.dumps(post_transport_attachment_probe, indent=2, ensure_ascii=False),
-                encoding="utf-8",
-            )
-            promote_catalysts(normalized_input, report=normalization_report)
-            canonicalize_same_as_aliases(normalized_input, report=normalization_report)
-            normalize_process_actor_schema(normalized_input, report=normalization_report)
-            dedupe_processes(normalized_input, report=normalization_report)
-            prune_disconnected_proteins(normalized_input, report=normalization_report)
-            gate_snapshot = run_strict_post_normalization_gates(
-                normalized_input,
-                report=normalization_report,
-                forbidden_complexes=["thyroglobulin:2-aminoacrylic acid"],
-                enforce_all_proteins_connected=True,
-            )
-            gate_connectivity_summary = _safe_dict(gate_snapshot.get("connectivity"))
-            post_dedupe_probe = {
-                "normalization_stats": _safe_dict(gate_snapshot.get("normalization_stats")),
-                "graph_summary": gate_connectivity_summary,
-                "payload": deepcopy(normalized_input),
-            }
-            post_dedupe_probe_path.write_text(
-                json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
-                encoding="utf-8",
-            )
-        except GateValidationError as exc:
-            gate_details = _safe_dict(getattr(exc, "details", {}))
-            gate_connectivity_summary = _safe_dict(gate_details.get("connectivity"))
-            gate_fail_report = {
-                "status": "failed",
-                "stage": "post_normalization_hard_gates",
-                "error": str(exc),
-                "errors": _safe_list(gate_details.get("errors")),
-                "normalization_stats": _safe_dict(gate_details.get("normalization_stats")),
-                "connectivity": gate_connectivity_summary,
-            }
-            if not post_dedupe_probe:
-                post_dedupe_probe = {
-                    "normalization_stats": _safe_dict(gate_details.get("normalization_stats"))
-                    or _safe_dict(normalization_report.get("summary")),
-                    "graph_summary": gate_connectivity_summary or graph_summary(normalized_input),
-                    "payload": deepcopy(normalized_input),
-                }
+
+        def _write_normalization_checkpoint(
+            name: str,
+            checkpoint_payload: Dict[str, Any],
+            checkpoint_report: Dict[str, Any],
+        ) -> None:
+            nonlocal post_normalization_probe, post_transport_attachment_probe, post_dedupe_probe
+            if name == "cleanup_disallowed_complexes" and not post_normalization_probe:
+                post_normalization_probe = _checkpoint_probe(checkpoint_payload, checkpoint_report)
+                post_normalization_probe_path.write_text(
+                    json.dumps(post_normalization_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            elif name == "attach_transporters_from_evidence" and not post_transport_attachment_probe:
+                post_transport_attachment_probe = _checkpoint_probe(checkpoint_payload, checkpoint_report)
+                post_transport_attachment_probe_path.write_text(
+                    json.dumps(post_transport_attachment_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            elif name == "run_strict_post_normalization_gates" and not post_dedupe_probe:
+                gate_snapshot = _safe_dict(checkpoint_report.get("gate"))
+                post_dedupe_probe = _checkpoint_probe(
+                    checkpoint_payload,
+                    checkpoint_report,
+                    gate_snapshot=gate_snapshot,
+                )
                 post_dedupe_probe_path.write_text(
                     json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+
+        try:
+            normalized_input, normalization_report = normalize_process_payload(
+                normalized_input,
+                on_checkpoint=_write_normalization_checkpoint,
+            )
+            gate_details = _safe_dict(normalization_report.get("gate"))
+            gate_connectivity_summary = _safe_dict(gate_details.get("connectivity"))
+            if gate_details and gate_details.get("ok") is False:
+                gate_fail_report = {
+                    "status": "failed",
+                    "stage": "post_normalization_hard_gates",
+                    "error": "Hard-gate validation failed after normalization.",
+                    "errors": _safe_list(gate_details.get("errors")),
+                    "normalization_stats": _safe_dict(gate_details.get("normalization_stats")),
+                    "connectivity": gate_connectivity_summary,
+                }
+                gate_fail_report_path.write_text(
+                    json.dumps(gate_fail_report, indent=2, ensure_ascii=False),
                     encoding="utf-8",
                 )
         except Exception as exc:
@@ -1148,58 +1085,6 @@ def run_post_pipeline_sbml_artifacts(
         preservation_after_normalization = _write_reaction_preservation_report("after_normalization", normalized_input)
         if preservation_after_normalization is not None:
             reaction_preservation_reports["after_normalization"] = preservation_after_normalization
-        if gate_fail_report:
-            gate_fail_report_path.write_text(json.dumps(gate_fail_report, indent=2, ensure_ascii=False), encoding="utf-8")
-            return {
-                "gate_failed": True,
-                "gate_fail_report": gate_fail_report,
-                "pre_normalization_input": pre_normalization_input,
-                "pre_normalized_input": normalized_input,
-                "pre_normalization_report": normalization_report,
-                "post_normalization_probe": post_normalization_probe,
-                "post_transport_attachment_probe": post_transport_attachment_probe,
-                "post_dedupe_probe": post_dedupe_probe,
-                "connectivity_summary": _safe_dict(post_dedupe_probe.get("graph_summary")),
-                "audit_report": {"summary": {"error_count": 0, "warning_count": 0, "patch_count": 0}},
-                "audit_patch": {},
-                "audit_apply_report": {"summary": {"accepted_count": 0, "rejected_count": 0}},
-                "final_audited": normalized_input,
-                "final_mapped": normalized_input,
-                "mapping_report": {"summary": {}},
-                "enrichment_report": {"summary": {}},
-                "sbml_report_json": {"counts": {}, "validation": {"has_errors": True}},
-                "sbml_report_txt": "",
-                "sbml_overwatch_report": {},
-                "sbml_xml_bytes": b"",
-                "sbml_diagram_png_bytes": b"",
-                "sbml_diagram_error": "",
-                "sbml_render_layout_summary": {},
-                "sbml_render_ready_sbml_bytes": b"",
-                "sbml_clean_bytes": b"",
-                "sbml_clean_summary": {},
-                "sbml_build_report": {},
-                "mapping_cache_path": str(cache_path),
-                "enrichment_cache_path": str(cache_path.with_name("enrichment_cache.json")),
-                "enrichment_dump_path": str(project_root / "out" / "enrichment_dump.json"),
-                "mapping_id_source": id_source,
-                "mapping_db_host": db_host,
-                "mapping_db_schema": db_schema,
-                "example_retrieval_enabled": False,
-                "example_retrieval_requested": bool(use_example_retrieval),
-                "example_index_path": "",
-                "example_index_error": "",
-                "example_index_entry_count": 0,
-                "audit_iterations": [],
-                "gap_resolution_iterations": [],
-                "reaction_preservation_reports": reaction_preservation_reports,
-                "audit_loop_summary": {
-                    "rounds_executed": 0,
-                    "max_rounds": 0,
-                    "timeout_seconds": 0,
-                    "stop_reason": "gate_failed",
-                    "duration_seconds": 0,
-                },
-            }
         input_json.write_text(json.dumps(normalized_input, indent=2, ensure_ascii=False), encoding="utf-8")
 
         audit_iterations: List[Dict[str, Any]] = []
@@ -1229,6 +1114,21 @@ def run_post_pipeline_sbml_artifacts(
             motif_index_error = f"index_not_found:{example_path}"
         audit_started_at = time.time()
         retry_context_note = ""
+        if gate_fail_report:
+            gate_errors = _safe_list(gate_fail_report.get("errors"))
+            compact_gate_errors = [
+                {
+                    "path": _safe_dict(error).get("path"),
+                    "reason": _safe_dict(error).get("reason"),
+                }
+                for error in gate_errors
+                if isinstance(error, dict)
+            ][:20]
+            retry_context_note = (
+                "Post-normalization gate failures are expected audit inputs. "
+                "Repair these issues before export: "
+                f"{json.dumps(compact_gate_errors, ensure_ascii=False)}"
+            )
         stop_reason = "max_rounds_reached"
 
         for round_idx in range(1, max_rounds + 1):
@@ -1591,25 +1491,24 @@ def run_post_pipeline_sbml_artifacts(
         except Exception as _cur_exc:
             curator_report = {"error": str(_cur_exc), "summary": {}}
 
-        run_mapping_params = inspect.signature(run_mapping).parameters
-        mapping_kwargs: Dict[str, Any] = {"cache_path": cache_path}
-        if "id_source" in run_mapping_params:
-            mapping_kwargs["id_source"] = id_source
-        if "db_config" in run_mapping_params:
-            mapping_kwargs["db_config"] = {
-                "host": db_host,
-                "port": db_port,
-                "user": db_user,
-                "password": db_password,
-                "schema": db_schema,
-            }
-        mapping_report = run_mapping(
-            audited_json,
-            mapped_json,
-            mapping_report_path,
-            **mapping_kwargs,
+        db_config = {
+            "host": db_host,
+            "port": db_port,
+            "user": db_user,
+            "password": db_password,
+            "schema": db_schema,
+        }
+        mapping_result = map_payload(
+            json.loads(audited_json.read_text(encoding="utf-8")),
+            cache_path=cache_path,
+            id_source=id_source,
+            db_config=db_config,
+            use_cache=False,
         )
-        mapped_payload = json.loads(mapped_json.read_text(encoding="utf-8"))
+        mapped_payload = _safe_dict(mapping_result.get("payload"))
+        mapping_report = _safe_dict(mapping_result.get("report"))
+        mapped_json.write_text(json.dumps(mapped_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+        mapping_report_path.write_text(json.dumps(mapping_report, indent=2, ensure_ascii=False), encoding="utf-8")
         stoich_audit_log: list = []
         if use_stoich_agent:
             from t2pw.stoich.agent import run_stoich_agent
@@ -1692,7 +1591,8 @@ def run_post_pipeline_sbml_artifacts(
 
         return {
             "gate_failed": False,
-            "gate_fail_report": {},
+            "normalization_gate_failed": bool(gate_fail_report),
+            "gate_fail_report": gate_fail_report,
             "pre_normalization_input": pre_normalization_input,
             "pre_normalized_input": normalized_input,
             "pre_normalization_report": normalization_report,
@@ -2589,6 +2489,7 @@ if st.session_state.get("pipeline_ready"):
     post_artifacts = st.session_state.get("post_pipeline_artifacts")
     if isinstance(post_artifacts, dict):
         gate_failed = bool(post_artifacts.get("gate_failed", False))
+        normalization_gate_failed = bool(post_artifacts.get("normalization_gate_failed", False))
         audit_summary = post_artifacts.get("audit_report", {}).get("summary", {})
         mapping_summary = post_artifacts.get("mapping_report", {}).get("summary", {})
         enrichment_summary = post_artifacts.get("enrichment_report", {}).get("summary", {})
@@ -2606,6 +2507,7 @@ if st.session_state.get("pipeline_ready"):
                 "connectivity": _safe_dict(post_artifacts.get("connectivity_summary"))
                 or _safe_dict(post_artifacts.get("post_dedupe_probe") or post_artifacts.get("post_normalization_probe")).get("graph_summary", {}),
                 "gate_failed": gate_failed,
+                "normalization_gate_failed": normalization_gate_failed,
                 "gate_fail_report": post_artifacts.get("gate_fail_report", {}),
                 "audit": audit_summary,
                 "mapping": mapping_summary,
@@ -2635,9 +2537,25 @@ if st.session_state.get("pipeline_ready"):
             }
         )
         if gate_failed:
+            _gfr = _safe_dict(post_artifacts.get("gate_fail_report"))
             st.error(
                 f"Hard-gate failure before audit/mapping/SBML: "
-                f"{_safe_dict(post_artifacts.get('gate_fail_report')).get('error', 'unknown error')}"
+                f"{_gfr.get('error', 'unknown error')}"
+            )
+            _gate_errors = _safe_list(_gfr.get("errors"))
+            if _gate_errors:
+                with st.expander(f"Gate validation errors ({len(_gate_errors)})", expanded=True):
+                    for _ge in _gate_errors:
+                        if isinstance(_ge, dict):
+                            st.markdown(f"- **`{_ge.get('path', '?')}`**: {_ge.get('reason', _ge)}")
+                        else:
+                            st.markdown(f"- {_ge}")
+        elif normalization_gate_failed:
+            _gfr = _safe_dict(post_artifacts.get("gate_fail_report"))
+            _gate_errors = _safe_list(_gfr.get("errors"))
+            st.warning(
+                f"Post-normalization gate produced {len(_gate_errors)} audit issue(s); "
+                "the audit loop ran before export."
             )
         if str(post_artifacts.get("example_index_error", "")).strip():
             st.warning(f"SBML motif retrieval issue: {post_artifacts.get('example_index_error')}")
@@ -2703,7 +2621,7 @@ if st.session_state.get("pipeline_ready"):
             mime="application/json",
             key="dl_post_dedupe_probe",
         )
-        if gate_failed:
+        if gate_failed or normalization_gate_failed:
             st.download_button(
                 "Download gate_fail_report.json",
                 json.dumps(post_artifacts.get("gate_fail_report", {}), indent=2),

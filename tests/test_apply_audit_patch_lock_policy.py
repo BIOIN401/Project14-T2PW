@@ -10,7 +10,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.curation.apply_audit_patch import apply_patch_with_policy, run_apply  # noqa: E402
+from t2pw.curation.apply_audit_patch import apply_audit_patch_payload, apply_patch_with_policy, run_apply  # noqa: E402
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME  # noqa: E402
 
 
@@ -76,6 +76,24 @@ def test_locked_policy_rejects_locked_reaction_removal() -> None:
             "locked_reaction_id": "rxn_lock_001",
         }
     ]
+
+
+def test_apply_audit_patch_payload_returns_payload_and_report() -> None:
+    result = apply_audit_patch_payload(
+        _payload(),
+        [
+            {
+                "op": "add",
+                "path": "/entities/compounds/-",
+                "value": {"name": "AMP"},
+                "confidence": 0.99,
+                "evidence": "AMP is mentioned.",
+            }
+        ],
+    )
+
+    assert result["payload"]["entities"]["compounds"][-1] == {"name": "AMP"}
+    assert result["report"]["summary"] == {"accepted_count": 1, "rejected_count": 0, "total": 1}
 
 
 def test_locked_policy_accepts_missing_compound_addition() -> None:

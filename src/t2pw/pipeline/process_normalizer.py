@@ -5,7 +5,7 @@ import json
 import re
 from collections import defaultdict
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
+from typing import Any, Callable, Dict, List, Optional, Sequence, Set, Tuple
 
 
 # ---------------------------------------------------------------------------
@@ -159,6 +159,12 @@ def _normalize(value: str) -> str:
     return re.sub(r"[^a-z0-9: ]+", "", lowered)
 
 
+def _norm_text(value: Any) -> str:
+    text = str(value or "").strip().casefold()
+    text = re.sub(r"[^a-z0-9\-\s]", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
 def _canonical(value: str) -> str:
     return re.sub(r"\s+", " ", (value or "").strip())
 
@@ -243,6 +249,7 @@ def _new_report() -> Dict[str, Any]:
             "n_autostate_created": 0,
             "n_entities_assigned_to_autostate": 0,
             "transporters_attached": 0,
+            "enzymes_attached_from_reaction_evidence": 0,
             "modifier_refs_canonicalized": 0,
             "modifier_refs_dropped": 0,
             "forbidden_complexes_removed": 0,
@@ -257,6 +264,8 @@ def _new_report() -> Dict[str, Any]:
             "n_single_protein_complexes_removed": 0,
             "unresolved_complex_components_dropped": 0,
             "component_only_proteins_removed": 0,
+            "pruned_disconnected_proteins": [],
+            "pruned_disconnected_proteins_count": 0,
             "alias_example_mappings": [],
         },
         "rewrite_map": {},
@@ -1463,7 +1472,7 @@ def _actor_name_from_row(row: Any) -> str:
         return _canonical(row)
     if not isinstance(row, dict):
         return ""
-    for field in ["protein", "protein_name", "protein_complex", "enzyme", "modifier", "name"]:
+    for field in ["entity", "protein", "protein_name", "protein_complex", "enzyme", "modifier", "name"]:
         value = _canonical(str(row.get(field, "")))
         if value:
             return value
@@ -1639,6 +1648,81 @@ def drop_unresolved_complex_component_proteins(
     return payload
 
 
+def drop_process_orphan_proteins(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Drop proteins from entities that are never referenced in any process and have no external identity.
+
+    This catches the case where extraction produces individual subunit entries (e.g., NdmC, NdmD,
+    NdmE) while the reactions only reference the complex form (e.g., NdmCDE complex), leaving the
+    subunits as degree-0 orphans that would fail the hard-gate connectivity check.
+    """
+    rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("orphan_proteins_dropped", 0)
+    rep.setdefault("actions", [])
+
+    entities = _safe_dict(payload.setdefault("entities", {}))
+    proteins = _safe_list(entities.get("proteins"))
+    processes = _safe_dict(payload.get("processes"))
+
+    process_ref_norms: Set[str] = set()
+
+    def _remember(value: Any) -> None:
+        name = _canonical(str(value or ""))
+        norm = _normalize(name)
+        if norm:
+            process_ref_norms.add(norm)
+
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ("inputs", "outputs"):
+            for token in _safe_list(reaction.get(side)):
+                _remember(token)
+        for key in ("enzymes", "modifiers", "catalysts"):
+            for row in _safe_list(reaction.get(key)):
+                _remember(_actor_name_from_row(row))
+                if isinstance(row, dict):
+                    _remember(row.get("entity"))
+        for field in ("enzyme", "modifier", "protein", "protein_name", "protein_complex"):
+            _remember(reaction.get(field))
+
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        _remember(transport.get("cargo"))
+        _remember(transport.get("cargo_complex"))
+        for row in _safe_list(transport.get("transporters")):
+            _remember(_actor_name_from_row(row))
+            if isinstance(row, dict):
+                _remember(row.get("entity"))
+
+    for interaction in _safe_list(processes.get("interactions")):
+        if not isinstance(interaction, dict):
+            continue
+        _remember(interaction.get("entity_1") or interaction.get("left") or interaction.get("source"))
+        _remember(interaction.get("entity_2") or interaction.get("right") or interaction.get("target"))
+
+    kept: List[Any] = []
+    for protein in proteins:
+        if not isinstance(protein, dict):
+            kept.append(protein)
+            continue
+        name = _canonical(str(protein.get("name", "")))
+        norm = _normalize(name)
+        if norm and norm not in process_ref_norms and not _has_protein_identity(protein):
+            summary["orphan_proteins_dropped"] += 1
+            rep["actions"].append({"type": "orphan_protein_dropped", "name": name})
+        else:
+            kept.append(protein)
+
+    entities["proteins"] = kept
+    return payload
+
+
 def _token_parts_for_aliasing(token: str) -> List[str]:
     text = _canonical(token)
     if not text:
@@ -1740,7 +1824,6 @@ def canonicalize_same_as_aliases(
             row["components"] = components
         kept_complexes.append(row)
     complexes[:] = kept_complexes
-    removed_single_complexes = 0
 
     # Gather registry names.
     for rows in [proteins, compounds, complexes]:
@@ -1920,7 +2003,7 @@ def canonicalize_same_as_aliases(
             if not isinstance(row, dict):
                 continue
             updated = dict(row)
-            for field in ["protein", "protein_name", "protein_complex", "enzyme", "modifier", "name"]:
+            for field in ["entity", "protein", "protein_name", "protein_complex", "enzyme", "modifier", "name"]:
                 if isinstance(updated.get(field), str):
                     updated[field] = _rewrite_token(str(updated.get(field)))
             out.append(updated)
@@ -2253,6 +2336,41 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 mod["entity"] = complex_by_norm[norm]
                 mod.pop("protein_complex", None)
 
+        # 1c. Migrate enzymes[] rows to entity/entity_type schema (mirrors modifier migration above).
+        new_enzymes: List[Dict[str, Any]] = []
+        for eidx, enz in enumerate(_safe_list(reaction.get("enzymes"))):
+            if not isinstance(enz, dict):
+                continue
+            updated_enz = dict(enz)
+            if not updated_enz.get("entity"):
+                # Migrate from old protein_complex/protein/name key to entity/entity_type.
+                for old_key, old_type in [("protein_complex", "protein_complex"), ("protein", "protein"), ("name", "protein")]:
+                    val = _canonical(str(updated_enz.get(old_key, "")))
+                    if val:
+                        updated_enz["entity"] = val
+                        updated_enz.setdefault("entity_type", old_type)
+                        updated_enz.pop(old_key, None)
+                        break
+            if not updated_enz.get("entity_type") and updated_enz.get("entity"):
+                updated_enz["entity_type"] = "protein"
+            for old_key in ["protein", "protein_complex", "name", "protein_name"]:
+                updated_enz.pop(old_key, None)
+            updated_enz.setdefault("role", "catalyst")
+            entity_type = _canonical(str(updated_enz.get("entity_type", ""))).casefold()
+            role = _canonical(str(updated_enz.get("role", "catalyst"))).casefold() or "catalyst"
+            if entity_type in dropped_enzyme_entity_types and role in enzyme_export_roles:
+                _record_non_protein_catalyst_drop(
+                    f"/processes/reactions/{ridx}/enzymes/{eidx}",
+                    _canonical(str(updated_enz.get("entity", ""))),
+                    entity_type,
+                    role,
+                    "entity",
+                )
+                continue
+            if updated_enz.get("entity"):
+                new_enzymes.append(updated_enz)
+        reaction["enzymes"] = new_enzymes
+
         # 2. Migrate legacy enzymes[] → modifiers[] with role: "catalyst".
         enzyme_rows = _safe_list(reaction.get("enzymes"))
         if enzyme_rows:
@@ -2296,9 +2414,9 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 })
                 existing_modifier_norms.add(_normalize(ename))
                 summary["modifier_refs_canonicalized"] += 1
-        # Keep a legacy enzymes[] view for callers that have not migrated to
-        # modifiers[] yet. The canonical representation remains modifiers[].
-        legacy_enzymes: List[Dict[str, Any]] = []
+        # Rebuild enzymes[] from modifiers[] (role=catalyst only) using entity/entity_type schema.
+        # The canonical representation remains modifiers[]; enzymes[] is kept in sync as a view.
+        canonical_enzymes: List[Dict[str, Any]] = []
         seen_enzyme_norms: Set[Tuple[str, str]] = set()
         for mod in reaction["modifiers"]:
             if not isinstance(mod, dict):
@@ -2324,21 +2442,19 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             if key in seen_enzyme_norms:
                 continue
             seen_enzyme_norms.add(key)
-            legacy_row: Dict[str, Any] = {
+            canonical_row: Dict[str, Any] = {
+                "entity": entity,
+                "entity_type": entity_type,
                 "role": "catalyst",
                 "confidence": mod.get("confidence", 1.0),
                 "provenance": mod.get("provenance", "extracted"),
             }
-            if entity_type == "protein_complex":
-                legacy_row["protein_complex"] = entity
-            else:
-                legacy_row["protein"] = entity
             evidence = _canonical(str(mod.get("evidence", "")))
             if evidence:
-                legacy_row["evidence"] = evidence
-            legacy_enzymes.append(legacy_row)
-        if legacy_enzymes or "enzymes" in reaction:
-            reaction["enzymes"] = legacy_enzymes
+                canonical_row["evidence"] = evidence
+            canonical_enzymes.append(canonical_row)
+        if canonical_enzymes or "enzymes" in reaction:
+            reaction["enzymes"] = canonical_enzymes
 
     for tidx, transport in enumerate(transports):
         if not isinstance(transport, dict):
@@ -2577,11 +2693,9 @@ def attach_transporters_from_evidence(payload: Dict[str, Any], *, report: Option
         for existing in transporters:
             if not isinstance(existing, dict):
                 continue
-            for key in ["protein", "protein_complex", "name"]:
-                existing_name = _canonical(str(existing.get(key, "")))
-                if existing_name and _normalize(existing_name) in known_norm_to_name:
-                    existing_norms.add(_normalize(existing_name))
-                    break
+            existing_name = _actor_name_from_row(existing)
+            if existing_name and _normalize(existing_name) in known_norm_to_name:
+                existing_norms.add(_normalize(existing_name))
 
         cargo_value = (
             transport.get("cargo_complex")
@@ -2632,6 +2746,110 @@ def attach_transporters_from_evidence(payload: Dict[str, Any], *, report: Option
                 }
             )
         transport["transporters"] = transporters
+    return payload
+
+
+_ENZYME_EVIDENCE_CUE_RE = re.compile(
+    r"(catalyz|catalys|catalytic|enzyme|enzymatic|mediated|dependent|activity|activat|promot|facilitat)",
+    flags=re.IGNORECASE,
+)
+
+
+def _cue_near_name(text: str, name: str, *, window: int = 80) -> Optional[str]:
+    evidence = _canonical(text)
+    actor_name = _canonical(name)
+    if not evidence or not actor_name:
+        return None
+    for match in re.finditer(re.escape(actor_name), evidence, flags=re.IGNORECASE):
+        start = max(0, match.start() - window)
+        end = min(len(evidence), match.end() + window)
+        snippet = evidence[start:end].strip()
+        if _ENZYME_EVIDENCE_CUE_RE.search(snippet):
+            return snippet
+    return None
+
+
+def attach_enzymes_from_reaction_evidence(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Attach enzyme actors when reaction evidence names one protein near a catalysis cue."""
+    rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("enzymes_attached_from_reaction_evidence", 0)
+    rep.setdefault("actions", [])
+
+    entities = _safe_dict(payload.get("entities"))
+    protein_names = [
+        _canonical(str(row.get("name", "")))
+        for row in _safe_list(entities.get("proteins"))
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    ]
+    complex_names = [
+        _canonical(str(row.get("name", "")))
+        for row in _safe_list(entities.get("protein_complexes"))
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    ]
+    actor_candidates: List[Tuple[str, str]] = [("protein", name) for name in protein_names]
+    actor_candidates.extend(("protein_complex", name) for name in complex_names)
+    if not actor_candidates:
+        return payload
+
+    reactions, _ = _process_lists(payload)
+    for ridx, reaction in enumerate(reactions):
+        if not isinstance(reaction, dict):
+            continue
+        if not isinstance(reaction.get("enzymes"), list):
+            reaction["enzymes"] = _safe_list(reaction.get("enzymes"))
+        if not isinstance(reaction.get("modifiers"), list):
+            reaction["modifiers"] = _safe_list(reaction.get("modifiers"))
+
+        existing_norms = {
+            _normalize(_actor_name_from_row(row))
+            for row in _safe_list(reaction.get("enzymes")) + _safe_list(reaction.get("modifiers"))
+            if _actor_name_from_row(row)
+        }
+        evidence_text = _canonical(
+            " ".join(
+                str(value or "")
+                for value in (reaction.get("name", ""), reaction.get("evidence", ""))
+            )
+        )
+        matches: List[Tuple[str, str, str]] = []
+        for entity_type, actor_name in sorted(actor_candidates, key=lambda item: len(item[1]), reverse=True):
+            actor_norm = _normalize(actor_name)
+            if not actor_norm or actor_norm in existing_norms:
+                continue
+            snippet = _cue_near_name(evidence_text, actor_name)
+            if snippet:
+                matches.append((entity_type, actor_name, snippet))
+
+        if len(matches) != 1:
+            continue
+        entity_type, actor_name, snippet = matches[0]
+        reaction["enzymes"].append(
+            {
+                "entity": actor_name,
+                "entity_type": entity_type,
+                "role": "catalyst",
+                "evidence": snippet,
+                "confidence": 0.75,
+                "provenance": "inferred",
+            }
+        )
+        existing_norms.add(_normalize(actor_name))
+        summary["enzymes_attached_from_reaction_evidence"] += 1
+        rep["actions"].append(
+            {
+                "type": "enzyme_attached_from_reaction_evidence",
+                "json_pointer": f"/processes/reactions/{ridx}/enzymes",
+                "entity": actor_name,
+                "entity_type": entity_type,
+                "snippet": snippet,
+            }
+        )
+
     return payload
 
 
@@ -2955,11 +3173,9 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
         for row in _safe_list(transport.get("transporters")):
             if not isinstance(row, dict):
                 continue
-            for key in ["protein", "protein_complex", "name"]:
-                value = _canonical(str(row.get(key, "")))
-                if value:
-                    transporter_names.append(value)
-                    break
+            value = _actor_name_from_row(row)
+            if value:
+                transporter_names.append(value)
         key = (
             "transport",
             _normalize(str(cargo_value or "")),
@@ -3037,12 +3253,7 @@ def validate_registry_references(payload: Dict[str, Any]) -> None:
             for eidx, enzyme in enumerate(_safe_list(reaction.get(actor_key))):
                 if not isinstance(enzyme, dict):
                     continue
-                enzyme_name = ""
-                for key in ["protein", "protein_complex", "name"]:
-                    candidate = _canonical(str(enzyme.get(key, "")))
-                    if candidate:
-                        enzyme_name = candidate
-                        break
+                enzyme_name = _actor_name_from_row(enzyme)
                 if enzyme_name and _normalize(enzyme_name) not in registry:
                     errors.append(
                         f"/processes/reactions/{ridx}/{actor_key}/{eidx} unknown modifier: {enzyme_name}"
@@ -3057,12 +3268,7 @@ def validate_registry_references(payload: Dict[str, Any]) -> None:
         for tridx, transporter in enumerate(_safe_list(transport.get("transporters"))):
             if not isinstance(transporter, dict):
                 continue
-            transporter_name = ""
-            for key in ["protein", "protein_complex", "name"]:
-                candidate = _canonical(str(transporter.get(key, "")))
-                if candidate:
-                    transporter_name = candidate
-                    break
+            transporter_name = _actor_name_from_row(transporter)
             if transporter_name and _normalize(transporter_name) not in registry:
                 errors.append(
                     f"/processes/transports/{tidx}/transporters/{tridx} unknown transporter: {transporter_name}"
@@ -3086,12 +3292,7 @@ def validate_no_scaffold_modifiers(payload: Dict[str, Any], *, report: Optional[
             for midx, row in enumerate(_safe_list(reaction.get(key))):
                 if not isinstance(row, dict):
                     continue
-                name = ""
-                for field in ["entity", "protein", "protein_complex", "name"]:
-                    candidate = _canonical(str(row.get(field, "")))
-                    if candidate:
-                        name = candidate
-                        break
+                name = _actor_name_from_row(row)
                 if not name:
                     continue
                 if _normalize(name) in scaffold_norms:
@@ -3156,14 +3357,15 @@ def prune_disconnected_proteins(
     *,
     report: Optional[Dict[str, Any]] = None,
 ) -> List[str]:
-    """Remove proteins with degree 0 from *payload* in-place.
-
-    Returns the list of pruned protein names.  These proteins were extracted by
-    the LLM but never referenced as an enzyme/modifier in any reaction, so they
-    contribute nothing to the pathway graph and would otherwise trip the
-    enforce_all_proteins_connected hard gate.
-    """
+    """Remove degree-0 proteins only when they have no external identity."""
     from t2pw.pipeline.qa_graph import build_graph, degrees, get_entities, node
+
+    rep = report if isinstance(report, dict) else None
+    summary = _safe_dict(rep.setdefault("summary", {})) if rep is not None else {}
+    if rep is not None:
+        summary.setdefault("pruned_disconnected_proteins", [])
+        summary.setdefault("pruned_disconnected_proteins_count", 0)
+        rep.setdefault("actions", [])
 
     adj, _ = build_graph(payload)
     deg = degrees(adj)
@@ -3178,16 +3380,27 @@ def prune_disconnected_proteins(
         return []
 
     proteins_list = _safe_list(_safe_dict(payload.get("entities")).get("proteins"))
-    kept = [
-        row for row in proteins_list
-        if isinstance(row, dict) and _canonical(str(row.get("name", ""))) not in disconnected
-    ]
+    pruned: List[str] = []
+    kept: List[Any] = []
+    for row in proteins_list:
+        if not isinstance(row, dict):
+            kept.append(row)
+            continue
+        name = _canonical(str(row.get("name", "")))
+        if name in disconnected and not _has_protein_identity(row):
+            pruned.append(name)
+            continue
+        kept.append(row)
     payload.setdefault("entities", {})["proteins"] = kept  # type: ignore[index]
 
-    pruned = sorted(disconnected)
-    if report is not None:
-        rep = report if isinstance(report, dict) else {}
-        rep.setdefault("summary", {})["pruned_disconnected_proteins"] = pruned
+    pruned = sorted(pruned)
+    if rep is not None:
+        summary["pruned_disconnected_proteins"] = pruned
+        summary["pruned_disconnected_proteins_count"] = len(pruned)
+        actions = rep.setdefault("actions", [])
+        if isinstance(actions, list):
+            for name in pruned:
+                actions.append({"type": "disconnected_protein_pruned", "name": name})
     return pruned
 
 
@@ -3253,12 +3466,7 @@ def run_strict_post_normalization_gates(
             for midx, actor in enumerate(_safe_list(reaction.get(key))):
                 if not isinstance(actor, dict):
                     continue
-                actor_name = ""
-                for field in ["protein", "protein_complex", "name"]:
-                    value = _canonical(str(actor.get(field, "")))
-                    if value:
-                        actor_name = value
-                        break
+                actor_name = _actor_name_from_row(actor)
                 if not actor_name:
                     continue
                 _check_forbidden(f"/processes/reactions/{ridx}/{key}/{midx}", actor_name)
@@ -3278,12 +3486,7 @@ def run_strict_post_normalization_gates(
         for tridx, actor in enumerate(_safe_list(transport.get("transporters"))):
             if not isinstance(actor, dict):
                 continue
-            actor_name = ""
-            for field in ["entity", "protein", "protein_complex", "name"]:
-                value = _canonical(str(actor.get(field, "")))
-                if value:
-                    actor_name = value
-                    break
+            actor_name = _actor_name_from_row(actor)
             if not actor_name:
                 continue
             _check_forbidden(f"/processes/transports/{tidx}/transporters/{tridx}", actor_name)
@@ -3372,26 +3575,74 @@ def run_strict_post_normalization_gates(
     return details
 
 
-def normalize_process_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+def normalize_process_payload(
+    payload: Dict[str, Any],
+    *,
+    on_checkpoint: Optional[Callable[[str, Dict[str, Any], Dict[str, Any]], None]] = None,
+) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     data = deepcopy(payload)
     report = _new_report()
+
+    def _checkpoint(name: str) -> None:
+        if on_checkpoint is not None:
+            on_checkpoint(name, data, report)
+
     # Step 0 — collapse biochemical synonyms before any other pass so that all
     # downstream logic sees consistent canonical names (Issue 3).
     apply_biochemical_aliases(data, report=report)
+    _checkpoint("apply_biochemical_aliases")
     normalize_composites(data, report=report)
+    _checkpoint("normalize_composites")
     rewrite_reactions_to_complex_states(data, report=report)
+    _checkpoint("rewrite_reactions_to_complex_states")
     cleanup_disallowed_complexes(data, report=report)
+    _checkpoint("cleanup_disallowed_complexes")
     ensure_autostates(data, report=report)
+    _checkpoint("ensure_autostates")
     # Backfill missing reaction compartments from participant entity locations (Issue 4).
     backfill_reaction_compartments(data, report=report)
+    _checkpoint("backfill_reaction_compartments")
     attach_transporters_from_evidence(data, report=report)
+    _checkpoint("attach_transporters_from_evidence")
+    attach_enzymes_from_reaction_evidence(data, report=report)
+    _checkpoint("attach_enzymes_from_reaction_evidence")
     promote_interaction_enzymes(data, report=report)
+    _checkpoint("promote_interaction_enzymes")
     promote_catalysts(data, report=report)
+    _checkpoint("promote_catalysts")
     canonicalize_same_as_aliases(data, report=report)
+    _checkpoint("canonicalize_same_as_aliases")
     normalize_process_actor_schema(data, report=report)
+    _checkpoint("normalize_process_actor_schema")
     drop_unresolved_complex_component_proteins(data, report=report)
+    _checkpoint("drop_unresolved_complex_component_proteins")
+    drop_process_orphan_proteins(data, report=report)
+    _checkpoint("drop_process_orphan_proteins")
+    prune_disconnected_proteins(data, report=report)
+    _checkpoint("prune_disconnected_proteins")
     dedupe_processes(data, report=report)
-    run_strict_post_normalization_gates(data, report=report, enforce_all_proteins_connected=True)
+    _checkpoint("dedupe_processes")
+    try:
+        gate_details = run_strict_post_normalization_gates(
+            data,
+            report=report,
+            enforce_all_proteins_connected=True,
+        )
+        report["gate"] = {"ok": True, **gate_details}
+    except GateValidationError as exc:
+        gate_details = _safe_dict(exc.details)
+        report["gate"] = {"ok": False, **gate_details}
+        report.setdefault("actions", []).append(
+            {
+                "type": "normalization_gate_failed",
+                "error_count": len(_safe_list(gate_details.get("errors"))),
+            }
+        )
+    report["gate_details"] = report["gate"]
+    _safe_dict(report.setdefault("summary", {}))["gate_error_count"] = len(
+        _safe_list(_safe_dict(report.get("gate")).get("errors"))
+    )
+    _checkpoint("run_strict_post_normalization_gates")
     return data, report
 
 

@@ -201,7 +201,21 @@ def chat(
             ) from e
 
         except BadRequestError as e:
-            # If response_format isn't supported by a specific OpenRouter model, you'll see this.
+            err_str = str(e).lower()
+            json_format_error = (
+                "response_format" in err_str
+                or "json_object" in err_str
+                or "json mode" in err_str
+                or "json schema" in err_str
+            )
+            if json_format_error and "response_format" in kwargs:
+                logger.warning(
+                    "Model %s does not support response_format JSON; retrying without it.",
+                    resolved_model,
+                )
+                kwargs.pop("response_format")
+                last_err = e
+                continue
             raise RuntimeError(
                 "Bad request (400). This model/provider may not support response_format JSON. "
                 "Try OPENROUTER_MODEL=openrouter/free or a different model. "

@@ -897,6 +897,36 @@ def apply_patch_with_policy(
     return working, report
 
 
+def apply_audit_patch_payload(
+    payload: Dict[str, Any],
+    patch_ops: List[Dict[str, Any]],
+    *,
+    connectivity_confidence_threshold: float = DEFAULT_CONNECTIVITY_CONFIDENCE_THRESHOLD,
+    major_topology_confidence_threshold: float = DEFAULT_MAJOR_TOPOLOGY_CONFIDENCE_THRESHOLD,
+    enforce_major_topology_threshold: bool = False,
+    locked_manifest: Any | None = None,
+    stage: str = "audit",
+    applied_patch_log_path: str | Path | None = None,
+    rejected_patch_log_path: str | Path | None = None,
+) -> Dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise ValueError("Input JSON must be an object.")
+    if not isinstance(patch_ops, list):
+        raise ValueError("Patch ops must be a JSON list.")
+    audited, apply_report = apply_patch_with_policy(
+        payload,
+        patch_ops,
+        connectivity_confidence_threshold=connectivity_confidence_threshold,
+        major_topology_confidence_threshold=major_topology_confidence_threshold,
+        enforce_major_topology_threshold=enforce_major_topology_threshold,
+        locked_manifest=locked_manifest,
+        stage=stage,
+        applied_log_path=applied_patch_log_path,
+        rejected_log_path=rejected_patch_log_path,
+    )
+    return {"payload": audited, "report": apply_report}
+
+
 def run_apply(
     input_path: Path,
     patch_path: Path,
@@ -928,7 +958,7 @@ def run_apply(
         applied_patch_log_path = applied_patch_log_path or (log_dir / APPLIED_PATCH_LOG_FILENAME)
         rejected_patch_log_path = rejected_patch_log_path or (log_dir / REJECTED_PATCH_LOG_FILENAME)
 
-    audited, apply_report = apply_patch_with_policy(
+    result = apply_audit_patch_payload(
         payload,
         patch_ops,
         connectivity_confidence_threshold=connectivity_confidence_threshold,
@@ -936,9 +966,11 @@ def run_apply(
         enforce_major_topology_threshold=enforce_major_topology_threshold,
         locked_manifest=locked_manifest,
         stage=stage,
-        applied_log_path=applied_patch_log_path,
-        rejected_log_path=rejected_patch_log_path,
+        applied_patch_log_path=applied_patch_log_path,
+        rejected_patch_log_path=rejected_patch_log_path,
     )
+    audited = _safe_dict(result.get("payload"))
+    apply_report = _safe_dict(result.get("report"))
     output_path.write_text(json.dumps(audited, indent=2, ensure_ascii=False), encoding="utf-8")
 
     if apply_report_path is not None:

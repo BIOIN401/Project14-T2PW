@@ -1155,27 +1155,20 @@ def _merge_issues(
     return merged
 
 
-def run_audit(
-    input_path: Path,
-    audit_report_path: Path,
-    audit_patch_path: Path,
+def audit_payload(
+    payload: Dict[str, Any],
     *,
     use_llm: bool = True,
     llm_temperature: float = 0.0,
     llm_max_tokens: int = 3200,
     context_note: str = "",
     retrieval_context: str = "",
+    locked_manifest: Optional[List[Dict[str, Any]]] = None,
     locked_manifest_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
-    payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
 
-    # --- Locked manifest discovery and loading ---
-    effective_manifest_path = locked_manifest_path
-    if effective_manifest_path is None:
-        effective_manifest_path = _discover_locked_manifest_path(input_path)
-    locked_manifest = _load_locked_manifest(effective_manifest_path)
     locked_indices: Optional[set] = None
     if locked_manifest is not None:
         locked_indices = _locked_reaction_indices(payload, locked_manifest)
@@ -1263,7 +1256,7 @@ def run_audit(
             "enabled": locked_manifest is not None,
             "locked_reaction_count": len(locked_manifest) if locked_manifest is not None else 0,
             "locked_reaction_indices_matched": len(locked_indices) if locked_indices is not None else 0,
-            "manifest_path": str(effective_manifest_path) if effective_manifest_path is not None else "",
+            "manifest_path": str(locked_manifest_path) if locked_manifest_path is not None else "",
         },
     }
 
@@ -1272,6 +1265,41 @@ def run_audit(
         candidate_score = score_audit_candidate(payload, patch_ops, locked_manifest)
         audit_report["preservation_score"] = candidate_score
 
+    return {"report": audit_report, "patch": patch_ops}
+
+
+def run_audit(
+    input_path: Path,
+    audit_report_path: Path,
+    audit_patch_path: Path,
+    *,
+    use_llm: bool = True,
+    llm_temperature: float = 0.0,
+    llm_max_tokens: int = 3200,
+    context_note: str = "",
+    retrieval_context: str = "",
+    locked_manifest_path: Optional[Path] = None,
+) -> Dict[str, Any]:
+    payload = json.loads(input_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Input JSON must be an object.")
+
+    effective_manifest_path = locked_manifest_path
+    if effective_manifest_path is None:
+        effective_manifest_path = _discover_locked_manifest_path(input_path)
+    locked_manifest = _load_locked_manifest(effective_manifest_path)
+    result = audit_payload(
+        payload,
+        use_llm=use_llm,
+        llm_temperature=llm_temperature,
+        llm_max_tokens=llm_max_tokens,
+        context_note=context_note,
+        retrieval_context=retrieval_context,
+        locked_manifest=locked_manifest,
+        locked_manifest_path=effective_manifest_path,
+    )
+    audit_report = _safe_dict(result.get("report"))
+    patch_ops = _safe_list(result.get("patch"))
     audit_report_path.write_text(json.dumps(audit_report, indent=2, ensure_ascii=False), encoding="utf-8")
     audit_patch_path.write_text(json.dumps(patch_ops, indent=2, ensure_ascii=False), encoding="utf-8")
     return audit_report

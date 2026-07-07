@@ -21,6 +21,7 @@ from t2pw.mapping.map_ids import (  # noqa: E402
     _protein_alias_entries,
     _reconcile_components_against_local_proteins,
     _rewrite_reaction_protein_enzymes_to_complexes,
+    map_payload,
     map_protein_uniprot,
     route_entity_for_mapping,
 )
@@ -619,6 +620,78 @@ def test_uniprot_candidate_parser_uses_submission_names_and_unreviewed_flag() ->
     assert result[0]["protein_name"] == "Threonine aldolase"
     assert result[0]["reviewed"] is False
     assert result[0]["score"] == 0.8
+
+
+def test_map_payload_returns_payload_and_report_without_mutating_input(tmp_path: Path) -> None:
+    payload = {
+        "entities": {
+            "proteins": [{"name": "Hexokinase", "organism": "Homo sapiens"}],
+            "compounds": [{"name": "glucose"}],
+        },
+        "processes": {"reactions": []},
+    }
+
+    with patch("t2pw.mapping.map_ids.hydrate_species_references", return_value={"hydrated": 0, "matched": 0, "novel": 0}), \
+            patch("t2pw.mapping.map_ids._rewrite_reaction_protein_enzymes_to_complexes", return_value={"summary": {}, "actions": []}), \
+            patch(
+                "t2pw.mapping.map_ids._map_protein_with_strategy",
+                return_value={
+                    "status": "mapped",
+                    "source": "api",
+                    "provider": "UniProt",
+                    "mapped_ids": {"uniprot": "P19367"},
+                    "confidence": 0.99,
+                    "candidates": [],
+                },
+            ), \
+            patch(
+                "t2pw.mapping.map_ids._map_compound_with_strategy",
+                return_value={
+                    "status": "mapped",
+                    "source": "api",
+                    "provider": "ChEBI",
+                    "mapped_ids": {"chebi": "CHEBI:17234"},
+                    "confidence": 0.99,
+                    "candidates": [],
+                },
+            ):
+        result = map_payload(payload, cache_path=tmp_path / "id_mapping_cache.json", id_source="api")
+
+    mapped = result["payload"]
+    report = result["report"]
+    assert payload["entities"]["proteins"][0].get("mapped_ids") is None
+    assert mapped["entities"]["proteins"][0]["mapped_ids"] == {"uniprot": "P19367"}
+    assert mapped["entities"]["compounds"][0]["mapped_ids"] == {"chebi": "CHEBI:17234"}
+    assert report["summary"]["proteins_mapped"] == 1
+    assert report["summary"]["compounds_mapped"] == 1
+
+
+def test_map_payload_can_invalidate_cache_keys(tmp_path: Path) -> None:
+    cache_path = tmp_path / "id_mapping_cache.json"
+    cache_path.write_text(
+        json.dumps(
+            {
+                "proteins": {"stale-protein": {"status": "mapped"}},
+                "compounds": {"stale-compound": {"status": "mapped"}},
+                "complexes": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with patch("t2pw.mapping.map_ids.hydrate_species_references", return_value={"hydrated": 0, "matched": 0, "novel": 0}), \
+            patch("t2pw.mapping.map_ids._rewrite_reaction_protein_enzymes_to_complexes", return_value={"summary": {}, "actions": []}):
+        result = map_payload(
+            {"entities": {"proteins": [], "compounds": []}, "processes": {"reactions": []}},
+            cache_path=cache_path,
+            id_source="api",
+            invalidate_cache_keys={"proteins": ["stale-protein"]},
+        )
+
+    saved_cache = json.loads(cache_path.read_text(encoding="utf-8"))
+    assert "stale-protein" not in saved_cache["proteins"]
+    assert "stale-compound" in saved_cache["compounds"]
+    assert result["report"]["summary"]["proteins_total"] == 0
 
 
 def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:

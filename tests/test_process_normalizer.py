@@ -17,6 +17,7 @@ from t2pw.sbml.json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species
 from t2pw.mapping.map_ids import route_entity_for_mapping  # noqa: E402
 from t2pw.pipeline.qa_graph import build_graph, connected_components  # noqa: E402
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
+    attach_enzymes_from_reaction_evidence,
     attach_transporters_from_evidence,
     canonicalize_same_as_aliases,
     cleanup_disallowed_complexes,
@@ -26,6 +27,7 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     normalize_composites,
     normalize_process_payload,
     normalize_process_actor_schema,
+    prune_disconnected_proteins,
     promote_catalysts,
     promote_interaction_enzymes,
     rewrite_reactions_to_complex_states,
@@ -182,6 +184,7 @@ def _run_normalization(payload: dict) -> tuple[dict, dict]:
     cleanup_disallowed_complexes(data, report=report)
     ensure_autostates(data, report=report)
     attach_transporters_from_evidence(data, report=report)
+    attach_enzymes_from_reaction_evidence(data, report=report)
     promote_interaction_enzymes(data, report=report)
     promote_catalysts(data, report=report)
     canonicalize_same_as_aliases(data, report=report)
@@ -295,6 +298,130 @@ def test_autostate_chooses_best_species_when_multiple_are_declared() -> None:
     assert payload["element_locations"]["protein_locations"][0]["biological_state"] == "__auto_state__"
 
 
+def test_actor_lookup_prefers_entity_over_legacy_protein_field() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "substrate"}, {"name": "product"}],
+            "proteins": [{"name": "canonical kinase"}, {"name": "stale kinase"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "phosphorylation",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "modifiers": [
+                        {
+                            "entity": "canonical kinase",
+                            "protein": "stale kinase",
+                            "entity_type": "protein",
+                            "role": "catalyst",
+                        }
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+
+    normalize_process_actor_schema(payload)
+    adj, _ = build_graph(payload)
+
+    assert "protein:canonical kinase" in adj
+    assert "reaction:#1" in adj["protein:canonical kinase"]
+    assert "protein:stale kinase" not in adj
+
+
+def test_attach_enzymes_from_reaction_evidence_emits_actor_dict_and_requires_cue() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "substrate"}, {"name": "product"}],
+            "proteins": [{"name": "Kinase A"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "substrate phosphorylation",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "evidence": "Kinase A catalyzes conversion of substrate to product.",
+                },
+                {
+                    "name": "substrate conversion",
+                    "inputs": ["substrate"],
+                    "outputs": ["product"],
+                    "evidence": "Kinase A was measured in the same sample.",
+                },
+            ],
+            "transports": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    attach_enzymes_from_reaction_evidence(payload, report=report)
+
+    assert payload["processes"]["reactions"][0]["enzymes"] == [
+        {
+            "entity": "Kinase A",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "substrate phosphorylation Kinase A catalyzes conversion of substrate to product.",
+            "confidence": 0.75,
+            "provenance": "inferred",
+        }
+    ]
+    assert payload["processes"]["reactions"][1]["enzymes"] == []
+    assert report["summary"]["enzymes_attached_from_reaction_evidence"] == 1
+
+
+def test_prune_disconnected_proteins_keeps_identified_proteins() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {"name": "identified enzyme", "uniprot": "P00001"},
+                {"name": "unidentified enzyme"},
+            ],
+            "compounds": [],
+            "protein_complexes": [],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+    report = {"summary": {}, "actions": []}
+
+    pruned = prune_disconnected_proteins(payload, report=report)
+
+    assert pruned == ["unidentified enzyme"]
+    assert [row["name"] for row in payload["entities"]["proteins"]] == ["identified enzyme"]
+    assert report["summary"]["pruned_disconnected_proteins"] == ["unidentified enzyme"]
+    assert report["summary"]["pruned_disconnected_proteins_count"] == 1
+
+
+def test_normalize_process_payload_returns_gate_failure_in_report() -> None:
+    payload = {
+        "entities": {
+            "proteins": [{"name": "mapped orphan enzyme", "uniprot": "P00001"}],
+            "compounds": [],
+            "protein_complexes": [],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+    checkpoints: list[str] = []
+
+    normalized, report = normalize_process_payload(
+        payload,
+        on_checkpoint=lambda name, _payload, _report: checkpoints.append(name),
+    )
+
+    assert [row["name"] for row in normalized["entities"]["proteins"]] == ["mapped orphan enzyme"]
+    assert report["gate"]["ok"] is False
+    assert report["summary"]["gate_error_count"] >= 1
+    assert any("Protein has degree 0" in err["reason"] for err in report["gate"]["errors"])
+    assert "attach_enzymes_from_reaction_evidence" in checkpoints
+    assert "run_strict_post_normalization_gates" in checkpoints
+
+
 def test_thyroid_normalization_and_dedupe() -> None:
     normalized, report = _run_normalization(_thyroid_payload())
     summary = report.get("summary", {})
@@ -347,7 +474,7 @@ def test_thyroid_normalization_and_dedupe() -> None:
     for reaction in normalized["processes"]["reactions"]:
         assert "thyroid peroxidase" not in reaction.get("inputs", [])
         enzymes = reaction.get("enzymes", [])
-        names = {str(e.get("protein") or e.get("protein_complex") or e.get("name") or "") for e in enzymes if isinstance(e, dict)}
+        names = {str(e.get("entity") or e.get("protein") or e.get("protein_complex") or e.get("name") or "") for e in enzymes if isinstance(e, dict)}
         assert "thyroid peroxidase" in names
         assert "thyroglobulin" not in names
 
@@ -390,10 +517,12 @@ def test_thyroid_normalization_and_dedupe() -> None:
         for enzyme in reaction.get("enzymes", []):
             if not isinstance(enzyme, dict):
                 continue
-            value = str(enzyme.get("protein") or "").strip().casefold()
+            value = str(enzyme.get("entity") or enzyme.get("protein") or "").strip().casefold()
             if value == "thyroid peroxidase":
+                assert enzyme.get("entity_type") == "protein"
                 assert "protein_complex" not in enzyme
-            assert "thyroid_peroxidase_complex" not in str(enzyme.get("protein_complex") or "").casefold()
+                assert "protein" not in enzyme
+            assert "thyroid_peroxidase_complex" not in str(enzyme.get("entity") or enzyme.get("protein_complex") or "").casefold()
 
 
 def test_generic_explicit_composite_still_materializes_complex() -> None:
@@ -656,7 +785,9 @@ def test_alias_enzyme_names_canonicalized_and_attached() -> None:
     assert protein_names[0] == "glutathione synthetase"
     reaction_enzymes = normalized["processes"]["reactions"][0]["enzymes"]
     assert reaction_enzymes
-    assert str(reaction_enzymes[0].get("protein") or "").strip() == "glutathione synthetase"
+    assert str(reaction_enzymes[0].get("entity") or "").strip() == "glutathione synthetase"
+    assert reaction_enzymes[0].get("entity_type") == "protein"
+    assert "protein" not in reaction_enzymes[0]
     assert _proteins_degree0(normalized) == 0
     alias_stats = report.get("summary", {}).get("alias_canonicalization", {})
     assert int(alias_stats.get("n_same_as_groups", 0)) >= 1
@@ -679,8 +810,10 @@ def test_reverse_alias_direction_still_attaches() -> None:
     assert len(protein_names) == 1
     reaction_enzymes = normalized["processes"]["reactions"][0]["enzymes"]
     assert reaction_enzymes
-    reaction_protein = str(reaction_enzymes[0].get("protein") or "").strip()
-    assert reaction_protein == protein_names[0]
+    reaction_entity = str(reaction_enzymes[0].get("entity") or "").strip()
+    assert reaction_entity == protein_names[0]
+    assert reaction_enzymes[0].get("entity_type") == "protein"
+    assert "protein" not in reaction_enzymes[0]
     assert _proteins_degree0(normalized) == 0
 
 
@@ -771,7 +904,9 @@ def test_single_protein_complex_preserved_for_enzyme() -> None:
     }
     reaction_enzymes = normalized["processes"]["reactions"][0]["enzymes"]
     assert reaction_enzymes
-    assert str(reaction_enzymes[0].get("protein_complex") or "").strip().casefold() == "pendrin_complex"
+    assert str(reaction_enzymes[0].get("entity") or "").strip().casefold() == "pendrin_complex"
+    assert reaction_enzymes[0].get("entity_type") == "protein_complex"
+    assert "protein_complex" not in reaction_enzymes[0]
     assert "protein" not in reaction_enzymes[0]
     assert _proteins_degree0(normalized) == 0
     alias_stats = report.get("summary", {}).get("alias_canonicalization", {})
@@ -930,7 +1065,7 @@ def test_mixed_protein_and_plp_catalysts_keep_protein_drop_non_protein() -> None
         {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"}
     ]
     assert reaction["enzymes"] == [
-        {"role": "catalyst", "confidence": 1.0, "provenance": "extracted", "protein": "ObaG"}
+        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst", "confidence": 1.0, "provenance": "extracted"}
     ]
     assert int(report["summary"].get("non_protein_catalysts_dropped", 0)) == 1
     assert any(
@@ -990,7 +1125,7 @@ def test_required_contract_accepts_generated_legacy_protein_enzyme_with_canonica
         {"entity": "N4OMT", "entity_type": "protein", "role": "catalyst"}
     ]
     assert reaction["enzymes"] == [
-        {"role": "catalyst", "confidence": 1.0, "provenance": "extracted", "protein": "N4OMT"}
+        {"entity": "N4OMT", "entity_type": "protein", "role": "catalyst", "confidence": 1.0, "provenance": "extracted"}
     ]
 
     contract = validate_required_pwml_contract(payload, strict_db=True)

@@ -580,25 +580,42 @@ class HttpClient:
 
 
 class MappingCache:
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, *, enabled: bool = True) -> None:
         self.path = path
+        self.enabled = enabled
         self.data: Dict[str, Dict[str, Any]] = {"proteins": {}, "compounds": {}, "complexes": {}}
-        if path.exists():
+        if enabled and path.exists():
             raw = json.loads(path.read_text(encoding="utf-8"))
             if isinstance(raw, dict):
-                self.data["proteins"] = _safe_dict(raw.get("proteins"))
-                self.data["compounds"] = _safe_dict(raw.get("compounds"))
-                self.data["complexes"] = _safe_dict(raw.get("complexes"))
+                for section, values in raw.items():
+                    if isinstance(values, dict):
+                        self.data[section] = values
+                self.data.setdefault("proteins", {})
+                self.data.setdefault("compounds", {})
+                self.data.setdefault("complexes", {})
 
     def get(self, section: str, key: str) -> Optional[Dict[str, Any]]:
+        if not self.enabled:
+            return None
         value = _safe_dict(self.data.get(section)).get(key)
         return value if isinstance(value, dict) else None
 
     def set(self, section: str, key: str, value: Dict[str, Any]) -> None:
+        if not self.enabled:
+            return
         self.data.setdefault(section, {})
         self.data[section][key] = value
 
+    def invalidate(self, section: str, key: str) -> bool:
+        values = _safe_dict(self.data.get(section))
+        if key not in values:
+            return False
+        del values[key]
+        return True
+
     def save(self) -> None:
+        if not self.enabled:
+            return
         self.path.write_text(json.dumps(self.data, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
@@ -1028,7 +1045,6 @@ class PathBankDbResolver:
         tid = (taxonomy_id or "").strip()
         if not text and not tid:
             return {"status": "unmapped", "reason": "empty_query", "candidates": [], "chosen_rule": "", "confidence": 0.0}
-        params: tuple
         if tid:
             rows = self._query(
                 (
@@ -4601,16 +4617,38 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     return {"summary": summary, "actions": actions}
 
 
-def run_mapping(
-    input_path: Path,
-    output_path: Path,
-    report_path: Path,
+def _invalidate_cache_entries(cache: MappingCache, invalidate_cache_keys: Any = None) -> int:
+    if not invalidate_cache_keys:
+        return 0
+    removed = 0
+    if isinstance(invalidate_cache_keys, dict):
+        for section, keys in invalidate_cache_keys.items():
+            for key in _safe_list(keys):
+                if isinstance(section, str) and isinstance(key, str) and cache.invalidate(section, key):
+                    removed += 1
+        return removed
+    for item in _safe_list(invalidate_cache_keys):
+        if isinstance(item, (list, tuple)) and len(item) == 2:
+            section, key = item
+            if isinstance(section, str) and isinstance(key, str) and cache.invalidate(section, key):
+                removed += 1
+            continue
+        if isinstance(item, str):
+            for section in list(cache.data.keys()):
+                if cache.invalidate(section, item):
+                    removed += 1
+    return removed
+
+
+def map_payload(
+    payload: Dict[str, Any],
     *,
     cache_path: Path,
     id_source: str = "hybrid",
     db_config: Optional[Dict[str, Any]] = None,
+    use_cache: bool = True,
+    invalidate_cache_keys: Any = None,
 ) -> Dict[str, Any]:
-    payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
     mapped = deepcopy(payload)
@@ -4620,7 +4658,8 @@ def run_mapping(
         source_mode = "hybrid"
 
     client = HttpClient()
-    cache = MappingCache(cache_path)
+    cache = MappingCache(cache_path, enabled=use_cache)
+    _invalidate_cache_entries(cache, invalidate_cache_keys)
     db: Optional[PathBankDbResolver] = None
     if source_mode in {"db", "hybrid"}:
         db = PathBankDbResolver.from_env(db_config)
@@ -4953,7 +4992,6 @@ def run_mapping(
     cache.save()
     if db is not None:
         db.close()
-    output_path.write_text(json.dumps(mapped, indent=2, ensure_ascii=False), encoding="utf-8")
 
     proteins_total = len([p for p in proteins if isinstance(p, dict) and isinstance(p.get("name"), str) and p.get("name").strip()])
     compounds_total = len([c for c in compounds if isinstance(c, dict) and isinstance(c.get("name"), str) and c.get("name").strip()])
@@ -4997,6 +5035,34 @@ def run_mapping(
         "entities": logs,
         "enzyme_complex_conversion": enzyme_complex_report,
     }
+    return {"payload": mapped, "report": report}
+
+
+def run_mapping(
+    input_path: Path,
+    output_path: Path,
+    report_path: Path,
+    *,
+    cache_path: Path,
+    id_source: str = "hybrid",
+    db_config: Optional[Dict[str, Any]] = None,
+    use_cache: bool = True,
+    invalidate_cache_keys: Any = None,
+) -> Dict[str, Any]:
+    payload = json.loads(input_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("Input JSON must be an object.")
+    result = map_payload(
+        payload,
+        cache_path=cache_path,
+        id_source=id_source,
+        db_config=db_config,
+        use_cache=use_cache,
+        invalidate_cache_keys=invalidate_cache_keys,
+    )
+    mapped = _safe_dict(result.get("payload"))
+    report = _safe_dict(result.get("report"))
+    output_path.write_text(json.dumps(mapped, indent=2, ensure_ascii=False), encoding="utf-8")
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     return report
 

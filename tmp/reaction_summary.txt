@@ -1,79 +1,104 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: phenylalanine to trans-cinnamic acid
-  Reactants: phenylalanine [unknown]
-  Products:  trans-cinnamic acid [unknown]
-  Modifier:  phenylalanine ammonia-lyase [unknown] (role=catalyst, confidence=1.0)
+REACTION 1: NdmA-catalyzed N-1 demethylation of caffeine
+  Reactants: caffeine [unknown], NADH [unknown], O2 [unknown]
+  Products:  theobromine [unknown], formaldehyde [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: trans-cinnamic acid to 4-hydroxycinnamic acid
-  Reactants: trans-cinnamic acid [unknown]
-  Products:  4-hydroxycinnamic acid [unknown]
-  Modifier:  CYP73A1 [unknown] (role=catalyst, confidence=1.0), cinnamate 4-hydroxylase [unknown] (role=catalyst, confidence=1.0)
+REACTION 2: NdmB-catalyzed N-3 demethylation of theobromine
+  Reactants: theobromine [unknown], NADH [unknown], O2 [unknown]
+  Products:  7-methylxanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: 4-hydroxycinnamic acid to 3,4-dihydroxycinnamic acid
-  Reactants: 4-hydroxycinnamic acid [unknown]
-  Products:  3,4-dihydroxycinnamic acid [unknown]
-  Modifier:  CYP98A3 [unknown] (role=catalyst, confidence=1.0)
+REACTION 3: NdmCDE-catalyzed N-7 demethylation of 7-methylxanthine
+  Reactants: 7-methylxanthine [unknown], NADH [unknown], O2 [unknown]
+  Products:  xanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmCDE protein complex [unknown] (role=catalyst, confidence=1.0) [possible_complex], NdmC [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: 3,4-dihydroxycinnamic acid to 3,4-dihydroxybenzaldehyde
-  Reactants: 3,4-dihydroxycinnamic acid [unknown]
-  Products:  3,4-dihydroxybenzaldehyde [unknown]
-  Modifier:  VpVAN [Vanilla planifolia inner bean pod state] (role=catalyst, confidence=1.0)
+REACTION 4: C-8 oxidation of caffeine by Cdh
+  Reactants: caffeine [unknown]
+  Products:  1,3,7-trimethyluric acid (TMU) [unknown]
+  Modifier:  caffeine dehydrogenase (Cdh) [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: tyrosine to tyramine
-  Reactants: tyrosine [unknown]
-  Products:  tyramine [unknown]
-  Modifier:  KT378599 [unknown] (role=catalyst, confidence=1.0), tyrosine decarboxylase [unknown] (role=catalyst, confidence=1.0)
+REACTION 5: TmuM-catalyzed hydroxylation of TMU
+  Reactants: 1,3,7-trimethyluric acid (TMU) [unknown], NADH [unknown], O2 [unknown]
+  Products:  1,3,7-trimethyl-5-hydroxyisourate (TM-HIU) [unknown]
+  Modifier:  trimethyl-uric acid monooxygenase (TmuM) [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: norbelladine Schiff-base formation and reduction
-  Reactants: tyramine [unknown], 3,4-dihydroxybenzaldehyde [unknown]
-  Products:  norbelladine [unknown]
-  Modifier:  tetrahydroalstonine synthase [unknown] (role=catalyst, confidence=1.0)
+REACTION 6: Spontaneous conversion of TM-HIU to TMA
+  Reactants: 1,3,7-trimethyl-5-hydroxyisourate (TM-HIU) [unknown]
+  Products:  3,6,8-trimethylallantoin (TMA) [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 7: norbelladine methylation to 4′-O-methylnorbelladine
-  Reactants: norbelladine [unknown]
-  Products:  4′-O-methylnorbelladine [unknown]
-  Modifier:  N4OMT [Narcissus sp. aff. pseudonarcissus state] (role=catalyst, confidence=1.0)
+REACTION 7: Oxidation of xanthine to uric acid
+  Reactants: xanthine [unknown]
+  Products:  uric acid [unknown]
+  Modifier:  xanthine oxidase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: para-para' phenol-phenol coupling
-  Reactants: 4′-O-methylnorbelladine [unknown]
-  Products:  crinine [unknown], vittatine [unknown]
-  Modifier:  CYP81Q1 [unknown] (role=catalyst, confidence=1.0)
+REACTION 8: Oxidation of uric acid to allantoin
+  Reactants: uric acid [unknown]
+  Products:  allantoin [unknown]
+  Modifier:  urate oxidase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: ortho-para' phenol-phenol coupling
-  Reactants: 4′-O-methylnorbelladine [unknown]
-  Products:  lycorine [unknown]
-  Modifier:  CYP81Q1 [unknown] (role=catalyst, confidence=1.0)
+REACTION 9: Hydrolysis of allantoin to allantoic acid
+  Reactants: allantoin [unknown]
+  Products:  allantoic acid [unknown]
+  Modifier:  allantoinase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 10: para-ortho' phenol-phenol coupling
-  Reactants: 4′-O-methylnorbelladine [unknown]
-  Products:  galanthamine [Lycoris aurea state]
-  Modifier:  CYP81Q1 [unknown] (role=catalyst, confidence=1.0)
+REACTION 10: Hydrolysis of allantoic acid to urea and glyoxylic acid
+  Reactants: allantoic acid [unknown]
+  Products:  urea [unknown], glyoxylic acid [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 11: loganin to secologanin
-  Reactants: loganin [unknown]
-  Products:  secologanin [unknown]
-  Modifier:  secologanin synthase [unknown] (role=catalyst, confidence=1.0)
+REACTION 11: Decomposition of urea by urease
+  Reactants: urea [unknown]
+  Products:  CO2 [unknown], NH3 [unknown]
+  Modifier:  urease [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 12: strictosidine to tetrahydroalstonine
-  Reactants: strictosidine [unknown]
-  Products:  tetrahydroalstonine [unknown]
-  Modifier:  tetrahydroalstonine synthase [unknown] (role=catalyst, confidence=1.0)
+REACTION 12: NdmA-catalyzed N-1 demethylation of theophylline
+  Reactants: theophylline [unknown], NADH [unknown], O2 [unknown]
+  Products:  3-methylxanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 13: NdmB-catalyzed N-3 demethylation of theophylline
+  Reactants: theophylline [unknown], NADH [unknown], O2 [unknown]
+  Products:  7-methylxanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: NdmA-catalyzed N-1 demethylation of paraxanthine
+  Reactants: paraxanthine [unknown], NADH [unknown], O2 [unknown]
+  Products:  7-methylxanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 15: NdmA-catalyzed N-1 demethylation of 1-methylxanthine
+  Reactants: 1-methylxanthine [unknown], NADH [unknown], O2 [unknown]
+  Products:  xanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 1: Caffeine import into bacteria
+  From: unspecified
+  To:   bacterial cytosol
+  Cargo: caffeine [unknown]
+  Transporter: MISSING
   QA flags:  none
 
 LOCKED REACTION FILTER
-10 locked reactions found
-10 exported
+11 locked reactions found
+11 exported
 0 quarantined reactions due to unresolved compound reference

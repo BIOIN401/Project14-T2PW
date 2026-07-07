@@ -574,26 +574,27 @@ def _resolve_compound_rows(
     resolved: List[Dict[str, Any]] = []
     for idx, row in enumerate(normalized):
         raw_name = _canonical(row.get("raw_name") or row.get("name"))
+        legacy_id = _db_id(row, ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"])
+        if legacy_id is not None:
+            fallback = dict(row)
+            fallback["db_status"] = "legacy_id_unverified"
+            fallback["db_id"] = legacy_id
+            fallback["chosen_rule"] = "legacy_pathwhiz_id_unverified"
+            fallback["confidence"] = max(float(fallback.get("confidence") or 0.0), 0.85)
+            report["db_resolution"]["compounds"].append(
+                {
+                    "raw_name": raw_name,
+                    "status": "legacy_id_unverified",
+                    "db_id": legacy_id,
+                    "chosen_rule": "legacy_pathwhiz_id_unverified",
+                    "confidence": fallback["confidence"],
+                    "reason": "payload_pathwhiz_id",
+                }
+            )
+            resolved.append(fallback)
+            continue
+
         if resolver is None:
-            legacy_id = _db_id(row, ["pathbank_compound_id", "pw_compound_id", "pathwhiz_id"])
-            if legacy_id is not None:
-                fallback = dict(row)
-                fallback["db_status"] = "legacy_id_unverified"
-                fallback["db_id"] = legacy_id
-                fallback["chosen_rule"] = "legacy_pathwhiz_id_unverified"
-                fallback["confidence"] = max(float(fallback.get("confidence") or 0.0), 0.85)
-                report["db_resolution"]["compounds"].append(
-                    {
-                        "raw_name": raw_name,
-                        "status": "legacy_id_unverified",
-                        "db_id": legacy_id,
-                        "chosen_rule": "legacy_pathwhiz_id_unverified",
-                        "confidence": fallback["confidence"],
-                        "reason": db_reason,
-                    }
-                )
-                resolved.append(fallback)
-                continue
             match = {
                 "status": "unmatched",
                 "raw_name": raw_name,
