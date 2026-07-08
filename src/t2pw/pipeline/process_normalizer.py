@@ -2186,6 +2186,8 @@ def canonicalize_same_as_aliases(
                     continue
                 if ":" in actor_name:
                     continue
+                if _find_entity_row(complexes, actor_name) is not None:
+                    continue
                 _ensure_protein(actor_name, payload, rep)
 
     # Final entity dedupe pass.
@@ -3675,11 +3677,22 @@ def run_strict_post_normalization_gates(
                 f"Located protein is isolated in connectivity graph: {protein_name}",
             )
 
+    # Proteins declared as components of any protein_complex are degree-0 by design:
+    # their network connection flows through the complex, not directly from reactions.
+    _complex_component_norms: Set[str] = {
+        _normalize(_component_name_from_row(comp))
+        for pc_row in complexes
+        if isinstance(pc_row, dict)
+        for comp in _safe_list(pc_row.get("components"))
+        if _normalize(_component_name_from_row(comp))
+    }
     if enforce_all_proteins_connected and proteins_degree0 > 0:
         for protein_name in sorted(ents.get("proteins", set())):
             pnode = node("protein", protein_name)
             if deg.get(pnode, 0) == 0:
                 pnorm = _normalize(protein_name)
+                if pnorm in _complex_component_norms:
+                    continue
                 _add_error(
                     protein_pointer_by_norm.get(pnorm, f"/entities/proteins/{protein_name}"),
                     f"Protein has degree 0 after normalization: {protein_name}",

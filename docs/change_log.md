@@ -5,6 +5,92 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Fixed
+
+---
+
+### FIXED — Stage 3 gate: `canonicalize_same_as_aliases` leaked protein_complex names into `entities.proteins`
+
+**File changed:** `src/t2pw/pipeline/process_normalizer.py` — `canonicalize_same_as_aliases`
+
+**Error / symptom:**
+After Fix 1 (degree-0 exemption), the gate still reported 21 errors:
+- `Generated protein complex wrapper 'NdmA complex' must be listed under protein_complexes, not proteins.`
+- `Protein 'NdmA complex' is missing species/organism.`
+- `Protein 'NdmA complex' is missing a UniProt or DrugBank identifier.`
+Same pattern for `NdmB complex`, `NdmC complex`, `NdmCDE complex`, `NdmD complex`, `TmuM complex`, `caffeine dehydrogenase complex`.
+
+**Why it appeared:**
+`canonicalize_same_as_aliases` iterates over every reaction's `enzymes` and `modifiers` and calls
+`_ensure_protein(actor_name, payload, rep)` for each actor. Stage 2/6 mapping had already rewritten
+these reaction modifier references to point to generated complex wrappers (e.g. `NdmA complex`).
+`_ensure_protein` checks whether `actor_name` is in `entities.proteins` but not whether it is in
+`entities.protein_complexes`. So it unconditionally added `NdmA complex`, `NdmB complex`, etc. to
+`entities.proteins`, even though they were already correctly placed in `entities.protein_complexes`.
+
+**How the fix is consistent with the pipeline design:**
+`_ensure_protein` is a safety net to guarantee that every reaction actor has a declared entity.
+It should only fire for names that are not yet declared as *any* entity type. Since protein_complex
+entries are real entity declarations, an actor that is already in `complexes` needs no fallback
+protein row. The one-line guard `if _find_entity_row(complexes, actor_name) is not None: continue`
+skips the `_ensure_protein` call for actors already declared as a complex. Stage 3 owns normalization;
+this fix stays within `canonicalize_same_as_aliases` and touches no other stage.
+
+---
+
+### FIXED — Stage 3 gate: degree-0 check incorrectly flagged proteins that are complex components
+
+**File changed:** `src/t2pw/pipeline/process_normalizer.py` — `run_strict_post_normalization_gates`
+
+**Error / symptom:**
+PWML export failed with "PWML export stopped by Stage 3 gate." The gate reported errors such as:
+- `Protein has degree 0 after normalization: NdmA`
+- `Protein has degree 0 after normalization: NdmB`
+- `Protein has degree 0 after normalization: NdmC`
+- `Protein has degree 0 after normalization: NdmD`
+
+**Why it appeared:**
+Stage 2/6 mapping wraps single-protein reaction enzymes in generated protein_complex records
+(e.g. `NdmA complex`) and replaces the direct protein reference in the reaction modifier
+with the complex name. This is correct — PathWhiz requires protein_complex as the enzyme
+actor. The side effect is that `NdmA` is no longer referenced directly in any reaction;
+its network connection flows through `NdmA complex`. `build_graph` does not add edges for
+protein→complex component membership, so `NdmA` has degree 0 in the connectivity graph.
+`prune_disconnected_proteins` (step 15) correctly keeps `NdmA` because it has a UniProt ID
+(`_has_protein_identity` returns True). The `enforce_all_proteins_connected` check in step 17
+then flagged it as a connectivity failure even though degree-0 is the expected and correct
+state for a complex-component protein.
+
+**How the fix is consistent with the pipeline design:**
+`pipeline.md` states: "A protein survives all three passes if it has any of:
+complex-component membership with external identity, a process reference, a non-zero
+graph degree, or an external database ID." The gate check lacked this exemption.
+The fix builds a set of protein name norms that appear as components in any declared
+`protein_complexes[]` entry and skips those from the `enforce_all_proteins_connected`
+error. No other gate check is changed. Stage 3 owns the gate; the fix lives entirely
+within `run_strict_post_normalization_gates`.
+
+---
+
+## Fixed
+
+---
+
+### FIXED — Stage 3 gate: degree-0 check incorrectly flagged proteins that are complex components
+
+**File changed:** `src/t2pw/pipeline/process_normalizer.py` — `run_strict_post_normalization_gates`
+
+**Error / symptom:**
+PWML export failed with "PWML export stopped by Stage 3 gate." Gate reported errors like `Protein has degree 0 after normalization: NdmA/B/C/D`.
+
+**Why it appeared:**
+Stage 2/6 mapping wraps single-protein reaction enzymes in generated `protein_complexes` entries (e.g. `NdmA complex`) and rewrites the reaction modifier reference to use the complex name — correct, because PathWhiz requires a protein_complex as the enzyme actor. The side effect is that `NdmA` no longer appears directly in any reaction; its network connection flows through `NdmA complex`. `build_graph` does not add edges for protein→complex component membership, so `NdmA` has degree 0. `prune_disconnected_proteins` (step 15) correctly kept it because `_has_protein_identity` returned True. The `enforce_all_proteins_connected` check in step 17 then flagged it as a connectivity failure even though degree-0 is the expected state for a complex-component protein.
+
+**How the fix is consistent with the pipeline design:**
+`pipeline.md` states: "A protein survives all three passes if it has any of: complex-component membership with external identity, a process reference, a non-zero graph degree, or an external database ID." The gate was missing this exemption. The fix builds `_complex_component_norms` from all `protein_complexes[].components` entries and skips those protein names from the `enforce_all_proteins_connected` error. No other gate check is changed. Stage 3 owns the gate; the fix lives entirely within `run_strict_post_normalization_gates`.
+
+---
+
 ## Open Issues
 
 Issues confirmed by running the pipeline. Ordered by pipeline stage. No code

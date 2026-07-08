@@ -1,32 +1,148 @@
 {
   "summary": {
-    "total_species": 13,
-    "total_reactions": 3,
-    "completeness_score": 0.062
+    "total_species": 29,
+    "total_reactions": 31,
+    "completeness_score": 0.033
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "NdmCDE",
+        "entity": "caffeine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "xanthosine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "7-methylxanthosine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "7-methylxanthine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "theobromine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "xanthine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "paraxanthine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "theophylline",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "1-methylxanthine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "3-methylxanthine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "uric acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "allantoin",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "allantoic acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "urea",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "glyoxylic acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ammonia",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "formaldehyde",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "1,3,7-trimethyluric acid",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "1,3,7-trimethyl-5-hydroxyisourate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "3,6,8-trimethylallantoin",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "CO2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NdmA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NdmB",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NdmD",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NdmC",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NdmE",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "caffeine dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "TmuM",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NdmCDE complex",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
-    "possible_complexes": [],
-    "transport_like_reactions": [],
-    "orphan_nodes": [
+    "possible_complexes": [
       {
-        "entity": "NdmE",
-        "degree": 0
+        "entity": "NdmCDE complex",
+        "reason": "name suggests a complex or subunit"
       }
     ],
+    "transport_like_reactions": [],
+    "orphan_nodes": [],
     "missing_ids": [
       {
         "entity": "caffeine",
         "type": "compound"
       },
       {
-        "entity": "theobromine",
+        "entity": "xanthosine",
+        "type": "compound"
+      },
+      {
+        "entity": "7-methylxanthosine",
         "type": "compound"
       },
       {
@@ -34,19 +150,71 @@
         "type": "compound"
       },
       {
+        "entity": "theobromine",
+        "type": "compound"
+      },
+      {
         "entity": "xanthine",
         "type": "compound"
       },
       {
-        "entity": "NADH",
+        "entity": "paraxanthine",
         "type": "compound"
       },
       {
-        "entity": "O2",
+        "entity": "theophylline",
+        "type": "compound"
+      },
+      {
+        "entity": "1-methylxanthine",
+        "type": "compound"
+      },
+      {
+        "entity": "3-methylxanthine",
+        "type": "compound"
+      },
+      {
+        "entity": "uric acid",
+        "type": "compound"
+      },
+      {
+        "entity": "allantoin",
+        "type": "compound"
+      },
+      {
+        "entity": "allantoic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "urea",
+        "type": "compound"
+      },
+      {
+        "entity": "glyoxylic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "ammonia",
         "type": "compound"
       },
       {
         "entity": "formaldehyde",
+        "type": "compound"
+      },
+      {
+        "entity": "1,3,7-trimethyluric acid",
+        "type": "compound"
+      },
+      {
+        "entity": "1,3,7-trimethyl-5-hydroxyisourate",
+        "type": "compound"
+      },
+      {
+        "entity": "3,6,8-trimethylallantoin",
+        "type": "compound"
+      },
+      {
+        "entity": "CO2",
         "type": "compound"
       },
       {
@@ -58,11 +226,11 @@
         "type": "protein"
       },
       {
-        "entity": "NdmC",
+        "entity": "NdmD",
         "type": "protein"
       },
       {
-        "entity": "NdmD",
+        "entity": "NdmC",
         "type": "protein"
       },
       {
@@ -70,7 +238,15 @@
         "type": "protein"
       },
       {
-        "entity": "NdmCDE",
+        "entity": "caffeine dehydrogenase",
+        "type": "protein"
+      },
+      {
+        "entity": "TmuM",
+        "type": "protein"
+      },
+      {
+        "entity": "NdmCDE complex",
         "type": "protein_complex"
       }
     ],

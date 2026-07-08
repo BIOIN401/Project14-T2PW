@@ -462992,6 +462992,1349 @@
           "uniParcId": "UPI0001DB9559"
         }
       }
+    },
+    "uniprot:Q556G3": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "Q556G3",
+        "recommended_name": "Putative glutathione S-transferase alpha-2",
+        "alternative_names": [
+          "GST class-alpha 2"
+        ],
+        "gene_names": [
+          "gsta2-1",
+          "gsta2-2"
+        ],
+        "organism": "Dictyostelium discoideum",
+        "taxonomy_id": "44689",
+        "function_text": "Conjugation of reduced glutathione to a wide number of exogenous and endogenous hydrophobic electrophiles",
+        "catalytic_activity": [
+          "RX + glutathione = an S-substituted glutathione + a halide anion + H(+)"
+        ],
+        "enzyme_commission": [
+          "2.5.1.18"
+        ],
+        "pathways": [],
+        "keywords": [
+          "Acetylation",
+          "Direct protein sequencing",
+          "Reference proteome",
+          "Transferase"
+        ],
+        "subcellular_locations": [],
+        "go_mf_ids": [
+          "GO:0004364"
+        ],
+        "go_bp_ids": [
+          "GO:0006749",
+          "GO:1904643",
+          "GO:0031153"
+        ],
+        "go_cellular_component_ids": [
+          "GO:0045335"
+        ],
+        "protein_existence": "1: Evidence at protein level",
+        "sequence_length": 198,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [],
+        "reactome_ids": [
+          "R-DDI-156590",
+          "R-DDI-2162123"
+        ],
+        "string_id": "44689.Q556G3",
+        "provenance": {
+          "source": "UniProt",
+          "query": "Q556G3",
+          "source_url": "https://rest.uniprot.org/uniprotkb/Q556G3.json",
+          "retrieved_at": "2026-07-08T22:27:01Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "Q556G3",
+        "secondaryAccessions": [
+          "Q86AN9"
+        ],
+        "uniProtkbId": "GSTA2_DICDI",
+        "entryAudit": {
+          "firstPublicDate": "2008-09-23",
+          "lastAnnotationUpdateDate": "2026-06-10",
+          "lastSequenceUpdateDate": "2006-05-02",
+          "entryVersion": 114,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 4.0,
+        "organism": {
+          "scientificName": "Dictyostelium discoideum",
+          "commonName": "Social amoeba",
+          "taxonId": 44689,
+          "lineage": [
+            "Eukaryota",
+            "Amoebozoa",
+            "Evosea",
+            "Eumycetozoa",
+            "Dictyostelia",
+            "Dictyosteliales",
+            "Dictyosteliaceae",
+            "Dictyostelium"
+          ]
+        },
+        "proteinExistence": "1: Evidence at protein level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "value": "Putative glutathione S-transferase alpha-2"
+            },
+            "ecNumbers": [
+              {
+                "value": "2.5.1.18"
+              }
+            ]
+          },
+          "alternativeNames": [
+            {
+              "fullName": {
+                "value": "GST class-alpha 2"
+              }
+            }
+          ]
+        },
+        "genes": [
+          {
+            "geneName": {
+              "value": "gsta2-1"
+            },
+            "orfNames": [
+              {
+                "value": "DDB_G0272632"
+              }
+            ]
+          },
+          {
+            "geneName": {
+              "value": "gsta2-2"
+            },
+            "orfNames": [
+              {
+                "value": "DDB_G0274081"
+              }
+            ]
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000250"
+                  }
+                ],
+                "value": "Conjugation of reduced glutathione to a wide number of exogenous and endogenous hydrophobic electrophiles"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "RX + glutathione = an S-substituted glutathione + a halide anion + H(+)",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:16437"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15378"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:16042"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:17792"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:57925"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:90779"
+                }
+              ],
+              "ecNumber": "2.5.1.18"
+            }
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "Belongs to the GST superfamily. Alpha family"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000305"
+                  }
+                ],
+                "value": "The gene for this protein is duplicated in strains AX3 and AX4. These strains contain a duplication of a segment of 750 kb of chromosome 2 compared to the corresponding sequence in strain AX2"
+              }
+            ],
+            "commentType": "CAUTION"
+          }
+        ],
+        "features": [
+          {
+            "type": "Initiator methionine",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 1,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Removed",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000269",
+                "source": "Reference",
+                "id": "Ref.3"
+              }
+            ]
+          },
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 2,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 198,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Putative glutathione S-transferase alpha-2",
+            "featureId": "PRO_0000350739"
+          },
+          {
+            "type": "Domain",
+            "location": {
+              "start": {
+                "value": 5,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 81,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "GST N-terminal"
+          },
+          {
+            "type": "Domain",
+            "location": {
+              "start": {
+                "value": 83,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 198,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "GST C-terminal"
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 11,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 11,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:57925"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P13745"
+              }
+            ],
+            "ligand": {
+              "name": "glutathione",
+              "id": "ChEBI:CHEBI:57925"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 45,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 45,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:57925"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P08263"
+              }
+            ],
+            "ligand": {
+              "name": "glutathione",
+              "id": "ChEBI:CHEBI:57925"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 52,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 53,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:57925"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P30711"
+              }
+            ],
+            "ligand": {
+              "name": "glutathione",
+              "id": "ChEBI:CHEBI:57925"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 65,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 66,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:57925"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "P13745"
+              }
+            ],
+            "ligand": {
+              "name": "glutathione",
+              "id": "ChEBI:CHEBI:57925"
+            }
+          },
+          {
+            "type": "Modified residue",
+            "location": {
+              "start": {
+                "value": 2,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 2,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "N-acetylserine",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000269",
+                "source": "Reference",
+                "id": "Ref.3"
+              }
+            ]
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0007",
+            "category": "PTM",
+            "name": "Acetylation"
+          },
+          {
+            "id": "KW-0903",
+            "category": "Technical term",
+            "name": "Direct protein sequencing"
+          },
+          {
+            "id": "KW-1185",
+            "category": "Technical term",
+            "name": "Reference proteome"
+          },
+          {
+            "id": "KW-0808",
+            "category": "Molecular function",
+            "name": "Transferase"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "12097910",
+              "citationType": "journal article",
+              "authors": [
+                "Gloeckner G.",
+                "Eichinger L.",
+                "Szafranski K.",
+                "Pachebat J.A.",
+                "Bankier A.T.",
+                "Dear P.H.",
+                "Lehmann R.",
+                "Baumgart C.",
+                "Parra G.",
+                "Abril J.F.",
+                "Guigo R.",
+                "Kumpf K.",
+                "Tunggal B.",
+                "Cox E.C.",
+                "Quail M.A.",
+                "Platzer M.",
+                "Rosenthal A.",
+                "Noegel A.A."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "12097910"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1038/nature00847"
+                }
+              ],
+              "title": "Sequence and analysis of chromosome 2 of Dictyostelium discoideum.",
+              "publicationDate": "2002",
+              "journal": "Nature",
+              "firstPage": "79",
+              "lastPage": "85",
+              "volume": "418"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "AX4",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 2,
+            "citation": {
+              "id": "15875012",
+              "citationType": "journal article",
+              "authors": [
+                "Eichinger L.",
+                "Pachebat J.A.",
+                "Gloeckner G.",
+                "Rajandream M.A.",
+                "Sucgang R.",
+                "Berriman M.",
+                "Song J.",
+                "Olsen R.",
+                "Szafranski K.",
+                "Xu Q.",
+                "Tunggal B.",
+                "Kummerfeld S.",
+                "Madera M.",
+                "Konfortov B.A.",
+                "Rivero F.",
+                "Bankier A.T.",
+                "Lehmann R.",
+                "Hamlin N.",
+                "Davies R.",
+                "Gaudet P.",
+                "Fey P.",
+                "Pilcher K.",
+                "Chen G.",
+                "Saunders D.",
+                "Sodergren E.J.",
+                "Davis P.",
+                "Kerhornou A.",
+                "Nie X.",
+                "Hall N.",
+                "Anjard C.",
+                "Hemphill L.",
+                "Bason N.",
+                "Farbrother P.",
+                "Desany B.",
+                "Just E.",
+                "Morio T.",
+                "Rost R.",
+                "Churcher C.M.",
+                "Cooper J.",
+                "Haydock S.",
+                "van Driessche N.",
+                "Cronin A.",
+                "Goodhead I.",
+                "Muzny D.M.",
+                "Mourier T.",
+                "Pain A.",
+                "Lu M.",
+                "Harper D.",
+                "Lindsay R.",
+                "Hauser H.",
+                "James K.D.",
+                "Quiles M.",
+                "Madan Babu M.",
+                "Saito T.",
+                "Buchrieser C.",
+                "Wardroper A.",
+                "Felder M.",
+                "Thangavelu M.",
+                "Johnson D.",
+                "Knights A.",
+                "Loulseged H.",
+                "Mungall K.L.",
+                "Oliver K.",
+                "Price C.",
+                "Quail M.A.",
+                "Urushihara H.",
+                "Hernandez J.",
+                "Rabbinowitsch E.",
+                "Steffen D.",
+                "Sanders M.",
+                "Ma J.",
+                "Kohara Y.",
+                "Sharp S.",
+                "Simmonds M.N.",
+                "Spiegler S.",
+                "Tivey A.",
+                "Sugano S.",
+                "White B.",
+                "Walker D.",
+                "Woodward J.R.",
+                "Winckler T.",
+                "Tanaka Y.",
+                "Shaulsky G.",
+                "Schleicher M.",
+                "Weinstock G.M.",
+                "Rosenthal A.",
+                "Cox E.C.",
+                "Chisholm R.L.",
+                "Gibbs R.A.",
+                "Loomis W.F.",
+                "Platzer M.",
+                "Kay R.R.",
+                "Williams J.G.",
+                "Dear P.H.",
+                "Noegel A.A.",
+                "Barrell B.G.",
+                "Kuspa A."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "15875012"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1038/nature03481"
+                }
+              ],
+              "title": "The genome of the social amoeba Dictyostelium discoideum.",
+              "publicationDate": "2005",
+              "journal": "Nature",
+              "firstPage": "43",
+              "lastPage": "57",
+              "volume": "435"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "AX4",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 3,
+            "citation": {
+              "id": "CI-30IB7POME90U1",
+              "citationType": "submission",
+              "authors": [
+                "Bienvenut W.V.",
+                "Patel H.",
+                "Brunton V.G.",
+                "Frame M.C."
+              ],
+              "publicationDate": "APR-2008",
+              "submissionDatabase": "UniProtKB"
+            },
+            "referencePositions": [
+              "PROTEIN SEQUENCE OF 2-15; 23-71; 116-127; 155-172; 178-188 AND 192-198",
+              "CLEAVAGE OF INITIATOR METHIONINE",
+              "ACETYLATION AT SER-2",
+              "IDENTIFICATION BY MASS SPECTROMETRY"
+            ]
+          },
+          {
+            "referenceNumber": 4,
+            "citation": {
+              "id": "16926386",
+              "citationType": "journal article",
+              "authors": [
+                "Gotthardt D.",
+                "Blancheteau V.",
+                "Bosserhoff A.",
+                "Ruppert T.",
+                "Delorenzi M.",
+                "Soldati T."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "16926386"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1074/mcp.m600113-mcp200"
+                }
+              ],
+              "title": "Proteomics fingerprinting of phagosome maturation and evidence for the role of a Galpha during uptake.",
+              "publicationDate": "2006",
+              "journal": "Mol. Cell. Proteomics",
+              "firstPage": "2228",
+              "lastPage": "2243",
+              "volume": "5"
+            },
+            "referencePositions": [
+              "IDENTIFICATION BY MASS SPECTROMETRY [LARGE SCALE ANALYSIS]"
+            ],
+            "referenceComments": [
+              {
+                "value": "AX2",
+                "type": "STRAIN"
+              }
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "AAFI02000011",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "EAL70474.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "AAFI02000009",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "EAL70953.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "XP_644399.1",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "XM_639307.1"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "XP_645014.1",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "XM_639922.1"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "Q556G3",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "Q556G3",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "FunCoup",
+            "id": "Q556G3",
+            "properties": [
+              {
+                "key": "Number of interactors",
+                "value": "69"
+              }
+            ]
+          },
+          {
+            "database": "STRING",
+            "id": "44689.Q556G3",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PaxDb",
+            "id": "44689-Q556G3",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "GeneID",
+            "id": "8618691",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "GeneID",
+            "id": "8619285",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "ddi:DDB_G0272632",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "ddi:DDB_G0274081",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "dictyBase",
+            "id": "DDB_G0272632",
+            "properties": [
+              {
+                "key": "GeneName",
+                "value": "gstA2-1"
+              }
+            ]
+          },
+          {
+            "database": "dictyBase",
+            "id": "DDB_G0274081",
+            "properties": [
+              {
+                "key": "GeneName",
+                "value": "gstA2-2"
+              }
+            ]
+          },
+          {
+            "database": "VEuPathDB",
+            "id": "AmoebaDB:DDB_G0274081",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "eggNOG",
+            "id": "KOG1695",
+            "properties": [
+              {
+                "key": "ToxonomicScope",
+                "value": "Eukaryota"
+              }
+            ]
+          },
+          {
+            "database": "HOGENOM",
+            "id": "CLU_039475_1_0_1",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "InParanoid",
+            "id": "Q556G3",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "OMA",
+            "id": "KKSCVFG",
+            "properties": [
+              {
+                "key": "Fingerprint",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PhylomeDB",
+            "id": "Q556G3",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "Reactome",
+            "id": "R-DDI-156590",
+            "properties": [
+              {
+                "key": "PathwayName",
+                "value": "Glutathione conjugation"
+              }
+            ]
+          },
+          {
+            "database": "Reactome",
+            "id": "R-DDI-2162123",
+            "properties": [
+              {
+                "key": "PathwayName",
+                "value": "Synthesis of Prostaglandins (PG) and Thromboxanes (TX)"
+              }
+            ]
+          },
+          {
+            "database": "PRO",
+            "id": "PR:Q556G3",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "Proteomes",
+            "id": "UP000002195",
+            "properties": [
+              {
+                "key": "Component",
+                "value": "Chromosome 2"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0045335",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:phagocytic vesicle"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "HDA:dictyBase"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007005",
+                "source": "PubMed",
+                "id": "16926386"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0004364",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:glutathione transferase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IDA:dictyBase"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000314",
+                "source": "PubMed",
+                "id": "33909675"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0006749",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:glutathione metabolic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IBA:GO_Central"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:1904643",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:response to curcumin"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IDA:dictyBase"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000314",
+                "source": "PubMed",
+                "id": "26449461"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0031153",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:slug development involved in sorocarp development"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IMP:dictyBase"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000315",
+                "source": "PubMed",
+                "id": "33909675"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd03192",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_C_Sigma_like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd03039",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_N_Sigma_like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "1.20.1050.130:FF:000014",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Putative glutathione S-transferase alpha-5"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.20.1050.130",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "-"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR010987",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Glutathione-S-Trfase_C-like"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR036282",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Glutathione-S-Trfase_C_sf"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR040079",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Glutathione_S-Trfase"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR004045",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Glutathione_S-Trfase_N"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR004046",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_C"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR050213",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_superfamily"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR036249",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Thioredoxin-like_sf"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR11571",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GLUTATHIONE S-TRANSFERASE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR11571:SF266",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GLUTATHIONE S-TRANSFERASE ALPHA-2-RELATED"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF14497",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_C_3"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF02798",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_N"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SFLD",
+            "id": "SFLDG00363",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "AMPS_(cytGST):_Alpha-__Mu-__Pi"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SFLD",
+            "id": "SFLDS00019",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Glutathione_Transferase_(cytos"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF47616",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST C-terminal domain-like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF52833",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Thioredoxin-like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS50405",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_CTER"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS50404",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "GST_NTER"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MSTSSVPSLTYFQGRGLGQFSRVLLSYLGIPYENITVTEISDALRATLPYGQLPIYRDGDFVLTQSSTIARYIAKKHNFMGKNLEEEFLVDQIVTAIHADIFPAFNNPVPEKLQKLYEKYFGSFEKKLQETGFLVGSSVTLADLYVYVGFDYIRFRGEAALSSELSDEKYPKIAELKKFFESNEGVAKYIKERPETKF",
+          "length": 198,
+          "molWeight": 22538,
+          "crc64": "36104DBFD83CA2D1",
+          "md5": "27A6F44813CE0C865846D96C94DA0438"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "CATALYTIC ACTIVITY": 1,
+            "SIMILARITY": 1,
+            "CAUTION": 1
+          },
+          "countByFeatureType": {
+            "Initiator methionine": 1,
+            "Chain": 1,
+            "Domain": 2,
+            "Binding site": 4,
+            "Modified residue": 1
+          },
+          "uniParcId": "UPI0000006F3C"
+        }
+      }
     }
   },
   "compounds": {

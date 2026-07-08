@@ -1,32 +1,193 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: NdmA-catalyzed N-1 demethylation of caffeine
-  Reactants: caffeine [extracellular], NADH [intracellular], O2 [intracellular]
-  Products:  theobromine [intracellular], formaldehyde [intracellular]
-  Modifier:  NdmA [intracellular] (role=catalyst, confidence=1.0)
+REACTION 1: N-1 demethylation of caffeine to theobromine
+  Reactants: caffeine [unknown]
+  Products:  theobromine [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: NdmB-catalyzed N-3 demethylation of theobromine
-  Reactants: theobromine [intracellular], NADH [intracellular], O2 [intracellular]
-  Products:  7-methylxanthine [intracellular], formaldehyde [intracellular]
-  Modifier:  NdmB [intracellular] (role=catalyst, confidence=1.0)
+REACTION 2: N-3 demethylation of theobromine to 7-methylxanthine
+  Reactants: theobromine [unknown]
+  Products:  7-methylxanthine [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: NdmCDE-catalyzed N-7 demethylation of 7-methylxanthine
-  Reactants: 7-methylxanthine [intracellular], NADH [intracellular], O2 [intracellular]
-  Products:  xanthine [intracellular], formaldehyde [intracellular]
-  Modifier:  NdmCDE [unknown] (role=catalyst, confidence=1.0), NdmC [intracellular] (role=catalyst, confidence=1.0)
+REACTION 3: N-7 demethylation of 7-methylxanthine to xanthine
+  Reactants: 7-methylxanthine [unknown]
+  Products:  xanthine [unknown]
+  Modifier:  NdmCDE complex [unknown] (role=catalyst, confidence=1.0) [possible_complex], NdmC [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-TRANSPORT 1: Caffeine import into Pseudomonas putida CBB5
-  From: extracellular
-  To:   intracellular
-  Cargo: caffeine [extracellular]
-  Transporter: MISSING
+REACTION 4: N-1 demethylation of caffeine to theobromine (NdmA variant)
+  Reactants: caffeine [unknown]
+  Products:  theobromine [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 5: N-3 demethylation of theobromine to 7-methylxanthine (NdmB variant)
+  Reactants: theobromine [unknown]
+  Products:  7-methylxanthine [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 6: N-7 demethylation of 7-methylxanthine to xanthine (NdmCDE variant)
+  Reactants: 7-methylxanthine [unknown]
+  Products:  xanthine [unknown]
+  Modifier:  NdmCDE complex [unknown] (role=catalyst, confidence=1.0) [possible_complex], NdmC [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 7: Oxidation of xanthine to uric acid
+  Reactants: xanthine [unknown]
+  Products:  uric acid [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 8: Oxidation of uric acid to allantoin
+  Reactants: uric acid [unknown]
+  Products:  allantoin [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 9: Hydrolysis of allantoin to allantoic acid
+  Reactants: allantoin [unknown]
+  Products:  allantoic acid [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 10: Hydrolysis of allantoic acid to urea and glyoxylic acid
+  Reactants: allantoic acid [unknown]
+  Products:  urea [unknown], glyoxylic acid [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 11: Decomposition of urea to ammonia and CO2
+  Reactants: urea [unknown]
+  Products:  ammonia [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 12: C-8 oxidation of caffeine to TMU
+  Reactants: caffeine [unknown]
+  Products:  1,3,7-trimethyluric acid [unknown]
+  Modifier:  caffeine dehydrogenase [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 13: Hydroxylation of TMU to TM-HIU
+  Reactants: 1,3,7-trimethyluric acid [unknown]
+  Products:  1,3,7-trimethyl-5-hydroxyisourate [unknown]
+  Modifier:  TmuM [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: Conversion of TM-HIU to TMA
+  Reactants: 1,3,7-trimethyl-5-hydroxyisourate [unknown]
+  Products:  3,6,8-trimethylallantoin [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 15: Demethylation of caffeine to theophylline (fungi)
+  Reactants: caffeine [unknown]
+  Products:  theophylline [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 16: Demethylation of theophylline to 3-methylxanthine (fungi)
+  Reactants: theophylline [unknown]
+  Products:  3-methylxanthine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 17: Demethylation of 3-methylxanthine to xanthine (fungi)
+  Reactants: 3-methylxanthine [unknown]
+  Products:  xanthine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 18: N-1 demethylation of theophylline to 3-methylxanthine
+  Reactants: theophylline [unknown]
+  Products:  3-methylxanthine [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 19: N-1 demethylation of paraxanthine to 7-methylxanthine
+  Reactants: paraxanthine [unknown]
+  Products:  7-methylxanthine [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 20: N-1 demethylation of 1-methylxanthine to xanthine
+  Reactants: 1-methylxanthine [unknown]
+  Products:  xanthine [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 21: N-3 demethylation of caffeine to paraxanthine
+  Reactants: caffeine [unknown]
+  Products:  paraxanthine [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 22: N-3 demethylation of theophylline to 7-methylxanthine
+  Reactants: theophylline [unknown]
+  Products:  7-methylxanthine [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 23: N-3 demethylation of 3-methylxanthine to xanthine
+  Reactants: 3-methylxanthine [unknown]
+  Products:  xanthine [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 24: Methylation of xanthosine to 7-methylxanthosine
+  Reactants: xanthosine [unknown]
+  Products:  7-methylxanthosine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 25: Nucleosidase conversion of 7-methylxanthosine to 7-methylxanthine
+  Reactants: 7-methylxanthosine [unknown]
+  Products:  7-methylxanthine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 26: Methylation of 7-methylxanthine to theobromine
+  Reactants: 7-methylxanthine [unknown]
+  Products:  theobromine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 27: Methylation of theobromine to caffeine
+  Reactants: theobromine [unknown]
+  Products:  caffeine [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 28: N-1 demethylation of caffeine to theobromine
+  Reactants: caffeine [unknown]
+  Products:  theobromine [unknown], formaldehyde [unknown]
+  Modifier:  NdmA [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 29: N-3 demethylation of theobromine to 7-methylxanthine
+  Reactants: theobromine [unknown]
+  Products:  7-methylxanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmB [unknown] (role=catalyst, confidence=1.0), NdmD [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 30: N-7 demethylation of 7-methylxanthine to xanthine
+  Reactants: 7-methylxanthine [unknown]
+  Products:  xanthine [unknown], formaldehyde [unknown]
+  Modifier:  NdmCDE complex [unknown] (role=catalyst, confidence=1.0) [possible_complex], NdmC [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 31: Decomposition of urea to ammonia and CO2
+  Reactants: urea [unknown]
+  Products:  ammonia [unknown], CO2 [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
 LOCKED REACTION FILTER
-3 locked reactions found
-3 exported
+20 locked reactions found
+20 exported
 0 quarantined reactions due to unresolved compound reference
