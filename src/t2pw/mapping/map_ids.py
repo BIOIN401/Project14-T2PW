@@ -47,7 +47,7 @@ def _name_variants(value: str, *, max_variants: int = 4) -> List[str]:
         base,
         re.sub(r"\([^)]*\)", " ", base),
         re.sub(r"[/,;:_-]", " ", base),
-        re.sub(r"\b(protein|enzyme)\b", " ", base, flags=re.IGNORECASE),
+        re.sub(r"\b(protein|enzyme|complex)\b", " ", base, flags=re.IGNORECASE),
     ]
     seen_norm: set = set()
     for candidate in candidates:
@@ -364,6 +364,7 @@ def _ai_protein_synonym_lookup(name: str, organism: str) -> List[Dict[str, str]]
             temperature=0.0,
             max_tokens=300,
             response_json=True,
+            model_env_var="OPENROUTER_GAP_MODEL",
         )
         data = json.loads(raw) if isinstance(raw, str) else (raw if isinstance(raw, dict) else {})
         aliases = _safe_list(_safe_dict(data).get("aliases"))
@@ -2390,7 +2391,13 @@ class PathBankDbResolver:
             component["mapped_ids"] = merged_ids
         species_id = _to_positive_int(row.get("species_id")) or (species_ids[0] if species_ids else None)
         issues: List[Dict[str, Any]] = []
-        if protein_result.get("status") != "mapped" and not protein_id:
+        component_has_external_id = bool(
+            merged_ids.get("uniprot")
+            or merged_ids.get("uniprot_id")
+            or merged_ids.get("drugbank")
+            or merged_ids.get("drugbank_id")
+        )
+        if protein_result.get("status") != "mapped" and not protein_id and not component_has_external_id:
             issues.append(
                 {
                     "issue": "component_protein_unresolved",
@@ -2411,6 +2418,8 @@ class PathBankDbResolver:
                 "chosen_rule": "novel_enzyme_single_component_complex",
                 "candidates": [],
                 "name": f"{protein_name} complex",
+                "generated": True,
+                "generation_reason": "single_protein_pathwhiz_wrapper",
                 "species_id": species_id,
                 "components": [component],
                 "issues": issues,
@@ -3580,6 +3589,22 @@ def map_protein_uniprot(
     if accepted is not None:
         return accepted
     best = candidates[0]
+    best_accession = str(best.get("accession") or "").strip()
+    if best_accession:
+        return {
+            "status": "mapped",
+            "reason": "best_effort_fallback",
+            "query": " | ".join(queries_tried),
+            "mapped_ids": {"uniprot": best_accession},
+            "confidence": best["score"],
+            "chosen_rule": "best_effort_fallback",
+            "candidates": candidates[:8],
+            "queries_tried": queries_tried,
+            "reviewed": bool(best.get("reviewed")),
+            "resolved_name": str(best.get("protein_name") or "").strip(),
+            "literature_aliases": literature_aliases_used,
+            "best_effort": True,
+        }
     return {
         "status": "unmapped",
         "reason": "ambiguous",
@@ -4280,6 +4305,10 @@ def _merge_complex_resolution_into_row(
     species_name: str = "",
 ) -> None:
     complex_row.setdefault("mapping_meta", {})
+    if result.get("generated") is not None:
+        complex_row["generated"] = bool(result.get("generated"))
+    if result.get("generation_reason"):
+        complex_row["generation_reason"] = str(result.get("generation_reason"))
     if result.get("pathbank_complex_id"):
         complex_row["pathbank_complex_id"] = int(result["pathbank_complex_id"])
         complex_row["mapping_meta"]["pathbank_complex_id"] = int(result["pathbank_complex_id"])
@@ -4305,12 +4334,29 @@ def _merge_complex_resolution_into_row(
 
 def _protein_has_external_id(protein_row: Dict[str, Any]) -> bool:
     """Return True if the protein row has a UniProt or DrugBank identifier."""
-    mapped_ids = _safe_dict(protein_row.get("mapped_ids"))
-    for key in ("uniprot", "uniprot_id", "uniprot-id", "drugbank", "drugbank_id", "drugbank-id"):
-        val = str(protein_row.get(key) or "").strip() or str(mapped_ids.get(key) or "").strip()
-        if val:
-            return True
+    for container in [
+        protein_row,
+        _safe_dict(protein_row.get("mapped_ids")),
+        _safe_dict(protein_row.get("ids")),
+        _safe_dict(protein_row.get("mapping_meta")),
+    ]:
+        for key in ("uniprot", "uniprot_id", "uniprot-id", "drugbank", "drugbank_id", "drugbank-id"):
+            if str(container.get(key) or "").strip():
+                return True
     return False
+
+
+def _protein_has_species_context(protein_row: Dict[str, Any], species_name: str = "") -> bool:
+    """Return True if a protein row has species context usable for PathWhiz records."""
+    hint = _species_hint_from_row(protein_row)
+    return bool(
+        _canonical_name(species_name)
+        or hint.get("name")
+        or hint.get("taxonomy_id")
+        or hint.get("pathbank_species_id")
+        or protein_row.get("species_id")
+        or protein_row.get("pathbank_species_id")
+    )
 
 
 def _protein_component_from_row(protein_row: Dict[str, Any], protein_name: str) -> Dict[str, Any]:
@@ -4318,7 +4364,17 @@ def _protein_component_from_row(protein_row: Dict[str, Any], protein_name: str) 
     protein_id = _to_positive_int(protein_row.get("pathbank_protein_id"))
     if protein_id:
         component["pathbank_protein_id"] = protein_id
-    mapped_ids = _safe_dict(protein_row.get("mapped_ids"))
+    mapped_ids = dict(_safe_dict(protein_row.get("mapped_ids")))
+    meta_ids = _safe_dict(protein_row.get("mapping_meta"))
+    for direct_key, mapped_key in [
+        ("uniprot", "uniprot"),
+        ("uniprot_id", "uniprot"),
+        ("drugbank", "drugbank"),
+        ("drugbank_id", "drugbank"),
+    ]:
+        value = str(protein_row.get(direct_key) or meta_ids.get(direct_key) or "").strip()
+        if value and not mapped_ids.get(mapped_key):
+            mapped_ids[mapped_key] = value
     if mapped_ids:
         component["mapped_ids"] = dict(mapped_ids)
     return component
@@ -4452,6 +4508,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
         "reaction_enzyme_complexes_novel": 0,
         "reaction_enzyme_complexes_unresolved": 0,
         "reaction_enzyme_proteins_dropped_no_external_id": 0,
+        "reaction_enzyme_complexes_skipped_invalid_component": 0,
     }
     actions: List[Dict[str, Any]] = []
 
@@ -4486,9 +4543,15 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                         "chosen_rule": "novel_enzyme_single_component_complex",
                         "candidates": [],
                         "name": f"{protein_name} complex",
+                        "generated": True,
+                        "generation_reason": "single_protein_pathwhiz_wrapper",
                         "species_id": species_id,
                         "components": [component],
-                        "issues": ([] if species_id else [{"issue": "protein_complex_missing_species", "reason": "db_unavailable"}]),
+                        "issues": (
+                            []
+                            if (species_id or species)
+                            else [{"issue": "protein_complex_missing_species", "reason": "db_unavailable"}]
+                        ),
                     },
                     "novel",
                     issue="db_unavailable",
@@ -4573,6 +4636,25 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                         "json_pointer": f"{pointer_prefix}/{idx}",
                         "protein": name,
                         "reason": "no UniProt or DrugBank identifier; other enzymes remain",
+                    }
+                )
+                continue
+            species = _species_for(protein_row, actor_dict, reaction)
+            if not _protein_has_external_id(protein_row) or not _protein_has_species_context(protein_row, species):
+                rewritten.append(dict(actor_dict))
+                summary["reaction_enzyme_complexes_skipped_invalid_component"] += 1
+                missing: List[str] = []
+                if not _protein_has_species_context(protein_row, species):
+                    missing.append("species")
+                if not _protein_has_external_id(protein_row):
+                    missing.append("uniprot_or_drugbank")
+                actions.append(
+                    {
+                        "type": "reaction_enzyme_complex_wrapper_skipped_invalid_component",
+                        "json_pointer": f"{pointer_prefix}/{idx}",
+                        "protein": name,
+                        "missing": missing,
+                        "reason": "single-protein PathWhiz complex wrapper requires a mapped protein component",
                     }
                 )
                 continue
@@ -4761,11 +4843,42 @@ def map_payload(
                 protein["mapping_meta"]["pathbank_protein_id"] = int(result["pathbank_protein_id"])
             status = "mapped"
             reason = ""
+        elif (
+            str(result.get("reason", "")) == "ambiguous"
+            or _safe_dict(result.get("resolution")).get("status") == "ambiguous"
+        ) and _safe_list(result.get("candidates")):
+            # Fix 2 — Ambiguous proteins: pick the first candidate that has a UniProt ID
+            protein_ambiguous += 1
+            _amb_candidates = _safe_list(result.get("candidates"))
+            _first_with_uniprot = next(
+                (c for c in _amb_candidates if isinstance(c, dict) and str(c.get("uniprot") or "").strip()),
+                None,
+            )
+            if _first_with_uniprot:
+                _amb_uniprot = str(_first_with_uniprot["uniprot"]).strip()
+                _amb_mapped: Dict[str, str] = {"uniprot": _amb_uniprot}
+                if _first_with_uniprot.get("pathbank_protein_id"):
+                    _amb_mapped["pathbank_protein_id"] = str(_first_with_uniprot["pathbank_protein_id"])
+                protein["mapped_ids"] = _merge_mapped_ids(_safe_dict(protein.get("mapped_ids")), _amb_mapped)
+                protein["mapping_meta"]["chosen_rule"] = "ambiguous_first_candidate"
+                protein["mapping_meta"]["resolution"] = {
+                    "status": "matched",
+                    "issue": "ambiguous_resolved_by_first",
+                    "order_step": "ambiguous_first_candidate",
+                }
+                proteins_mapped += 1
+                proteins_mapped_by_db += 1
+                status = "mapped"
+                reason = ""
+            else:
+                status = "unmapped"
+                reason = "ambiguous"
         else:
             status = "unmapped"
             reason = str(result.get("reason", "unknown"))
             if reason == "ambiguous" or _safe_dict(result.get("resolution")).get("status") == "ambiguous":
                 protein_ambiguous += 1
+
 
         logs.append(
             {
@@ -4791,6 +4904,115 @@ def map_payload(
         global_organism=global_organism,
     )
     protein_complexes = _safe_list(entities.get("protein_complexes"))
+
+    # ── Post-mapping protein cleanup ──────────────────────────────────────────
+    # Rule: a complex only needs ONE protein with a valid UniProt/DrugBank.
+    # If a complex already has at least one valid component, drop the invalid
+    # ones from that complex and, if they are no longer referenced anywhere,
+    # remove them from entities.proteins entirely so the gate does not reject
+    # the whole payload for their sake.
+    # For complexes that have NO valid component at all, call the LLM to
+    # obtain a UniProt accession for each remaining unknown protein.
+
+    _ID_SENTINELS_PM = frozenset({"unknown", "n/a", "na", "none", ""})
+
+    def _has_valid_id(p_row: Dict[str, Any]) -> bool:
+        ids = _safe_dict(p_row.get("mapped_ids"))
+        for _id_val in (ids.get("uniprot"), ids.get("drugbank")):
+            _v = str(_id_val or "").strip()
+            if _v and _v.lower() not in _ID_SENTINELS_PM:
+                return True
+        return False
+
+    _proteins_current = _safe_list(entities.get("proteins"))
+    _p_by_norm: Dict[str, Dict[str, Any]] = {
+        _normalize_name(str(_p.get("name") or "")): _p
+        for _p in _proteins_current
+        if isinstance(_p, dict) and _p.get("name")
+    }
+
+    # Phase 1: prune invalid components from complexes that have at least one valid one.
+    _dropped_norms: Set[str] = set()
+    for _pc in protein_complexes:
+        if not isinstance(_pc, dict):
+            continue
+        _comps = _safe_list(_pc.get("components"))
+        if not _comps:
+            continue
+        _valid: List[Any] = []
+        _invalid: List[Any] = []
+        for _comp in _comps:
+            _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
+            _crow = _p_by_norm.get(_normalize_name(_cname))
+            if _crow and _has_valid_id(_crow):
+                _valid.append(_comp)
+            else:
+                _invalid.append(_comp)
+        if _valid and _invalid:
+            _pc["components"] = _valid
+            for _comp in _invalid:
+                _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
+                _dropped_norms.add(_normalize_name(_cname))
+
+    # Only actually remove a protein if it is no longer referenced in ANY complex component list.
+    _still_needed: Set[str] = set()
+    for _pc in protein_complexes:
+        if not isinstance(_pc, dict):
+            continue
+        for _comp in _safe_list(_pc.get("components")):
+            _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
+            _still_needed.add(_normalize_name(_cname))
+
+    _remove_norms = _dropped_norms - _still_needed
+    if _remove_norms:
+        entities["proteins"] = [
+            _p for _p in _safe_list(entities.get("proteins"))
+            if not (isinstance(_p, dict) and _normalize_name(str(_p.get("name") or "")) in _remove_norms)
+        ]
+        proteins = _safe_list(entities.get("proteins"))
+        _p_by_norm = {
+            _normalize_name(str(_p.get("name") or "")): _p
+            for _p in proteins
+            if isinstance(_p, dict) and _p.get("name")
+        }
+
+    # Phase 2: UniProt API fallback (with gap-model LLM synonym expansion) for every
+    # protein that still has no valid id after DB mapping and complex pruning.
+    # Controlled by T2PW_LLM_PROTEIN_FALLBACK env flag (default enabled).
+    # Model used for synonym suggestions is OPENROUTER_GAP_MODEL (set in _ai_protein_synonym_lookup).
+    _api_fallback_enabled = (os.environ.get("T2PW_LLM_PROTEIN_FALLBACK", "1") or "1").strip() not in ("0", "false", "no", "off")
+    if _api_fallback_enabled:
+        for _p_row in _safe_list(entities.get("proteins")):
+            if not isinstance(_p_row, dict) or _has_valid_id(_p_row):
+                continue
+            _p_name = str(_p_row.get("name") or "").strip()
+            _p_org = str(
+                _p_row.get("organism") or _p_row.get("species")
+                or _safe_dict(_p_row.get("species_ref")).get("name")
+                or global_organism or ""
+            ).strip()
+            if not _p_name or not _p_org:
+                continue
+            try:
+                _api_result = map_protein_uniprot(client, _p_name, _p_org)
+                if _api_result.get("status") == "mapped":
+                    _api_ids = _safe_dict(_api_result.get("mapped_ids"))
+                    if _api_ids:
+                        _p_row["mapped_ids"] = _merge_mapped_ids(
+                            _safe_dict(_p_row.get("mapped_ids")), _api_ids
+                        )
+                        _p_row.setdefault("mapping_meta", {}).update({
+                            "chosen_rule": "api_uniprot_fallback",
+                            "resolution": {
+                                "status": "matched",
+                                "issue": "api_resolved",
+                                "order_step": "api_uniprot_fallback",
+                            },
+                        })
+                        proteins_mapped += 1
+            except Exception:
+                pass
+    # ─────────────────────────────────────────────────────────────────────────
 
     for idx, complex_row in enumerate(protein_complexes):
         if not isinstance(complex_row, dict):

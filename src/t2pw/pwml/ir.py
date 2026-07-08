@@ -78,6 +78,49 @@ def _first_nonempty(row: Dict[str, Any], keys: Sequence[str]) -> Any:
     return None
 
 
+def _protein_external_id(row: Dict[str, Any]) -> str:
+    value = _first_nonempty(
+        row,
+        [
+            "uniprot",
+            "uniprot_id",
+            "uniprot-id",
+            "drugbank",
+            "drugbank_id",
+            "drugbank-id",
+        ],
+    )
+    return _canonical(value)
+
+
+def _entity_species_context(row: Dict[str, Any]) -> Any:
+    return (
+        row.get("species")
+        or row.get("organism")
+        or row.get("taxonomy_id")
+        or row.get("species_id")
+        or row.get("pathbank_species_id")
+        or _safe_dict(row.get("species_ref")).get("pathbank_species_id")
+        or _safe_dict(row.get("species_ref")).get("name")
+        or _safe_dict(row.get("mapping_meta")).get("species")
+        or _safe_dict(row.get("mapping_meta")).get("species_id")
+    )
+
+
+def _is_generated_complex_row(row: Dict[str, Any]) -> bool:
+    meta = _safe_dict(row.get("mapping_meta"))
+    reason = _canonical(row.get("generation_reason") or meta.get("generation_reason")).casefold()
+    chosen_rule = _canonical(row.get("chosen_rule") or meta.get("chosen_rule")).casefold()
+    resolution = _safe_dict(meta.get("resolution"))
+    order_step = _canonical(resolution.get("order_step")).casefold()
+    return bool(
+        row.get("generated") is True
+        or reason == "single_protein_pathwhiz_wrapper"
+        or chosen_rule == "novel_enzyme_single_component_complex"
+        or order_step == "novel_enzyme_single_component_complex"
+    )
+
+
 def _db_id(row: Dict[str, Any], keys: Sequence[str]) -> Optional[int]:
     return _to_int(_first_nonempty(row, keys))
 
@@ -349,6 +392,8 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
     for key in [
         "mapped_ids",
         "mapping_meta",
+        "generated",
+        "generation_reason",
         "raw_name",
         "db_status",
         "db_id",
@@ -1120,6 +1165,24 @@ def build_pwml_ir(
             return existing
 
         protein_name = _canonical(entity.get("name")) or protein_key
+        missing_wrapper_fields: List[str] = []
+        if not _entity_species_context(entity):
+            missing_wrapper_fields.append("species")
+        if not _protein_external_id(entity):
+            missing_wrapper_fields.append("uniprot_or_drugbank")
+        if missing_wrapper_fields:
+            _add_issue(
+                report,
+                "error",
+                "enzyme_protein_complex_wrapper_invalid_component",
+                f"Reaction enzyme protein '{protein_name}' cannot be represented as a PathWhiz protein complex without species and UniProt/DrugBank on the source protein.",
+                pointer=pointer,
+                protein_key=protein_key,
+                protein_name=protein_name,
+                missing=missing_wrapper_fields,
+            )
+            return entity
+
         base_name = f"{protein_name} complex"
         complex_name = base_name
         suffix = 2
@@ -1130,10 +1193,13 @@ def build_pwml_ir(
             "key": f"pc_{len(ir['entities']['protein_complexes']) + 1}",
             "name": complex_name,
             "components": [{"protein_key": protein_key, "stoichiometry": 1}],
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
             "mapping_meta": {"resolution": {"status": "novel", "issue": "enzyme_wrapped_direct_protein"}},
         }
-        if entity.get("species_id"):
-            complex_record["species_id"] = entity.get("species_id")
+        for species_key in ["species", "organism", "taxonomy_id", "species_id", "pathbank_species_id", "species_ref"]:
+            if entity.get(species_key):
+                complex_record[species_key] = entity.get(species_key)
         ir["entities"]["protein_complexes"].append(complex_record)
         typed_pc = dict(complex_record)
         typed_pc["entity_type"] = "protein_complex"
@@ -1837,9 +1903,11 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
     all_entity_names: set = set()
     all_entity_keys: set = set()
     protein_names: set = set()
-    protein_keys: set = set()
-    protein_uniprots: set = set()
-    protein_pathbank_ids: set = set()
+    proteins_by_key: Dict[str, Dict[str, Any]] = {}
+    proteins_by_name: Dict[str, Dict[str, Any]] = {}
+    proteins_by_uniprot: Dict[str, Dict[str, Any]] = {}
+    proteins_by_drugbank: Dict[str, Dict[str, Any]] = {}
+    proteins_by_pathbank_id: Dict[int, Dict[str, Any]] = {}
     protein_complex_names: set = set()
 
     for bucket in ENTITY_BUCKETS.values():
@@ -1855,15 +1923,20 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 k = e.get("key")
                 if k:
                     all_entity_keys.add(k)
-                    if bucket == "proteins":
-                        protein_keys.add(k)
                 if bucket == "proteins":
+                    if k:
+                        proteins_by_key[str(k)] = e
+                    if n:
+                        proteins_by_name[_norm(n)] = e
                     uniprot = _canonical(_first_nonempty(e, ["uniprot", "uniprot_id", "uniprot-id"])).casefold()
                     if uniprot:
-                        protein_uniprots.add(uniprot)
+                        proteins_by_uniprot[uniprot] = e
+                    drugbank = _canonical(_first_nonempty(e, ["drugbank", "drugbank_id", "drugbank-id"])).casefold()
+                    if drugbank:
+                        proteins_by_drugbank[drugbank] = e
                     pathbank_id = db_id(e, ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id", "protein_id"])
                     if pathbank_id is not None:
-                        protein_pathbank_ids.add(pathbank_id)
+                        proteins_by_pathbank_id[pathbank_id] = e
 
     # ── PROTEINS ─────────────────────────────────────────────────────────────
     for idx, comp in enumerate(_safe_list(entities.get("compounds"))):
@@ -1887,17 +1960,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 "Protein is missing a name.",
                 f"/entities/proteins/{idx}/name",
             )
-        species = (
-            prot.get("species")
-            or prot.get("organism")
-            or prot.get("taxonomy_id")
-            or prot.get("species_id")
-            or prot.get("pathbank_species_id")
-            or _safe_dict(prot.get("species_ref")).get("pathbank_species_id")
-            or _safe_dict(prot.get("species_ref")).get("name")
-            or _safe_dict(prot.get("mapping_meta")).get("species")
-            or _safe_dict(prot.get("mapping_meta")).get("species_id")
-        )
+        species = _entity_species_context(prot)
         if not species:
             err(
                 "protein_missing_species",
@@ -1905,7 +1968,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 f"/entities/proteins/{idx}",
                 entity_name=pname,
             )
-        if not protein_external_id(prot):
+        if not _protein_external_id(prot):
             err(
                 "protein_missing_external_identity",
                 f"Protein '{pname}' is missing a UniProt or DrugBank identifier.",
@@ -1919,17 +1982,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
         if not isinstance(pc, dict):
             continue
         pcname = _canonical(pc.get("name"))
-        species = (
-            pc.get("species")
-            or pc.get("organism")
-            or pc.get("taxonomy_id")
-            or pc.get("species_id")
-            or pc.get("pathbank_species_id")
-            or _safe_dict(pc.get("species_ref")).get("pathbank_species_id")
-            or _safe_dict(pc.get("species_ref")).get("name")
-            or _safe_dict(pc.get("mapping_meta")).get("species")
-            or _safe_dict(pc.get("mapping_meta")).get("species_id")
-        )
+        species = _entity_species_context(pc)
         if not species:
             err(
                 "protein_complex_missing_species",
@@ -1937,9 +1990,10 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 f"/entities/protein_complexes/{idx}",
                 entity_name=pcname,
             )
+        generated_complex = _is_generated_complex_row(pc)
         components = _safe_list(pc.get("components"))
         if not components:
-            warn(
+            (err if generated_complex else warn)(
                 "protein_complex_missing_components",
                 f"Protein complex '{pcname}' has no protein components.",
                 f"/entities/protein_complexes/{idx}/components",
@@ -1961,9 +2015,11 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                         complex_name=pcname,
                         component_name=comp_name,
                     )
+                matched_protein: Optional[Dict[str, Any]] = None
                 if protein_key:
-                    if protein_key not in protein_keys:
-                        warn(
+                    matched_protein = proteins_by_key.get(protein_key)
+                    if matched_protein is None:
+                        (err if generated_complex else warn)(
                             "component_protein_unresolved",
                             f"Component '{protein_key}' in complex '{pcname}' does not reference an existing protein.",
                             pointer,
@@ -1971,23 +2027,26 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                             protein_key=protein_key,
                         )
                 elif comp_name:
-                    component_matches = _norm(comp_name) in protein_names
+                    matched_protein = proteins_by_name.get(_norm(comp_name))
                     if isinstance(comp, dict):
                         comp_uniprot = _canonical(
                             _first_nonempty(comp, ["uniprot", "uniprot_id", "uniprot-id"])
+                        ).casefold()
+                        comp_drugbank = _canonical(
+                            _first_nonempty(comp, ["drugbank", "drugbank_id", "drugbank-id"])
                         ).casefold()
                         comp_pathbank_id = db_id(
                             comp,
                             ["pathbank_protein_id", "pw_protein_id", "pathwhiz_id", "protein_id"],
                         )
-                        component_matches = component_matches or (
-                            bool(comp_uniprot) and comp_uniprot in protein_uniprots
-                        )
-                        component_matches = component_matches or (
-                            comp_pathbank_id is not None and comp_pathbank_id in protein_pathbank_ids
-                        )
-                    if not component_matches:
-                        warn(
+                        if matched_protein is None and comp_uniprot:
+                            matched_protein = proteins_by_uniprot.get(comp_uniprot)
+                        if matched_protein is None and comp_drugbank:
+                            matched_protein = proteins_by_drugbank.get(comp_drugbank)
+                        if matched_protein is None and comp_pathbank_id is not None:
+                            matched_protein = proteins_by_pathbank_id.get(comp_pathbank_id)
+                    if matched_protein is None:
+                        (err if generated_complex else warn)(
                             "component_protein_unresolved",
                             f"Component '{comp_name}' in complex '{pcname}' does not reference an existing protein.",
                             pointer,
@@ -1995,12 +2054,30 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                             component_name=comp_name,
                         )
                 else:
-                    warn(
+                    (err if generated_complex else warn)(
                         "component_protein_unresolved",
                         f"Component[{cidx}] in complex '{pcname}' does not reference an existing protein.",
                         pointer,
                         complex_name=pcname,
                     )
+                if generated_complex and matched_protein is not None:
+                    if not _entity_species_context(matched_protein):
+                        err(
+                            "generated_complex_component_missing_species",
+                            f"Generated protein complex '{pcname}' component protein '{matched_protein.get('name')}' is missing species/organism.",
+                            pointer,
+                            complex_name=pcname,
+                            component_name=matched_protein.get("name"),
+                        )
+                    if not _protein_external_id(matched_protein):
+                        err(
+                            "generated_complex_component_missing_external_identity",
+                            f"Generated protein complex '{pcname}' component protein '{matched_protein.get('name')}' is missing a UniProt or DrugBank identifier.",
+                            pointer,
+                            complex_name=pcname,
+                            component_name=matched_protein.get("name"),
+                            required_fields=["uniprot", "uniprot_id", "drugbank", "drugbank_id"],
+                        )
 
     # ── BIOLOGICAL STATES ────────────────────────────────────────────────────
     bio_states = _safe_list(payload_or_ir.get("biological_states"))

@@ -17,6 +17,7 @@ from t2pw.sbml.json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species
 from t2pw.mapping.map_ids import route_entity_for_mapping  # noqa: E402
 from t2pw.pipeline.qa_graph import build_graph, connected_components  # noqa: E402
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
+    GateValidationError,
     attach_enzymes_from_reaction_evidence,
     attach_transporters_from_evidence,
     canonicalize_same_as_aliases,
@@ -517,12 +518,14 @@ def test_thyroid_normalization_and_dedupe() -> None:
         for enzyme in reaction.get("enzymes", []):
             if not isinstance(enzyme, dict):
                 continue
-            value = str(enzyme.get("entity") or enzyme.get("protein") or "").strip().casefold()
-            if value == "thyroid peroxidase":
+            # All enzymes must use entity/entity_type schema — no legacy keys.
+            assert "protein_complex" not in enzyme, f"Legacy protein_complex key survived: {enzyme}"
+            assert "protein" not in enzyme, f"Legacy protein key survived: {enzyme}"
+            assert enzyme.get("entity"), f"Enzyme missing entity: {enzyme}"
+            assert enzyme.get("entity_type"), f"Enzyme missing entity_type: {enzyme}"
+            # Enzymes with entity "thyroid peroxidase" must be typed as protein.
+            if str(enzyme.get("entity") or "").strip().casefold() == "thyroid peroxidase":
                 assert enzyme.get("entity_type") == "protein"
-                assert "protein_complex" not in enzyme
-                assert "protein" not in enzyme
-            assert "thyroid_peroxidase_complex" not in str(enzyme.get("entity") or enzyme.get("protein_complex") or "").casefold()
 
 
 def test_generic_explicit_composite_still_materializes_complex() -> None:
@@ -1149,6 +1152,92 @@ def test_mapping_route_and_species_id_helpers() -> None:
     assert p_id.startswith("p_")
     assert m_id.startswith("m_")
     assert p_id == sbml_species_id({"kind": "protein", "name": "thyroglobulin", "mapped_ids": {}}, "c_cell")
+
+
+def test_stage3_gate_accepts_generated_complex_with_resolved_uniprot_component() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {"name": "NdmA", "species": "Pseudomonas putida", "mapped_ids": {"uniprot": "A0A000"}},
+            ],
+            "protein_complexes": [
+                {
+                    "name": "NdmA complex",
+                    "species": "Pseudomonas putida",
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                    "components": [
+                        {"name": "NdmA", "stoichiometry": 1, "mapped_ids": {"uniprot": "A0A000"}},
+                    ],
+                }
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "caffeine demethylation",
+                    "enzymes": [{"entity": "NdmA complex", "entity_type": "protein_complex"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    gate = run_strict_post_normalization_gates(payload, enforce_all_proteins_connected=False)
+
+    assert gate["errors"] == []
+
+
+def test_stage3_gate_rejects_generated_complex_wrapper_under_proteins() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {"name": "NdmA complex", "species": "Pseudomonas putida", "mapped_ids": {"uniprot": "A0A000"}},
+            ],
+            "protein_complexes": [],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    with pytest.raises(GateValidationError) as excinfo:
+        run_strict_post_normalization_gates(payload, enforce_all_proteins_connected=False)
+
+    errors = excinfo.value.details["errors"]
+    assert any("must be listed under protein_complexes" in err["reason"] for err in errors)
+
+
+def test_stage3_gate_rejects_generated_complex_component_without_uniprot_or_drugbank() -> None:
+    payload = {
+        "entities": {
+            "proteins": [{"name": "NdmA", "species": "Pseudomonas putida"}],
+            "protein_complexes": [
+                {
+                    "name": "NdmA complex",
+                    "species": "Pseudomonas putida",
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                    "components": [{"name": "NdmA", "stoichiometry": 1}],
+                }
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "caffeine demethylation",
+                    "enzymes": [{"entity": "NdmA complex", "entity_type": "protein_complex"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    with pytest.raises(GateValidationError) as excinfo:
+        run_strict_post_normalization_gates(payload, enforce_all_proteins_connected=False)
+
+    errors = excinfo.value.details["errors"]
+    assert any("component protein 'NdmA' is missing a UniProt or DrugBank identifier" in err["reason"] for err in errors)
 
 
 def test_sbml_reaction_edges_encode_pathwhiz_arrow_options(tmp_path: Path) -> None:

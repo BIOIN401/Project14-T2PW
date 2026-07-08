@@ -42,9 +42,11 @@ from t2pw.sbml.overwatch import run_sbml_overwatch
 from t2pw.sbml.examples import build_retrieval_context, load_motif_index, payload_to_query_text
 from t2pw.tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
 from t2pw.pipeline.process_normalizer import (
+    GateValidationError,
     compute_normalization_stats,
     ensure_autostates,
     normalize_process_payload,
+    run_strict_post_normalization_gates,
 )
 from t2pw.pipeline.pipeline import (
     PipelineFailure,
@@ -327,6 +329,19 @@ def _generate_pwml_from_refinement_working_json(work_dir: str | Path) -> Dict[st
             "output_path": "",
             "qa": {},
             "grounding_report": {},
+        }
+
+    refinement_gate_errors = _safe_list(st.session_state.get("refinement_gate_errors"))
+    if refinement_gate_errors:
+        return {
+            "ok": False,
+            "error": "PWML export stopped by Stage 3 gate. Resolve the refinement gate errors first.",
+            "counts": {},
+            "issues": len(refinement_gate_errors),
+            "output_path": "",
+            "qa": {},
+            "grounding_report": {},
+            "stage3_gate_errors": refinement_gate_errors,
         }
 
     _write_reviewed_payload_snapshot(working_json, work_dir)
@@ -1689,6 +1704,28 @@ def run_pwml_export(
 
         outputs_dir = project_root / "outputs"
         outputs_dir.mkdir(parents=True, exist_ok=True)
+        stage3_gate_report = _safe_dict(export_normalization_report.get("gate"))
+        if stage3_gate_report and not bool(stage3_gate_report.get("ok", False)):
+            stage3_gate_path = outputs_dir / "pwml_stage3_gate_report.json"
+            stage3_gate_path.write_text(
+                json.dumps(stage3_gate_report, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            return {
+                "ok": False,
+                "error": "PWML export stopped by Stage 3 gate.",
+                "counts": {},
+                "issues": int(_safe_dict(stage3_gate_report.get("summary")).get("error_count", 0))
+                or len(_safe_list(stage3_gate_report.get("errors"))),
+                "output_path": "",
+                "qa": {},
+                "grounding_report": grounding_report,
+                "export_normalization_report": export_normalization_report,
+                "stage3_gate_report": stage3_gate_report,
+                "stage3_gate_report_path": str(stage3_gate_path),
+                "reaction_preservation_before_final_export": before_export_report,
+            }
+
         required_gate_path = outputs_dir / "pwml_required_field_gate_report.json"
         gate_payload = deepcopy(payload)
         metadata = gate_payload.setdefault("metadata", {})
@@ -3058,8 +3095,19 @@ if st.session_state.get("pipeline_ready"):
                     final_mapped_payload = _pa.get("final_mapped_db") or _pa.get("final_mapped")
                     mapping_report = _safe_dict(_pa.get("mapping_report"))
                     if isinstance(final_mapped_payload, dict) and final_mapped_payload:
-                        initialize_refinement_review_state(final_mapped_payload, mapping_report)
-                    st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
+                        try:
+                            _gate_details = run_strict_post_normalization_gates(deepcopy(final_mapped_payload))
+                            final_gate: Dict[str, Any] = {"ok": True, **_gate_details}
+                        except GateValidationError as _gate_exc:
+                            final_gate = {"ok": False, **_safe_dict(_gate_exc.details)}
+                        if final_gate and not bool(final_gate.get("ok", False)):
+                            st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
+                            _pa["final_stage3_gate_report"] = final_gate
+                            st.error("Mapped pathway still fails the Stage 3 gate. Refinement review was not opened.")
+                        else:
+                            st.session_state.refinement_gate_errors = []
+                            initialize_refinement_review_state(final_mapped_payload, mapping_report)
+                            st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
 

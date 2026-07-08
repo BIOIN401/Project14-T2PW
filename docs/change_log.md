@@ -8,53 +8,131 @@ fix stay consistent with the intended pipeline design.
 ## Open Issues
 
 Issues confirmed by running the pipeline. Ordered by pipeline stage. No code
-changes yet — this section records the diagnosis and the planned fix.
+changes yet - this section records the diagnosis and the planned fix.
 
 ---
 
-### OPEN — Stage 3 (Normalize): `normalize_process_actor_schema` never writes `entity` key for enzyme actors
+### OPEN - Stage 2/6/8: Generated PathWhiz protein-complex wrappers leak into proteins and bypass Stage 3 blocking
 
-**Files to change:** `src/t2pw/pipeline/process_normalizer.py`
+**Files to change:** `src/t2pw/mapping/map_ids.py`, `src/t2pw/pipeline/process_normalizer.py`, `src/t2pw/app/streamlit_app.py`, `src/t2pw/pwml/ir.py`, tests covering mapping, normalization gates, and PWML export blocking.
 
 **Error / symptom:**
-All enzyme actor dicts in `reactions[].enzymes` retain `protein_complex` (or
-`protein`) as the name field after normalization completes. `e.get("entity")`
-returns `""` for every enzyme. The JSON evidence is clear: after a full pipeline
-run on the Arabidopsis jasmonic acid pathway all 30 enzyme actors use
-`protein_complex`, while all 30 modifier actors correctly use `entity/entity_type`.
+PWML required-field validation reports errors such as:
+
+- `Protein 'NdmA complex' is missing species/organism.`
+- `Protein 'NdmA complex' is missing a UniProt or DrugBank identifier.`
+- Same pattern for `NdmB complex`, `NdmC complex`, `xanthine oxidase complex`, `urate oxidase complex`, `allantoinase complex`, `urease complex`, `TmuM complex`, and `TM-HIU hydrolase complex`.
+
+These errors are misleading because the generated `* complex` names should not
+be protein rows at all. In PathWhiz, the member protein needs the UniProt or
+DrugBank ID; a protein-complex record can be created from valid member proteins
+and does not necessarily need a complex-level PathBank ID.
+
+**PathWhiz behavior confirmed from UI:**
+
+1. The `New Protein` form requires `Name`, `Species`, and either `UniProt ID`
+   or `DrugBank ID`.
+2. The `New Protein Complex` form requires `Name`, `Species`, and at least one
+   member `Protein` with stoichiometry.
+3. Therefore a generated single-protein wrapper such as `NdmA complex` is valid
+   only as a `protein_complexes[]` row with component `NdmA`; `NdmA` must be a
+   valid `proteins[]` row with species and UniProt/DrugBank identity.
+4. The pipeline should not try to find or assign a UniProt ID for
+   `NdmA complex`; UniProt belongs to `NdmA`.
 
 **Root cause:**
-`normalize_process_actor_schema` has two passes.
+There are two interacting issues:
 
-Pass 1 (`_rewrite_actor_rows`) resolves each actor name against the protein and
-complex registries. `_resolve_actor_name` returns a tuple `("protein_complex",
-canonical_name)` or `("protein", canonical_name)`. The function then pops the
-old fields and writes `updated[target_field] = canonical_name` — meaning it
-writes back to `protein_complex` or `protein`, **not** to `entity`.
+1. `map_ids._rewrite_reaction_protein_enzymes_to_complexes` creates novel
+   single-component wrappers named `f"{protein_name} complex"` when PathBank DB
+   lookup cannot resolve a real complex. This is acceptable only if the wrapper
+   stays under `entities.protein_complexes` and its member protein is already
+   mapped.
+2. The Streamlit PWML export path calls `normalize_process_payload`, receives a
+   Stage 3 gate report, but then proceeds to `validate_required_pwml_contract`
+   instead of stopping on unresolved Stage 3 gate failures. As a result, issues
+   that Stage 3 can detect still reach the Stage 8 hard gate.
 
-Pass 2 (the post-process block at lines 2287–2317) migrates `modifiers[]` from
-old field names to `entity/entity_type`. This block runs **only on modifiers**;
-there is no equivalent block for `enzymes[]`. So enzyme actors are left in the
-legacy field format even after the schema-normalization step completes.
+The mapping cache also contains stale/generated `enzyme_complexes` records for
+the affected names, including entries with `status: "unmapped"` and
+`chosen_rule: "novel_enzyme_single_component_complex"`. These cache rows show
+where the `* complex` names are being synthesized.
 
 **Planned fix:**
-After the existing modifier migration block (line ~2317), add an identical
-migration loop for `enzymes[]` in every reaction. The logic is the same:
-if `entity` is absent, copy the value from `protein_complex`, `protein`, or
-`name` into `entity`, set `entity_type` accordingly, and pop the legacy keys.
-Optionally, `_rewrite_actor_rows` itself could be updated so `target_field` is
-always `"entity"` and `entity_type` is set separately — that eliminates the
-need for a second-pass migration entirely.
+
+1. Stage 2/6 mapping (`map_ids.py`):
+   - Keep generated single-protein wrappers under `entities.protein_complexes`
+     only.
+   - Mark generated wrappers with explicit metadata such as
+     `generated: true` and
+     `generation_reason: "single_protein_pathwhiz_wrapper"`.
+   - Before creating a usable wrapper, require the base protein row to have
+     species plus UniProt/DrugBank identity.
+   - If the base protein is unmapped, do not create an apparently exportable
+     complex. Record a mapping issue instead.
+   - Do not add or preserve rows like `NdmA complex` under
+     `entities.proteins`.
+2. Stage 3 normalization/gate (`process_normalizer.py`):
+   - Add a hard gate check that rejects `entities.proteins[]` rows whose names
+     are generated-complex shaped (`* complex`) when they correspond to
+     generated wrappers.
+   - Add a generated-complex integrity check: species present, at least one
+     component, and every component resolves to a declared protein with
+     UniProt/DrugBank identity.
+   - Preserve the current design: Stage 3 reports these as gate failures for
+     audit/review; it should not silently reclassify biological entities unless
+     the operation is a deterministic generated-wrapper cleanup.
+3. Orchestrator (`streamlit_app.py`):
+   - Before initializing refinement review and before PWML generation, inspect
+     `normalize_process_payload(...)[1]["gate"]`.
+   - If the gate is not OK, stop and surface the Stage 3 gate errors. Do not
+     continue to the PWML required-field gate.
+4. Stage 8 PWML IR (`pwml/ir.py`):
+   - Treat generated protein complexes without a complex-level PathBank ID as
+     valid only when their component proteins satisfy the protein identity
+     contract.
+   - Keep strict validation for ordinary protein rows: species plus
+     UniProt/DrugBank remains required.
+5. Tests:
+   - Add a fixture where `NdmA` has species and UniProt and `NdmA complex` is a
+     generated protein complex. This should pass the generated-complex contract.
+   - Add a fixture where `NdmA complex` appears under `entities.proteins`. This
+     should fail Stage 3 before export.
+   - Add a fixture where `NdmA complex` is generated but component `NdmA` lacks
+     UniProt/DrugBank. This should fail before export.
 
 **Pipeline consistency:**
-Change lives entirely in `normalize_process_actor_schema` inside
-`process_normalizer.py`, which owns actor schema enforcement. No other module
-needs to change. After the fix, any code that checks `actor.get("entity")` will
-work correctly for both enzyme and modifier actors.
+The protein-vs-complex distinction belongs at the mapping and normalization
+boundary. Stage 2/6 owns creation of generated PathWhiz wrapper complexes.
+Stage 3 owns deterministic gate checks that prevent invalid rows from reaching
+review/export. Stage 8 owns final PWML contract enforcement. The orchestrator
+must wire these stages so unresolved Stage 3 failures block PWML generation
+rather than being rediscovered later as required-field errors.
 
 ---
 
-### OPEN — Stage 4 (Audit): LLM connection failure prevents semantic repair
+### OPEN â€” Stage 2 (Map): Best-effort UniProt fallback assigns lowest-scored candidate when no threshold passes
+
+**Files to change:** `src/t2pw/mapping/map_ids.py` (replace best_effort_fallback block), `src/t2pw/curation/audit_json_llm.py` (add audit hint for best_effort IDs)
+
+**Error / symptom:**
+Generic enzyme names such as "N-methyltransferase complex" and "N-methylnucleosidase complex" have no species-specific UniProt entry that clears the 0.78 confidence threshold. As a temporary workaround (added 2026-07-08), the mapper now accepts the top-ranked UniProt candidate regardless of score and marks it `best_effort: True`. This prevents Stage 3 gate failures for missing external identity, but the assigned accession may be incorrect â€” it is simply the highest-scoring candidate from a name search, not a verified match.
+
+**Root cause:**
+Generic descriptive names ("N-methyltransferase", "N-methylnucleosidase") return many UniProt hits with similar, low Jaccard scores. None is definitively the right protein, so no candidate clears the strict acceptance threshold. The right fix is sequence-based disambiguation (BLAST or UniProt sequence search) â€” find the actual protein sequence from the paper or a reference, BLAST it against UniProt, and accept the top hit by sequence identity. This requires the pipeline to carry or fetch protein sequences, which it currently does not do.
+
+**Planned fix:**
+1. For proteins that reach the best_effort_fallback path, attempt a NCBI eSearch + efetch to retrieve the candidate sequence by gene name + organism.
+2. Submit the retrieved sequence to the UniProt BLAST API.
+3. Accept the BLAST top hit (â‰¥40% identity, â‰¥60% coverage) as the confirmed accession and replace the best_effort ID.
+4. Add an audit hint in `audit_json_llm.py` that flags any entity with `best_effort: True` in its mapping metadata so the audit LLM knows to verify or propose a correction.
+
+**Pipeline consistency:**
+Sequence fetching and BLAST belong in Stage 2 mapping or Stage 4a gap resolution â€” both own external ID lookup. No normalization or export logic would change. The `best_effort` flag in mapping metadata is the audit signal; the audit loop owns the decision to accept or replace the provisional ID.
+
+---
+
+### OPEN â€” Stage 4 (Audit): LLM connection failure prevents semantic repair
 
 **Files to change:** Configuration / environment (not source code)
 
@@ -85,9 +163,9 @@ without an LLM connection.
 
 ---
 
-### OPEN — Stage 1 (Extract): Empty reaction inputs in beta-oxidation chain
+### OPEN â€” Stage 1 (Extract): Empty reaction inputs in beta-oxidation chain
 
-**Files to change:** None yet — this is a Stage 4 (Audit) repair task once
+**Files to change:** None yet â€” this is a Stage 4 (Audit) repair task once
 LLM is connected (see connection issue above).
 
 **Error / symptom:**
@@ -105,7 +183,7 @@ final product (jasmonic acid) as each reaction's output.
 Stage 1 (Extract) LLM did not capture the intermediate acyl-CoA compounds as
 reaction-level inputs/outputs. Each reaction was extracted as "produces JA" with
 the intermediate steps omitted. This is an expected limitation of the extraction
-stage — the LLM summarised rather than enumerated each cycle.
+stage â€” the LLM summarised rather than enumerated each cycle.
 
 **Planned fix:**
 This is the correct input for Stage 4 (Audit). Once the LLM connection is
@@ -114,7 +192,7 @@ restored (see above), the audit should:
 2. Propose patches that add the correct OPC-CoA intermediate as `inputs` for
    each reaction and the shortened OPC-CoA as `outputs` (except the last cycle
    which produces jasmonic acid).
-No normalization or schema change is required — this is a data completeness
+No normalization or schema change is required â€” this is a data completeness
 issue that the audit loop is designed to repair.
 
 **Pipeline consistency:**
@@ -124,14 +202,14 @@ resolve once the LLM connection issue is fixed.
 
 ---
 
-### OPEN — Stage 1 (Extract): OPC-8, OPC-6, OPC-4 misclassified as proteins
+### OPEN â€” Stage 1 (Extract): OPC-8, OPC-6, OPC-4 misclassified as proteins
 
-**Files to change:** None yet — audit repair task.
+**Files to change:** None yet â€” audit repair task.
 
 **Error / symptom:**
 Entities `OPC-8`, `OPC-6`, and `OPC-4` appear in `entities.proteins`. The audit
 warns: `"Protein has no location link; default compartment may be used."` for
-all three. These are 3-oxo-2-(2'-pentenyl)-cyclopentane-acyl-CoA intermediates —
+all three. These are 3-oxo-2-(2'-pentenyl)-cyclopentane-acyl-CoA intermediates â€”
 chemical compounds, not proteins.
 
 **Root cause:**
@@ -151,20 +229,20 @@ cross-stage logic), just an additional audit hint.
 
 **Pipeline consistency:**
 Reclassification is a semantic operation and belongs in Stage 4 (Audit). If a
-normalization hint is added, it goes into the gate report as an audit input —
+normalization hint is added, it goes into the gate report as an audit input â€”
 not as a normalization mutation. This preserves the rule that Stage 3 does not
 make semantic corrections.
 
 ---
 
-### OPEN — Stage 2 (Map): DB unavailable — degraded mapping rates
+### OPEN â€” Stage 2 (Map): DB unavailable â€” degraded mapping rates
 
 **Files to change:** Configuration only.
 
 **Error / symptom:**
 `mapping_report.dbonly.json` shows `"db_available": false`. Protein mapping:
 38.46% (5/13). Compound mapping: 9.52% (2/21). All 12 protein complexes skipped
-(10/12 have gap issues — component proteins unmapped, so complex cannot map).
+(10/12 have gap issues â€” component proteins unmapped, so complex cannot map).
 
 **Root cause:**
 The PathBank database is not reachable from this environment
@@ -188,7 +266,7 @@ returns no-hit when an entity is unmapped, which is recorded in `mapping_meta`.
 
 ---
 
-### OPEN — Stage 6 (Enrich): Enrichment stage produces data no stage consumes
+### OPEN â€” Stage 6 (Enrich): Enrichment stage produces data no stage consumes
 
 **Files to change:** Decision required before code change.
 
@@ -203,7 +281,7 @@ The enrichment stage was built but not wired into the PWML IR builder or any
 other consumer. This was documented as a product decision pending in the
 refactoring plan (Step 8).
 
-**Planned fix — choose one:**
+**Planned fix â€” choose one:**
 - **Option A (Use it):** Wire `entity["enrichment"]` into the PWML IR builder
   (`src/t2pw/pwml/ir.py`) so synonyms and cross-references appear in the
   exported pathway file. This adds value to the PWML output.
@@ -224,9 +302,9 @@ option adds cross-stage logic.
 ## Template
 
 ```
-### YYYY-MM-DD — <short description>
+### YYYY-MM-DD â€” <short description>
 
-**Files changed:** `path/to/file.py` (lines X–Y)
+**Files changed:** `path/to/file.py` (lines Xâ€“Y)
 
 **Error / symptom:**
 What the user or test saw. Quote the error message if there is one.
@@ -248,7 +326,158 @@ table in pipeline.md).
 
 ## Entries
 
-### 2026-07-07 — Wire drop_process_orphan_proteins into normalize_process_payload
+### 2026-07-08 â€” Best-effort UniProt fallback for generic enzyme names that clear no confidence threshold
+
+**Files changed:** `src/t2pw/mapping/map_ids.py` (lines ~3580â€“3590, `map_protein_uniprot`), `docs/change_log.md`
+
+**Error / symptom:**
+Proteins with generic names such as "N-methyltransferase complex" and "N-methylnucleosidase complex" failed the Stage 3 gate checks for missing UniProt/DrugBank identifiers. These names have no species-specific UniProt entry that scores above the 0.78 acceptance threshold â€” the correct protein cannot be confidently distinguished from many similarly-named candidates by name alone.
+
+**Root cause:**
+`map_protein_uniprot` returned `status: "unmapped", reason: "ambiguous"` whenever candidates existed but none cleared the strict threshold. The caller only writes a UniProt accession when `status == "mapped"`, so ambiguous results produced no ID on the protein entity. For genuinely generic enzyme names, no name-based scoring strategy can reliably pick the right candidate â€” the correct fix is sequence-based lookup (BLAST), but the pipeline does not currently carry protein sequences.
+
+**Fix:**
+In `map_protein_uniprot`, when `_accepted_uniprot_candidate_result` returns None but at least one candidate has a non-empty accession, return that top candidate with `status: "mapped"`, `chosen_rule: "best_effort_fallback"`, and `best_effort: True` instead of `status: "unmapped"`. The caller writes the accession, which clears the Stage 3 gate check. The `best_effort: True` flag is preserved in the mapping metadata as a signal for the audit loop that this ID was not confidently matched and should be reviewed.
+
+**Pipeline consistency:**
+Change is entirely within `map_protein_uniprot` in `t2pw.mapping.map_ids`, which owns Stage 2 and Stage 6 ID mapping. No normalization, audit, or export logic was changed. The fallback is a last resort â€” it only activates when all three normal acceptance paths (strong_unique, reviewed_unique, reviewed_exact_gene_match) fail and candidates exist. The proper long-term fix (BLAST-based sequence lookup) is documented as an open issue. See OPEN issue: "Stage 2 (Map): Best-effort UniProt fallback assigns lowest-scored candidate when no threshold passes."
+
+---
+
+### 2026-07-08 â€” Strengthen extraction scoping to single-pathway + single-organism; fix doc inconsistencies
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `docs/pipeline.md`, `docs/change_log.md`
+
+**Error / symptom:**
+Three issues found after adding the initial species scoping rule: (1) The BIOLOGICAL STATE RULE still instructed the LLM to default to *Homo sapiens* when no organism was available, directly contradicting the new scoping rule's instruction to leave species empty. (2) The scoping rule told the LLM to pick one organism but did not tell it to first pick one pathway â€” papers covering multiple pathways (e.g. caffeine biosynthesis and caffeine degradation in the same review) would still produce a merged multi-pathway extraction scoped to one organism. (3) `docs/pipeline.md` had a duplicate copy of the Step 17 gate description mislabelled as Step 15, and the file ownership table listed no prompt files.
+
+**Root cause:**
+(1) The BIOLOGICAL STATE RULE predated the scoping rule and was never updated to match. An LLM reading both rules encounters conflicting instructions for the no-organism case. (2) The prior scoping rule said "choose one primary biological scope" but did not make pathway selection an explicit first decision â€” organism selection was the only named decision. (3) The pipeline.md duplicate was a copy-paste artifact from a prior edit; the prompt files were always owned but never listed in the table.
+
+**Fix:**
+1. Changed the BIOLOGICAL STATE RULE fallback from `"use 'Homo sapiens' as the default"` to `"leave species empty â€” do not guess or default to any organism"`, removing the contradiction.
+2. Expanded the scoping rule into two explicit sequential decisions: Decision 1 (select one pathway â€” the most central to the paper) followed by Decision 2 (select one organism for that pathway). The pathway decision now comes first and is the primary filter; organism selection applies within it.
+3. Removed the duplicate Step 15 paragraph from `docs/pipeline.md` (lines 135â€“138, copy-paste of Step 17 description).
+4. Added `pwml_system.txt` and `pwml_infer_system.txt` to the file ownership table in `docs/pipeline.md`.
+
+**Pipeline consistency:**
+All changes are in prompt text files and documentation. No Python source was modified. The scoping decision remains Stage 1's responsibility â€” it is an extraction-time filter that prevents mixed-pathway, mixed-species entity sets from entering Stage 2 and beyond.
+
+---
+
+### 2026-07-08 â€” Add single-organism scoping rules to Stage 1 extraction prompt
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `src/t2pw/llm/prompts/pwml_infer_system.txt` (cross-reference note only), `docs/pipeline.md`, `docs/change_log.md`
+
+**Error / symptom:**
+Proteins from multiple organisms present in a single paper (e.g. *Coffea arabica* biosynthesis enzymes and *Pseudomonas putida* degradation enzymes) were extracted together into the same pathway payload, resulting in mixed species assignments across entities. This caused Stage 3 gate failures for missing species/organism on proteins that inherited no clear organism context, and UniProt mapping failures at Stage 2 and Stage 6 because the wrong species was searched for each protein.
+
+**Root cause:**
+The Stage 1 extraction prompt (`pwml_system.txt`) had no rule requiring the LLM to select a single primary organism before extracting reactions. Papers that cover multiple organisms â€” comparative studies, combined biosynthesis-plus-degradation reviews â€” caused the LLM to emit proteins from all mentioned organisms, mixing species context across entities. The BIOLOGICAL STATE RULE required species on every biological_state but gave no guidance for choosing among competing organisms.
+
+**Fix:**
+Added two rule blocks to `pwml_system.txt` immediately after the BIOLOGICAL STATE RULE:
+
+1. **Species and organism scoping rule** â€” instructs the LLM to select one primary organism/species/strain before extracting reactions, assign it to all proteins, enzymes, complexes, reactions, and biological states, exclude entities from other organisms unless explicitly requested, and emit an audit warning rather than mix species when no organism can be confidently selected.
+2. **Protein/enzyme species rule** â€” requires every protein, enzyme, and protein complex to inherit the selected pathway species before identifier mapping, and prohibits emitting a protein entity without a species/organism assignment and sufficient identifier context.
+
+Added a species constraint cross-reference note to the locality constraint block in `pwml_infer_system.txt`: the Stage 2 mandatory modifier repair pass is now explicitly instructed to apply the Stage 1 species scoping rule and skip modifier links for proteins from other organisms.
+
+**Pipeline consistency:**
+Change is entirely within prompt text files. No Python source was modified. Species scoping is an extraction-time decision that Stage 1 owns â€” the correct stage boundary. Selecting a single organism at Stage 1 prevents mixed-species entity sets from propagating to Stage 2 mapping (where wrong-species queries fail silently) and Stage 3 gate checks (where missing species generates unrepaired gate failures). Stage 2â€“8 behavior is otherwise unchanged.
+
+---
+
+### 2026-07-08 â€” Strip "complex" from UniProt name query variants
+
+**Files changed:** `src/t2pw/mapping/map_ids.py` (line ~50, `_name_variants`), `docs/change_log.md`
+
+**Error / symptom:**
+Proteins with "complex" in their names â€” e.g. "xanthine oxidase complex", "NdmA complex", "IMP dehydrogenase complex", "TmuM complex" â€” consistently failed the Stage 3 gate checks added on 2026-07-08 for missing UniProt/DrugBank identifiers. These proteins are findable in UniProt under their base names ("Xanthine oxidase", "NdmA", etc.) but the pipeline assigned no accession to any of them.
+
+**Root cause:**
+`_name_variants` (Stage 2 and 6 mapping) already strips "protein" and "enzyme" from name query strings to normalize them for UniProt lookup, but did not strip "complex". UniProt never includes "complex" in individual protein entry names â€” that word is a complex-level descriptor. Querying for "xanthine oxidase complex" produced a Jaccard similarity of 2/3 â‰ˆ 0.667 against the correct UniProt entry "Xanthine oxidase". After scoring (`base_score = 0.35 Ã— 0.667 = 0.234`, plus organism and reviewed bonuses), the total landed at â‰ˆ 0.53 â€” 0.25 points below the 0.78 acceptance threshold â€” so no accession was accepted despite the correct entry being returned by UniProt's API.
+
+**Fix:**
+Added `"complex"` to the word-strip regex in `_name_variants`:
+```
+re.sub(r"\b(protein|enzyme|complex)\b", " ", base, flags=re.IGNORECASE)
+```
+Names like "xanthine oxidase complex" now generate "xanthine oxidase" as a search variant. That variant scores 1.0 (exact name match, base_score = 0.55) plus organism and reviewed bonuses, clearing the 0.78 threshold and producing a mapped accession.
+
+**Pipeline consistency:**
+Change is entirely within `t2pw.mapping.map_ids`, which owns Stage 2 and Stage 6 ID mapping. No normalization, audit, export, or orchestrator logic was touched. The change is a query normalization improvement consistent with the pre-existing "protein" and "enzyme" stripping.
+
+---
+
+### 2026-07-08 â€” Add protein species and external identity checks to Stage 3 gate
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py` (inside `run_strict_post_normalization_gates`), `docs/change_log.md`
+
+**Error / symptom:**
+Stage 8 (Export) hard-aborted with `validate_required_pwml_contract` failures for two checks â€” `protein_missing_species` and `protein_missing_external_identity` â€” with no opportunity for the audit loop to repair the affected proteins. The specific failure: proteins (and compounds misclassified into `entities.proteins`) that had no species/organism field and no UniProt or DrugBank ID would pass Stage 3 and Stage 4 unchanged, then cause an unrecoverable abort at pre-export contract validation.
+
+**Root cause:**
+Both checks existed only in `t2pw/pwml/ir.py` (lines 1880â€“1915) as part of the hard Stage 8 pre-export semantic contract. They were absent from `run_strict_post_normalization_gates` in `process_normalizer.py`, so Stage 4 (Audit) never received them as gate failures to repair. The audit loop correctly repairs what the gate reports; the gate simply never reported these two conditions.
+
+**Fix:**
+Added two new loops inside `run_strict_post_normalization_gates`, immediately after the existing forbidden-name check loop on `entities.proteins`. Each loop iterates `entities.proteins`, skips unnamed rows (already caught by a separate check), and calls `_add_error` when the condition is unmet:
+
+1. **Species/organism check** â€” mirrors the `species` resolution chain from `ir.py`: tries `species`, `organism`, `taxonomy_id`, `species_id`, `pathbank_species_id`, `species_ref.pathbank_species_id`, `species_ref.name`, `mapping_meta.species`, `mapping_meta.species_id`.
+2. **External identity check** â€” emits an error if none of `uniprot`, `uniprot_id`, `drugbank`, `drugbank_id` are present and non-empty.
+
+Both checks use only `_safe_dict` and `_safe_list`, which are already defined in `process_normalizer.py`. No imports from `t2pw.pwml.ir` or any other stage module were added.
+
+**Pipeline consistency:**
+The fix lives entirely within `run_strict_post_normalization_gates` in `process_normalizer.py`, which owns Stage 3's gate. The gate's return type and `errors` list shape (`{"path": str, "reason": str}`) are unchanged. The `GateValidationError` raise path is untouched. By surfacing these two conditions as Stage 3 gate failures, Stage 4 now receives them in its repair context and can propose patches (species assignment, ID lookup via gap resolution) before Stage 8 runs. No cross-stage logic was introduced â€” `process_normalizer.py` mirrors the field-level logic without importing from `ir.py`.
+
+---
+
+### 2026-07-07 â€” Fix `normalize_process_actor_schema` to write `entity`/`entity_type` for enzyme actors
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py` (blocks 1c and legacy-enzyme view), `tests/test_process_normalizer.py` (updated assertions)
+
+**Error / symptom:**
+All enzyme actor dicts in `reactions[].enzymes` retained `protein_complex` (or
+`protein`) as the name field after normalization completed. `e.get("entity")`
+returned `""` for every enzyme. After a full pipeline run on the Arabidopsis
+jasmonic acid pathway, all 30 enzyme actors used `protein_complex`, while all 30
+modifier actors correctly used `entity/entity_type`.
+
+**Root cause:**
+`normalize_process_actor_schema` has two passes. Pass 1 (`_rewrite_actor_rows`)
+resolves each actor name against the protein and complex registries and writes
+the canonical name back to `protein_complex` or `protein` â€” NOT to `entity`.
+The post-process loop migrated `modifiers[]` rows to `entity/entity_type` schema,
+but had no equivalent migration for `enzymes[]`. Additionally, the "legacy view"
+reconstruction block that rebuilds `reaction["enzymes"]` from `modifiers[]`
+wrote `protein`/`protein_complex` keys rather than `entity`/`entity_type`,
+leaving enzymes in legacy field format after the schema-normalization step.
+
+**Fix:**
+1. Added block **1c** in the post-process loop (after the modifier migration and
+   the 1b entity_type correction): iterates `reaction["enzymes"]`, migrates each
+   dict from `protein_complex`/`protein`/`name` to `entity`/`entity_type`,
+   drops actors whose `entity_type` is in `dropped_enzyme_entity_types`, and
+   writes the result back to `reaction["enzymes"]`.
+2. Updated the legacy-enzyme view reconstruction (formerly writing
+   `protein_complex`/`protein` keys) to use `entity`/`entity_type` instead,
+   keeping `reaction["enzymes"]` in sync with `modifiers[]` in the canonical
+   schema.
+3. Updated six test assertions in `tests/test_process_normalizer.py` that were
+   checking for the old `protein`/`protein_complex` keys; all now verify
+   `entity` and `entity_type` and confirm legacy keys are absent.
+
+**Pipeline consistency:**
+Change is entirely within `normalize_process_actor_schema` in
+`process_normalizer.py`, which owns actor schema enforcement for Stage 3. No
+orchestrator, mapping, audit, or export logic was touched. After the fix, any
+code that calls `actor.get("entity")` works correctly for both enzyme and
+modifier actors without special-casing field names.
+
+---
+
+### 2026-07-07 â€” Wire drop_process_orphan_proteins into normalize_process_payload
 
 **Files changed:** `src/t2pw/pipeline/process_normalizer.py` (line ~3586), `docs/pipeline.md`, `docs/change_log.md`
 
@@ -264,7 +493,7 @@ by pruning.
 A prior implementation pass added the function to the module but omitted the call
 site from the pipeline sequence in `normalize_process_payload`. The change log
 stated it was wired in, but the code did not reflect this. The gap was discovered
-by reviewing the actual step sequence (lines 3584–3588) against the documented
+by reviewing the actual step sequence (lines 3584â€“3588) against the documented
 17-step list.
 
 **Fix:**
@@ -272,14 +501,14 @@ Added the call `drop_process_orphan_proteins(data, report=report)` and its
 corresponding `_checkpoint("drop_process_orphan_proteins")` between
 `drop_unresolved_complex_component_proteins` and `prune_disconnected_proteins`.
 Updated `docs/pipeline.md` to reflect the 17-step sequence and document why steps
-13–15 run in sequence (each catches a different class of orphan; a protein must
+13â€“15 run in sequence (each catches a different class of orphan; a protein must
 fail all three to be treated as an orphan by the gate).
 
 **Pipeline consistency:**
 Change is entirely within `normalize_process_payload` in `process_normalizer.py`,
 which owns all normalization steps. No orchestrator, mapping, audit, or export
-logic was touched. The three pruning steps remain independent functions — each with
-a single responsibility — rather than being merged into one function that would be
+logic was touched. The three pruning steps remain independent functions â€” each with
+a single responsibility â€” rather than being merged into one function that would be
 harder to reason about when a specific class of orphan slips through.
 
 ---
@@ -435,9 +664,9 @@ or cross-stage behavior, so runtime pipeline behavior is unchanged.
 
 ---
 
-### 2026-07-07 — Gate validation errors not shown in UI
+### 2026-07-07 â€” Gate validation errors not shown in UI
 
-**Files changed:** `src/t2pw/app/streamlit_app.py` (lines 2637–2651)
+**Files changed:** `src/t2pw/app/streamlit_app.py` (lines 2637â€“2651)
 
 **Error / symptom:**
 PWML export failed with "Hard-gate validation failed after normalization" but
@@ -456,12 +685,12 @@ and show each entry as a formatted line (path + reason) inside an expander.
 **Pipeline consistency:**
 Change is entirely within the orchestrator's display logic. No stage function
 was modified. The gate report structure is owned by `process_normalizer.py` and
-was not changed — only the UI reading of it was corrected. This is a pure
+was not changed â€” only the UI reading of it was corrected. This is a pure
 orchestrator responsibility: surface what a stage reported.
 
 ---
 
-### 2026-07-07 — Orphan proteins not pruned when not complex components
+### 2026-07-07 â€” Orphan proteins not pruned when not complex components
 
 **Files changed:** `src/t2pw/pipeline/process_normalizer.py` (after line 1639)
 

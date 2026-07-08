@@ -1520,6 +1520,49 @@ def _has_protein_identity(row: Any) -> bool:
     return False
 
 
+def _protein_external_identity(row: Any) -> str:
+    if not isinstance(row, dict):
+        return ""
+    for container in [row, _safe_dict(row.get("mapped_ids")), _safe_dict(row.get("ids")), _safe_dict(row.get("mapping_meta"))]:
+        for key in ("uniprot", "uniprot_id", "uniprot-id", "drugbank", "drugbank_id", "drugbank-id"):
+            value = _canonical(str(container.get(key, "")))
+            if value:
+                return value
+    return ""
+
+
+def _entity_species_context(row: Any) -> Any:
+    if not isinstance(row, dict):
+        return ""
+    return (
+        row.get("species")
+        or row.get("organism")
+        or row.get("taxonomy_id")
+        or row.get("species_id")
+        or row.get("pathbank_species_id")
+        or _safe_dict(row.get("species_ref")).get("pathbank_species_id")
+        or _safe_dict(row.get("species_ref")).get("name")
+        or _safe_dict(row.get("mapping_meta")).get("species")
+        or _safe_dict(row.get("mapping_meta")).get("species_id")
+    )
+
+
+def _is_generated_complex_row(row: Any) -> bool:
+    if not isinstance(row, dict):
+        return False
+    meta = _safe_dict(row.get("mapping_meta"))
+    reason = _canonical(str(row.get("generation_reason") or meta.get("generation_reason") or ""))
+    chosen_rule = _canonical(str(row.get("chosen_rule") or meta.get("chosen_rule") or ""))
+    resolution = _safe_dict(meta.get("resolution"))
+    order_step = _canonical(str(resolution.get("order_step") or ""))
+    return bool(
+        row.get("generated") is True
+        or reason == "single_protein_pathwhiz_wrapper"
+        or chosen_rule == "novel_enzyme_single_component_complex"
+        or order_step == "novel_enzyme_single_component_complex"
+    )
+
+
 def drop_unresolved_complex_component_proteins(
     payload: Dict[str, Any],
     *,
@@ -3431,6 +3474,21 @@ def run_strict_post_normalization_gates(
         if isinstance(row, dict) and _canonical(str(row.get("name", "")))
     }
     protein_registry_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+    generated_complex_norms = {
+        _normalize(_canonical(str(row.get("name", ""))))
+        for row in complexes
+        if isinstance(row, dict) and _is_generated_complex_row(row) and _canonical(str(row.get("name", "")))
+    }
+    proteins_by_norm = {
+        _normalize(_canonical(str(row.get("name", "")))): row
+        for row in proteins
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    }
+    proteins_by_uniprot = {
+        _protein_external_identity(row).casefold(): row
+        for row in proteins
+        if isinstance(row, dict) and _protein_external_identity(row)
+    }
 
     def _add_error(path: str, reason: str) -> None:
         errors.append({"path": path, "reason": reason})
@@ -3451,9 +3509,71 @@ def run_strict_post_normalization_gates(
     for idx, row in enumerate(_safe_list(entities.get("proteins"))):
         if isinstance(row, dict):
             _check_forbidden(f"/entities/proteins/{idx}/name", str(row.get("name", "")))
+    for idx, row in enumerate(_safe_list(entities.get("proteins"))):
+        if not isinstance(row, dict):
+            continue
+        pname = str(row.get("name", "")).strip()
+        if not pname:
+            continue
+        pnorm = _normalize(_canonical(pname))
+        if pnorm in generated_complex_norms or pname.casefold().endswith(" complex"):
+            _add_error(
+                f"/entities/proteins/{idx}",
+                f"Generated protein complex wrapper '{pname}' must be listed under protein_complexes, not proteins.",
+            )
+        species = _entity_species_context(row)
+        if not species:
+            _add_error(
+                f"/entities/proteins/{idx}",
+                f"Protein '{pname}' is missing species/organism.",
+            )
+        ext_id = _protein_external_identity(row)
+        if not ext_id:
+            _add_error(
+                f"/entities/proteins/{idx}",
+                f"Protein '{pname}' is missing a UniProt or DrugBank identifier.",
+            )
     for idx, row in enumerate(_safe_list(entities.get("protein_complexes"))):
-        if isinstance(row, dict):
-            _check_forbidden(f"/entities/protein_complexes/{idx}/name", str(row.get("name", "")))
+        if not isinstance(row, dict):
+            continue
+        _check_forbidden(f"/entities/protein_complexes/{idx}/name", str(row.get("name", "")))
+        if not _is_generated_complex_row(row):
+            continue
+        pcname = str(row.get("name") or idx).strip()
+        if not _entity_species_context(row):
+            _add_error(
+                f"/entities/protein_complexes/{idx}",
+                f"Generated protein complex '{pcname}' is missing species/organism.",
+            )
+        components = _safe_list(row.get("components"))
+        if not components:
+            _add_error(
+                f"/entities/protein_complexes/{idx}/components",
+                f"Generated protein complex '{pcname}' must include at least one protein component.",
+            )
+            continue
+        for cidx, component in enumerate(components):
+            cname = _component_name_from_row(component)
+            comp_identity = _protein_external_identity(component)
+            match = proteins_by_norm.get(_normalize(_canonical(cname))) if cname else None
+            if match is None and comp_identity:
+                match = proteins_by_uniprot.get(comp_identity.casefold())
+            if match is None:
+                _add_error(
+                    f"/entities/protein_complexes/{idx}/components/{cidx}",
+                    f"Generated protein complex '{pcname}' component '{cname or cidx}' does not resolve to a declared protein.",
+                )
+                continue
+            if not _entity_species_context(match):
+                _add_error(
+                    f"/entities/protein_complexes/{idx}/components/{cidx}",
+                    f"Generated protein complex '{pcname}' component protein '{match.get('name')}' is missing species/organism.",
+                )
+            if not _protein_external_identity(match):
+                _add_error(
+                    f"/entities/protein_complexes/{idx}/components/{cidx}",
+                    f"Generated protein complex '{pcname}' component protein '{match.get('name')}' is missing a UniProt or DrugBank identifier.",
+                )
 
     for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
         if not isinstance(reaction, dict):

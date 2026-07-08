@@ -446,6 +446,58 @@ def test_novel_protein_complex_with_resolved_components_does_not_need_db_identit
     assert validation["ok"], validation["errors"]
 
 
+def test_generated_single_protein_complex_requires_valid_component_not_complex_identity() -> None:
+    payload = _base_payload()
+    payload["entities"]["proteins"][0]["species"] = "Homo sapiens"
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "Hexokinase complex",
+            "species": "Homo sapiens",
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
+            "components": [
+                {"name": "Hexokinase", "stoichiometry": 1, "mapped_ids": {"uniprot": "P19367"}},
+            ],
+        }
+    ]
+    payload["processes"]["reactions"][0]["enzymes"] = [
+        {"entity": "Hexokinase complex", "entity_type": "protein_complex"}
+    ]
+
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    validation = validate_pwml_ir(ir)
+
+    codes = {err["code"] for err in contract["errors"]}
+    assert "protein_complex_missing_db_identity" not in codes
+    assert "generated_complex_component_missing_external_identity" not in codes
+    assert not report["errors"]
+    assert validation["ok"], validation["errors"]
+
+
+def test_generated_single_protein_complex_errors_when_component_protein_lacks_external_identity() -> None:
+    payload = _base_payload()
+    payload["entities"]["proteins"][0]["species"] = "Homo sapiens"
+    payload["entities"]["proteins"][0].pop("mapped_ids")
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "Hexokinase complex",
+            "species": "Homo sapiens",
+            "generated": True,
+            "generation_reason": "single_protein_pathwhiz_wrapper",
+            "components": [{"name": "Hexokinase", "stoichiometry": 1}],
+        }
+    ]
+    payload["processes"]["reactions"][0]["enzymes"] = [
+        {"entity": "Hexokinase complex", "entity_type": "protein_complex"}
+    ]
+
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+
+    codes = {err["code"] for err in contract["errors"]}
+    assert "generated_complex_component_missing_external_identity" in codes
+
+
 def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None:
     payload = _base_payload()
     payload["entities"]["protein_complexes"] = [

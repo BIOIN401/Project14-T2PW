@@ -973,3 +973,68 @@ def test_glycolysis_reaction_enzyme_complex_components_reconcile_to_local_protei
         reaction["enzymes"][0]["entity_type"] == "protein_complex"
         for reaction in mapped["processes"]["reactions"]
     )
+
+
+def test_reaction_enzyme_rewrite_creates_generated_wrapper_from_valid_protein_component() -> None:
+    mapped = {
+        "entities": {
+            "proteins": [
+                {
+                    "name": "NdmA",
+                    "species": "Pseudomonas putida",
+                    "mapped_ids": {"uniprot": "A0A000"},
+                }
+            ],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "caffeine demethylation", "enzymes": [{"protein": "NdmA"}]},
+            ]
+        },
+    }
+
+    report = _rewrite_reaction_protein_enzymes_to_complexes(
+        mapped,
+        db=None,
+        cache=_MemoryCache(),  # type: ignore[arg-type]
+        global_organism="Pseudomonas putida",
+    )
+
+    complexes = mapped["entities"]["protein_complexes"]
+    assert [row["name"] for row in complexes] == ["NdmA complex"]
+    assert complexes[0]["generated"] is True
+    assert complexes[0]["generation_reason"] == "single_protein_pathwhiz_wrapper"
+    assert complexes[0]["components"][0]["name"] == "NdmA"
+    assert complexes[0]["components"][0]["mapped_ids"]["uniprot"] == "A0A000"
+    assert mapped["processes"]["reactions"][0]["enzymes"] == [
+        {"entity": "NdmA complex", "entity_type": "protein_complex", "role": "catalyst"}
+    ]
+    assert report["summary"]["reaction_enzyme_complexes_novel"] == 1
+
+
+def test_reaction_enzyme_rewrite_does_not_generate_wrapper_without_component_identity() -> None:
+    mapped = {
+        "entities": {
+            "proteins": [{"name": "NdmA", "species": "Pseudomonas putida"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "caffeine demethylation", "enzymes": [{"protein": "NdmA"}]},
+            ]
+        },
+    }
+
+    report = _rewrite_reaction_protein_enzymes_to_complexes(
+        mapped,
+        db=None,
+        cache=_MemoryCache(),  # type: ignore[arg-type]
+        global_organism="Pseudomonas putida",
+    )
+
+    assert mapped["entities"]["protein_complexes"] == []
+    assert mapped["processes"]["reactions"][0]["enzymes"] == [{"protein": "NdmA"}]
+    assert report["summary"]["reaction_enzyme_complexes_skipped_invalid_component"] == 1
+    assert report["actions"][0]["type"] == "reaction_enzyme_complex_wrapper_skipped_invalid_component"
+    assert report["actions"][0]["missing"] == ["uniprot_or_drugbank"]

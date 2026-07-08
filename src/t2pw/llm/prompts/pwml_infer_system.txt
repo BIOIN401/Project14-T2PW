@@ -83,6 +83,7 @@ Step 2: MANDATORY REPAIR PASS — run this for every entry in BOTH Stage-1 entit
         → Add A as a modifier with role "activator" on the matching reaction.
   Only skip an actor if the text gives absolutely no information about what process it participates in.
   Locality constraint: during the modifier repair pass, only link a protein/complex to a reaction if both are supported by the same local evidence span or the same selected_example. Do not link a protein to a reaction based solely on global document co-occurrence when the document is a multi-example review.
+  Species constraint: Apply the species scoping rule from Stage 1 — only add modifiers for proteins belonging to the selected pathway organism. Do not add modifier links for proteins from other organisms mentioned in the source text.
   IMPORTANT: if both a complex and one of its subunits share a name prefix (e.g., "pyruvate dehydrogenase complex" and "pyruvate dehydrogenase"), always prefer the complex as the catalyst modifier when the text names the complex as the catalyst.
 
 Step 3: Generic examples of the repair:

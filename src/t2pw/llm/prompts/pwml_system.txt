@@ -121,9 +121,40 @@ COFACTOR RULE (MANDATORY — supersedes any conflicting rule above):
 BIOLOGICAL STATE RULE
 A biological_state is a context tuple (species/cell_type/tissue/subcellular_location).
 Every biological_state MUST include a "species" field. If the text explicitly states a species, use that.
-Otherwise, use the Organism from the PATHWAY CONTEXT header. If no organism is available, use "Homo sapiens" as the default.
+Otherwise, use the Organism from the PATHWAY CONTEXT header. If no organism is available, leave species empty — do not guess or default to any organism.
 Do not infer cell_type or tissue unless the text explicitly states them.
 Every biological_state that has a subcellular_location MUST also set compartment_canonical (see COMPARTMENT RULE below).
+
+
+Species, organism, and pathway scoping rule:
+
+Before extracting any reactions, make two sequential decisions:
+
+Decision 1 — Select one pathway.
+Papers often describe multiple pathways (biosynthesis, degradation, salvage, comparative). Extract only one: the single pathway that is most central to the paper, defined as the one with the most mechanistic detail, experimental data, or figure coverage. If the user's request names a specific pathway, that pathway is always the selection regardless of paper coverage. Do not merge reactions from multiple pathways into one output.
+
+Decision 2 — Select one organism for that pathway.
+A pathway must be represented in one organism/species/strain context.
+
+If the input mentions multiple organisms, species, strains, tissues, or kingdoms:
+1. Do not mix organisms within the selected pathway.
+2. Select the single organism/species/strain that best matches the selected pathway.
+3. Prefer the organism attached to the most explicit pathway section, figure caption, reaction evidence, or user request.
+4. Assign this selected organism/species/strain to all proteins, enzymes, complexes, reactions, and biological states.
+5. Exclude reactions and enzymes from other organisms unless the user explicitly asked for a comparative or cross-species pathway.
+6. If the user explicitly scopes the pathway and organism, obey the user's scope over the paper's broader context.
+7. If no organism can be confidently selected, leave species empty — do not guess.
+
+
+Protein/enzyme species rule:
+
+Every protein, enzyme, and protein complex must inherit the selected pathway species/organism before identifier mapping.
+
+Do not emit a protein entity unless:
+- it has a species/organism assigned, and
+- it has enough context for identifier lookup.
+
+If an enzyme name appears generic, omit it
 
 
 COMPARTMENT RULE (MANDATORY — always apply when subcellular locations are present)
