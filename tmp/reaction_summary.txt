@@ -1,32 +1,37 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: ObaG-catalysed L-Thr transaldolase reaction
-  Reactants: L-Thr [unknown], 4-nitrophenyacetaldehyde [unknown]
-  Products:  (2S,3R)-2-amino-3-hydroxy-4-(4-nitrophenyl)butanoate [unknown]
-  Modifier:  ObaG [unknown] (role=catalyst, confidence=1.0)
+REACTION 1: ObaG-catalyzed L-Thr transaldolase reaction
+  Reactants: L-Thr [unknown], 4-nitrophenyacetaldehyde (4-NPA) [unknown]
+  Products:  AHNB [unknown]
+  Modifier:  ObaG [Pseudomonas fluorescens cellular context] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: KtzT-catalysed N-N bond formation
-  Reactants: L-N5-OH-Orn [unknown]
-  Products:  L-piperazate [unknown]
-  Modifier:  KtzT [unknown] (role=catalyst, confidence=1.0)
+REACTION 2: RibC-catalyzed riboflavin phosphorylation
+  Reactants: riboflavin [unknown], ATP [unknown]
+  Products:  riboflavin-5'-phosphate [unknown]
+  Modifier:  RibC [S. davawensis cellular context] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: PntM-catalysed pentalenolactone rearrangement
-  Reactants: pentalenolactone F [unknown]
-  Products:  pentalenolactone [Streptomyces cellular state]
-  Modifier:  PntM [unknown] (role=catalyst, confidence=1.0)
+REACTION 3: RosB-catalyzed conversion of RP to AFP
+  Reactants: riboflavin-5'-phosphate [unknown], l-Glu [unknown]
+  Products:  8-demethyl-8-amino-riboflavin-5'-phosphate [unknown], 2-oxoglutarate [unknown]
+  Modifier:  RosB [S. davawensis cellular context] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: NosL-catalysed L-Trp rearrangement
-  Reactants: L-Trp [unknown]
-  Products:  3-methyl-2-indolic acid [unknown]
-  Modifier:  NosL [unknown] (role=catalyst, confidence=1.0)
+REACTION 4: Dephosphorylation of AFP
+  Reactants: 8-demethyl-8-amino-riboflavin-5'-phosphate [unknown]
+  Products:  8-demethyl-8-amino-riboflavin [unknown]
+  Modifier:  RibC [S. davawensis cellular context] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: KtzI-catalysed L-Orn hydroxylation
-  Reactants: L-Orn [unknown]
-  Products:  L-N5-OH-Orn [unknown]
-  Modifier:  KtzI [unknown] (role=catalyst, confidence=1.0)
+REACTION 5: RosA-catalyzed methylation of AF to roseoflavin
+  Reactants: 8-demethyl-8-amino-riboflavin [unknown], SAM [unknown]
+  Products:  roseoflavin [unknown]
+  Modifier:  RosA [S. davawensis cellular context] (role=catalyst, confidence=1.0)
   QA flags:  none
+
+LOCKED REACTION FILTER
+5 locked reactions found
+5 exported
+0 quarantined reactions due to unresolved compound reference

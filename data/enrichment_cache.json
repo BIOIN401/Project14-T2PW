@@ -472067,6 +472067,4053 @@
           "uniParcId": "UPI00000BE622"
         }
       }
+    },
+    "uniprot:P0AFU8": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "P0AFU8",
+        "recommended_name": "Riboflavin synthase",
+        "alternative_names": [],
+        "gene_names": [
+          "ribC",
+          "ribE"
+        ],
+        "organism": "Escherichia coli (strain K12)",
+        "taxonomy_id": "83333",
+        "function_text": "Catalyzes the dismutation of two molecules of 6,7-dimethyl-8-ribityllumazine, resulting in the formation of riboflavin and 5-amino-6-(D-ribitylamino)uracil",
+        "catalytic_activity": [
+          "2 6,7-dimethyl-8-(1-D-ribityl)lumazine + H(+) = 5-amino-6-(D-ribitylamino)uracil + riboflavin"
+        ],
+        "enzyme_commission": [
+          "2.5.1.9"
+        ],
+        "pathways": [
+          "Cofactor biosynthesis; riboflavin biosynthesis; riboflavin from 2-hydroxy-3-oxobutyl phosphate and 5-amino-6-(D-ribitylamino)uracil: step 2/2"
+        ],
+        "keywords": [
+          "3D-structure",
+          "Reference proteome",
+          "Repeat",
+          "Riboflavin biosynthesis",
+          "Transferase"
+        ],
+        "subcellular_locations": [],
+        "go_mf_ids": [
+          "GO:0004746"
+        ],
+        "go_bp_ids": [
+          "GO:0009231"
+        ],
+        "go_cellular_component_ids": [
+          "GO:0005829"
+        ],
+        "protein_existence": "1: Evidence at protein level",
+        "sequence_length": 213,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [
+          "1HZE",
+          "1I18",
+          "1I8D",
+          "1PKV"
+        ],
+        "reactome_ids": [],
+        "string_id": "511145.b1662",
+        "provenance": {
+          "source": "UniProt",
+          "query": "P0AFU8",
+          "source_url": "https://rest.uniprot.org/uniprotkb/P0AFU8.json",
+          "retrieved_at": "2026-07-10T19:50:21Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "P0AFU8",
+        "secondaryAccessions": [
+          "P29015"
+        ],
+        "uniProtkbId": "RISA_ECOLI",
+        "entryAudit": {
+          "firstPublicDate": "2005-12-20",
+          "lastAnnotationUpdateDate": "2026-06-10",
+          "lastSequenceUpdateDate": "2005-12-20",
+          "entryVersion": 143,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 4.0,
+        "organism": {
+          "scientificName": "Escherichia coli (strain K12)",
+          "taxonId": 83333,
+          "lineage": [
+            "Bacteria",
+            "Pseudomonadati",
+            "Pseudomonadota",
+            "Gammaproteobacteria",
+            "Enterobacterales",
+            "Enterobacteriaceae",
+            "Escherichia"
+          ]
+        },
+        "proteinExistence": "1: Evidence at protein level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "value": "Riboflavin synthase"
+            },
+            "shortNames": [
+              {
+                "value": "RS"
+              }
+            ],
+            "ecNumbers": [
+              {
+                "value": "2.5.1.9"
+              }
+            ]
+          }
+        },
+        "genes": [
+          {
+            "geneName": {
+              "value": "ribC"
+            },
+            "synonyms": [
+              {
+                "value": "ribE"
+              }
+            ],
+            "orderedLocusNames": [
+              {
+                "value": "b1662"
+              },
+              {
+                "value": "JW1654"
+              }
+            ]
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "9022701"
+                  }
+                ],
+                "value": "Catalyzes the dismutation of two molecules of 6,7-dimethyl-8-ribityllumazine, resulting in the formation of riboflavin and 5-amino-6-(D-ribitylamino)uracil"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "2 6,7-dimethyl-8-(1-D-ribityl)lumazine + H(+) = 5-amino-6-(D-ribitylamino)uracil + riboflavin",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:20772"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15378"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15934"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:57986"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:58201"
+                }
+              ],
+              "ecNumber": "2.5.1.9",
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000269",
+                  "source": "PubMed",
+                  "id": "9022701"
+                }
+              ]
+            }
+          },
+          {
+            "texts": [
+              {
+                "value": "Cofactor biosynthesis; riboflavin biosynthesis; riboflavin from 2-hydroxy-3-oxobutyl phosphate and 5-amino-6-(D-ribitylamino)uracil: step 2/2"
+              }
+            ],
+            "commentType": "PATHWAY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "11399071"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "12927541"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "9022701"
+                  }
+                ],
+                "value": "Homotrimer. Unlike in B.subtilis, does not interact with 6,7-dimethyl-8-ribityllumazine synthase"
+              }
+            ],
+            "commentType": "SUBUNIT"
+          }
+        ],
+        "features": [
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 213,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Riboflavin synthase",
+            "featureId": "PRO_0000068166"
+          },
+          {
+            "type": "Repeat",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 97,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Lumazine-binding 1"
+          },
+          {
+            "type": "Repeat",
+            "location": {
+              "start": {
+                "value": 98,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 195,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "Lumazine-binding 2"
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 4,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 6,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:16489"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q2YN92"
+              },
+              {
+                "evidenceCode": "ECO:0000305",
+                "source": "PubMed",
+                "id": "12927541"
+              }
+            ],
+            "ligand": {
+              "name": "2,4-dihydroxypteridine",
+              "id": "ChEBI:CHEBI:16489",
+              "label": "1"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 48,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 50,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:16489"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q2YN92"
+              },
+              {
+                "evidenceCode": "ECO:0000305",
+                "source": "PubMed",
+                "id": "12927541"
+              }
+            ],
+            "ligand": {
+              "name": "2,4-dihydroxypteridine",
+              "id": "ChEBI:CHEBI:16489",
+              "label": "2",
+              "note": "ligand shared between two trimeric partners"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 62,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 67,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:16489"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q2YN92"
+              },
+              {
+                "evidenceCode": "ECO:0000305",
+                "source": "PubMed",
+                "id": "12927541"
+              }
+            ],
+            "ligand": {
+              "name": "2,4-dihydroxypteridine",
+              "id": "ChEBI:CHEBI:16489",
+              "label": "2",
+              "note": "ligand shared between two trimeric partners"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 101,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 103,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:16489"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q2YN92"
+              }
+            ],
+            "ligand": {
+              "name": "2,4-dihydroxypteridine",
+              "id": "ChEBI:CHEBI:16489",
+              "label": "2",
+              "note": "ligand shared between two trimeric partners"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 137,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 137,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "in other chain",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:16489"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q2YN92"
+              }
+            ],
+            "ligand": {
+              "name": "2,4-dihydroxypteridine",
+              "id": "ChEBI:CHEBI:16489",
+              "label": "2",
+              "note": "ligand shared between two trimeric partners"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 146,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 148,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:16489"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q2YN92"
+              }
+            ],
+            "ligand": {
+              "name": "2,4-dihydroxypteridine",
+              "id": "ChEBI:CHEBI:16489",
+              "label": "1"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 160,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 165,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:16489"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000250",
+                "source": "UniProtKB",
+                "id": "Q2YN92"
+              }
+            ],
+            "ligand": {
+              "name": "2,4-dihydroxypteridine",
+              "id": "ChEBI:CHEBI:16489",
+              "label": "1"
+            }
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 8,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 17,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 19,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 27,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 30,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 32,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Turn",
+            "location": {
+              "start": {
+                "value": 33,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 35,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 41,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 44,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 47,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 55,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 58,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 64,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 65,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 70,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 72,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 75,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 81,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 86,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 105,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 115,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 118,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 126,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 128,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 133,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 139,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 142,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 145,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 148,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 154,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 161,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 163,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 168,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 171,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 173,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 179,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 184,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 186,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 204,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "1I8D"
+              }
+            ]
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0002",
+            "category": "Technical term",
+            "name": "3D-structure"
+          },
+          {
+            "id": "KW-1185",
+            "category": "Technical term",
+            "name": "Reference proteome"
+          },
+          {
+            "id": "KW-0677",
+            "category": "Domain",
+            "name": "Repeat"
+          },
+          {
+            "id": "KW-0686",
+            "category": "Biological process",
+            "name": "Riboflavin biosynthesis"
+          },
+          {
+            "id": "KW-0808",
+            "category": "Molecular function",
+            "name": "Transferase"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "9022701",
+              "citationType": "journal article",
+              "authors": [
+                "Eberhardt S.M.R.",
+                "Richter G.",
+                "Gimbel W.",
+                "Werner T.",
+                "Bacher A."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "9022701"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1111/j.1432-1033.1996.0712r.x"
+                }
+              ],
+              "title": "Cloning, sequencing, mapping and hyperexpression of the ribC gene coding for riboflavin synthase of Escherichia coli.",
+              "publicationDate": "1996",
+              "journal": "Eur. J. Biochem.",
+              "firstPage": "712",
+              "lastPage": "719",
+              "volume": "242"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [GENOMIC DNA]",
+              "FUNCTION",
+              "CATALYTIC ACTIVITY",
+              "SUBUNIT"
+            ],
+            "referenceComments": [
+              {
+                "value": "K12 / RR28",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 2,
+            "citation": {
+              "id": "9023191",
+              "citationType": "journal article",
+              "authors": [
+                "Hensel M.",
+                "Shea J.E.",
+                "Baeumler A.J.",
+                "Gleeson C.",
+                "Blattner F.R.",
+                "Holden D.W."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "9023191"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1128/jb.179.4.1105-1111.1997"
+                }
+              ],
+              "title": "Analysis of the boundaries of Salmonella pathogenicity island 2 and the corresponding chromosomal region of Escherichia coli K-12.",
+              "publicationDate": "1997",
+              "journal": "J. Bacteriol.",
+              "firstPage": "1105",
+              "lastPage": "1111",
+              "volume": "179"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "K12 / MG1655 / ATCC 47076",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 3,
+            "citation": {
+              "id": "9097039",
+              "citationType": "journal article",
+              "authors": [
+                "Aiba H.",
+                "Baba T.",
+                "Fujita K.",
+                "Hayashi K.",
+                "Inada T.",
+                "Isono K.",
+                "Itoh T.",
+                "Kasai H.",
+                "Kashimoto K.",
+                "Kimura S.",
+                "Kitakawa M.",
+                "Kitagawa M.",
+                "Makino K.",
+                "Miki T.",
+                "Mizobuchi K.",
+                "Mori H.",
+                "Mori T.",
+                "Motomura K.",
+                "Nakade S.",
+                "Nakamura Y.",
+                "Nashimoto H.",
+                "Nishio Y.",
+                "Oshima T.",
+                "Saito N.",
+                "Sampei G.",
+                "Seki Y.",
+                "Sivasundaram S.",
+                "Tagami H.",
+                "Takeda J.",
+                "Takemoto K.",
+                "Takeuchi Y.",
+                "Wada C.",
+                "Yamamoto Y.",
+                "Horiuchi T."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "9097039"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1093/dnares/3.6.363"
+                }
+              ],
+              "title": "A 570-kb DNA sequence of the Escherichia coli K-12 genome corresponding to the 28.0-40.1 min region on the linkage map.",
+              "publicationDate": "1996",
+              "journal": "DNA Res.",
+              "firstPage": "363",
+              "lastPage": "377",
+              "volume": "3"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "K12 / W3110 / ATCC 27325 / DSM 5911",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 4,
+            "citation": {
+              "id": "9278503",
+              "citationType": "journal article",
+              "authors": [
+                "Blattner F.R.",
+                "Plunkett G. III",
+                "Bloch C.A.",
+                "Perna N.T.",
+                "Burland V.",
+                "Riley M.",
+                "Collado-Vides J.",
+                "Glasner J.D.",
+                "Rode C.K.",
+                "Mayhew G.F.",
+                "Gregor J.",
+                "Davis N.W.",
+                "Kirkpatrick H.A.",
+                "Goeden M.A.",
+                "Rose D.J.",
+                "Mau B.",
+                "Shao Y."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "9278503"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1126/science.277.5331.1453"
+                }
+              ],
+              "title": "The complete genome sequence of Escherichia coli K-12.",
+              "publicationDate": "1997",
+              "journal": "Science",
+              "firstPage": "1453",
+              "lastPage": "1462",
+              "volume": "277"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "K12 / MG1655 / ATCC 47076",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 5,
+            "citation": {
+              "id": "16738553",
+              "citationType": "journal article",
+              "authors": [
+                "Hayashi K.",
+                "Morooka N.",
+                "Yamamoto Y.",
+                "Fujita K.",
+                "Isono K.",
+                "Choi S.",
+                "Ohtsubo E.",
+                "Baba T.",
+                "Wanner B.L.",
+                "Mori H.",
+                "Horiuchi T."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "16738553"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1038/msb4100049"
+                }
+              ],
+              "title": "Highly accurate genome sequences of Escherichia coli K-12 strains MG1655 and W3110.",
+              "publicationDate": "2006",
+              "journal": "Mol. Syst. Biol.",
+              "firstPage": "E1",
+              "lastPage": "E5",
+              "volume": "2"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "K12 / W3110 / ATCC 27325 / DSM 5911",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 6,
+            "citation": {
+              "id": "11399071",
+              "citationType": "journal article",
+              "authors": [
+                "Truffault V.",
+                "Coles M.",
+                "Diercks T.",
+                "Abelmann K.",
+                "Eberhardt S.",
+                "Luttgen H.",
+                "Bacher A.",
+                "Kessler H."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "11399071"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1006/jmbi.2001.4683"
+                }
+              ],
+              "title": "The solution structure of the N-terminal domain of riboflavin synthase.",
+              "publicationDate": "2001",
+              "journal": "J. Mol. Biol.",
+              "firstPage": "949",
+              "lastPage": "960",
+              "volume": "309"
+            },
+            "referencePositions": [
+              "STRUCTURE BY NMR OF 1-97 IN COMPLEX WITH RIBOFLAVIN"
+            ]
+          },
+          {
+            "referenceNumber": 7,
+            "citation": {
+              "id": "11377200",
+              "citationType": "journal article",
+              "authors": [
+                "Liao D.I.",
+                "Wawrzak Z.",
+                "Calabrese J.C.",
+                "Viitanen P.V.",
+                "Jordan D.B."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "11377200"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1016/s0969-2126(01)00600-1"
+                }
+              ],
+              "title": "Crystal structure of riboflavin synthase.",
+              "publicationDate": "2001",
+              "journal": "Structure",
+              "firstPage": "399",
+              "lastPage": "408",
+              "volume": "9"
+            },
+            "referencePositions": [
+              "X-RAY CRYSTALLOGRAPHY (2.0 ANGSTROMS)"
+            ]
+          },
+          {
+            "referenceNumber": 8,
+            "citation": {
+              "id": "12927541",
+              "citationType": "journal article",
+              "authors": [
+                "Meining W.",
+                "Eberhardt S.",
+                "Bacher A.",
+                "Ladenstein R."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "12927541"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1016/s0022-2836(03)00844-1"
+                }
+              ],
+              "title": "The structure of the N-terminal domain of riboflavin synthase in complex with riboflavin at 2.6A resolution.",
+              "publicationDate": "2003",
+              "journal": "J. Mol. Biol.",
+              "firstPage": "1053",
+              "lastPage": "1063",
+              "volume": "331"
+            },
+            "referencePositions": [
+              "X-RAY CRYSTALLOGRAPHY (2.60 ANGSTROMS) OF 1-97 IN COMPLEX WITH RIBOFLAVIN"
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "X69109",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "CAA48861.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "U68703",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AAB47940.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "U00096",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AAC74734.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "AP009048",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "BAA15429.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "PIR",
+            "id": "S28526",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "S28526"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "NP_416179.1",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "NC_000913.3"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "WP_000493947.1",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "NZ_CP009789.1"
+              }
+            ]
+          },
+          {
+            "database": "PDB",
+            "id": "1HZE",
+            "properties": [
+              {
+                "key": "Method",
+                "value": "NMR"
+              },
+              {
+                "key": "Resolution",
+                "value": "-"
+              },
+              {
+                "key": "Chains",
+                "value": "A/B=1-97"
+              }
+            ]
+          },
+          {
+            "database": "PDB",
+            "id": "1I18",
+            "properties": [
+              {
+                "key": "Method",
+                "value": "NMR"
+              },
+              {
+                "key": "Resolution",
+                "value": "-"
+              },
+              {
+                "key": "Chains",
+                "value": "A/B=1-97"
+              }
+            ]
+          },
+          {
+            "database": "PDB",
+            "id": "1I8D",
+            "properties": [
+              {
+                "key": "Method",
+                "value": "X-ray"
+              },
+              {
+                "key": "Resolution",
+                "value": "2.00 A"
+              },
+              {
+                "key": "Chains",
+                "value": "A/B/C=1-213"
+              }
+            ]
+          },
+          {
+            "database": "PDB",
+            "id": "1PKV",
+            "properties": [
+              {
+                "key": "Method",
+                "value": "X-ray"
+              },
+              {
+                "key": "Resolution",
+                "value": "2.60 A"
+              },
+              {
+                "key": "Chains",
+                "value": "A/B=1-97"
+              }
+            ]
+          },
+          {
+            "database": "PDBsum",
+            "id": "1HZE",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PDBsum",
+            "id": "1I18",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PDBsum",
+            "id": "1I8D",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PDBsum",
+            "id": "1PKV",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BMRB",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BioGRID",
+            "id": "4261654",
+            "properties": [
+              {
+                "key": "Interactions",
+                "value": "52"
+              }
+            ]
+          },
+          {
+            "database": "DIP",
+            "id": "DIP-47865N",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "FunCoup",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Number of interactors",
+                "value": "785"
+              }
+            ]
+          },
+          {
+            "database": "IntAct",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Interactions",
+                "value": "3"
+              }
+            ]
+          },
+          {
+            "database": "STRING",
+            "id": "511145.b1662",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "DrugBank",
+            "id": "DB00140",
+            "properties": [
+              {
+                "key": "GenericName",
+                "value": "Riboflavin"
+              }
+            ]
+          },
+          {
+            "database": "jPOST",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PaxDb",
+            "id": "511145-b1662",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "EnsemblBacteria",
+            "id": "AAC74734",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "AAC74734"
+              },
+              {
+                "key": "GeneId",
+                "value": "b1662"
+              }
+            ]
+          },
+          {
+            "database": "GeneID",
+            "id": "93775817",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "GeneID",
+            "id": "945848",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "ecj:JW1654",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "eco:b1662",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "ecoc:C3026_09535",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PATRIC",
+            "id": "fig|1411691.4.peg.595",
+            "properties": [
+              {
+                "key": "GeneDesignation",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "EchoBASE",
+            "id": "EB1378",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "eggNOG",
+            "id": "COG0307",
+            "properties": [
+              {
+                "key": "ToxonomicScope",
+                "value": "Bacteria"
+              }
+            ]
+          },
+          {
+            "database": "HOGENOM",
+            "id": "CLU_034388_0_1_6",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "InParanoid",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "OMA",
+            "id": "IGGHAMS",
+            "properties": [
+              {
+                "key": "Fingerprint",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "OrthoDB",
+            "id": "9788537at2",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PhylomeDB",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BioCyc",
+            "id": "EcoCyc:RIBOFLAVIN-SYN-MONOMER",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BioCyc",
+            "id": "MetaCyc:RIBOFLAVIN-SYN-MONOMER",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BRENDA",
+            "id": "2.5.1.9",
+            "properties": [
+              {
+                "key": "OrganismId",
+                "value": "2026"
+              }
+            ]
+          },
+          {
+            "database": "SABIO-RK",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "UniPathway",
+            "id": "UPA00275",
+            "properties": [
+              {
+                "key": "RectionId",
+                "value": "UER00405"
+              }
+            ]
+          },
+          {
+            "database": "EvolutionaryTrace",
+            "id": "P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PRO",
+            "id": "PR:P0AFU8",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "Proteomes",
+            "id": "UP000000625",
+            "properties": [
+              {
+                "key": "Component",
+                "value": "Chromosome"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0005829",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "C:cytosol"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IDA:EcoCyc"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000314",
+                "source": "PubMed",
+                "id": "18304323"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0004746",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:riboflavin synthase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IDA:EcoCyc"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000314",
+                "source": "PubMed",
+                "id": "9022701"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0009231",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:riboflavin biosynthetic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IDA:EcoCyc"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000314",
+                "source": "PubMed",
+                "id": "9022701"
+              }
+            ]
+          },
+          {
+            "database": "CDD",
+            "id": "cd00402",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Riboflavin_synthase_like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "2.40.30.20:FF:000003",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Riboflavin synthase, alpha subunit"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "FunFam",
+            "id": "2.40.30.20:FF:000005",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Riboflavin synthase, alpha subunit"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "2.40.30.20",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "-"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "2"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR023366",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "ATP_synth_asu-like_sf"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR001783",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Lumazine-bd"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR026017",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Lumazine-bd_dom"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR017938",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Riboflavin_synthase-like_b-brl"
+              }
+            ]
+          },
+          {
+            "database": "NCBIfam",
+            "id": "NF006767",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PRK09289.1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "NCBIfam",
+            "id": "NF009566",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PRK13020.1"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "NCBIfam",
+            "id": "TIGR00187",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "ribE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR21098:SF0",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "RIBOFLAVIN SYNTHASE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR21098",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "RIBOFLAVIN SYNTHASE ALPHA CHAIN"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00677",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Lum_binding"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "2"
+              }
+            ]
+          },
+          {
+            "database": "PIRSF",
+            "id": "PIRSF000498",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Riboflavin_syn_A"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF63380",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Riboflavin synthase domain-like"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "2"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS51177",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "LUMAZINE_BIND"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "2"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MFTGIVQGTAKLVSIDEKPNFRTHVVELPDHMLDGLETGASVAHNGCCLTVTEINGNHVSFDLMKETLRITNLGDLKVGDWVNVERAAKFSDEIGGHLMSGHIMTTAEVAKILTSENNRQIWFKVQDSQLMKYILYKGFIGIDGISLTVGEVTPTRFCVHLIPETLERTTLGKKKLGARVNIEIDPQTQAVVDTVERVLAARENAMNQPGTEA",
+          "length": 213,
+          "molWeight": 23445,
+          "crc64": "CD1C7E40E4AC88B6",
+          "md5": "BA36EC06B78CD67AC2924910795C560C"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "CATALYTIC ACTIVITY": 1,
+            "PATHWAY": 1,
+            "SUBUNIT": 1
+          },
+          "countByFeatureType": {
+            "Chain": 1,
+            "Repeat": 2,
+            "Binding site": 7,
+            "Beta strand": 12,
+            "Helix": 7,
+            "Turn": 1
+          },
+          "uniParcId": "UPI0000113130"
+        }
+      }
+    },
+    "uniprot:K4RFM2": {
+      "status": "ok",
+      "parsed": {
+        "status": "ok",
+        "uniprot_id": "K4RFM2",
+        "recommended_name": "8-amino-8-demethylriboflavin N,N-dimethyltransferase",
+        "alternative_names": [
+          "AF dimethyltransferase",
+          "N,N-8-amino-8-demethyl-D-riboflavin dimethyltransferase"
+        ],
+        "gene_names": [
+          "rosA"
+        ],
+        "organism": "Streptomyces davaonensis (strain DSM 101723 / JCM 4913 / KCC S-0913 / 768)",
+        "taxonomy_id": "1214101",
+        "function_text": "Catalyzes the S-adenosyl methionine-dependent conversion of 8-amino-8-demethyl-D-riboflavin (AF) into 8-methylamino-8-demethyl-D-riboflavin (MAF) and roseoflavin (RoF), the last two steps in the biosynthesis of the antibiotic roseoflavin",
+        "catalytic_activity": [
+          "8-amino-8-demethylriboflavin + 2 S-adenosyl-L-methionine = roseoflavin + 2 S-adenosyl-L-homocysteine + 2 H(+)"
+        ],
+        "enzyme_commission": [
+          "2.1.1.343"
+        ],
+        "pathways": [
+          "Antibiotic biosynthesis"
+        ],
+        "keywords": [
+          "3D-structure",
+          "Antibiotic biosynthesis",
+          "Methyltransferase",
+          "Reference proteome",
+          "S-adenosyl-L-methionine",
+          "Transferase"
+        ],
+        "subcellular_locations": [],
+        "go_mf_ids": [
+          "GO:0008171",
+          "GO:0046983"
+        ],
+        "go_bp_ids": [
+          "GO:0017000",
+          "GO:0032259"
+        ],
+        "go_cellular_component_ids": [],
+        "protein_existence": "1: Evidence at protein level",
+        "sequence_length": 347,
+        "transmembrane_regions_count": 0,
+        "signal_peptide": {
+          "present": false,
+          "region": ""
+        },
+        "pdb_ids": [
+          "4D7K"
+        ],
+        "reactome_ids": [],
+        "string_id": "1214101.BN159_8032",
+        "provenance": {
+          "source": "UniProt",
+          "query": "K4RFM2",
+          "source_url": "https://rest.uniprot.org/uniprotkb/K4RFM2.json",
+          "retrieved_at": "2026-07-10T19:50:21Z"
+        }
+      },
+      "raw": {
+        "entryType": "UniProtKB reviewed (Swiss-Prot)",
+        "primaryAccession": "K4RFM2",
+        "secondaryAccessions": [
+          "E7BBN5"
+        ],
+        "uniProtkbId": "ROSA_STRDJ",
+        "entryAudit": {
+          "firstPublicDate": "2020-06-17",
+          "lastAnnotationUpdateDate": "2026-01-28",
+          "lastSequenceUpdateDate": "2013-01-09",
+          "entryVersion": 60,
+          "sequenceVersion": 1
+        },
+        "annotationScore": 4.0,
+        "organism": {
+          "scientificName": "Streptomyces davaonensis (strain DSM 101723 / JCM 4913 / KCC S-0913 / 768)",
+          "taxonId": 1214101,
+          "lineage": [
+            "Bacteria",
+            "Bacillati",
+            "Actinomycetota",
+            "Actinomycetes",
+            "Kitasatosporales",
+            "Streptomycetaceae",
+            "Streptomyces"
+          ]
+        },
+        "proteinExistence": "1: Evidence at protein level",
+        "proteinDescription": {
+          "recommendedName": {
+            "fullName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000305"
+                }
+              ],
+              "value": "8-amino-8-demethylriboflavin N,N-dimethyltransferase"
+            },
+            "ecNumbers": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21911488"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "26913589"
+                  }
+                ],
+                "value": "2.1.1.343"
+              }
+            ]
+          },
+          "alternativeNames": [
+            {
+              "fullName": {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "21911488"
+                  }
+                ],
+                "value": "AF dimethyltransferase"
+              }
+            },
+            {
+              "fullName": {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000303",
+                    "source": "PubMed",
+                    "id": "21911488"
+                  }
+                ],
+                "value": "N,N-8-amino-8-demethyl-D-riboflavin dimethyltransferase"
+              }
+            }
+          ]
+        },
+        "genes": [
+          {
+            "geneName": {
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000303",
+                  "source": "PubMed",
+                  "id": "21911488"
+                }
+              ],
+              "value": "rosA"
+            },
+            "orfNames": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000312",
+                    "source": "EMBL",
+                    "id": "CCK32410.1"
+                  }
+                ],
+                "value": "BN159_8032"
+              }
+            ]
+          }
+        ],
+        "comments": [
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21911488"
+                  },
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "26913589"
+                  }
+                ],
+                "value": "Catalyzes the S-adenosyl methionine-dependent conversion of 8-amino-8-demethyl-D-riboflavin (AF) into 8-methylamino-8-demethyl-D-riboflavin (MAF) and roseoflavin (RoF), the last two steps in the biosynthesis of the antibiotic roseoflavin"
+              }
+            ],
+            "commentType": "FUNCTION"
+          },
+          {
+            "commentType": "CATALYTIC ACTIVITY",
+            "reaction": {
+              "name": "8-amino-8-demethylriboflavin + 2 S-adenosyl-L-methionine = roseoflavin + 2 S-adenosyl-L-homocysteine + 2 H(+)",
+              "reactionCrossReferences": [
+                {
+                  "database": "Rhea",
+                  "id": "RHEA:51944"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:15378"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:57856"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:59789"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:136518"
+                },
+                {
+                  "database": "ChEBI",
+                  "id": "CHEBI:136521"
+                }
+              ],
+              "ecNumber": "2.1.1.343",
+              "evidences": [
+                {
+                  "evidenceCode": "ECO:0000269",
+                  "source": "PubMed",
+                  "id": "21911488"
+                },
+                {
+                  "evidenceCode": "ECO:0000269",
+                  "source": "PubMed",
+                  "id": "26913589"
+                }
+              ]
+            }
+          },
+          {
+            "commentType": "BIOPHYSICOCHEMICAL PROPERTIES",
+            "kineticParameters": {
+              "maximumVelocities": [
+                {
+                  "velocity": 0.58,
+                  "unit": "umol/min/mg",
+                  "enzyme": "enzyme with AF as substrate",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21911488"
+                    }
+                  ]
+                }
+              ],
+              "michaelisConstants": [
+                {
+                  "constant": 57.7,
+                  "unit": "uM",
+                  "substrate": "AF",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21911488"
+                    }
+                  ]
+                },
+                {
+                  "constant": 4.0,
+                  "unit": "uM",
+                  "substrate": "AF",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "26913589"
+                    }
+                  ]
+                },
+                {
+                  "constant": 28.6,
+                  "unit": "uM",
+                  "substrate": "S-adenosyl-L-methionine",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21911488"
+                    }
+                  ]
+                },
+                {
+                  "constant": 70.0,
+                  "unit": "uM",
+                  "substrate": "S-adenosyl-L-methionine",
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "26913589"
+                    }
+                  ]
+                }
+              ],
+              "note": {
+                "texts": [
+                  {
+                    "evidences": [
+                      {
+                        "evidenceCode": "ECO:0000269",
+                        "source": "PubMed",
+                        "id": "21911488"
+                      }
+                    ],
+                    "value": "kcat is 22.0 min(-1) with AF as substrate. kcat is 14.8 min(-1) with S-adenosyl-L-methionine as substrate."
+                  }
+                ]
+              }
+            },
+            "phDependence": {
+              "texts": [
+                {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21911488"
+                    }
+                  ],
+                  "value": "Optimum pH is 8.8."
+                }
+              ]
+            },
+            "temperatureDependence": {
+              "texts": [
+                {
+                  "evidences": [
+                    {
+                      "evidenceCode": "ECO:0000269",
+                      "source": "PubMed",
+                      "id": "21911488"
+                    }
+                  ],
+                  "value": "Optimum temperature is 52 degrees Celsius."
+                }
+              ]
+            }
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21911488"
+                  }
+                ],
+                "value": "Antibiotic biosynthesis"
+              }
+            ],
+            "commentType": "PATHWAY"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "26913589"
+                  }
+                ],
+                "value": "Homodimer"
+              }
+            ],
+            "commentType": "SUBUNIT"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000269",
+                    "source": "PubMed",
+                    "id": "21911488"
+                  }
+                ],
+                "value": "Inactivation of the gene leads to a strain that synthesizes AF but not MAF or RoF"
+              }
+            ],
+            "commentType": "DISRUPTION PHENOTYPE"
+          },
+          {
+            "texts": [
+              {
+                "evidences": [
+                  {
+                    "evidenceCode": "ECO:0000255",
+                    "source": "PROSITE-ProRule",
+                    "id": "PRU01020"
+                  }
+                ],
+                "value": "Belongs to the class I-like SAM-binding methyltransferase superfamily. Cation-independent O-methyltransferase family"
+              }
+            ],
+            "commentType": "SIMILARITY"
+          }
+        ],
+        "features": [
+          {
+            "type": "Chain",
+            "location": {
+              "start": {
+                "value": 1,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 347,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "8-amino-8-demethylriboflavin N,N-dimethyltransferase",
+            "featureId": "PRO_0000449812"
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 209,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 209,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:59789"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255",
+                "source": "PROSITE-ProRule",
+                "id": "PRU01020"
+              }
+            ],
+            "ligand": {
+              "name": "S-adenosyl-L-methionine",
+              "id": "ChEBI:CHEBI:59789"
+            }
+          },
+          {
+            "type": "Binding site",
+            "location": {
+              "start": {
+                "value": 235,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 237,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "featureCrossReferences": [
+              {
+                "database": "ChEBI",
+                "id": "CHEBI:59789"
+              }
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0000255",
+                "source": "PROSITE-ProRule",
+                "id": "PRU01020"
+              }
+            ],
+            "ligand": {
+              "name": "S-adenosyl-L-methionine",
+              "id": "ChEBI:CHEBI:59789"
+            }
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 13,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 35,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 38,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 41,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Turn",
+            "location": {
+              "start": {
+                "value": 42,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 44,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 49,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 56,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 60,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 72,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 75,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 79,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Turn",
+            "location": {
+              "start": {
+                "value": 80,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 82,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 83,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 86,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 88,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 91,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 102,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 107,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 111,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 118,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 120,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 126,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 131,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 134,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 135,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 137,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 139,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 144,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 146,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 148,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 149,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 165,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 167,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 171,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 176,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 178,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 180,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 185,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 191,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 199,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 200,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 202,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 204,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 209,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 211,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 213,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 214,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 223,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Turn",
+            "location": {
+              "start": {
+                "value": 227,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 229,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 230,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 235,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Turn",
+            "location": {
+              "start": {
+                "value": 237,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 239,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 246,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 252,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 259,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 270,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 280,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 285,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 293,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 305,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Helix",
+            "location": {
+              "start": {
+                "value": 313,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 322,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 325,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 333,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Turn",
+            "location": {
+              "start": {
+                "value": 334,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 336,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          },
+          {
+            "type": "Beta strand",
+            "location": {
+              "start": {
+                "value": 337,
+                "modifier": "EXACT"
+              },
+              "end": {
+                "value": 344,
+                "modifier": "EXACT"
+              }
+            },
+            "description": "",
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007829",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          }
+        ],
+        "keywords": [
+          {
+            "id": "KW-0002",
+            "category": "Technical term",
+            "name": "3D-structure"
+          },
+          {
+            "id": "KW-0045",
+            "category": "Biological process",
+            "name": "Antibiotic biosynthesis"
+          },
+          {
+            "id": "KW-0489",
+            "category": "Molecular function",
+            "name": "Methyltransferase"
+          },
+          {
+            "id": "KW-1185",
+            "category": "Technical term",
+            "name": "Reference proteome"
+          },
+          {
+            "id": "KW-0949",
+            "category": "Ligand",
+            "name": "S-adenosyl-L-methionine"
+          },
+          {
+            "id": "KW-0808",
+            "category": "Molecular function",
+            "name": "Transferase"
+          }
+        ],
+        "references": [
+          {
+            "referenceNumber": 1,
+            "citation": {
+              "id": "21911488",
+              "citationType": "journal article",
+              "authors": [
+                "Jankowitsch F.",
+                "Kuehm C.",
+                "Kellner R.",
+                "Kalinowski J.",
+                "Pelzer S.",
+                "Macheroux P.",
+                "Mack M."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "21911488"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1074/jbc.m111.292300"
+                }
+              ],
+              "title": "A novel N,N-8-amino-8-demethyl-D-riboflavin dimethyltransferase (RosA) catalyzing the two terminal steps of roseoflavin biosynthesis in Streptomyces davawensis.",
+              "publicationDate": "2011",
+              "journal": "J. Biol. Chem.",
+              "firstPage": "38275",
+              "lastPage": "38285",
+              "volume": "286"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [GENOMIC DNA]",
+              "IDENTIFICATION BY MASS SPECTROMETRY",
+              "FUNCTION",
+              "CATALYTIC ACTIVITY",
+              "BIOPHYSICOCHEMICAL PROPERTIES",
+              "PATHWAY",
+              "DISRUPTION PHENOTYPE"
+            ],
+            "referenceComments": [
+              {
+                "value": "DSM 101723 / JCM 4913 / KCC S-0913 / 768",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 2,
+            "citation": {
+              "id": "23043000",
+              "citationType": "journal article",
+              "authors": [
+                "Jankowitsch F.",
+                "Schwarz J.",
+                "Ruckert C.",
+                "Gust B.",
+                "Szczepanowski R.",
+                "Blom J.",
+                "Pelzer S.",
+                "Kalinowski J.",
+                "Mack M."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "23043000"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1128/jb.01592-12"
+                }
+              ],
+              "title": "Genome sequence of the bacterium Streptomyces davawensis JCM 4913 and heterologous production of the unique antibiotic roseoflavin.",
+              "publicationDate": "2012",
+              "journal": "J. Bacteriol.",
+              "firstPage": "6818",
+              "lastPage": "6827",
+              "volume": "194"
+            },
+            "referencePositions": [
+              "NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]"
+            ],
+            "referenceComments": [
+              {
+                "value": "DSM 101723 / JCM 4913 / KCC S-0913 / 768",
+                "type": "STRAIN"
+              }
+            ]
+          },
+          {
+            "referenceNumber": 3,
+            "citation": {
+              "id": "26913589",
+              "citationType": "journal article",
+              "authors": [
+                "Tongsook C.",
+                "Uhl M.K.",
+                "Jankowitsch F.",
+                "Mack M.",
+                "Gruber K.",
+                "Macheroux P."
+              ],
+              "citationCrossReferences": [
+                {
+                  "database": "PubMed",
+                  "id": "26913589"
+                },
+                {
+                  "database": "DOI",
+                  "id": "10.1111/febs.13690"
+                }
+              ],
+              "title": "Structural and kinetic studies on RosA, the enzyme catalysing the methylation of 8-demethyl-8-amino-d-riboflavin to the antibiotic roseoflavin.",
+              "publicationDate": "2016",
+              "journal": "FEBS J.",
+              "firstPage": "1531",
+              "lastPage": "1549",
+              "volume": "283"
+            },
+            "referencePositions": [
+              "X-RAY CRYSTALLOGRAPHY (2.22 ANGSTROMS)",
+              "FUNCTION",
+              "CATALYTIC ACTIVITY",
+              "BIOPHYSICOCHEMICAL PROPERTIES",
+              "SUBUNIT"
+            ],
+            "evidences": [
+              {
+                "evidenceCode": "ECO:0007744",
+                "source": "PDB",
+                "id": "4D7K"
+              }
+            ]
+          }
+        ],
+        "uniProtKBCrossReferences": [
+          {
+            "database": "EMBL",
+            "id": "FR750395",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "CBY84436.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "EMBL",
+            "id": "HE971709",
+            "properties": [
+              {
+                "key": "ProteinId",
+                "value": "CCK32410.1"
+              },
+              {
+                "key": "Status",
+                "value": "-"
+              },
+              {
+                "key": "MoleculeType",
+                "value": "Genomic_DNA"
+              }
+            ]
+          },
+          {
+            "database": "RefSeq",
+            "id": "WP_015662736.1",
+            "properties": [
+              {
+                "key": "NucleotideSequenceId",
+                "value": "NC_020504.1"
+              }
+            ]
+          },
+          {
+            "database": "PDB",
+            "id": "4D7K",
+            "properties": [
+              {
+                "key": "Method",
+                "value": "X-ray"
+              },
+              {
+                "key": "Resolution",
+                "value": "2.22 A"
+              },
+              {
+                "key": "Chains",
+                "value": "A/B/C/D/E/F=1-347"
+              }
+            ]
+          },
+          {
+            "database": "PDBsum",
+            "id": "4D7K",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "AlphaFoldDB",
+            "id": "K4RFM2",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "SMR",
+            "id": "K4RFM2",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "STRING",
+            "id": "1214101.BN159_8032",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "KEGG",
+            "id": "sdv:BN159_8032",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "PATRIC",
+            "id": "fig|1214101.3.peg.8127",
+            "properties": [
+              {
+                "key": "GeneDesignation",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "eggNOG",
+            "id": "COG2226",
+            "properties": [
+              {
+                "key": "ToxonomicScope",
+                "value": "Bacteria"
+              }
+            ]
+          },
+          {
+            "database": "HOGENOM",
+            "id": "CLU_005533_12_0_11",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "OrthoDB",
+            "id": "4145676at2",
+            "properties": [
+              {
+                "key": "Description",
+                "value": "-"
+              }
+            ]
+          },
+          {
+            "database": "BRENDA",
+            "id": "2.1.1.343",
+            "properties": [
+              {
+                "key": "OrganismId",
+                "value": "9909"
+              }
+            ]
+          },
+          {
+            "database": "Proteomes",
+            "id": "UP000008043",
+            "properties": [
+              {
+                "key": "Component",
+                "value": "Chromosome"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0008171",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:O-methyltransferase activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0046983",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "F:protein dimerization activity"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:InterPro"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0017000",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:antibiotic biosynthetic process"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "GO",
+            "id": "GO:0032259",
+            "properties": [
+              {
+                "key": "GoTerm",
+                "value": "P:methylation"
+              },
+              {
+                "key": "GoEvidenceType",
+                "value": "IEA:UniProtKB-KW"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.10.287.1350",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "-"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "3.40.50.150",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Vaccinia Virus protein VP39"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Gene3D",
+            "id": "1.10.10.10",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Winged helix-like DNA-binding domain superfamily/Winged helix DNA-binding domain"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR016461",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "COMT-like"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR001077",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "COMT_C"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR012967",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "COMT_dimerisation"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR029063",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "SAM-dependent_MTases_sf"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR036388",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "WH-like_DNA-bd_sf"
+              }
+            ]
+          },
+          {
+            "database": "InterPro",
+            "id": "IPR036390",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "WH_DNA-bd_sf"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR43712:SF2",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "O-METHYLTRANSFERASE CICE"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PANTHER",
+            "id": "PTHR43712",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "PUTATIVE (AFU_ORTHOLOGUE AFUA_4G14580)-RELATED"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF08100",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Dimerisation"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "Pfam",
+            "id": "PF00891",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Methyltransf_2"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PIRSF",
+            "id": "PIRSF005739",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "O-mtase"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF53335",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "S-adenosyl-L-methionine-dependent methyltransferases"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "SUPFAM",
+            "id": "SSF46785",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "Winged helix' DNA-binding domain"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          },
+          {
+            "database": "PROSITE",
+            "id": "PS51683",
+            "properties": [
+              {
+                "key": "EntryName",
+                "value": "SAM_OMT_II"
+              },
+              {
+                "key": "MatchStatus",
+                "value": "1"
+              }
+            ]
+          }
+        ],
+        "sequence": {
+          "value": "MRPEPTEHPERTAAQRLYQYNVDLKVAFVLYAVAKLHLPDLLADGPRTTADLAAATGSDPSRLRRLLRAAAGADALREVPEDSFELAPMGDLLRSGHPRSMRGMTTFFAEPDVLAAYGDLVESVRTGVPAFQLRHREPLYDFLARPQHKEVRDEFDAAMVEFGQYFADDFLTSFDFGRFTRFADIGGGRGQFLAGVLTAVPSSTGVLVDGPAVAASAHKFLASQNLTERVEVRIGDFFDVLPTGCDAYVLRGVLEDWADADAVRLLVRIRQAMGDAPEARLLILDSVIGETGELGKVLDLDMLVLVEGEHRTRAQWDDLLARAGFDIVGIHPAGDVWAVIECRGTAG",
+          "length": 347,
+          "molWeight": 37936,
+          "crc64": "B121C5B441D2E37D",
+          "md5": "C59AAB58826B77EB8F2574D14B3223A0"
+        },
+        "extraAttributes": {
+          "countByCommentType": {
+            "FUNCTION": 1,
+            "CATALYTIC ACTIVITY": 1,
+            "BIOPHYSICOCHEMICAL PROPERTIES": 1,
+            "PATHWAY": 1,
+            "SUBUNIT": 1,
+            "DISRUPTION PHENOTYPE": 1,
+            "SIMILARITY": 1
+          },
+          "countByFeatureType": {
+            "Chain": 1,
+            "Binding site": 2,
+            "Helix": 20,
+            "Turn": 5,
+            "Beta strand": 11
+          },
+          "uniParcId": "UPI0001F39F7D"
+        }
+      }
     }
   },
   "compounds": {
@@ -485589,6 +489636,214 @@
         "id": "C05944",
         "source_url": "https://rest.kegg.jp/get/cpd:C05944",
         "retrieved_at": "2026-07-10T19:22:43Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:17015": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17015",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-07-10T19:50:25Z"
+      }
+    },
+    "hmdb:HMDB0000244": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000244",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000244",
+        "retrieved_at": "2026-07-10T19:50:26Z"
+      }
+    },
+    "kegg:C00255": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00255",
+      "primary_name": "Riboflavin",
+      "synonyms": [
+        "Riboflavin",
+        "Lactoflavin",
+        "7,8-Dimethyl-10-ribitylisoalloxazine",
+        "Vitamin B2"
+      ],
+      "formula": "C17H20N4O6",
+      "mass_monoisotopic": 376.1383,
+      "mass_average": 376.36,
+      "pathways": [
+        "Riboflavin metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Biosynthesis of cofactors",
+        "ABC transporters",
+        "Vitamin digestion and absorption"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Vitamins and cofactors",
+        "Vitamins",
+        "Water-soluble vitamins",
+        "C00255 Riboflavin (Vitamin B2)",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D00050)]",
+        "A ALIMENTARY TRACT AND METABOLISM",
+        "A11 VITAMINS",
+        "A11H OTHER PLAIN VITAMIN PREPARATIONS",
+        "A11HA Other plain vitamin preparations",
+        "A11HA04 Riboflavin (vit B2)",
+        "D00050 Riboflavin (JP19/USP/INN)",
+        "S SENSORY ORGANS",
+        "S01 OPHTHALMOLOGICALS",
+        "S01X OTHER OPHTHALMOLOGICALS",
+        "S01XA Other ophthalmologicals",
+        "S01XA26 Riboflavin",
+        "Classification of Japanese OTC drugs [BR:br08313(D00050)]",
+        "Nourishing tonics and health supplements",
+        "36 Vitamin B2 based drugs",
+        "40 Vitamin B2B6 based drugs",
+        "43 Vitamin containing supplements",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00050)]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Riboflavin",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00050)]",
+        "Chemicals",
+        "D00050 Riboflavin",
+        "D00050 Riboflavin powder"
+      ],
+      "cross_references": {
+        "kegg_id": "C00255",
+        "pubchem_id": "3554",
+        "chebi_id": "17015"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00255",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00255",
+        "retrieved_at": "2026-07-10T19:50:27Z",
+        "status": "ok"
+      }
+    },
+    "kegg:C21805": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C21805",
+      "primary_name": "8-Amino-8-demethylriboflavin 5'-phosphate",
+      "synonyms": [
+        "8-Amino-8-demethylriboflavin 5'-phosphate",
+        "8-Demethyl-8-aminoriboflavin 5'-phosphate"
+      ],
+      "formula": "C16H20N5O9P",
+      "mass_monoisotopic": 457.0999,
+      "mass_average": 457.33,
+      "pathways": [
+        "Biosynthesis of various antibiotics",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C21805"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C21805",
+        "source_url": "https://rest.kegg.jp/get/cpd:C21805",
+        "retrieved_at": "2026-07-10T19:50:27Z",
+        "status": "ok"
+      }
+    },
+    "kegg:C21646": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C21646",
+      "primary_name": "8-Amino-8-demethylriboflavin",
+      "synonyms": [
+        "8-Amino-8-demethylriboflavin"
+      ],
+      "formula": "C16H19N5O6",
+      "mass_monoisotopic": 377.1335,
+      "mass_average": 377.35,
+      "pathways": [
+        "Biosynthesis of various antibiotics",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C21646",
+        "pubchem_id": "350078223"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C21646",
+        "source_url": "https://rest.kegg.jp/get/cpd:C21646",
+        "retrieved_at": "2026-07-10T19:50:28Z",
+        "status": "ok"
+      }
+    },
+    "chebi:CHEBI:18385": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:18385",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-07-10T19:50:32Z"
+      }
+    },
+    "hmdb:HMDB0000235": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000235",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000235",
+        "retrieved_at": "2026-07-10T19:50:32Z"
+      }
+    },
+    "kegg:C00378": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00378",
+      "primary_name": "Thiamine",
+      "synonyms": [
+        "Thiamine",
+        "Thiamin",
+        "Vitamin B1",
+        "Aneurin",
+        "Antiberiberi factor"
+      ],
+      "formula": "C12H17N4OS",
+      "mass_monoisotopic": 265.1123,
+      "mass_average": 265.36,
+      "pathways": [
+        "Thiamine metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of cofactors",
+        "ABC transporters",
+        "Sulfur relay system",
+        "Vitamin digestion and absorption"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Vitamins and cofactors",
+        "Vitamins",
+        "Water-soluble vitamins",
+        "C00378 Thiamine (Vitamin B1)"
+      ],
+      "cross_references": {
+        "kegg_id": "C00378",
+        "pubchem_id": "3668",
+        "chebi_id": "18385"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00378",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00378",
+        "retrieved_at": "2026-07-10T19:50:32Z",
         "status": "ok"
       }
     }
