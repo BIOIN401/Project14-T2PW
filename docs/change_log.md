@@ -9,6 +9,62 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### FIXED - Stage 8 PWML IR: direct protein enzyme wrapper lost source protein metadata
+
+**Files changed:** `src/t2pw/pwml/ir.py`, `tests/test_process_normalizer.py`
+
+**Error / symptom:**
+The PWML IR builder has a last-resort safety net that wraps direct protein enzyme actors
+as generated single-protein protein_complex records. That wrapper check was running after
+entity rows had been converted into IR records, but those records did not preserve `species`
+context and `_protein_external_id` did not inspect nested `mapped_ids`. A valid protein
+catalyst could therefore be reported as missing species/UniProt and remain as a bare protein
+enzyme in the IR, triggering `reaction_enzyme_must_be_protein_complex`.
+
+**Fix:**
+IR entity records now preserve `species`, `taxonomy_id`, and `species_ref`, and the protein
+external-ID helper reads UniProt/DrugBank IDs from `mapped_ids`, `ids`, and `mapping_meta`.
+The existing direct-protein catalyst tests now verify that valid proteins are wrapped into
+single-component protein_complex enzymes.
+
+---
+
+### FIXED - Stage 3 alias normalization: protein_complex component metadata was flattened
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py`, `tests/test_process_normalizer.py`
+
+**Error / symptom:**
+`canonicalize_same_as_aliases` rewrote `protein_complexes[].components` to plain strings.
+That preserved the component name but discarded structured fields such as `stoichiometry`,
+`mapped_ids`, `uniprot`, and `pathbank_protein_id`. Generated PathWhiz wrapper complexes
+could then lose the exact data needed by Stage 3/Stage 8 contract checks.
+
+**Fix:**
+Component alias rewriting now preserves dict component rows and rewrites only the component
+name-bearing field. The same pass also reads component names with `_component_name_from_row`
+instead of stringifying dict components.
+
+---
+
+### FIXED - Stage 3 gate: generated protein_complex components missing stoichiometry
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py`, `tests/test_process_normalizer.py`
+
+**Error / symptom:**
+Generated single-protein PathWhiz wrapper complexes could pass Stage 3 with a component record
+that resolved to a declared protein and had species/external identity, but omitted explicit
+`stoichiometry`. Stage 8 and the SPMDB schema require structured protein_complex components
+to carry positive stoichiometry, so the payload failed later during required PWML contract
+validation.
+
+**How the fix is consistent with the pipeline design:**
+Stage 3 already hard-gates generated protein_complex component resolution, species, and external
+identity. The fix adds the matching positive `stoichiometry` requirement to that same generated
+component loop, so repair/audit sees the issue before export. A focused regression test covers
+`NdmA complex` with a resolved `NdmA` component missing `stoichiometry`.
+
+---
+
 ### FIXED — Stage 3 gate: `canonicalize_same_as_aliases` leaked protein_complex names into `entities.proteins`
 
 **File changed:** `src/t2pw/pipeline/process_normalizer.py` — `canonicalize_same_as_aliases`

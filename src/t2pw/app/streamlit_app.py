@@ -3104,6 +3104,22 @@ if st.session_state.get("pipeline_ready"):
                             st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
                             _pa["final_stage3_gate_report"] = final_gate
                             st.error("Mapped pathway still fails the Stage 3 gate. Refinement review was not opened.")
+                            _gate_errors_for_display = _safe_list(final_gate.get("errors"))
+                            with st.expander(
+                                f"Why Stage 3 failed ({len(_gate_errors_for_display)} error(s))",
+                                expanded=True,
+                            ):
+                                if _gate_errors_for_display:
+                                    for _gate_err in _gate_errors_for_display:
+                                        if isinstance(_gate_err, dict):
+                                            st.markdown(
+                                                f"- `{_gate_err.get('path', '')}` — {_gate_err.get('reason', _gate_err)}"
+                                            )
+                                        else:
+                                            st.markdown(f"- {_gate_err}")
+                                else:
+                                    st.write("No itemized errors were returned; showing full gate report below.")
+                                st.json(final_gate)
                         else:
                             st.session_state.refinement_gate_errors = []
                             initialize_refinement_review_state(final_mapped_payload, mapping_report)

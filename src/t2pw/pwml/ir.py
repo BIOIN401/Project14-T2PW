@@ -79,18 +79,23 @@ def _first_nonempty(row: Dict[str, Any], keys: Sequence[str]) -> Any:
 
 
 def _protein_external_id(row: Dict[str, Any]) -> str:
-    value = _first_nonempty(
-        row,
-        [
-            "uniprot",
-            "uniprot_id",
-            "uniprot-id",
-            "drugbank",
-            "drugbank_id",
-            "drugbank-id",
-        ],
-    )
-    return _canonical(value)
+    keys = [
+        "uniprot",
+        "uniprot_id",
+        "uniprot-id",
+        "drugbank",
+        "drugbank_id",
+        "drugbank-id",
+    ]
+    value = _first_nonempty(row, keys)
+    if value not in (None, ""):
+        return _canonical(value)
+    for nested_key in ("mapped_ids", "ids", "mapping_meta"):
+        nested = _safe_dict(row.get(nested_key))
+        value = _first_nonempty(nested, keys)
+        if value not in (None, ""):
+            return _canonical(value)
+    return ""
 
 
 def _entity_species_context(row: Dict[str, Any]) -> Any:
@@ -405,6 +410,9 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
         "provenance",
         "source_refs",
         "evidence",
+        "species",
+        "taxonomy_id",
+        "species_ref",
         "organism",
         "species_id",
         "pathbank_species_id",

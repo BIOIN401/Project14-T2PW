@@ -1491,6 +1491,35 @@ def _component_name_from_row(row: Any) -> str:
     return ""
 
 
+def _rewrite_component_rows(
+    rows: List[Any],
+    rewrite_name: Callable[[str], str],
+) -> List[Any]:
+    rewritten_rows: List[Any] = []
+    seen_norms: Set[str] = set()
+    for row in rows:
+        name = _component_name_from_row(row)
+        if not name:
+            continue
+        rewritten_name = rewrite_name(name)
+        norm = _normalize(rewritten_name)
+        if not rewritten_name or not norm or norm in seen_norms:
+            continue
+        seen_norms.add(norm)
+        if isinstance(row, dict):
+            updated = deepcopy(row)
+            for field in ["name", "protein", "entity", "protein_name"]:
+                if _canonical(str(updated.get(field, ""))):
+                    updated[field] = rewritten_name
+                    break
+            else:
+                updated["name"] = rewritten_name
+            rewritten_rows.append(updated)
+        else:
+            rewritten_rows.append(rewritten_name)
+    return rewritten_rows
+
+
 def _has_protein_identity(row: Any) -> bool:
     if not isinstance(row, dict):
         return False
@@ -1851,17 +1880,12 @@ def canonicalize_same_as_aliases(
         if not isinstance(row, dict):
             continue
         complex_name = _canonical(str(row.get("name", "")))
-        components = _dedupe_preserve(
-            [
-                component
-                for component in (_component_name_from_row(part) for part in _safe_list(row.get("components")))
-                if component
-            ]
-        )
+        components = _rewrite_component_rows(_safe_list(row.get("components")), _canonical)
         if not components and complex_name and ":" not in complex_name:
             components = [complex_name]
-        if len(components) == 1:
-            _ensure_protein(components[0], payload, rep)
+        component_names = [_component_name_from_row(component) for component in components]
+        if len(component_names) == 1 and not _is_known_complex_name(component_names[0], payload):
+            _ensure_protein(component_names[0], payload, rep)
         row["name"] = complex_name
         if components:
             row["components"] = components
@@ -1881,7 +1905,7 @@ def canonicalize_same_as_aliases(
             _remember_display(name)
             if rows is complexes:
                 for comp in _safe_list(row.get("components")):
-                    comp_name = _canonical(str(comp))
+                    comp_name = _component_name_from_row(comp)
                     comp_norm = _normalize(comp_name)
                     if comp_norm:
                         entity_registry_norms.add(comp_norm)
@@ -2065,15 +2089,10 @@ def canonicalize_same_as_aliases(
         updated = dict(row)
         updated["name"] = _rewrite_token(str(updated.get("name", "")))
         comps = _safe_list(updated.get("components"))
-        updated["components"] = _dedupe_preserve(
-            [
-                rewritten_part
-                for rewritten_part in [_rewrite_name(_component_name_from_row(part)) for part in comps]
-                if rewritten_part
-            ]
-        )
-        if len(updated["components"]) == 1:
-            _ensure_protein(updated["components"][0], payload, rep)
+        updated["components"] = _rewrite_component_rows(comps, _rewrite_name)
+        component_names = [_component_name_from_row(component) for component in updated["components"]]
+        if len(component_names) == 1 and not _is_known_complex_name(component_names[0], payload):
+            _ensure_protein(component_names[0], payload, rep)
         rewritten_complexes.append(updated)
     complexes[:] = rewritten_complexes
 
@@ -3499,6 +3518,19 @@ def run_strict_post_normalization_gates(
         if _normalize(_canonical(token)) in forbidden_norms:
             _add_error(path, f"Forbidden complex reference detected: {token}")
 
+    def _has_positive_component_stoichiometry(component: Any) -> bool:
+        if isinstance(component, str):
+            return True
+        if not isinstance(component, dict):
+            return False
+        value = component.get("stoichiometry")
+        if value in (None, ""):
+            return False
+        try:
+            return int(value) >= 1
+        except (TypeError, ValueError):
+            return False
+
     if int(stats.get("n_plus_tokens_remaining", 0)) != 0:
         _add_error(
             "/normalization_stats/n_plus_tokens_remaining",
@@ -3557,6 +3589,11 @@ def run_strict_post_normalization_gates(
         for cidx, component in enumerate(components):
             cname = _component_name_from_row(component)
             comp_identity = _protein_external_identity(component)
+            if not _has_positive_component_stoichiometry(component):
+                _add_error(
+                    f"/entities/protein_complexes/{idx}/components/{cidx}",
+                    f"Generated protein complex '{pcname}' component '{cname or cidx}' is missing positive stoichiometry.",
+                )
             match = proteins_by_norm.get(_normalize(_canonical(cname))) if cname else None
             if match is None and comp_identity:
                 match = proteins_by_uniprot.get(comp_identity.casefold())

@@ -54,8 +54,18 @@ def _thyroid_payload() -> dict:
                 {"name": "liothyronine"},
                 {"name": "thyroxine"},
             ],
-            "proteins": [{"name": "thyroid peroxidase"}, {"name": "pendrin"}],
-            "protein_complexes": [],
+            "proteins": [
+                {"name": "thyroid peroxidase", "species": "Homo sapiens", "uniprot": "P07202"},
+                {"name": "pendrin", "species": "Homo sapiens", "uniprot": "O43511"},
+                {"name": "thyroglobulin", "species": "Homo sapiens", "uniprot": "P01266"},
+            ],
+            "protein_complexes": [
+                {
+                    "name": "thyroid_peroxidase_complex",
+                    "species": "Homo sapiens",
+                    "components": [{"name": "thyroid peroxidase", "stoichiometry": 1}],
+                }
+            ],
             "subcellular_locations": [{"name": "follicular lumen"}, {"name": "bloodstream"}],
         },
         "biological_states": [
@@ -532,7 +542,7 @@ def test_generic_explicit_composite_still_materializes_complex() -> None:
     payload = {
         "entities": {
             "compounds": [{"name": "ligand x"}],
-            "proteins": [{"name": "carrier protein"}],
+            "proteins": [{"name": "carrier protein", "species": "Homo sapiens", "uniprot": "Q00001"}],
             "protein_complexes": [],
             "subcellular_locations": [{"name": "cytosol"}],
         },
@@ -730,7 +740,10 @@ def _alias_payload(
     return {
         "entities": {
             "compounds": [{"name": "substrate"}, {"name": "product"}],
-            "proteins": [{"name": name} for name in proteins],
+            "proteins": [
+                {"name": name, "species": "Homo sapiens", "uniprot": f"Q{idx:05d}"}
+                for idx, name in enumerate(proteins, start=1)
+            ],
             "protein_complexes": protein_complexes or [],
             "subcellular_locations": [{"name": "cytosol"}],
         },
@@ -1187,6 +1200,142 @@ def test_stage3_gate_accepts_generated_complex_with_resolved_uniprot_component()
     gate = run_strict_post_normalization_gates(payload, enforce_all_proteins_connected=False)
 
     assert gate["errors"] == []
+
+
+def test_stage3_gate_rejects_generated_complex_component_without_stoichiometry() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {"name": "NdmA", "species": "Pseudomonas putida", "mapped_ids": {"uniprot": "A0A000"}},
+            ],
+            "protein_complexes": [
+                {
+                    "name": "NdmA complex",
+                    "species": "Pseudomonas putida",
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                    "components": [
+                        {"name": "NdmA", "mapped_ids": {"uniprot": "A0A000"}},
+                    ],
+                }
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "caffeine demethylation",
+                    "enzymes": [{"entity": "NdmA complex", "entity_type": "protein_complex"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    with pytest.raises(GateValidationError) as excinfo:
+        run_strict_post_normalization_gates(payload, enforce_all_proteins_connected=False)
+
+    errors = excinfo.value.details["errors"]
+    assert any(
+        "Generated protein complex 'NdmA complex' component 'NdmA' is missing positive stoichiometry"
+        in err["reason"]
+        for err in errors
+    )
+
+
+def test_stage3_single_protein_complex_component_dict_survives_alias_canonicalization() -> None:
+    def _payload() -> dict:
+        return {
+            "entities": {
+                "species": [{"name": "Pseudomonas putida", "pathwhiz_id": 1}],
+                "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+                "compounds": [{"name": "caffeine"}, {"name": "theobromine"}],
+                "proteins": [
+                    {
+                        "name": "NdmA",
+                        "species": "Pseudomonas putida",
+                        "mapped_ids": {"uniprot": "A0A000"},
+                    }
+                ],
+                "protein_complexes": [
+                    {
+                        "name": "NdmA complex",
+                        "species": "Pseudomonas putida",
+                        "generated": True,
+                        "generation_reason": "single_protein_pathwhiz_wrapper",
+                        "components": [
+                            {
+                                "name": "Ndm alpha",
+                                "stoichiometry": 1,
+                                "uniprot": "A0A000",
+                                "pathbank_protein_id": 123,
+                                "mapped_ids": {"uniprot": "A0A000", "pathbank": "PB123"},
+                            }
+                        ],
+                    }
+                ],
+            },
+            "biological_states": [
+                {
+                    "name": "cyto_state",
+                    "species": "Pseudomonas putida",
+                    "subcellular_location": "cytosol",
+                }
+            ],
+            "element_locations": {
+                "compound_locations": [
+                    {"compound": "caffeine", "biological_state": "cyto_state"},
+                    {"compound": "theobromine", "biological_state": "cyto_state"},
+                ],
+                "protein_locations": [{"protein": "NdmA", "biological_state": "cyto_state"}],
+            },
+            "processes": {
+                "reactions": [
+                    {
+                        "name": "caffeine demethylation",
+                        "inputs": ["caffeine"],
+                        "outputs": ["theobromine"],
+                        "biological_state": "cyto_state",
+                        "enzymes": [{"entity": "NdmA complex", "entity_type": "protein_complex"}],
+                        "modifiers": [{"entity": "NdmA", "entity_type": "protein", "role": "catalyst"}],
+                    }
+                ],
+                "transports": [],
+                "interactions": [
+                    {"entity_1": "NdmA", "entity_2": "Ndm alpha", "relationship": "SAME_AS"}
+                ],
+            },
+        }
+
+    def _assert_component_preserved(payload: dict) -> None:
+        complex_row = next(
+            row
+            for row in payload["entities"]["protein_complexes"]
+            if row.get("name") == "NdmA complex"
+        )
+        assert complex_row["components"] == [
+            {
+                "name": "NdmA",
+                "stoichiometry": 1,
+                "uniprot": "A0A000",
+                "pathbank_protein_id": 123,
+                "mapped_ids": {"uniprot": "A0A000", "pathbank": "PB123"},
+            }
+        ]
+        protein_names = {
+            row.get("name")
+            for row in payload["entities"]["proteins"]
+            if isinstance(row, dict)
+        }
+        assert "NdmA complex" not in protein_names
+
+    canonicalized = _payload()
+    canonicalize_same_as_aliases(canonicalized)
+    _assert_component_preserved(canonicalized)
+
+    normalized, report = normalize_process_payload(_payload())
+    _assert_component_preserved(normalized)
+    assert report["gate"]["ok"] is True
 
 
 def test_stage3_gate_rejects_generated_complex_wrapper_under_proteins() -> None:
