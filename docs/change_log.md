@@ -9,6 +9,72 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-14 — Prefer a confident Stage 6 DB complex match's components over stale extraction data
+
+**Files changed:** `src/t2pw/mapping/map_ids.py`, `tests/test_map_ids.py`,
+`docs/pipeline.md`, `docs/change_log.md`.
+
+**Error / symptom:** Stage 8 export error `Component[0] in complex 'pyruvate
+dehydrogenase complex' is missing stoichiometry.` (and `[1]`, `[2]`) — for a
+complex that Stage 6 had, in the same run, successfully matched to a real
+PathBank record. This surfaced immediately after the 2026-07-14 "NAME-BASED
+COMPLEX RULE" fix (below) started correctly routing this entity into
+`entities.protein_complexes` for the first time; it had never reached this
+code path before because it used to be misfiled under `proteins[]` with no
+`components` at all.
+
+**Root cause:** two upstream stages compound into a gap Stage 6 didn't cover.
+Stage 1 extracts `components` as plain subunit-name strings (its schema has no
+concept of stoichiometry). Stage 4a's gap-resolver
+(`gap_resolver.py:_resolve_declared_complex_components`) tries to attach a
+protein identity to each subunit by name-matching against
+`entities.proteins`; when a subunit was never separately extracted as its own
+protein row (true here — the paper only names E1/E2/E3 as complex members),
+that lookup fails, but the function *still* unconditionally upgrades the
+plain string into a dict (`{"name": ...}`) and writes it back, flagging
+`missing_stoichiometry` with `resolution_owner: "audit"`. Stage 4's
+deterministic audit rule can only backfill stoichiometry from an *explicit*
+per-subunit count stated in the evidence text (its precedent case: "three
+NdmC, three NdmD..."); this paper's evidence never states a count, so nothing
+fills it in. Stage 6 then DB-matches the complex to a real PathBank record
+(`pathbank_complex_id`) whose components carry real, correct stoichiometry —
+but the mapping loop in `map_payload` was hard-coded to keep
+`complex_row`'s existing (by-then broken) components whenever they were
+non-empty, discarding the DB match's authoritative data outright.
+
+**Fix:** in `map_payload`'s per-complex loop, when the Stage 6 mapping result
+has `status == "mapped"` — a confident match via direct
+`pathbank_protein_complex_id`, name+species, or resolved-component-species —
+the DB-hydrated `result["components"]` (already reconciled against local
+`entities.proteins` earlier in the same loop iteration) now overwrites
+`complex_row["components"]` outright. Every other outcome (`unmapped`,
+`ambiguous`, `novel`, and the PathBank `Unknown`-sentinel fallback, all of
+which carry a non-`"mapped"` status) is unaffected — extraction/gap-resolver
+components are still preferred there, since there is no more-authoritative
+DB version to prefer.
+
+**Pipeline consistency:** this stays entirely inside `map_ids.py`, the sole
+Stage 6 module. The two upstream gaps that let a stoichiometry-less dict
+component reach Stage 6 in the first place (Stage 4a always promoting
+strings to dicts without a stoichiometry fallback, and Stage 4's audit only
+backfilling from explicit textual counts) were deliberately left untouched —
+this fix does not reach into Stage 3, 4, or 4a, per "stages are independent."
+It only changes which of two already-available component lists Stage 6
+prefers when it has legitimate grounds (a confident DB identity) to prefer
+one over the other.
+
+**Verification:** `tests/test_map_ids.py` gained
+`test_confident_db_complex_match_overrides_stale_extraction_components`
+(a complex with plain-string, unresolvable components and a mocked confident
+DB match ends up with the DB's stoichiometry-bearing components) and
+`test_unconfident_db_complex_match_keeps_extraction_components` (an
+ambiguous/unmapped result leaves the original extraction components
+untouched — current behavior preserved). No existing test asserted the old
+precedence (checked every test that mocks Stage 6 complex-matching). Full
+suite re-run: 398 passing.
+
+---
+
 ### 2026-07-14 — Stop LLM extraction from routing "X complex" entities into proteins[]
 
 **Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `docs/pipeline.md`,

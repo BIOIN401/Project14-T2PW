@@ -694,6 +694,143 @@ def test_map_payload_can_invalidate_cache_keys(tmp_path: Path) -> None:
     assert result["report"]["summary"]["proteins_total"] == 0
 
 
+def _pdh_complex_payload() -> Dict[str, Any]:
+    """A protein complex whose plain-string components have no matching standalone
+    entities.proteins rows (mirrors the pyruvate dehydrogenase complex gap-resolver
+    bug: Stage 4a upgrades these to dicts with no stoichiometry, and nothing upstream
+    can backfill it)."""
+    return {
+        "entities": {
+            "proteins": [],
+            "compounds": [],
+            "protein_complexes": [
+                {
+                    "name": "pyruvate dehydrogenase complex",
+                    "species": "Homo sapiens",
+                    "components": [
+                        "pyruvate dehydrogenase E1",
+                        "dihydrolipoamide acetyltransferase E2",
+                        "dihydrolipoamide dehydrogenase E3",
+                    ],
+                }
+            ],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+
+def _pdh_db_hydrated_components() -> List[Dict[str, Any]]:
+    return [
+        {
+            "name": "Pyruvate dehydrogenase E1",
+            "stoichiometry": 1,
+            "pathbank_protein_id": 101,
+            "mapped_ids": {"pathbank_protein_id": "101"},
+        },
+        {
+            "name": "Dihydrolipoamide acetyltransferase E2",
+            "stoichiometry": 1,
+            "pathbank_protein_id": 102,
+            "mapped_ids": {"pathbank_protein_id": "102"},
+        },
+        {
+            "name": "Dihydrolipoamide dehydrogenase E3",
+            "stoichiometry": 1,
+            "pathbank_protein_id": 103,
+            "mapped_ids": {"pathbank_protein_id": "103"},
+        },
+    ]
+
+
+def _pdh_mapped_db_result() -> Dict[str, Any]:
+    return {
+        "status": "mapped",
+        "provider": "PathBankDB",
+        "source": "db",
+        "name": "Pyruvate dehydrogenase complex",
+        "pathbank_complex_id": 555,
+        "pathbank_protein_complex_id": 555,
+        "species_id": 1,
+        "components": _pdh_db_hydrated_components(),
+        "confidence": 0.95,
+        "chosen_rule": "pathbank_protein_complex_id",
+        "candidates": [],
+        "issues": [],
+        "resolution": {"status": "matched", "order_step": "pathbank_protein_complex_id"},
+    }
+
+
+def test_confident_db_complex_match_overrides_stale_extraction_components(tmp_path: Path) -> None:
+    """Regression test: when Stage 6 achieves a genuine, confident DB match for a
+    protein complex, its DB-hydrated components (with real stoichiometry) must win
+    over whatever incomplete extraction/Stage-4a-derived components the payload's
+    own complex row already carries."""
+    payload = _pdh_complex_payload()
+
+    with patch(
+        "t2pw.mapping.map_ids.hydrate_species_references",
+        return_value={"hydrated": 0, "matched": 0, "novel": 0},
+    ), patch(
+        "t2pw.mapping.map_ids._map_complex_with_strategy",
+        return_value=_pdh_mapped_db_result(),
+    ):
+        result = map_payload(
+            payload,
+            cache_path=tmp_path / "id_mapping_cache.json",
+            id_source="api",
+            use_cache=False,
+        )
+
+    complex_row = result["payload"]["entities"]["protein_complexes"][0]
+    assert complex_row["components"] == _pdh_db_hydrated_components()
+    assert all("stoichiometry" in component for component in complex_row["components"])
+    assert complex_row["pathbank_complex_id"] == 555
+    assert result["report"]["summary"]["protein_complexes_mapped"] == 1
+
+
+def test_unconfident_db_complex_match_keeps_extraction_components(tmp_path: Path) -> None:
+    """Negative case: when Stage 6 does not achieve a confident DB match (status
+    stays unmapped/ambiguous/novel), the original extraction-derived components on
+    the payload's own complex row must be left untouched (current behavior)."""
+    payload = _pdh_complex_payload()
+
+    def _ambiguous_complex_result(**_: Any) -> Dict[str, Any]:
+        return {
+            "status": "unmapped",
+            "reason": "ambiguous",
+            "provider": "PathBankDB",
+            "source": "db",
+            "confidence": 0.4,
+            "chosen_rule": "resolved_component_species",
+            "candidates": [],
+            "components": [],
+            "issues": [],
+            "resolution": {"status": "ambiguous", "issue": "ambiguous_component_complex_species"},
+        }
+
+    with patch(
+        "t2pw.mapping.map_ids.hydrate_species_references",
+        return_value={"hydrated": 0, "matched": 0, "novel": 0},
+    ), patch(
+        "t2pw.mapping.map_ids._map_complex_with_strategy",
+        side_effect=_ambiguous_complex_result,
+    ):
+        result = map_payload(
+            payload,
+            cache_path=tmp_path / "id_mapping_cache.json",
+            id_source="api",
+            use_cache=False,
+        )
+
+    complex_row = result["payload"]["entities"]["protein_complexes"][0]
+    assert complex_row["components"] == [
+        "pyruvate dehydrogenase E1",
+        "dihydrolipoamide acetyltransferase E2",
+        "dihydrolipoamide dehydrogenase E3",
+    ]
+    assert result["report"]["summary"]["protein_complexes_mapped"] == 0
+
+
 def test_uniprot_mapping_uses_parent_alias_for_nocb_domain() -> None:
     client = _NocBDomainUniProtClient()
 

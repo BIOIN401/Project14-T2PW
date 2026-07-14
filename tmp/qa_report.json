@@ -1,25 +1,97 @@
 {
   "summary": {
-    "total_species": 78,
-    "total_reactions": 32,
-    "completeness_score": 0.145
+    "total_species": 40,
+    "total_reactions": 13,
+    "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "dihydroxyacetone phosphate",
+        "entity": "acetyl-CoA",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "glycerol 3-phosphate",
+        "entity": "oxaloacetate",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pyruvate dehydrogenase kinase 1",
+        "entity": "citrate",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pyruvate dehydrogenase phosphatase 1",
+        "entity": "isocitrate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "alpha-ketoglutarate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "succinyl-CoA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "succinate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "fumarate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "malate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyruvate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NAD+",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "FAD",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "FADH2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "CO2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "CoA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ATP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ADP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Ca2+",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "glutamine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "glutamate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ammonia",
         "reason": "no subcellular location recorded"
       },
       {
@@ -27,93 +99,91 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "NADP",
+        "entity": "citrate synthase",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "GDP",
+        "entity": "aconitase 2",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "cytochrome C reduced",
+        "entity": "isocitrate dehydrogenase 3",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "fatty acyl-CoA",
+        "entity": "succinyl-CoA synthetase",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Ca2+",
+        "entity": "fumarate hydratase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "malate dehydrogenase 2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PDK (pyruvate dehydrogenase kinase)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PDP (pyruvate dehydrogenase phosphatase)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyruvate carboxylase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ATP-citrate lyase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "glutaminase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "glutamate dehydrogenase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "pyruvate dehydrogenase complex",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "oxoglutarate dehydrogenase complex",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "succinate dehydrogenase complex",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "mitochondrial pyruvate carrier",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "SLC25A1",
         "reason": "no subcellular location recorded"
       }
     ],
-    "missing_modifiers": [
-      {
-        "reaction": "glutaminase reaction",
-        "reason": "reactant list includes known cofactors"
-      },
-      {
-        "reaction": "acetate to acetyl-CoA",
-        "reason": "reactant list includes known cofactors"
-      },
-      {
-        "reaction": "propionyl-CoA to succinyl-CoA",
-        "reason": "reactant list includes known cofactors"
-      },
-      {
-        "reaction": "OAA to phosphoenolpyruvate",
-        "reason": "reactant list includes known cofactors"
-      },
-      {
-        "reaction": "2-hydroxyglutarate production from αKG",
-        "reason": "reactant list includes known cofactors"
-      },
-      {
-        "reaction": "ubiquinone reduction by complex I",
-        "reason": "reactant list includes known cofactors"
-      },
-      {
-        "reaction": "ubiquinone reduction by complex II",
-        "reason": "reactant list includes known cofactors"
-      }
-    ],
+    "missing_modifiers": [],
     "possible_complexes": [
       {
         "entity": "pyruvate dehydrogenase complex",
         "reason": "name suggests a complex or subunit"
       },
       {
-        "entity": "succinate dehydrogenase complex",
+        "entity": "oxoglutarate dehydrogenase complex",
         "reason": "name suggests a complex or subunit"
       },
       {
-        "entity": "oxoglutarate dehydrogenase complex",
+        "entity": "succinate dehydrogenase complex",
         "reason": "name suggests a complex or subunit"
       }
     ],
     "transport_like_reactions": [],
-    "orphan_nodes": [
-      {
-        "entity": "coenzyme A",
-        "degree": 0
-      },
-      {
-        "entity": "NADP+",
-        "degree": 0
-      },
-      {
-        "entity": "carnitine acetyltransferase I",
-        "degree": 0
-      },
-      {
-        "entity": "carnitine acetyltransferase II",
-        "degree": 0
-      },
-      {
-        "entity": "pyruvate dehydrogenase phosphatase 2",
-        "degree": 0
-      }
-    ],
+    "orphan_nodes": [],
     "missing_ids": [
       {
         "entity": "acetyl-CoA",
@@ -152,7 +222,7 @@
         "type": "compound"
       },
       {
-        "entity": "CO2",
+        "entity": "pyruvate",
         "type": "compound"
       },
       {
@@ -172,7 +242,11 @@
         "type": "compound"
       },
       {
-        "entity": "GTP",
+        "entity": "CO2",
+        "type": "compound"
+      },
+      {
+        "entity": "CoA",
         "type": "compound"
       },
       {
@@ -184,35 +258,7 @@
         "type": "compound"
       },
       {
-        "entity": "pyruvate",
-        "type": "compound"
-      },
-      {
-        "entity": "lactate",
-        "type": "compound"
-      },
-      {
-        "entity": "coenzyme A",
-        "type": "compound"
-      },
-      {
-        "entity": "CoA-SH",
-        "type": "compound"
-      },
-      {
-        "entity": "NADP+",
-        "type": "compound"
-      },
-      {
-        "entity": "NADPH",
-        "type": "compound"
-      },
-      {
-        "entity": "glutamate",
-        "type": "compound"
-      },
-      {
-        "entity": "aspartate",
+        "entity": "Ca2+",
         "type": "compound"
       },
       {
@@ -220,75 +266,15 @@
         "type": "compound"
       },
       {
+        "entity": "glutamate",
+        "type": "compound"
+      },
+      {
         "entity": "ammonia",
         "type": "compound"
       },
       {
-        "entity": "phosphoenolpyruvate",
-        "type": "compound"
-      },
-      {
-        "entity": "acetoacetate",
-        "type": "compound"
-      },
-      {
-        "entity": "acetoacetyl-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "β-hydroxybutyrate",
-        "type": "compound"
-      },
-      {
-        "entity": "acetate",
-        "type": "compound"
-      },
-      {
-        "entity": "propionyl-CoA",
-        "type": "compound"
-      },
-      {
-        "entity": "dihydroxyacetone phosphate",
-        "type": "compound"
-      },
-      {
-        "entity": "glycerol 3-phosphate",
-        "type": "compound"
-      },
-      {
-        "entity": "2-hydroxyglutarate",
-        "type": "compound"
-      },
-      {
-        "entity": "itaconate",
-        "type": "compound"
-      },
-      {
-        "entity": "aconitate",
-        "type": "compound"
-      },
-      {
-        "entity": "O2",
-        "type": "compound"
-      },
-      {
-        "entity": "H2O",
-        "type": "compound"
-      },
-      {
-        "entity": "ubiquinone",
-        "type": "compound"
-      },
-      {
-        "entity": "ubiquinol",
-        "type": "compound"
-      },
-      {
-        "entity": "cytochrome C",
-        "type": "compound"
-      },
-      {
-        "entity": "phosphate",
+        "entity": "NAD",
         "type": "compound"
       },
       {
@@ -304,10 +290,6 @@
         "type": "protein"
       },
       {
-        "entity": "isocitrate dehydrogenase 2",
-        "type": "protein"
-      },
-      {
         "entity": "succinyl-CoA synthetase",
         "type": "protein"
       },
@@ -320,7 +302,11 @@
         "type": "protein"
       },
       {
-        "entity": "pyruvate dehydrogenase complex",
+        "entity": "PDK (pyruvate dehydrogenase kinase)",
+        "type": "protein"
+      },
+      {
+        "entity": "PDP (pyruvate dehydrogenase phosphatase)",
         "type": "protein"
       },
       {
@@ -328,79 +314,35 @@
         "type": "protein"
       },
       {
-        "entity": "glutamate dehydrogenase",
-        "type": "protein"
-      },
-      {
-        "entity": "glutamic-oxaloacetic transaminase 2",
-        "type": "protein"
-      },
-      {
-        "entity": "glutamic-oxaloacetic transaminase 1",
-        "type": "protein"
-      },
-      {
-        "entity": "malate dehydrogenase 1",
-        "type": "protein"
-      },
-      {
         "entity": "ATP-citrate lyase",
         "type": "protein"
       },
       {
-        "entity": "carnitine acetyltransferase I",
+        "entity": "glutaminase",
         "type": "protein"
       },
       {
-        "entity": "carnitine acetyltransferase II",
+        "entity": "glutamate dehydrogenase",
         "type": "protein"
       },
       {
-        "entity": "mitochondrial pyruvate carrier",
-        "type": "protein"
+        "entity": "pyruvate dehydrogenase complex",
+        "type": "protein_complex"
       },
       {
-        "entity": "pyruvate dehydrogenase kinase 1",
-        "type": "protein"
-      },
-      {
-        "entity": "pyruvate dehydrogenase kinase 2",
-        "type": "protein"
-      },
-      {
-        "entity": "pyruvate dehydrogenase kinase 3",
-        "type": "protein"
-      },
-      {
-        "entity": "pyruvate dehydrogenase kinase 4",
-        "type": "protein"
-      },
-      {
-        "entity": "pyruvate dehydrogenase phosphatase 1",
-        "type": "protein"
-      },
-      {
-        "entity": "pyruvate dehydrogenase phosphatase 2",
-        "type": "protein"
-      },
-      {
-        "entity": "glycerol 3-phosphate dehydrogenase 1",
-        "type": "protein"
-      },
-      {
-        "entity": "glycerol 3-phosphate dehydrogenase 2",
-        "type": "protein"
-      },
-      {
-        "entity": "L-lactate dehydrogenase",
-        "type": "protein"
+        "entity": "oxoglutarate dehydrogenase complex",
+        "type": "protein_complex"
       },
       {
         "entity": "succinate dehydrogenase complex",
         "type": "protein_complex"
       },
       {
-        "entity": "oxoglutarate dehydrogenase complex",
+        "entity": "mitochondrial pyruvate carrier",
+        "type": "protein_complex"
+      },
+      {
+        "entity": "SLC25A1",
         "type": "protein_complex"
       }
     ],
@@ -409,11 +351,6 @@
       {
         "entity_a": "NAD+",
         "entity_b": "NAD",
-        "reason": "normalized label collision"
-      },
-      {
-        "entity_a": "NADP+",
-        "entity_b": "NADP",
         "reason": "normalized label collision"
       }
     ],

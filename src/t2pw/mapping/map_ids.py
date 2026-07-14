@@ -5827,7 +5827,14 @@ def map_payload(
         if result.get("species_id"):
             complex_row["species_id"] = int(result["species_id"])
             complex_row["mapping_meta"]["species_id"] = int(result["species_id"])
-        if _safe_list(complex_row.get("components")):
+        if result.get("status") == "mapped":
+            # A confident DB match carries its own authoritative, fully-hydrated
+            # component list (stoichiometry, pathbank_protein_id, etc.). Prefer it
+            # over whatever extraction/Stage-4a-derived components complex_row
+            # already holds, since those may be missing required fields (e.g.
+            # stoichiometry) that only the DB match can supply.
+            complex_row["components"] = result["components"]
+        elif _safe_list(complex_row.get("components")):
             complex_row["components"] = _reconcile_components_against_local_proteins(
                 _safe_list(complex_row.get("components")),
                 proteins,

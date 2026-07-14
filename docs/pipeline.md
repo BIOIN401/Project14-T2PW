@@ -491,6 +491,21 @@ Its `final.mapped.json` and `mapping_report.json` artifacts remain separate from
 the Stage 2B artifacts so mapping changes made after audit/curation can be
 compared directly.
 
+When Stage 6 resolves a declared `protein_complexes` row to a real PathBank
+complex (`result.status == "mapped"`, i.e. a direct `pathbank_protein_complex_id`
+match, a name+species match, or a resolved-component-species match), the DB's
+own hydrated component list — which always carries per-component
+`stoichiometry` plus `pathbank_protein_id`/`mapped_ids` where available —
+replaces whatever `components` the payload's own row already held, rather than
+the reverse. Earlier stages' extraction- or gap-resolver-derived component data
+is only kept when Stage 6 does *not* reach a confident match (`unmapped`,
+`ambiguous`, `novel`, or the PathBank `Unknown`-sentinel fallback below, all of
+which carry a non-`"mapped"` status). This exists because a confident DB match
+is strictly more authoritative than pre-DB component data, and because earlier
+stages have no mechanism to invent `stoichiometry` for a subunit whose count is
+never stated numerically in the source text — see the 2026-07-14 change log
+entry for the incident this closes.
+
 If Stage 6 creates PathWhiz-required single-protein complex wrappers, it must
 create them from already-mapped proteins. A generated complex is allowed to lack
 a complex-level PathBank ID only when all of the following are true:

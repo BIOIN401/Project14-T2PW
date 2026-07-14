@@ -38831,6 +38831,148 @@
         "status": "matched",
         "order_step": "synonym_or_fuzzy_species"
       }
+    },
+    "db::pdk pyruvate dehydrogenase kinase::homo sapiens::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "A4D1H4",
+        "pathbank_protein_id": "4615"
+      },
+      "pathbank_protein_id": 4615,
+      "confidence": 0.77,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 4615,
+          "name": "Pyruvate dehydrogenase kinase, isoenzyme 4",
+          "gene_name": "PDK4",
+          "uniprot": "A4D1H4",
+          "species_id": 1,
+          "score": 0.77
+        },
+        {
+          "pathbank_protein_id": 1101,
+          "name": "[Pyruvate dehydrogenase [lipoamide]] kinase isozyme 1, mitochondrial",
+          "gene_name": "PDK1",
+          "uniprot": "Q15118",
+          "species_id": 1,
+          "score": 0.705
+        },
+        {
+          "pathbank_protein_id": 1400,
+          "name": "[Pyruvate dehydrogenase [lipoamide]] kinase isozyme 3, mitochondrial",
+          "gene_name": "PDK3",
+          "uniprot": "Q15120",
+          "species_id": 1,
+          "score": 0.705
+        },
+        {
+          "pathbank_protein_id": 14755,
+          "name": "[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 2, mitochondrial",
+          "gene_name": "PDK2",
+          "uniprot": "Q15119",
+          "species_id": 1,
+          "score": 0.705
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::pdp pyruvate dehydrogenase phosphatase::homo sapiens::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.7329,
+      "candidates": [
+        {
+          "pathbank_protein_id": 4003,
+          "name": "Pyruvate dehydrogenase phosphatase regulatory subunit, mitochondrial",
+          "gene_name": "PDPR",
+          "uniprot": "Q8NCN5",
+          "species_id": 1,
+          "score": 0.7329
+        },
+        {
+          "pathbank_protein_id": 3505,
+          "name": "[Pyruvate dehydrogenase [acetyl-transferring]]-phosphatase 2, mitochondrial",
+          "gene_name": "PDP2",
+          "uniprot": "Q9P2J9",
+          "species_id": 1,
+          "score": 0.705
+        },
+        {
+          "pathbank_protein_id": 4002,
+          "name": "[Pyruvate dehydrogenase [acetyl-transferring]]-phosphatase 1, mitochondrial",
+          "gene_name": "PDP1",
+          "uniprot": "Q9P0J1",
+          "species_id": 1,
+          "score": 0.705
+        },
+        {
+          "pathbank_protein_id": 1328,
+          "name": "3-phosphoinositide-dependent protein kinase 1",
+          "gene_name": "PDPK1",
+          "uniprot": "O15530",
+          "species_id": 1,
+          "score": 0.51
+        },
+        {
+          "pathbank_protein_id": 24610,
+          "name": "PDPSC18",
+          "gene_name": "",
+          "uniprot": "",
+          "species_id": 1,
+          "score": 0.43
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::glutaminase::homo sapiens::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.78,
+      "candidates": [
+        {
+          "pathbank_protein_id": 639,
+          "name": "Glutaminase liver isoform, mitochondrial",
+          "gene_name": "GLS2",
+          "uniprot": "Q9UI32",
+          "species_id": 1,
+          "score": 0.78
+        },
+        {
+          "pathbank_protein_id": 644,
+          "name": "Glutaminase kidney isoform, mitochondrial",
+          "gene_name": "GLS",
+          "uniprot": "O94925",
+          "species_id": 1,
+          "score": 0.78
+        },
+        {
+          "pathbank_protein_id": 23976,
+          "name": "Glutaminase kidney isoform, mitochondrial",
+          "gene_name": "GLS",
+          "uniprot": "O94925",
+          "species_id": 1,
+          "score": 0.78
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
     }
   },
   "compounds": {
@@ -67499,6 +67641,48 @@
         "issue": "ambiguous_exact_name",
         "order_step": "exact_normalized_name"
       }
+    },
+    "db::ca2::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000464",
+        "kegg": "C00076",
+        "chebi": "CHEBI:29108",
+        "pubchem": "271",
+        "cas": "14127-61-8",
+        "biocyc": "CA%2b2",
+        "chemspider": "266",
+        "drugbank": "DB01373",
+        "pathbank_compound_id": "353"
+      },
+      "pathbank_compound_id": 353,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 353,
+          "name": "Calcium",
+          "short_name": "Ca2+",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000464",
+            "kegg": "C00076",
+            "chebi": "CHEBI:29108",
+            "pubchem": "271",
+            "cas": "14127-61-8",
+            "biocyc": "CA%2b2",
+            "chemspider": "266",
+            "drugbank": "DB01373",
+            "pathbank_compound_id": "353"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
     }
   },
   "complexes": {
@@ -73681,6 +73865,300 @@
       "resolution": {
         "status": "matched",
         "order_step": "complex_name_species"
+      }
+    },
+    "db::pyruvate dehydrogenase complex::homo sapiens::::[{\"ids\": {}, \"name\": \"pyruvate dehydrogenase E1\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"dihydrolipoamide acetyltransferase E2\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"dihydrolipoamide dehydrogenase E3\", \"stoichiometry\": 1}]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 61,
+      "pathbank_protein_complex_id": 61,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Pyruvate dehydrogenase E1 component subunit alpha, somatic form, mitochondrial",
+          "pathbank_protein_id": 44,
+          "stoichiometry": 1,
+          "uniprot": "P08559",
+          "mapped_ids": {
+            "uniprot": "P08559",
+            "pathbank_protein_id": "44"
+          },
+          "gene_name": "PDHA1",
+          "species_id": 1
+        },
+        {
+          "name": "Pyruvate dehydrogenase E1 component subunit beta, mitochondrial",
+          "pathbank_protein_id": 12,
+          "stoichiometry": 1,
+          "uniprot": "P11177",
+          "mapped_ids": {
+            "uniprot": "P11177",
+            "pathbank_protein_id": "12"
+          },
+          "gene_name": "PDHB",
+          "species_id": 1
+        },
+        {
+          "name": "Dihydrolipoyllysine-residue acetyltransferase component of pyruvate dehydrogenase complex, mitochondrial",
+          "pathbank_protein_id": 53,
+          "stoichiometry": 1,
+          "uniprot": "P10515",
+          "mapped_ids": {
+            "uniprot": "P10515",
+            "pathbank_protein_id": "53"
+          },
+          "gene_name": "DLAT",
+          "species_id": 1
+        },
+        {
+          "name": "Dihydrolipoyl dehydrogenase, mitochondrial",
+          "pathbank_protein_id": 52,
+          "stoichiometry": 1,
+          "uniprot": "P09622",
+          "mapped_ids": {
+            "uniprot": "P09622",
+            "pathbank_protein_id": "52"
+          },
+          "gene_name": "DLD",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_complex_candidate",
+      "candidates": [
+        {
+          "pathbank_complex_id": 61,
+          "pathbank_protein_complex_id": 61,
+          "name": "Pyruvate dehydrogenase complex",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_complex_id": 15554,
+          "pathbank_protein_complex_id": 15554,
+          "name": "pyruvate dehydrogenase",
+          "species_id": 1,
+          "score": 0.7567
+        },
+        {
+          "pathbank_complex_id": 54,
+          "pathbank_protein_complex_id": 54,
+          "name": "Pyruvate dehydrogenase E1",
+          "species_id": 1,
+          "score": 0.665
+        },
+        {
+          "pathbank_complex_id": 476,
+          "pathbank_protein_complex_id": 476,
+          "name": "Pyruvate dehydrogenase E1 component subunit beta, mitochondrial",
+          "species_id": 1,
+          "score": 0.5275
+        },
+        {
+          "pathbank_complex_id": 1013,
+          "pathbank_protein_complex_id": 1013,
+          "name": "[Pyruvate dehydrogenase [lipoamide]] kinase isozyme 1, mitochondrial",
+          "species_id": 1,
+          "score": 0.5275
+        },
+        {
+          "pathbank_complex_id": 478,
+          "pathbank_protein_complex_id": 478,
+          "name": "Pyruvate dehydrogenase E1 component subunit alpha, somatic form, mitochondrial",
+          "species_id": 1,
+          "score": 0.5
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "dihydrolipoamide acetyltransferase E2",
+          "component_index": 1,
+          "reason": "novel_protein"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "dihydrolipoamide dehydrogenase E3",
+          "component_index": 2,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "complex_name_species"
+      }
+    },
+    "db::oxoglutarate dehydrogenase complex::homo sapiens::::[]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 60,
+      "pathbank_protein_complex_id": 60,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Probable 2-oxoglutarate dehydrogenase E1 component DHKTD1, mitochondrial",
+          "pathbank_protein_id": 4308,
+          "stoichiometry": 1,
+          "uniprot": "Q96HY7",
+          "mapped_ids": {
+            "uniprot": "Q96HY7",
+            "pathbank_protein_id": "4308"
+          },
+          "gene_name": "DHTKD1",
+          "species_id": 1
+        },
+        {
+          "name": "Dihydrolipoyllysine-residue succinyltransferase component of 2-oxoglutarate dehydrogenase complex, mitochondrial",
+          "pathbank_protein_id": 882,
+          "stoichiometry": 1,
+          "uniprot": "P36957",
+          "mapped_ids": {
+            "uniprot": "P36957",
+            "pathbank_protein_id": "882"
+          },
+          "gene_name": "DLST",
+          "species_id": 1
+        },
+        {
+          "name": "Dihydrolipoyl dehydrogenase, mitochondrial",
+          "pathbank_protein_id": 52,
+          "stoichiometry": 1,
+          "uniprot": "P09622",
+          "mapped_ids": {
+            "uniprot": "P09622",
+            "pathbank_protein_id": "52"
+          },
+          "gene_name": "DLD",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_complex_candidate",
+      "candidates": [
+        {
+          "pathbank_complex_id": 60,
+          "pathbank_protein_complex_id": 60,
+          "name": "Oxoglutarate dehydrogenase complex",
+          "species_id": 1,
+          "score": 1.0
+        },
+        {
+          "pathbank_complex_id": 15584,
+          "pathbank_protein_complex_id": 15584,
+          "name": "oxoglutarate dehydrogenase",
+          "species_id": 1,
+          "score": 0.7567
+        },
+        {
+          "pathbank_complex_id": 298,
+          "pathbank_protein_complex_id": 298,
+          "name": "Dihydrolipoyllysine-residue succinyltransferase component of 2-oxoglutarate dehydrogenase complex, mitochondrial",
+          "species_id": 1,
+          "score": 0.5722
+        },
+        {
+          "pathbank_complex_id": 297,
+          "pathbank_protein_complex_id": 297,
+          "name": "2-oxoglutarate dehydrogenase, mitochondrial",
+          "species_id": 1,
+          "score": 0.5
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "complex_name_species"
+      }
+    },
+    "db::succinate dehydrogenase complex::homo sapiens::::[]": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.7567,
+      "chosen_rule": "",
+      "candidates": [
+        {
+          "pathbank_complex_id": 64,
+          "pathbank_protein_complex_id": 64,
+          "name": "Succinate dehydrogenase",
+          "species_id": 1,
+          "score": 0.7567
+        },
+        {
+          "pathbank_complex_id": 4184,
+          "pathbank_protein_complex_id": 4184,
+          "name": "mutant succinate dehydrogenase",
+          "species_id": 1,
+          "score": 0.665
+        }
+      ],
+      "components": [],
+      "issues": [],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_complex_name_species",
+        "order_step": "complex_name_species"
+      }
+    },
+    "db::mitochondrial pyruvate carrier::homo sapiens::::[]": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "pathbank_complex_id": 303,
+      "pathbank_protein_complex_id": 303,
+      "species_id": 1,
+      "components": [
+        {
+          "name": "Mitochondrial pyruvate carrier 1",
+          "pathbank_protein_id": 5479,
+          "stoichiometry": 1,
+          "uniprot": "Q9Y5U8",
+          "mapped_ids": {
+            "uniprot": "Q9Y5U8",
+            "pathbank_protein_id": "5479"
+          },
+          "gene_name": "MPC1",
+          "species_id": 1
+        }
+      ],
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_complex_candidate",
+      "candidates": [
+        {
+          "pathbank_complex_id": 303,
+          "pathbank_protein_complex_id": 303,
+          "name": "Mitochondrial pyruvate carrier",
+          "species_id": 1,
+          "score": 1.0
+        }
+      ],
+      "issues": [],
+      "resolution": {
+        "status": "matched",
+        "order_step": "complex_name_species"
+      }
+    },
+    "db::slc25a1::homo sapiens::::[]": {
+      "status": "unmapped",
+      "reason": "no_components",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [],
+      "issues": [
+        {
+          "issue": "protein_complex_missing_components",
+          "reason": "no_components_provided"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_components"
       }
     }
   },
