@@ -70,14 +70,14 @@ meaning or shape of a field owned by an earlier stage.
 
 | Stage | Concrete input | Concrete output and exit guarantee | Boundary owner |
 | --- | --- | --- | --- |
-| 1 — Extract | Paper text plus pathway/user context (not JSON) | `Payload`; named entity rows use `PayloadCompound`, `PayloadProtein`, `PayloadProteinComplex`, and related entity types; process rows use `PayloadReaction`, `PayloadTransport`, and `PayloadInteraction`. Actor rows use `PayloadReactionActor.entity` plus `.entity_type`. `PayloadReaction.spontaneous` is optional and may be true only with explicit source evidence. | `validate_post_extraction`: `entities`/`processes` objects exist, entity names are non-empty, process rows are objects, and each known process bucket satisfies its own participant/reference shape. Structural failure aborts. |
+| 1 — Extract | Paper text plus pathway/user context (not JSON) | `Payload`; named entity rows use `PayloadCompound`, `PayloadProtein`, `PayloadProteinComplex`, and related entity types; process rows use `PayloadReaction`, `PayloadTransport`, and `PayloadInteraction`. Actor rows use `PayloadReactionActor.entity` plus `.entity_type`. Spontaneity is not modeled: `PayloadReaction.spontaneous` is always `false`. | `validate_post_extraction`: `entities`/`processes` objects exist, entity names are non-empty, process rows are objects, and each known process bucket satisfies its own participant/reference shape. Structural failure aborts. |
 | 2 — Map | The already merged Stage 1 extraction + Stage 2A inference `Payload` | The same `Payload`; every named entity has a `PayloadMappingMeta` object containing a `resolution` object with non-empty string `status` and string `issue`/`order_step` when present, and `PayloadEntities.species` is non-empty. The live pass uses cache and calls `map_payload(..., use_cache=True, allow_complex_wrapper_creation=False, allow_structural_cleanup=False)`; it annotates but cannot prune structure or create generated PathWhiz wrappers. | `validate_post_mapping`; structural failure aborts. |
 | 3 — Normalize | Stage 2 `Payload` | `(Payload, normalization_report)`. Reaction enzymes/modifiers, transporters, and interaction participants have canonical non-empty `entity` and `entity_type`. The report contains the pointer-addressable strict gate result. | `validate_post_normalization(payload, gate)`. Structural failure aborts; semantic failures are returned with `effect_on_failure=feed_audit`. |
-| 4 — Audit / gap resolve | Stage 3 `Payload` plus its strict gate report | Patched `Payload` preserving the Stage 3 shape. Audit patches may set `PayloadReaction.spontaneous=true` only after determining that the reaction has no real enzyme. After every selected patch with at least one accepted operation, the orchestrator runs `run_strict_post_normalization_gates` (not the full normalizer) and supplies that fresh result to the next round. | `validate_post_audit`; malformed patched output aborts. |
+| 4 — Audit / gap resolve | Stage 3 `Payload` plus its strict gate report | Patched `Payload` preserving the Stage 3 shape. Audit never sets `PayloadReaction.spontaneous`; spontaneity is not modeled and the field stays `false`. After every selected patch with at least one accepted operation, the orchestrator runs `run_strict_post_normalization_gates` (not the full normalizer) and supplies that fresh result to the next round. | `validate_post_audit`; malformed patched output aborts. |
 | 5 — Curate | Post-audit `Payload` | Same `Payload` shape. If curation produces structurally invalid output, the orchestrator retains the pre-curation payload. | Stage 1 structural contract reused by the curator fallback policy. |
 | 6 — Remap | Curated `Payload` | Same `Payload`, with refreshed IDs and mapping cache bypassed. This is the sole pass allowed to call `map_payload(..., use_cache=False, allow_complex_wrapper_creation=True, allow_structural_cleanup=True)`. Generated `PayloadProteinComplex` rows carry `generated=true` and `generation_reason="single_protein_pathwhiz_wrapper"`; every component resolves to a declared protein with species and UniProt/DrugBank identity. | `validate_post_remap`; invalid generated wrappers abort before export. |
 | 7 — Enrich (optional) | Post-remap `Payload` | Same `Payload` with additive enrichment metadata only; process and identity contracts do not change. | Runtime shape report at `post_enrichment`; Stage 6 and pre-export semantic contracts remain authoritative. |
-| 8 — Export | Post-remap/enriched `Payload` after optional user-requested grounding | PWML IR (`Dict[str, Any]`) and serialized PWML XML. Reactions retain `spontaneous`; enzyme references are unique protein complexes; protein species serialization uses each protein's resolved species. Stage 8 is validation-only: it does not rerun normalization, create autostates, map or infer entities, or create a last-resort wrapper. | Validation-only `run_strict_post_normalization_gates`/`validate_post_normalization`, followed by `validate_pre_export`, which wraps `validate_required_pwml_contract`; semantic failure aborts. |
+| 8 — Export | Post-remap/enriched `Payload` after optional user-requested grounding | PWML IR (`Dict[str, Any]`) and serialized PWML XML. Reactions export `spontaneous=false` unconditionally (spontaneity is not modeled); enzyme references are unique protein complexes; protein species serialization uses each protein's resolved species. Stage 8 is validation-only: it does not rerun normalization, create autostates, map or infer entities, or create a last-resort wrapper. | Validation-only `run_strict_post_normalization_gates`/`validate_post_normalization`, followed by `validate_pre_export`, which wraps `validate_required_pwml_contract`; semantic failure aborts. |
 
 The live Streamlit post-pipeline function now runs both mapping boundaries. It
 validates the already merged extraction/inference payload, runs the
@@ -109,6 +109,8 @@ actor names, and schema inconsistencies. That is normal — later stages resolve
 them.
 
 The extraction prompt (`pwml_system.txt`) enforces single-organism scoping: before extracting reactions, the LLM selects one primary organism/species/strain for the pathway and assigns it to all extracted proteins, enzymes, complexes, reactions, and biological states. Proteins from other organisms are excluded unless the user explicitly requested a comparative or cross-species pathway. This prevents mixed-species entity sets from reaching Stage 2 mapping and Stage 3 gate checks.
+
+The extraction prompt also enforces a name-based `protein_complexes` routing rule: any entity whose own name contains the word "complex" (e.g. "pyruvate dehydrogenase complex") must be extracted under `protein_complexes[]`, never `proteins[]`, even when subunit membership is not stated in the source text. This exists because the Stage 3 gate (below) rejects a `proteins[]` row named `"... complex"` as a misrouted entity, and that rejection is a hard export blocker with no auto-repair step — the correct fix is preventing the misrouting at its source rather than reclassifying it later.
 
 **Structural contract enforced here:**
 - Valid JSON
@@ -503,24 +505,30 @@ a complex-level PathBank ID only when all of the following are true:
 When those conditions are not met, Stage 6 should leave a mapping/gate issue for
 audit or export blocking instead of creating an apparently usable complex.
 
-One explicit last-resort exception exists for functional reaction enzymes whose
-normal PathBank, UniProt, DrugBank, alias, literature, and API retry strategies
-all fail. Stage 6 may retain the functional enzyme name as a generated complex
-and use PathBank's known `Unknown` protein row as its sole component. That
-sentinel is serialized exactly as PathBank protein `9659`, name/UniProt value
-`Unknown`, species *Arabidopsis thaliana* (`species_id=4`, taxon `3702`). The
-complex and sentinel carry `chosen_rule=pathbank_unknown_protein_fallback`,
-`cross_species_placeholder=true`, and the original target organism in mapping
-metadata. This fallback:
+One explicit last-resort exception exists for functional reaction enzymes and
+transporters whose normal PathBank, UniProt, DrugBank, alias, literature, and
+API retry strategies all fail. Stage 6 may retain the functional protein name
+as a generated complex and use PathBank's known `Unknown` protein row as its
+sole component. That sentinel is serialized exactly as PathBank protein `9659`,
+name/UniProt value `Unknown`, species *Arabidopsis thaliana* (`species_id=4`,
+taxon `3702`). The complex and sentinel carry
+`chosen_rule=pathbank_unknown_protein_fallback`, `cross_species_placeholder=true`,
+and the original target organism in mapping metadata. This fallback:
 
 - runs only in the wrapper-enabled Stage 6 pass, never Stage 2;
-- applies only to reaction enzymes (including catalyst modifiers promoted by
-  Stage 3), never unrelated unresolved proteins;
-- therefore applies to an unresolved catalyst on a biologically valid surviving
-  reaction, but not to an orphan from a removed or quarantined reaction;
+- applies to a protein only when its *sole* role in the payload is as a
+  reaction catalyst (including catalyst modifiers promoted by Stage 3) or as a
+  transport transporter — never to a protein also referenced as a reaction
+  input/output, a non-catalyst/non-transporter modifier, an interaction
+  participant, or a complex component; each role is tracked and counted
+  separately (`reaction_enzyme_unknown_fallbacks` vs.
+  `transporter_unknown_fallbacks`);
+- therefore applies to an unresolved catalyst or transporter on a biologically
+  valid surviving reaction/transport, but not to an orphan from a removed or
+  quarantined reaction, nor to a protein with any other reference elsewhere;
 - never replaces a real protein or protein-complex mapping;
-- preserves non-catalytic process references instead of deleting their source
-  protein; and
+- preserves non-catalytic, non-transporter process references instead of
+  deleting their source protein; and
 - is skipped by later UniProt enrichment and recognized on repeated mapping so
   it cannot recursively wrap or duplicate `Unknown`.
 

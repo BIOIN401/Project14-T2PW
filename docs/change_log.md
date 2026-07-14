@@ -9,6 +9,152 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-14 — Stop LLM extraction from routing "X complex" entities into proteins[]
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `docs/pipeline.md`,
+`docs/change_log.md`.
+
+**Error / symptom:** Stage 3 gate error `Generated protein complex wrapper
+'pyruvate dehydrogenase complex' must be listed under protein_complexes, not
+proteins.` for an entity that was never a pipeline-generated wrapper at all —
+it is a real, well-known multi-subunit enzyme complex.
+
+**Root cause:** the Stage 1 extraction prompt already told the LLM to use
+`protein_complexes[]` when the source text "explicitly supports a complex,"
+but that guidance was buried among many other extraction rules and had no
+single unmissable rule tied to the literal entity name. The model extracted
+an entity named "...complex" directly into `proteins[]`. The Stage 3 gate
+that reports this (`process_normalizer.py:3766`, unchanged by this fix)
+correctly detects any `proteins[]` row named "...complex" as suspicious, but
+it is detection-only — there is no auto-repair step for this class of
+misclassification (only pipeline-generated wrapper duplicates are guarded).
+
+**Fix:** added one explicit, mandatory rule to the Stage 1 prompt: any entity
+whose own name contains the word "complex" must be extracted under
+`protein_complexes[]`, never `proteins[]`, even when the source text does not
+enumerate subunits (in which case `components: []` and confidence `< 1.0` are
+used, mirroring the existing "unknown subunit membership" convention already
+in the same prompt).
+
+**Pipeline consistency:** this is a Stage 1 (Extract) prompt change only —
+the entity-type decision belongs at extraction, where `PayloadProtein` vs.
+`PayloadProteinComplex` is first assigned. It does not touch Stage 3's gate
+logic, Stage 6's remap logic, or any other stage's module, per the "stages
+are independent" design principle.
+
+**Verification:** no automated test covers LLM prompt text in this repo
+(confirmed via `grep -rn "pwml_system.txt" tests/` — no matches); the fix was
+verified by inspection against the file's existing rule conventions and by
+re-running the full test suite to confirm nothing else references or
+snapshots this file's content.
+
+---
+
+### 2026-07-14 — Widen the Stage 6 PathBank Unknown fallback to cover transporter-only proteins
+
+**Files changed:** `src/t2pw/mapping/map_ids.py`,
+`tests/test_pathbank_unknown_fallback.py`, `docs/pipeline.md`,
+`docs/change_log.md`.
+
+**Error / symptom:** Stage 3 gate error `Protein 'ABCG-116' is missing a
+UniProt or DrugBank identifier.` for a protein that legitimately could not be
+matched to a real identifier — the same situation the Stage 6 PathBank
+`Unknown` sentinel fallback exists to handle for enzymes, but this protein's
+only role in the payload was as a transporter, not a reaction catalyst.
+
+**Root cause:** `_apply_pathbank_unknown_enzyme_fallback` in `map_ids.py` was
+deliberately scoped to reaction enzymes only (see the 2026-07-13 Stage 6
+entry above and `docs/pipeline.md` Stage 6 section). `_has_non_enzyme_reference`
+disqualified any protein referenced outside a catalyst role — including as a
+transporter — from ever receiving the fallback, so an unresolved
+transporter-only protein was left with zero identifiers and no path to a
+valid export state.
+
+**Fix:** generalized the disqualification check to accept a caller-specified
+"allowed role" (`enzyme` or `transporter`) instead of hard-coding "enzyme."
+Added a second pass over `processes.transports[].transporters[]` that applies
+the identical guards already used for enzymes (only after real mapping
+strategies fail, never overrides a real mapping, reused/deduplicated Unknown
+sentinel, excluded once any other disqualifying reference exists) and rewrites
+a qualifying transporter entry to reference the generated Unknown-backed
+complex the same way a qualifying reaction enzyme entry is rewritten. A
+protein referenced as a transporter *and* anywhere else disqualifying (reaction
+input/output, non-catalyst/non-transporter modifier, interaction, complex
+component) remains excluded, matching the existing enzyme-side behavior. A
+new `transporter_unknown_fallbacks` counter tracks this path separately from
+the existing `reaction_enzyme_unknown_fallbacks` counter so no existing
+caller's assertion on that counter changes meaning.
+
+**Pipeline consistency:** this stays entirely inside `map_ids.py`, the sole
+Stage 6 module allowed to call `map_payload(..., allow_complex_wrapper_creation=True)`.
+It does not touch Stage 3's gate (which correctly just reports the symptom)
+or any other stage. The fallback's core invariants are unchanged and merely
+extended to a second, symmetric role — it still never applies to a protein
+with any other kind of reference, and it is still the sole wrapper-creating
+pass in the pipeline.
+
+**Verification:** `tests/test_pathbank_unknown_fallback.py` gained
+`test_unknown_fallback_wraps_transporter_only_protein` (transporter-only
+unresolved protein gets wrapped and its transporter entry is rewritten to
+`entity_type: "protein_complex"`) and
+`test_unknown_fallback_excludes_transporter_referenced_elsewhere` (a
+transporter also referenced via an interaction stays excluded, matching the
+existing enzyme-side exclusion test). Full test suite re-run: all passing.
+
+---
+
+### 2026-07-14 — Retire the spontaneous-reaction flag; every reaction exports non-spontaneous
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`,
+`src/t2pw/curation/audit_json_llm.py`, `src/t2pw/pipeline/process_normalizer.py`,
+`src/t2pw/pwml/ir.py`, `src/t2pw/pwml/qa.py`, `tests/test_pwml_ir.py`,
+`tests/test_audit_json_llm_payload.py`, `docs/pipeline.md`,
+`docs/change_log.md`.
+
+**Error / symptom:** Stage 8 export error
+`Reaction 'OPCL1-catalyzed CoA ligation of OPC-4:0' is marked spontaneous but
+also has enzymes.` — Stage 1 extraction (or the Stage 4 audit's deterministic
+enzyme-less rule) could mark a reaction `spontaneous: true` independently of
+whether it also carried real enzyme references, and the Stage 8 semantic gate
+(`ir.py`) rejected the combination outright with no repair path.
+
+**Root cause:** the `spontaneous` field could be set from three independent
+places (Stage 1 LLM extraction judgment, Stage 4's deterministic
+enzyme-less-reaction rule, and manual/legacy payload data) with nothing
+reconciling it against the reaction's actual enzyme list until the Stage 8
+export gate, which only detects the conflict and aborts.
+
+**Fix:** spontaneity is not modeled for now. Every source that could set
+`spontaneous: true` was changed to never do so (Stage 1 prompt instruction,
+Stage 4's deterministic audit rule removed), Stage 3's normalizer now forces
+`spontaneous: false` on every reaction as its first step so the persisted
+normalized payload is consistent, and Stage 8's IR builder hardcodes
+`spontaneous: False` on export regardless of upstream payload content. The
+now-unreachable Stage 8 mutual-exclusion check
+(`spontaneous_reaction_has_enzymes`) was removed. The companion legacy XML QA
+check in `qa.py` that required every non-spontaneous reaction to have an
+enzyme was relaxed to match — an enzyme-less reaction is now expected, not an
+error, since spontaneity can no longer be asserted to explain it.
+
+**Pipeline consistency:** the enforcement point that matters for correctness
+is Stage 8 (export), which now owns the invariant unconditionally rather than
+validating an upstream assertion. Stage 1's prompt and Stage 4's audit rule
+were also updated so the persisted payload stays consistent with what
+actually exports, but Stage 8 does not depend on either of them having done
+so correctly — it forces the value itself, per "broken stages must not
+produce output" / each stage should not trust an earlier stage's optional
+field to be correct.
+
+**Verification:** `tests/test_pwml_ir.py::test_spontaneous_field_is_always_forced_false_on_export`
+and `test_pre_export_and_qa_reject_duplicate_enzyme_complex_even_when_spontaneous_set`
+(renamed/updated from the prior spontaneous-preserving tests) and
+`tests/test_audit_json_llm_payload.py::test_deterministic_audit_does_not_mark_enzyme_less_reaction_spontaneous`
+(renamed/updated) all pass, along with the full related test suite (96 tests
+across `test_pwml_ir.py`, `test_audit_json_llm_payload.py`, and
+`test_process_normalizer.py`).
+
+---
+
 ### 2026-07-13 — Quarantine coarse reactions before orphan-protein validation
 
 **Files changed:** `src/t2pw/pipeline/process_normalizer.py`,
