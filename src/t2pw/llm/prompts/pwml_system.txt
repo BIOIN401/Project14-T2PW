@@ -12,20 +12,20 @@ reaction you extract with exactly one of these labels in the required "scope_mem
                   context but is not itself a step of the named pathway
   out_of_scope  — mentioned in passing but belongs to a completely different pathway
 
-If no <pathway_scope> is supplied and upstream_context is absent, set scope_membership to "core" only for reactions clearly belonging to the main described pathway or process. For reactions that are unrelated mentions or belong to a different pathway, use "out_of_scope" or omit them.
-Reactions whose scope_membership is "out_of_scope" will be filtered before graph building.
+If no <pathway_scope> is supplied, set scope_membership to "core" only for reactions that are direct, defining steps of the single pathway selected under the "Species, organism, and pathway scoping rule" below (this applies whether or not an <upstream_context> block is present). Reactions that are anaplerotic, cataplerotic, auxiliary, or otherwise biochemically adjacent but not themselves a defining step of that pathway MUST be set to "out_of_scope" in this case — do not use the anaplerotic/cataplerotic/auxiliary labels unless an explicit <pathway_scope> block requests that broader classification. For reactions that are unrelated mentions or belong to a different pathway, use "out_of_scope" or omit them.
+Reactions whose scope_membership is "out_of_scope" are removed from the payload before downstream stages run — omitting a clearly out-of-scope reaction entirely is equally correct.
 
 UPSTREAM CONTEXT GATE (apply before extraction)
 When a <upstream_context> block is supplied, it contains Stage 0 preprocessor output fields including document_type, context_type, selected_example, candidate_examples, scope_clarity_score, and warning. Use these to gate extraction:
 
 Case A — document_type is "multi_example_review" AND selected_example is empty:
-  - The upstream pipeline gate has already approved this text for extraction.
-    Proceed with full extraction. Do NOT return empty arrays or skip extraction.
-  - Extract the single most prominent or most completely described pathway in the text.
-  - Focus on the pathway with the most detailed reaction steps, enzymes, and intermediates.
-  - Set scope_warning to "" (empty).
-  - Treat unrelated examples mentioned in passing the same way as out-of-scope reactions:
-    set their scope_membership to "out_of_scope" or omit them.
+  - The production orchestrator does not invoke this stage in this state: it stops before
+    extraction whenever document_type is "multi_example_review" and selected_example is
+    empty, so this stage should never receive this combination in normal operation.
+  - If this state is nevertheless received (e.g. a direct or manual call that bypasses the
+    orchestrator gate), do not guess a dominant example and do not extract pathway content.
+    Return entities and processes as empty and set scope_warning to
+    "ambiguous_review_scope_received_by_extractor".
 
 Case B — document_type is "multi_example_review" AND selected_example is non-empty:
   - Extract ONLY entities and reactions whose evidence is locally anchored to the selected_example by paragraph, figure caption, or directly adjacent section.
@@ -323,7 +323,7 @@ OUTPUT JSON SCHEMA (must match exactly)
         "cargo": "",
         "from_biological_state": "",
         "to_biological_state": "",
-        "transporters": [ { "protein_complex": "", "biological_state": "", "evidence": "" } ],
+        "transporters": [ { "entity": "", "entity_type": "protein | protein_complex", "role": "transporter", "biological_state": "", "evidence": "" } ],
         "elements_with_states": [
           { "side": "left", "element": "", "biological_state": "", "evidence": "" },
           { "side": "right", "element": "", "biological_state": "", "evidence": "" }
@@ -381,6 +381,33 @@ IMPORTANT CONSTRUCTION NOTES
 - transports[].transporters[] MAY be empty. If the text says the transporter is "unknown", unnamed, or simply does not name a carrier protein, still create the transport object with transporters: []. Do NOT skip a transport just because no transporter protein is named.
 - For visualizations/edges: keep empty unless the text explicitly mentions figure/diagram/layout metadata.
 
+PROTEIN-COMPLEX DECISION CHECKLIST (apply this exact procedure to every enzyme/catalyst)
+This consolidates the protein vs. protein_complex rules stated elsewhere in this prompt
+(NAME-BASED COMPLEX RULE, COFACTOR RULE's extraction-layer bullets) into one procedure.
+Follow these steps in order for every enzyme or catalytic actor:
+
+1. Does the entity's own name contain the word "complex" (case-insensitive, e.g. ends with
+   " complex" such as "pyruvate dehydrogenase complex")?
+   - YES: it MUST be extracted under protein_complexes[], never proteins[]. Go to step 2.
+   - NO: does the source text otherwise explicitly call it a "complex", "heterodimer",
+     "holoenzyme", "multisubunit", or otherwise name a multi-subunit structure?
+       - YES: extract under protein_complexes[]. Go to step 2.
+       - NO: extract under proteins[] as a single protein. Stop here — do not create a
+         protein_complex row for this actor.
+
+2. Are the individual subunit/component names explicitly stated in the source text?
+   - YES: set components to exactly those named subunits.
+   - NO: set components to [] (or best-effort if partially named) and set confidence < 1.0
+     with provenance "inferred" for the complex row. Do not invent subunit names.
+
+3. Never create a protein_complex solely because a protein catalyzes a reaction — that
+   inference is invalid at extraction time regardless of confidence.
+4. Never create a protein_complex because downstream PathWhiz export may need one. A
+   single-protein export wrapper is a Stage 6 technical representation, never a Stage 1
+   extraction decision — do not anticipate or pre-create it here.
+5. Never wrap compounds, cofactors, ions, metabolites, or small molecules into
+   protein_complexes under any circumstance.
+
 MODIFIER EXAMPLES (follow these exactly for any pathway)
 
 Example 1 — enzyme as catalyst (generic pattern):
@@ -395,10 +422,13 @@ Example 1 — enzyme as catalyst (generic pattern):
           { "entity": "[EnzymeX]", "entity_type": "protein", "role": "catalyst",
             "evidence": "[EnzymeX] catalyzes the conversion of [SubstrateA]", "confidence": 1.0, "provenance": "extracted" }
         ],
-        "evidence": "[EnzymeX] catalyzes the conversion of [SubstrateA] and [CofactorB] to [ProductC]"
+        "biological_state": "",
+        "evidence": "[EnzymeX] catalyzes the conversion of [SubstrateA] and [CofactorB] to [ProductC]",
+        "class": "biochemical_reaction", "scope_membership": "core", "confidence": 1.0,
+        "provenance": "extracted", "source_refs": []
       }
     ]
-  KEY POINTS: [EnzymeX] is in modifiers[], NOT in inputs[]. [CofactorB]/[CofactorB'] are stoichiometrically consumed/produced so they stay in inputs/outputs. This applies to ANY enzyme in ANY pathway.
+  KEY POINTS: [EnzymeX] is in modifiers[], NOT in inputs[]. [CofactorB]/[CofactorB'] are stoichiometrically consumed/produced so they stay in inputs/outputs. This applies to ANY enzyme in ANY pathway. Every field shown above is required — this is a complete, schema-valid reaction object, not an abbreviated illustration.
 
 Example 2 — small-molecule regulator vs. protein catalyst (generic pattern):
   Text: "[EnzymeY] converts [A] and [B] into [C] and [D]; [SmallMolecule] allosterically inhibits [EnzymeY]; [OtherMolecule] activates [EnzymeY]"
@@ -412,14 +442,23 @@ Example 2 — small-molecule regulator vs. protein catalyst (generic pattern):
           { "entity": "[EnzymeY]", "entity_type": "protein", "role": "catalyst",
             "evidence": "[EnzymeY] converts [A] and [B]", "confidence": 1.0, "provenance": "extracted" }
         ],
-        "evidence": "[EnzymeY] converts [A] and [B] into [C] and [D]"
+        "biological_state": "",
+        "evidence": "[EnzymeY] converts [A] and [B] into [C] and [D]",
+        "class": "biochemical_reaction", "scope_membership": "core", "confidence": 1.0,
+        "provenance": "extracted", "source_refs": []
       }
     ]
     interactions: [
-      { "entity_1": "[SmallMolecule]", "relationship": "inhibits", "entity_2": "[EnzymeY]",
-        "evidence": "[SmallMolecule] allosterically inhibits [EnzymeY]", "class": "inhibition", "confidence": 1.0, "provenance": "extracted" },
-      { "entity_1": "[OtherMolecule]", "relationship": "activates", "entity_2": "[EnzymeY]",
-        "evidence": "[OtherMolecule] activates [EnzymeY]", "class": "activation", "confidence": 1.0, "provenance": "extracted" }
+      { "name": "[SmallMolecule] inhibits [EnzymeY]",
+        "entity_1": "[SmallMolecule]", "relationship": "inhibits", "entity_2": "[EnzymeY]",
+        "biological_state": "",
+        "evidence": "[SmallMolecule] allosterically inhibits [EnzymeY]", "class": "inhibition",
+        "confidence": 1.0, "provenance": "extracted", "source_refs": [] },
+      { "name": "[OtherMolecule] activates [EnzymeY]",
+        "entity_1": "[OtherMolecule]", "relationship": "activates", "entity_2": "[EnzymeY]",
+        "biological_state": "",
+        "evidence": "[OtherMolecule] activates [EnzymeY]", "class": "activation",
+        "confidence": 1.0, "provenance": "extracted", "source_refs": [] }
     ]
   KEY POINTS: the protein enzyme ([EnzymeY]) is the catalyst modifier. Small-molecule regulators (compounds) go in interactions[], not modifiers[]. This applies regardless of which pathway or molecules are involved.
 
@@ -433,13 +472,15 @@ Example 3 — transporter protein (generic pattern):
         "from_biological_state": "[CompartmentA] state",
         "to_biological_state": "[CompartmentB] state",
         "transporters": [
-          { "protein": "[TransporterZ]", "biological_state": "[CompartmentB] state",
+          { "entity": "[TransporterZ]", "entity_type": "protein", "role": "transporter",
+            "biological_state": "[CompartmentB] state",
             "evidence": "[TransporterZ] shuttles [CargoMolecule] from [CompartmentA]" }
         ],
-        "evidence": "[TransporterZ] shuttles [CargoMolecule] from [CompartmentA] into [CompartmentB]"
+        "evidence": "[TransporterZ] shuttles [CargoMolecule] from [CompartmentA] into [CompartmentB]",
+        "class": "transport_reaction", "confidence": 1.0, "provenance": "extracted", "source_refs": []
       }
     ]
-  KEY POINTS: [TransporterZ] goes in transporters[] on the transport object, NOT as a reactant/product. Applies to any transporter in any pathway.
+  KEY POINTS: [TransporterZ] goes in transporters[] on the transport object using the same entity/entity_type/role shape as reaction modifiers — NOT as a reactant/product, and never as a bare "protein" or "protein_complex" key. Applies to any transporter in any pathway.
 
 Example 3b — transport with unknown transporter (MANDATORY pattern — applies whenever movement is described but no carrier protein is named):
   Text: "[CargoMolecule] is synthesized in [CompartmentA] and imported into [CompartmentB] via unknown transporters."
@@ -454,7 +495,8 @@ Example 3b — transport with unknown transporter (MANDATORY pattern — applies
         "evidence": "synthesized in [CompartmentA] and imported into [CompartmentB] via unknown transporters",
         "class": "transport_reaction",
         "confidence": 1.0,
-        "provenance": "extracted"
+        "provenance": "extracted",
+        "source_refs": []
       }
     ]
   KEY POINTS: transporters[] is empty because no carrier is named — this is valid. Do NOT omit the transport object. The movement itself ("imported into") is sufficient justification to create the transport. Applies whenever text uses "unknown transporters", "uncharacterized transporter", "not yet identified", or simply names no carrier protein.
@@ -478,7 +520,10 @@ Example 4 — protein complex as catalyst (MANDATORY pattern — applies wheneve
             "evidence": "[ComplexName] complex catalyzes the conversion of [A] to [B]",
             "confidence": 1.0, "provenance": "extracted" }
         ],
-        "evidence": "[ComplexName] complex catalyzes the conversion of [A] to [B]"
+        "biological_state": "",
+        "evidence": "[ComplexName] complex catalyzes the conversion of [A] to [B]",
+        "class": "biochemical_reaction", "scope_membership": "core", "confidence": 1.0,
+        "provenance": "extracted", "source_refs": []
       }
     ]
   KEY POINTS: the complex goes in modifiers[] with entity_type: "protein_complex". Its subunits are listed in protein_complexes[].components — they are NOT separate modifiers on the reaction. This applies to any named complex (holoenzyme, heterodimer, multi-subunit structure) in any pathway.

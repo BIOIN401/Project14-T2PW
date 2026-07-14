@@ -1,99 +1,153 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: citrate synthase reaction
+REACTION 1: CS reaction
   Reactants: acetyl-CoA [unknown], oxaloacetate [unknown]
-  Products:  citrate [unknown]
-  Modifier:  citrate synthase [unknown] (role=catalyst, confidence=1.0)
+  Products:  citrate [unknown], CoA-SH [unknown]
+  Modifier:  CS [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: aconitase 2 reaction
+REACTION 2: ACO2 reaction
   Reactants: citrate [unknown]
   Products:  isocitrate [unknown]
-  Modifier:  aconitase 2 [unknown] (role=catalyst, confidence=1.0)
+  Modifier:  ACO2 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: isocitrate dehydrogenase 3 reaction
+REACTION 3: IDH3 reaction
   Reactants: isocitrate [unknown], NAD [unknown]
-  Products:  alpha-ketoglutarate [unknown], NADH [unknown], CO2 [unknown]
-  Modifier:  isocitrate dehydrogenase 3 [unknown] (role=catalyst, confidence=1.0)
+  Products:  alpha-ketoglutarate [unknown], CO2 [unknown], NADH [unknown]
+  Modifier:  IDH3 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: oxoglutarate dehydrogenase complex reaction
-  Reactants: alpha-ketoglutarate [unknown], NAD [unknown]
-  Products:  succinyl-CoA [unknown], NADH [unknown], CO2 [unknown]
-  Modifier:  oxoglutarate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
+REACTION 4: OGDH complex reaction
+  Reactants: alpha-ketoglutarate [unknown], CoA-SH [unknown], NAD [unknown]
+  Products:  succinyl-CoA [unknown], CO2 [unknown], NADH [unknown]
+  Modifier:  oxoglutarate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex], GDH [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: succinyl-CoA synthetase reaction
-  Reactants: succinyl-CoA [unknown]
-  Products:  succinate [unknown]
-  Modifier:  succinyl-CoA synthetase [unknown] (role=catalyst, confidence=1.0)
+REACTION 5: SCS reaction
+  Reactants: succinyl-CoA [unknown], ADP [unknown], Pi [unknown]
+  Products:  succinate [unknown], ATP [unknown], CoA-SH [unknown]
+  Modifier:  SCS [unknown] (role=catalyst, confidence=1.0), CS [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: succinate dehydrogenase complex reaction
+REACTION 6: SDH complex reaction
   Reactants: succinate [unknown], FAD [unknown]
   Products:  fumarate [unknown], FADH2 [unknown]
   Modifier:  succinate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
   QA flags:  none
 
-REACTION 7: fumarate hydratase reaction
-  Reactants: fumarate [unknown]
+REACTION 7: FH reaction
+  Reactants: fumarate [unknown], H2O [unknown]
   Products:  malate [unknown]
-  Modifier:  fumarate hydratase [unknown] (role=catalyst, confidence=1.0)
+  Modifier:  FH [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: malate dehydrogenase 2 reaction
+REACTION 8: MDH2 reaction
   Reactants: malate [unknown], NAD [unknown]
   Products:  oxaloacetate [unknown], NADH [unknown]
-  Modifier:  malate dehydrogenase 2 [unknown] (role=catalyst, confidence=1.0)
+  Modifier:  MDH2 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: pyruvate dehydrogenase complex reaction
-  Reactants: pyruvate [unknown], CoA [unknown], NAD [unknown]
-  Products:  acetyl-CoA [unknown], NADH [unknown], CO2 [unknown]
-  Modifier:  pyruvate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
+REACTION 9: PDHC reaction
+  Reactants: pyruvate [unknown], CoA-SH [unknown], NAD [unknown]
+  Products:  acetyl-CoA [unknown], CO2 [unknown], NADH [unknown]
+  Modifier:  pyruvate dehydrogenase complex [unknown] (role=catalyst, confidence=1.0) [possible_complex], PDK1 [unknown] (role=catalyst, confidence=1.0), PDP1 [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 10: pyruvate carboxylase reaction
-  Reactants: pyruvate [unknown], ATP [unknown], CO2 [unknown]
-  Products:  oxaloacetate [unknown], ADP [unknown]
-  Modifier:  pyruvate carboxylase [unknown] (role=catalyst, confidence=1.0)
+REACTION 10: PC reaction
+  Reactants: pyruvate [unknown], CO2 [unknown], ATP [unknown]
+  Products:  oxaloacetate [unknown], ADP [unknown], Pi [unknown]
+  Modifier:  PC [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 11: ATP-citrate lyase reaction
-  Reactants: citrate [unknown], ATP [unknown], CoA [unknown]
-  Products:  acetyl-CoA [unknown], oxaloacetate [unknown], ADP [unknown]
-  Modifier:  ATP-citrate lyase [unknown] (role=catalyst, confidence=1.0)
+REACTION 11: GDH reaction
+  Reactants: glutamate [unknown], NAD [unknown]
+  Products:  alpha-ketoglutarate [unknown], ammonia [unknown], NADH [unknown]
+  Modifier:  GDH [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 12: glutaminase reaction
-  Reactants: glutamine [unknown]
+REACTION 12: GOT2 reaction
+  Reactants: glutamate [unknown], oxaloacetate [unknown]
+  Products:  alpha-ketoglutarate [unknown], aspartate [unknown]
+  Modifier:  GOT2 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 13: IDH2 reaction
+  Reactants: isocitrate [unknown], NADP [unknown]
+  Products:  alpha-ketoglutarate [unknown], CO2 [unknown], NADPH [unknown]
+  Modifier:  IDH2 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: FH reaction
+  Reactants: fumarate [unknown]
+  Products:  malate [unknown]
+  Modifier:  FH [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 15: GOT1 reaction
+  Reactants: alpha-ketoglutarate [unknown], aspartate [unknown]
+  Products:  glutamate [unknown], oxaloacetate [unknown]
+  Modifier:  GOT1 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 16: MDH1 reaction
+  Reactants: oxaloacetate [unknown], NADH [unknown]
+  Products:  malate [unknown], NAD [unknown]
+  Modifier:  MDH1 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 17: LDHA reaction
+  Reactants: lactate [unknown], NAD [unknown]
+  Products:  pyruvate [unknown], NADH [unknown]
+  Modifier:  LDHA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 18: ACL reaction
+  Reactants: citrate [unknown], ATP [unknown], CoA-SH [unknown]
+  Products:  acetyl-CoA [unknown], oxaloacetate [unknown], ADP [unknown], Pi [unknown]
+  Modifier:  ACL [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 19: GPD1 reaction
+  Reactants: dihydroxyacetone phosphate [unknown], NADH [unknown]
+  Products:  glycerol 3-phosphate [unknown], NAD [unknown]
+  Modifier:  GPD1 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 20: GPD2 reaction
+  Reactants: glycerol 3-phosphate [unknown], FAD [unknown]
+  Products:  dihydroxyacetone phosphate [unknown], FADH2 [unknown]
+  Modifier:  GPD2 [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 21: glutaminase reaction
+  Reactants: glutamine [unknown], H2O [unknown]
   Products:  glutamate [unknown], ammonia [unknown]
   Modifier:  glutaminase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 13: glutamate dehydrogenase reaction
-  Reactants: glutamate [unknown], NAD [unknown]
-  Products:  alpha-ketoglutarate [unknown], NADH [unknown], ammonia [unknown]
-  Modifier:  glutamate dehydrogenase [unknown] (role=catalyst, confidence=1.0)
+REACTION 22: SCS reaction (GTP)
+  Reactants: succinyl-CoA [unknown], GDP [unknown], Pi [unknown]
+  Products:  succinate [unknown], GTP [unknown], CoA-SH [unknown]
+  Modifier:  SCS [unknown] (role=catalyst, confidence=1.0), CS [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 TRANSPORT 1: pyruvate import via MPC
-  From: cytosol state
+  From: cytosolic state
   To:   mitochondrial matrix state
   Cargo: pyruvate [unknown]
-  Transporter: mitochondrial pyruvate carrier [unknown] (role=transporter, confidence=1.0)
+  Transporter: PC [unknown] (role=transporter, confidence=1.0)
   QA flags:  none
 
 TRANSPORT 2: citrate export via SLC25A1
   From: mitochondrial matrix state
-  To:   cytosol state
+  To:   cytosolic state
   Cargo: citrate [unknown]
   Transporter: SLC25A1 [unknown] (role=transporter, confidence=1.0)
   QA flags:  none
 
 LOCKED REACTION FILTER
-9 locked reactions found
-9 exported
+12 locked reactions found
+12 exported
 0 quarantined reactions due to unresolved compound reference

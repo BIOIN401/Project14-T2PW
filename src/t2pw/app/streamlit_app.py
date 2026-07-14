@@ -61,6 +61,7 @@ from t2pw.pipeline.pipeline import (
     PipelineFailure,
     build_qa_feedback,
     build_and_save_draft_graph,
+    filter_out_of_scope_reactions,
     merge_additions,
     propagate_context_organism,
     run_stage_two_with_feedback_loop,
@@ -2466,7 +2467,19 @@ if submit:
         st.json(failure.report)
         st.stop()
 
-    final_payload = stage_one
+    # Stage 1 wrote its raw output (incl. out-of-scope reactions) to disk and the
+    # locked-reaction manifest above, before this filter runs; the manifest never
+    # locked out-of-scope reactions in the first place. Drop them here so Stage 2
+    # does not spend effort linking modifiers to reactions that are about to be
+    # removed, and so out-of-scope material never reaches export.
+    stage_one_in_scope, out_of_scope_removed_reactions = filter_out_of_scope_reactions(stage_one)
+    if out_of_scope_removed_reactions:
+        st.info(
+            f"Removed {len(out_of_scope_removed_reactions)} out-of-scope reaction(s) "
+            f"before Stage 2: {', '.join(out_of_scope_removed_reactions)}"
+        )
+
+    final_payload = stage_one_in_scope
     stage_two = None
     stage_two_chunks: List[Dict[str, Any]] = []
     stage_two_rounds: List[Dict[str, Any]] = []
@@ -2478,7 +2491,7 @@ if submit:
             with st.spinner("Running Stage 2 inference..."):
                 stage_two, stage_two_chunks, stage_two_rounds = run_stage_two_with_feedback_loop(
                     text,
-                    stage_one,
+                    stage_one_in_scope,
                     chunk_details=chunk_details,
                     pathway_context=pathway_context,
                     user_task_context=user_task_context,
@@ -2497,7 +2510,7 @@ if submit:
             st.stop()
 
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
-        final_payload = merge_additions(stage_one, stage_two if isinstance(stage_two, dict) else {})
+        final_payload = merge_additions(stage_one_in_scope, stage_two if isinstance(stage_two, dict) else {})
 
     stage2_preservation_report = _write_reaction_preservation_report("after_stage2", final_payload)
 
@@ -2513,6 +2526,7 @@ if submit:
     st.session_state["pathway_context"] = pathway_context
     st.session_state["user_task_context"] = user_task_context
     st.session_state["stage_one"] = stage_one
+    st.session_state["out_of_scope_removed_reactions"] = out_of_scope_removed_reactions
     st.session_state["chunk_details"] = chunk_details
     st.session_state["stage_two"] = stage_two
     st.session_state["stage_two_chunks"] = stage_two_chunks
@@ -2559,6 +2573,13 @@ if st.session_state.get("pipeline_ready"):
             json.dumps(stage_one, indent=2),
             file_name="stage1_extract.json",
             mime="application/json",
+        )
+
+    out_of_scope_removed_reactions = st.session_state.get("out_of_scope_removed_reactions", [])
+    if out_of_scope_removed_reactions:
+        st.info(
+            f"Removed {len(out_of_scope_removed_reactions)} out-of-scope reaction(s) "
+            f"before Stage 2: {', '.join(out_of_scope_removed_reactions)}"
         )
 
     chunk_count = len(chunk_details)

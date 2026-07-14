@@ -133,6 +133,25 @@ def apply_biochemical_aliases(
                 continue
             rxn[side] = [_alias(t) if isinstance(t, str) else t for t in tokens]
 
+    # Rewrite plain-string participant names on interactions and transport cargo.
+    # These are the same class of bare compound/protein reference as reaction
+    # inputs/outputs, but were previously left out of this pass entirely.
+    for interaction in _safe_list(processes.get("interactions")):
+        if not isinstance(interaction, dict):
+            continue
+        for field in ("entity_1", "entity_2", "left", "right", "source", "target"):
+            value = interaction.get(field)
+            if isinstance(value, str) and value:
+                interaction[field] = _alias(value)
+
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        for field in ("cargo", "cargo_complex"):
+            value = transport.get(field)
+            if isinstance(value, str) and value:
+                transport[field] = _alias(value)
+
     if rewrites:
         rep.setdefault("actions", []).append({
             "type": "biochemical_alias_rewrite",
@@ -177,7 +196,7 @@ def _safe_list(value: Any) -> List[Any]:
 
 def _normalize(value: str) -> str:
     lowered = re.sub(r"\s+", " ", (value or "").strip().casefold())
-    return re.sub(r"[^a-z0-9: ]+", "", lowered)
+    return re.sub(r"[^a-z0-9:+ ]+", "", lowered)
 
 
 def _norm_text(value: Any) -> str:
@@ -357,8 +376,13 @@ def _select_default_species_name(entities: Dict[str, Any]) -> str:
 def _entity_name_norms(rows: Sequence[Any]) -> Set[str]:
     out: Set[str] = set()
     for row in rows:
-        if isinstance(row, dict) and isinstance(row.get("name"), str) and row.get("name").strip():
+        if not isinstance(row, dict):
+            continue
+        if isinstance(row.get("name"), str) and row.get("name").strip():
             out.add(_normalize(row["name"]))
+        for synonym in _safe_list(row.get("synonyms")):
+            if isinstance(synonym, str) and synonym.strip():
+                out.add(_normalize(synonym))
     return out
 
 
@@ -1775,7 +1799,7 @@ def _token_parts_for_aliasing(token: str) -> List[str]:
     parts: List[str] = [text]
     if _complex_components(text):
         parts.extend(_complex_components(text))
-    elif "+" in text:
+    elif _has_plus_token(text):
         parts.extend(_split_composite(text))
     return _dedupe_preserve(parts)
 
@@ -2022,7 +2046,7 @@ def canonicalize_same_as_aliases(
                 ]
             )
             return ":".join(rewritten)
-        if "+" in text:
+        if _has_plus_token(text):
             parts = _split_composite(text)
             rewritten = _dedupe_preserve(
                 [
@@ -2138,6 +2162,20 @@ def canonicalize_same_as_aliases(
             updated["entity_1"] = _rewrite_token(str(updated.get("entity_1")))
         if isinstance(updated.get("entity_2"), str):
             updated["entity_2"] = _rewrite_token(str(updated.get("entity_2")))
+        if _is_same_as_relationship(str(updated.get("relationship", ""))) and _normalize(
+            str(updated.get("entity_1", ""))
+        ) == _normalize(str(updated.get("entity_2", ""))):
+            # Both sides resolved to the same canonical name (e.g. a same-as
+            # declaration whose two forms both aliased to one registry entry,
+            # or a degenerate self-referential declaration to begin with).
+            # There is no remaining alias information to carry forward.
+            rep["actions"].append(
+                {
+                    "type": "same_as_interaction_resolved_to_noop",
+                    "json_pointer": f"/processes/interactions/{idx}",
+                }
+            )
+            continue
         key = (
             _normalize(str(updated.get("relationship", ""))),
             _normalize(str(updated.get("entity_1", ""))),
@@ -3514,6 +3552,17 @@ def validate_registry_references(payload: Dict[str, Any]) -> None:
             if transporter_name and _normalize(transporter_name) not in registry:
                 errors.append(
                     f"/processes/transports/{tidx}/transporters/{tridx} unknown transporter: {transporter_name}"
+                )
+
+    for iidx, interaction in enumerate(_safe_list(processes.get("interactions"))):
+        if not isinstance(interaction, dict):
+            continue
+        left = interaction.get("left") or interaction.get("entity_1") or interaction.get("source")
+        right = interaction.get("right") or interaction.get("entity_2") or interaction.get("target")
+        for side_name, side in [("entity_1", left), ("entity_2", right)]:
+            if isinstance(side, str) and _canonical(side) and _normalize(side) not in registry:
+                errors.append(
+                    f"/processes/interactions/{iidx}/{side_name} unknown entity: {side}"
                 )
 
     if errors:

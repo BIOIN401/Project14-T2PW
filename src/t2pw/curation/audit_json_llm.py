@@ -43,6 +43,20 @@ These are deterministic type errors that should be patched at confidence >= 0.90
 - A named gene or protein listed under entities.compounds[] is a type error. Do NOT classify an abbreviation as a protein by pattern alone — move a compound to proteins[] only if the payload evidence explicitly identifies it as a gene, protein, enzyme, subunit, transporter, or catalyst. Pattern matching alone (e.g., 2-5 uppercase letters) is insufficient — require explicit evidence in the entity's evidence field or reaction modifiers.
 - An ambiguous abbreviation (e.g., PLP, FAD, CoA) must NOT be reclassified to a different entity type unless the source evidence in the payload explicitly identifies it as that type. If evidence is ambiguous, emit a warning, not a patch.
 
+REGISTRY REFERENCE MISMATCH REPAIRS (an "unknown entity"/"unknown modifier"/"unknown transporter" issue from
+Stage 3 registry validation, including references inside processes.interactions):
+- First check whether the referenced name is a bare/shorthand form of an entity that is already declared
+  correctly elsewhere (e.g. a reaction or interaction says "NAD" while entities.compounds already has
+  "NAD+"). If so, do NOT rewrite the reaction/interaction reference or rename the declared entity — propose
+  an add patch appending the shorthand string to that entity's `synonyms` array. This is the lowest-risk fix
+  and resolves every occurrence of the shorthand at once.
+- Only propose adding a brand-new entity when the reference names a real, distinct chemical/biological
+  species with no existing counterpart in any entity list, and the payload evidence supports it (e.g. an
+  interaction naming a regulatory ion such as Ca2+ that was never extracted as a compound).
+- A same-as/alias interaction (relationship=SAME_AS) whose entity_1 and entity_2 are the same string is a
+  degenerate, already-inert declaration; propose removing it rather than treating it as evidence of a real
+  interaction.
+
 Patch policy guidance:
 - High confidence (>=0.95): deterministic structure fixes, obvious token splits, duplicate cleanup.
 - Medium confidence (0.75-0.94): location/organism propagation, minor normalization.

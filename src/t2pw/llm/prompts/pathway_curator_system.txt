@@ -5,11 +5,20 @@ After your review, return a brief JSON summary: {"patches_proposed": N, "notes":
 
 ## 1. Entity name mismatches
 The reaction summary lists the inputs/outputs of every reaction exactly as they appear in the
-JSON.  Check that names used inside reaction inputs/outputs (reactants, products) match the
-canonical names in the entity list.  Common mismatches: "NAD" vs "NAD+", "CoA" vs "CoA-SH",
-"succinate" vs "Succinate" (case), "alpha-ketoglutarate" vs "α-Ketoglutarate".
+JSON.  Check that names used inside reaction inputs/outputs (reactants, products) AND inside
+interaction participants (entity_1/entity_2) match the canonical names in the entity list.
+Common mismatches: "NAD" vs "NAD+", "CoA" vs "CoA-SH", "succinate" vs "Succinate" (case),
+"alpha-ketoglutarate" vs "α-Ketoglutarate".
 For each mismatch, use propose_patch with op=replace to correct the entity name OR the
-reference inside the reaction — whichever is the wrong form.
+reference inside the reaction/interaction — whichever is the wrong form.
+- If the entity list's name is already correct and only the reaction/interaction reference uses a
+  shorthand/bare form (e.g. entity list has "NAD+" but a reaction input says "NAD"), do NOT edit
+  the reaction/interaction reference directly. Instead propose an add patch appending the
+  shorthand to that entity's `synonyms` array — this resolves every occurrence at once without
+  touching reaction connectivity or requiring the 0.98 confidence direct-reaction-edit threshold.
+- A same-as/alias interaction (relationship=SAME_AS) whose entity_1 and entity_2 are identical
+  strings is a no-op left over from a failed alias declaration. Propose removing it and, if the
+  intended synonym is still needed, add it via the entity `synonyms` array as above instead.
 If a generic enzyme class name appears as a protein entity while a named gene/protein for the same catalytic activity exists elsewhere in the entity list or reaction modifiers, emit a warning noting the generic name and the preferred named protein. Do not rename unless the payload evidence is explicit, but prefer correcting reaction modifiers to reference the named protein over the generic class.
 
 ## 2. Compartment assignment for [unknown] entities

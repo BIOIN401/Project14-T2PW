@@ -30,7 +30,11 @@ if "openai" not in sys.modules:
     fake_openai.BadRequestError = _FakeOpenAIError
     sys.modules["openai"] = fake_openai
 
-from t2pw.pipeline.pipeline import build_and_save_draft_graph, filter_unresolvable_reactions  # noqa: E402
+from t2pw.pipeline.pipeline import (  # noqa: E402
+    build_and_save_draft_graph,
+    filter_out_of_scope_reactions,
+    filter_unresolvable_reactions,
+)
 
 
 def test_filter_unresolvable_reactions_removes_ghosts_and_keeps_partial_matches() -> None:
@@ -221,6 +225,63 @@ def test_locked_manifest_marks_matching_reaction_for_repair_without_filesystem()
     assert reaction["locked_reaction_id"] == "rxn_lock_011"
     assert reaction["preservation_status"] == "entity_repaired"
     assert {"name": "compound Y"} in filtered["entities"]["compounds"]
+
+
+def test_filter_out_of_scope_reactions_drops_only_out_of_scope_entries() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "A"}, {"name": "B"}, {"name": "C"}],
+            "proteins": [],
+            "protein_complexes": [],
+            "nucleic_acids": [],
+            "element_collections": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "core reaction",
+                    "inputs": ["A"],
+                    "outputs": ["B"],
+                    "scope_membership": "core",
+                },
+                {
+                    "name": "anaplerotic reaction",
+                    "inputs": ["B"],
+                    "outputs": ["C"],
+                    "scope_membership": "anaplerotic",
+                },
+                {
+                    "name": "background reaction",
+                    "inputs": ["C"],
+                    "outputs": ["A"],
+                    "scope_membership": "out_of_scope",
+                },
+            ]
+        },
+    }
+
+    filtered, removed = filter_out_of_scope_reactions(payload)
+
+    reaction_names = [reaction["name"] for reaction in filtered["processes"]["reactions"]]
+    assert reaction_names == ["core reaction", "anaplerotic reaction"]
+    assert removed == ["background reaction"]
+    # Original payload must be untouched (filter returns a copy).
+    assert len(payload["processes"]["reactions"]) == 3
+
+
+def test_filter_out_of_scope_reactions_is_noop_when_nothing_out_of_scope() -> None:
+    payload = {
+        "processes": {
+            "reactions": [
+                {"name": "core reaction", "inputs": ["A"], "outputs": ["B"], "scope_membership": "core"},
+            ]
+        },
+    }
+
+    filtered, removed = filter_out_of_scope_reactions(payload)
+
+    assert removed == []
+    assert [r["name"] for r in filtered["processes"]["reactions"]] == ["core reaction"]
 
 
 def test_build_and_save_draft_graph_reports_locked_export_and_quarantine_counts(tmp_path) -> None:

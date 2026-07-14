@@ -1,5 +1,5 @@
 {
-  "compound:Acetyl-CoA|HMDB0001206": {
+  "compound:acetyl-coa|HMDB0001206": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "Acetyl-CoA",
     "synonyms": [
@@ -1201,7 +1201,156 @@
       }
     ]
   },
-  "compound:NAD+|HMDB0000902": {
+  "compound:lactate|HMDB0000190": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "(S)-Lactate",
+    "synonyms": [
+      "(S)-Lactate",
+      "L-Lactate",
+      "L-Lactic acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H6O3",
+    "charge": 0,
+    "mass_monoisotopic": 90.0317,
+    "mass_average": 90.08,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Organic acids",
+      "Carboxylic acids",
+      "Hydroxycarboxylic acids",
+      "C00186 L-Lactate; (S)-2-Hydroxypropanoate"
+    ],
+    "pathways": [
+      "Glycolysis / Gluconeogenesis",
+      "Fructose and mannose metabolism",
+      "Pyruvate metabolism",
+      "Propanoate metabolism",
+      "Styrene degradation",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "cAMP signaling pathway",
+      "HIF-1 signaling pathway",
+      "Efferocytosis",
+      "Glucagon signaling pathway",
+      "Central carbon metabolism in cancer"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000190",
+      "kegg_id": "C00186",
+      "chebi_id": "CHEBI:422",
+      "pubchem_id": "107689",
+      "cas": "79-33-4",
+      "biocyc": "L-LACTATE",
+      "chemspider": "96860",
+      "drugbank_id": "DB03066",
+      "pathbank_compound_id": "122"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00186",
+      "primary_name": "(S)-Lactate",
+      "synonyms": [
+        "(S)-Lactate",
+        "L-Lactate",
+        "L-Lactic acid"
+      ],
+      "formula": "C3H6O3",
+      "mass_monoisotopic": 90.0317,
+      "mass_average": 90.08,
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Fructose and mannose metabolism",
+        "Pyruvate metabolism",
+        "Propanoate metabolism",
+        "Styrene degradation",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "cAMP signaling pathway",
+        "HIF-1 signaling pathway",
+        "Efferocytosis",
+        "Glucagon signaling pathway",
+        "Central carbon metabolism in cancer"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Organic acids",
+        "Carboxylic acids",
+        "Hydroxycarboxylic acids",
+        "C00186 L-Lactate; (S)-2-Hydroxypropanoate"
+      ],
+      "cross_references": {
+        "kegg_id": "C00186",
+        "pubchem_id": "3486",
+        "chebi_id": "16651"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00186",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00186",
+        "retrieved_at": "2026-04-06T21:33:55Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:422",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-24T06:15:01Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000190",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000190",
+        "retrieved_at": "2026-03-24T06:15:01Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:422",
+        "retrieved_at": "2026-03-24T06:15:01Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000190",
+        "retrieved_at": "2026-03-24T06:15:01Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00186",
+        "retrieved_at": "2026-04-06T21:33:55Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:nad+|HMDB0000902": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "NAD+",
     "synonyms": [
@@ -1373,7 +1522,7 @@
       }
     ]
   },
-  "compound:NADH|HMDB0001487": {
+  "compound:nadh|HMDB0001487": {
     "enrichment_status": "ok_with_warnings",
     "primary_name": "NADH",
     "synonyms": [
@@ -1489,6 +1638,284 @@
         "source": "KEGG",
         "id": "C00004",
         "retrieved_at": "2026-03-20T19:31:51Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:nadp+|HMDB0000217": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "NADP+",
+    "synonyms": [
+      "NADP+",
+      "NADP",
+      "Nicotinamide adenine dinucleotide phosphate",
+      "beta-Nicotinamide adenine dinucleotide phosphate",
+      "TPN",
+      "Triphosphopyridine nucleotide",
+      "beta-NADP+"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C21H29N7O17P3",
+    "charge": 0,
+    "mass_monoisotopic": 744.0833,
+    "mass_average": 744.41,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Vitamins and cofactors",
+      "Cofactors",
+      "Coenzymes",
+      "C00006 NADP"
+    ],
+    "pathways": [
+      "Photosynthesis",
+      "Glutathione metabolism",
+      "Nicotinate and nicotinamide metabolism",
+      "Drug metabolism - other enzymes",
+      "Metabolic pathways",
+      "Biosynthesis of cofactors",
+      "Thyroid hormone synthesis",
+      "Aldosterone synthesis and secretion",
+      "Alcoholic liver disease",
+      "Chemical carcinogenesis - reactive oxygen species",
+      "Diabetic cardiomyopathy"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000217",
+      "kegg_id": "C00006",
+      "chebi_id": "CHEBI:18009",
+      "pubchem_id": "5886",
+      "cas": "53-59-8",
+      "biocyc": "NAD(P)",
+      "chemspider": "5675",
+      "pathbank_compound_id": "143"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00006",
+      "primary_name": "NADP+",
+      "synonyms": [
+        "NADP+",
+        "NADP",
+        "Nicotinamide adenine dinucleotide phosphate",
+        "beta-Nicotinamide adenine dinucleotide phosphate",
+        "TPN",
+        "Triphosphopyridine nucleotide",
+        "beta-NADP+"
+      ],
+      "formula": "C21H29N7O17P3",
+      "mass_monoisotopic": 744.0833,
+      "mass_average": 744.41,
+      "pathways": [
+        "Photosynthesis",
+        "Glutathione metabolism",
+        "Nicotinate and nicotinamide metabolism",
+        "Drug metabolism - other enzymes",
+        "Metabolic pathways",
+        "Biosynthesis of cofactors",
+        "Thyroid hormone synthesis",
+        "Aldosterone synthesis and secretion",
+        "Alcoholic liver disease",
+        "Chemical carcinogenesis - reactive oxygen species",
+        "Diabetic cardiomyopathy"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Vitamins and cofactors",
+        "Cofactors",
+        "Coenzymes",
+        "C00006 NADP"
+      ],
+      "cross_references": {
+        "kegg_id": "C00006",
+        "pubchem_id": "3308",
+        "chebi_id": "18009"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00006",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00006",
+        "retrieved_at": "2026-06-24T17:34:39Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:18009",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-06-24T17:34:38Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000217",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000217",
+        "retrieved_at": "2026-06-24T17:34:38Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:18009",
+        "retrieved_at": "2026-06-24T17:34:38Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000217",
+        "retrieved_at": "2026-06-24T17:34:38Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00006",
+        "retrieved_at": "2026-06-24T17:34:39Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:nadph|HMDB0000221": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "NADPH",
+    "synonyms": [
+      "NADPH",
+      "TPNH",
+      "Reduced nicotinamide adenine dinucleotide phosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C21H30N7O17P3",
+    "charge": 0,
+    "mass_monoisotopic": 745.0911,
+    "mass_average": 745.42,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Photosynthesis",
+      "Glutathione metabolism",
+      "Metabolic pathways",
+      "Thyroid hormone synthesis",
+      "Aldosterone synthesis and secretion",
+      "Alcoholic liver disease",
+      "Chemical carcinogenesis - reactive oxygen species",
+      "Diabetic cardiomyopathy"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000221",
+      "kegg_id": "C00005",
+      "chebi_id": "CHEBI:16474",
+      "pubchem_id": "22833512",
+      "cas": "53-57-6",
+      "biocyc": "NADPH",
+      "chemspider": "17215925",
+      "pathbank_compound_id": "146"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00005",
+      "primary_name": "NADPH",
+      "synonyms": [
+        "NADPH",
+        "TPNH",
+        "Reduced nicotinamide adenine dinucleotide phosphate"
+      ],
+      "formula": "C21H30N7O17P3",
+      "mass_monoisotopic": 745.0911,
+      "mass_average": 745.42,
+      "pathways": [
+        "Photosynthesis",
+        "Glutathione metabolism",
+        "Metabolic pathways",
+        "Thyroid hormone synthesis",
+        "Aldosterone synthesis and secretion",
+        "Alcoholic liver disease",
+        "Chemical carcinogenesis - reactive oxygen species",
+        "Diabetic cardiomyopathy"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00005",
+        "pubchem_id": "3307",
+        "chebi_id": "16474"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00005",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00005",
+        "retrieved_at": "2026-04-06T00:35:36Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16474",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-04-06T00:35:34Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000221",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000221",
+        "retrieved_at": "2026-04-06T00:35:35Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:16474",
+        "retrieved_at": "2026-04-06T00:35:34Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000221",
+        "retrieved_at": "2026-04-06T00:35:35Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00005",
+        "retrieved_at": "2026-04-06T00:35:36Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -1635,7 +2062,7 @@
       }
     ]
   },
-  "compound:FADH2|CHEBI:17877": {
+  "compound:fadh2|CHEBI:17877": {
     "enrichment_status": "error",
     "primary_name": "",
     "synonyms": [],
@@ -1875,147 +2302,51 @@
       }
     ]
   },
-  "compound:CoA|HMDB0001423": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "CoA",
-    "synonyms": [
-      "CoA",
-      "Coenzyme A",
-      "CoA-SH"
-    ],
+  "compound:coa-sh|CHEBI:57287": {
+    "enrichment_status": "error",
+    "primary_name": "",
+    "synonyms": [],
     "description": "",
     "taxonomy": {},
     "ontology_classification": {},
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C21H36N7O16P3S",
+    "formula": "",
     "charge": 0,
-    "mass_monoisotopic": 767.1152,
-    "mass_average": 767.54,
+    "mass_monoisotopic": 0.0,
+    "mass_average": 0.0,
     "chebi_roles": [],
     "ontology_parents": [],
-    "kegg_class": [
-      "Compounds with biological roles [BR:br08001]",
-      "Vitamins and cofactors",
-      "Cofactors",
-      "Coenzymes",
-      "C00010 CoA"
-    ],
-    "pathways": [
-      "Fatty acid degradation",
-      "Carbapenem biosynthesis",
-      "Pantothenate and CoA biosynthesis",
-      "Metabolic pathways",
-      "Biosynthesis of secondary metabolites",
-      "Biosynthesis of cofactors",
-      "Ferroptosis",
-      "Thermogenesis",
-      "Cholinergic synapse",
-      "Fat digestion and absorption",
-      "Vitamin digestion and absorption"
-    ],
+    "kegg_class": [],
+    "pathways": [],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0001423",
-      "kegg_id": "C00010",
-      "chebi_id": "CHEBI:1146900",
-      "pubchem_id": "6816",
-      "cas": "85-61-0",
-      "biocyc": "CO-A",
-      "chemspider": "6557",
-      "pathbank_compound_id": "1099"
+      "chebi_id": "CHEBI:57287",
+      "pathbank_compound_id": "282377"
     },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C00010",
-      "primary_name": "CoA",
-      "synonyms": [
-        "CoA",
-        "Coenzyme A",
-        "CoA-SH"
-      ],
-      "formula": "C21H36N7O16P3S",
-      "mass_monoisotopic": 767.1152,
-      "mass_average": 767.54,
-      "pathways": [
-        "Fatty acid degradation",
-        "Carbapenem biosynthesis",
-        "Pantothenate and CoA biosynthesis",
-        "Metabolic pathways",
-        "Biosynthesis of secondary metabolites",
-        "Biosynthesis of cofactors",
-        "Ferroptosis",
-        "Thermogenesis",
-        "Cholinergic synapse",
-        "Fat digestion and absorption",
-        "Vitamin digestion and absorption"
-      ],
-      "kegg_class": [
-        "Compounds with biological roles [BR:br08001]",
-        "Vitamins and cofactors",
-        "Cofactors",
-        "Coenzymes",
-        "C00010 CoA"
-      ],
-      "cross_references": {
-        "kegg_id": "C00010",
-        "pubchem_id": "3312",
-        "chebi_id": "15346"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C00010",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00010",
-        "retrieved_at": "2026-03-24T06:14:51Z",
-        "status": "ok"
-      }
-    },
+    "kegg": {},
     "chebi": {
       "status": "error",
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:1146900",
+        "id": "CHEBI:57287",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-04-05T04:49:09Z"
+        "retrieved_at": "2026-07-13T23:21:04Z"
       }
     },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0001423",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0001423",
-        "retrieved_at": "2026-04-05T04:49:10Z"
-      }
-    },
+    "hmdb": {},
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:1146900",
-        "retrieved_at": "2026-04-05T04:49:09Z",
+        "id": "CHEBI:57287",
+        "retrieved_at": "2026-07-13T23:21:04Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0001423",
-        "retrieved_at": "2026-04-05T04:49:10Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C00010",
-        "retrieved_at": "2026-03-24T06:14:51Z",
-        "status": "ok",
-        "error_if_any": ""
       }
     ]
   },
@@ -2412,14 +2743,12 @@
       }
     ]
   },
-  "compound:Ca2+|HMDB0000464": {
+  "compound:GTP|HMDB0001273": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Calcium cation",
+    "primary_name": "GTP",
     "synonyms": [
-      "Calcium cation",
-      "Ca2+",
-      "Calcium(2+)",
-      "Calcium ion"
+      "GTP",
+      "Guanosine 5'-triphosphate"
     ],
     "description": "",
     "taxonomy": {},
@@ -2427,324 +2756,95 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "Ca",
+    "formula": "C10H16N5O14P3",
     "charge": 0,
-    "mass_monoisotopic": 39.9626,
-    "mass_average": 40.08,
+    "mass_monoisotopic": 522.9907,
+    "mass_average": 523.18,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
-      "Classification of Japanese OTC drugs [BR:br08313]",
-      "Nourishing tonics and health supplements",
-      "44 Calcium based drugs",
-      "C00076 Calcium"
+      "Compounds with biological roles [BR:br08001]",
+      "Nucleic acids",
+      "Nucleotides",
+      "Ribonucleotides",
+      "C00044 GTP"
     ],
     "pathways": [
-      "MAPK signaling pathway",
-      "ErbB signaling pathway",
+      "Purine metabolism",
+      "Riboflavin metabolism",
+      "Folate biosynthesis",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Nucleotide metabolism",
+      "Biosynthesis of cofactors",
+      "Biofilm formation - Pseudomonas aeruginosa",
       "Ras signaling pathway",
       "Rap1 signaling pathway",
-      "Calcium signaling pathway",
-      "cGMP-PKG signaling pathway",
-      "cAMP signaling pathway",
-      "Chemokine signaling pathway",
-      "NF-kappa B signaling pathway",
-      "HIF-1 signaling pathway",
-      "Phosphatidylinositol signaling system",
-      "Phospholipase D signaling pathway",
-      "Plant hormone signal transduction",
-      "Neuroactive ligand signaling",
-      "Oocyte meiosis",
-      "Protein processing in endoplasmic reticulum",
-      "AMPK signaling pathway",
-      "Apoptosis",
-      "Longevity regulating pathway",
-      "Necroptosis",
-      "Cellular senescence",
-      "Cardiac muscle contraction",
-      "Adrenergic signaling in cardiomyocytes",
-      "Vascular smooth muscle contraction",
-      "Wnt signaling pathway",
-      "Axon guidance",
-      "Axon regeneration",
-      "VEGF signaling pathway",
-      "Apelin signaling pathway",
-      "Osteoclast differentiation",
-      "Cornified envelope formation",
-      "IgSF CAM signaling",
-      "Tight junction",
-      "Gap junction",
-      "Platelet activation",
-      "Neutrophil extracellular trap formation",
-      "NOD-like receptor signaling pathway",
-      "C-type lectin receptor signaling pathway",
-      "Plant-pathogen interaction",
-      "Natural killer cell mediated cytotoxicity",
-      "Th1 and Th2 cell differentiation",
-      "Th17 cell differentiation",
-      "T cell receptor signaling pathway",
-      "B cell receptor signaling pathway",
-      "Fc epsilon RI signaling pathway",
-      "Fc gamma R-mediated phagocytosis",
-      "Leukocyte transendothelial migration",
-      "Circadian rhythm",
-      "Circadian entrainment",
-      "Long-term potentiation",
-      "Synaptic vesicle cycle",
-      "Neurotrophin signaling pathway",
-      "Retrograde endocannabinoid signaling",
-      "Glutamatergic synapse",
-      "Cholinergic synapse",
-      "Serotonergic synapse",
-      "GABAergic synapse",
-      "Dopaminergic synapse",
-      "Long-term depression",
-      "Olfactory transduction",
-      "Taste transduction",
-      "Phototransduction",
-      "Phototransduction - fly",
-      "Inflammatory mediator regulation of TRP channels",
-      "Insulin secretion",
-      "GnRH signaling pathway",
-      "Estrogen signaling pathway",
-      "Melanogenesis",
-      "Thyroid hormone synthesis",
-      "Thyroid hormone signaling pathway",
-      "Adipocytokine signaling pathway",
-      "Oxytocin signaling pathway",
-      "Glucagon signaling pathway",
-      "Renin secretion",
-      "Aldosterone synthesis and secretion",
-      "Relaxin signaling pathway",
-      "Cortisol synthesis and secretion",
-      "Parathyroid hormone synthesis, secretion and action",
-      "GnRH secretion",
-      "Type II diabetes mellitus",
-      "AGE-RAGE signaling pathway in diabetic complications",
-      "Cushing syndrome",
-      "Growth hormone synthesis, secretion and action",
-      "Alcoholic liver disease",
-      "Endocrine and other factor-regulated calcium reabsorption",
-      "Salivary secretion",
-      "Gastric acid secretion",
-      "Pancreatic secretion",
-      "Carbohydrate digestion and absorption",
-      "Protein digestion and absorption",
-      "Mineral absorption",
-      "Alzheimer disease",
-      "Parkinson disease",
-      "Amyotrophic lateral sclerosis",
-      "Huntington disease",
-      "Spinocerebellar ataxia",
-      "Prion disease",
-      "Pathways of neurodegeneration - multiple diseases",
-      "Amphetamine addiction",
-      "Morphine addiction",
-      "Nicotine addiction",
-      "Alcoholism",
-      "Shigellosis",
-      "Pertussis",
-      "Yersinia infection",
-      "Leishmaniasis",
-      "Chagas disease",
-      "African trypanosomiasis",
-      "Toxoplasmosis",
-      "Amoebiasis",
-      "Tuberculosis",
-      "Hepatitis B",
-      "Human cytomegalovirus infection",
-      "Human T-cell leukemia virus 1 infection",
-      "Kaposi sarcoma-associated herpesvirus infection",
-      "Epstein-Barr virus infection",
-      "Human immunodeficiency virus 1 infection",
-      "Pathways in cancer",
-      "Chemical carcinogenesis - receptor activation",
-      "Glioma",
-      "Non-small cell lung cancer",
-      "Hepatocellular carcinoma",
-      "PD-L1 expression and PD-1 checkpoint pathway in cancer",
-      "Hypertrophic cardiomyopathy",
-      "Arrhythmogenic right ventricular cardiomyopathy",
-      "Dilated cardiomyopathy",
-      "Diabetic cardiomyopathy",
-      "Lipid and atherosclerosis",
-      "Fluid shear stress and atherosclerosis"
+      "Sulfur relay system",
+      "Mitophagy - animal",
+      "Autophagy - animal",
+      "Endocytosis",
+      "Biofilm formation - Vibrio cholerae"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000464",
-      "kegg_id": "C00076",
-      "chebi_id": "CHEBI:29108",
-      "pubchem_id": "271",
-      "cas": "14127-61-8",
-      "biocyc": "CA%2b2",
-      "chemspider": "266",
-      "drugbank_id": "DB01373",
-      "pathbank_compound_id": "353"
+      "hmdb_id": "HMDB0001273",
+      "kegg_id": "C00044",
+      "chebi_id": "CHEBI:15996",
+      "pubchem_id": "6830",
+      "cas": "86-01-1",
+      "biocyc": "GTP",
+      "chemspider": "6569",
+      "pathbank_compound_id": "986"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00076",
-      "primary_name": "Calcium cation",
+      "id": "C00044",
+      "primary_name": "GTP",
       "synonyms": [
-        "Calcium cation",
-        "Ca2+",
-        "Calcium(2+)",
-        "Calcium ion"
+        "GTP",
+        "Guanosine 5'-triphosphate"
       ],
-      "formula": "Ca",
-      "mass_monoisotopic": 39.9626,
-      "mass_average": 40.08,
+      "formula": "C10H16N5O14P3",
+      "mass_monoisotopic": 522.9907,
+      "mass_average": 523.18,
       "pathways": [
-        "MAPK signaling pathway",
-        "ErbB signaling pathway",
+        "Purine metabolism",
+        "Riboflavin metabolism",
+        "Folate biosynthesis",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Nucleotide metabolism",
+        "Biosynthesis of cofactors",
+        "Biofilm formation - Pseudomonas aeruginosa",
         "Ras signaling pathway",
         "Rap1 signaling pathway",
-        "Calcium signaling pathway",
-        "cGMP-PKG signaling pathway",
-        "cAMP signaling pathway",
-        "Chemokine signaling pathway",
-        "NF-kappa B signaling pathway",
-        "HIF-1 signaling pathway",
-        "Phosphatidylinositol signaling system",
-        "Phospholipase D signaling pathway",
-        "Plant hormone signal transduction",
-        "Neuroactive ligand signaling",
-        "Oocyte meiosis",
-        "Protein processing in endoplasmic reticulum",
-        "AMPK signaling pathway",
-        "Apoptosis",
-        "Longevity regulating pathway",
-        "Necroptosis",
-        "Cellular senescence",
-        "Cardiac muscle contraction",
-        "Adrenergic signaling in cardiomyocytes",
-        "Vascular smooth muscle contraction",
-        "Wnt signaling pathway",
-        "Axon guidance",
-        "Axon regeneration",
-        "VEGF signaling pathway",
-        "Apelin signaling pathway",
-        "Osteoclast differentiation",
-        "Cornified envelope formation",
-        "IgSF CAM signaling",
-        "Tight junction",
-        "Gap junction",
-        "Platelet activation",
-        "Neutrophil extracellular trap formation",
-        "NOD-like receptor signaling pathway",
-        "C-type lectin receptor signaling pathway",
-        "Plant-pathogen interaction",
-        "Natural killer cell mediated cytotoxicity",
-        "Th1 and Th2 cell differentiation",
-        "Th17 cell differentiation",
-        "T cell receptor signaling pathway",
-        "B cell receptor signaling pathway",
-        "Fc epsilon RI signaling pathway",
-        "Fc gamma R-mediated phagocytosis",
-        "Leukocyte transendothelial migration",
-        "Circadian rhythm",
-        "Circadian entrainment",
-        "Long-term potentiation",
-        "Synaptic vesicle cycle",
-        "Neurotrophin signaling pathway",
-        "Retrograde endocannabinoid signaling",
-        "Glutamatergic synapse",
-        "Cholinergic synapse",
-        "Serotonergic synapse",
-        "GABAergic synapse",
-        "Dopaminergic synapse",
-        "Long-term depression",
-        "Olfactory transduction",
-        "Taste transduction",
-        "Phototransduction",
-        "Phototransduction - fly",
-        "Inflammatory mediator regulation of TRP channels",
-        "Insulin secretion",
-        "GnRH signaling pathway",
-        "Estrogen signaling pathway",
-        "Melanogenesis",
-        "Thyroid hormone synthesis",
-        "Thyroid hormone signaling pathway",
-        "Adipocytokine signaling pathway",
-        "Oxytocin signaling pathway",
-        "Glucagon signaling pathway",
-        "Renin secretion",
-        "Aldosterone synthesis and secretion",
-        "Relaxin signaling pathway",
-        "Cortisol synthesis and secretion",
-        "Parathyroid hormone synthesis, secretion and action",
-        "GnRH secretion",
-        "Type II diabetes mellitus",
-        "AGE-RAGE signaling pathway in diabetic complications",
-        "Cushing syndrome",
-        "Growth hormone synthesis, secretion and action",
-        "Alcoholic liver disease",
-        "Endocrine and other factor-regulated calcium reabsorption",
-        "Salivary secretion",
-        "Gastric acid secretion",
-        "Pancreatic secretion",
-        "Carbohydrate digestion and absorption",
-        "Protein digestion and absorption",
-        "Mineral absorption",
-        "Alzheimer disease",
-        "Parkinson disease",
-        "Amyotrophic lateral sclerosis",
-        "Huntington disease",
-        "Spinocerebellar ataxia",
-        "Prion disease",
-        "Pathways of neurodegeneration - multiple diseases",
-        "Amphetamine addiction",
-        "Morphine addiction",
-        "Nicotine addiction",
-        "Alcoholism",
-        "Shigellosis",
-        "Pertussis",
-        "Yersinia infection",
-        "Leishmaniasis",
-        "Chagas disease",
-        "African trypanosomiasis",
-        "Toxoplasmosis",
-        "Amoebiasis",
-        "Tuberculosis",
-        "Hepatitis B",
-        "Human cytomegalovirus infection",
-        "Human T-cell leukemia virus 1 infection",
-        "Kaposi sarcoma-associated herpesvirus infection",
-        "Epstein-Barr virus infection",
-        "Human immunodeficiency virus 1 infection",
-        "Pathways in cancer",
-        "Chemical carcinogenesis - receptor activation",
-        "Glioma",
-        "Non-small cell lung cancer",
-        "Hepatocellular carcinoma",
-        "PD-L1 expression and PD-1 checkpoint pathway in cancer",
-        "Hypertrophic cardiomyopathy",
-        "Arrhythmogenic right ventricular cardiomyopathy",
-        "Dilated cardiomyopathy",
-        "Diabetic cardiomyopathy",
-        "Lipid and atherosclerosis",
-        "Fluid shear stress and atherosclerosis"
+        "Sulfur relay system",
+        "Mitophagy - animal",
+        "Autophagy - animal",
+        "Endocytosis",
+        "Biofilm formation - Vibrio cholerae"
       ],
       "kegg_class": [
-        "Classification of Japanese OTC drugs [BR:br08313]",
-        "Nourishing tonics and health supplements",
-        "44 Calcium based drugs",
-        "C00076 Calcium"
+        "Compounds with biological roles [BR:br08001]",
+        "Nucleic acids",
+        "Nucleotides",
+        "Ribonucleotides",
+        "C00044 GTP"
       ],
       "cross_references": {
-        "kegg_id": "C00076",
-        "pubchem_id": "3376",
-        "chebi_id": "22984"
+        "kegg_id": "C00044",
+        "pubchem_id": "3346",
+        "chebi_id": "15996"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00076",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00076",
-        "retrieved_at": "2026-04-05T04:49:15Z",
+        "id": "C00044",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00044",
+        "retrieved_at": "2026-03-24T06:14:12Z",
         "status": "ok"
       }
     },
@@ -2753,9 +2853,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:29108",
+        "id": "CHEBI:15996",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-04-05T04:49:14Z"
+        "retrieved_at": "2026-03-24T06:14:11Z"
       }
     },
     "hmdb": {
@@ -2763,31 +2863,100 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000464",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000464",
-        "retrieved_at": "2026-04-05T04:49:14Z"
+        "id": "HMDB0001273",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001273",
+        "retrieved_at": "2026-03-24T06:14:12Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:29108",
-        "retrieved_at": "2026-04-05T04:49:14Z",
+        "id": "CHEBI:15996",
+        "retrieved_at": "2026-03-24T06:14:11Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000464",
-        "retrieved_at": "2026-04-05T04:49:14Z",
+        "id": "HMDB0001273",
+        "retrieved_at": "2026-03-24T06:14:12Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00076",
-        "retrieved_at": "2026-04-05T04:49:15Z",
+        "id": "C00044",
+        "retrieved_at": "2026-03-24T06:14:12Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:aspartate|22660": {
+    "enrichment_status": "ok",
+    "primary_name": "Aspartate",
+    "synonyms": [
+      "Aspartate",
+      "Aspartic acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C4H7NO4",
+    "charge": 0,
+    "mass_monoisotopic": 133.0375,
+    "mass_average": 133.1,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C16433",
+      "pubchem_id": "47205730",
+      "chebi_id": "22660"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C16433",
+      "primary_name": "Aspartate",
+      "synonyms": [
+        "Aspartate",
+        "Aspartic acid"
+      ],
+      "formula": "C4H7NO4",
+      "mass_monoisotopic": 133.0375,
+      "mass_average": 133.1,
+      "pathways": [],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C16433",
+        "pubchem_id": "47205730",
+        "chebi_id": "22660"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C16433",
+        "source_url": "https://rest.kegg.jp/get/cpd:C16433",
+        "retrieved_at": "2026-03-24T06:15:23Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {},
+    "hmdb": {},
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "KEGG",
+        "id": "C16433",
+        "retrieved_at": "2026-03-24T06:15:23Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -3178,76 +3347,848 @@
       }
     ]
   },
-  "protein:citrate synthase|P53396": {
-    "status": "error",
-    "uniprot_id": "P53396",
-    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/P53396.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/P53396.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e087d0>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P53396",
-      "retrieved_at": "2026-07-14T20:01:42Z"
-    }
+  "compound:dihydroxyacetone phosphate|HMDB0001473": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Glycerone phosphate",
+    "synonyms": [
+      "Glycerone phosphate",
+      "Dihydroxyacetone phosphate",
+      "3-Hydroxy-2-oxopropyl phosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H7O6P",
+    "charge": 0,
+    "mass_monoisotopic": 169.998,
+    "mass_average": 170.06,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Glycolysis / Gluconeogenesis",
+      "Pentose and glucuronate interconversions",
+      "Fructose and mannose metabolism",
+      "Galactose metabolism",
+      "Glycerolipid metabolism",
+      "Inositol phosphate metabolism",
+      "Glycerophospholipid metabolism",
+      "Glyoxylate and dicarboxylate metabolism",
+      "Propanoate metabolism",
+      "Methane metabolism",
+      "Carbon fixation by Calvin cycle",
+      "Nicotinate and nicotinamide metabolism",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "Microbial metabolism in diverse environments",
+      "Carbon metabolism",
+      "Biosynthesis of amino acids"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0001473",
+      "kegg_id": "C00111",
+      "chebi_id": "CHEBI:16108",
+      "pubchem_id": "668",
+      "cas": "57-04-5",
+      "biocyc": "DIHYDROXY-ACETONE-PHOSPHATE",
+      "chemspider": "648",
+      "drugbank_id": "DB04326",
+      "pathbank_compound_id": "1134"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00111",
+      "primary_name": "Glycerone phosphate",
+      "synonyms": [
+        "Glycerone phosphate",
+        "Dihydroxyacetone phosphate",
+        "3-Hydroxy-2-oxopropyl phosphate"
+      ],
+      "formula": "C3H7O6P",
+      "mass_monoisotopic": 169.998,
+      "mass_average": 170.06,
+      "pathways": [
+        "Glycolysis / Gluconeogenesis",
+        "Pentose and glucuronate interconversions",
+        "Fructose and mannose metabolism",
+        "Galactose metabolism",
+        "Glycerolipid metabolism",
+        "Inositol phosphate metabolism",
+        "Glycerophospholipid metabolism",
+        "Glyoxylate and dicarboxylate metabolism",
+        "Propanoate metabolism",
+        "Methane metabolism",
+        "Carbon fixation by Calvin cycle",
+        "Nicotinate and nicotinamide metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "Microbial metabolism in diverse environments",
+        "Carbon metabolism",
+        "Biosynthesis of amino acids"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00111",
+        "pubchem_id": "3411",
+        "chebi_id": "16108"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00111",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00111",
+        "retrieved_at": "2026-03-07T21:34:42Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:16108",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-10T15:49:10Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001473",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001473",
+        "retrieved_at": "2026-03-10T15:49:10Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:16108",
+        "retrieved_at": "2026-03-10T15:49:10Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001473",
+        "retrieved_at": "2026-03-10T15:49:10Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00111",
+        "retrieved_at": "2026-03-07T21:34:42Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
   },
-  "protein:aconitase 2|A0A7I2V3C8": {
-    "status": "error",
-    "uniprot_id": "A0A7I2V3C8",
-    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/A0A7I2V3C8.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/A0A7I2V3C8.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e09310>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
-    "provenance": {
-      "source": "UniProt",
-      "query": "A0A7I2V3C8",
-      "retrieved_at": "2026-07-14T20:01:42Z"
-    }
+  "compound:glycerol 3-phosphate|HMDB0000126": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "sn-Glycerol 3-phosphate",
+    "synonyms": [
+      "sn-Glycerol 3-phosphate",
+      "Glycerophosphoric acid",
+      "D-Glycerol 1-phosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C3H9O6P",
+    "charge": 0,
+    "mass_monoisotopic": 172.0137,
+    "mass_average": 172.07,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Risk category of Japanese OTC drugs [BR:br08312]",
+      "Third-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Calcium glycerophosphate",
+      "C00093 sn-Glycerol 3-phosphate"
+    ],
+    "pathways": [
+      "Glycerolipid metabolism",
+      "Glycerophospholipid metabolism",
+      "Metabolic pathways",
+      "Biosynthesis of secondary metabolites",
+      "ABC transporters",
+      "Choline metabolism in cancer"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000126",
+      "kegg_id": "C00093",
+      "chebi_id": "CHEBI:15978",
+      "pubchem_id": "439162",
+      "cas": "17989-41-2",
+      "biocyc": "GLYCEROL-3P",
+      "chemspider": "388308",
+      "drugbank_id": "DB02515",
+      "pathbank_compound_id": "81"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00093",
+      "primary_name": "sn-Glycerol 3-phosphate",
+      "synonyms": [
+        "sn-Glycerol 3-phosphate",
+        "Glycerophosphoric acid",
+        "D-Glycerol 1-phosphate"
+      ],
+      "formula": "C3H9O6P",
+      "mass_monoisotopic": 172.0137,
+      "mass_average": 172.07,
+      "pathways": [
+        "Glycerolipid metabolism",
+        "Glycerophospholipid metabolism",
+        "Metabolic pathways",
+        "Biosynthesis of secondary metabolites",
+        "ABC transporters",
+        "Choline metabolism in cancer"
+      ],
+      "kegg_class": [
+        "Risk category of Japanese OTC drugs [BR:br08312]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Calcium glycerophosphate",
+        "C00093 sn-Glycerol 3-phosphate"
+      ],
+      "cross_references": {
+        "kegg_id": "C00093",
+        "pubchem_id": "3393",
+        "chebi_id": "15978"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00093",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00093",
+        "retrieved_at": "2026-03-10T15:49:04Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15978",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-10T15:49:02Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000126",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000126",
+        "retrieved_at": "2026-03-10T15:49:03Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:15978",
+        "retrieved_at": "2026-03-10T15:49:02Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000126",
+        "retrieved_at": "2026-03-10T15:49:03Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00093",
+        "retrieved_at": "2026-03-10T15:49:04Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
   },
-  "protein:isocitrate dehydrogenase 3|F2UQ72": {
-    "status": "error",
-    "uniprot_id": "F2UQ72",
-    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/F2UQ72.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/F2UQ72.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e096d0>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
-    "provenance": {
-      "source": "UniProt",
-      "query": "F2UQ72",
-      "retrieved_at": "2026-07-14T20:01:42Z"
-    }
+  "compound:GDP|HMDB0001201": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "GDP",
+    "synonyms": [
+      "GDP",
+      "Guanosine 5'-diphosphate",
+      "Guanosine diphosphate"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C10H15N5O11P2",
+    "charge": 0,
+    "mass_monoisotopic": 443.0243,
+    "mass_average": 443.2,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Nucleic acids",
+      "Nucleotides",
+      "Ribonucleotides",
+      "C00035 GDP"
+    ],
+    "pathways": [
+      "Purine metabolism",
+      "Metabolic pathways",
+      "Nucleotide metabolism",
+      "Ras signaling pathway",
+      "Rap1 signaling pathway",
+      "Mitophagy - animal",
+      "Autophagy - animal",
+      "Endocytosis"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0001201",
+      "kegg_id": "C00035",
+      "chebi_id": "CHEBI:17552",
+      "pubchem_id": "8977",
+      "cas": "146-91-8",
+      "biocyc": "GDP-4-DEHYDRO-6-DEOXY-D-MANNOSE",
+      "chemspider": "8630",
+      "pathbank_compound_id": "936"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00035",
+      "primary_name": "GDP",
+      "synonyms": [
+        "GDP",
+        "Guanosine 5'-diphosphate",
+        "Guanosine diphosphate"
+      ],
+      "formula": "C10H15N5O11P2",
+      "mass_monoisotopic": 443.0243,
+      "mass_average": 443.2,
+      "pathways": [
+        "Purine metabolism",
+        "Metabolic pathways",
+        "Nucleotide metabolism",
+        "Ras signaling pathway",
+        "Rap1 signaling pathway",
+        "Mitophagy - animal",
+        "Autophagy - animal",
+        "Endocytosis"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Nucleic acids",
+        "Nucleotides",
+        "Ribonucleotides",
+        "C00035 GDP"
+      ],
+      "cross_references": {
+        "kegg_id": "C00035",
+        "pubchem_id": "3337",
+        "chebi_id": "17552"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00035",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00035",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17552",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-24T06:14:06Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001201",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001201",
+        "retrieved_at": "2026-03-24T06:14:06Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17552",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0001201",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00035",
+        "retrieved_at": "2026-03-24T06:14:06Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
   },
-  "protein:succinyl-CoA synthetase|Q9P2R7": {
+  "compound:Pi|HMDB0000250": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "Diphosphate",
+    "synonyms": [
+      "Diphosphate",
+      "Diphosphoric acid",
+      "Pyrophosphate",
+      "Pyrophosphoric acid",
+      "PPi"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "H4P2O7",
+    "charge": 0,
+    "mass_monoisotopic": 177.9432,
+    "mass_average": 177.98,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
+    "pathways": [
+      "Oxidative phosphorylation",
+      "Parkinson disease",
+      "Pathways of neurodegeneration - multiple diseases"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "kegg_id": "C00013",
+      "hmdb_id": "HMDB0000250",
+      "chebi_id": "CHEBI:18361",
+      "pubchem_id": "644102",
+      "cas": "14000-31-8",
+      "biocyc": "PPI",
+      "chemspider": "559142",
+      "drugbank_id": "DB04160",
+      "pathbank_compound_id": "170"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00013",
+      "primary_name": "Diphosphate",
+      "synonyms": [
+        "Diphosphate",
+        "Diphosphoric acid",
+        "Pyrophosphate",
+        "Pyrophosphoric acid",
+        "PPi"
+      ],
+      "formula": "H4P2O7",
+      "mass_monoisotopic": 177.9432,
+      "mass_average": 177.98,
+      "pathways": [
+        "Oxidative phosphorylation",
+        "Parkinson disease",
+        "Pathways of neurodegeneration - multiple diseases"
+      ],
+      "kegg_class": [],
+      "cross_references": {
+        "kegg_id": "C00013",
+        "pubchem_id": "3315",
+        "chebi_id": "18361"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00013",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00013",
+        "retrieved_at": "2026-03-24T06:14:07Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:18361",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-06-24T17:34:43Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000250",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000250",
+        "retrieved_at": "2026-06-24T17:34:43Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:18361",
+        "retrieved_at": "2026-06-24T17:34:43Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000250",
+        "retrieved_at": "2026-06-24T17:34:43Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00013",
+        "retrieved_at": "2026-03-24T06:14:07Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:H2O|HMDB0002111": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "H2O",
+    "synonyms": [
+      "H2O",
+      "Water"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "H2O",
+    "charge": 0,
+    "mass_monoisotopic": 18.0106,
+    "mass_average": 18.02,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Therapeutic category of drugs in Japan [BR:br08301(D00001)]",
+      "7 Agents not mainly for therapeutic purpose",
+      "71 Dispensing medicines",
+      "713 Solvents",
+      "7131 Purified water",
+      "D00001 Water (JP18/USP); Purified water (JP18); Purified water in containers (JP18); Water, purified (USP); Sterile purified water in containers (JP18); Water for injection (JP18); Water for injection in containers (JP18)",
+      "Risk category of Japanese OTC drugs [BR:br08312(D00001)]",
+      "Third-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Water",
+      "D00001 Water (JP18/USP)",
+      "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00001)]",
+      "Chemicals",
+      "D00001 Water",
+      "D00001 Purified water",
+      "D00001 Purified water in containers",
+      "D00001 Sterile purified Water in containers",
+      "D00001 Water for injection",
+      "D00001 Sterile water for injection in containers"
+    ],
+    "pathways": [
+      "Oxidative phosphorylation",
+      "Photosynthesis",
+      "Carbon fixation by Calvin cycle",
+      "Metabolic pathways",
+      "Thyroid hormone synthesis",
+      "Renin secretion",
+      "Vasopressin-regulated water reabsorption",
+      "Proximal tubule bicarbonate reclamation",
+      "Collecting duct acid secretion",
+      "Salivary secretion",
+      "Gastric acid secretion",
+      "Pancreatic secretion",
+      "Bile secretion",
+      "Amyotrophic lateral sclerosis",
+      "Pathways of neurodegeneration - multiple diseases",
+      "Chemical carcinogenesis - reactive oxygen species",
+      "Diabetic cardiomyopathy"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0002111",
+      "kegg_id": "C00001",
+      "chebi_id": "CHEBI:15377",
+      "pubchem_id": "962",
+      "cas": "7732-18-5",
+      "chemspider": "937",
+      "pathbank_compound_id": "1420"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00001",
+      "primary_name": "H2O",
+      "synonyms": [
+        "H2O",
+        "Water"
+      ],
+      "formula": "H2O",
+      "mass_monoisotopic": 18.0106,
+      "mass_average": 18.02,
+      "pathways": [
+        "Oxidative phosphorylation",
+        "Photosynthesis",
+        "Carbon fixation by Calvin cycle",
+        "Metabolic pathways",
+        "Thyroid hormone synthesis",
+        "Renin secretion",
+        "Vasopressin-regulated water reabsorption",
+        "Proximal tubule bicarbonate reclamation",
+        "Collecting duct acid secretion",
+        "Salivary secretion",
+        "Gastric acid secretion",
+        "Pancreatic secretion",
+        "Bile secretion",
+        "Amyotrophic lateral sclerosis",
+        "Pathways of neurodegeneration - multiple diseases",
+        "Chemical carcinogenesis - reactive oxygen species",
+        "Diabetic cardiomyopathy"
+      ],
+      "kegg_class": [
+        "Therapeutic category of drugs in Japan [BR:br08301(D00001)]",
+        "7 Agents not mainly for therapeutic purpose",
+        "71 Dispensing medicines",
+        "713 Solvents",
+        "7131 Purified water",
+        "D00001 Water (JP18/USP); Purified water (JP18); Purified water in containers (JP18); Water, purified (USP); Sterile purified water in containers (JP18); Water for injection (JP18); Water for injection in containers (JP18)",
+        "Risk category of Japanese OTC drugs [BR:br08312(D00001)]",
+        "Third-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Water",
+        "D00001 Water (JP18/USP)",
+        "Drugs listed in the Japanese Pharmacopoeia [BR:br08311(D00001)]",
+        "Chemicals",
+        "D00001 Water",
+        "D00001 Purified water",
+        "D00001 Purified water in containers",
+        "D00001 Sterile purified Water in containers",
+        "D00001 Water for injection",
+        "D00001 Sterile water for injection in containers"
+      ],
+      "cross_references": {
+        "kegg_id": "C00001",
+        "pubchem_id": "3303",
+        "chebi_id": "15377"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00001",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00001",
+        "retrieved_at": "2026-03-14T01:12:40Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15377",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-14T01:12:39Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0002111",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0002111",
+        "retrieved_at": "2026-03-14T01:12:40Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:15377",
+        "retrieved_at": "2026-03-14T01:12:39Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0002111",
+        "retrieved_at": "2026-03-14T01:12:40Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00001",
+        "retrieved_at": "2026-03-14T01:12:40Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "protein:CS|O75390": {
     "status": "ok",
-    "uniprot_id": "Q9P2R7",
-    "recommended_name": "Succinate--CoA ligase [ADP-forming] subunit beta, mitochondrial",
+    "uniprot_id": "O75390",
+    "recommended_name": "Citrate synthase, mitochondrial",
     "alternative_names": [
-      "ATP-specific succinyl-CoA synthetase subunit beta",
-      "Itaconyl--CoA ligase [ADP-forming] subunit beta",
-      "Malyl--CoA ligase [ADP-forming] subunit beta",
-      "Succinyl-CoA synthetase beta-A chain"
+      "Citrate (Si)-synthase"
     ],
     "gene_names": [
-      "SUCLA2"
+      "CS"
     ],
     "organism": "Homo sapiens",
     "taxonomy_id": "9606",
-    "function_text": "ATP-specific succinyl-CoA synthetase functions in the citric acid cycle (TCA), coupling the hydrolysis of succinyl-CoA to the synthesis of ATP and thus represents the only step of substrate-level phosphorylation in the TCA (PubMed:15877282, PubMed:34492704, PubMed:40108300). The beta subunit provides nucleotide specificity of the enzyme and binds the substrate succinate, while the binding sites for coenzyme A and phosphate are found in the alpha subunit (By similarity). Also able to act as an ATP-specific itaconyl- and malyl-CoA synthetase (PubMed:40108300)",
+    "function_text": "Key enzyme of the Krebs tricarboxylic acid cycle which catalyzes the synthesis of citrate from acetyl coenzyme A and oxaloacetate",
     "catalytic_activity": [
-      "succinate + ATP + CoA = succinyl-CoA + ADP + phosphate",
-      "(S)-malate + ATP + CoA = (S)-malyl-CoA + ADP + phosphate"
+      "oxaloacetate + acetyl-CoA + H2O = citrate + CoA + H(+)"
     ],
     "enzyme_commission": [
-      "6.2.1.5",
-      "6.2.1.9"
+      "2.3.3.1"
     ],
     "pathways": [
-      "Carbohydrate metabolism; tricarboxylic acid cycle; succinate from succinyl-CoA (ligase route): step 1/1"
+      "Carbohydrate metabolism; tricarboxylic acid cycle; isocitrate from oxaloacetate: step 1/2"
     ],
     "keywords": [
       "3D-structure",
       "Acetylation",
-      "Alternative splicing",
-      "ATP-binding",
+      "Direct protein sequencing",
+      "Methylation",
+      "Mitochondrion",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transferase",
+      "Transit peptide",
+      "Tricarboxylic acid cycle",
+      "Ubl conjugation"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion matrix"
+    ],
+    "go_mf_ids": [
+      "GO:0036440",
+      "GO:0042802",
+      "GO:0003723"
+    ],
+    "go_bp_ids": [
+      "GO:0005975",
+      "GO:0006101",
+      "GO:0006099"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0070062",
+      "GO:0005759",
+      "GO:0005739",
+      "GO:0005634"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 466,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "5UZP",
+      "5UZQ",
+      "5UZR",
+      "8ZVL",
+      "8ZVM",
+      "8ZVR",
+      "8ZVT",
+      "8ZVU",
+      "8ZVV",
+      "8ZVW",
+      "8ZW1"
+    ],
+    "reactome_ids": [
+      "R-HSA-1268020",
+      "R-HSA-71403",
+      "R-HSA-9837999",
+      "R-HSA-9854311"
+    ],
+    "string_id": "9606.ENSP00000342056",
+    "provenance": {
+      "source": "UniProt",
+      "query": "O75390",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O75390.json",
+      "retrieved_at": "2026-07-14T21:04:52Z"
+    }
+  },
+  "protein:ACO2|Q99798": {
+    "status": "ok",
+    "uniprot_id": "Q99798",
+    "recommended_name": "Aconitate hydratase, mitochondrial",
+    "alternative_names": [
+      "Citrate hydro-lyase"
+    ],
+    "gene_names": [
+      "ACO2"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Catalyzes the isomerization of citrate to isocitrate via cis-aconitate",
+    "catalytic_activity": [
+      "citrate = D-threo-isocitrate"
+    ],
+    "enzyme_commission": [
+      "4.2.1.3"
+    ],
+    "pathways": [
+      "Carbohydrate metabolism; tricarboxylic acid cycle; isocitrate from oxaloacetate: step 2/2"
+    ],
+    "keywords": [
+      "4Fe-4S",
+      "Acetylation",
+      "Direct protein sequencing",
       "Disease variant",
-      "Ligase",
-      "Magnesium",
+      "Iron",
+      "Iron-sulfur",
+      "Lyase",
       "Metal-binding",
       "Mitochondrion",
-      "Nucleotide-binding",
+      "Neurodegeneration",
       "Phosphoprotein",
-      "Primary mitochondrial disease",
       "Proteomics identification",
       "Reference proteome",
       "Transit peptide",
@@ -3257,46 +4198,284 @@
       "Mitochondrion"
     ],
     "go_mf_ids": [
-      "GO:0005524",
-      "GO:0000287",
-      "GO:0004775"
+      "GO:0051539",
+      "GO:0003994",
+      "GO:0005506"
     ],
     "go_bp_ids": [
-      "GO:0006105",
-      "GO:1901289",
-      "GO:0006104",
-      "GO:0006781",
+      "GO:0006101",
+      "GO:0006091",
       "GO:0006099"
     ],
     "go_cellular_component_ids": [
-      "GO:0070062",
+      "GO:0005829",
       "GO:0005759",
-      "GO:0005739",
-      "GO:0042709",
-      "GO:0009361"
+      "GO:0005739"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 463,
+    "sequence_length": 780,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [
+      "R-HSA-1268020",
+      "R-HSA-71403",
+      "R-HSA-9837999",
+      "R-HSA-9854311"
+    ],
+    "string_id": "9606.ENSP00000216254",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Q99798",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q99798.json",
+      "retrieved_at": "2026-07-14T21:04:52Z"
+    }
+  },
+  "protein:IDH3|O43837": {
+    "status": "ok",
+    "uniprot_id": "O43837",
+    "recommended_name": "Isocitrate dehydrogenase [NAD] subunit beta, mitochondrial",
+    "alternative_names": [
+      "Isocitric dehydrogenase subunit beta",
+      "NAD(+)-specific ICDH subunit beta"
+    ],
+    "gene_names": [
+      "IDH3B"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Plays a structural role to facilitate the assembly and ensure the full activity of the enzyme catalyzing the decarboxylation of isocitrate (ICT) into alpha-ketoglutarate. The heterodimer composed of the alpha (IDH3A) and beta (IDH3B) subunits and the heterodimer composed of the alpha (IDH3A) and gamma (IDH3G) subunits, have considerable basal activity but the full activity of the heterotetramer (containing two subunits of IDH3A, one of IDH3B and one of IDH3G) requires the assembly and cooperative function of both heterodimers",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Disease variant",
+      "Mitochondrion",
+      "Proteomics identification",
+      "Reference proteome",
+      "Retinitis pigmentosa",
+      "Transit peptide",
+      "Tricarboxylic acid cycle"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion"
+    ],
+    "go_mf_ids": [
+      "GO:0009055",
+      "GO:0004449",
+      "GO:0000287",
+      "GO:0051287"
+    ],
+    "go_bp_ids": [
+      "GO:0006102",
+      "GO:0006099"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0045242",
+      "GO:0005759",
+      "GO:0005739",
+      "GO:0005634"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 385,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "6G4Q"
+      "6KDE",
+      "6KDF",
+      "6KDY",
+      "6KE3",
+      "7CE3",
+      "8GRB",
+      "8GRD",
+      "8GRU",
+      "8GS5"
     ],
     "reactome_ids": [
       "R-HSA-71403"
     ],
-    "string_id": "9606.ENSP00000494360",
+    "string_id": "9606.ENSP00000482773",
     "provenance": {
       "source": "UniProt",
-      "query": "Q9P2R7",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q9P2R7.json",
-      "retrieved_at": "2026-03-24T06:13:35Z"
+      "query": "O43837",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O43837.json",
+      "retrieved_at": "2026-07-14T21:04:53Z"
     }
   },
-  "protein:fumarate hydratase|P07954": {
+  "protein:IDH2|P48735": {
+    "status": "ok",
+    "uniprot_id": "P48735",
+    "recommended_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+    "alternative_names": [
+      "ICD-M",
+      "IDP",
+      "NADP(+)-specific ICDH",
+      "Oxalosuccinate decarboxylase"
+    ],
+    "gene_names": [
+      "IDH2"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Plays a role in intermediary metabolism and energy production (PubMed:19228619, PubMed:22416140). It may tightly associate or interact with the pyruvate dehydrogenase complex (PubMed:19228619, PubMed:22416140)",
+    "catalytic_activity": [
+      "D-threo-isocitrate + NADP(+) = 2-oxoglutarate + CO2 + NADPH"
+    ],
+    "enzyme_commission": [
+      "1.1.1.42"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Disease variant",
+      "Glyoxylate bypass",
+      "Magnesium",
+      "Manganese",
+      "Metal-binding",
+      "Mitochondrion",
+      "NADP",
+      "Oxidoreductase",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transit peptide",
+      "Tricarboxylic acid cycle"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion"
+    ],
+    "go_mf_ids": [
+      "GO:0004450",
+      "GO:0000287",
+      "GO:0051287"
+    ],
+    "go_bp_ids": [
+      "GO:0006103",
+      "GO:0005975",
+      "GO:0006097",
+      "GO:0006102",
+      "GO:0006741",
+      "GO:0006739",
+      "GO:1903976",
+      "GO:0060253",
+      "GO:1904465",
+      "GO:0006099"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005829",
+      "GO:0070062",
+      "GO:0005759",
+      "GO:0005739",
+      "GO:0005777"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 452,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "4JA8",
+      "5GIS",
+      "5I95",
+      "5I96",
+      "5SVN",
+      "5SVO",
+      "6ADI",
+      "6UJ7",
+      "6UJ8",
+      "6UJ9",
+      "6VFZ"
+    ],
+    "reactome_ids": [
+      "R-HSA-2151201",
+      "R-HSA-71403",
+      "R-HSA-9837999",
+      "R-HSA-9854311"
+    ],
+    "string_id": "9606.ENSP00000331897",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P48735",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P48735.json",
+      "retrieved_at": "2026-07-14T21:04:53Z"
+    }
+  },
+  "protein:SCS|G8GJ94": {
+    "status": "ok",
+    "uniprot_id": "G8GJ94",
+    "recommended_name": "Sclareol synthase, chloroplastic",
+    "alternative_names": [
+      "Diterpene synthase 1132"
+    ],
+    "gene_names": [
+      "SCS",
+      "SS",
+      "Tps1132"
+    ],
+    "organism": "Salvia sclarea",
+    "taxonomy_id": "38869",
+    "function_text": "Involved in the biosynthesis of labdane-type diterpenoid including sclareol, a diterpene-diol that is used as fragrance and flavoring, and has anticancer effects (able to kill leukemic and colon cancer cells by apoptosis) (Probable). Sclareol can also be used as synthesis precursor of ambergris substitution fragance products such as ambrox (Probable). Terpene synthase that catalyzes the conversion of 8-hydroxy-copalyl diphosphate to sclareol (PubMed:22834731, PubMed:23113661)",
+    "catalytic_activity": [
+      "8-hydroxycopalyl diphosphate + H2O = sclareol + diphosphate"
+    ],
+    "enzyme_commission": [
+      "4.2.3.141"
+    ],
+    "pathways": [
+      "Secondary metabolite biosynthesis; terpenoid biosynthesis"
+    ],
+    "keywords": [
+      "Chloroplast",
+      "Lyase",
+      "Magnesium",
+      "Metal-binding",
+      "Plastid",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Plastid, chloroplast"
+    ],
+    "go_mf_ids": [
+      "GO:0000287",
+      "GO:0010333"
+    ],
+    "go_bp_ids": [
+      "GO:0016102",
+      "GO:0009686"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009507"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 575,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "G8GJ94",
+      "source_url": "https://rest.uniprot.org/uniprotkb/G8GJ94.json",
+      "retrieved_at": "2026-07-14T21:04:53Z"
+    }
+  },
+  "protein:FH|P07954": {
     "status": "ok",
     "uniprot_id": "P07954",
     "recommended_name": "Fumarate hydratase, mitochondrial",
@@ -3397,27 +4576,578 @@
       "retrieved_at": "2026-03-24T06:13:36Z"
     }
   },
-  "protein:malate dehydrogenase 2|A0ACI8PI59": {
-    "status": "error",
-    "uniprot_id": "A0ACI8PI59",
-    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/A0ACI8PI59.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/A0ACI8PI59.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e0a350>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
-    "provenance": {
-      "source": "UniProt",
-      "query": "A0ACI8PI59",
-      "retrieved_at": "2026-07-14T20:01:42Z"
-    }
-  },
-  "protein:PDK (pyruvate dehydrogenase kinase)|A4D1H4": {
+  "protein:MDH2|P40926": {
     "status": "ok",
-    "uniprot_id": "A4D1H4",
-    "recommended_name": "Protein-serine/threonine kinase",
+    "uniprot_id": "P40926",
+    "recommended_name": "Malate dehydrogenase, mitochondrial",
     "alternative_names": [],
     "gene_names": [
-      "PDK4"
+      "MDH2"
     ],
     "organism": "Homo sapiens",
     "taxonomy_id": "9606",
-    "function_text": "",
+    "function_text": "Mitochondrial malate dehydrogenase that catalyzes the reversible conversion of malate to oxaloacetate using NAD(+) as a cofactor (PubMed:27989324). Plays a central role in the tricarboxylic acid (TCA) cycle contributing to cellular respiration and energy production via the mitochondrial electron transport chain (PubMed:35366151). Also participates in the malate-aspartate NADH shuttle, facilitating transfer of reducing equivalents between cytosol and mitochondria to maintain redox balance (NAD(+)/NADH homeostasis) and support metabolic flux between compartments (By similarity). In addition to its metabolic role, binds to RNA in cells, associating with cytosolic RNAs including tRNAs and mRNAs (PubMed:38609156)",
+    "catalytic_activity": [
+      "(S)-malate + NAD(+) = oxaloacetate + NADH + H(+)"
+    ],
+    "enzyme_commission": [
+      "1.1.1.37"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Disease variant",
+      "Epilepsy",
+      "Glycoprotein",
+      "Lipoprotein",
+      "Mitochondrion",
+      "NAD",
+      "Oxidoreductase",
+      "Palmitate",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transit peptide",
+      "Tricarboxylic acid cycle"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion matrix"
+    ],
+    "go_mf_ids": [
+      "GO:0042802",
+      "GO:0030060",
+      "GO:0046554",
+      "GO:0003723"
+    ],
+    "go_bp_ids": [
+      "GO:0009060",
+      "GO:0006094",
+      "GO:0006108",
+      "GO:0043490",
+      "GO:0006099"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005737",
+      "GO:0070062",
+      "GO:0016020",
+      "GO:0005759",
+      "GO:0005739",
+      "GO:0005634"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 338,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "2DFD",
+      "4WLE",
+      "4WLF",
+      "4WLN",
+      "4WLO",
+      "4WLU",
+      "4WLV"
+    ],
+    "reactome_ids": [
+      "R-HSA-71403",
+      "R-HSA-9837999",
+      "R-HSA-9856872"
+    ],
+    "string_id": "9606.ENSP00000327070",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P40926",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P40926.json",
+      "retrieved_at": "2026-07-14T21:04:53Z"
+    }
+  },
+  "protein:MDH1|P40925": {
+    "status": "ok",
+    "uniprot_id": "P40925",
+    "recommended_name": "Malate dehydrogenase, cytoplasmic",
+    "alternative_names": [
+      "Aromatic alpha-keto acid reductase",
+      "Cytosolic malate dehydrogenase"
+    ],
+    "gene_names": [
+      "MDH1",
+      "MDHA"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Catalyzes the reduction of aromatic alpha-keto acids in the presence of NADH (PubMed:2449162, PubMed:3052244). Plays essential roles in the malate-aspartate shuttle and the tricarboxylic acid cycle, important in mitochondrial NADH supply for oxidative phosphorylation (PubMed:31538237). Catalyzes the reduction of 2-oxoglutarate to 2-hydroxyglutarate, leading to elevated reactive oxygen species (ROS) (PubMed:34012073)",
+    "catalytic_activity": [
+      "(S)-malate + NAD(+) = oxaloacetate + NADH + H(+)",
+      "(2R)-2-hydroxy-3-(4-hydroxyphenyl)propanoate + NAD(+) = 3-(4-hydroxyphenyl)pyruvate + NADH + H(+)",
+      "(S)-2-hydroxyglutarate + NAD(+) = 2-oxoglutarate + NADH + H(+)"
+    ],
+    "enzyme_commission": [
+      "1.1.1.37"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Cytoplasm",
+      "Direct protein sequencing",
+      "Disease variant",
+      "Epilepsy",
+      "Methylation",
+      "NAD",
+      "Oxidoreductase",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
+      "Tricarboxylic acid cycle",
+      "Ubl conjugation"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm, cytosol"
+    ],
+    "go_mf_ids": [
+      "GO:0047995",
+      "GO:0030060",
+      "GO:0004470"
+    ],
+    "go_bp_ids": [
+      "GO:0006108",
+      "GO:0043490",
+      "GO:0019674",
+      "GO:0006739",
+      "GO:0006107",
+      "GO:0006099"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005737",
+      "GO:0005829",
+      "GO:0070062",
+      "GO:0005615"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 334,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "7RM9",
+      "7RRL"
+    ],
+    "reactome_ids": [
+      "R-HSA-9856872"
+    ],
+    "string_id": "",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P40925",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P40925.json",
+      "retrieved_at": "2026-07-14T21:04:53Z"
+    }
+  },
+  "protein:PC|P11498": {
+    "status": "error",
+    "uniprot_id": "P11498",
+    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/P11498.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/P11498.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e0a710>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P11498",
+      "retrieved_at": "2026-07-14T21:04:53Z"
+    }
+  },
+  "protein:GPD1|P21695": {
+    "status": "ok",
+    "uniprot_id": "P21695",
+    "recommended_name": "Glycerol-3-phosphate dehydrogenase [NAD(+)], cytoplasmic",
+    "alternative_names": [],
+    "gene_names": [
+      "GPD1"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Has glycerol-3-phosphate dehydrogenase activity",
+    "catalytic_activity": [
+      "sn-glycerol 3-phosphate + NAD(+) = dihydroxyacetone phosphate + NADH + H(+)"
+    ],
+    "enzyme_commission": [
+      "1.1.1.8"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Alternative splicing",
+      "Cytoplasm",
+      "Disease variant",
+      "NAD",
+      "Oxidoreductase",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm"
+    ],
+    "go_mf_ids": [
+      "GO:0141152",
+      "GO:0047952",
+      "GO:0051287",
+      "GO:0042803"
+    ],
+    "go_bp_ids": [
+      "GO:0005975",
+      "GO:0046168",
+      "GO:0006072"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005829",
+      "GO:0070062"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 349,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "1WPQ",
+      "1X0V",
+      "1X0X",
+      "6E8Y",
+      "6E8Z",
+      "6E90",
+      "6PYP"
+    ],
+    "reactome_ids": [
+      "R-HSA-1483166"
+    ],
+    "string_id": "9606.ENSP00000301149",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P21695",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P21695.json",
+      "retrieved_at": "2026-07-14T21:04:54Z"
+    }
+  },
+  "protein:GPD2|P43304": {
+    "status": "ok",
+    "uniprot_id": "P43304",
+    "recommended_name": "Glycerol-3-phosphate dehydrogenase, mitochondrial",
+    "alternative_names": [
+      "mitochondrial glycerophosphate dehydrogenase gene",
+      "mtGPD"
+    ],
+    "gene_names": [
+      "GPD2"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Calcium-responsive mitochondrial glycerol-3-phosphate dehydrogenase which seems to be a key component of the pancreatic beta-cell glucose-sensing device",
+    "catalytic_activity": [
+      "a quinone + sn-glycerol 3-phosphate = dihydroxyacetone phosphate + a quinol"
+    ],
+    "enzyme_commission": [
+      "1.1.5.3"
+    ],
+    "pathways": [
+      "Polyol metabolism; glycerol degradation via glycerol kinase pathway; glycerone phosphate from sn-glycerol 3-phosphate (anaerobic route): step 1/1"
+    ],
+    "keywords": [
+      "Alternative splicing",
+      "Calcium",
+      "Direct protein sequencing",
+      "FAD",
+      "Flavoprotein",
+      "Metal-binding",
+      "Mitochondrion",
+      "Oxidoreductase",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
+      "Repeat",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion"
+    ],
+    "go_mf_ids": [
+      "GO:0005509",
+      "GO:0004368"
+    ],
+    "go_bp_ids": [
+      "GO:0019563",
+      "GO:0006072",
+      "GO:0006127"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005743",
+      "GO:0005739"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 727,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [
+      "R-HSA-1483166",
+      "R-HSA-163560"
+    ],
+    "string_id": "9606.ENSP00000308610",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P43304",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P43304.json",
+      "retrieved_at": "2026-07-14T21:04:54Z"
+    }
+  },
+  "protein:GOT1|P17174": {
+    "status": "ok",
+    "uniprot_id": "P17174",
+    "recommended_name": "Aspartate aminotransferase, cytoplasmic",
+    "alternative_names": [
+      "Cysteine aminotransferase, cytoplasmic",
+      "Cysteine transaminase, cytoplasmic",
+      "Glutamate oxaloacetate transaminase 1",
+      "Transaminase A"
+    ],
+    "gene_names": [
+      "GOT1"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Biosynthesis of L-glutamate from L-aspartate or L-cysteine (PubMed:21900944). Important regulator of levels of glutamate, the major excitatory neurotransmitter of the vertebrate central nervous system. Acts as a scavenger of glutamate in brain neuroprotection. The aspartate aminotransferase activity is involved in hepatic glucose synthesis during development and in adipocyte glyceroneogenesis. Using L-cysteine as substrate, regulates levels of mercaptopyruvate, an important source of hydrogen sulfide. Mercaptopyruvate is converted into H(2)S via the action of 3-mercaptopyruvate sulfurtransferase (3MST). Hydrogen sulfide is an important synaptic modulator and neuroprotectant in the brain. In addition, catalyzes (2S)-2-aminobutanoate, a by-product in the cysteine biosynthesis pathway (PubMed:27827456)",
+    "catalytic_activity": [
+      "L-aspartate + 2-oxoglutarate = oxaloacetate + L-glutamate",
+      "L-cysteine + 2-oxoglutarate = 2-oxo-3-sulfanylpropanoate + L-glutamate",
+      "(2S)-2-aminobutanoate + 2-oxoglutarate = 2-oxobutanoate + L-glutamate",
+      "3-sulfino-L-alanine + 2-oxoglutarate = 3-sulfinopyruvate + L-glutamate"
+    ],
+    "enzyme_commission": [
+      "2.6.1.1",
+      "2.6.1.3"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Alternative splicing",
+      "Amino-acid biosynthesis",
+      "Aminotransferase",
+      "Cytoplasm",
+      "Direct protein sequencing",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Pyridoxal phosphate",
+      "Reference proteome",
+      "Transferase"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm"
+    ],
+    "go_mf_ids": [
+      "GO:0120554",
+      "GO:0031406",
+      "GO:0004069",
+      "GO:0047801",
+      "GO:0004609",
+      "GO:0030170"
+    ],
+    "go_bp_ids": [
+      "GO:0006103",
+      "GO:0006531",
+      "GO:0032869",
+      "GO:0071260",
+      "GO:0006094",
+      "GO:0006536",
+      "GO:0006114",
+      "GO:0006532",
+      "GO:0006533",
+      "GO:0097054",
+      "GO:0043490",
+      "GO:0032966",
+      "GO:0051481",
+      "GO:0051902",
+      "GO:0006107",
+      "GO:0030511",
+      "GO:0046686",
+      "GO:0009743",
+      "GO:0051384",
+      "GO:0035902",
+      "GO:1990267",
+      "GO:0060290"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0043679",
+      "GO:0005737",
+      "GO:0005829",
+      "GO:0070062",
+      "GO:0005634"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 413,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "3II0",
+      "3WZF",
+      "6DNA",
+      "6DNB",
+      "6DND",
+      "6LIG",
+      "8Z0E"
+    ],
+    "reactome_ids": [
+      "R-HSA-1237112",
+      "R-HSA-8963693",
+      "R-HSA-9856872"
+    ],
+    "string_id": "9606.ENSP00000359539",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P17174",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P17174.json",
+      "retrieved_at": "2026-07-14T21:04:54Z"
+    }
+  },
+  "protein:GOT2|P00505": {
+    "status": "ok",
+    "uniprot_id": "P00505",
+    "recommended_name": "Aspartate aminotransferase, mitochondrial",
+    "alternative_names": [
+      "Fatty acid-binding protein",
+      "Glutamate oxaloacetate transaminase 2",
+      "Kynurenine aminotransferase 4",
+      "Kynurenine aminotransferase IV",
+      "Kynurenine--oxoglutarate transaminase 4",
+      "Kynurenine--oxoglutarate transaminase IV",
+      "Plasma membrane-associated fatty acid-binding protein",
+      "Transaminase A"
+    ],
+    "gene_names": [
+      "GOT2",
+      "KYAT4"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Catalyzes the irreversible transamination of the L-tryptophan metabolite L-kynurenine to form kynurenic acid (KA). As a member of the malate-aspartate shuttle, it has a key role in the intracellular NAD(H) redox balance. Is important for metabolite exchange between mitochondria and cytosol, and for amino acid metabolism. Facilitates cellular uptake of long-chain free fatty acids",
+    "catalytic_activity": [
+      "L-aspartate + 2-oxoglutarate = oxaloacetate + L-glutamate",
+      "L-kynurenine + 2-oxoglutarate = kynurenate + L-glutamate + H2O"
+    ],
+    "enzyme_commission": [
+      "2.6.1.1",
+      "2.6.1.7"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Aminotransferase",
+      "Cell membrane",
+      "Direct protein sequencing",
+      "Disease variant",
+      "Epilepsy",
+      "Lipid transport",
+      "Membrane",
+      "Methylation",
+      "Mitochondrion",
+      "Nitration",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Pyridoxal phosphate",
+      "Reference proteome",
+      "Transferase",
+      "Transit peptide",
+      "Transport"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion matrix",
+      "Cell membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0016212",
+      "GO:0004069",
+      "GO:0030170",
+      "GO:0003723"
+    ],
+    "go_bp_ids": [
+      "GO:0006103",
+      "GO:0006531",
+      "GO:0015908",
+      "GO:0006536",
+      "GO:0006533",
+      "GO:0043490",
+      "GO:0045471",
+      "GO:0019470"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0070062",
+      "GO:0005759",
+      "GO:0005739",
+      "GO:0005886"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 430,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "5AX8",
+      "8SKR",
+      "9YB6"
+    ],
+    "reactome_ids": [
+      "R-HSA-1614558",
+      "R-HSA-389661",
+      "R-HSA-8963693",
+      "R-HSA-8964539",
+      "R-HSA-9856872"
+    ],
+    "string_id": "9606.ENSP00000245206",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P00505",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P00505.json",
+      "retrieved_at": "2026-07-14T21:04:54Z"
+    }
+  },
+  "protein:ACL|P53396": {
+    "status": "error",
+    "uniprot_id": "P53396",
+    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/P53396.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/P53396.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e087d0>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P53396",
+      "retrieved_at": "2026-07-14T21:04:54Z"
+    }
+  },
+  "protein:PDK1|Q15118": {
+    "status": "ok",
+    "uniprot_id": "Q15118",
+    "recommended_name": "[Pyruvate dehydrogenase (acetyl-transferring)] kinase isozyme 1, mitochondrial",
+    "alternative_names": [
+      "Pyruvate dehydrogenase kinase isoform 1"
+    ],
+    "gene_names": [
+      "PDK1",
+      "PDHK1"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Kinase that plays a key role in regulation of glucose and fatty acid metabolism and homeostasis via phosphorylation of the pyruvate dehydrogenase subunits PDHA1 and PDHA2 (PubMed:7499431, PubMed:18541534, PubMed:22195962, PubMed:26942675, PubMed:17683942). This inhibits pyruvate dehydrogenase activity, and thereby regulates metabolite flux through the tricarboxylic acid cycle, down-regulates aerobic respiration and inhibits the formation of acetyl-coenzyme A from pyruvate (PubMed:18541534, PubMed:22195962, PubMed:26942675). Plays an important role in cellular responses to hypoxia and is important for cell proliferation under hypoxia (PubMed:18541534, PubMed:22195962, PubMed:26942675)",
     "catalytic_activity": [
       "L-seryl-[pyruvate dehydrogenase E1 alpha subunit] + ATP = O-phospho-L-seryl-[pyruvate dehydrogenase E1 alpha subunit] + ADP + H(+)"
     ],
@@ -3426,11 +5156,15 @@
     ],
     "pathways": [],
     "keywords": [
+      "3D-structure",
+      "Alternative splicing",
       "ATP-binding",
       "Kinase",
       "Mitochondrion",
       "Nucleotide-binding",
-      "Pyruvate",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
       "Transferase",
       "Transit peptide"
     ],
@@ -3439,115 +5173,440 @@
     ],
     "go_mf_ids": [
       "GO:0005524",
+      "GO:0004672",
       "GO:0004740"
     ],
     "go_bp_ids": [
-      "GO:0033554",
-      "GO:0042593",
-      "GO:0008286",
-      "GO:0045124",
-      "GO:0042304",
-      "GO:0046320",
+      "GO:0008283",
+      "GO:0006006",
+      "GO:0097411",
+      "GO:0008631",
+      "GO:0043491",
       "GO:0010906",
-      "GO:0006885",
-      "GO:0010510",
-      "GO:0042594"
+      "GO:0010510"
     ],
     "go_cellular_component_ids": [
-      "GO:0005759"
-    ],
-    "protein_existence": "2: Evidence at transcript level",
-    "sequence_length": 411,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "",
-    "provenance": {
-      "source": "UniProt",
-      "query": "A4D1H4",
-      "source_url": "https://rest.uniprot.org/uniprotkb/A4D1H4.json",
-      "retrieved_at": "2026-07-14T20:01:43Z"
-    }
-  },
-  "protein:PDP (pyruvate dehydrogenase phosphatase)|Q8NCN5": {
-    "status": "ok",
-    "uniprot_id": "Q8NCN5",
-    "recommended_name": "Pyruvate dehydrogenase phosphatase regulatory subunit, mitochondrial",
-    "alternative_names": [],
-    "gene_names": [
-      "PDPR",
-      "KIAA1990"
-    ],
-    "organism": "Homo sapiens",
-    "taxonomy_id": "9606",
-    "function_text": "Decreases the sensitivity of PDP1 to magnesium ions, and this inhibition is reversed by the polyamine spermine",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
-    "pathways": [],
-    "keywords": [
-      "3D-structure",
-      "Alternative splicing",
-      "Mitochondrion",
-      "Proteomics identification",
-      "Reference proteome",
-      "Transit peptide"
-    ],
-    "subcellular_locations": [
-      "Mitochondrion matrix"
-    ],
-    "go_mf_ids": [],
-    "go_bp_ids": [
-      "GO:0140176"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005737",
       "GO:0005759",
-      "GO:0005739"
+      "GO:0005739",
+      "GO:0005886",
+      "GO:0045254"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 879,
+    "sequence_length": 436,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "8FHL",
-      "8FHU"
+      "2Q8F",
+      "2Q8G",
+      "2Q8H",
+      "9M3O",
+      "9M3P"
     ],
+    "reactome_ids": [
+      "R-HSA-204174",
+      "R-HSA-5362517",
+      "R-HSA-9837999"
+    ],
+    "string_id": "9606.ENSP00000376352",
+    "provenance": {
+      "source": "UniProt",
+      "query": "Q15118",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q15118.json",
+      "retrieved_at": "2026-07-14T21:04:55Z"
+    }
+  },
+  "protein:PDP1|Q9P0J1": {
+    "status": "ok",
+    "uniprot_id": "Q9P0J1",
+    "recommended_name": "[Pyruvate dehydrogenase [acetyl-transferring]]-phosphatase 1, mitochondrial",
+    "alternative_names": [
+      "Protein phosphatase 2C",
+      "Pyruvate dehydrogenase phosphatase catalytic subunit 1"
+    ],
+    "gene_names": [
+      "PDP1",
+      "PDP",
+      "PPM2C"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Mitochondrial enzyme that catalyzes the dephosphorylation and concomitant reactivation of the alpha subunit of the E1 component of the pyruvate dehydrogenase complex (PDC), thereby stimulating the conversion of pyruvate into acetyl-CoA",
+    "catalytic_activity": [
+      "O-phospho-L-seryl-[pyruvate dehydrogenase E1 alpha subunit] + H2O = L-seryl-[pyruvate dehydrogenase E1 alpha subunit] + phosphate"
+    ],
+    "enzyme_commission": [
+      "3.1.3.43"
+    ],
+    "pathways": [],
+    "keywords": [
+      "Acetylation",
+      "Alternative splicing",
+      "Calcium",
+      "Disease variant",
+      "Hydrolase",
+      "Magnesium",
+      "Manganese",
+      "Metal-binding",
+      "Mitochondrion",
+      "Protein phosphatase",
+      "Proteomics identification",
+      "Reference proteome",
+      "Transit peptide"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion"
+    ],
+    "go_mf_ids": [
+      "GO:0004741",
+      "GO:0046872",
+      "GO:0004722"
+    ],
+    "go_bp_ids": [
+      "GO:0035970",
+      "GO:0140176"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005759",
+      "GO:0005739"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 537,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
     "reactome_ids": [
       "R-HSA-204174"
     ],
-    "string_id": "9606.ENSP00000288050",
+    "string_id": "9606.ENSP00000379503",
     "provenance": {
       "source": "UniProt",
-      "query": "Q8NCN5",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q8NCN5.json",
-      "retrieved_at": "2026-07-14T20:01:43Z"
+      "query": "Q9P0J1",
+      "source_url": "https://rest.uniprot.org/uniprotkb/Q9P0J1.json",
+      "retrieved_at": "2026-07-14T21:04:55Z"
     }
   },
-  "protein:pyruvate carboxylase|P11498": {
-    "status": "error",
-    "uniprot_id": "P11498",
-    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/P11498.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/P11498.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e0a710>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
+  "protein:BCAT1|P54687": {
+    "status": "ok",
+    "uniprot_id": "P54687",
+    "recommended_name": "Branched-chain-amino-acid aminotransferase, cytosolic",
+    "alternative_names": [],
+    "gene_names": [
+      "BCAT1",
+      "BCT1",
+      "ECA39"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Catalyzes the first reaction in the catabolism of the essential branched chain amino acids leucine, isoleucine, and valine",
+    "catalytic_activity": [
+      "L-leucine + 2-oxoglutarate = 4-methyl-2-oxopentanoate + L-glutamate",
+      "L-isoleucine + 2-oxoglutarate = (S)-3-methyl-2-oxopentanoate + L-glutamate",
+      "L-valine + 2-oxoglutarate = 3-methyl-2-oxobutanoate + L-glutamate"
+    ],
+    "enzyme_commission": [
+      "2.6.1.42"
+    ],
+    "pathways": [],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Amino-acid biosynthesis",
+      "Aminotransferase",
+      "Branched-chain amino acid biosynthesis",
+      "Cytoplasm",
+      "Lipid metabolism",
+      "Proteomics identification",
+      "Pyridoxal phosphate",
+      "Reference proteome",
+      "Transferase"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm"
+    ],
+    "go_mf_ids": [
+      "GO:0004084",
+      "GO:0052656",
+      "GO:0052654",
+      "GO:0052655"
+    ],
+    "go_bp_ids": [
+      "GO:0009082",
+      "GO:0000082",
+      "GO:0009098",
+      "GO:0009099",
+      "GO:0006629"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005737",
+      "GO:0005829",
+      "GO:0005739"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 386,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "2ABJ",
+      "2COG",
+      "2COI",
+      "2COJ",
+      "7NTR",
+      "7NWA",
+      "7NWB",
+      "7NWC",
+      "7NWE",
+      "7NWM",
+      "7NXN",
+      "7NXO",
+      "7NY2",
+      "7NY9",
+      "7NYA",
+      "9BFA",
+      "9BFO"
+    ],
+    "reactome_ids": [
+      "R-HSA-70895"
+    ],
+    "string_id": "9606.ENSP00000443459",
     "provenance": {
       "source": "UniProt",
-      "query": "P11498",
-      "retrieved_at": "2026-07-14T20:01:43Z"
+      "query": "P54687",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P54687.json",
+      "retrieved_at": "2026-07-14T21:04:55Z"
     }
   },
-  "protein:ATP-citrate lyase|A0ACI8RFK7": {
-    "status": "error",
-    "uniprot_id": "A0ACI8RFK7",
-    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/A0ACI8RFK7.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/A0ACI8RFK7.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e0bed0>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
+  "protein:LDHA|P00338": {
+    "status": "ok",
+    "uniprot_id": "P00338",
+    "recommended_name": "L-lactate dehydrogenase A chain",
+    "alternative_names": [
+      "Cell proliferation-inducing gene 19 protein",
+      "LDH muscle subunit",
+      "Renal carcinoma antigen NY-REN-59"
+    ],
+    "gene_names": [
+      "LDHA"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Interconverts simultaneously and stereospecifically pyruvate and lactate with concomitant interconversion of NADH and NAD(+)",
+    "catalytic_activity": [
+      "(S)-lactate + NAD(+) = pyruvate + NADH + H(+)"
+    ],
+    "enzyme_commission": [
+      "1.1.1.27"
+    ],
+    "pathways": [
+      "Fermentation; pyruvate fermentation to lactate; (S)-lactate from pyruvate: step 1/1"
+    ],
+    "keywords": [
+      "3D-structure",
+      "Acetylation",
+      "Alternative splicing",
+      "Cytoplasm",
+      "Direct protein sequencing",
+      "Disease variant",
+      "Glycogen storage disease",
+      "Isopeptide bond",
+      "NAD",
+      "Oxidoreductase",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
+      "Ubl conjugation"
+    ],
+    "subcellular_locations": [
+      "Cytoplasm"
+    ],
+    "go_mf_ids": [
+      "GO:0045296",
+      "GO:0042802",
+      "GO:0004459"
+    ],
+    "go_bp_ids": [
+      "GO:0006096",
+      "GO:0006089",
+      "GO:0042867",
+      "GO:0021762"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005829",
+      "GO:0070062",
+      "GO:0016020",
+      "GO:0005739",
+      "GO:0005634",
+      "GO:0035686"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 332,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "1I10",
+      "4AJP",
+      "4JNK",
+      "4L4R",
+      "4L4S",
+      "4M49",
+      "4OJN",
+      "4OKN",
+      "4QO7",
+      "4QO8",
+      "4QSM",
+      "4QT0",
+      "4R68",
+      "4R69",
+      "4RLS",
+      "4ZVV",
+      "5IXS",
+      "5IXY",
+      "5W8H",
+      "5W8I",
+      "5W8J",
+      "5W8K",
+      "5W8L",
+      "5ZJD",
+      "5ZJE",
+      "5ZJF",
+      "6BAD",
+      "6BAG",
+      "6BAX",
+      "6BAZ",
+      "6BB0",
+      "6BB1",
+      "6BB2",
+      "6BB3",
+      "6MV8",
+      "6MVA",
+      "6Q0D",
+      "6Q13",
+      "6SBU",
+      "6SBV",
+      "6ZZR",
+      "7M2N",
+      "8FW6",
+      "9BK2",
+      "9BK3",
+      "9IOV"
+    ],
+    "reactome_ids": [
+      "R-HSA-70268",
+      "R-HSA-9861718"
+    ],
+    "string_id": "9606.ENSP00000445175",
     "provenance": {
       "source": "UniProt",
-      "query": "A0ACI8RFK7",
-      "retrieved_at": "2026-07-14T20:01:43Z"
+      "query": "P00338",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P00338.json",
+      "retrieved_at": "2026-07-14T21:04:55Z"
+    }
+  },
+  "protein:GDH|O95479": {
+    "status": "ok",
+    "uniprot_id": "O95479",
+    "recommended_name": "GDH/6PGL endoplasmic bifunctional protein",
+    "alternative_names": [],
+    "gene_names": [
+      "H6PD",
+      "GDH"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Bifunctional enzyme localized in the lumen of the endoplasmic reticulum that catalyzes the first two steps of the oxidative branch of the pentose phosphate pathway/shunt, an alternative to glycolysis and a major source of reducing power and metabolic intermediates for biosynthetic processes (By similarity). Has a hexose-6-phosphate dehydrogenase activity, with broad substrate specificity compared to glucose-6-phosphate 1-dehydrogenase/G6PD, and catalyzes the first step of the pentose phosphate pathway (PubMed:12858176, PubMed:18628520, PubMed:23132696). In addition, acts as a 6-phosphogluconolactonase and catalyzes the second step of the pentose phosphate pathway (By similarity). May have a dehydrogenase activity for alternative substrates including glucosamine 6-phosphate and glucose 6-sulfate (By similarity). The main function of this enzyme is to provide reducing equivalents such as NADPH to maintain the adequate levels of reductive cofactors in the oxidizing environment of the endoplasmic reticulum (PubMed:12858176, PubMed:18628520, PubMed:23132696). By producing NADPH that is needed by reductases of the lumen of the endoplasmic reticulum like corticosteroid 11-beta-dehydrogenase isozyme 1/HSD11B1, indirectly regulates their activity (PubMed:18628520)",
+    "catalytic_activity": [
+      "D-glucose 6-phosphate + NADP(+) = 6-phospho-D-glucono-1,5-lactone + NADPH + H(+)",
+      "D-glucose 6-phosphate + NAD(+) = 6-phospho-D-glucono-1,5-lactone + NADH + H(+)",
+      "6-phospho-D-glucono-1,5-lactone + H2O = 6-phospho-D-gluconate + H(+)",
+      "2-deoxy-D-glucose 6-phosphate + NAD(+) = 2-deoxy-6-phospho-D-glucono-1,5-lactone + NADH + H(+)",
+      "2-deoxy-D-glucose 6-phosphate + NADP(+) = 2-deoxy-6-phospho-D-glucono-1,5-lactone + NADPH + H(+)",
+      "D-galactose 6-phosphate + NADP(+) = 6-phospho-D-galactono-1,5-lactone + NADPH + H(+)",
+      "D-galactose 6-phosphate + NAD(+) = 6-phospho-D-galactono-1,5-lactone + NADH + H(+)",
+      "D-glucosamine 6-phosphate + NADP(+) = 2-amino-2-deoxy-6-phospho-D-glucono-1,5-lactone + NADPH + 2 H(+)",
+      "D-glucose + NAD(+) = D-glucono-1,5-lactone + NADH + H(+)",
+      "D-glucose + NADP(+) = D-glucono-1,5-lactone + NADPH + H(+)",
+      "D-glucose 6-sulfate + NADP(+) = 6-sulfo-D-glucono-1,5-lactone + NADPH + H(+)"
+    ],
+    "enzyme_commission": [
+      "1.1.1.363",
+      "3.1.1.31",
+      "1.1.1.47"
+    ],
+    "pathways": [
+      "Carbohydrate degradation; pentose phosphate pathway; D-ribulose 5-phosphate from D-glucose 6-phosphate (oxidative stage): step 1/3",
+      "Carbohydrate degradation; pentose phosphate pathway; D-ribulose 5-phosphate from D-glucose 6-phosphate (oxidative stage): step 2/3",
+      "Carbohydrate degradation; pentose phosphate pathway; D-ribulose 5-phosphate from D-glucose 6-phosphate (oxidative stage)"
+    ],
+    "keywords": [
+      "3D-structure",
+      "Alternative splicing",
+      "Carbohydrate metabolism",
+      "Disease variant",
+      "Endoplasmic reticulum",
+      "Glucose metabolism",
+      "Glycoprotein",
+      "Hydrolase",
+      "Multifunctional enzyme",
+      "NAD",
+      "NADP",
+      "Oxidoreductase",
+      "Proteomics identification",
+      "Pyrrolidone carboxylic acid",
+      "Reference proteome",
+      "Signal"
+    ],
+    "subcellular_locations": [
+      "Endoplasmic reticulum lumen"
+    ],
+    "go_mf_ids": [
+      "GO:0017057",
+      "GO:0030246",
+      "GO:0047934",
+      "GO:0047935",
+      "GO:0004345",
+      "GO:0050661"
+    ],
+    "go_bp_ids": [
+      "GO:0006006",
+      "GO:0009051",
+      "GO:2000064",
+      "GO:0097305",
+      "GO:0031667"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0005783",
+      "GO:0005788",
+      "GO:0016529"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 791,
+    "transmembrane_regions_count": 0,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [
+      "8EM2"
+    ],
+    "reactome_ids": [],
+    "string_id": "9606.ENSP00000473348",
+    "provenance": {
+      "source": "UniProt",
+      "query": "O95479",
+      "source_url": "https://rest.uniprot.org/uniprotkb/O95479.json",
+      "retrieved_at": "2026-07-14T21:04:56Z"
     }
   },
   "protein:glutaminase|Q9UI32": {
@@ -3627,14 +5686,87 @@
       "retrieved_at": "2026-07-14T20:01:43Z"
     }
   },
-  "protein:glutamate dehydrogenase|P49448": {
-    "status": "error",
-    "uniprot_id": "P49448",
-    "error_message": "request_failed:HTTP request failed after retries: https://rest.uniprot.org/uniprotkb/P49448.json; last error: HTTPSConnectionPool(host='rest.uniprot.org', port=443): Max retries exceeded with url: /uniprotkb/P49448.json (Caused by ConnectTimeoutError(<HTTPSConnection(host='rest.uniprot.org', port=443) at 0x25007e0afd0>, 'Connection to rest.uniprot.org timed out. (connect timeout=15)'))",
+  "protein:SLC25A1|P53007": {
+    "status": "ok",
+    "uniprot_id": "P53007",
+    "recommended_name": "Tricarboxylate transport protein, mitochondrial",
+    "alternative_names": [
+      "Citrate transport protein",
+      "Mitochondrial citrate carrier",
+      "Solute carrier family 25 member 1",
+      "Tricarboxylate carrier protein"
+    ],
+    "gene_names": [
+      "SLC25A1",
+      "SLC20A3"
+    ],
+    "organism": "Homo sapiens",
+    "taxonomy_id": "9606",
+    "function_text": "Mitochondrial electroneutral antiporter that exports citrate from the mitochondria into the cytosol in exchange for malate (PubMed:26870663, PubMed:29031613, PubMed:29238895, PubMed:39881208, PubMed:38937634). Also able to mediate the exchange of citrate for isocitrate, phosphoenolpyruvate, cis-aconitate and to a lesser extent trans-aconitate, maleate and succinate (PubMed:29031613). Substrate exchange across the membrane occurs consecutively with one substrate being transported first, then dissociating from the substrate binding site before the second substrate binds for transport in the opposite direction (PubMed:38937634). In the cytoplasm, citrate plays important roles in fatty acid and sterol synthesis, regulation of glycolysis, protein acetylation, and other physiopathological processes (PubMed:29031613, PubMed:29238895, PubMed:39881208)",
+    "catalytic_activity": [
+      "citrate(out) + (S)-malate(in) = citrate(in) + (S)-malate(out)",
+      "D-threo-isocitrate(in) + citrate(out) = D-threo-isocitrate(out) + citrate(in)",
+      "citrate(out) + succinate(in) = citrate(in) + succinate(out)",
+      "cis-aconitate(in) + citrate(out) = cis-aconitate(out) + citrate(in)",
+      "trans-aconitate(in) + citrate(out) = trans-aconitate(out) + citrate(in)",
+      "phosphoenolpyruvate(in) + citrate(out) = phosphoenolpyruvate(out) + citrate(in)",
+      "maleate(in) + citrate(out) = maleate(out) + citrate(in)"
+    ],
+    "enzyme_commission": [],
+    "pathways": [],
+    "keywords": [
+      "Antiport",
+      "Congenital myasthenic syndrome",
+      "Disease variant",
+      "Membrane",
+      "Mitochondrion",
+      "Mitochondrion inner membrane",
+      "Phosphoprotein",
+      "Proteomics identification",
+      "Reference proteome",
+      "Repeat",
+      "Transmembrane",
+      "Transmembrane helix",
+      "Transport"
+    ],
+    "subcellular_locations": [
+      "Mitochondrion inner membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0015297",
+      "GO:0071913",
+      "GO:0015137",
+      "GO:0015142"
+    ],
+    "go_bp_ids": [
+      "GO:0006843",
+      "GO:0006811",
+      "GO:0110076"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0070062",
+      "GO:0005743",
+      "GO:0031966",
+      "GO:0005739",
+      "GO:0005634"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 311,
+    "transmembrane_regions_count": 6,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [
+      "R-HSA-428643"
+    ],
+    "string_id": "9606.ENSP00000215882",
     "provenance": {
       "source": "UniProt",
-      "query": "P49448",
-      "retrieved_at": "2026-07-14T20:01:43Z"
+      "query": "P53007",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P53007.json",
+      "retrieved_at": "2026-04-06T21:33:52Z"
     }
   }
 }

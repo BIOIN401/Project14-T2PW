@@ -19,11 +19,12 @@ candidate_examples, or scope_clarity_score, apply these rules before proposing
 any additions:
 
 Rule 1 — Multi-example review with no selected example:
-  If document_type = "multi_example_review" AND selected_example is empty:
-  - The upstream pipeline has already approved this text for extraction.
-    Proceed with normal inference for the most prominent pathway in the text.
-  - Propose additions that improve the graph for that dominant pathway.
-  - Do NOT connect entities from clearly unrelated examples discussed in the review.
+  - The production orchestrator does not invoke this stage in this state: it stops before
+    Stage 2 whenever document_type is "multi_example_review" and selected_example is empty.
+    This stage should never receive that combination in normal operation.
+  - If it is nevertheless received (e.g. a direct or manual call that bypasses the
+    orchestrator gate), propose no additions. Return an empty additions object and set
+    qa_hints.intended_effect to "ambiguous_review_scope_received_by_inference — no action taken."
 
 Rule 2 — Multi-example review with a selected example:
   If document_type = "multi_example_review" AND selected_example is non-empty:
@@ -143,6 +144,13 @@ Constraints:
 C) Alias/synonym bridging for connectivity
 - If explicit equivalence exists (example: "Glutathione (GSH)"), add an interaction:
   (entity_1, relationship=SAME_AS, entity_2)
+- entity_1 and entity_2 MUST be two different literal strings — the shorthand/alternate form and the
+  full/canonical form. Never emit a SAME_AS interaction where entity_1 and entity_2 are identical; that
+  declares nothing and will not resolve anything downstream.
+- Well-known cofactor charge-state names (NAD+/NADH, NADP+/NADPH, FAD/FADH2, ATP/ADP/AMP, GTP/GDP,
+  CoA/CoA-SH, Pi/PPi) are already canonicalized deterministically downstream — use the exact charged/full
+  form directly in reaction inputs/outputs and interaction participants instead of a bare abbreviation
+  ("NAD+", not "NAD"). Reserve SAME_AS bridging for paper-specific synonyms not covered by that list.
 
 D) Protein complex inference
 - If text names a multi-subunit complex without listing components, create the complex with confidence 0.7 and
@@ -155,7 +163,7 @@ D) Protein complex inference
 
 E) Biological state and location linking
 - You may add biological_states and element_locations when explicitly supported.
-- Every biological_state MUST include a "species" field. Use the Organism from the PATHWAY CONTEXT header; if unavailable, default to "Homo sapiens".
+- Every biological_state MUST include a "species" field. Use, in this order: (1) the organism already selected in upstream_context or the PATHWAY CONTEXT header, (2) an organism explicitly stated in the same local evidence span as this biological_state, (3) otherwise leave species empty. Never default to Homo sapiens or any other organism — an unresolved species is a valid Stage 3 gate finding that the audit loop (Stage 4) is designed to repair with real evidence; it must not be masked by an invented default here.
 - Prefer linking existing entities to states over inventing new entities.
 - If an inferred product/input phrase is composite, split it into multiple entities and keep the process stoichiometry explicit.
 

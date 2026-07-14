@@ -776,6 +776,47 @@ def test_stage_contract_failure_renderer_exposes_complete_structured_report() ->
     ]
 
 
+def test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference() -> None:
+    tree = _source_tree()
+
+    def _calls_named(name: str) -> list[ast.Call]:
+        return [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == name
+        ]
+
+    extraction_calls = _calls_named("run_stage_one_with_chunking")
+    filter_calls = _calls_named("filter_out_of_scope_reactions")
+    inference_calls = _calls_named("run_stage_two_with_feedback_loop")
+
+    assert len(extraction_calls) == 1
+    assert len(filter_calls) == 1
+    assert len(inference_calls) == 1
+
+    # The filter must run strictly after Stage 1 extraction returns and strictly
+    # before its output is handed to Stage 2 inference, so out-of-scope reactions
+    # never reach the inference pass.
+    assert extraction_calls[0].lineno < filter_calls[0].lineno < inference_calls[0].lineno
+
+    # Stage 2 inference must be called with the *filtered* Stage 1 payload, not
+    # the raw extraction output.
+    inference_call = inference_calls[0]
+    stage_one_arg = inference_call.args[1]
+    assert isinstance(stage_one_arg, ast.Name)
+    assert stage_one_arg.id != "stage_one"
+
+    # merge_additions (used to build final_payload when inference ran) must also
+    # be seeded from the filtered payload.
+    merge_calls = _calls_named("merge_additions")
+    assert merge_calls
+    merge_base_arg = merge_calls[0].args[0]
+    assert isinstance(merge_base_arg, ast.Name)
+    assert merge_base_arg.id != "stage_one"
+
+
 def test_stage2_artifacts_are_visible_and_both_ui_paths_share_the_orchestrator() -> None:
     namespace: dict[str, Any] = {"Any": Any, "Dict": Dict, "List": List, "Optional": Optional, "Tuple": Tuple}
     entries_function = _load_function("_json_artifact_entries", namespace)

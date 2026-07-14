@@ -18,6 +18,7 @@ from t2pw.mapping.map_ids import route_entity_for_mapping  # noqa: E402
 from t2pw.pipeline.qa_graph import build_graph, connected_components  # noqa: E402
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
     GateValidationError,
+    apply_biochemical_aliases,
     attach_enzymes_from_reaction_evidence,
     attach_transporters_from_evidence,
     canonicalize_same_as_aliases,
@@ -33,6 +34,7 @@ from t2pw.pipeline.process_normalizer import (  # noqa: E402
     promote_interaction_enzymes,
     rewrite_reactions_to_complex_states,
     run_strict_post_normalization_gates,
+    validate_registry_references,
 )
 from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract  # noqa: E402
 
@@ -1762,3 +1764,204 @@ def test_sbml_merges_synonyms_sharing_mapped_ids(tmp_path: Path) -> None:
     assert {name.casefold() for _, name, _ in triacylglycerol_species} == {"triacylglycerol"}
     assert all("CHEBI_75848" in sid for _, _, sid in triacylglycerol_species)
     assert all("unmapped_" not in sid for _, _, sid in triacylglycerol_species)
+
+
+# ---------------------------------------------------------------------------
+# Regression coverage for the TCA-cycle "NAD"/"NADP"/"Ca2+" incident:
+# bare cofactor shorthand in reaction inputs/outputs and interaction
+# participants was silently treated as matching the registry's charge-specific
+# compound names by the Stage 3/4 gate, only to fail hard at Stage 8 IR
+# construction where the stricter normalizer preserves "+".
+# ---------------------------------------------------------------------------
+
+
+def test_apply_biochemical_aliases_rewrites_interaction_and_transport_participants() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "nad+"}, {"name": "nadh"}],
+            "proteins": [],
+        },
+        "processes": {
+            "reactions": [],
+            "transports": [{"cargo": "nad", "transporters": []}],
+            "interactions": [
+                {"entity_1": "NAD", "entity_2": "IDH3", "relationship": "activates"},
+            ],
+        },
+    }
+
+    out = apply_biochemical_aliases(payload)
+
+    assert out["processes"]["interactions"][0]["entity_1"] == "NAD+"
+    assert out["processes"]["interactions"][0]["entity_2"] == "IDH3"
+    assert out["processes"]["transports"][0]["cargo"] == "NAD+"
+
+
+def test_validate_registry_references_flags_unknown_interaction_participant() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "isocitrate"}],
+            "proteins": [{"name": "IDH3"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [],
+            "transports": [],
+            "interactions": [
+                {"entity_1": "Ca2", "entity_2": "IDH3", "relationship": "activates"},
+            ],
+        },
+    }
+
+    with pytest.raises(ValueError, match="unknown entity: Ca2"):
+        validate_registry_references(payload)
+
+
+def test_validate_registry_references_allows_known_interaction_participant() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "isocitrate"}],
+            "proteins": [{"name": "IDH3"}],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [],
+            "transports": [],
+            "interactions": [
+                {"entity_1": "isocitrate", "entity_2": "IDH3", "relationship": "activates"},
+            ],
+        },
+    }
+
+    validate_registry_references(payload)  # must not raise
+
+
+def test_validate_registry_references_recognizes_declared_synonyms() -> None:
+    payload = {
+        "entities": {
+            "compounds": [
+                {"name": "NAD+", "synonyms": ["NAD"]},
+                {"name": "substrate"},
+                {"name": "product"},
+            ],
+            "proteins": [],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [{"name": "R1", "inputs": ["substrate", "NAD"], "outputs": ["product"]}],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    validate_registry_references(payload)  # must not raise: "NAD" is a declared synonym
+
+
+def test_canonicalize_same_as_aliases_preserves_charge_notation() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens"}],
+            "compounds": [{"name": "NAD+"}, {"name": "NADH"}],
+            "proteins": [],
+            "protein_complexes": [],
+            "subcellular_locations": [],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "R1", "inputs": ["substrate", "NAD+"], "outputs": ["product", "NADH"]},
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    out = canonicalize_same_as_aliases(payload)
+
+    assert out["processes"]["reactions"][0]["inputs"] == ["substrate", "NAD+"]
+    compound_names = {row["name"] for row in out["entities"]["compounds"]}
+    assert "NAD+" in compound_names
+    assert "NAD" not in compound_names
+
+
+def test_canonicalize_same_as_aliases_drops_noop_same_as_interaction() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens"}],
+            "compounds": [{"name": "NAD+"}],
+            "proteins": [],
+            "protein_complexes": [],
+            "subcellular_locations": [],
+        },
+        "processes": {
+            "reactions": [],
+            "transports": [],
+            "interactions": [
+                {"entity_1": "NAD+", "entity_2": "NAD+", "relationship": "SAME_AS"},
+            ],
+        },
+    }
+
+    out = canonicalize_same_as_aliases(payload)
+
+    assert out["processes"]["interactions"] == []
+
+
+def test_full_normalization_resolves_bare_cofactor_and_flags_missing_ion() -> None:
+    payload = {
+        "entities": {
+            "species": [{"name": "Homo sapiens"}],
+            "compounds": [{"name": "nad+"}, {"name": "nadh"}, {"name": "isocitrate"}, {"name": "α-ketoglutarate"}],
+            "proteins": [{"name": "IDH3", "species": "Homo sapiens", "uniprot": "P50213"}],
+            "protein_complexes": [],
+            "subcellular_locations": [{"name": "mitochondrial matrix"}],
+        },
+        "biological_states": [
+            {"name": "mito_state", "species": "Homo sapiens", "subcellular_location": "mitochondrial matrix"}
+        ],
+        "element_locations": {
+            "compound_locations": [
+                {"compound": "isocitrate", "biological_state": "mito_state"},
+                {"compound": "α-ketoglutarate", "biological_state": "mito_state"},
+                {"compound": "nad+", "biological_state": "mito_state"},
+                {"compound": "nadh", "biological_state": "mito_state"},
+            ],
+            "protein_locations": [{"protein": "IDH3", "biological_state": "mito_state"}],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "IDH3 reaction",
+                    "inputs": ["isocitrate", "NAD"],
+                    "outputs": ["α-ketoglutarate", "NADH"],
+                    "biological_state": "mito_state",
+                    "enzymes": [{"protein": "IDH3"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [
+                {
+                    "entity_1": "Ca2",
+                    "entity_2": "IDH3",
+                    "relationship": "activates",
+                    "name": "Ca2+ activates IDH3",
+                    "evidence": "Ca2+ ions directly activate IDH3",
+                },
+                {"entity_1": "NAD", "entity_2": "NAD", "relationship": "SAME_AS", "name": "NAD alias"},
+            ],
+        },
+    }
+
+    normalized, report = normalize_process_payload(payload)
+
+    reaction = normalized["processes"]["reactions"][0]
+    assert reaction["inputs"] == ["isocitrate", "NAD+"]
+    assert reaction["outputs"] == ["α-ketoglutarate", "NADH"]
+
+    # The degenerate self-referential SAME_AS interaction is cleaned up...
+    remaining = normalized["processes"]["interactions"]
+    assert not any(it.get("relationship") == "SAME_AS" for it in remaining)
+
+    # ...but the genuinely-missing Ca2+ entity is surfaced as a gate failure
+    # (feeding the audit loop) instead of silently reaching Stage 8 export.
+    gate_errors = report["gate"]["errors"]
+    assert any("Ca2" in err.get("reason", "") for err in gate_errors)

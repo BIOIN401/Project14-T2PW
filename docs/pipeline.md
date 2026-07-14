@@ -245,6 +245,38 @@ Steps in order:
 16. `prune_disconnected_proteins` — graph-based pass: drop degree-0 proteins with no external identity
 17. `run_strict_post_normalization_gates` — generate gate report
 
+`process_normalizer._normalize()` now preserves the `+` character instead of
+stripping it, matching `t2pw.pwml.ir._norm()`'s existing charge-aware normalization.
+Previously the two functions disagreed on whether "NAD" and "NAD+" were the same
+name: Stage 3/4's registry check (`_normalize`-based) treated them as identical and
+silently passed a payload that Stage 8's IR construction (`_norm`-based) then rejected
+outright, with no chance for the audit loop to repair it. The two normalizers must
+agree on name equality for the same logical "is this reference registered" check to
+mean the same thing at every stage that performs it.
+
+Step 1 (`apply_biochemical_aliases`) and step 11 (`canonicalize_same_as_aliases`)
+now rewrite plain-string participant names on `processes.interactions[]`
+(`entity_1`/`entity_2`/`left`/`right`/`source`/`target`) and `processes.transports[].cargo`,
+not just reaction inputs/outputs — this is the same class of bare compound/protein
+reference and was previously left uncovered, letting a shorthand cofactor name reach
+Stage 8 unresolved even though the fully-qualified form was already declared and the
+deterministic `BIOCHEMICAL_ALIAS_MAP` already covered it. A `relationship: "SAME_AS"`
+interaction whose two sides resolve to the same canonical name after rewriting
+(including a degenerate declaration where both sides were identical to begin with)
+is dropped as a no-op instead of being carried forward as an inert self-referential
+interaction. Composite-token splitting (`_rewrite_token`, `_token_parts_for_aliasing`)
+now uses the same charge-notation-aware `_has_plus_token` check as `normalize_composites`
+instead of a raw `"+" in text` test, so a charged compound name (`NAD+`, `NADP+`, `Ca2+`)
+is never mistaken for an `A + B` composite token and stripped of its trailing charge
+during alias canonicalization. `validate_registry_references` (the Stage 3 gate's
+registry check, also exposed to Stage 4 audit via `_stage3_validation_issues`) now
+checks `processes.interactions[]` participants against the entity registry, mirroring
+the existing reactions/transports coverage — an interaction referencing an undeclared
+entity is now a repairable gate failure instead of an unresolvable Stage 8 export abort.
+The registry itself (`_entity_name_norms`) now also recognizes an entity's declared
+`synonyms`, matching `t2pw.pwml.ir`'s existing alias resolution, so a curator- or
+audit-proposed synonym patch is honored by the gate rather than only by export.
+
 Reaction classification now precedes the final two orphan passes. This ordering
 ensures that an enzyme referenced only by a removed or quarantined reaction does
 not remain in the active entity registry and later fail identity validation. A

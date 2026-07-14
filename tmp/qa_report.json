@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total_species": 40,
-    "total_reactions": 13,
+    "total_species": 58,
+    "total_reactions": 22,
     "completeness_score": 0.0
   },
   "flags": {
@@ -47,11 +47,23 @@
         "reason": "no subcellular location recorded"
       },
       {
+        "entity": "lactate",
+        "reason": "no subcellular location recorded"
+      },
+      {
         "entity": "NAD+",
         "reason": "no subcellular location recorded"
       },
       {
         "entity": "NADH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADP+",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADPH",
         "reason": "no subcellular location recorded"
       },
       {
@@ -67,7 +79,7 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "CoA",
+        "entity": "CoA-SH",
         "reason": "no subcellular location recorded"
       },
       {
@@ -79,11 +91,11 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Ca2+",
+        "entity": "GTP",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "glutamine",
+        "entity": "aspartate",
         "reason": "no subcellular location recorded"
       },
       {
@@ -91,51 +103,107 @@
         "reason": "no subcellular location recorded"
       },
       {
+        "entity": "glutamine",
+        "reason": "no subcellular location recorded"
+      },
+      {
         "entity": "ammonia",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "NAD",
+        "entity": "dihydroxyacetone phosphate",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "citrate synthase",
+        "entity": "glycerol 3-phosphate",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "aconitase 2",
+        "entity": "GDP",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "isocitrate dehydrogenase 3",
+        "entity": "Pi",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "succinyl-CoA synthetase",
+        "entity": "H2O",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "fumarate hydratase",
+        "entity": "CS",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "malate dehydrogenase 2",
+        "entity": "ACO2",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "PDK (pyruvate dehydrogenase kinase)",
+        "entity": "IDH3",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "PDP (pyruvate dehydrogenase phosphatase)",
+        "entity": "IDH2",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pyruvate carboxylase",
+        "entity": "SCS",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "ATP-citrate lyase",
+        "entity": "FH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "MDH2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "MDH1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PC",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GPD1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GPD2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GOT1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GOT2",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ACL",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PDK1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PDP1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "BCAT1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LDHA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GDH",
         "reason": "no subcellular location recorded"
       },
       {
@@ -143,11 +211,7 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "glutamate dehydrogenase",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "pyruvate dehydrogenase complex",
+        "entity": "SLC25A1",
         "reason": "no subcellular location recorded"
       },
       {
@@ -159,31 +223,44 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "mitochondrial pyruvate carrier",
+        "entity": "pyruvate dehydrogenase complex",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "SLC25A1",
+        "entity": "NAD",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "NADP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Ca2+",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
     "possible_complexes": [
       {
-        "entity": "pyruvate dehydrogenase complex",
-        "reason": "name suggests a complex or subunit"
-      },
-      {
         "entity": "oxoglutarate dehydrogenase complex",
         "reason": "name suggests a complex or subunit"
       },
       {
         "entity": "succinate dehydrogenase complex",
         "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "pyruvate dehydrogenase complex",
+        "reason": "name suggests a complex or subunit"
       }
     ],
     "transport_like_reactions": [],
-    "orphan_nodes": [],
+    "orphan_nodes": [
+      {
+        "entity": "BCAT1",
+        "degree": 0
+      }
+    ],
     "missing_ids": [
       {
         "entity": "acetyl-CoA",
@@ -226,11 +303,23 @@
         "type": "compound"
       },
       {
+        "entity": "lactate",
+        "type": "compound"
+      },
+      {
         "entity": "NAD+",
         "type": "compound"
       },
       {
         "entity": "NADH",
+        "type": "compound"
+      },
+      {
+        "entity": "NADP+",
+        "type": "compound"
+      },
+      {
+        "entity": "NADPH",
         "type": "compound"
       },
       {
@@ -246,7 +335,7 @@
         "type": "compound"
       },
       {
-        "entity": "CoA",
+        "entity": "CoA-SH",
         "type": "compound"
       },
       {
@@ -258,11 +347,11 @@
         "type": "compound"
       },
       {
-        "entity": "Ca2+",
+        "entity": "GTP",
         "type": "compound"
       },
       {
-        "entity": "glutamine",
+        "entity": "aspartate",
         "type": "compound"
       },
       {
@@ -270,51 +359,107 @@
         "type": "compound"
       },
       {
+        "entity": "glutamine",
+        "type": "compound"
+      },
+      {
         "entity": "ammonia",
         "type": "compound"
       },
       {
-        "entity": "NAD",
+        "entity": "dihydroxyacetone phosphate",
         "type": "compound"
       },
       {
-        "entity": "citrate synthase",
+        "entity": "glycerol 3-phosphate",
+        "type": "compound"
+      },
+      {
+        "entity": "GDP",
+        "type": "compound"
+      },
+      {
+        "entity": "Pi",
+        "type": "compound"
+      },
+      {
+        "entity": "H2O",
+        "type": "compound"
+      },
+      {
+        "entity": "CS",
         "type": "protein"
       },
       {
-        "entity": "aconitase 2",
+        "entity": "ACO2",
         "type": "protein"
       },
       {
-        "entity": "isocitrate dehydrogenase 3",
+        "entity": "IDH3",
         "type": "protein"
       },
       {
-        "entity": "succinyl-CoA synthetase",
+        "entity": "IDH2",
         "type": "protein"
       },
       {
-        "entity": "fumarate hydratase",
+        "entity": "SCS",
         "type": "protein"
       },
       {
-        "entity": "malate dehydrogenase 2",
+        "entity": "FH",
         "type": "protein"
       },
       {
-        "entity": "PDK (pyruvate dehydrogenase kinase)",
+        "entity": "MDH2",
         "type": "protein"
       },
       {
-        "entity": "PDP (pyruvate dehydrogenase phosphatase)",
+        "entity": "MDH1",
         "type": "protein"
       },
       {
-        "entity": "pyruvate carboxylase",
+        "entity": "PC",
         "type": "protein"
       },
       {
-        "entity": "ATP-citrate lyase",
+        "entity": "GPD1",
+        "type": "protein"
+      },
+      {
+        "entity": "GPD2",
+        "type": "protein"
+      },
+      {
+        "entity": "GOT1",
+        "type": "protein"
+      },
+      {
+        "entity": "GOT2",
+        "type": "protein"
+      },
+      {
+        "entity": "ACL",
+        "type": "protein"
+      },
+      {
+        "entity": "PDK1",
+        "type": "protein"
+      },
+      {
+        "entity": "PDP1",
+        "type": "protein"
+      },
+      {
+        "entity": "BCAT1",
+        "type": "protein"
+      },
+      {
+        "entity": "LDHA",
+        "type": "protein"
+      },
+      {
+        "entity": "GDH",
         "type": "protein"
       },
       {
@@ -322,12 +467,8 @@
         "type": "protein"
       },
       {
-        "entity": "glutamate dehydrogenase",
+        "entity": "SLC25A1",
         "type": "protein"
-      },
-      {
-        "entity": "pyruvate dehydrogenase complex",
-        "type": "protein_complex"
       },
       {
         "entity": "oxoglutarate dehydrogenase complex",
@@ -338,11 +479,7 @@
         "type": "protein_complex"
       },
       {
-        "entity": "mitochondrial pyruvate carrier",
-        "type": "protein_complex"
-      },
-      {
-        "entity": "SLC25A1",
+        "entity": "pyruvate dehydrogenase complex",
         "type": "protein_complex"
       }
     ],
@@ -351,6 +488,11 @@
       {
         "entity_a": "NAD+",
         "entity_b": "NAD",
+        "reason": "normalized label collision"
+      },
+      {
+        "entity_a": "NADP+",
+        "entity_b": "NADP",
         "reason": "normalized label collision"
       }
     ],

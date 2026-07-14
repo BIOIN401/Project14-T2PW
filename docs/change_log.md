@@ -9,6 +9,321 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-14 — Tighten default reaction scope and wire the out-of-scope reaction filter
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `src/t2pw/app/streamlit_app.py`,
+`tests/test_pipeline_cleanup.py`, `tests/test_streamlit_stage2_orchestration.py`,
+`docs/change_log.md`.
+
+**Error / symptom:** For pathway-dense topics (e.g. the TCA cycle), extraction returned far
+more reactions than the paper's actual core pathway — anaplerotic, cataplerotic, and
+auxiliary reactions mentioned only as background context were included in the final PWML
+output alongside the pathway's defining steps.
+
+**Root cause:** Two compounding gaps. (1) `pathway_scope` is a real parameter on
+`run_extraction_pipeline` that the prompt's `scope_membership` rule depends on, but no live
+caller ever populates it. `pwml_system.txt`'s own scope rule only defined strict
+`core`-only behavior for "no `pathway_scope` AND no `upstream_context`," leaving the actual
+common case — no `pathway_scope`, `upstream_context` present, true on every live run —
+undefined, so the model had no explicit instruction to stay tight and would reach for the
+full core/anaplerotic/cataplerotic/auxiliary taxonomy. (2) `filter_out_of_scope_reactions()`,
+whose entire job is to drop reactions tagged `scope_membership: out_of_scope`, existed fully
+implemented in `pipeline.py` but was never called anywhere in the live orchestrator, so even
+a reaction the model correctly tagged `out_of_scope` remained in the payload through export.
+
+**Fix:** `pwml_system.txt`'s scope rule now applies strict `core`-only classification
+whenever no explicit `<pathway_scope>` is supplied, regardless of whether `upstream_context`
+is present — the anaplerotic/cataplerotic/auxiliary labels are reserved for when a
+`<pathway_scope>` block explicitly requests that broader taxonomy. `streamlit_app.py` now
+calls `filter_out_of_scope_reactions()` on the merged Stage 1 payload immediately after
+Stage 1's structural contract validates (and after `write_stage1_lock_artifacts` has already
+captured the raw output and lock manifest), and before that payload reaches Stage 2
+inference.
+
+**Pipeline consistency:** Verified against `reaction_lock_manifest.py`:
+`build_locked_reaction_manifest()` already excludes `scope_membership == "out_of_scope"`
+reactions from locking, so the lock/preservation contract
+(`reaction_preservation_validator.py`) was already designed assuming these reactions get
+removed from the payload — this fix completes that assumption rather than introducing a new
+one. No locked reaction is affected. Filtering between Stage 1 and Stage 2 is orchestrator-owned
+cross-stage logic per `docs/pipeline.md` ("logic spanning two stages belongs in the
+orchestrator"); `filter_out_of_scope_reactions` itself, already Stage-1-owned, was untouched.
+
+**Verification:** New tests in `tests/test_pipeline_cleanup.py` (filter behavior in
+isolation) and `tests/test_streamlit_stage2_orchestration.py::test_out_of_scope_filter_runs_between_stage1_extraction_and_stage2_inference`
+(AST-verified call ordering). Full suite: 408 passing.
+
+---
+
+### 2026-07-14 — Replace unreachable multi-example-review branches with defensive text
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`,
+`src/t2pw/llm/prompts/pwml_infer_system.txt`, `docs/change_log.md`.
+
+**Error / symptom:** Both the Stage 1 and Stage 2 prompts contained a documented branch
+("Case A" / "Rule 1") instructing the model to proceed with extraction/inference when
+`document_type == "multi_example_review"` and `selected_example` is empty, claiming "the
+upstream pipeline gate has already approved this text." This is not true of production
+behavior.
+
+**Root cause:** `is_ambiguous_multi_example_review_context()` in `preprocessor.py`, called
+from `run_extraction_pipeline` and `run_inference_pipeline` in `pipeline.py`, hard-aborts the
+entire pipeline with `PipelineFailure` for exactly this condition, before either stage's LLM
+is ever called. The prompt branches described a state the orchestrator guarantees can never
+reach the model in normal operation — dead, misleading documentation that could confuse a
+future prompt editor into thinking the fallback path is live and tested.
+
+**Fix:** Both branches now state plainly that the production orchestrator does not invoke the
+stage in this state, and specify defensive behavior (return an empty extraction/no additions
+with a warning flag) only for the hypothetical case of a direct or manual call that bypasses
+the orchestrator gate.
+
+**Pipeline consistency:** Prompt-text-only change; no orchestrator or normalization logic
+touched. This is documentation truth-alignment to the orchestrator's actual, already-correct
+hard-stop behavior, not a behavior change.
+
+**Verification:** No automated test covers LLM prompt text in this repo (confirmed via
+`rg "pwml_infer_system" tests` — zero matches); verified by inspection against `pipeline.py`'s
+actual gate logic.
+
+---
+
+### 2026-07-14 — Standardize the transporter actor schema in the Stage 1 extraction prompt
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `docs/change_log.md`.
+
+**Error / symptom:** `pwml_system.txt` showed three different shapes for
+`transports[].transporters[]` actor rows within the same file: `{"protein_complex": "..."}`
+in the formal OUTPUT JSON SCHEMA, and `{"protein": "..."}` in Example 3 — neither matching
+the canonical `entity`/`entity_type`/`role` actor shape `docs/pipeline.md` documents for
+every other actor list (`reactions[].enzymes`, `reactions[].modifiers`,
+`interactions[].participants`).
+
+**Root cause:** The same bug class as the 2026-07-07 fix to `normalize_process_actor_schema`
+for `reactions[].enzymes` (that entry: "all enzyme actor dicts ... retained
+`protein_complex` ... as the name field" because the prompt/schema was inconsistent) —
+transporters had simply never been brought in line with the canonical actor shape.
+
+**Fix:** Both occurrences in `pwml_system.txt` now use the canonical
+`{"entity": "", "entity_type": "protein | protein_complex", "role": "transporter", ...}`
+shape.
+
+**Pipeline consistency:** Confirmed by direct code read that `normalize_process_actor_schema`'s
+`_rewrite_actor_rows` helper (`process_normalizer.py:2509-2515`) already canonicalizes
+`transports[].transporters[]` to `entity`/`entity_type` regardless of which legacy key Stage 1
+emits (it reads `entity`/`protein`/`protein_complex`/`name` as fallback fields) — this fix
+changes zero bytes of what reaches export; it only removes an internally-inconsistent prompt
+that could lead a weaker model to pick the wrong key or omit `entity_type`/`role`.
+
+**Verification:** Inspected `process_normalizer.py` directly to confirm the downstream
+migration path already exists and is unaffected. No automated test covers LLM prompt text.
+
+---
+
+### 2026-07-14 — Make Stage 1 prompt examples schema-valid and consolidate complex-routing guidance
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `docs/change_log.md`.
+
+**Error / symptom:** Two related prompt-quality gaps in `pwml_system.txt`: (1) all four
+MODIFIER EXAMPLES omitted required top-level reaction/interaction/transport fields
+(`biological_state`, `class`, `scope_membership`, `confidence`, `provenance`,
+`source_refs`) that the formal OUTPUT JSON SCHEMA requires — a weaker model imitating the
+examples rather than the full schema block could emit incomplete objects. (2) protein-vs-
+protein_complex routing guidance (NAME-BASED COMPLEX RULE, extraction-layer cofactor-rule
+bullets) was scattered across roughly 450 lines of the file with no single, locally-visible
+decision procedure — the same root cause named in the earlier 2026-07-14 "Stop LLM extraction
+from routing 'X complex' entities into proteins[]" entry ("that guidance was buried among many
+other extraction rules").
+
+**Fix:** All four MODIFIER EXAMPLES (enzyme catalyst, regulator/catalyst with interactions,
+transporter, protein complex catalyst) now include every field the formal schema requires, so
+each is a complete, valid instance of its schema rather than an abbreviated illustration.
+Added a new "PROTEIN-COMPLEX DECISION CHECKLIST" section immediately before the examples,
+consolidating the existing scattered rules (name-contains-"complex" check, explicit
+multi-subunit language check, components explicit-vs-unresolved handling, never infer a
+complex for export-wrapper reasons) into one explicit, numbered procedure. The existing
+scattered rules were left in place as reinforcement rather than removed, to avoid risking any
+rule a downstream check implicitly depends on the model having seen phrased a specific way.
+
+**Pipeline consistency:** Prompt-text-only; no schema, normalizer, or export code touched. The
+checklist restates existing policy already enforced downstream by Stage 3's NAME-BASED
+COMPLEX RULE gate and Stage 6's generated-wrapper contract — it does not introduce new policy.
+
+**Verification:** No automated test covers LLM prompt text; verified by inspection that every
+added field matches `t2pw/schema.py`'s existing TypedDict definitions exactly (no new fields
+invented).
+
+---
+
+### 2026-07-14 — Remove the live Homo sapiens organism default from the Stage 2 inference prompt
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_infer_system.txt`, `docs/change_log.md`.
+
+**Error / symptom:** `pwml_infer_system.txt` section E ("Biological state and location
+linking") still instructed the model to default an unresolved organism to "Homo sapiens" —
+directly contradicting Stage 1's own species rule ("if no organism can be confidently
+selected, leave species empty — do not guess") and Stage 0's preprocessor, both of which
+already forbid organism guessing. This is the same contradiction the 2026-07-08 change log
+entry fixed for Stage 1's own BIOLOGICAL STATE RULE — that fix never reached this second copy
+in the Stage 2 prompt.
+
+**Root cause:** The 2026-07-08 fix ("Strengthen extraction scoping...") only touched
+`pwml_system.txt` and added a species cross-reference note to `pwml_infer_system.txt`'s
+modifier-linking section; the separate default-organism line in that same file's
+biological-state/location section was never located or updated.
+
+**Fix:** Replaced the Homo sapiens default with an explicit priority order (upstream-selected
+organism → locally-evidenced organism → empty) and an explicit prohibition on defaulting,
+noting that an unresolved species is a valid Stage 3 gate finding the Stage 4 audit loop is
+designed to repair from real evidence.
+
+**Pipeline consistency:** Prompt-text-only; matches the already-existing Stage 3 species gate
+(added 2026-07-08, "Add protein species and external identity checks to Stage 3 gate") plus
+the Stage 4 audit repair path, both unaffected. No code touched.
+
+**Verification:** No automated test covers LLM prompt text; confirmed the pre-existing
+uncommitted section C (alias/synonym bridging) addition to this same file — added by
+concurrent, unrelated work on cofactor charge-notation canonicalization — was left untouched.
+
+---
+
+### 2026-07-14 — Retire dead prompt files and their dead loader code
+
+**Files changed:** `src/t2pw/llm/prompts/extract_json.md` (deleted),
+`src/t2pw/llm/prompts/repair_json.md` (deleted),
+`src/t2pw/llm/prompts/enrichment_system.txt` (deleted),
+`src/t2pw/curation/gap_resolver.py`, `docs/change_log.md`.
+
+**Error / symptom:** Three prompt files sat in `src/t2pw/llm/prompts/` with no live reference
+anywhere in the codebase: `extract_json.md` and `repair_json.md` were both 0 bytes and
+unreferenced by filename anywhere in `src/`. `enrichment_system.txt` was a real, substantive
+prompt (patch-based, non-agentic enrichment) loaded only by `_get_enrichment_system_prompt()`
+in `gap_resolver.py`, a function that was itself never called anywhere — the live Stage 4a
+enrichment path uses the separate, actually-wired `enrichment_agentic_system.txt` /
+`_get_enrichment_agentic_system_prompt()`.
+
+**Root cause:** Vestigial from an earlier prompt-per-stage design iteration; nothing removed
+them when the live enrichment path moved to the agentic/tool-calling variant.
+
+**Fix:** Deleted all three files after independent re-verification (fresh repo-wide grep, not
+reliance on prior analysis) confirmed zero references. Removed the now-fully-dead
+`_get_enrichment_system_prompt()` function and its module-level `_ENRICHMENT_SYSTEM_PROMPT`
+global from `gap_resolver.py`. Left `src/t2pw/config.py` untouched: although it is 0 bytes,
+`src/config.py` (a separate legacy shim) does `from t2pw.config import *`, so deleting it
+would break that shim's import — this dependency was found during re-verification and the
+file was correctly left in place.
+
+**Pipeline consistency:** Removes dead code only; no live prompt, stage function, or call path
+touched. `enrichment_agentic_system.txt` (the live Stage 4a prompt) was explicitly left
+untouched and re-verified as the sole caller-reachable enrichment prompt.
+
+**Verification:** Repo-wide grep for each deleted filename and the removed function/global
+name returned zero remaining source references. `python -m py_compile
+src/t2pw/curation/gap_resolver.py` succeeded.
+
+---
+
+### 2026-07-14 — Charge-notation-aware alias canonicalization; interaction registry coverage
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py`,
+`src/t2pw/llm/prompts/pwml_infer_system.txt`, `src/t2pw/llm/prompts/pathway_curator_system.txt`,
+`src/t2pw/curation/audit_json_llm.py`, `tests/test_process_normalizer.py`,
+`docs/pipeline.md`, `docs/change_log.md`.
+
+**Error / symptom:** Stage 8 IR construction failed with 14 `Process member 'X' was
+not found in entity registries.` errors (for `NAD`, `NADP`, `Ca2`) and 3
+`Interaction must have exactly one left and one right member.` errors, on a TCA-cycle
+paper run. `entities.compounds` correctly declared the redox-specific species
+(`nad+`, `nadh`, `nadp+`, `nadph`), but 9 reactions referenced the bare, ambiguous
+tokens `"NAD"`/`"NADP"`, and two interactions were self-referential `SAME_AS`
+declarations (`entity_1 == entity_2 == "NAD"`/`"NADP"`, evidently a failed attempt to
+declare "NAD" and "NAD+" as synonyms) plus one interaction (`Ca2+ activates IDH and
+OGDH`) referenced calcium, which was never extracted as a compound at all.
+
+**Root cause:** four compounding issues, none of which is a "missing entity" problem
+for NAD/NADP:
+
+1. `process_normalizer._normalize()` stripped the `+` character while
+   `t2pw.pwml.ir._norm()` (Stage 8) preserved it. Stage 3/4's registry check
+   (`validate_registry_references`, exposed to audit via `_stage3_validation_issues`)
+   therefore treated `"NAD"` and `"nad+"` as the same name and never flagged the
+   mismatch — the payload reached Stage 8 looking clean, where the stricter,
+   charge-aware `_norm()` correctly rejected it with no repair path left.
+2. `apply_biochemical_aliases` (step 1) already had the exact fix in
+   `BIOCHEMICAL_ALIAS_MAP` (`"nad": "NAD+"`, `"nadp": "NADP+"`) and already rewrote
+   reaction inputs/outputs, but never touched `processes.interactions[]` participants
+   or `processes.transports[].cargo` — the same class of bare compound reference was
+   simply never in scope for this pass.
+3. Independently of (1)/(2), `_rewrite_token` and `_token_parts_for_aliasing` (used by
+   step 11, `canonicalize_same_as_aliases`, which runs on every payload regardless of
+   whether it contains a `SAME_AS` interaction) tested for a composite `"A + B"`
+   token with a raw `"+" in text` check instead of the charge-aware `_has_plus_token`
+   guard already used elsewhere (`normalize_composites`). This silently mangled any
+   correctly-charged compound name — `"NAD+"` was split on `"+"` into `["NAD", ""]`,
+   the empty part dropped, and the single remaining part rejoined with no `+` at all.
+   This is the actual, deterministic reason `"NAD+"` never survived to Stage 8 even
+   after `apply_biochemical_aliases` had just correctly produced it.
+4. `validate_registry_references` never checked `processes.interactions[]` at all
+   (only reactions and transports), so the genuinely-missing `Ca2+` compound, and the
+   self-referential `SAME_AS` rows, had no path to becoming a Stage 3 gate failure —
+   they were invisible to the audit loop and only surfaced as a hard Stage 8 abort.
+
+**Fix:**
+1. `_normalize()` now preserves `+`, matching `ir.py`'s `_norm()`.
+2. `apply_biochemical_aliases` now also rewrites `processes.interactions[]`
+   (`entity_1`/`entity_2`/`left`/`right`/`source`/`target`) and
+   `processes.transports[].cargo`/`cargo_complex`.
+3. `_rewrite_token` and `_token_parts_for_aliasing` now use `_has_plus_token` instead
+   of a raw `"+" in text` check, so charge notation on compound names is never
+   mistaken for a composite separator during alias canonicalization.
+4. `canonicalize_same_as_aliases` now drops a `SAME_AS` interaction whose two sides
+   normalize to the same name after rewriting (including a degenerate declaration
+   that was self-referential to begin with) instead of carrying forward an inert
+   self-interaction.
+5. `validate_registry_references` now checks `processes.interactions[]` participants
+   against the registry, mirroring the existing reactions/transports coverage.
+6. `_entity_name_norms` now also recognizes an entity's declared `synonyms`, matching
+   `ir.py`'s existing alias resolution, so a curator/audit-proposed synonym patch is
+   honored by the gate and not only by export.
+7. Prompt updates (defense in depth, not required for the deterministic fix above):
+   the Stage 2A inference prompt now requires `SAME_AS` pairs to use two distinct
+   literal strings and prefers the deterministic charge-form directly for known
+   cofactors; the Stage 5 curator prompt now covers interaction participants (not
+   just reaction inputs/outputs) and prefers an entity `synonyms` patch over editing
+   a reaction/interaction reference when the entity's declared name is already
+   correct; the Stage 4 audit system prompt gained equivalent "registry reference
+   mismatch" guidance (synonym-patch first, new-entity only when genuinely absent,
+   remove degenerate self-referential `SAME_AS` rows).
+
+**Pipeline consistency:** all deterministic changes stay inside
+`process_normalizer.py`, which owns Stage 3's alias canonicalization and gate. None
+of them reach into Stage 6/8 or invent biology — they only make an existing,
+already-tested deterministic mechanism (biochemical alias rewriting, same-as
+canonicalization, registry validation) correctly cover interactions and correctly
+preserve chemically-significant `+` notation, so a repairable naming issue is caught
+and fed to Stage 4 audit (per "the gate is not a blocker before audit") instead of
+surfacing as an unrepairable Stage 8 abort. The genuinely-missing `Ca2+` entity is
+still left as an audit-owned gap — no stage invents the missing compound.
+
+**Verification:** `tests/test_process_normalizer.py` gained
+`test_apply_biochemical_aliases_rewrites_interaction_and_transport_participants`,
+`test_validate_registry_references_flags_unknown_interaction_participant`,
+`test_validate_registry_references_allows_known_interaction_participant`,
+`test_validate_registry_references_recognizes_declared_synonyms`,
+`test_canonicalize_same_as_aliases_preserves_charge_notation`,
+`test_canonicalize_same_as_aliases_drops_noop_same_as_interaction`, and
+`test_full_normalization_resolves_bare_cofactor_and_flags_missing_ion` (an
+end-to-end reproduction of the exact TCA-cycle payload shape: bare "NAD" input
+resolves to "NAD+", the self-referential alias interactions are dropped, and the
+genuinely-missing Ca2+ reference correctly surfaces as a gate error). Verified
+directly against the failing run's saved `tmp/final.mapped.json`: before the fix,
+`validate_registry_references` raised on all 14 tokens exactly matching the reported
+Stage 8 errors; after the fix, a reduced reproduction of the same reactions/
+interactions normalizes to zero gate errors except the genuine Ca2+ gap. Full suite
+re-run: 405 passing (398 previously existing + 7 new).
+
+---
+
 ### 2026-07-14 — Prefer a confident Stage 6 DB complex match's components over stale extraction data
 
 **Files changed:** `src/t2pw/mapping/map_ids.py`, `tests/test_map_ids.py`,

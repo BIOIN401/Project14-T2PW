@@ -1726,21 +1726,6 @@ def _map_ids_for_entity(
 # Step 10 — Agentic enrichment helpers
 # ---------------------------------------------------------------------------
 
-_ENRICHMENT_SYSTEM_PROMPT: Optional[str] = None
-
-
-def _get_enrichment_system_prompt() -> str:
-    global _ENRICHMENT_SYSTEM_PROMPT  # noqa: PLW0603
-    if _ENRICHMENT_SYSTEM_PROMPT is None:
-        prompt_path = PROMPTS_DIR / "enrichment_system.txt"
-        _ENRICHMENT_SYSTEM_PROMPT = (
-            prompt_path.read_text(encoding="utf-8")
-            if prompt_path.exists()
-            else "You are an enrichment agent. Return JSON patches only."
-        )
-    return _ENRICHMENT_SYSTEM_PROMPT
-
-
 # ---------------------------------------------------------------------------
 # Agentic enrichment — tool schemas and prompt loader
 # ---------------------------------------------------------------------------
