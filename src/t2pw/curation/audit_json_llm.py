@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from t2pw.llm.client import PROVIDER, chat
+from t2pw.pipeline.process_normalizer import validate_no_composites, validate_registry_references
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,7 @@ Hard constraints:
 - Prefer add/replace over remove.
 - Every issue and patch must include concrete evidence from input JSON.
 - Be conservative: if uncertain, emit warning/suggestion instead of risky patch.
+- Patch protein-complex component stoichiometry only when payload evidence explicitly states one exact positive count for that named component. Never default stoichiometry to 1, infer it from symmetry or a total subunit count, or patch from approximate, ranged, or conflicting evidence. Leave unresolved stoichiometry as an error for review.
 - If upstream context includes a "selected_example" field (non-empty), any entity or process whose evidence quotes belong to a different named example than selected_example may be removed at high confidence (>= 0.90). This is a valid out-of-scope removal, not a data loss.
 - If upstream context indicates document_type = "multi_example_review" and selected_example is empty, do NOT repair the payload into a single pathway. Emit a scope_ambiguity error/warning in the issues block instead of adding bridging reactions or compartment assignments.
 
@@ -75,6 +77,7 @@ Cross-cutting constraints:
 - Named genes/proteins outrank generic enzyme class names.
 - Cofactors are compounds. Proteins/genes are not compounds.
 - Do not wrap a single enzyme into a protein_complex unless complex evidence exists in the payload.
+- Spontaneity is not modeled currently. Never add or replace a reaction's spontaneous field with true; leave it false regardless of whether a real enzyme/catalyst is present.
 """
 
 LOCK_AWARE_SYSTEM_PROMPT_FRAGMENT = """
@@ -113,6 +116,92 @@ def _normalize_name(value: str) -> str:
     return re.sub(r"[^a-z0-9 ]+", "", cleaned)
 
 
+_COUNT_WORDS = {
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+    "eleven": 11,
+    "twelve": 12,
+}
+_AMBIGUOUS_COUNT_PREFIX_RE = re.compile(
+    r"(?:approximately|about|around|roughly|estimated|at\s+least|up\s+to|more\s+than|less\s+than|or|to)\s+$|[-\u2013\u2014]\s*$",
+    flags=re.IGNORECASE,
+)
+
+
+def _positive_integer(value: Any) -> Optional[int]:
+    if isinstance(value, bool) or value in (None, ""):
+        return None
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return None
+    if parsed < 1 or str(value).strip() not in {str(parsed), f"{parsed}.0"}:
+        return None
+    return parsed
+
+
+def _positive_stoichiometry(value: Any) -> bool:
+    return _positive_integer(value) is not None
+
+
+def _component_name(component: Any) -> str:
+    if isinstance(component, str):
+        return component.strip()
+    if not isinstance(component, dict):
+        return ""
+    for key in ("name", "protein", "entity"):
+        value = component.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return ""
+
+
+def _evidence_strings(row: Dict[str, Any], component: Any) -> List[str]:
+    evidence: List[str] = []
+    for source in (row, component if isinstance(component, dict) else {}):
+        for key in ("evidence", "evidence_quote", "source_evidence", "source_text"):
+            value = source.get(key)
+            if isinstance(value, str) and value.strip() and value.strip() not in evidence:
+                evidence.append(value.strip())
+    return evidence
+
+
+def _explicit_component_count(component_name: str, evidence: Sequence[str]) -> Tuple[Optional[int], str]:
+    if not component_name:
+        return None, ""
+    count_token = r"\d+|" + "|".join(_COUNT_WORDS)
+    name_pattern = re.escape(component_name)
+    pattern = re.compile(
+        rf"(?<![A-Za-z0-9])(?P<count>{count_token})\s+"
+        rf"(?:(?:copies?|subunits?)\s+of\s+)?(?:the\s+)?"
+        rf"{name_pattern}(?![A-Za-z0-9])(?:\s+subunits?)?",
+        flags=re.IGNORECASE,
+    )
+    matches: List[Tuple[int, str]] = []
+    for statement in evidence:
+        for match in pattern.finditer(statement):
+            if _AMBIGUOUS_COUNT_PREFIX_RE.search(statement[max(0, match.start() - 30) : match.start()]):
+                continue
+            raw_count = match.group("count").casefold()
+            count = int(raw_count) if raw_count.isdigit() else _COUNT_WORDS[raw_count]
+            if count >= 1:
+                matches.append((count, statement))
+    distinct_counts = {count for count, _ in matches}
+    if len(distinct_counts) != 1:
+        return None, ""
+    count = next(iter(distinct_counts))
+    supporting_statement = next(statement for matched_count, statement in matches if matched_count == count)
+    return count, supporting_statement
+
+
 def _split_composite_name(value: str) -> List[str]:
     text = (value or "").strip()
     if not text:
@@ -123,6 +212,31 @@ def _split_composite_name(value: str) -> List[str]:
 
 def _is_composite_name(value: str) -> bool:
     return len(_split_composite_name(value)) > 1
+
+
+def _stage3_validation_issues(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Expose Stage 3's canonical composite/registry failures to audit."""
+
+    issues: List[Dict[str, Any]] = []
+    for validator, label in (
+        (validate_no_composites, "composite"),
+        (validate_registry_references, "registry reference"),
+    ):
+        try:
+            validator(payload)
+        except ValueError as exc:
+            details = [line.strip() for line in str(exc).splitlines()[1:] if line.strip()]
+            for detail in details:
+                pointer, separator, reason = detail.partition(" ")
+                issues.append(
+                    {
+                        "path": pointer if pointer.startswith("/") else "/",
+                        "reason": f"Stage 3 {label} validation failed: {reason if separator else detail}",
+                        "evidence": detail,
+                        "source": "deterministic_stage3_validator",
+                    }
+                )
+    return issues
 
 
 def _dedupe_preserve_order(values: Sequence[str]) -> List[str]:
@@ -348,6 +462,11 @@ def _deterministic_audit(payload: Dict[str, Any], *, locked_reaction_indices: Op
     issues: Dict[str, List[Dict[str, Any]]] = {"errors": [], "warnings": [], "suggestions": []}
     patch_ops: List[Dict[str, Any]] = []
 
+    # Stage 4 consumes the same deterministic boundary validators as Stage 3.
+    # The repair discovery below remains audit-owned because it proposes JSON
+    # patches, while these checks are the authoritative failure definitions.
+    issues["errors"].extend(_stage3_validation_issues(payload))
+
     entities = _safe_dict(payload.get("entities"))
     processes = _safe_dict(payload.get("processes"))
     locations = _safe_dict(payload.get("element_locations"))
@@ -449,6 +568,67 @@ def _deterministic_audit(payload: Dict[str, Any], *, locked_reaction_indices: Op
                 )
             else:
                 seen[normalized] = comparable
+
+    for complex_idx, complex_row in enumerate(_safe_list(entities.get("protein_complexes"))):
+        if not isinstance(complex_row, dict):
+            continue
+        complex_name = str(complex_row.get("name") or complex_idx).strip()
+        for component_idx, component in enumerate(_safe_list(complex_row.get("components"))):
+            if isinstance(component, dict) and _positive_stoichiometry(component.get("stoichiometry")):
+                continue
+            component_name = _component_name(component)
+            stoichiometry_pointer = _join_pointer(
+                ["entities", "protein_complexes", complex_idx, "components", component_idx, "stoichiometry"]
+            )
+            evidence_strings = _evidence_strings(complex_row, component)
+            legacy_coefficient = _positive_integer(component.get("coefficient")) if isinstance(component, dict) else None
+            if legacy_coefficient is not None:
+                explicit_count = legacy_coefficient
+                count_evidence = (
+                    f"Component '{component_name or component_idx}' has explicit legacy coefficient "
+                    f"{component.get('coefficient')}."
+                )
+            else:
+                explicit_count, count_evidence = _explicit_component_count(component_name, evidence_strings)
+            issues["errors"].append(
+                {
+                    "path": stoichiometry_pointer,
+                    "reason": (
+                        f"Protein complex '{complex_name}' component "
+                        f"'{component_name or component_idx}' is missing positive stoichiometry."
+                    ),
+                    "evidence": count_evidence or " | ".join(evidence_strings) or json.dumps(component, ensure_ascii=False),
+                    "source": "deterministic",
+                }
+            )
+            if explicit_count is None:
+                continue
+            if isinstance(component, dict):
+                patch_ops.append(
+                    {
+                        "op": "add" if "stoichiometry" not in component else "replace",
+                        "path": stoichiometry_pointer,
+                        "value": explicit_count,
+                        "reason": "Set component stoichiometry from an explicit per-component count in complex evidence.",
+                        "confidence": 0.995,
+                        "evidence": count_evidence,
+                        "source": "deterministic",
+                    }
+                )
+            elif isinstance(component, str):
+                patch_ops.append(
+                    {
+                        "op": "replace",
+                        "path": _join_pointer(
+                            ["entities", "protein_complexes", complex_idx, "components", component_idx]
+                        ),
+                        "value": {"name": component_name, "stoichiometry": explicit_count},
+                        "reason": "Preserve the component name and set stoichiometry from explicit complex evidence.",
+                        "confidence": 0.995,
+                        "evidence": count_evidence,
+                        "source": "deterministic",
+                    }
+                )
 
     for section_name, idx, name in sorted(composite_entity_removals, key=lambda item: item[1], reverse=True):
         patch_ops.append(
@@ -643,11 +823,15 @@ def _deterministic_audit(payload: Dict[str, Any], *, locked_reaction_indices: Op
                     }
                 )
 
-        for enz_idx, enzyme in enumerate(_safe_list(reaction.get("enzymes"))):
+        enzyme_rows = _safe_list(reaction.get("enzymes"))
+        modifier_rows = _safe_list(reaction.get("modifiers"))
+        for enz_idx, enzyme in enumerate(enzyme_rows):
             if not isinstance(enzyme, dict):
                 continue
             candidate = ""
-            if isinstance(enzyme.get("protein_complex"), str):
+            if isinstance(enzyme.get("entity"), str):
+                candidate = enzyme["entity"].strip()
+            elif isinstance(enzyme.get("protein_complex"), str):
                 candidate = enzyme["protein_complex"].strip()
             elif isinstance(enzyme.get("protein"), str):
                 candidate = enzyme["protein"].strip()
@@ -1094,6 +1278,7 @@ def _build_llm_prompt(
             "Return issues and a minimal patch list.",
             "Use RFC6901 json pointers for paths.",
             "Use action add/replace/remove and include confidence 0..1.",
+            "Only patch protein-complex component stoichiometry when input evidence explicitly gives one exact positive count for the named component; never default to 1 or infer ambiguous counts.",
             "repair_rationale must be short and concrete.",
             f"Retry context: {note if note else 'none'}",
             lock_section if lock_section else "",

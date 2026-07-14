@@ -37,6 +37,14 @@ repair what earlier stages got wrong. The consequence of this is:
 - **Semantic contracts** (data is logically correct) are enforced only after the
   audit loop has run. Enforcing them before the audit would prevent the audit
   from ever fixing them.
+- **Runtime shape validation** recursively checks known field, container, and
+  value types without rewriting the payload or rejecting unknown additive
+  metadata. It is separate from biological and cross-record semantics. The
+  live rollout uses `report` mode through the single
+  `stage_contracts.RUNTIME_SCHEMA_MODE` configuration point. Tests and
+  deployments may opt into `enforce`, which raises with the same structured
+  report. Existing structural aborts and the semantic PWML gate remain
+  authoritative.
 - **The gate is not a blocker before audit.** It is the error report that tells
   the audit what to fix. A gate failure before audit means "send this to audit,"
   not "abort the pipeline."
@@ -53,6 +61,38 @@ repair what earlier stages got wrong. The consequence of this is:
 ---
 
 ## Stages
+
+### Enforced input/output contracts
+
+The canonical JSON shapes below are the `TypedDict` definitions in
+`t2pw.schema`. A stage may add optional metadata, but it may not change the
+meaning or shape of a field owned by an earlier stage.
+
+| Stage | Concrete input | Concrete output and exit guarantee | Boundary owner |
+| --- | --- | --- | --- |
+| 1 — Extract | Paper text plus pathway/user context (not JSON) | `Payload`; named entity rows use `PayloadCompound`, `PayloadProtein`, `PayloadProteinComplex`, and related entity types; process rows use `PayloadReaction`, `PayloadTransport`, and `PayloadInteraction`. Actor rows use `PayloadReactionActor.entity` plus `.entity_type`. `PayloadReaction.spontaneous` is optional and may be true only with explicit source evidence. | `validate_post_extraction`: `entities`/`processes` objects exist, entity names are non-empty, process rows are objects, and each known process bucket satisfies its own participant/reference shape. Structural failure aborts. |
+| 2 — Map | The already merged Stage 1 extraction + Stage 2A inference `Payload` | The same `Payload`; every named entity has a `PayloadMappingMeta` object containing a `resolution` object with non-empty string `status` and string `issue`/`order_step` when present, and `PayloadEntities.species` is non-empty. The live pass uses cache and calls `map_payload(..., use_cache=True, allow_complex_wrapper_creation=False, allow_structural_cleanup=False)`; it annotates but cannot prune structure or create generated PathWhiz wrappers. | `validate_post_mapping`; structural failure aborts. |
+| 3 — Normalize | Stage 2 `Payload` | `(Payload, normalization_report)`. Reaction enzymes/modifiers, transporters, and interaction participants have canonical non-empty `entity` and `entity_type`. The report contains the pointer-addressable strict gate result. | `validate_post_normalization(payload, gate)`. Structural failure aborts; semantic failures are returned with `effect_on_failure=feed_audit`. |
+| 4 — Audit / gap resolve | Stage 3 `Payload` plus its strict gate report | Patched `Payload` preserving the Stage 3 shape. Audit patches may set `PayloadReaction.spontaneous=true` only after determining that the reaction has no real enzyme. After every selected patch with at least one accepted operation, the orchestrator runs `run_strict_post_normalization_gates` (not the full normalizer) and supplies that fresh result to the next round. | `validate_post_audit`; malformed patched output aborts. |
+| 5 — Curate | Post-audit `Payload` | Same `Payload` shape. If curation produces structurally invalid output, the orchestrator retains the pre-curation payload. | Stage 1 structural contract reused by the curator fallback policy. |
+| 6 — Remap | Curated `Payload` | Same `Payload`, with refreshed IDs and mapping cache bypassed. This is the sole pass allowed to call `map_payload(..., use_cache=False, allow_complex_wrapper_creation=True, allow_structural_cleanup=True)`. Generated `PayloadProteinComplex` rows carry `generated=true` and `generation_reason="single_protein_pathwhiz_wrapper"`; every component resolves to a declared protein with species and UniProt/DrugBank identity. | `validate_post_remap`; invalid generated wrappers abort before export. |
+| 7 — Enrich (optional) | Post-remap `Payload` | Same `Payload` with additive enrichment metadata only; process and identity contracts do not change. | Runtime shape report at `post_enrichment`; Stage 6 and pre-export semantic contracts remain authoritative. |
+| 8 — Export | Post-remap/enriched `Payload` after optional user-requested grounding | PWML IR (`Dict[str, Any]`) and serialized PWML XML. Reactions retain `spontaneous`; enzyme references are unique protein complexes; protein species serialization uses each protein's resolved species. Stage 8 is validation-only: it does not rerun normalization, create autostates, map or infer entities, or create a last-resort wrapper. | Validation-only `run_strict_post_normalization_gates`/`validate_post_normalization`, followed by `validate_pre_export`, which wraps `validate_required_pwml_contract`; semantic failure aborts. |
+
+The live Streamlit post-pipeline function now runs both mapping boundaries. It
+validates the already merged extraction/inference payload, runs the
+annotation-only Stage 2B pass, validates that result, and gives that exact
+payload to Stage 3. After audit and curation it runs the wrapper-enabled Stage
+6 remap. The two passes share one database configuration but have distinct
+cache/mutation policies and distinct payload, report, and runtime-schema
+artifacts.
+
+If a stage contract aborts this live flow, the UI identifies the exact boundary,
+states which downstream stages did not run, lists every issue with its code and
+JSON pointer, and exposes the full structured report as a JSON download. A
+`post_extraction` failure here is specifically labelled as the Stage 2A merged
+payload to Stage 2B database-mapping input boundary; it occurs before the mapper
+or audit is called.
 
 ### Stage 1 — Extract
 
@@ -74,22 +114,43 @@ The extraction prompt (`pwml_system.txt`) enforces single-organism scoping: befo
 - Valid JSON
 - Top-level keys `entities` and `processes` both present
 - Every entity has a non-empty `name` field
-- Every process has at least one of `inputs`, `outputs`, or `cargo`
+- Every process row is an object, with bucket-specific structure:
+  reactions have a usable input or output; transports have cargo or a
+  state-bearing element; interactions have two endpoints or a usable
+  participant; reaction-coupled transports have paired references or a
+  state-bearing element; and sub-pathways have a usable name, reference ID, or
+  alternate text. Unknown additive process buckets remain accepted when their
+  rows are objects.
 
 If this contract fails, abort — no downstream stage can operate on malformed
 input.
 
 ---
 
-### Stage 2 — Inference + Map
+### Stage 2A — Infer / Stage 2B — Map
 
 **Inference prompt:** `pwml_infer_system.txt` (LLM modifier repair and enrichment pass)
 **Module:** `t2pw.mapping.map_ids.map_payload`
-**Output file:** `stage1_mapped.json`
+**Live output files:** `stage2.mapped.json`, `stage2_mapping_report.json`, and
+`stage2_runtime_schema_report.json`
 
 An LLM inference pass runs after Stage 1 extraction. It receives the Stage-1 JSON and proposes conservative additions: missing modifier links (mandatory repair pass over all Stage-1 proteins and protein complexes), missing biological states, compartment assignments, and synonym bridges. The modifier repair pass applies the species scoping rule from Stage 1 — it only adds modifiers for proteins belonging to the selected pathway organism and does not link proteins from other organisms mentioned in the source text.
 
-Following inference, database ID lookup runs against PathBank and configured ID sources. Writes `mapped_ids` and `mapping_meta` onto each entity. Species and subcellular locations are resolved here.
+Following inference, database ID lookup runs against PathBank and configured ID
+sources. The current UI completes and merges inference before calling the
+post-pipeline orchestrator; the orchestrator does not run a second inference
+pass. Stage 2B writes `mapped_ids` and `mapping_meta` onto each entity and
+hydrates species references. Buckets outside direct ID mapping, including
+subcellular locations, receive an explicit `not_applicable` resolution.
+
+The live Stage 2B call uses the configured mapping cache, disables wrapper
+creation, and disables structural cleanup. It may add mapping candidates,
+confidence, provenance, IDs, and approved species hydration, but it preserves
+process structure and the non-species entity inventory. Every named bucket is
+given an explicit resolution: directly mapped buckets record their actual
+status, while buckets outside ID resolution record `status="not_applicable"`.
+Unmapped and low-confidence rows remain valid Stage 2 output and stay visible
+to Stage 3 and audit.
 
 This stage does not know whether an entity name is correct. It maps what it
 receives. If the LLM invented a protein name, mapping returns no hit — that is
@@ -177,17 +238,68 @@ Steps in order:
 11. `canonicalize_same_as_aliases` — deduplicate names via same-as links
 12. `normalize_process_actor_schema` — enforce uniform actor dict shape
 13. `drop_unresolved_complex_component_proteins` — drop component-only proteins with no external identity
-14. `drop_process_orphan_proteins` — drop standalone proteins never referenced in any process and with no external identity
-15. `prune_disconnected_proteins` — graph-based pass: drop degree-0 proteins with no external identity
-16. `dedupe_processes` — collapse duplicate reaction/transport entries
+14. `dedupe_processes` — classify no-op/subset reactions, quarantine source-supported non-exportable claims, and collapse genuine duplicates
+15. `drop_process_orphan_proteins` — drop standalone proteins never referenced by a surviving process and with no external identity
+16. `prune_disconnected_proteins` — graph-based pass: drop degree-0 proteins with no external identity
 17. `run_strict_post_normalization_gates` — generate gate report
 
-Steps 13–15 run in sequence so each pass can only drop what the previous pass did not catch. A protein survives all three passes if it has any of: complex-component membership with external identity, a process reference, a non-zero graph degree, or an external database ID. Only after all three passes fail to retain it does the gate see it as an orphan.
+Reaction classification now precedes the final two orphan passes. This ordering
+ensures that an enzyme referenced only by a removed or quarantined reaction does
+not remain in the active entity registry and later fail identity validation. A
+protein survives cleanup when it is still referenced by a valid reaction,
+interaction, transport, or surviving protein complex, has non-zero graph degree,
+or has an external database identity.
+
+Stage 3 treats biological correctness as an export requirement. A normalized
+`A -> A` reaction, or a reaction whose outputs are only a subset of its inputs,
+does not become exportable because it is `locked` or `essential`. Unsupported
+unlocked no-ops are dropped. Locked or directly evidenced coarse-grained
+transformations are removed from active processes and appended to the existing
+`quarantined_locked_reactions` ledger with their original reaction, JSON
+pointer, action, and a stable reason such as
+`coarse_grained_same_entity_transformation` or
+`output_subset_of_input_without_distinct_product`. A lock therefore guarantees
+traceability, not export. Every lock must be accounted as either active or
+quarantined; distinct locked duplicates are likewise quarantined instead of
+being silently collapsed. The strict Stage 3 gate blocks a payload when
+`locked_reaction_filter_report.unaccounted_locked_reactions` is positive or
+malformed, at the exact accounting-field pointer. An accounted quarantine does
+not fail the gate.
+
+Immediately after normalization, the live orchestrator refreshes the canonical
+`tmp/quarantined_locked_reactions.json` from the normalized payload's ledger,
+before audit starts. This prevents the earlier pre-normalization empty artifact
+from hiding Stage 3 classifications. The refreshed object is also returned in
+post-pipeline artifacts and exposed by the JSON artifact viewer/downloads.
 
 Step 17 runs inside `normalize_process_payload` and collects all hard-gate failures into a structured report. **It does not raise an exception that aborts the pipeline.** The gate failures are returned as part of the normalization report and passed to the audit loop.
 
+Reaction-evidence attachment is idempotent across supported reruns. It may
+treat a generated single-protein PathWhiz wrapper as equivalent to its member
+only when the complex has the expected generation provenance, exactly one
+component, and that component resolves to a declared protein. Thus evidence for
+`NdmA` does not re-add a bare `NdmA` actor beside a valid `NdmA complex` actor.
+Ordinary biological complexes, malformed wrappers, and multi-protein complexes
+are not treated as aliases of one member.
+
 An `on_checkpoint` callback can be passed by the orchestrator to write probe
 files at named checkpoints without splitting the normalization into two pipelines.
+
+Stage 3 must preserve the entity registry distinction established upstream. A
+name already declared in `entities.protein_complexes` must not be synthesized
+again under `entities.proteins` merely because the same name appears in a
+process or `element_locations.protein_locations` reference. Protein versus
+protein-complex name collisions are gate failures; deterministic normalization
+may canonicalize a reference, but it must not silently change a protein complex
+into a protein.
+
+The full normalizer runs only at Stage 3. After Stage 6, the live export path
+may apply explicitly requested grounding and then reruns only the Stage 3 strict
+gate plus its boundary validator. This is a **validation-only pre-export Stage
+3 revalidation**, not another normalization pass: it does not create
+autostates, attach or promote actors, remap entities, run inference, or create
+wrappers. A failure there means the pipeline reached final remap but the exact
+remapped payload is unsafe for Stage 8.
 
 ---
 
@@ -199,6 +311,11 @@ files at named checkpoints without splitting the normalization into two pipeline
 The primary semantic repair stage. It receives the normalized payload and the
 gate report. If the gate passed with no failures, the loop is skipped. If gate
 failures exist, the loop runs:
+
+Quarantined coarse-grained reactions may return to the active payload only when
+the paper supplies enough evidence to identify biologically distinct
+participants. Stage 4 must not invent precursor/product names merely to turn an
+`A -> A` claim into an exportable equation.
 
 ```
 normalize → gate → if gate failures exist:
@@ -234,9 +351,92 @@ Gap resolution output is folded into the round's settled payload before the next
 audit round begins.
 
 Gap Resolve is optional (controlled by `use_gap_resolver`). It does not replace
-the audit — it supplements it by filling ID gaps the audit LLM is not designed
-to fix. It owns ID lookup for unmapped entities only; it does not rewrite
-reaction structure, actor roles, or biological states.
+the audit — it supplements it with targeted ID and location resolution for
+flagged entities. It does not rewrite reaction structure or actor roles. For a
+declared complex, it may resolve existing component names against mapped protein
+rows, but evidence-dependent stoichiometry remains an audit responsibility.
+
+#### Current implementation status (2026-07-13)
+
+Completed and verified:
+
+- Stage 3 now classifies biologically non-exportable same-label/subset reactions
+  before orphan cleanup. Locked/evidenced claims are quarantined with provenance,
+  unsupported no-ops are dropped, and preservation accounting recognizes the
+  quarantine ledger.
+- Stage 2B now runs as a distinct annotation-only mapping boundary before
+  normalization, while Stage 6 remains the only wrapper-creating remap.
+- Runtime payload reports cover the live Stage 2 and pre-export boundaries.
+- Post-extraction contracts validate each process bucket by its own shape, so
+  valid interactions are not rejected by reaction-specific requirements.
+- Contract failures in the Streamlit UI identify the exact boundary, skipped
+  stages, issue codes, JSON pointers, and provide the full JSON report.
+- Pre-export Stage 3 gate failures stop PWML generation instead of being hidden
+  behind a later generic export error.
+- Stage 3 now preserves known protein-complex names in process and location
+  references, refuses to synthesize a same-name protein, and gates protein versus
+  protein-complex registry collisions.
+- Gap Resolve now executes protein-complex issues, hydrates declared components
+  from mapped proteins, leaves unsupported stoichiometry explicitly unresolved,
+  and treats the complex-level PathBank ID as optional for a valid novel complex.
+- Stage 4 audit now emits pointer-addressed component-stoichiometry errors and
+  applies exact counts only from unambiguous named-component evidence. The
+  `NdmCDE` evidence produces accepted `3/3/3` patches; ambiguous evidence never
+  defaults to `1`.
+- Audit convergence now includes gap-only payload changes and unresolved gap
+  issues, with a fresh strict gate after every changed settled payload and
+  bounded unchanged/repeated/timeout/max-round exits.
+- Gap location ranking now filters eukaryotic-only organelles from confirmed
+  prokaryotic pathways before LLM selection.
+
+Issues reproduced by the `NdmCDE` run and repaired in code:
+
+1. `normalize_composites` created a second bare `NdmCDE` protein from a
+   protein-location reference. Type-aware registry preservation now prevents it.
+2. `protein_complex:ndmcde` was skipped as `issue_not_found`. Complex rows are
+   now part of the resolver execution index.
+3. Component strings lacked member identity and stoichiometry. Gap Resolve now
+   hydrates member IDs, and audit derives exact ratios only from explicit source
+   evidence.
+4. The loop stopped on zero accepted audit patches despite gap-only progress.
+   Settled-payload change, fresh gate state, and actionable gap issues now govern
+   convergence.
+5. Global PathBank frequency selected endoplasmic-reticulum membrane for
+   *Pseudomonas putida*. Organism compatibility now rejects that candidate.
+
+Implemented stage-owned remediation:
+
+1. **Stage 3 — normalization and gate:** type-aware registry lookup preserves
+   complex references and rejects protein/complex collisions without mapping IDs
+   or inventing stoichiometry.
+2. **Stage 4a — Gap Resolve:** complex issues execute and member names resolve to
+   declared mapped proteins. Missing ratios remain explicit audit-owned issues.
+3. **Stage 4 — audit and orchestration:** exact evidence-backed ratios become
+   policy-checked patches; gap-only changes receive a fresh gate and another
+   eligible round while all loop bounds remain active.
+4. **Stage 4a — location resolution:** organism/taxonomy context filters clearly
+   incompatible organelles before selection.
+5. **Stage 6 — remap:** continues to consume the settled structure and refresh
+   IDs without taking over classification or biological repair.
+6. **Stage 8 — export:** remains the hard semantic guard, and UI errors identify
+   its preceding check as validation-only `pre-export Stage 3 revalidation`.
+7. **Regression coverage:** fixtures cover location-reference duplication,
+   complex execution/member hydration, explicit and ambiguous stoichiometry,
+   gap-only convergence, prokaryotic location filtering, and the real failed
+   artifact's repair shape; an in-memory integration replay covers the actual
+   saved artifact.
+
+Remaining validation and intentional limits:
+
+- The fresh paper run completed the configured DB/LLM stages and produced the
+  final Stage 6 artifact. After the Stage 8 repair, that exact artifact also
+  passes programmatic PWML export; only a final manual export click in the live
+  Streamlit UI remains.
+- Missing, approximate, ranged, or conflicting component counts remain blocking
+  audit errors by design; the pipeline will not invent a ratio.
+- Organism compatibility uses resolved taxonomy/lineage plus a conservative
+  marker vocabulary. Broader taxa may require vocabulary expansion as new live
+  cases are observed.
 
 ---
 
@@ -284,6 +484,11 @@ mapping cache for this pass (`use_cache=False`) so stale IDs from the pre-audit
 mapping are not carried forward. Batch callers can pass `invalidate_cache_keys`
 to the same function to achieve the same effect selectively.
 
+The live call explicitly enables both wrapper creation and structural cleanup.
+Its `final.mapped.json` and `mapping_report.json` artifacts remain separate from
+the Stage 2B artifacts so mapping changes made after audit/curation can be
+compared directly.
+
 If Stage 6 creates PathWhiz-required single-protein complex wrappers, it must
 create them from already-mapped proteins. A generated complex is allowed to lack
 a complex-level PathBank ID only when all of the following are true:
@@ -298,6 +503,27 @@ a complex-level PathBank ID only when all of the following are true:
 When those conditions are not met, Stage 6 should leave a mapping/gate issue for
 audit or export blocking instead of creating an apparently usable complex.
 
+One explicit last-resort exception exists for functional reaction enzymes whose
+normal PathBank, UniProt, DrugBank, alias, literature, and API retry strategies
+all fail. Stage 6 may retain the functional enzyme name as a generated complex
+and use PathBank's known `Unknown` protein row as its sole component. That
+sentinel is serialized exactly as PathBank protein `9659`, name/UniProt value
+`Unknown`, species *Arabidopsis thaliana* (`species_id=4`, taxon `3702`). The
+complex and sentinel carry `chosen_rule=pathbank_unknown_protein_fallback`,
+`cross_species_placeholder=true`, and the original target organism in mapping
+metadata. This fallback:
+
+- runs only in the wrapper-enabled Stage 6 pass, never Stage 2;
+- applies only to reaction enzymes (including catalyst modifiers promoted by
+  Stage 3), never unrelated unresolved proteins;
+- therefore applies to an unresolved catalyst on a biologically valid surviving
+  reaction, but not to an orphan from a removed or quarantined reaction;
+- never replaces a real protein or protein-complex mapping;
+- preserves non-catalytic process references instead of deleting their source
+  protein; and
+- is skipped by later UniProt enrichment and recognized on repeated mapping so
+  it cannot recursively wrap or duplicate `Unknown`.
+
 ---
 
 ### Stage 7 — Enrich (optional)
@@ -307,6 +533,9 @@ audit or export blocking instead of creating an apparently usable complex.
 Fetches additional metadata (synonyms, cross-references, properties) and writes
 `entity["enrichment"]`. Currently this data is not read by any downstream stage.
 Decision pending: either wire it into the PWML IR builder or remove this stage.
+The live orchestrator records a report-mode runtime shape report after this
+additive pass and another at pre-export. These observations do not replace the
+Stage 8 semantic PWML contract.
 
 ---
 
@@ -316,6 +545,12 @@ Decision pending: either wire it into the PWML IR builder or remove this stage.
 
 Converts the final payload to PWML XML (primary) or SBML (legacy).
 
+For PWML, `run_pwml_export` deep-copies the Stage 6 payload, optionally applies
+the user-supplied grounding dictionary, and then validates without repairing.
+It must not call the full Stage 3 normalizer or any autostate, mapping,
+inference, actor-attachment, or wrapper-creation step. Stage 6 remains the sole
+owner of generated PathWhiz wrappers and reaction remapping.
+
 **Semantic contract enforced here (hard abort):**
 - `validate_required_pwml_contract` from `t2pw.pwml.ir` — called before IR
   construction
@@ -323,10 +558,23 @@ Converts the final payload to PWML XML (primary) or SBML (legacy).
   present (if strict mode), no scaffold modifiers, no unresolved composites
 - Generated protein complexes are valid without a complex-level PathBank ID only
   if their member protein rows satisfy the protein contract above.
+- A bare catalytic protein actor is rejected at its own JSON pointer, whether it
+  appears in `reactions[].enzymes` or the catalytic subset of
+  `reactions[].modifiers`.
+- One canonical `enzymes`/`modifiers` cross-field mirror is accepted as one
+  logical catalyst and produces one IR enzyme. Duplicate actors within either
+  field remain errors and are not silently collapsed.
 
 If this contract fails, the pipeline did not converge and the pathway is not
 exportable. The error is surfaced to the user with the specific failing checks.
 This is the only hard abort in the semantic sense.
+
+The 2026-07-13 regression replay uses the exact saved `tmp/final.mapped.json`.
+With valid pathway metadata supplied, it returns `ok=true`, writes the PWML
+output, and reports zero required-contract and IR-validation errors. The focused
+merged suite passes 127 tests; the full suite passes 380 tests, with Ruff,
+compile, and diff checks also green. A live UI click remains the final manual
+verification step.
 
 ---
 
@@ -339,6 +587,7 @@ This is the only hard abort in the semantic sense.
 | Post-normalization (gate) | Semantic | Feed to audit loop — this is expected |
 | Post-audit | Structural | Abort — audit produced garbage |
 | Post-curate | Structural | Fall back to pre-curate payload — do not abort |
+| Post-enrichment | Runtime shape (report-first) | Report known recursive shape errors; preserve additive metadata |
 | Pre-export | Semantic (full) | Abort — pipeline did not converge |
 
 ---
@@ -354,7 +603,10 @@ Paper text
     │               structural contract
     │
     ▼
-[2: Map]      ──→  stage1_mapped.json
+[2A: Infer]
+    │
+    ▼
+[2B: Map]     ──→  stage2.mapped.json + stage2_mapping_report.json
     │                        │
     │               structural contract
     │
@@ -363,7 +615,7 @@ Paper text
     │
     ├──→ gate passes ─────────────────────────────────────────────┐
     │                                                              │
-    └──→ gate fails → [4: Audit] ──→ re-normalize ──→ gate again  │
+    └──→ gate fails → [4: Audit] ──→ strict gate again ──→ next round  │
               ↑           │   └── [4a: Gap Resolve] (per round)   │
               └───────────┘    (repeats up to max_iter)           │
                                                                    │
@@ -381,7 +633,7 @@ Paper text
                                                        [7: Enrich] (optional)
                                                                    │
                                                                    ▼
-                                                   pre-export semantic contract
+                                          validation-only gate + pre-export contract
                                                                    │
                                                                    ▼
                                                           [8: Export]

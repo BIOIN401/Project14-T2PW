@@ -13,6 +13,16 @@ from xml.etree import ElementTree
 
 import requests
 
+from t2pw.pipeline.entity_identity import (
+    PATHBANK_UNKNOWN_FALLBACK_RULE,
+    PATHBANK_UNKNOWN_PROTEIN_ID,
+    PATHBANK_UNKNOWN_PROTEIN_NAME,
+    PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+    has_protein_external_identity,
+    is_pathbank_unknown_protein,
+    route_entity_for_mapping,
+)
+
 
 def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
@@ -3927,50 +3937,6 @@ def map_compound_all(client: HttpClient, name: str) -> Dict[str, Any]:
     }
 
 
-def _looks_protein_like_name(name: str) -> bool:
-    norm = _normalize_name(name)
-    if not norm:
-        return False
-    return bool(
-        re.search(
-            r"(protein|globulin|peroxidase|deiodinase|kinase|phosphatase|ligase|atpase|receptor|transporter|enzyme)",
-            norm,
-            flags=re.IGNORECASE,
-        )
-    )
-
-
-BIOCHEMICAL_COLON_RE = re.compile(r"(?<![A-Za-z0-9])\d+\s*:\s*\d+(?![A-Za-z0-9])")
-
-
-def _is_biochemical_colon_name(name: str) -> bool:
-    text = _canonical_name(name)
-    if ":" not in text:
-        return False
-    if re.search(r"\(\s*\d+\s*:\s*\d+\s*\)", text):
-        return True
-    if re.search(r"\b[A-Za-z][A-Za-z0-9]*-\d+\s*:\s*\d+-CoA\b", text, flags=re.IGNORECASE):
-        return True
-    if re.search(r":\s*CoA\b", text, flags=re.IGNORECASE):
-        return True
-    return bool(BIOCHEMICAL_COLON_RE.search(text))
-
-
-def _is_explicit_complex_colon_name(name: str, *, protein_like_names: Optional[Set[str]] = None) -> bool:
-    text = _canonical_name(name)
-    if ":" not in text or _is_biochemical_colon_name(text):
-        return False
-    parts = [part.strip() for part in text.split(":") if part.strip()]
-    if len(parts) < 2:
-        return False
-    if re.search(r"\bcomplex\b", text, flags=re.IGNORECASE):
-        return True
-    if any(_looks_protein_like_name(part) for part in parts):
-        return True
-    protein_like_set = {v for v in (protein_like_names or set()) if v}
-    return any(_normalize_name(part) in protein_like_set for part in parts)
-
-
 def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
     entities = _safe_dict(payload.get("entities"))
     processes = _safe_dict(payload.get("processes"))
@@ -4017,30 +3983,6 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
     return {value for value in out if value}
 
 
-def route_entity_for_mapping(
-    entity_name: str,
-    entity_type_hint: str,
-    *,
-    protein_like_names: Optional[Set[str]] = None,
-) -> Dict[str, str]:
-    name = _canonical_name(entity_name)
-    hint = _canonical_name(entity_type_hint).lower()
-    norm = _normalize_name(name)
-    protein_like_set = {v for v in (protein_like_names or set()) if v}
-
-    if hint in {"complex", "protein_complex"}:
-        return {"route": "complex", "reason": "complex_entity"}
-    if hint in {"protein", "enzyme", "modifier"}:
-        return {"route": "protein", "reason": "type_hint"}
-    if ":" in name and _is_explicit_complex_colon_name(name, protein_like_names=protein_like_set):
-        return {"route": "complex", "reason": "complex_entity"}
-    if norm in protein_like_set:
-        return {"route": "protein", "reason": "known_protein_like"}
-    if _looks_protein_like_name(name):
-        return {"route": "protein", "reason": "name_pattern"}
-    return {"route": "compound", "reason": "default_compound_route"}
-
-
 def _map_protein_with_strategy(
     *,
     id_source: str,
@@ -4051,6 +3993,27 @@ def _map_protein_with_strategy(
     organism: str,
     protein_row: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
+    if is_pathbank_unknown_protein(protein_row):
+        return _with_resolution(
+            {
+                "status": "mapped",
+                "reason": "explicit_pathbank_unknown_sentinel",
+                "provider": "PathBankDB",
+                "source": "db",
+                "mapped_ids": {
+                    "uniprot": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                },
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "confidence": 0.0,
+                "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                "candidates": [],
+                "cross_species_placeholder": True,
+            },
+            "fallback",
+            issue="pathbank_unknown_sentinel",
+            order_step=_PATHBANK_UNKNOWN_FALLBACK_RULE,
+        )
     row_ids = _row_external_ids(
         _safe_dict(protein_row),
         [("uniprot", ("uniprot_id",)), ("gene_name", ("gene",))],
@@ -4332,20 +4295,6 @@ def _merge_complex_resolution_into_row(
         complex_row["mapping_meta"]["issues"] = _safe_list(result.get("issues"))
 
 
-def _protein_has_external_id(protein_row: Dict[str, Any]) -> bool:
-    """Return True if the protein row has a UniProt or DrugBank identifier."""
-    for container in [
-        protein_row,
-        _safe_dict(protein_row.get("mapped_ids")),
-        _safe_dict(protein_row.get("ids")),
-        _safe_dict(protein_row.get("mapping_meta")),
-    ]:
-        for key in ("uniprot", "uniprot_id", "uniprot-id", "drugbank", "drugbank_id", "drugbank-id"):
-            if str(container.get(key) or "").strip():
-                return True
-    return False
-
-
 def _protein_has_species_context(protein_row: Dict[str, Any], species_name: str = "") -> bool:
     """Return True if a protein row has species context usable for PathWhiz records."""
     hint = _species_hint_from_row(protein_row)
@@ -4602,7 +4551,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             if atype == "protein_complex" or aname_norm in complexes_by_norm:
                 resolved_protein_count += 1
             elif atype in {"protein", ""} and aname_norm in proteins_by_norm:
-                if _protein_has_external_id(proteins_by_norm[aname_norm]):
+                if has_protein_external_identity(proteins_by_norm[aname_norm]):
                     resolved_protein_count += 1
 
         for idx, actor in enumerate(rows):
@@ -4624,7 +4573,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 continue
             # Drop proteins that have no external ID when other resolved
             # proteins exist in the same enzyme/modifier list.
-            if not _protein_has_external_id(protein_row) and resolved_protein_count > 0:
+            if not has_protein_external_identity(protein_row) and resolved_protein_count > 0:
                 if protein_row in proteins:
                     proteins.remove(protein_row)
                 proteins_by_norm.pop(name_norm, None)
@@ -4640,13 +4589,13 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 )
                 continue
             species = _species_for(protein_row, actor_dict, reaction)
-            if not _protein_has_external_id(protein_row) or not _protein_has_species_context(protein_row, species):
+            if not has_protein_external_identity(protein_row) or not _protein_has_species_context(protein_row, species):
                 rewritten.append(dict(actor_dict))
                 summary["reaction_enzyme_complexes_skipped_invalid_component"] += 1
                 missing: List[str] = []
                 if not _protein_has_species_context(protein_row, species):
                     missing.append("species")
-                if not _protein_has_external_id(protein_row):
+                if not has_protein_external_identity(protein_row):
                     missing.append("uniprot_or_drugbank")
                 actions.append(
                     {
@@ -4699,6 +4648,678 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
     return {"summary": summary, "actions": actions}
 
 
+_PATHBANK_UNKNOWN_PROTEIN_ID = PATHBANK_UNKNOWN_PROTEIN_ID
+_PATHBANK_UNKNOWN_PROTEIN_NAME = PATHBANK_UNKNOWN_PROTEIN_NAME
+_PATHBANK_UNKNOWN_PROTEIN_UNIPROT = PATHBANK_UNKNOWN_PROTEIN_UNIPROT
+_PATHBANK_UNKNOWN_SPECIES_NAME = "Arabidopsis thaliana"
+_PATHBANK_UNKNOWN_SPECIES_ID = 4
+_PATHBANK_UNKNOWN_TAXONOMY_ID = "3702"
+_PATHBANK_UNKNOWN_FALLBACK_RULE = PATHBANK_UNKNOWN_FALLBACK_RULE
+
+
+def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str, Any]:
+    """Use PathBank's Unknown protein only for still-unresolved reaction enzymes.
+
+    This is deliberately a Stage 6 structural fallback.  It runs after normal
+    protein and complex mapping, retains the functional enzyme name on the
+    complex, and uses the known PathBank sentinel only as its component.
+    """
+
+    entities = _safe_dict(mapped.setdefault("entities", {}))
+    proteins = _safe_list(entities.setdefault("proteins", []))
+    complexes = _safe_list(entities.setdefault("protein_complexes", []))
+    processes = _safe_dict(mapped.setdefault("processes", {}))
+    reactions = _safe_list(processes.get("reactions"))
+    pathway_organism = _extract_global_organism(mapped)
+    summary = {
+        "reaction_enzyme_unknown_fallbacks": 0,
+        "transporter_unknown_fallbacks": 0,
+        "unknown_sentinel_proteins_added": 0,
+        "unknown_sentinel_proteins_reused": 0,
+        "unknown_fallback_complexes_created": 0,
+        "unknown_fallback_complexes_reused": 0,
+        "unknown_fallbacks_skipped_non_enzyme_reference": 0,
+        "unknown_fallbacks_skipped_unusable_name": 0,
+        "unknown_fallbacks_skipped_real_mapping": 0,
+    }
+    actions: List[Dict[str, Any]] = []
+
+    def _row_pathbank_protein_id(row: Dict[str, Any]) -> Optional[int]:
+        return _to_positive_int(
+            row.get("pathbank_protein_id")
+            or _safe_dict(row.get("mapped_ids")).get("pathbank_protein_id")
+            or _safe_dict(row.get("mapping_meta")).get("pathbank_protein_id")
+        )
+
+    def _is_unknown_sentinel(row: Dict[str, Any]) -> bool:
+        return is_pathbank_unknown_protein(row)
+
+    def _has_real_protein_identity(row: Dict[str, Any]) -> bool:
+        return has_protein_external_identity(row) and not _is_unknown_sentinel(row)
+
+    def _usable_functional_name(name: str) -> bool:
+        norm = _normalize_name(name)
+        if not norm:
+            return False
+        reduced = re.sub(r"\b(protein|enzyme|complex|catalyst)\b", " ", norm)
+        reduced = re.sub(r"\s+", " ", reduced).strip()
+        return reduced not in {
+            "",
+            "unknown",
+            "uncharacterized",
+            "uncharacterised",
+            "hypothetical",
+            "unnamed",
+            "putative unknown",
+        }
+
+    def _participant_name(value: Any) -> str:
+        if isinstance(value, str):
+            return _canonical_name(value)
+        row = _safe_dict(value)
+        for key in ("entity", "name", "protein", "protein_complex", "compound", "element"):
+            name = _canonical_name(str(row.get(key) or ""))
+            if name:
+                return name
+        return ""
+
+    def _has_disqualifying_reference(name_norm: str, *, allowed_role: str) -> bool:
+        """Return True if ``name_norm`` appears anywhere outside its allowed fallback role.
+
+        ``allowed_role`` is either "enzyme" (reaction catalyst/enzyme) or
+        "transporter" (transport transporter). Any other appearance -- a
+        reaction input/output, a modifier that isn't the allowed role, the
+        *other* allowed role, transport cargo, an interaction participant, or
+        a complex component -- disqualifies the protein from that role's
+        Unknown-sentinel fallback, since the fallback is only for proteins
+        that are otherwise nowhere else in the payload.
+        """
+        if not name_norm:
+            return False
+        for reaction in reactions:
+            if not isinstance(reaction, dict):
+                continue
+            for field in ("inputs", "outputs"):
+                if any(_normalize_name(_participant_name(item)) == name_norm for item in _safe_list(reaction.get(field))):
+                    return True
+            if allowed_role != "enzyme" and any(
+                _normalize_name(_participant_name(item)) == name_norm
+                for item in _safe_list(reaction.get("enzymes"))
+            ):
+                return True
+            for modifier in _safe_list(reaction.get("modifiers")):
+                modifier_row = _safe_dict(modifier)
+                role = _canonical_name(str(modifier_row.get("role") or "")).casefold()
+                if _normalize_name(_participant_name(modifier)) != name_norm:
+                    continue
+                if allowed_role == "enzyme" and role in {"catalyst", "enzyme"}:
+                    continue
+                return True
+        for transport in _safe_list(processes.get("transports")):
+            if not isinstance(transport, dict):
+                continue
+            if _normalize_name(_participant_name(transport.get("cargo"))) == name_norm:
+                return True
+            transporter_match = any(
+                _normalize_name(_participant_name(item)) == name_norm
+                for item in _safe_list(transport.get("transporters"))
+            )
+            if transporter_match and allowed_role != "transporter":
+                return True
+        for interaction in _safe_list(processes.get("interactions")):
+            if not isinstance(interaction, dict):
+                continue
+            for field in ("entity_1", "entity_2"):
+                if _normalize_name(_participant_name(interaction.get(field))) == name_norm:
+                    return True
+            if any(
+                _normalize_name(_participant_name(item)) == name_norm
+                for item in _safe_list(interaction.get("participants"))
+            ):
+                return True
+        for complex_row in complexes:
+            if not isinstance(complex_row, dict):
+                continue
+            if any(
+                _normalize_name(_component_name(item)) == name_norm
+                for item in _safe_list(complex_row.get("components"))
+            ):
+                return True
+        return False
+
+    def _has_non_enzyme_reference(name_norm: str) -> bool:
+        return _has_disqualifying_reference(name_norm, allowed_role="enzyme")
+
+    def _has_non_transporter_reference(name_norm: str) -> bool:
+        return _has_disqualifying_reference(name_norm, allowed_role="transporter")
+
+    def _ensure_unknown_species() -> bool:
+        species_rows = _safe_list(entities.setdefault("species", []))
+        for row in species_rows:
+            if not isinstance(row, dict):
+                continue
+            sid = _to_positive_int(row.get("pathbank_species_id") or row.get("species_id"))
+            row_norm = _normalize_name(str(row.get("name") or ""))
+            if sid == _PATHBANK_UNKNOWN_SPECIES_ID and row_norm not in {
+                "",
+                _normalize_name(_PATHBANK_UNKNOWN_SPECIES_NAME),
+            }:
+                return False
+            if sid == _PATHBANK_UNKNOWN_SPECIES_ID or row_norm == _normalize_name(_PATHBANK_UNKNOWN_SPECIES_NAME):
+                row.setdefault("name", _PATHBANK_UNKNOWN_SPECIES_NAME)
+                row.setdefault("taxonomy_id", _PATHBANK_UNKNOWN_TAXONOMY_ID)
+                row.setdefault("pathbank_species_id", _PATHBANK_UNKNOWN_SPECIES_ID)
+                row.setdefault("species_id", _PATHBANK_UNKNOWN_SPECIES_ID)
+                row.setdefault("mapping_meta", {}).setdefault(
+                    "species_resolution",
+                    {
+                        "name": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                        "taxonomy_id": _PATHBANK_UNKNOWN_TAXONOMY_ID,
+                        "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    },
+                )
+                return True
+        species_rows.append(
+            {
+                "name": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                "taxonomy_id": _PATHBANK_UNKNOWN_TAXONOMY_ID,
+                "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                "mapping_meta": {
+                    "species_resolution": {
+                        "name": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                        "taxonomy_id": _PATHBANK_UNKNOWN_TAXONOMY_ID,
+                        "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    }
+                },
+            }
+        )
+        return True
+
+    unknown_row: Optional[Dict[str, Any]] = None
+
+    def _ensure_unknown_protein() -> Optional[Dict[str, Any]]:
+        nonlocal unknown_row
+        if unknown_row is not None:
+            summary["unknown_sentinel_proteins_reused"] += 1
+            return unknown_row
+        by_id = next(
+            (
+                row
+                for row in proteins
+                if isinstance(row, dict) and _row_pathbank_protein_id(row) == _PATHBANK_UNKNOWN_PROTEIN_ID
+            ),
+            None,
+        )
+        by_name = next(
+            (
+                row
+                for row in proteins
+                if isinstance(row, dict)
+                and _normalize_name(str(row.get("name") or ""))
+                == _normalize_name(_PATHBANK_UNKNOWN_PROTEIN_NAME)
+            ),
+            None,
+        )
+        candidate = by_id or by_name
+        if candidate is not None and not _is_unknown_sentinel(candidate):
+            if _row_pathbank_protein_id(candidate) or has_protein_external_identity(candidate):
+                return None
+        if not _ensure_unknown_species():
+            return None
+        created = candidate is None
+        if candidate is None:
+            candidate = {"name": _PATHBANK_UNKNOWN_PROTEIN_NAME}
+            proteins.append(candidate)
+        candidate.update(
+            {
+                "name": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                "species": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                "organism": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                "taxonomy_id": _PATHBANK_UNKNOWN_TAXONOMY_ID,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "pw_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "uniprot_id": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                "mapped_ids": {
+                    **_safe_dict(candidate.get("mapped_ids")),
+                    "uniprot": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                },
+            }
+        )
+        candidate.setdefault("mapping_meta", {}).update(
+            {
+                "provider": "PathBankDB",
+                "source": "db",
+                "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                "confidence": 0.0,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "fallback_used": True,
+                "fallback_reason": "all_normal_protein_identity_strategies_failed",
+                "cross_species_placeholder": True,
+                "resolution": {
+                    "status": "fallback",
+                    "issue": "pathbank_unknown_sentinel",
+                    "order_step": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                },
+            }
+        )
+        unknown_row = candidate
+        summary["unknown_sentinel_proteins_added" if created else "unknown_sentinel_proteins_reused"] += 1
+        return candidate
+
+    proteins_by_norm = {
+        _normalize_name(str(row.get("name") or "")): row
+        for row in proteins
+        if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))
+    }
+    complexes_by_norm = {
+        _normalize_name(str(row.get("name") or "")): row
+        for row in complexes
+        if isinstance(row, dict) and _canonical_name(str(row.get("name") or ""))
+    }
+    proteins_to_remove: Set[str] = set()
+    # Records, for a protein removed because it was *directly* wrapped into a
+    # generated complex, which single role ("enzyme" or "transporter") it
+    # occupied -- so the final cleanup pass can re-check it with the matching
+    # self-role exemption instead of always using the enzyme-only check.
+    # Orphaned old complex components (never given an entry here) fall back to
+    # the strictest "no exemption" check via ``.get(norm, "")``.
+    proteins_to_remove_roles: Dict[str, str] = {}
+
+    for ridx, reaction in enumerate(reactions):
+        if not isinstance(reaction, dict):
+            continue
+        rewritten: List[Dict[str, Any]] = []
+        for eidx, actor in enumerate(_safe_list(reaction.get("enzymes"))):
+            actor_dict = actor if isinstance(actor, dict) else {"entity": actor}
+            name, actor_type, role = _reaction_actor_name_and_type(actor_dict)
+            pointer = f"/processes/reactions/{ridx}/enzymes/{eidx}"
+            name_norm = _normalize_name(name)
+            if not _usable_functional_name(name):
+                rewritten.append(dict(actor_dict))
+                summary["unknown_fallbacks_skipped_unusable_name"] += 1
+                continue
+
+            source_protein = proteins_by_norm.get(name_norm)
+            source_complex = complexes_by_norm.get(name_norm)
+            target_organism = _canonical_name(
+                str(
+                    _species_hint_from_row(source_protein or source_complex or actor_dict).get("name")
+                    or pathway_organism
+                    or ""
+                )
+            )
+            if actor_type == "protein_complex" or (source_complex is not None and source_protein is None):
+                if source_complex is None:
+                    rewritten.append(dict(actor_dict))
+                    continue
+                complex_ids = _safe_dict(source_complex.get("mapping_meta"))
+                if (
+                    complex_ids.get("chosen_rule") == _PATHBANK_UNKNOWN_FALLBACK_RULE
+                    and any(
+                        _is_unknown_sentinel(
+                            proteins_by_norm.get(_normalize_name(_component_name(component)), {})
+                        )
+                        for component in _safe_list(source_complex.get("components"))
+                    )
+                ):
+                    rewritten.append(
+                        {
+                            **dict(actor_dict),
+                            "entity": name,
+                            "entity_type": "protein_complex",
+                            "role": role or "catalyst",
+                        }
+                    )
+                    continue
+                if _to_positive_int(
+                    source_complex.get("pathbank_complex_id")
+                    or source_complex.get("pathbank_protein_complex_id")
+                    or complex_ids.get("pathbank_complex_id")
+                    or complex_ids.get("pathbank_protein_complex_id")
+                ):
+                    rewritten.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_real_mapping"] += 1
+                    continue
+                component_rows = [
+                    proteins_by_norm.get(_normalize_name(_component_name(component)))
+                    for component in _safe_list(source_complex.get("components"))
+                ]
+                if any(row is not None and _has_real_protein_identity(row) for row in component_rows):
+                    rewritten.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_real_mapping"] += 1
+                    continue
+            else:
+                if source_protein is None:
+                    rewritten.append(dict(actor_dict))
+                    continue
+                if _is_unknown_sentinel(source_protein) or _has_real_protein_identity(source_protein):
+                    rewritten.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_real_mapping"] += 1
+                    continue
+                if _has_non_enzyme_reference(name_norm):
+                    rewritten.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_non_enzyme_reference"] += 1
+                    continue
+
+            sentinel = _ensure_unknown_protein()
+            if sentinel is None:
+                rewritten.append(dict(actor_dict))
+                continue
+            sentinel_meta = sentinel.setdefault("mapping_meta", {})
+            target_organisms = {
+                _canonical_name(str(value or ""))
+                for value in _safe_list(sentinel_meta.get("placeholder_target_organisms"))
+                if _canonical_name(str(value or ""))
+            }
+            if target_organism:
+                target_organisms.add(target_organism)
+            sentinel_meta["placeholder_target_organisms"] = sorted(target_organisms, key=str.casefold)
+            component = {
+                "name": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                "stoichiometry": 1,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "mapped_ids": {
+                    "uniprot": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                },
+            }
+            complex_row = source_complex
+            if complex_row is None:
+                complex_row = {"name": name}
+                complexes.append(complex_row)
+                complexes_by_norm[name_norm] = complex_row
+                summary["unknown_fallback_complexes_created"] += 1
+            else:
+                summary["unknown_fallback_complexes_reused"] += 1
+                for old_component in _safe_list(complex_row.get("components")):
+                    old_norm = _normalize_name(_component_name(old_component))
+                    old_row = proteins_by_norm.get(old_norm)
+                    if old_row is not None and not _has_real_protein_identity(old_row):
+                        proteins_to_remove.add(old_norm)
+            complex_row.update(
+                {
+                    "name": name,
+                    "species": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                    "organism": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                    "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                    "components": [component],
+                }
+            )
+            complex_row.setdefault("mapping_meta", {}).update(
+                {
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                    "confidence": 0.0,
+                    "fallback_used": True,
+                    "fallback_reason": "all_normal_protein_identity_strategies_failed",
+                    "cross_species_placeholder": True,
+                    "target_organism": target_organism,
+                    "functional_enzyme_name": name,
+                    "sentinel_pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                    "resolution": {
+                        "status": "fallback",
+                        "issue": "pathbank_unknown_sentinel_component",
+                        "order_step": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                    },
+                }
+            )
+            updated_actor = {
+                "entity": name,
+                "entity_type": "protein_complex",
+                "role": role or "catalyst",
+            }
+            for keep_key in ("evidence", "confidence", "provenance", "biological_state", "source_refs"):
+                if keep_key in actor_dict:
+                    updated_actor[keep_key] = actor_dict[keep_key]
+            rewritten.append(updated_actor)
+            rewritten_modifiers: List[Any] = []
+            for modifier in _safe_list(reaction.get("modifiers")):
+                modifier_row = _safe_dict(modifier)
+                modifier_name = _participant_name(modifier)
+                modifier_role = _canonical_name(str(modifier_row.get("role") or "")).casefold()
+                if (
+                    _normalize_name(modifier_name) == name_norm
+                    and modifier_role in {"catalyst", "enzyme"}
+                ):
+                    synchronized = dict(modifier_row)
+                    synchronized.update(
+                        {
+                            "entity": name,
+                            "entity_type": "protein_complex",
+                            "role": "catalyst",
+                        }
+                    )
+                    synchronized.pop("protein", None)
+                    synchronized.pop("protein_complex", None)
+                    synchronized.pop("name", None)
+                    rewritten_modifiers.append(synchronized)
+                else:
+                    rewritten_modifiers.append(modifier)
+            if "modifiers" in reaction:
+                reaction["modifiers"] = rewritten_modifiers
+            if source_protein is not None:
+                proteins_to_remove.add(name_norm)
+                proteins_to_remove_roles[name_norm] = "enzyme"
+            summary["reaction_enzyme_unknown_fallbacks"] += 1
+            actions.append(
+                {
+                    "type": "reaction_enzyme_pathbank_unknown_fallback",
+                    "json_pointer": pointer,
+                    "functional_enzyme_name": name,
+                    "protein_complex": name,
+                    "component_protein": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                    "reason": "all normal UniProt/DrugBank mapping strategies failed",
+                }
+            )
+        reaction["enzymes"] = rewritten
+
+    for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+        if not isinstance(transport, dict):
+            continue
+        rewritten_transporters: List[Dict[str, Any]] = []
+        for xidx, actor in enumerate(_safe_list(transport.get("transporters"))):
+            actor_dict = actor if isinstance(actor, dict) else {"entity": actor}
+            name, actor_type, role = _reaction_actor_name_and_type(actor_dict)
+            pointer = f"/processes/transports/{tidx}/transporters/{xidx}"
+            name_norm = _normalize_name(name)
+            if not _usable_functional_name(name):
+                rewritten_transporters.append(dict(actor_dict))
+                summary["unknown_fallbacks_skipped_unusable_name"] += 1
+                continue
+
+            source_protein = proteins_by_norm.get(name_norm)
+            source_complex = complexes_by_norm.get(name_norm)
+            target_organism = _canonical_name(
+                str(
+                    _species_hint_from_row(source_protein or source_complex or actor_dict).get("name")
+                    or pathway_organism
+                    or ""
+                )
+            )
+            if actor_type == "protein_complex" or (source_complex is not None and source_protein is None):
+                if source_complex is None:
+                    rewritten_transporters.append(dict(actor_dict))
+                    continue
+                complex_ids = _safe_dict(source_complex.get("mapping_meta"))
+                if (
+                    complex_ids.get("chosen_rule") == _PATHBANK_UNKNOWN_FALLBACK_RULE
+                    and any(
+                        _is_unknown_sentinel(
+                            proteins_by_norm.get(_normalize_name(_component_name(component)), {})
+                        )
+                        for component in _safe_list(source_complex.get("components"))
+                    )
+                ):
+                    rewritten_transporters.append(
+                        {
+                            **dict(actor_dict),
+                            "entity": name,
+                            "entity_type": "protein_complex",
+                            "role": role or "transporter",
+                        }
+                    )
+                    continue
+                if _to_positive_int(
+                    source_complex.get("pathbank_complex_id")
+                    or source_complex.get("pathbank_protein_complex_id")
+                    or complex_ids.get("pathbank_complex_id")
+                    or complex_ids.get("pathbank_protein_complex_id")
+                ):
+                    rewritten_transporters.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_real_mapping"] += 1
+                    continue
+                component_rows = [
+                    proteins_by_norm.get(_normalize_name(_component_name(component)))
+                    for component in _safe_list(source_complex.get("components"))
+                ]
+                if any(row is not None and _has_real_protein_identity(row) for row in component_rows):
+                    rewritten_transporters.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_real_mapping"] += 1
+                    continue
+            else:
+                if source_protein is None:
+                    rewritten_transporters.append(dict(actor_dict))
+                    continue
+                if _is_unknown_sentinel(source_protein) or _has_real_protein_identity(source_protein):
+                    rewritten_transporters.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_real_mapping"] += 1
+                    continue
+                if _has_non_transporter_reference(name_norm):
+                    rewritten_transporters.append(dict(actor_dict))
+                    summary["unknown_fallbacks_skipped_non_enzyme_reference"] += 1
+                    continue
+
+            sentinel = _ensure_unknown_protein()
+            if sentinel is None:
+                rewritten_transporters.append(dict(actor_dict))
+                continue
+            sentinel_meta = sentinel.setdefault("mapping_meta", {})
+            target_organisms = {
+                _canonical_name(str(value or ""))
+                for value in _safe_list(sentinel_meta.get("placeholder_target_organisms"))
+                if _canonical_name(str(value or ""))
+            }
+            if target_organism:
+                target_organisms.add(target_organism)
+            sentinel_meta["placeholder_target_organisms"] = sorted(target_organisms, key=str.casefold)
+            component = {
+                "name": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                "stoichiometry": 1,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "mapped_ids": {
+                    "uniprot": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                },
+            }
+            complex_row = source_complex
+            if complex_row is None:
+                complex_row = {"name": name}
+                complexes.append(complex_row)
+                complexes_by_norm[name_norm] = complex_row
+                summary["unknown_fallback_complexes_created"] += 1
+            else:
+                summary["unknown_fallback_complexes_reused"] += 1
+                for old_component in _safe_list(complex_row.get("components")):
+                    old_norm = _normalize_name(_component_name(old_component))
+                    old_row = proteins_by_norm.get(old_norm)
+                    if old_row is not None and not _has_real_protein_identity(old_row):
+                        proteins_to_remove.add(old_norm)
+            complex_row.update(
+                {
+                    "name": name,
+                    "species": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                    "organism": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                    "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                    "components": [component],
+                }
+            )
+            complex_row.setdefault("mapping_meta", {}).update(
+                {
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                    "confidence": 0.0,
+                    "fallback_used": True,
+                    "fallback_reason": "all_normal_protein_identity_strategies_failed",
+                    "cross_species_placeholder": True,
+                    "target_organism": target_organism,
+                    "functional_enzyme_name": name,
+                    "sentinel_pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                    "resolution": {
+                        "status": "fallback",
+                        "issue": "pathbank_unknown_sentinel_component",
+                        "order_step": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                    },
+                }
+            )
+            updated_actor = {
+                "entity": name,
+                "entity_type": "protein_complex",
+                "role": role or "transporter",
+            }
+            for keep_key in ("evidence", "confidence", "provenance", "biological_state", "source_refs"):
+                if keep_key in actor_dict:
+                    updated_actor[keep_key] = actor_dict[keep_key]
+            rewritten_transporters.append(updated_actor)
+            if source_protein is not None:
+                proteins_to_remove.add(name_norm)
+                proteins_to_remove_roles[name_norm] = "transporter"
+            summary["transporter_unknown_fallbacks"] += 1
+            actions.append(
+                {
+                    "type": "transport_transporter_pathbank_unknown_fallback",
+                    "json_pointer": pointer,
+                    "functional_transporter_name": name,
+                    "protein_complex": name,
+                    "component_protein": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                    "reason": "all normal UniProt/DrugBank mapping strategies failed",
+                }
+            )
+        transport["transporters"] = rewritten_transporters
+
+    if proteins_to_remove:
+        retained: List[Dict[str, Any]] = []
+        removed_norms: Set[str] = set()
+        for protein in proteins:
+            if not isinstance(protein, dict):
+                retained.append(protein)
+                continue
+            norm = _normalize_name(str(protein.get("name") or ""))
+            if (
+                norm in proteins_to_remove
+                and not _is_unknown_sentinel(protein)
+                and not _has_disqualifying_reference(norm, allowed_role=proteins_to_remove_roles.get(norm, ""))
+            ):
+                removed_norms.add(norm)
+                continue
+            retained.append(protein)
+        entities["proteins"] = retained
+        protein_locations = _safe_list(
+            _safe_dict(mapped.get("element_locations")).get("protein_locations")
+        )
+        if removed_norms and protein_locations:
+            _safe_dict(mapped.get("element_locations"))["protein_locations"] = [
+                row
+                for row in protein_locations
+                if _normalize_name(_participant_name(row)) not in removed_norms
+            ]
+
+    return {"summary": summary, "actions": actions}
+
+
 def _invalidate_cache_entries(cache: MappingCache, invalidate_cache_keys: Any = None) -> int:
     if not invalidate_cache_keys:
         return 0
@@ -4722,6 +5343,82 @@ def _invalidate_cache_entries(cache: MappingCache, invalidate_cache_keys: Any = 
     return removed
 
 
+_DIRECTLY_MAPPED_ENTITY_BUCKETS = frozenset({"compounds", "proteins", "protein_complexes"})
+
+
+def _stamp_named_entity_mapping_metadata(entities: Dict[str, Any]) -> Dict[str, int]:
+    """Give every named entity an explicit Stage 2 resolution policy.
+
+    Compound, protein, and protein-complex rows are populated by their mapping
+    loops. Species rows are populated by species hydration. All other named
+    buckets are intentionally outside this mapper's ID-resolution scope and
+    receive an explicit ``not_applicable`` resolution instead of looking like
+    an accidental mapping omission.
+    """
+
+    counts = {
+        "named_rows": 0,
+        "directly_mapped_rows": 0,
+        "species_rows": 0,
+        "not_applicable_rows": 0,
+        "unresolved_rows": 0,
+    }
+    for bucket, rows in entities.items():
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            if not isinstance(row, dict) or not _canonical_name(str(row.get("name") or "")):
+                continue
+            counts["named_rows"] += 1
+            mapping_meta = row.setdefault("mapping_meta", {})
+            if not isinstance(mapping_meta, dict):
+                mapping_meta = {}
+                row["mapping_meta"] = mapping_meta
+
+            resolution = mapping_meta.get("resolution")
+            if isinstance(resolution, dict) and str(resolution.get("status") or "").strip():
+                if bucket in _DIRECTLY_MAPPED_ENTITY_BUCKETS:
+                    counts["directly_mapped_rows"] += 1
+                elif bucket == "species":
+                    counts["species_rows"] += 1
+                else:
+                    counts["not_applicable_rows"] += 1
+                continue
+
+            if bucket == "species":
+                species_resolution = _safe_dict(mapping_meta.get("species_resolution"))
+                status = str(species_resolution.get("status") or "unresolved")
+                species_mapping_resolution: Dict[str, str] = {
+                    "status": status,
+                    "order_step": str(
+                        species_resolution.get("chosen_rule")
+                        or species_resolution.get("source")
+                        or "species_hydration"
+                    ),
+                }
+                issue = str(species_resolution.get("reason") or "").strip()
+                if issue:
+                    species_mapping_resolution["issue"] = issue
+                mapping_meta["resolution"] = species_mapping_resolution
+                counts["species_rows"] += 1
+            elif bucket in _DIRECTLY_MAPPED_ENTITY_BUCKETS:
+                mapping_meta["resolution"] = {
+                    "status": "unresolved",
+                    "issue": "mapping_result_missing",
+                    "order_step": "entity_mapping",
+                }
+                counts["directly_mapped_rows"] += 1
+                counts["unresolved_rows"] += 1
+            else:
+                mapping_meta["resolution"] = {
+                    "status": "not_applicable",
+                    "issue": "entity_bucket_not_mapped",
+                    "order_step": "not_applicable",
+                }
+                counts["not_applicable_rows"] += 1
+    return counts
+
+
 def map_payload(
     payload: Dict[str, Any],
     *,
@@ -4730,9 +5427,18 @@ def map_payload(
     db_config: Optional[Dict[str, Any]] = None,
     use_cache: bool = True,
     invalidate_cache_keys: Any = None,
+    allow_complex_wrapper_creation: bool = True,
+    allow_structural_cleanup: bool = True,
 ) -> Dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
+    initial_generated_wrapper_names = {
+        _normalize_name(str(row.get("name") or ""))
+        for row in _safe_list(_safe_dict(payload.get("entities")).get("protein_complexes"))
+        if isinstance(row, dict)
+        and row.get("generated") is True
+        and _normalize_name(str(row.get("name") or ""))
+    }
     mapped = deepcopy(payload)
 
     source_mode = (id_source or os.getenv("PATHBANK_ID_SOURCE", "hybrid")).strip().lower()
@@ -4775,6 +5481,8 @@ def map_payload(
     protein_complexes_ambiguous = 0
     protein_complexes_novel = 0
     protein_complexes_gap_issues = 0
+    low_confidence_mappings = 0
+    best_effort_mappings = 0
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -4826,7 +5534,15 @@ def map_payload(
         protein["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
         protein["mapping_meta"]["reviewed"] = bool(result.get("reviewed", False))
         protein["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
-        for meta_key in ["matched_alias", "alias_source", "resolved_name", "queries_tried", "literature_aliases"]:
+        for meta_key in [
+            "matched_alias",
+            "alias_source",
+            "resolved_name",
+            "queries_tried",
+            "literature_aliases",
+            "method",
+            "best_effort",
+        ]:
             if result.get(meta_key):
                 protein["mapping_meta"][meta_key] = result.get(meta_key)
 
@@ -4879,6 +5595,12 @@ def map_payload(
             if reason == "ambiguous" or _safe_dict(result.get("resolution")).get("status") == "ambiguous":
                 protein_ambiguous += 1
 
+        result_confidence = float(result.get("confidence", 0.0) or 0.0)
+        is_best_effort = bool(result.get("best_effort"))
+        if status == "mapped" and result_confidence < 0.78:
+            low_confidence_mappings += 1
+        if status == "mapped" and is_best_effort:
+            best_effort_mappings += 1
 
         logs.append(
             {
@@ -4892,17 +5614,28 @@ def map_payload(
                 "candidate_count": len(_safe_list(result.get("candidates"))),
                 "source": source,
                 "provider": provider,
+                "confidence": result_confidence,
+                "chosen_rule": str(protein["mapping_meta"].get("chosen_rule") or ""),
+                "best_effort": is_best_effort,
                 "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
                 "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
             }
         )
 
-    enzyme_complex_report = _rewrite_reaction_protein_enzymes_to_complexes(
-        mapped,
-        db=db,
-        cache=cache,
-        global_organism=global_organism,
-    )
+    if allow_complex_wrapper_creation:
+        enzyme_complex_report = _rewrite_reaction_protein_enzymes_to_complexes(
+            mapped,
+            db=db,
+            cache=cache,
+            global_organism=global_organism,
+        )
+    else:
+        enzyme_complex_report = {
+            "summary": {"reaction_protein_enzymes_rewritten_to_complexes": 0},
+            "actions": [],
+            "skipped": True,
+            "reason": "complex_wrapper_creation_disabled",
+        }
     protein_complexes = _safe_list(entities.get("protein_complexes"))
 
     # ── Post-mapping protein cleanup ──────────────────────────────────────────
@@ -4924,57 +5657,53 @@ def map_payload(
                 return True
         return False
 
-    _proteins_current = _safe_list(entities.get("proteins"))
-    _p_by_norm: Dict[str, Dict[str, Any]] = {
-        _normalize_name(str(_p.get("name") or "")): _p
-        for _p in _proteins_current
-        if isinstance(_p, dict) and _p.get("name")
-    }
-
-    # Phase 1: prune invalid components from complexes that have at least one valid one.
-    _dropped_norms: Set[str] = set()
-    for _pc in protein_complexes:
-        if not isinstance(_pc, dict):
-            continue
-        _comps = _safe_list(_pc.get("components"))
-        if not _comps:
-            continue
-        _valid: List[Any] = []
-        _invalid: List[Any] = []
-        for _comp in _comps:
-            _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
-            _crow = _p_by_norm.get(_normalize_name(_cname))
-            if _crow and _has_valid_id(_crow):
-                _valid.append(_comp)
-            else:
-                _invalid.append(_comp)
-        if _valid and _invalid:
-            _pc["components"] = _valid
-            for _comp in _invalid:
-                _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
-                _dropped_norms.add(_normalize_name(_cname))
-
-    # Only actually remove a protein if it is no longer referenced in ANY complex component list.
-    _still_needed: Set[str] = set()
-    for _pc in protein_complexes:
-        if not isinstance(_pc, dict):
-            continue
-        for _comp in _safe_list(_pc.get("components")):
-            _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
-            _still_needed.add(_normalize_name(_cname))
-
-    _remove_norms = _dropped_norms - _still_needed
-    if _remove_norms:
-        entities["proteins"] = [
-            _p for _p in _safe_list(entities.get("proteins"))
-            if not (isinstance(_p, dict) and _normalize_name(str(_p.get("name") or "")) in _remove_norms)
-        ]
-        proteins = _safe_list(entities.get("proteins"))
-        _p_by_norm = {
+    if allow_structural_cleanup:
+        _proteins_current = _safe_list(entities.get("proteins"))
+        _p_by_norm: Dict[str, Dict[str, Any]] = {
             _normalize_name(str(_p.get("name") or "")): _p
-            for _p in proteins
+            for _p in _proteins_current
             if isinstance(_p, dict) and _p.get("name")
         }
+
+        # Phase 1: prune invalid components from complexes that have at least one valid one.
+        _dropped_norms: Set[str] = set()
+        for _pc in protein_complexes:
+            if not isinstance(_pc, dict):
+                continue
+            _comps = _safe_list(_pc.get("components"))
+            if not _comps:
+                continue
+            _valid: List[Any] = []
+            _invalid: List[Any] = []
+            for _comp in _comps:
+                _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
+                _crow = _p_by_norm.get(_normalize_name(_cname))
+                if _crow and _has_valid_id(_crow):
+                    _valid.append(_comp)
+                else:
+                    _invalid.append(_comp)
+            if _valid and _invalid:
+                _pc["components"] = _valid
+                for _comp in _invalid:
+                    _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
+                    _dropped_norms.add(_normalize_name(_cname))
+
+        # Only remove a protein if it is no longer referenced by any complex.
+        _still_needed: Set[str] = set()
+        for _pc in protein_complexes:
+            if not isinstance(_pc, dict):
+                continue
+            for _comp in _safe_list(_pc.get("components")):
+                _cname = str(_comp if isinstance(_comp, str) else _safe_dict(_comp).get("name") or "")
+                _still_needed.add(_normalize_name(_cname))
+
+        _remove_norms = _dropped_norms - _still_needed
+        if _remove_norms:
+            entities["proteins"] = [
+                _p for _p in _safe_list(entities.get("proteins"))
+                if not (isinstance(_p, dict) and _normalize_name(str(_p.get("name") or "")) in _remove_norms)
+            ]
+            proteins = _safe_list(entities.get("proteins"))
 
     # Phase 2: UniProt API fallback (with gap-model LLM synonym expansion) for every
     # protein that still has no valid id after DB mapping and complex pruning.
@@ -4983,7 +5712,11 @@ def map_payload(
     _api_fallback_enabled = (os.environ.get("T2PW_LLM_PROTEIN_FALLBACK", "1") or "1").strip() not in ("0", "false", "no", "off")
     if _api_fallback_enabled:
         for _p_row in _safe_list(entities.get("proteins")):
-            if not isinstance(_p_row, dict) or _has_valid_id(_p_row):
+            if (
+                not isinstance(_p_row, dict)
+                or is_pathbank_unknown_protein(_p_row)
+                or _has_valid_id(_p_row)
+            ):
                 continue
             _p_name = str(_p_row.get("name") or "").strip()
             _p_org = str(
@@ -5028,14 +5761,51 @@ def map_payload(
             or ""
         )
         organism = organism.strip() if isinstance(organism, str) else ""
-        result = _map_complex_with_strategy(
-            id_source=source_mode,
-            db=db,
-            cache=cache,
-            name=name,
-            organism=organism,
-            complex_row=complex_row,
+        existing_meta = _safe_dict(complex_row.get("mapping_meta"))
+        is_unknown_fallback_complex = bool(
+            existing_meta.get("chosen_rule") == _PATHBANK_UNKNOWN_FALLBACK_RULE
+            and any(
+                is_pathbank_unknown_protein(
+                    next(
+                        (
+                            protein
+                            for protein in proteins
+                            if isinstance(protein, dict)
+                            and _normalize_name(str(protein.get("name") or ""))
+                            == _normalize_name(_component_name(component))
+                        ),
+                        {},
+                    )
+                )
+                for component in _safe_list(complex_row.get("components"))
+            )
         )
+        if is_unknown_fallback_complex:
+            result = _with_resolution(
+                {
+                    "status": "unmapped",
+                    "reason": "explicit_pathbank_unknown_sentinel_component",
+                    "provider": "PathBankDB",
+                    "source": "db",
+                    "confidence": 0.0,
+                    "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                    "candidates": [],
+                    "components": _safe_list(complex_row.get("components")),
+                    "issues": [],
+                },
+                "fallback",
+                issue="pathbank_unknown_sentinel_component",
+                order_step=_PATHBANK_UNKNOWN_FALLBACK_RULE,
+            )
+        else:
+            result = _map_complex_with_strategy(
+                id_source=source_mode,
+                db=db,
+                cache=cache,
+                name=name,
+                organism=organism,
+                complex_row=complex_row,
+            )
         result.setdefault("provider", "PathBankDB" if result.get("source") == "db" else "none")
         result.setdefault("source", "db" if result.get("provider") == "PathBankDB" else "none")
         result["components"] = _reconcile_components_against_local_proteins(
@@ -5086,6 +5856,12 @@ def map_payload(
             protein_complexes_skipped += 1
             complex_status = "unmapped"
             complex_reason = str(result.get("reason") or _safe_dict(result.get("resolution")).get("issue") or "complex_unresolved")
+        result_confidence = float(result.get("confidence", 0.0) or 0.0)
+        is_best_effort = bool(result.get("best_effort"))
+        if complex_status == "mapped" and result_confidence < 0.78:
+            low_confidence_mappings += 1
+        if complex_status == "mapped" and is_best_effort:
+            best_effort_mappings += 1
         logs.append(
             {
                 "entity_type": "protein_complex",
@@ -5098,6 +5874,9 @@ def map_payload(
                 "candidate_count": len(_safe_list(result.get("candidates"))),
                 "source": str(result.get("source") or "none"),
                 "provider": str(result.get("provider") or "none"),
+                "confidence": result_confidence,
+                "chosen_rule": str(result.get("chosen_rule") or ""),
+                "best_effort": is_best_effort,
                 "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
                 "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
                 "gap_issues": _safe_list(result.get("issues")),
@@ -5193,6 +5972,13 @@ def map_payload(
             ):
                 compound_ambiguous += 1
 
+        result_confidence = float(result.get("confidence", 0.0) or 0.0)
+        is_best_effort = bool(result.get("best_effort"))
+        if status == "mapped" and result_confidence < 0.78:
+            low_confidence_mappings += 1
+        if status == "mapped" and is_best_effort:
+            best_effort_mappings += 1
+
         logs.append(
             {
                 "entity_type": "compound",
@@ -5206,10 +5992,26 @@ def map_payload(
                 "candidate_count": len(_safe_list(result.get("candidates"))),
                 "source": source,
                 "provider": provider,
+                "confidence": result_confidence,
+                "chosen_rule": str(result.get("chosen_rule") or ""),
+                "best_effort": is_best_effort,
                 "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
                 "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
             }
         )
+
+    if allow_complex_wrapper_creation:
+        unknown_fallback_report = _apply_pathbank_unknown_enzyme_fallback(mapped)
+        enzyme_complex_report.setdefault("summary", {}).update(
+            _safe_dict(unknown_fallback_report.get("summary"))
+        )
+        enzyme_complex_report.setdefault("actions", []).extend(
+            _safe_list(unknown_fallback_report.get("actions"))
+        )
+        proteins = _safe_list(entities.get("proteins"))
+        protein_complexes = _safe_list(entities.get("protein_complexes"))
+
+    mapping_metadata_policy = _stamp_named_entity_mapping_metadata(entities)
 
     cache.save()
     if db is not None:
@@ -5220,6 +6022,20 @@ def map_payload(
     protein_complexes_total = len(
         [c for c in protein_complexes if isinstance(c, dict) and isinstance(c.get("name"), str) and c.get("name").strip()]
     )
+    generated_wrapper_names = {
+        _normalize_name(str(row.get("name") or ""))
+        for row in protein_complexes
+        if isinstance(row, dict)
+        and row.get("generated") is True
+        and _normalize_name(str(row.get("name") or ""))
+    }
+    ambiguous_log_rows = [
+        row
+        for row in logs
+        if str(row.get("reason") or "") == "ambiguous"
+        or str(row.get("resolution_status") or "") == "ambiguous"
+    ]
+    ambiguous_log_ids = {id(row) for row in ambiguous_log_rows}
     summary = {
         "proteins_total": proteins_total,
         "proteins_mapped": proteins_mapped,
@@ -5248,6 +6064,19 @@ def map_payload(
         "species_hydrated": int(species_report.get("hydrated", 0)),
         "species_matched": int(species_report.get("matched", 0)),
         "species_novel": int(species_report.get("novel", 0)),
+        "low_confidence_mappings": low_confidence_mappings,
+        "best_effort_mappings": best_effort_mappings,
+        "entities_mapped": sum(1 for row in logs if row.get("status") == "mapped"),
+        "entities_ambiguous": len(ambiguous_log_rows),
+        "entities_unmapped": sum(
+            1
+            for row in logs
+            if row.get("status") == "unmapped" and id(row) not in ambiguous_log_ids
+        ),
+        "structural_cleanup_enabled": allow_structural_cleanup,
+        "generated_wrappers_created": len(
+            generated_wrapper_names - initial_generated_wrapper_names
+        ),
     }
     summary.update(_safe_dict(enzyme_complex_report.get("summary")))
 
@@ -5256,6 +6085,7 @@ def map_payload(
         "species": species_report,
         "entities": logs,
         "enzyme_complex_conversion": enzyme_complex_report,
+        "mapping_metadata_policy": mapping_metadata_policy,
     }
     return {"payload": mapped, "report": report}
 
@@ -5270,6 +6100,8 @@ def run_mapping(
     db_config: Optional[Dict[str, Any]] = None,
     use_cache: bool = True,
     invalidate_cache_keys: Any = None,
+    allow_complex_wrapper_creation: bool = True,
+    allow_structural_cleanup: bool = True,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -5281,6 +6113,8 @@ def run_mapping(
         db_config=db_config,
         use_cache=use_cache,
         invalidate_cache_keys=invalidate_cache_keys,
+        allow_complex_wrapper_creation=allow_complex_wrapper_creation,
+        allow_structural_cleanup=allow_structural_cleanup,
     )
     mapped = _safe_dict(result.get("payload"))
     report = _safe_dict(result.get("report"))

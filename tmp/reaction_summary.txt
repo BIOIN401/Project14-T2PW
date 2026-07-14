@@ -1,37 +1,241 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: ObaG-catalyzed L-Thr transaldolase reaction
-  Reactants: L-Thr [unknown], 4-nitrophenyacetaldehyde (4-NPA) [unknown]
-  Products:  AHNB [unknown]
-  Modifier:  ObaG [Pseudomonas fluorescens cellular context] (role=catalyst, confidence=1.0)
+REACTION 1: citrate synthase reaction
+  Reactants: acetyl-CoA [mitochondrial matrix state], oxaloacetate [mitochondrial matrix state], H2O [mitochondrial matrix state]
+  Products:  citrate [mitochondrial matrix state], CoA-SH [mitochondrial matrix state]
+  Modifier:  citrate synthase [mitochondrial matrix state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: RibC-catalyzed riboflavin phosphorylation
-  Reactants: riboflavin [unknown], ATP [unknown]
-  Products:  riboflavin-5'-phosphate [unknown]
-  Modifier:  RibC [S. davawensis cellular context] (role=catalyst, confidence=1.0)
+REACTION 2: aconitase reaction
+  Reactants: citrate [mitochondrial matrix state]
+  Products:  isocitrate [mitochondrial matrix state]
+  Modifier:  aconitase 2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: RosB-catalyzed conversion of RP to AFP
-  Reactants: riboflavin-5'-phosphate [unknown], l-Glu [unknown]
-  Products:  8-demethyl-8-amino-riboflavin-5'-phosphate [unknown], 2-oxoglutarate [unknown]
-  Modifier:  RosB [S. davawensis cellular context] (role=catalyst, confidence=1.0)
+REACTION 3: isocitrate dehydrogenase reaction (NAD+)
+  Reactants: isocitrate [mitochondrial matrix state], NAD [unknown]
+  Products:  alpha-ketoglutarate [mitochondrial matrix state], CO2 [mitochondrial matrix state], NADH [mitochondrial matrix state]
+  Modifier:  isocitrate dehydrogenase 3 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: Dephosphorylation of AFP
-  Reactants: 8-demethyl-8-amino-riboflavin-5'-phosphate [unknown]
-  Products:  8-demethyl-8-amino-riboflavin [unknown]
-  Modifier:  RibC [S. davawensis cellular context] (role=catalyst, confidence=1.0)
+REACTION 4: isocitrate dehydrogenase reaction (NADP+)
+  Reactants: isocitrate [mitochondrial matrix state], NADP [unknown]
+  Products:  alpha-ketoglutarate [mitochondrial matrix state], CO2 [mitochondrial matrix state], NADPH [mitochondrial matrix state]
+  Modifier:  isocitrate dehydrogenase 2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: RosA-catalyzed methylation of AF to roseoflavin
-  Reactants: 8-demethyl-8-amino-riboflavin [unknown], SAM [unknown]
-  Products:  roseoflavin [unknown]
-  Modifier:  RosA [S. davawensis cellular context] (role=catalyst, confidence=1.0)
+REACTION 5: oxoglutarate dehydrogenase reaction
+  Reactants: alpha-ketoglutarate [mitochondrial matrix state], NAD [unknown], CoA-SH [mitochondrial matrix state]
+  Products:  succinyl-CoA [mitochondrial matrix state], NADH [mitochondrial matrix state], CO2 [mitochondrial matrix state]
+  Modifier:  oxoglutarate dehydrogenase complex [mitochondrial matrix state] (role=catalyst, confidence=1.0) [possible_complex]
+  QA flags:  none
+
+REACTION 6: succinyl-CoA synthetase reaction
+  Reactants: succinyl-CoA [mitochondrial matrix state], ADP [mitochondrial matrix state], phosphate [mitochondrial matrix state]
+  Products:  succinate [mitochondrial matrix state], ATP [mitochondrial matrix state], CoA-SH [mitochondrial matrix state]
+  Modifier:  succinyl-CoA synthetase [mitochondrial matrix state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 7: succinate dehydrogenase reaction
+  Reactants: succinate [mitochondrial matrix state], FAD [mitochondrial matrix state]
+  Products:  fumarate [mitochondrial matrix state], FADH2 [mitochondrial matrix state]
+  Modifier:  succinate dehydrogenase complex [mitochondrial matrix state] (role=catalyst, confidence=1.0) [possible_complex]
+  QA flags:  none
+
+REACTION 8: fumarate hydratase reaction
+  Reactants: fumarate [mitochondrial matrix state], H2O [mitochondrial matrix state]
+  Products:  malate [cytosolic state]
+  Modifier:  fumarate hydratase [mitochondrial matrix state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 9: malate dehydrogenase reaction
+  Reactants: malate [cytosolic state], NAD [unknown]
+  Products:  oxaloacetate [mitochondrial matrix state], NADH [mitochondrial matrix state]
+  Modifier:  malate dehydrogenase 2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 10: pyruvate dehydrogenase complex reaction
+  Reactants: pyruvate [mitochondrial matrix state], NAD [unknown], CoA-SH [mitochondrial matrix state]
+  Products:  acetyl-CoA [mitochondrial matrix state], NADH [mitochondrial matrix state], CO2 [mitochondrial matrix state]
+  Modifier:  pyruvate dehydrogenase complex [mitochondrial matrix state] (role=catalyst, confidence=1.0) [possible_complex]
+  QA flags:  none
+
+REACTION 11: pyruvate carboxylase reaction
+  Reactants: pyruvate [mitochondrial matrix state], ATP [mitochondrial matrix state], CO2 [mitochondrial matrix state]
+  Products:  oxaloacetate [mitochondrial matrix state], ADP [mitochondrial matrix state], phosphate [mitochondrial matrix state]
+  Modifier:  pyruvate carboxylase [mitochondrial matrix state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 12: glutaminase reaction
+  Reactants: glutamine [mitochondrial matrix state], H2O [mitochondrial matrix state]
+  Products:  glutamate [mitochondrial matrix state], ammonia [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  missing_modifier — reactant list includes known cofactors
+
+REACTION 13: glutamate dehydrogenase reaction
+  Reactants: glutamate [mitochondrial matrix state], NAD [unknown], H2O [mitochondrial matrix state]
+  Products:  alpha-ketoglutarate [mitochondrial matrix state], NADH [mitochondrial matrix state], ammonia [mitochondrial matrix state]
+  Modifier:  glutamate dehydrogenase [mitochondrial matrix state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 14: GOT2 transamination reaction
+  Reactants: glutamate [mitochondrial matrix state], oxaloacetate [mitochondrial matrix state]
+  Products:  alpha-ketoglutarate [mitochondrial matrix state], aspartate [cytosolic state]
+  Modifier:  glutamic-oxaloacetic transaminase 2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 15: GOT1 transamination reaction
+  Reactants: alpha-ketoglutarate [mitochondrial matrix state], aspartate [cytosolic state]
+  Products:  glutamate [mitochondrial matrix state], oxaloacetate [mitochondrial matrix state]
+  Modifier:  glutamic-oxaloacetic transaminase 1 [cytosolic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 16: MDH1 reaction
+  Reactants: oxaloacetate [mitochondrial matrix state], NADH [mitochondrial matrix state]
+  Products:  malate [cytosolic state], NAD [unknown]
+  Modifier:  malate dehydrogenase 1 [cytosolic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 17: citrate lyase reaction
+  Reactants: citrate [mitochondrial matrix state], ATP [mitochondrial matrix state], CoA-SH [mitochondrial matrix state]
+  Products:  acetyl-CoA [mitochondrial matrix state], oxaloacetate [mitochondrial matrix state], ADP [mitochondrial matrix state], phosphate [mitochondrial matrix state]
+  Modifier:  ATP-citrate lyase [cytosolic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 18: lactate dehydrogenase reaction
+  Reactants: pyruvate [mitochondrial matrix state], NADH [mitochondrial matrix state]
+  Products:  lactate [cytosolic state], NAD [unknown]
+  Modifier:  L-lactate dehydrogenase [cytosolic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 19: GPD1 reaction
+  Reactants: dihydroxyacetone phosphate [unknown], NADH [mitochondrial matrix state]
+  Products:  glycerol 3-phosphate [unknown], NAD [unknown]
+  Modifier:  glycerol 3-phosphate dehydrogenase 1 [cytosolic state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 20: GPD2 reaction
+  Reactants: glycerol 3-phosphate [unknown], FAD [mitochondrial matrix state]
+  Products:  dihydroxyacetone phosphate [unknown], FADH2 [mitochondrial matrix state]
+  Modifier:  glycerol 3-phosphate dehydrogenase 2 [mitochondrial inner membrane state] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 21: aconitate decarboxylation
+  Reactants: aconitate [mitochondrial matrix state]
+  Products:  itaconate [mitochondrial matrix state], CO2 [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 22: acetoacetate to acetoacetyl-CoA
+  Reactants: acetoacetate [mitochondrial matrix state], CoA-SH [mitochondrial matrix state]
+  Products:  acetoacetyl-CoA [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 23: acetoacetyl-CoA cleavage
+  Reactants: acetoacetyl-CoA [mitochondrial matrix state], CoA-SH [mitochondrial matrix state]
+  Products:  acetyl-CoA [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 24: β-hydroxybutyrate to acetoacetate
+  Reactants: β-hydroxybutyrate [mitochondrial matrix state], NAD [unknown]
+  Products:  acetoacetate [mitochondrial matrix state], NADH [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 25: acetate to acetyl-CoA
+  Reactants: acetate [mitochondrial matrix state], ATP [mitochondrial matrix state], CoA-SH [mitochondrial matrix state]
+  Products:  acetyl-CoA [mitochondrial matrix state], ADP [mitochondrial matrix state], phosphate [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  missing_modifier — reactant list includes known cofactors
+
+REACTION 26: propionyl-CoA to succinyl-CoA
+  Reactants: propionyl-CoA [mitochondrial matrix state], ATP [mitochondrial matrix state], CO2 [mitochondrial matrix state]
+  Products:  succinyl-CoA [mitochondrial matrix state], ADP [mitochondrial matrix state], phosphate [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  missing_modifier — reactant list includes known cofactors
+
+REACTION 27: OAA to phosphoenolpyruvate
+  Reactants: oxaloacetate [mitochondrial matrix state], GTP [mitochondrial matrix state]
+  Products:  phosphoenolpyruvate [cytosolic state], GDP [unknown], CO2 [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  missing_modifier — reactant list includes known cofactors
+
+REACTION 28: 2-hydroxyglutarate production from αKG
+  Reactants: alpha-ketoglutarate [mitochondrial matrix state], NADPH [mitochondrial matrix state]
+  Products:  2-hydroxyglutarate [mitochondrial matrix state], NADP [unknown]
+  Modifier:  MISSING
+  QA flags:  missing_modifier — reactant list includes known cofactors
+
+REACTION 29: ubiquinone reduction by complex I
+  Reactants: NADH [mitochondrial matrix state], ubiquinone [mitochondrial inner membrane state]
+  Products:  NAD [unknown], ubiquinol [mitochondrial inner membrane state]
+  Modifier:  MISSING
+  QA flags:  missing_modifier — reactant list includes known cofactors
+
+REACTION 30: ubiquinone reduction by complex II
+  Reactants: FADH2 [mitochondrial matrix state], ubiquinone [mitochondrial inner membrane state]
+  Products:  FAD [mitochondrial matrix state], ubiquinol [mitochondrial inner membrane state]
+  Modifier:  MISSING
+  QA flags:  missing_modifier — reactant list includes known cofactors
+
+REACTION 31: ubiquinol oxidation by complex III
+  Reactants: ubiquinol [mitochondrial inner membrane state], cytochrome C [mitochondrial inner membrane state]
+  Products:  ubiquinone [mitochondrial inner membrane state], cytochrome C reduced [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 32: cytochrome C oxidation by complex IV
+  Reactants: cytochrome C reduced [unknown], O2 [mitochondrial matrix state]
+  Products:  cytochrome C [mitochondrial inner membrane state], H2O [mitochondrial matrix state]
+  Modifier:  MISSING
+  QA flags:  none
+
+TRANSPORT 1: pyruvate import into mitochondria
+  From: cytosolic state
+  To:   mitochondrial matrix state
+  Cargo: pyruvate [mitochondrial matrix state]
+  Transporter: mitochondrial pyruvate carrier [mitochondrial inner membrane state] (role=transporter, confidence=1.0)
+  QA flags:  none
+
+TRANSPORT 2: citrate export from mitochondria
+  From: mitochondrial matrix state
+  To:   cytosolic state
+  Cargo: citrate [mitochondrial matrix state]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 3: malate import into mitochondria
+  From: cytosolic state
+  To:   mitochondrial matrix state
+  Cargo: malate [cytosolic state]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 4: aspartate export from mitochondria
+  From: mitochondrial matrix state
+  To:   cytosolic state
+  Cargo: aspartate [cytosolic state]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 5: glutamate import into mitochondria
+  From: cytosolic state
+  To:   mitochondrial matrix state
+  Cargo: glutamate [mitochondrial matrix state]
+  Transporter: MISSING
+  QA flags:  none
+
+TRANSPORT 6: fatty acid transport via carnitine shuttle
+  From: cytosolic state
+  To:   mitochondrial matrix state
+  Cargo: fatty acyl-CoA [unknown]
+  Transporter: MISSING
   QA flags:  none
 
 LOCKED REACTION FILTER
-5 locked reactions found
-5 exported
+19 locked reactions found
+19 exported
 0 quarantined reactions due to unresolved compound reference

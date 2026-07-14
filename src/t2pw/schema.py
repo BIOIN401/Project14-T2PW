@@ -131,6 +131,13 @@ class PayloadMappingMeta(TypedDict, total=False):
     pathbank_protein_complex_id: int
     species_id: int
     db_gap_resolved: bool
+    fallback_used: bool
+    fallback_reason: str
+    cross_species_placeholder: bool
+    target_organism: str
+    placeholder_target_organisms: List[str]
+    functional_enzyme_name: str
+    sentinel_pathbank_protein_id: int
 
 
 class PayloadNamedRecord(TypedDict):
@@ -225,6 +232,7 @@ class PayloadNucleicAcid(PayloadCommonRecord, PayloadNucleicAcidClassField, tota
 
 class PayloadProtein(PayloadCommonRecord, PayloadProteinClassField, total=False):
     pathbank_protein_id: Union[str, int]
+    pw_protein_id: Union[str, int]
     uniprot: str
     uniprot_id: str
     drugbank: str
@@ -258,6 +266,8 @@ class PayloadProteinComplex(PayloadCommonRecord, PayloadProteinComplexClassField
     pathbank_complex_id: Union[str, int]
     pathbank_protein_complex_id: Union[str, int]
     issues: List[Dict[str, Any]]
+    generated: bool
+    generation_reason: Literal["single_protein_pathwhiz_wrapper"]
 
 
 class PayloadBound(PayloadNamedRecord, total=False):
@@ -387,6 +397,7 @@ class PayloadReaction(PayloadNamedRecord, PayloadReactionClassField, total=False
     confidence: float
     provenance: PayloadProvenance
     source_refs: List[str]
+    spontaneous: bool
 
 
 class PayloadReactionCoupledTransport(PayloadNamedRecord, PayloadTransportReactionClassField, total=False):

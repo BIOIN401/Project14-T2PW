@@ -7,6 +7,14 @@ from collections import defaultdict
 from copy import deepcopy
 from typing import Any, Callable, Dict, List, Optional, Sequence, Set, Tuple
 
+from t2pw.pipeline.entity_identity import (
+    has_protein_external_identity,
+    is_generated_complex_wrapper,
+    protein_external_identity,
+    protein_species_context,
+    route_entity_for_mapping,
+)
+
 
 # ---------------------------------------------------------------------------
 # Biochemical alias map — collapses common synonyms to one canonical name
@@ -61,6 +69,19 @@ BIOCHEMICAL_ALIAS_MAP: Dict[str, str] = {
     "inorganic phosphate": "Pi",
     "inorganic pyrophosphate": "PPi",
 }
+
+
+def force_reactions_non_spontaneous(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Spontaneity is not modeled currently; every reaction is forced to spontaneous=false."""
+    processes = _safe_dict(payload.get("processes"))
+    for row in _safe_list(processes.get("reactions")):
+        if isinstance(row, dict):
+            row["spontaneous"] = False
+    return payload
 
 
 def apply_biochemical_aliases(
@@ -258,6 +279,11 @@ def _new_report() -> Dict[str, Any]:
             "dedupe_removed": 0,
             "dedupe_removed_total": 0,
             "no_op_removed_count": 0,
+            "no_op_quarantined_count": 0,
+            "locked_no_op_quarantined_count": 0,
+            "evidenced_no_op_quarantined_count": 0,
+            "unsupported_no_op_dropped_count": 0,
+            "duplicate_locked_reactions_quarantined_count": 0,
             "n_same_as_groups": 0,
             "n_aliases_rewritten": 0,
             "n_entities_deduped": 0,
@@ -446,8 +472,6 @@ def _is_protein_like(name: str, payload: Dict[str, Any]) -> bool:
     if norm in protein_like_set:
         return True
     try:
-        from t2pw.mapping.map_ids import route_entity_for_mapping
-
         routed = route_entity_for_mapping(name, "compound", protein_like_names=protein_like_set)
         if str(routed.get("route", "")).strip().lower() in {"protein", "complex"}:
             return True
@@ -475,7 +499,10 @@ def _ensure_protein(name: str, payload: Dict[str, Any], report: Dict[str, Any]) 
     c_name = _canonical(name)
     if not c_name:
         return ""
-    compounds, proteins, _ = _entity_lists(payload)
+    compounds, proteins, complexes = _entity_lists(payload)
+    existing_complex = _find_entity_row(complexes, c_name)
+    if existing_complex is not None:
+        return _canonical(str(existing_complex.get("name", c_name)))
     if _find_entity_row(proteins, c_name) is None:
         # Carry class/confidence/provenance/source_refs from compound row if present
         existing = _find_entity_row(compounds, c_name) or {}
@@ -742,6 +769,9 @@ def _rewrite_token(
         return [rewrite_map[ckey]]
 
     if not _has_plus_token(text):
+        existing_complex = _find_entity_row(_entity_lists(payload)[2], text)
+        if existing_complex is not None:
+            return [_canonical(str(existing_complex.get("name", text)))]
         if len(_complex_components(text, payload=payload)) >= 2:
             parts = _complex_components(text, payload=payload)
             complex_name = materialize_complex(
@@ -1520,78 +1550,6 @@ def _rewrite_component_rows(
     return rewritten_rows
 
 
-def _has_protein_identity(row: Any) -> bool:
-    if not isinstance(row, dict):
-        return False
-    direct_keys = [
-        "uniprot",
-        "uniprot_id",
-        "uniprot-id",
-        "drugbank",
-        "drugbank_id",
-        "drugbank-id",
-        "pathbank_protein_id",
-        "pw_protein_id",
-        "pathwhiz_id",
-        "protein_id",
-    ]
-    for key in direct_keys:
-        if _canonical(str(row.get(key, ""))):
-            return True
-    for nested_key in ("mapped_ids", "ids", "mapping_meta"):
-        nested = _safe_dict(row.get(nested_key))
-        for key in direct_keys:
-            if _canonical(str(nested.get(key, ""))):
-                return True
-        for key in ("uniprot", "drugbank", "pathbank", "pathbank_protein"):
-            if _canonical(str(nested.get(key, ""))):
-                return True
-    return False
-
-
-def _protein_external_identity(row: Any) -> str:
-    if not isinstance(row, dict):
-        return ""
-    for container in [row, _safe_dict(row.get("mapped_ids")), _safe_dict(row.get("ids")), _safe_dict(row.get("mapping_meta"))]:
-        for key in ("uniprot", "uniprot_id", "uniprot-id", "drugbank", "drugbank_id", "drugbank-id"):
-            value = _canonical(str(container.get(key, "")))
-            if value:
-                return value
-    return ""
-
-
-def _entity_species_context(row: Any) -> Any:
-    if not isinstance(row, dict):
-        return ""
-    return (
-        row.get("species")
-        or row.get("organism")
-        or row.get("taxonomy_id")
-        or row.get("species_id")
-        or row.get("pathbank_species_id")
-        or _safe_dict(row.get("species_ref")).get("pathbank_species_id")
-        or _safe_dict(row.get("species_ref")).get("name")
-        or _safe_dict(row.get("mapping_meta")).get("species")
-        or _safe_dict(row.get("mapping_meta")).get("species_id")
-    )
-
-
-def _is_generated_complex_row(row: Any) -> bool:
-    if not isinstance(row, dict):
-        return False
-    meta = _safe_dict(row.get("mapping_meta"))
-    reason = _canonical(str(row.get("generation_reason") or meta.get("generation_reason") or ""))
-    chosen_rule = _canonical(str(row.get("chosen_rule") or meta.get("chosen_rule") or ""))
-    resolution = _safe_dict(meta.get("resolution"))
-    order_step = _canonical(str(resolution.get("order_step") or ""))
-    return bool(
-        row.get("generated") is True
-        or reason == "single_protein_pathwhiz_wrapper"
-        or chosen_rule == "novel_enzyme_single_component_complex"
-        or order_step == "novel_enzyme_single_component_complex"
-    )
-
-
 def drop_unresolved_complex_component_proteins(
     payload: Dict[str, Any],
     *,
@@ -1647,17 +1605,23 @@ def drop_unresolved_complex_component_proteins(
 
     component_refs: Dict[str, List[Tuple[Dict[str, Any], Any]]] = defaultdict(list)
     identified_component_norms: Set[str] = set()
+    process_referenced_component_norms: Set[str] = set()
     for complex_row in complexes:
         if not isinstance(complex_row, dict):
             continue
+        complex_is_process_referenced = (
+            _normalize(str(complex_row.get("name", ""))) in process_ref_norms
+        )
         for component in _safe_list(complex_row.get("components")):
             component_name = _component_name_from_row(component)
             norm = _normalize(component_name)
             if not norm:
                 continue
             component_refs[norm].append((complex_row, component))
-            if isinstance(component, dict) and _has_protein_identity(component):
+            if isinstance(component, dict) and has_protein_external_identity(component):
                 identified_component_norms.add(norm)
+            if complex_is_process_referenced:
+                process_referenced_component_norms.add(norm)
 
     rogue_norms: Set[str] = set()
     for protein in proteins:
@@ -1669,8 +1633,9 @@ def drop_unresolved_complex_component_proteins(
             norm
             and norm in component_refs
             and norm not in process_ref_norms
+            and norm not in process_referenced_component_norms
             and norm not in identified_component_norms
-            and not _has_protein_identity(protein)
+            and not has_protein_external_identity(protein)
         ):
             rogue_norms.add(norm)
 
@@ -1778,6 +1743,14 @@ def drop_process_orphan_proteins(
         _remember(interaction.get("entity_1") or interaction.get("left") or interaction.get("source"))
         _remember(interaction.get("entity_2") or interaction.get("right") or interaction.get("target"))
 
+    # A component of a surviving complex is still semantically referenced even
+    # when processes point at the complex rather than the component protein.
+    for complex_row in _safe_list(entities.get("protein_complexes")):
+        if not isinstance(complex_row, dict):
+            continue
+        for component in _safe_list(complex_row.get("components")):
+            _remember(_component_name_from_row(component))
+
     kept: List[Any] = []
     for protein in proteins:
         if not isinstance(protein, dict):
@@ -1785,7 +1758,7 @@ def drop_process_orphan_proteins(
             continue
         name = _canonical(str(protein.get("name", "")))
         norm = _normalize(name)
-        if norm and norm not in process_ref_norms and not _has_protein_identity(protein):
+        if norm and norm not in process_ref_norms and not has_protein_external_identity(protein):
             summary["orphan_proteins_dropped"] += 1
             rep["actions"].append({"type": "orphan_protein_dropped", "name": name})
         else:
@@ -2234,6 +2207,7 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
     entities = _safe_dict(payload.get("entities"))
     protein_rows = _safe_list(entities.get("proteins"))
     complex_rows = _safe_list(entities.get("protein_complexes"))
+    compound_rows = _safe_list(entities.get("compounds"))
     protein_by_norm = {
         _normalize(_canonical(str(row.get("name", "")))): _canonical(str(row.get("name", "")))
         for row in protein_rows
@@ -2243,6 +2217,11 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
         _normalize(_canonical_complex_name(str(row.get("name", "")))): _canonical_complex_name(str(row.get("name", "")))
         for row in complex_rows
         if isinstance(row, dict) and _canonical_complex_name(str(row.get("name", "")))
+    }
+    compound_by_norm = {
+        _normalize(_canonical(str(row.get("name", "")))): _canonical(str(row.get("name", "")))
+        for row in compound_rows
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
     }
     reactions, transports = _process_lists(payload)
 
@@ -2258,6 +2237,8 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 return "protein_complex", complex_by_norm[norm]
             if norm in protein_by_norm:
                 return "protein", protein_by_norm[norm]
+            if norm in compound_by_norm:
+                return "compound", compound_by_norm[norm]
         return None
 
     def _record_non_protein_catalyst_drop(pointer: str, name: str, entity_type: str, role: str, source_field: str) -> None:
@@ -2318,19 +2299,24 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 kept.append(row)
                 continue
 
-            target_field, canonical_name = resolved
+            entity_type, canonical_name = resolved
             updated = dict(row)
-            for field in ["protein", "protein_complex", "name"]:
+            for field in ["protein", "protein_complex", "name", "protein_name"]:
                 updated.pop(field, None)
-            updated[target_field] = canonical_name
-            if source_field != target_field or _normalize(raw_name) != _normalize(canonical_name):
+            updated["entity"] = canonical_name
+            updated["entity_type"] = entity_type
+            # Keep the legacy typed key during migration for downstream SBML
+            # consumers that have not yet switched to the canonical fields.
+            if entity_type in {"protein", "protein_complex"}:
+                updated[entity_type] = canonical_name
+            if source_field != "entity" or _normalize(raw_name) != _normalize(canonical_name):
                 summary["modifier_refs_canonicalized"] += 1
                 rep["actions"].append(
                     {
                         "type": "schema_drift_actor_canonicalized",
                         "json_pointer": pointer,
                         "from_field": source_field,
-                        "to_field": target_field,
+                        "to_field": "entity",
                         "from_name": raw_name,
                         "to_name": canonical_name,
                     }
@@ -2527,6 +2513,18 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
         if not isinstance(transport.get("transporters"), list):
             transport["transporters"] = rows
         transport["transporters"] = _rewrite_actor_rows(rows, f"/processes/transports/{tidx}/transporters")
+
+    processes = _safe_dict(payload.get("processes"))
+    for iidx, interaction in enumerate(_safe_list(processes.get("interactions"))):
+        if not isinstance(interaction, dict):
+            continue
+        rows = _safe_list(interaction.get("participants"))
+        if "participants" in interaction:
+            interaction["participants"] = _rewrite_actor_rows(
+                rows,
+                f"/processes/interactions/{iidx}/participants",
+                drop_unknown=False,
+            )
     return payload
 
 
@@ -2855,6 +2853,28 @@ def attach_enzymes_from_reaction_evidence(
         for row in _safe_list(entities.get("protein_complexes"))
         if isinstance(row, dict) and _canonical(str(row.get("name", "")))
     ]
+    protein_norms = {_normalize(name) for name in protein_names}
+    generated_wrapper_member_by_norm: Dict[str, str] = {}
+    for row in _safe_list(entities.get("protein_complexes")):
+        if not isinstance(row, dict) or not is_generated_complex_wrapper(row):
+            continue
+        complex_name = _canonical(str(row.get("name", "")))
+        components = _safe_list(row.get("components"))
+        if not complex_name or len(components) != 1:
+            continue
+        component = components[0]
+        component_name = _component_name_from_row(component)
+        component_norm = _normalize(component_name)
+        if not component_norm or component_norm not in protein_norms:
+            continue
+        if isinstance(component, dict):
+            stoichiometry = component.get("stoichiometry")
+            try:
+                if stoichiometry in (None, "") or int(stoichiometry) < 1:
+                    continue
+            except (TypeError, ValueError):
+                continue
+        generated_wrapper_member_by_norm[_normalize(complex_name)] = component_norm
     actor_candidates: List[Tuple[str, str]] = [("protein", name) for name in protein_names]
     actor_candidates.extend(("protein_complex", name) for name in complex_names)
     if not actor_candidates:
@@ -2874,6 +2894,15 @@ def attach_enzymes_from_reaction_evidence(
             for row in _safe_list(reaction.get("enzymes")) + _safe_list(reaction.get("modifiers"))
             if _actor_name_from_row(row)
         }
+        # A Stage 6 generated single-protein wrapper already attached to the
+        # reaction represents its declared component.  Derive that relationship
+        # from the wrapper metadata and component structure, never from a name
+        # suffix; genuine multi-protein complexes must not suppress members.
+        existing_norms.update(
+            generated_wrapper_member_by_norm[actor_norm]
+            for actor_norm in tuple(existing_norms)
+            if actor_norm in generated_wrapper_member_by_norm
+        )
         evidence_text = _canonical(
             " ".join(
                 str(value or "")
@@ -3197,22 +3226,112 @@ def _best_record(a: Dict[str, Any], b: Dict[str, Any]) -> Dict[str, Any]:
 
 def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, int]:
     rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("no_op_removed_count", 0)
+    summary.setdefault("no_op_quarantined_count", 0)
+    summary.setdefault("locked_no_op_quarantined_count", 0)
+    summary.setdefault("evidenced_no_op_quarantined_count", 0)
+    summary.setdefault("unsupported_no_op_dropped_count", 0)
+    summary.setdefault("duplicate_locked_reactions_quarantined_count", 0)
+    summary.setdefault("dedupe_removed_reactions", 0)
+    summary.setdefault("dedupe_removed_transports", 0)
+    summary.setdefault("dedupe_removed", 0)
+    summary.setdefault("dedupe_removed_total", 0)
+    rep.setdefault("actions", [])
     reactions, transports = _process_lists(payload)
 
+    existing_quarantine = payload.get("quarantined_locked_reactions")
+    quarantined: List[Dict[str, Any]] = (
+        [deepcopy(row) for row in existing_quarantine if isinstance(row, dict)]
+        if isinstance(existing_quarantine, list)
+        else []
+    )
+
+    def _lock_id(reaction: Dict[str, Any]) -> str:
+        value = reaction.get("locked_reaction_id")
+        if isinstance(value, str):
+            return value.strip()
+        if isinstance(value, (int, float)):
+            return str(value)
+        return ""
+
+    def _has_direct_evidence(reaction: Dict[str, Any]) -> bool:
+        return _evidence_length(reaction) > 0 or bool(reaction.get("observed", False))
+
+    def _quarantine_reaction(
+        reaction: Dict[str, Any],
+        *,
+        reaction_index: int,
+        reason: str,
+        count_as_no_op: bool,
+    ) -> None:
+        lock_id = _lock_id(reaction)
+        record: Dict[str, Any] = {
+            "reaction_name": _canonical(str(reaction.get("name", ""))) or "<unnamed>",
+            "reason": reason,
+            "action": "quarantined_from_active_reactions",
+            "json_pointer": f"/processes/reactions/{reaction_index}",
+            "original_reaction": deepcopy(reaction),
+        }
+        if lock_id:
+            record["locked_reaction_id"] = lock_id
+        quarantined.append(record)
+        if count_as_no_op:
+            summary["no_op_quarantined_count"] += 1
+        if lock_id and count_as_no_op:
+            summary["locked_no_op_quarantined_count"] += 1
+        elif lock_id:
+            summary["duplicate_locked_reactions_quarantined_count"] += 1
+        else:
+            summary["evidenced_no_op_quarantined_count"] += 1
+        actions = rep.get("actions")
+        if isinstance(actions, list):
+            actions.append(
+                {
+                    "type": "reaction_quarantined",
+                    "reason": reason,
+                    "json_pointer": record["json_pointer"],
+                    "reaction_name": record["reaction_name"],
+                    **({"locked_reaction_id": lock_id} if lock_id else {}),
+                }
+            )
+
     reaction_by_key: Dict[Tuple[Any, ...], Dict[str, Any]] = {}
-    for reaction in reactions:
+    reaction_index_by_key: Dict[Tuple[Any, ...], int] = {}
+    for reaction_index, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
             continue
-        essential = bool(reaction.get("essential", False))
         in_norm = [_normalize(v) for v in _safe_list(reaction.get("inputs")) if isinstance(v, str) and _canonical(v)]
         out_norm = [_normalize(v) for v in _safe_list(reaction.get("outputs")) if isinstance(v, str) and _canonical(v)]
-        if not essential and in_norm and out_norm:
+        if in_norm and out_norm:
+            no_op_reason = ""
             if sorted(in_norm) == sorted(out_norm):
-                rep["summary"]["no_op_removed_count"] += 1
-                continue
+                no_op_reason = "coarse_grained_same_entity_transformation"
             # Proteolysis/no-op style: all outputs already present in inputs, no novel produced token.
-            if set(out_norm).issubset(set(in_norm)):
-                rep["summary"]["no_op_removed_count"] += 1
+            elif set(out_norm).issubset(set(in_norm)):
+                no_op_reason = "output_subset_of_input_without_distinct_product"
+            if no_op_reason:
+                summary["no_op_removed_count"] += 1
+                if _lock_id(reaction) or _has_direct_evidence(reaction):
+                    _quarantine_reaction(
+                        reaction,
+                        reaction_index=reaction_index,
+                        reason=no_op_reason,
+                        count_as_no_op=True,
+                    )
+                else:
+                    summary["unsupported_no_op_dropped_count"] += 1
+                    actions = rep.get("actions")
+                    if isinstance(actions, list):
+                        actions.append(
+                            {
+                                "type": "reaction_dropped",
+                                "reason": "unsupported_no_op",
+                                "classification_reason": no_op_reason,
+                                "json_pointer": f"/processes/reactions/{reaction_index}",
+                                "reaction_name": _canonical(str(reaction.get("name", ""))) or "<unnamed>",
+                            }
+                        )
                 continue
         key = (
             "reaction",
@@ -3222,7 +3341,36 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
             tuple(sorted(_normalize(v) for v in _reaction_modifier_names(reaction))),
         )
         existing = reaction_by_key.get(key)
-        reaction_by_key[key] = reaction if existing is None else _best_record(existing, reaction)
+        if existing is None:
+            reaction_by_key[key] = reaction
+            reaction_index_by_key[key] = reaction_index
+        elif _lock_id(existing) and not _lock_id(reaction):
+            reaction_by_key[key] = existing
+        elif _lock_id(reaction) and not _lock_id(existing):
+            reaction_by_key[key] = reaction
+            reaction_index_by_key[key] = reaction_index
+        elif (
+            _lock_id(existing)
+            and _lock_id(reaction)
+            and _lock_id(existing) != _lock_id(reaction)
+        ):
+            selected = _best_record(existing, reaction)
+            if selected is existing:
+                loser = reaction
+                loser_index = reaction_index
+            else:
+                loser = existing
+                loser_index = reaction_index_by_key[key]
+                reaction_index_by_key[key] = reaction_index
+            reaction_by_key[key] = selected
+            _quarantine_reaction(
+                loser,
+                reaction_index=loser_index,
+                reason="duplicate_locked_reaction",
+                count_as_no_op=False,
+            )
+        else:
+            reaction_by_key[key] = _best_record(existing, reaction)
 
     transport_by_key: Dict[Tuple[Any, ...], Dict[str, Any]] = {}
     for transport in transports:
@@ -3259,6 +3407,35 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
     processes["reactions"] = deduped_reactions
     processes["transports"] = deduped_transports
 
+    if quarantined or isinstance(existing_quarantine, list):
+        payload["quarantined_locked_reactions"] = quarantined
+
+    active_locked_ids = {
+        _lock_id(reaction)
+        for reaction in deduped_reactions
+        if isinstance(reaction, dict) and _lock_id(reaction)
+    }
+    quarantined_locked_ids = {
+        _lock_id(record)
+        for record in quarantined
+        if _lock_id(record)
+    }
+    prior_filter_report = _safe_dict(payload.get("locked_reaction_filter_report"))
+    locked_found = max(
+        int(prior_filter_report.get("locked_reactions_found") or 0),
+        len(active_locked_ids | quarantined_locked_ids),
+    )
+    if locked_found:
+        payload["locked_reaction_filter_report"] = {
+            "locked_reactions_found": locked_found,
+            "exported_locked_reactions": len(active_locked_ids),
+            "quarantined_locked_reactions": len(quarantined_locked_ids),
+            "unaccounted_locked_reactions": max(
+                0,
+                locked_found - len(active_locked_ids | quarantined_locked_ids),
+            ),
+        }
+
     rep["summary"]["dedupe_removed_reactions"] += removed_reactions
     rep["summary"]["dedupe_removed_transports"] += removed_transports
     rep["summary"]["dedupe_removed"] += removed_reactions + removed_transports
@@ -3268,6 +3445,7 @@ def dedupe_processes(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]
         "transports_removed": removed_transports,
         "dedupe_removed": removed_reactions + removed_transports,
         "no_op_removed_count": int(rep["summary"].get("no_op_removed_count", 0)),
+        "no_op_quarantined_count": int(rep["summary"].get("no_op_quarantined_count", 0)),
     }
 
 
@@ -3435,10 +3613,17 @@ def prune_disconnected_proteins(
     deg = degrees(adj)
     ents = get_entities(payload)
 
+    component_norms = {
+        _normalize(_component_name_from_row(component))
+        for complex_row in _safe_list(_safe_dict(payload.get("entities")).get("protein_complexes"))
+        if isinstance(complex_row, dict)
+        for component in _safe_list(complex_row.get("components"))
+        if _normalize(_component_name_from_row(component))
+    }
     disconnected = {
         name
         for name in ents.get("proteins", set())
-        if deg.get(node("protein", name), 0) == 0
+        if deg.get(node("protein", name), 0) == 0 and _normalize(name) not in component_norms
     }
     if not disconnected:
         return []
@@ -3451,7 +3636,7 @@ def prune_disconnected_proteins(
             kept.append(row)
             continue
         name = _canonical(str(row.get("name", "")))
-        if name in disconnected and not _has_protein_identity(row):
+        if name in disconnected and not has_protein_external_identity(row):
             pruned.append(name)
             continue
         kept.append(row)
@@ -3494,11 +3679,16 @@ def run_strict_post_normalization_gates(
         for idx, row in enumerate(proteins)
         if isinstance(row, dict) and _canonical(str(row.get("name", "")))
     }
+    complex_pointer_by_norm = {
+        _normalize(_canonical(str(row.get("name", "")))): f"/entities/protein_complexes/{idx}/name"
+        for idx, row in enumerate(complexes)
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    }
     protein_registry_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
     generated_complex_norms = {
         _normalize(_canonical(str(row.get("name", ""))))
         for row in complexes
-        if isinstance(row, dict) and _is_generated_complex_row(row) and _canonical(str(row.get("name", "")))
+        if isinstance(row, dict) and is_generated_complex_wrapper(row) and _canonical(str(row.get("name", "")))
     }
     proteins_by_norm = {
         _normalize(_canonical(str(row.get("name", "")))): row
@@ -3506,9 +3696,9 @@ def run_strict_post_normalization_gates(
         if isinstance(row, dict) and _canonical(str(row.get("name", "")))
     }
     proteins_by_uniprot = {
-        _protein_external_identity(row).casefold(): row
+        protein_external_identity(row).casefold(): row
         for row in proteins
-        if isinstance(row, dict) and _protein_external_identity(row)
+        if isinstance(row, dict) and protein_external_identity(row)
     }
 
     def _add_error(path: str, reason: str) -> None:
@@ -3530,6 +3720,42 @@ def run_strict_post_normalization_gates(
             return int(value) >= 1
         except (TypeError, ValueError):
             return False
+
+    lock_report = payload.get("locked_reaction_filter_report")
+    if lock_report is not None:
+        lock_pointer = "/locked_reaction_filter_report/unaccounted_locked_reactions"
+        if not isinstance(lock_report, dict):
+            _add_error(
+                "/locked_reaction_filter_report",
+                "Locked reaction accounting report must be an object.",
+            )
+        elif "unaccounted_locked_reactions" in lock_report:
+            unaccounted = lock_report.get("unaccounted_locked_reactions")
+            if isinstance(unaccounted, bool) or not isinstance(unaccounted, int) or unaccounted < 0:
+                _add_error(
+                    lock_pointer,
+                    "Locked reaction accounting is malformed: "
+                    "unaccounted_locked_reactions must be a non-negative integer.",
+                )
+            elif unaccounted > 0:
+                _add_error(
+                    lock_pointer,
+                    f"Locked reaction accounting failed: {unaccounted} locked reaction(s) are neither active nor quarantined.",
+                )
+
+    for duplicate_norm in sorted(set(protein_pointer_by_norm) & set(complex_pointer_by_norm)):
+        protein_row = next(
+            row
+            for row in proteins
+            if isinstance(row, dict)
+            and _normalize(_canonical(str(row.get("name", "")))) == duplicate_norm
+        )
+        duplicate_name = _canonical(str(protein_row.get("name", "")))
+        _add_error(
+            protein_pointer_by_norm[duplicate_norm],
+            f"Entity '{duplicate_name}' is declared as both a protein and a protein_complex; "
+            f"entity types must be disjoint (complex declaration: {complex_pointer_by_norm[duplicate_norm]}).",
+        )
 
     if int(stats.get("n_plus_tokens_remaining", 0)) != 0:
         _add_error(
@@ -3555,13 +3781,13 @@ def run_strict_post_normalization_gates(
                 f"/entities/proteins/{idx}",
                 f"Generated protein complex wrapper '{pname}' must be listed under protein_complexes, not proteins.",
             )
-        species = _entity_species_context(row)
+        species = protein_species_context(row)
         if not species:
             _add_error(
                 f"/entities/proteins/{idx}",
                 f"Protein '{pname}' is missing species/organism.",
             )
-        ext_id = _protein_external_identity(row)
+        ext_id = protein_external_identity(row)
         if not ext_id:
             _add_error(
                 f"/entities/proteins/{idx}",
@@ -3571,10 +3797,10 @@ def run_strict_post_normalization_gates(
         if not isinstance(row, dict):
             continue
         _check_forbidden(f"/entities/protein_complexes/{idx}/name", str(row.get("name", "")))
-        if not _is_generated_complex_row(row):
+        if not is_generated_complex_wrapper(row):
             continue
         pcname = str(row.get("name") or idx).strip()
-        if not _entity_species_context(row):
+        if not protein_species_context(row):
             _add_error(
                 f"/entities/protein_complexes/{idx}",
                 f"Generated protein complex '{pcname}' is missing species/organism.",
@@ -3588,7 +3814,7 @@ def run_strict_post_normalization_gates(
             continue
         for cidx, component in enumerate(components):
             cname = _component_name_from_row(component)
-            comp_identity = _protein_external_identity(component)
+            comp_identity = protein_external_identity(component)
             if not _has_positive_component_stoichiometry(component):
                 _add_error(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
@@ -3603,12 +3829,12 @@ def run_strict_post_normalization_gates(
                     f"Generated protein complex '{pcname}' component '{cname or cidx}' does not resolve to a declared protein.",
                 )
                 continue
-            if not _entity_species_context(match):
+            if not protein_species_context(match):
                 _add_error(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
                     f"Generated protein complex '{pcname}' component protein '{match.get('name')}' is missing species/organism.",
                 )
-            if not _protein_external_identity(match):
+            if not protein_external_identity(match):
                 _add_error(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
                     f"Generated protein complex '{pcname}' component protein '{match.get('name')}' is missing a UniProt or DrugBank identifier.",
@@ -3757,6 +3983,8 @@ def normalize_process_payload(
         if on_checkpoint is not None:
             on_checkpoint(name, data, report)
 
+    force_reactions_non_spontaneous(data, report=report)
+    _checkpoint("force_reactions_non_spontaneous")
     # Step 0 — collapse biochemical synonyms before any other pass so that all
     # downstream logic sees consistent canonical names (Issue 3).
     apply_biochemical_aliases(data, report=report)
@@ -3786,12 +4014,15 @@ def normalize_process_payload(
     _checkpoint("normalize_process_actor_schema")
     drop_unresolved_complex_component_proteins(data, report=report)
     _checkpoint("drop_unresolved_complex_component_proteins")
+    dedupe_processes(data, report=report)
+    _checkpoint("dedupe_processes")
+    # Reaction classification must run before orphan cleanup. Otherwise a protein
+    # attached only to a rejected/quarantined reaction remains long enough to fail
+    # the final identity/connectivity gate even though it is no longer exportable.
     drop_process_orphan_proteins(data, report=report)
     _checkpoint("drop_process_orphan_proteins")
     prune_disconnected_proteins(data, report=report)
     _checkpoint("prune_disconnected_proteins")
-    dedupe_processes(data, report=report)
-    _checkpoint("dedupe_processes")
     try:
         gate_details = run_strict_post_normalization_gates(
             data,
@@ -3813,295 +4044,8 @@ def normalize_process_payload(
         _safe_list(_safe_dict(report.get("gate")).get("errors"))
     )
     _checkpoint("run_strict_post_normalization_gates")
+    from t2pw.pipeline.stage_contracts import validate_post_normalization
+
+    actor_contract = validate_post_normalization(data, {"ok": True, "errors": []})
+    assert actor_contract.get("ok") is True, actor_contract.get("errors")
     return data, report
-
-
-# ---------------------------------------------------------------------------
-# Draft-graph normalizer
-# ---------------------------------------------------------------------------
-
-_PROCESS_KINDS = frozenset({
-    "reaction", "transport", "reaction_coupled_transport", "interaction",
-})
-_ENTITY_KINDS = frozenset({
-    "compound", "protein", "protein_complex", "nucleic_acid", "element_collection",
-})
-_COMPOUND_KINDS = frozenset({"compound", "nucleic_acid", "element_collection"})
-_PROTEIN_KINDS = frozenset({"protein", "protein_complex"})
-
-
-def _norm_label(label: str) -> str:
-    """Casefold + strip + collapse whitespace — used as merge key."""
-    return re.sub(r"\s+", " ", (label or "").strip().casefold())
-
-
-def normalize_draft_graph(draft_graph: "DraftGraph") -> "DraftGraph":  # noqa: F821
-    """
-    Normalise a DraftGraph in-place and return it.
-
-    Checks performed
-    ----------------
-    1. Name normalisation  – casefold / strip / collapse whitespace on every node
-       label; nodes whose normalised labels collide are flagged as duplicates.
-    2. Synonym merging     – duplicate entity nodes (same normalised label) are
-       merged; a SAME_AS edge is added and the longer/more-specific display label
-       is kept.
-    3. ID deduplication    – nodes that share the same ``external_id`` field are
-       merged unconditionally.
-    4. Role conflict       – a node that appears as both ``compound`` and
-       ``protein`` kind is flagged in metadata.
-    5. Empty reaction      – reaction/transport/interaction process nodes that have
-       zero reactant *and* zero product edges are flagged for removal.
-    6. Modifier/reactant   – a species that is simultaneously a reactant and a
-       modifier on the same reaction node is flagged.
-
-    The ``draft_graph.metadata["normalization_warnings"]`` list is populated with
-    structured dicts for every issue found.  The graph is modified in-place so
-    that callers can inspect the merged state without an extra copy.
-
-    Returns
-    -------
-    DraftGraph
-        The same object (mutated), for chaining convenience.
-    """
-    # Lazy import to avoid circular dependency at module load time.
-    from t2pw.pipeline.draft_graph import DraftEdge, DraftNode
-
-    warnings: List[Dict[str, Any]] = []
-    graph = draft_graph
-
-    # ------------------------------------------------------------------
-    # Step 1 & 2: Name normalisation + synonym merge for entity nodes
-    # ------------------------------------------------------------------
-    # Map norm_label -> first DraftNode that owns that label.
-    canonical_entity: Dict[str, DraftNode] = {}
-    # Map old_node_id -> surviving_node_id (identity when no merge occurs).
-    id_remap: Dict[str, str] = {}
-
-    surviving_nodes: List[DraftNode] = []
-
-    for node in graph.nodes:
-        if node.kind in _PROCESS_KINDS:
-            # Process nodes are never merged by name — keep as-is.
-            surviving_nodes.append(node)
-            id_remap[node.id] = node.id
-            continue
-
-        norm = _norm_label(node.label)
-        if not norm:
-            surviving_nodes.append(node)
-            id_remap[node.id] = node.id
-            continue
-
-        existing = canonical_entity.get(norm)
-        if existing is None:
-            canonical_entity[norm] = node
-            surviving_nodes.append(node)
-            id_remap[node.id] = node.id
-        else:
-            # Merge: keep longer/more specific display label.
-            if len(node.label) > len(existing.label):
-                old_label = existing.label
-                existing.label = node.label
-                warnings.append({
-                    "type": "synonym_merge",
-                    "kept_label": node.label,
-                    "dropped_label": old_label,
-                    "surviving_id": existing.id,
-                })
-            else:
-                warnings.append({
-                    "type": "synonym_merge",
-                    "kept_label": existing.label,
-                    "dropped_label": node.label,
-                    "surviving_id": existing.id,
-                })
-            # Add SAME_AS edge (source = dropped id, target = surviving id).
-            graph.edges.append(DraftEdge(
-                source=node.id,
-                target=existing.id,
-                role="SAME_AS",
-                confidence=1.0,
-            ))
-            id_remap[node.id] = existing.id
-
-    graph.nodes = surviving_nodes
-
-    # ------------------------------------------------------------------
-    # Step 3: External-ID deduplication
-    # ------------------------------------------------------------------
-    # DraftNode.cls holds the entity class field (e.g. "CHEBI:15422") — the
-    # only per-node external identifier present in the current schema.  Nodes
-    # with an empty cls are skipped; those with identical non-empty cls values
-    # are merged unconditionally.
-    ext_id_to_node: Dict[str, DraftNode] = {}
-
-    for node in list(graph.nodes):
-        ext_id = node.cls.strip() if node.cls else ""
-        if not ext_id:
-            continue
-        norm_ext = ext_id.lower()
-        existing = ext_id_to_node.get(norm_ext)
-        if existing is None:
-            ext_id_to_node[norm_ext] = node
-        else:
-            warnings.append({
-                "type": "external_id_duplicate",
-                "external_id": ext_id,
-                "merged_id": node.id,
-                "surviving_id": existing.id,
-            })
-            graph.edges.append(DraftEdge(
-                source=node.id,
-                target=existing.id,
-                role="SAME_AS",
-                confidence=1.0,
-            ))
-            id_remap[node.id] = existing.id
-            graph.nodes = [n for n in graph.nodes if n.id != node.id]
-
-    # ------------------------------------------------------------------
-    # Rewrite all edge endpoints through the remap table
-    # ------------------------------------------------------------------
-    def _remap(nid: str) -> str:
-        seen: Set[str] = set()
-        while nid in id_remap and id_remap[nid] != nid:
-            if nid in seen:
-                break
-            seen.add(nid)
-            nid = id_remap[nid]
-        return nid
-
-    for edge in graph.edges:
-        if edge.role == "SAME_AS":
-            continue  # preserve original dropped→surviving IDs; remapping would create self-loops
-        edge.source = _remap(edge.source)
-        edge.target = _remap(edge.target)
-
-    # ------------------------------------------------------------------
-    # Step 4: Role-conflict detection (compound ↔ protein kind clash)
-    # ------------------------------------------------------------------
-    node_by_id: Dict[str, DraftNode] = {n.id: n for n in graph.nodes}
-    for node in graph.nodes:
-        if node.kind not in _ENTITY_KINDS:
-            continue
-        is_compound_kind = node.kind in _COMPOUND_KINDS
-        is_protein_kind = node.kind in _PROTEIN_KINDS
-        # Detect via edges: does the same entity appear in both a compound role
-        # and a protein role in different process contexts?  Easier heuristic:
-        # flag nodes whose kind contradicts how they are used (catalyst/modifier
-        # implies protein; reactant/product can be either, so skip those).
-        catalyst_roles = {"catalyst", "modifier", "transporter"}
-        node_roles: Set[str] = set()
-        for edge in graph.edges:
-            if edge.source == node.id or edge.target == node.id:
-                node_roles.add(edge.role)
-        compound_only_roles = {"reactant", "product", "cargo", "participant"}
-        has_protein_role = bool(node_roles & catalyst_roles)
-        has_only_compound_roles = bool(node_roles) and node_roles.issubset(compound_only_roles)
-
-        if has_protein_role and is_compound_kind:
-            warnings.append({
-                "type": "role_conflict",
-                "node_id": node.id,
-                "node_label": node.label,
-                "node_kind": node.kind,
-                "conflict": "compound-kind node used in protein role (catalyst/modifier/transporter)",
-            })
-        elif has_only_compound_roles and is_protein_kind:
-            warnings.append({
-                "type": "role_conflict",
-                "node_id": node.id,
-                "node_label": node.label,
-                "node_kind": node.kind,
-                "conflict": "protein-kind node appears only in compound roles (reactant/product) — possible kind mismatch",
-            })
-
-    # ------------------------------------------------------------------
-    # Step 5: Empty reaction detection
-    # ------------------------------------------------------------------
-    # Each process kind has different "meaningful" roles:
-    #   reaction                  → reactant / product
-    #   transport                 → cargo / transporter
-    #   reaction_coupled_transport→ participant / catalyst
-    #   interaction               → participant  (skipped — different semantics)
-    _meaningful_roles_by_kind: Dict[str, Set[str]] = {
-        "reaction": {"reactant", "product"},
-        "transport": {"cargo", "transporter"},
-        "reaction_coupled_transport": {"participant", "catalyst"},
-    }
-
-    # Count meaningful edges per process node.
-    process_edge_counts: Dict[str, int] = {}
-    for edge in graph.edges:
-        proc_id: Optional[str] = None
-        kind_hint: Optional[str] = None
-        # Determine which endpoint (if any) is a process node.
-        src_node = node_by_id.get(edge.source)
-        tgt_node = node_by_id.get(edge.target)
-        if src_node and src_node.kind in _meaningful_roles_by_kind:
-            proc_id = src_node.id
-            kind_hint = src_node.kind
-        elif tgt_node and tgt_node.kind in _meaningful_roles_by_kind:
-            proc_id = tgt_node.id
-            kind_hint = tgt_node.kind
-        if proc_id and kind_hint:
-            if edge.role in _meaningful_roles_by_kind[kind_hint]:
-                process_edge_counts[proc_id] = process_edge_counts.get(proc_id, 0) + 1
-
-    for node in graph.nodes:
-        if node.kind not in _PROCESS_KINDS:
-            continue
-        if node.kind == "interaction":
-            continue  # interactions use participant role — different semantics
-        if process_edge_counts.get(node.id, 0) == 0:
-            warnings.append({
-                "type": "empty_reaction",
-                "node_id": node.id,
-                "node_label": node.label,
-                "node_kind": node.kind,
-                "message": "process node has no meaningful edges — flagged for removal",
-            })
-
-    # ------------------------------------------------------------------
-    # Step 6: Modifier/reactant conflict on the same reaction
-    # ------------------------------------------------------------------
-    # For each process node, collect entity nodes by role.
-    reaction_entity_roles: Dict[str, Dict[str, Set[str]]] = {}
-    # structure: {process_id: {entity_id: {role1, role2, ...}}}
-
-    for edge in graph.edges:
-        if edge.role in ("reactant", "modifier", "catalyst"):
-            # reactant: entity → process (target is process)
-            # modifier/catalyst: entity → process (target is process)
-            proc_id = edge.target
-            ent_id = edge.source
-            if proc_id not in node_by_id or node_by_id[proc_id].kind not in _PROCESS_KINDS:
-                continue
-            proc_roles = reaction_entity_roles.setdefault(proc_id, {})
-            proc_roles.setdefault(ent_id, set()).add(edge.role)
-
-    for proc_id, entity_roles in reaction_entity_roles.items():
-        for ent_id, roles in entity_roles.items():
-            if "reactant" in roles and ("modifier" in roles or "catalyst" in roles):
-                proc_node = node_by_id.get(proc_id)
-                ent_node = node_by_id.get(ent_id)
-                warnings.append({
-                    "type": "modifier_reactant_conflict",
-                    "process_id": proc_id,
-                    "process_label": proc_node.label if proc_node else proc_id,
-                    "entity_id": ent_id,
-                    "entity_label": ent_node.label if ent_node else ent_id,
-                    "roles": sorted(roles),
-                    "message": "entity appears as both reactant and modifier/catalyst on the same process",
-                })
-
-    # ------------------------------------------------------------------
-    # Persist warnings + refresh counts
-    # ------------------------------------------------------------------
-    graph.metadata.setdefault("normalization_warnings", [])
-    graph.metadata["normalization_warnings"].extend(warnings)
-    graph.metadata["node_count"] = len(graph.nodes)
-    graph.metadata["edge_count"] = len(graph.edges)
-
-    return graph

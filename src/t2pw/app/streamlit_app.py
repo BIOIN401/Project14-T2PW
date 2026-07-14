@@ -44,9 +44,18 @@ from t2pw.tools.pathwhiz_converter.ui import render_pathwhiz_converter_section
 from t2pw.pipeline.process_normalizer import (
     GateValidationError,
     compute_normalization_stats,
-    ensure_autostates,
     normalize_process_payload,
     run_strict_post_normalization_gates,
+)
+from t2pw.pipeline.stage_contracts import (
+    StageContractError,
+    validate_post_audit,
+    validate_post_extraction,
+    validate_post_mapping,
+    validate_post_normalization,
+    validate_post_remap,
+    validate_pre_export,
+    validate_runtime_payload_contract,
 )
 from t2pw.pipeline.pipeline import (
     PipelineFailure,
@@ -229,6 +238,77 @@ def _safe_list(value: Any) -> List[Any]:
     return value if isinstance(value, list) else []
 
 
+def _render_stage_contract_failure(
+    failure: StageContractError,
+    *,
+    operation_label: str,
+    download_key: str,
+) -> None:
+    """Expose a stage-boundary failure without reducing it to one message."""
+
+    report = _safe_dict(failure.report)
+    stage = str(report.get("stage") or failure.stage or "unknown_stage")
+    effect_on_failure = str(report.get("effect_on_failure") or "unknown")
+    summary = _safe_dict(report.get("summary"))
+
+    if stage == "post_extraction":
+        boundary = "Stage 2A merged-payload → Stage 2B DB mapping input boundary"
+        execution_status = (
+            "Stage 2B DB mapping and Stage 4 audit did not run. "
+            "The merged extraction/inference payload was rejected before the mapper was called."
+        )
+    elif stage == "post_mapping":
+        boundary = "Stage 2B mapping output → Stage 3 normalization input boundary"
+        execution_status = (
+            "Stage 2B DB mapping ran, but Stage 3 normalization and Stage 4 audit did not run."
+        )
+    else:
+        boundary = f"{stage} stage boundary"
+        execution_status = "The pipeline stopped at this boundary; later stages did not run."
+
+    st.error(f"{operation_label} stopped at the {boundary}.")
+    st.info(execution_status)
+    st.write(
+        {
+            "boundary": boundary,
+            "stage": stage,
+            "effect_on_failure": effect_on_failure,
+            "summary": summary,
+            "message": str(failure),
+        }
+    )
+
+    structured_issues: List[Tuple[str, Dict[str, Any]]] = []
+    for severity in ("errors", "warnings"):
+        for issue in _safe_list(report.get(severity)):
+            if isinstance(issue, dict):
+                structured_issues.append((severity[:-1], issue))
+
+    st.write(f"Structured issues ({len(structured_issues)})")
+    for severity, issue in structured_issues:
+        displayed_issue: Dict[str, Any] = {
+            "severity": severity,
+            "code": issue.get("code", ""),
+            "pointer": issue.get("pointer", ""),
+            "path": issue.get("path", ""),
+            "message": issue.get("message") or issue.get("reason", ""),
+        }
+        for optional_field in ("bucket", "name"):
+            if issue.get(optional_field) not in (None, ""):
+                displayed_issue[optional_field] = issue[optional_field]
+        st.write(displayed_issue)
+
+    st.write("Full stage contract report")
+    st.json(report)
+    st.download_button(
+        "Download stage contract error report",
+        data=json.dumps(report, indent=2, ensure_ascii=False),
+        file_name="stage_contract_error_report.json",
+        mime="application/json",
+        key=download_key,
+    )
+
+
 def _write_reaction_preservation_report(stage: str, payload: Any) -> Optional[Dict[str, Any]]:
     try:
         return write_reaction_preservation_report_if_manifest(
@@ -335,7 +415,10 @@ def _generate_pwml_from_refinement_working_json(work_dir: str | Path) -> Dict[st
     if refinement_gate_errors:
         return {
             "ok": False,
-            "error": "PWML export stopped by Stage 3 gate. Resolve the refinement gate errors first.",
+            "error": (
+                "PWML export stopped by pre-export Stage 3 revalidation. "
+                "Resolve the refinement gate errors first."
+            ),
             "counts": {},
             "issues": len(refinement_gate_errors),
             "output_path": "",
@@ -667,14 +750,26 @@ def _json_artifact_entries(
     if isinstance(post_artifacts, dict):
         for label, filename, key in [
             ("Final merged output", "final.json", "final_payload_snapshot"),
-            ("Pre-normalized input", "pre_normalized_input.json", "pre_normalized_input"),
+            ("Stage 2A extraction + inference input", "pre_mapping_input.json", "pre_mapping_input"),
+            ("Stage 2B mapped payload", "stage2.mapped.json", "stage2_payload"),
+            ("Stage 2B mapping report", "stage2_mapping_report.json", "stage2_mapping_report"),
+            ("Stage 2B runtime schema report", "stage2_runtime_schema_report.json", "stage2_runtime_schema_report"),
+            ("Stage 3 normalization input", "pre_normalization_input.json", "pre_normalization_input"),
+            ("Post-normalization payload", "pre_normalized_input.json", "pre_normalized_input"),
             ("Final audited", "final.audited.json", "final_audited"),
             ("Final mapped - DB mapping", "final.mapped.json", "final_mapped_db"),
             ("Final export input", "final.export_input.json", "final_export_input"),
-            ("Mapping report", "mapping_report.json", "mapping_report"),
+            ("Stage 6 mapping report", "mapping_report.json", "mapping_report"),
             ("Enrichment report", "enrichment_report.json", "enrichment_report"),
+            ("Post-enrichment runtime schema report", "post_enrichment_runtime_schema_report.json", "post_enrichment_runtime_schema_report"),
+            ("Pre-export runtime schema report", "pre_export_runtime_schema_report.json", "pre_export_runtime_schema_report"),
             ("Audit report", "audit_report.json", "audit_report"),
             ("Audit apply report", "audit_apply_report.json", "audit_apply_report"),
+            (
+                "Quarantined locked reactions after Stage 3",
+                "quarantined_locked_reactions.json",
+                "locked_reaction_quarantine_artifact",
+            ),
         ]:
             value = post_artifacts.get(key)
             if value not in (None, "", [], {}):
@@ -921,6 +1016,13 @@ def run_post_pipeline_sbml_artifacts(
     if not cache_path.is_absolute():
         cache_path = project_root / mapping_cache_path
     cache_path.parent.mkdir(parents=True, exist_ok=True)
+    db_config = {
+        "host": db_host,
+        "port": db_port,
+        "user": db_user,
+        "password": db_password,
+        "schema": db_schema,
+    }
 
     temp_root = project_root / "tmp"
     temp_root.mkdir(parents=True, exist_ok=True)
@@ -932,6 +1034,8 @@ def run_post_pipeline_sbml_artifacts(
         audit_patch_path = tmp / "audit_patch.json"
         apply_report_path = tmp / "audit_apply_report.json"
         audited_json = tmp / "final.audited.json"
+        stage2_mapped_json = tmp / "stage2.mapped.json"
+        stage2_mapping_report_path = tmp / "stage2_mapping_report.json"
         mapped_json = tmp / "final.mapped.json"
         enriched_json = tmp / "final.enriched.json"
         mapping_report_path = tmp / "mapping_report.json"
@@ -948,8 +1052,45 @@ def run_post_pipeline_sbml_artifacts(
         stoich_json_path = tmp / "final.stoich.json"
         stoich_audit_log_path = tmp / "stoich_audit_log.json"
 
-        pre_normalization_input = deepcopy(final_payload)
-        normalized_input = deepcopy(final_payload)
+        pre_mapping_input = deepcopy(final_payload)
+        post_extraction_contract_report = validate_post_extraction(pre_mapping_input)
+        stage2_result = map_payload(
+            deepcopy(pre_mapping_input),
+            cache_path=cache_path,
+            id_source=id_source,
+            db_config=db_config,
+            use_cache=True,
+            allow_complex_wrapper_creation=False,
+            allow_structural_cleanup=False,
+        )
+        if not isinstance(stage2_result, dict):
+            raise ValueError("Stage 2 mapping returned a malformed result: expected an object.")
+        stage2_payload_value = stage2_result.get("payload")
+        stage2_report_value = stage2_result.get("report")
+        if not isinstance(stage2_payload_value, dict) or not isinstance(stage2_report_value, dict):
+            raise ValueError(
+                "Stage 2 mapping returned a malformed result: payload and report must be objects."
+            )
+        stage2_payload = stage2_payload_value
+        stage2_mapping_report = stage2_report_value
+        stage2_contract_report = validate_post_mapping(stage2_payload)
+        stage2_runtime_schema_report = _safe_dict(
+            stage2_contract_report.get("runtime_schema_report")
+        )
+        stage2_mapped_json.write_text(
+            json.dumps(stage2_payload, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        stage2_mapping_report_path.write_text(
+            json.dumps(stage2_mapping_report, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+
+        # This is the exact Stage 2 output supplied to Stage 3. The normalizer
+        # copies its input, so this object also remains the immutable Stage 2
+        # artifact returned to the UI.
+        pre_normalization_input = stage2_payload
+        normalized_input = stage2_payload
         normalization_report: Dict[str, Any] = {
             "summary": {
                 "complexes_created": 0,
@@ -990,6 +1131,7 @@ def run_post_pipeline_sbml_artifacts(
         post_dedupe_probe: Dict[str, Any] = {}
         gate_connectivity_summary: Dict[str, Any] = {}
         reaction_preservation_reports: Dict[str, Any] = {}
+        post_normalization_contract_report: Dict[str, Any] = {}
 
         def _checkpoint_probe(
             checkpoint_payload: Dict[str, Any],
@@ -1041,12 +1183,18 @@ def run_post_pipeline_sbml_artifacts(
                     encoding="utf-8",
                 )
 
+        normalization_completed = False
         try:
             normalized_input, normalization_report = normalize_process_payload(
-                normalized_input,
+                stage2_payload,
                 on_checkpoint=_write_normalization_checkpoint,
             )
+            normalization_completed = True
             gate_details = _safe_dict(normalization_report.get("gate"))
+            post_normalization_contract_report = validate_post_normalization(
+                normalized_input,
+                gate_details,
+            )
             gate_connectivity_summary = _safe_dict(gate_details.get("connectivity"))
             if gate_details and gate_details.get("ok") is False:
                 gate_fail_report = {
@@ -1097,6 +1245,20 @@ def run_post_pipeline_sbml_artifacts(
                     json.dumps(post_dedupe_probe, indent=2, ensure_ascii=False),
                     encoding="utf-8",
                 )
+        locked_reaction_quarantine_path = temp_root / "quarantined_locked_reactions.json"
+        locked_reaction_quarantine_artifact: Dict[str, Any] = {}
+        if normalization_completed:
+            locked_reaction_quarantine_artifact = {
+                "quarantined_locked_reactions": [
+                    deepcopy(row)
+                    for row in _safe_list(normalized_input.get("quarantined_locked_reactions"))
+                    if isinstance(row, dict)
+                ]
+            }
+            locked_reaction_quarantine_path.write_text(
+                json.dumps(locked_reaction_quarantine_artifact, indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
         preservation_after_normalization = _write_reaction_preservation_report("after_normalization", normalized_input)
         if preservation_after_normalization is not None:
             reaction_preservation_reports["after_normalization"] = preservation_after_normalization
@@ -1104,8 +1266,59 @@ def run_post_pipeline_sbml_artifacts(
 
         audit_iterations: List[Dict[str, Any]] = []
         gap_iterations: List[Dict[str, Any]] = []
-        seen_hashes: set = set()
         current_input = input_json
+
+        def _payload_file_hash(path: Path) -> str:
+            canonical_payload = json.dumps(
+                _read_json(path),
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            )
+            return hashlib.sha1(canonical_payload.encode("utf-8")).hexdigest()
+
+        def _actionable_gap_issue_count(report: Dict[str, Any]) -> int:
+            stage3_report = _safe_dict(report.get("stage3"))
+            issue_rows: List[Any] = []
+            for post_resolution_key in (
+                "post_resolution_issues",
+                "remaining_issues",
+                "unresolved_issues",
+            ):
+                if post_resolution_key in stage3_report:
+                    issue_rows = _safe_list(stage3_report.get(post_resolution_key))
+                    break
+            else:
+                # Gap Resolve currently reports the actionable issues it
+                # attempted in `issues`. A following round recollects them
+                # from the settled payload, so resolved rows disappear then.
+                issue_rows = _safe_list(stage3_report.get("issues"))
+
+            actionable_keys = {
+                str(_safe_dict(issue).get("issue_key") or f"issue:{index}")
+                for index, issue in enumerate(issue_rows)
+                if isinstance(issue, dict)
+            }
+            actionable_execution_statuses = {
+                "error",
+                "failed",
+                "skipped",
+                "unavailable",
+                "unmapped",
+                "unresolved",
+            }
+            for index, execution in enumerate(_safe_list(stage3_report.get("executions"))):
+                execution_row = _safe_dict(execution)
+                status = str(execution_row.get("status") or "").strip().lower()
+                if status not in actionable_execution_statuses:
+                    continue
+                actionable_keys.add(
+                    str(execution_row.get("issue_key") or f"execution:{index}")
+                )
+            return len(actionable_keys)
+
+        seen_hashes = {_payload_file_hash(current_input)}
+        current_stage3_gate_errors = _safe_list(gate_fail_report.get("errors"))
         current_round_summary: Optional[str] = reaction_summary  # refreshed each round
         max_rounds = max(1, int(audit_max_rounds))
         timeout_seconds = max(30, int(audit_timeout_seconds))
@@ -1151,6 +1364,7 @@ def run_post_pipeline_sbml_artifacts(
             if elapsed_before > timeout_seconds:
                 stop_reason = "timeout"
                 break
+            round_input_hash = _payload_file_hash(current_input)
 
             base_temperature = min(0.65, 0.15 * (round_idx - 1))
             base_max_tokens = min(8000, 3600 + 700 * (round_idx - 1))
@@ -1341,13 +1555,7 @@ def run_post_pipeline_sbml_artifacts(
                     round_resolved,
                     gap_resolution_report_path,
                     id_source=id_source,
-                    db_config={
-                        "host": db_host,
-                        "port": db_port,
-                        "user": db_user,
-                        "password": db_password,
-                        "schema": db_schema,
-                    },
+                    db_config=db_config,
                     use_llm=use_llm_gap_resolver,
                     llm_temperature=gap_temp,
                     llm_max_tokens=gap_tokens,
@@ -1369,6 +1577,24 @@ def run_post_pipeline_sbml_artifacts(
             patch_count = int(summary.get("patch_count", 0))
             accepted_count = int(apply_summary.get("accepted_count", 0))
             rejected_count = int(apply_summary.get("rejected_count", 0))
+            audit_payload_hash = _payload_file_hash(round_audited)
+            settled_payload_hash = _payload_file_hash(current_after_round)
+            audit_payload_changed = audit_payload_hash != round_input_hash
+            gap_payload_changed = settled_payload_hash != audit_payload_hash
+            settled_payload_changed = settled_payload_hash != round_input_hash
+            fresh_gate_report: Dict[str, Any] = {}
+            if settled_payload_changed:
+                settled_payload = _read_json(current_after_round)
+                try:
+                    fresh_gate_details = run_strict_post_normalization_gates(
+                        settled_payload,
+                        enforce_all_proteins_connected=True,
+                    )
+                    fresh_gate_report = {"ok": True, **fresh_gate_details}
+                except GateValidationError as exc:
+                    fresh_gate_report = {"ok": False, **_safe_dict(exc.details)}
+                validate_post_normalization(settled_payload, fresh_gate_report)
+                current_stage3_gate_errors = _safe_list(fresh_gate_report.get("errors"))
             top_errors = [
                 str(_safe_dict(item).get("reason", "")).strip()
                 for item in _safe_list(round_audit.get("errors"))
@@ -1379,10 +1605,16 @@ def run_post_pipeline_sbml_artifacts(
             mapped_ids_added = int(gap_summary.get("mapped_ids_added", 0))
             locations_added = int(gap_summary.get("locations_added", 0))
             states_filled = int(gap_summary.get("location_states_filled", 0))
+            actionable_gap_issue_count = _actionable_gap_issue_count(gap_report_round)
 
-            payload_hash = hashlib.sha1(current_after_round.read_bytes()).hexdigest()
-            repeated_payload = payload_hash in seen_hashes
-            seen_hashes.add(payload_hash)
+            repeated_payload = settled_payload_hash in seen_hashes
+            seen_hashes.add(settled_payload_hash)
+            fresh_gate_errors = _safe_list(fresh_gate_report.get("errors"))
+            actionable_issues_remain = bool(
+                error_count > 0
+                or current_stage3_gate_errors
+                or actionable_gap_issue_count > 0
+            )
 
             audit_iterations.append(
                 {
@@ -1406,7 +1638,15 @@ def run_post_pipeline_sbml_artifacts(
                     "gap_mapped_ids_added": mapped_ids_added,
                     "gap_locations_added": locations_added,
                     "gap_location_states_filled": states_filled,
+                    "audit_payload_changed": audit_payload_changed,
+                    "gap_payload_changed": gap_payload_changed,
+                    "settled_payload_changed": settled_payload_changed,
+                    "actionable_issues_remain": actionable_issues_remain,
+                    "actionable_gap_issue_count": actionable_gap_issue_count,
+                    "current_stage3_gate_error_count": len(current_stage3_gate_errors),
                     "payload_repeated": repeated_payload,
+                    "post_patch_gate": fresh_gate_report,
+                    "post_settlement_gate": fresh_gate_report,
                     "elapsed_seconds": round(time.time() - audit_started_at, 3),
                     "candidates": round_candidates,
                 }
@@ -1418,6 +1658,8 @@ def run_post_pipeline_sbml_artifacts(
                         "summary": gap_summary,
                         "db": _safe_dict(gap_report_round.get("db")),
                         "stage3": _safe_dict(gap_report_round.get("stage3")),
+                        "payload_changed": gap_payload_changed,
+                        "actionable_issue_count": actionable_gap_issue_count,
                     }
                 )
 
@@ -1436,28 +1678,46 @@ def run_post_pipeline_sbml_artifacts(
             if timed_out_mid_round:
                 stop_reason = "timeout"
                 break
+            if (
+                fresh_gate_report
+                and bool(fresh_gate_report.get("ok", False))
+                and not current_stage3_gate_errors
+                and error_count == 0
+                and actionable_gap_issue_count == 0
+            ):
+                stop_reason = "clean_post_settlement_gate"
+                break
+            if not actionable_issues_remain:
+                stop_reason = "clean_no_actionable_issues"
+                break
+            if not settled_payload_changed:
+                stop_reason = "stalled_unchanged_payload_with_actionable_issues"
+                break
             if repeated_payload:
-                stop_reason = "loop_detected_same_payload"
-                break
-            if error_count == 0 and accepted_count == 0:
-                stop_reason = "clean_no_pending_patch"
-                break
-            if error_count == 0 and patch_count == 0:
-                stop_reason = "clean_no_patch"
-                break
-            if accepted_count == 0:
-                stop_reason = "stalled_no_accepted_patch"
+                stop_reason = "loop_detected_repeated_payload"
                 break
 
+            compact_fresh_gate_errors = [
+                {
+                    "path": _safe_dict(error).get("path"),
+                    "reason": _safe_dict(error).get("reason"),
+                }
+                for error in fresh_gate_errors
+                if isinstance(error, dict)
+            ][:20]
             retry_context_note = (
                 f"Previous attempt unresolved: errors={error_count}, warnings={warning_count}, "
-                f"accepted_patches={accepted_count}. Prioritize remaining issues: "
-                f"{'; '.join(top_errors) if top_errors else 'generic consistency fixes'}."
+                f"accepted_patches={accepted_count}, gap_payload_changed={gap_payload_changed}. "
+                "Prioritize remaining issues: "
+                f"{'; '.join(top_errors) if top_errors else 'generic consistency fixes'}. "
+                "Fresh post-settlement Stage 3 gate result: "
+                f"{json.dumps(compact_fresh_gate_errors, ensure_ascii=False)}"
             )
         else:
             stop_reason = "max_rounds_reached"
 
         audited_json.write_text(current_input.read_text(encoding="utf-8"), encoding="utf-8")
+        post_audit_contract_report = validate_post_audit(_read_json(audited_json))
         loop_duration = round(time.time() - audit_started_at, 3)
         try:
             preservation_after_audit = _write_reaction_preservation_report(
@@ -1506,22 +1766,26 @@ def run_post_pipeline_sbml_artifacts(
         except Exception as _cur_exc:
             curator_report = {"error": str(_cur_exc), "summary": {}}
 
-        db_config = {
-            "host": db_host,
-            "port": db_port,
-            "user": db_user,
-            "password": db_password,
-            "schema": db_schema,
-        }
         mapping_result = map_payload(
             json.loads(audited_json.read_text(encoding="utf-8")),
             cache_path=cache_path,
             id_source=id_source,
             db_config=db_config,
             use_cache=False,
+            allow_complex_wrapper_creation=True,
+            allow_structural_cleanup=True,
         )
-        mapped_payload = _safe_dict(mapping_result.get("payload"))
-        mapping_report = _safe_dict(mapping_result.get("report"))
+        if not isinstance(mapping_result, dict):
+            raise ValueError("Stage 6 mapping returned a malformed result: expected an object.")
+        mapped_payload_value = mapping_result.get("payload")
+        mapping_report_value = mapping_result.get("report")
+        if not isinstance(mapped_payload_value, dict) or not isinstance(mapping_report_value, dict):
+            raise ValueError(
+                "Stage 6 mapping returned a malformed result: payload and report must be objects."
+            )
+        mapped_payload = mapped_payload_value
+        mapping_report = mapping_report_value
+        post_remap_contract_report = validate_post_remap(mapped_payload)
         mapped_json.write_text(json.dumps(mapped_payload, indent=2, ensure_ascii=False), encoding="utf-8")
         mapping_report_path.write_text(json.dumps(mapping_report, indent=2, ensure_ascii=False), encoding="utf-8")
         stoich_audit_log: list = []
@@ -1552,6 +1816,14 @@ def run_post_pipeline_sbml_artifacts(
             }
             sbml_input_path = mapped_json
         final_export_payload = json.loads(sbml_input_path.read_text(encoding="utf-8"))
+        post_enrichment_runtime_schema_report = validate_runtime_payload_contract(
+            final_export_payload,
+            boundary="post_enrichment",
+        )
+        pre_export_runtime_schema_report = validate_runtime_payload_contract(
+            final_export_payload,
+            boundary="pre_export",
+        )
         preservation_before_final_export = _write_reaction_preservation_report(
             "before_final_export",
             final_export_payload,
@@ -1573,13 +1845,7 @@ def run_post_pipeline_sbml_artifacts(
                 sbml_report_json_path,
                 sbml_report_txt_path,
                 default_compartment_name=default_compartment,
-                db_config={
-                    "host": db_host,
-                    "port": db_port,
-                    "user": db_user,
-                    "password": db_password,
-                    "schema": db_schema,
-                },
+                db_config=db_config,
             )
             if use_sbml_overwatch:
                 sbml_overwatch_report = run_sbml_overwatch(
@@ -1608,9 +1874,21 @@ def run_post_pipeline_sbml_artifacts(
             "gate_failed": False,
             "normalization_gate_failed": bool(gate_fail_report),
             "gate_fail_report": gate_fail_report,
+            "pre_mapping_input": pre_mapping_input,
+            "extraction_inference_payload": pre_mapping_input,
+            "post_extraction_contract_report": post_extraction_contract_report,
+            "post_extraction_runtime_schema_report": _safe_dict(
+                post_extraction_contract_report.get("runtime_schema_report")
+            ),
+            "stage2_payload": stage2_payload,
+            "stage2_mapping_report": stage2_mapping_report,
+            "stage2_contract_report": stage2_contract_report,
+            "stage2_runtime_schema_report": stage2_runtime_schema_report,
             "pre_normalization_input": pre_normalization_input,
             "pre_normalized_input": normalized_input,
+            "post_normalization_payload": normalized_input,
             "pre_normalization_report": normalization_report,
+            "post_normalization_contract_report": post_normalization_contract_report,
             "post_normalization_probe": post_normalization_probe,
             "post_transport_attachment_probe": post_transport_attachment_probe,
             "post_dedupe_probe": post_dedupe_probe,
@@ -1619,11 +1897,15 @@ def run_post_pipeline_sbml_artifacts(
             "audit_patch": json.loads(audit_patch_path.read_text(encoding="utf-8")),
             "audit_apply_report": json.loads(apply_report_path.read_text(encoding="utf-8")),
             "final_audited": json.loads(audited_json.read_text(encoding="utf-8")),
+            "post_audit_contract_report": post_audit_contract_report,
             "final_mapped": final_export_payload,
             "final_mapped_db": json.loads(mapped_json.read_text(encoding="utf-8")),
             "final_export_input": final_export_payload,
             "mapping_report": mapping_report,
+            "post_remap_contract_report": post_remap_contract_report,
             "enrichment_report": enrichment_report,
+            "post_enrichment_runtime_schema_report": post_enrichment_runtime_schema_report,
+            "pre_export_runtime_schema_report": pre_export_runtime_schema_report,
             "sbml_report_json": json.loads(sbml_report_json_path.read_text(encoding="utf-8"))
             if sbml_report_json_path.exists()
             else {},
@@ -1667,6 +1949,8 @@ def run_post_pipeline_sbml_artifacts(
             "audit_iterations": audit_iterations,
             "gap_resolution_iterations": gap_iterations,
             "reaction_preservation_reports": reaction_preservation_reports,
+            "locked_reaction_quarantine_artifact": locked_reaction_quarantine_artifact,
+            "locked_reaction_quarantine_path": str(locked_reaction_quarantine_path),
             "audit_loop_summary": {
                 "rounds_executed": len(audit_iterations),
                 "max_rounds": max_rounds,
@@ -1677,6 +1961,22 @@ def run_post_pipeline_sbml_artifacts(
         }
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _validate_stage8_export_payload(payload: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """Revalidate the Stage 6 payload without repairing or otherwise changing it."""
+
+    try:
+        gate_details = run_strict_post_normalization_gates(
+            payload,
+            enforce_all_proteins_connected=True,
+        )
+        stage3_gate_report = {"ok": True, **gate_details}
+    except GateValidationError as exc:
+        stage3_gate_report = {"ok": False, **_safe_dict(exc.details)}
+
+    stage3_contract_report = validate_post_normalization(payload, stage3_gate_report)
+    return stage3_gate_report, stage3_contract_report
 
 
 def run_pwml_export(
@@ -1699,29 +1999,40 @@ def run_pwml_export(
         grounding_report: Dict[str, Any] = {}
         if grounding_dict:
             payload, grounding_report = apply_grounding(payload, grounding_dict)
-        ensure_autostates(payload)
-        payload, export_normalization_report = normalize_process_payload(payload)
 
         outputs_dir = project_root / "outputs"
         outputs_dir.mkdir(parents=True, exist_ok=True)
-        stage3_gate_report = _safe_dict(export_normalization_report.get("gate"))
-        if stage3_gate_report and not bool(stage3_gate_report.get("ok", False)):
+        stage3_gate_report, stage3_contract_report = _validate_stage8_export_payload(payload)
+        if not bool(stage3_contract_report.get("ok", False)):
             stage3_gate_path = outputs_dir / "pwml_stage3_gate_report.json"
             stage3_gate_path.write_text(
-                json.dumps(stage3_gate_report, indent=2, ensure_ascii=False),
+                json.dumps(
+                    {
+                        "stage": "pre_export_stage3_revalidation",
+                        "mode": "validation_only",
+                        "ok": False,
+                        "gate_report": stage3_gate_report,
+                        "contract_report": stage3_contract_report,
+                    },
+                    indent=2,
+                    ensure_ascii=False,
+                ),
                 encoding="utf-8",
             )
             return {
                 "ok": False,
-                "error": "PWML export stopped by Stage 3 gate.",
+                "error": (
+                    "PWML export stopped by validation-only pre-export Stage 3 "
+                    "revalidation; Stage 8 did not repair the payload."
+                ),
                 "counts": {},
                 "issues": int(_safe_dict(stage3_gate_report.get("summary")).get("error_count", 0))
                 or len(_safe_list(stage3_gate_report.get("errors"))),
                 "output_path": "",
                 "qa": {},
                 "grounding_report": grounding_report,
-                "export_normalization_report": export_normalization_report,
                 "stage3_gate_report": stage3_gate_report,
+                "stage3_contract_report": stage3_contract_report,
                 "stage3_gate_report_path": str(stage3_gate_path),
                 "reaction_preservation_before_final_export": before_export_report,
             }
@@ -1737,7 +2048,19 @@ def run_pwml_export(
             metadata.setdefault("description", pathway_description)
             metadata.setdefault("width", int(vis_width))
             metadata.setdefault("height", int(vis_height))
-        required_gate_report = validate_required_pwml_contract(gate_payload, strict_db=bool(strict_db))
+        try:
+            pre_export_contract = validate_pre_export(gate_payload, strict_db=bool(strict_db))
+            required_gate_report = _safe_dict(pre_export_contract.get("pwml_contract_report"))
+        except StageContractError as exc:
+            pre_export_contract = _safe_dict(exc.report)
+            required_gate_report = _safe_dict(pre_export_contract.get("pwml_contract_report"))
+            if not required_gate_report:
+                required_gate_report = {
+                    "ok": False,
+                    "errors": _safe_list(pre_export_contract.get("errors")),
+                    "warnings": _safe_list(pre_export_contract.get("warnings")),
+                    "summary": _safe_dict(pre_export_contract.get("summary")),
+                }
         required_gate_report["stage"] = "required_field_gate"
         required_gate_report["pipeline_order"] = [
             "audit_normalize",
@@ -1762,7 +2085,8 @@ def run_pwml_export(
                 "output_path": "",
                 "qa": {},
                 "grounding_report": grounding_report,
-                "export_normalization_report": export_normalization_report,
+                "stage3_gate_report": stage3_gate_report,
+                "stage3_contract_report": stage3_contract_report,
                 "required_gate_report": required_gate_report,
                 "required_gate_report_path": str(required_gate_path),
                 "reaction_preservation_before_final_export": before_export_report,
@@ -1788,7 +2112,8 @@ def run_pwml_export(
                 "output_path": "",
                 "qa": {},
                 "grounding_report": grounding_report,
-                "export_normalization_report": export_normalization_report,
+                "stage3_gate_report": stage3_gate_report,
+                "stage3_contract_report": stage3_contract_report,
                 "required_gate_report": required_gate_report,
                 "required_gate_report_path": str(required_gate_path),
                 "pwml_ir": pwml_ir,
@@ -1829,7 +2154,8 @@ def run_pwml_export(
             "validation_report": report,
             "qa": qa_report,
             "grounding_report": grounding_report,
-            "export_normalization_report": export_normalization_report,
+            "stage3_gate_report": stage3_gate_report,
+            "stage3_contract_report": stage3_contract_report,
             "required_gate_report": required_gate_report,
             "required_gate_report_path": str(required_gate_path),
             "pwml_ir": pwml_ir,
@@ -2130,9 +2456,14 @@ if submit:
                 temperature=temperature,
                 max_tokens=int(extract_tokens),
             )
+            validate_post_extraction(stage_one)
     except PipelineFailure as failure:
         st.error(f"Extraction failed: {failure}")
         render_attempts("Stage 1 attempts", failure.attempts)
+        st.stop()
+    except StageContractError as failure:
+        st.error(f"Extraction boundary failed: {failure}")
+        st.json(failure.report)
         st.stop()
 
     final_payload = stage_one
@@ -2528,6 +2859,7 @@ if st.session_state.get("pipeline_ready"):
         gate_failed = bool(post_artifacts.get("gate_failed", False))
         normalization_gate_failed = bool(post_artifacts.get("normalization_gate_failed", False))
         audit_summary = post_artifacts.get("audit_report", {}).get("summary", {})
+        stage2_mapping_summary = post_artifacts.get("stage2_mapping_report", {}).get("summary", {})
         mapping_summary = post_artifacts.get("mapping_report", {}).get("summary", {})
         enrichment_summary = post_artifacts.get("enrichment_report", {}).get("summary", {})
         sbml_summary = post_artifacts.get("sbml_report_json", {}).get("counts", {})
@@ -2538,6 +2870,39 @@ if st.session_state.get("pipeline_ready"):
         stoich_additions_made = sum(1 for e in stoich_audit_log if e.get("llm_verdict") == "add")
         stoich_audits_reversed = sum(1 for e in stoich_audit_log if e.get("audit_verdict") == "reversed")
 
+        _stage2_mapped = int(
+            stage2_mapping_summary.get(
+                "entities_mapped",
+                int(stage2_mapping_summary.get("proteins_mapped", 0))
+                + int(stage2_mapping_summary.get("compounds_mapped", 0))
+                + int(stage2_mapping_summary.get("protein_complexes_mapped", 0)),
+            )
+        )
+        _stage2_total = int(stage2_mapping_summary.get("proteins_total", 0)) + int(
+            stage2_mapping_summary.get("compounds_total", 0)
+        ) + int(stage2_mapping_summary.get("protein_complexes_total", 0))
+        _stage2_ambiguous = int(
+            stage2_mapping_summary.get(
+                "entities_ambiguous",
+                int(stage2_mapping_summary.get("proteins_ambiguous", 0))
+                + int(stage2_mapping_summary.get("compounds_ambiguous", 0))
+                + int(stage2_mapping_summary.get("protein_complexes_ambiguous", 0)),
+            )
+        )
+        _stage2_unmapped = int(
+            stage2_mapping_summary.get(
+                "entities_unmapped",
+                max(0, _stage2_total - _stage2_mapped - _stage2_ambiguous),
+            )
+        )
+        st.info(
+            "Stage 2B mapping completed: "
+            f"mapped={_stage2_mapped}, ambiguous={_stage2_ambiguous}, "
+            f"unmapped={_stage2_unmapped}, generated_wrappers="
+            f"{int(stage2_mapping_summary.get('generated_wrappers_created', 0))}. "
+            "Stage 6 remap bypassed cache and may create required wrappers after audit/curation."
+        )
+
         st.write(
             {
                 "normalization_stats": _safe_dict(post_artifacts.get("pre_normalization_report")).get("summary", {}),
@@ -2547,7 +2912,8 @@ if st.session_state.get("pipeline_ready"):
                 "normalization_gate_failed": normalization_gate_failed,
                 "gate_fail_report": post_artifacts.get("gate_fail_report", {}),
                 "audit": audit_summary,
-                "mapping": mapping_summary,
+                "stage2_mapping": stage2_mapping_summary,
+                "stage6_mapping": mapping_summary,
                 "enrichment": enrichment_summary,
                 "sbml_counts": sbml_summary,
                 "sbml_validation_has_errors": sbml_validation.get("has_errors"),
@@ -2616,6 +2982,34 @@ if st.session_state.get("pipeline_ready"):
             else:
                 st.warning("SBML render geometry could not be confirmed from the render-ready SBML.")
 
+        st.download_button(
+            "Download pre_mapping_input.json",
+            json.dumps(post_artifacts.get("pre_mapping_input", {}), indent=2),
+            file_name="pre_mapping_input.json",
+            mime="application/json",
+            key="dl_pre_mapping_input",
+        )
+        st.download_button(
+            "Download stage2.mapped.json",
+            json.dumps(post_artifacts.get("stage2_payload", {}), indent=2),
+            file_name="stage2.mapped.json",
+            mime="application/json",
+            key="dl_stage2_mapped",
+        )
+        st.download_button(
+            "Download stage2_mapping_report.json",
+            json.dumps(post_artifacts.get("stage2_mapping_report", {}), indent=2),
+            file_name="stage2_mapping_report.json",
+            mime="application/json",
+            key="dl_stage2_mapping_report",
+        )
+        st.download_button(
+            "Download stage2_runtime_schema_report.json",
+            json.dumps(post_artifacts.get("stage2_runtime_schema_report", {}), indent=2),
+            file_name="stage2_runtime_schema_report.json",
+            mime="application/json",
+            key="dl_stage2_runtime_schema_report",
+        )
         st.download_button(
             "Download pre_normalization_input.json",
             json.dumps(post_artifacts.get("pre_normalization_input", {}), indent=2),
@@ -2731,6 +3125,20 @@ if st.session_state.get("pipeline_ready"):
             file_name="mapping_report.json",
             mime="application/json",
             key="dl_mapping_report",
+        )
+        st.download_button(
+            "Download post_enrichment_runtime_schema_report.json",
+            json.dumps(post_artifacts.get("post_enrichment_runtime_schema_report", {}), indent=2),
+            file_name="post_enrichment_runtime_schema_report.json",
+            mime="application/json",
+            key="dl_post_enrichment_runtime_schema_report",
+        )
+        st.download_button(
+            "Download pre_export_runtime_schema_report.json",
+            json.dumps(post_artifacts.get("pre_export_runtime_schema_report", {}), indent=2),
+            file_name="pre_export_runtime_schema_report.json",
+            mime="application/json",
+            key="dl_pre_export_runtime_schema_report",
         )
         st.download_button(
             "Download enrichment_report.json",
@@ -3050,6 +3458,8 @@ if st.session_state.get("pipeline_ready"):
         if not isinstance(final_payload, dict) or not final_payload:
             st.error("No pipeline output in session state. Run the pipeline first.")
         else:
+            st.session_state.pop("post_pipeline_artifacts", None)
+            post_artifacts = {}
             try:
                 with st.spinner("Running audit and DB mapping..."):
                     final_payload = propagate_context_organism(
@@ -3103,7 +3513,10 @@ if st.session_state.get("pipeline_ready"):
                         if final_gate and not bool(final_gate.get("ok", False)):
                             st.session_state.refinement_gate_errors = _safe_list(final_gate.get("errors"))
                             _pa["final_stage3_gate_report"] = final_gate
-                            st.error("Mapped pathway still fails the Stage 3 gate. Refinement review was not opened.")
+                            st.error(
+                                "Mapped pathway still fails the pre-export Stage 3 revalidation. "
+                                "Refinement review was not opened."
+                            )
                             _gate_errors_for_display = _safe_list(final_gate.get("errors"))
                             with st.expander(
                                 f"Why Stage 3 failed ({len(_gate_errors_for_display)} error(s))",
@@ -3124,6 +3537,12 @@ if st.session_state.get("pipeline_ready"):
                             st.session_state.refinement_gate_errors = []
                             initialize_refinement_review_state(final_mapped_payload, mapping_report)
                             st.info("Mapped pathway is ready for review. PWML generation is paused until approval.")
+            except StageContractError as failure:
+                _render_stage_contract_failure(
+                    failure,
+                    operation_label="Audit and DB mapping",
+                    download_key="dl_audit_mapping_stage_contract_error",
+                )
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
 
@@ -3382,6 +3801,8 @@ if st.session_state.get("pipeline_ready"):
     with st.expander("Legacy SBML Export", expanded=False):
         st.caption("SBML is a legacy export path. Use PWML above for primary output.")
         if st.button("Run legacy SBML export", key="run_legacy_sbml_export_btn"):
+            st.session_state.pop("post_pipeline_artifacts", None)
+            post_artifacts = {}
             try:
                 with st.spinner("Running legacy SBML export..."):
                     legacy_artifacts = run_post_pipeline_sbml_artifacts(
@@ -3413,6 +3834,12 @@ if st.session_state.get("pipeline_ready"):
                 st.session_state["post_pipeline_artifacts"] = legacy_artifacts
                 post_artifacts = legacy_artifacts
                 st.success("Legacy SBML export completed.")
+            except StageContractError as failure:
+                _render_stage_contract_failure(
+                    failure,
+                    operation_label="Legacy SBML export",
+                    download_key="dl_legacy_stage_contract_error",
+                )
             except Exception as exc:
                 st.error(f"Legacy SBML export failed: {exc}")
         if not isinstance(post_artifacts, dict):

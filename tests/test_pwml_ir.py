@@ -29,8 +29,9 @@ def _base_payload() -> dict:
                 {"name": "Glucose 6-phosphate", "pathbank_compound_id": 102, "mapped_ids": {"chebi": "CHEBI:4170"}},
             ],
             "proteins": [
-                {"name": "Hexokinase", "pathbank_protein_id": 201, "mapped_ids": {"uniprot": "P19367"}},
+                {"name": "Hexokinase", "species": "Homo sapiens", "pathbank_protein_id": 201, "mapped_ids": {"uniprot": "P19367"}},
             ],
+            "protein_complexes": [{"name": "Hexokinase complex", "species": "Homo sapiens", "components": ["Hexokinase"]}],
         },
         "biological_states": [
             {"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"},
@@ -42,7 +43,7 @@ def _base_payload() -> dict:
                     "inputs": ["Glucose"],
                     "outputs": ["Glucose 6-phosphate"],
                     "biological_state": "cytosol",
-                    "enzymes": [{"protein": "Hexokinase"}],
+                    "enzymes": [{"entity": "Hexokinase complex", "entity_type": "protein_complex"}],
                 }
             ],
             "transports": [],
@@ -118,9 +119,57 @@ def test_reaction_ir_construction_refs_resolve() -> None:
     }
 
 
+def test_required_contract_validates_protein_complex_enzyme_in_direct_ir() -> None:
+    ir, report = build_pwml_ir(_base_payload(), strict_db=True)
+    assert not report["errors"]
+
+    valid_contract = validate_required_pwml_contract(ir, strict_db=True)
+    assert "reaction_enzyme_must_be_protein_complex" not in {
+        error["code"] for error in valid_contract["errors"]
+    }
+
+    bare_ir = deepcopy(ir)
+    protein = bare_ir["entities"]["proteins"][0]
+    bare_ir["processes"]["reactions"][0]["enzymes"][0].update(
+        {"entity_key": protein["key"], "entity_type": "protein"}
+    )
+
+    invalid_contract = validate_required_pwml_contract(bare_ir, strict_db=True)
+    wrapper_errors = [
+        error
+        for error in invalid_contract["errors"]
+        if error["code"] == "reaction_enzyme_must_be_protein_complex"
+    ]
+    assert len(wrapper_errors) == 1
+    assert wrapper_errors[0]["pointer"] == "/processes/reactions/0/enzymes/0"
+
+
+def test_required_contract_accepts_canonical_complex_modifier_mirror() -> None:
+    payload = _base_payload()
+    payload["processes"]["reactions"][0]["modifiers"] = [
+        {
+            "entity": "Hexokinase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+        }
+    ]
+
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+
+    assert not {
+        "reaction_enzyme_must_be_protein_complex",
+        "duplicate_reaction_enzyme_complex",
+    } & {error["code"] for error in contract["errors"]}
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+    assert len(ir["processes"]["reactions"][0]["enzymes"]) == 1
+
+
 def test_compound_catalyst_modifier_is_not_exported_as_reaction_enzyme() -> None:
     payload = _base_payload()
     payload["entities"]["compounds"].append({"name": "pyridoxal-phosphate", "pathbank_compound_id": 103})
+    payload["entities"]["protein_complexes"] = []
     payload["processes"]["reactions"][0]["enzymes"] = []
     payload["processes"]["reactions"][0]["modifiers"] = [
         {"entity": "pyridoxal-phosphate", "entity_type": "compound", "role": "catalyst"}
@@ -135,46 +184,36 @@ def test_compound_catalyst_modifier_is_not_exported_as_reaction_enzyme() -> None
     assert "non_protein_catalyst_dropped" in {warning["code"] for warning in report["warnings"]}
 
 
-def test_protein_catalyst_modifier_exports_as_single_protein_complex() -> None:
+def test_bare_protein_catalyst_fails_instead_of_being_wrapped_during_export() -> None:
     payload = _base_payload()
-    payload["entities"]["proteins"] = [{"name": "ObaG", "pathbank_protein_id": 201}]
+    payload["entities"]["protein_complexes"] = []
     payload["processes"]["reactions"][0]["enzymes"] = []
     payload["processes"]["reactions"][0]["modifiers"] = [
-        {"entity": "ObaG", "entity_type": "protein", "role": "catalyst"}
+        {"entity": "Hexokinase", "entity_type": "protein", "role": "catalyst"}
     ]
 
     ir, report = build_pwml_ir(payload, strict_db=True)
     validation = validate_pwml_ir(ir)
 
-    assert validation["ok"], validation["errors"]
+    assert not validation["ok"]
     reaction = ir["processes"]["reactions"][0]
-    assert reaction["enzymes"][0]["entity_type"] == "protein_complex"
-    assert ir["entities"]["protein_complexes"][0]["components"] == [
-        {"protein_key": ir["entities"]["proteins"][0]["key"], "stoichiometry": 1}
-    ]
-    assert "enzyme_protein_wrapped_as_complex" in {warning["code"] for warning in report["warnings"]}
+    assert reaction["enzymes"][0]["entity_type"] == "protein"
+    assert ir["entities"]["protein_complexes"] == []
+    assert "reaction_enzyme_must_be_protein_complex" in {error["code"] for error in report["errors"]}
 
 
-def test_obag_export_drops_plp_catalyst_and_uses_single_protein_complex() -> None:
+def test_obag_export_drops_plp_catalyst_but_rejects_bare_protein_enzyme() -> None:
     ir, report = build_pwml_ir(_obag_plp_payload(), strict_db=True)
     validation = validate_pwml_ir(ir)
 
-    assert validation["ok"], validation["errors"]
-    assert "reaction_enzyme_must_be_protein_complex" not in {
+    assert not validation["ok"]
+    assert "reaction_enzyme_must_be_protein_complex" in {
         error.get("code") for error in validation["errors"]
     }
     reaction = ir["processes"]["reactions"][0]
     assert len(reaction["enzymes"]) == 1
-    assert reaction["enzymes"][0]["entity_type"] == "protein_complex"
-    complex_key = reaction["enzymes"][0]["entity_key"]
-    complex_row = next(row for row in ir["entities"]["protein_complexes"] if row["key"] == complex_key)
-    protein_row = next(row for row in ir["entities"]["proteins"] if row["name"] == "ObaG")
-    assert complex_row["name"] == "ObaG complex"
-    assert complex_row["components"] == [
-        {"protein_key": protein_row["key"], "stoichiometry": 1}
-    ]
+    assert reaction["enzymes"][0]["entity_type"] == "protein"
     assert {warning["code"] for warning in report["warnings"]} >= {
-        "enzyme_protein_wrapped_as_complex",
         "non_protein_catalyst_dropped",
     }
     assert any(
@@ -186,8 +225,7 @@ def test_obag_export_drops_plp_catalyst_and_uses_single_protein_complex() -> Non
 
 def test_legacy_reaction_enzyme_rows_continue_exporting() -> None:
     cases = [
-        ({"protein": "Hexokinase"}, []),
-        ({"protein_complex": "Hexokinase complex"}, [{"name": "Hexokinase complex", "components": ["Hexokinase"]}]),
+        ({"protein_complex": "Hexokinase complex"}, [{"name": "Hexokinase complex", "species": "Homo sapiens", "components": ["Hexokinase"]}]),
     ]
 
     for enzyme_row, protein_complexes in cases:
@@ -682,3 +720,61 @@ def test_ir_writer_integration_validates_and_has_no_fatal_qa_errors() -> None:
     assert "protein-location-id" not in enzyme_viz
     assert validation["ok"], validation["issues"][:3]
     assert qa["ok"], qa["errors"]
+
+
+def test_spontaneous_field_is_always_forced_false_on_export() -> None:
+    payload = _base_payload()
+    payload["processes"]["reactions"][0].update({"enzymes": [], "spontaneous": True})
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+    assert ir["processes"]["reactions"][0]["spontaneous"] is False
+
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000", height=1400, width=3200, background_color="#FFFFFF", ref=str(ROOT / "reference" / "PW000001.pwml"))
+    root = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args).build().root
+    assert root.findtext(".//reactions/reaction/spontaneous") == "false"
+    assert run_pwml_qa(etree.tostring(root))["ok"] is True
+
+
+def test_pre_export_and_qa_reject_duplicate_enzyme_complex_even_when_spontaneous_set() -> None:
+    payload = _base_payload()
+    enzyme = payload["processes"]["reactions"][0]["enzymes"][0]
+    payload["processes"]["reactions"][0].update({"enzymes": [enzyme, dict(enzyme)], "spontaneous": True})
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+    assert "duplicate_reaction_enzyme_complex" in {
+        error["code"] for error in contract["errors"]
+    }
+
+    ir, _ = build_pwml_ir(payload, strict_db=True)
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000", height=1400, width=3200, background_color="#FFFFFF", ref=str(ROOT / "reference" / "PW000001.pwml"))
+    root = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args).build().root
+    qa = run_pwml_qa(etree.tostring(root))
+    assert any("more than once as an enzyme" in error for error in qa["errors"])
+
+
+def test_pre_export_rejects_duplicate_legacy_protein_complex_enzyme_rows() -> None:
+    payload = _base_payload()
+    payload["processes"]["reactions"][0]["enzymes"] = [
+        {"protein_complex": "Hexokinase complex"},
+        {"protein_complex": "Hexokinase complex"},
+    ]
+
+    contract = validate_required_pwml_contract(payload, strict_db=True)
+
+    assert "duplicate_reaction_enzyme_complex" in {
+        error["code"] for error in contract["errors"]
+    }
+
+
+def test_writer_serializes_each_proteins_resolved_species() -> None:
+    payload = _base_payload()
+    payload["entities"]["species"].append({"name": "Mus musculus", "pathwhiz_id": 9})
+    payload["entities"]["proteins"][0]["species"] = "Mus musculus"
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert not report["errors"]
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    args = SimpleNamespace(name="Generated Pathway", description="", subject="Metabolic", pw_id="PW000000", height=1400, width=3200, background_color="#FFFFFF", ref=str(ROOT / "reference" / "PW000001.pwml"))
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=args)
+    builder.build()
+    assert builder.section_items["proteins"][0]["species-id"] == 9

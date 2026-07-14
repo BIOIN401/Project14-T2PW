@@ -9,6 +9,327 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-13 — Quarantine coarse reactions before orphan-protein validation
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py`,
+`tests/test_locked_noop_quarantine_policy.py`, `docs/pipeline.md`, and
+`docs/change_log.md`.
+
+**Error / symptom:** A new paper began with 21 locked source reactions. Stage 2
+preserved all 21, but Stage 3 retained only nine and reported the other 12 as
+missing. The 12 all used the same coarse compound label on both sides. The
+`KlpD` claim, for example, was represented as `klebsazolicin -> klebsazolicin`.
+After that row was silently removed, its unmapped `KlpD` protein remained and
+the pre-export Stage 3 revalidation stopped on a missing UniProt/DrugBank ID.
+
+**Root cause:** `dedupe_processes` equated identical/subset normalized labels
+with a biochemical no-op and deleted the row without considering lock
+accounting. It also ran after orphan cleanup, so an enzyme could become orphaned
+only after the cleanup passes had finished. `essential` exempted self-loops from
+classification, and distinct locked duplicates could be silently collapsed.
+The Stage 6 PathBank `Unknown` fallback was correctly narrow: because the KlpD
+reaction no longer survived, it had no valid reaction enzyme to process.
+
+**Fix:** Stage 3 now classifies same-label and output-subset reactions before
+the final orphan passes. Unsupported unlocked no-ops are dropped. Locked or
+directly evidenced coarse reactions are removed from active processes and
+written to the existing `quarantined_locked_reactions` ledger with stable reason
+codes, the original reaction/provenance, source JSON pointer, and action. Neither
+`locked` nor `essential` forces a biologically invalid equation into export.
+Distinct locked duplicates retain one active representative and account for the
+other lock in quarantine. The final orphan cleanup then removes unmapped
+proteins used only by rejected reactions while retaining proteins referenced by
+surviving reactions, interactions, transports, or complexes. Preservation
+validation consequently treats the intended result as active plus quarantined,
+with no silently missing locks. The strict Stage 3 gate now rejects a positive,
+negative, or malformed `unaccounted_locked_reactions` value at
+`/locked_reaction_filter_report/unaccounted_locked_reactions`; zero accounted
+locks pass. After normalization and before audit, the live orchestrator also
+rewrites canonical `tmp/quarantined_locked_reactions.json` from the normalized
+ledger and returns it through post-pipeline JSON artifacts, so stale
+pre-normalization content cannot mask quarantine results.
+
+**Pipeline consistency:** Stage 3 owns deterministic reaction classification,
+quarantine, and post-classification cleanup. Stage 4 may restore a quarantined
+claim only from evidence that establishes distinct biochemical participants.
+Stage 6 remains responsible for the narrow PathBank `Unknown` fallback only
+after normal identity mapping fails for a confirmed catalyst on a valid
+surviving reaction. Mapping failure does not remove that valid reaction, and the
+fallback is not broadened to unrelated orphan proteins.
+
+**Verification:** Focused regressions cover the KlpD-shaped locked/essential
+self-loop, unlocked no-op removal, active-plus-quarantined preservation
+accounting, duplicate locked IDs, post-quarantine orphan cleanup with all
+surviving reference types, and Stage 6 fallback eligibility for an unresolved
+enzyme on a valid distinct-participant reaction. Additional boundary tests cover
+strict-gate accounting enforcement and post-normalization replacement of a
+stale canonical quarantine artifact before audit.
+
+---
+
+### 2026-07-13 — Make Stage 8 validation-only and preserve Stage 6 enzyme wrappers
+
+**Files changed:** `src/t2pw/app/streamlit_app.py`,
+`src/t2pw/pipeline/process_normalizer.py`, `src/t2pw/pwml/ir.py`,
+`tests/test_streamlit_stage8_export_contract.py`,
+`tests/test_process_normalizer.py`, `tests/test_pwml_ir.py`,
+`docs/pipeline.md`, and `docs/change_log.md`.
+
+**Error / symptom:** PWML export of the saved final mapping stopped with
+repeated bare-protein enzyme errors for actors such as `NdmA` and `NdmB`.
+Inspection of `tmp/final.mapped.json` proved that Stage 6 had already done the
+right work: it contained structurally valid generated single-protein PathWhiz
+wrappers (`NdmA complex`, `NdmB complex`, and peers), and the reactions
+referenced those wrappers.
+
+**Root cause:** `run_pwml_export` reran the full Stage 3 normalizer after Stage
+6. Reaction-evidence attachment compared exact actor names, did not recognize a
+valid generated wrapper as equivalent to its sole member, and re-added bare
+`NdmA`/`NdmB` actors beside their complex wrappers. Actor mirroring into both
+`enzymes` and `modifiers`, together with a required-contract exemption, allowed
+those bad actors through that gate; IR validation then emitted the repeated
+bare-protein failures.
+
+**Fix:** Stage 8 now performs validation only after optional grounding. It does
+not rerun normalization, create autostates, attach/promote actors, map or infer
+entities, or create wrappers. Evidence attachment is wrapper-aware and treats
+only generated, structurally valid one-protein wrappers as equivalent to their
+member, making supported reruns idempotent without conflating ordinary
+biological complexes with proteins. The pre-export and direct-IR contracts now
+reject bare catalytic proteins at their own actor pointers, accept one canonical
+cross-field `enzymes`/`modifiers` mirror as a single logical enzyme, and still
+reject duplicates within either field. IR construction likewise emits that
+cross-field mirror only once.
+
+**Pipeline consistency:** Stage 3 remains the sole full normalization stage,
+and Stage 6 remains the sole owner of wrapper creation and reaction remapping.
+Stage 8 validates and serializes the exact post-remap payload without repairing
+it or inventing export structure.
+
+**Verification:** With valid pathway metadata supplied, the exact saved
+`tmp/final.mapped.json` now exports with `ok=true`, writes the output, and has
+zero required-contract and IR-validation errors. The focused merged suite
+passes 127 tests; the full suite passes 380 tests, and Ruff, compile, and diff
+checks are green. A live UI click is the remaining manual check.
+
+---
+
+### 2026-07-13 — Repair named-complex resolution, audit convergence, and organism-aware locations
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py`,
+`src/t2pw/curation/gap_resolver.py`, `src/t2pw/curation/audit_json_llm.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_process_normalizer.py`,
+`tests/test_gap_resolver.py`, `tests/test_gap_resolver_stage3_issues.py`,
+`tests/test_gap_resolver_agent_tools.py`, `tests/test_audit_json_llm_payload.py`,
+`tests/test_streamlit_stage2_orchestration.py`, `docs/pipeline.md`, and
+`docs/change_log.md`.
+
+**Error / symptom:** The `NdmCDE` paper run reached final remapping but stopped
+at pre-export Stage 3 revalidation. Normalization duplicated the declared
+complex as a bare protein, Gap Resolve skipped the complex as `issue_not_found`,
+the audit loop stopped after one round despite gap progress, and bacterial
+compounds received eukaryotic organelle locations.
+
+**Root cause:** Protein synthesis did not consult the complex registry; the gap
+executor indexed only proteins and compounds; convergence considered audit
+patch counts but not gap-only changes/unresolved issues; audit had no
+evidence-safe component-ratio repair; and location ranking used global frequency
+without organism compatibility.
+
+**Fix:** Stage 3 now preserves complex identity and gates protein/complex name
+collisions. Gap Resolve executes complex issues, hydrates member identity from
+declared mapped proteins, reports unsupported ratios to audit, treats a valid
+novel complex ID as optional, and filters incompatible organelles. Stage 4 audit
+adds exact component ratios only from unambiguous evidence (including the
+`NdmCDE` `3/3/3` sentence) and canonicalizes positive legacy coefficients. The
+orchestrator gates every changed settled payload, includes unresolved gap issues
+in convergence, preserves loop bounds, and labels final failures as pre-export
+Stage 3 revalidation.
+
+**Pipeline consistency:** Stage 3 owns deterministic entity-type invariants;
+Stage 4a owns targeted member/ID/location resolution; Stage 4 audit owns
+evidence-dependent ratios; the orchestrator owns convergence; Stage 6 remaps;
+and Stage 8 remains the export guard. No stage invents missing biology.
+
+**Remaining validation:** A fresh live run completed the configured DB/LLM
+stages and produced the final Stage 6 artifact. The separate Stage 8 regression
+found on export is fixed above, and the exact saved artifact now passes
+programmatic PWML export. Only a final manual export click in the live UI
+remains.
+
+---
+
+### 2026-07-13 — Process-aware extraction contracts and visible boundary failures
+
+**Files changed:** `src/t2pw/pipeline/stage_contracts.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_stage_contracts.py`,
+`tests/test_streamlit_stage2_orchestration.py`, `docs/pipeline.md`, and
+`docs/change_log.md`.
+
+**Error / symptom:** Clicking **Run audit and DB mapping** could stop with only
+"Every extracted process must include inputs, outputs, or cargo." Database
+mapping and audit never ran, the structured issue pointer was hidden, and a
+valid interaction could trigger the same reaction-oriented error.
+
+**Root cause:** The post-extraction contract applied one reaction/transport
+participant rule to every process bucket. The Streamlit handlers also caught
+`StageContractError` as a generic exception and displayed only its summary
+message, despite the exception carrying a structured report.
+
+**Fix:** Post-extraction validation now dispatches bucket-specific structural
+rules for reactions, transports, interactions, reaction-coupled transports,
+and sub-pathways while keeping unknown additive buckets object-safe. Both live
+post-pipeline handlers render contract failures separately with the exact
+boundary, skipped stages, issue codes and JSON pointers, full report, and a
+downloadable JSON report. A new run also clears stale successful artifacts
+before executing.
+
+**Pipeline consistency:** Genuine structural failures still abort before
+mapping and audit, but valid process shapes are no longer rejected by another
+process type's rule. The orchestrator exposes the contract state without
+repairing or silently changing the payload.
+
+---
+
+### 2026-07-13 — Runtime payload reports and live Stage 2 mapping boundary
+
+**Files changed:** `src/t2pw/pipeline/payload_models.py`,
+`src/t2pw/pipeline/stage_contracts.py`, `src/t2pw/mapping/map_ids.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_payload_models.py`,
+`tests/test_stage_contracts.py`, `tests/test_stage2_mapping_boundary.py`,
+`tests/test_streamlit_stage2_orchestration.py`, `docs/pipeline.md`, and
+`AGENT_INSTRUCTIONS.md`.
+
+**Error / symptom:** The live Streamlit post-pipeline path normalized the
+merged extraction/inference payload before any Stage 2 database mapping. Its
+only mapping call was the post-curation Stage 6 remap, so the UI could not show
+the exact mapped payload entering Stage 3 or distinguish early mapping misses
+from later wrapper creation. TypedDict documentation also did not catch nested
+runtime type errors in full payloads.
+
+**Root cause:** The documented Stage 2 boundary had not been wired into the
+orchestrator, and mapper compatibility behavior combined annotation, wrapper
+creation, and structural cleanup. Boundary contracts covered selected
+structural and semantic invariants but did not recursively validate known
+container/value shapes at runtime.
+
+**Fix:** Added non-mutating Pydantic runtime models with stable JSON-pointer
+reports and report/enforce modes, integrated through the stage-contract
+adapter. The live Stage 2B call now uses cache with wrapper creation and
+structural cleanup explicitly disabled, requires object payload/report results,
+and validates the nested `mapping_meta.resolution` shape before Stage 3. Stage
+6 explicitly bypasses cache and enables wrappers/cleanup. The passes share one
+database configuration but emit separate `stage2.mapped.json`,
+`stage2_mapping_report.json`, `stage2_runtime_schema_report.json`,
+`final.mapped.json`, and `mapping_report.json` UI artifacts. Runtime reports
+are also exposed after enrichment and before export. Runtime validation remains
+report-first by default and allows unknown additive metadata; it does not
+replace the semantic PWML gate.
+
+**Pipeline consistency:** Stage 2 owns annotation and mapping uncertainty,
+Stage 3 receives that exact output and still owns normalization, Stage 4 keeps
+its strict-gate-only repair cadence, Stage 6 remains the sole wrapper-creating
+remap (including the PathBank `Unknown` fallback), and Stage 8 retains semantic
+export authority. Malformed or failed Stage 2 results stop before Stage 3 and
+cannot produce a successful mapped artifact.
+
+---
+
+### 2026-07-13 - Explicit PathBank Unknown fallback for unresolved enzymes
+
+**Files changed:** `src/t2pw/mapping/map_ids.py`,
+`src/t2pw/mapping/enrich_entities.py`, `src/t2pw/pipeline/entity_identity.py`,
+`src/t2pw/pwml/ir.py`, `src/t2pw/pwml/writer.py`, `src/t2pw/schema.py`,
+`tests/test_pathbank_unknown_fallback.py`, and `docs/pipeline.md`.
+
+**Error / symptom:** A source-supported functional enzyme name could remain a
+bare, unmapped protein after every protein identity strategy failed. PathWhiz
+requires a protein-complex enzyme with a resolvable member, so export was
+blocked even though PathBank provides a known `Unknown` protein sentinel.
+
+**Root cause:** Stage 6 had no explicit, provenance-bearing route from a fully
+unresolved enzyme to the known PathBank sentinel. Treating the sentinel's
+`Unknown` UniProt text as a normal accession would also trigger an invalid
+UniProt enrichment request.
+
+**Fix:** After ordinary protein and complex mapping plus the API retry fail,
+the wrapper-enabled Stage 6 pass may create or reuse one functional-name
+complex backed by PathBank protein `9659` (`Unknown`, *Arabidopsis thaliana*,
+species 4, taxon 3702). It records the target organism and
+`cross_species_placeholder`, synchronizes catalyst-modifier mirrors, preserves
+non-catalytic references, deduplicates reruns, and skips UniProt enrichment.
+Stage 2 cannot activate it. PWML emits the reference-compatible
+`protein-complex-protein` child and the sentinel's exact scalar identity.
+
+**Pipeline consistency:** Real mappings always win. Mapping and wrapper
+creation remain Stage 6 responsibilities; Stage 3 owns catalyst promotion and
+contract checking; Stage 8 only serializes the explicit mapping.
+
+---
+
+### 2026-07-10 — Shared entity identity and enforceable Stage 2/3/6 contracts
+
+**Files changed:** `src/t2pw/pipeline/entity_identity.py`,
+`src/t2pw/mapping/map_ids.py`, `src/t2pw/pipeline/process_normalizer.py`,
+`src/t2pw/pipeline/stage_contracts.py`, `src/t2pw/schema.py`,
+`tests/test_entity_identity_contracts.py`
+
+**Error / symptom:** Mapping, normalization, and PWML code independently
+decided whether an entity was protein-like, whether a protein had exportable
+identity, and whether a complex was a generated wrapper. Stage 2 could also
+create export wrappers even though Stage 6 owns that transformation, while
+actor rows could leave Stage 3 without canonical `entity`/`entity_type` fields.
+
+**Root cause:** Identity rules were copied across stage-specific modules, the
+mapping API had no wrapper-creation control, and the Stage 3/6 exit guarantees
+were documented but not asserted.
+
+**Fix:** Added the dependency-light `entity_identity` module and switched
+mapping and normalization to its shared routing, external-ID, species, and
+generated-wrapper helpers. Added `allow_complex_wrapper_creation` to mapping,
+canonicalized all supported process actor collections, typed `spontaneous` and
+generated-wrapper fields in `schema.py`, extended the Stage 3 actor contract,
+and added a Stage 6 generated-component identity contract.
+
+**Pipeline consistency:** Entity identity is now neutral shared policy rather
+than Stage 3 reaching backward into Stage 2. Stage 2 can map without structural
+wrapper creation; Stage 6 alone may create wrappers and must validate them
+before export.
+
+---
+
+### 2026-07-10 — Stage 8 fails invalid enzymes and serializes PathWhiz truthfully
+
+**Files changed:** `src/t2pw/pwml/ir.py`, `src/t2pw/pwml/writer.py`,
+`src/t2pw/pwml/qa.py`, `src/t2pw/pwml/to_pwml.py`,
+`src/t2pw/pwml/legacy_validate.py`, `src/to_pwml.py`, `src/validate.py`,
+`tests/test_pwml_ir.py`, `tests/test_pwml_writer.py`
+
+**Error / symptom:** Stage 8 silently wrapped a bare protein enzyme, discarded
+reaction spontaneity before serialization, assigned every protein the
+pathway's first species, and could hide duplicate enzyme-complex assignments
+that PathWhiz rejects. Dead standalone converter/validation paths also offered
+an alternate exporter with incompatible behavior.
+
+**Root cause:** Export attempted last-resort structural repair instead of
+enforcing Stage 6 output, the IR reaction omitted `spontaneous`, protein
+serialization ignored per-record species context, and duplicate targets were
+silently collapsed before QA could report them.
+
+**Fix:** Bare protein enzymes now fail the PWML contract without auto-wrapping;
+the IR carries `spontaneous`; writer species IDs resolve from each protein with
+the pathway species only as a true fallback; QA rejects spontaneous reactions
+with enzymes and repeated enzyme-complex targets; and the confirmed-dead
+converter/legacy validation modules and shims were removed. The CLI export
+also writes and enforces its normalization gate before building IR.
+
+**Pipeline consistency:** Stage 8 validates and serializes the Stage 6 payload
+without inventing biology or concealing import errors. Obsolete alternate
+export paths are removed so the IR-backed writer remains the authoritative
+implementation.
+
+---
+
 ### FIXED - Stage 8 PWML IR: direct protein enzyme wrapper lost source protein metadata
 
 **Files changed:** `src/t2pw/pwml/ir.py`, `tests/test_process_normalizer.py`
@@ -149,14 +470,99 @@ Stage 2/6 mapping wraps single-protein reaction enzymes in generated `protein_co
 
 ## Open Issues
 
-Issues confirmed by running the pipeline. Ordered by pipeline stage. No code
-changes yet - this section records the diagnosis and the planned fix.
+Issues confirmed by running the pipeline. Ordered by pipeline stage. Each entry
+records its current status, diagnosis, and planned fix; some older entries are
+partially resolved and retain their remaining work here.
 
 ---
 
-### OPEN - Stage 2/6/8: Generated PathWhiz protein-complex wrappers leak into proteins and bypass Stage 3 blocking
+### IMPLEMENTED — LIVE RERUN VERIFIED: Stage 3/4a/pre-export `NdmCDE` repair
+
+**Files involved:** `src/t2pw/pipeline/process_normalizer.py`,
+`src/t2pw/curation/gap_resolver.py`, `src/t2pw/app/streamlit_app.py`, tests for
+normalization, Stage 3 gap issues, orchestration convergence, and organism-aware
+location selection.
+
+**Implementation status (2026-07-13):** The stage-owned repair described below
+is implemented with deterministic regression coverage. The fresh live run
+completed mapping, normalization, audit/gap resolution, curation, and final
+Stage 6 remapping while keeping `NdmCDE` out of the protein registry. Its saved
+artifact now also passes the repaired programmatic PWML export; only the final
+manual Streamlit export click remains.
+
+**Observed progress:** The earlier failed run stopped safely at pre-export
+Stage 3 revalidation and exposed two pointer-addressed errors for the synthetic
+`/entities/proteins/5` row. The subsequent live run cleared that boundary and
+produced a valid final remap. Its first PWML attempt exposed the independent
+Stage 8 re-normalization bug documented above; replaying the same artifact after
+the repair returns `ok=true` with no required-contract or IR-validation errors.
+
+**Error / symptom:** `NdmCDE` is correctly declared under
+`entities.protein_complexes`, but the final normalization pass adds another
+bare `NdmCDE` row under `entities.proteins`. The gate rejects that new protein
+because it lacks species/organism and UniProt/DrugBank identity. In the Stage 3
+resolution report, the real `protein_complex:ndmcde` issue is detected with
+missing component stoichiometry and unresolved component references, then its
+execution is skipped with `reason="issue_not_found"`. Only one gap-resolution
+round is recorded.
+
+**Root cause:**
+
+1. `normalize_composites` rewrites `element_locations.protein_locations` through
+   `_rewrite_token`. `_ensure_protein` checks only the protein registry and does
+   not first preserve a matching declared protein complex, so the location row
+   causes a cross-bucket duplicate.
+2. `run_gap_resolution` builds `entity_by_key` for proteins and compounds only,
+   although `_collect_stage3_issues` also emits protein-complex issues. The
+   planner can therefore request a complex repair that the executor cannot find.
+3. The outer audit loop decides convergence from audit patch counts. It can stop
+   when no audit patch was accepted even if Gap Resolve changed the payload or
+   still has actionable issues. Fresh gate evaluation is also conditional on an
+   accepted audit patch instead of any settled-payload change.
+4. Location candidate ranking uses broad PathBank frequency without a strong
+   organism-compatibility filter. It selected endoplasmic-reticulum membrane for
+   two compounds in *Pseudomonas putida*.
+
+**Planned fix:**
+
+1. Stage 3 normalization will perform type-aware registry lookup, preserve
+   declared complex references in location/process rows, and gate cross-bucket
+   duplicate names. It will not perform ID lookup or invent component ratios.
+2. Stage 4a will index protein-complex entities, join component names to declared
+   mapped proteins, and write structured component references. Stoichiometry
+   must come from source evidence or an accepted audit patch; an absent value
+   remains an explicit issue.
+3. Stage 4 orchestration will run the fresh strict gate after audit or gap-only
+   changes and use payload progress plus remaining issues for convergence. Loop
+   safety remains bounded by unchanged/repeated payload detection, timeout, and
+   maximum rounds.
+4. Stage 4a location resolution will use resolved organism/taxonomy compatibility
+   before LLM selection and reject clearly impossible compartments.
+5. Stage 6 remains a remapper of the settled payload. Stage 8 remains the hard
+   export guard, with UI wording clarified to identify the pre-export Stage 3
+   revalidation.
+6. Regression tests will cover complex location references, complex issue
+   execution, gap-only convergence, organism-compatible locations, and an
+   end-to-end `NdmCDE` export boundary.
+
+**Pipeline consistency:** Entity classification is a Stage 3 normalization
+invariant; targeted DB/component/location repair belongs to Stage 4a; iteration
+and convergence belong to the Stage 4 orchestrator; Stage 6 refreshes mappings;
+Stage 8 validates exportability. No proposed stage silently takes over another
+stage's semantic responsibility.
+
+---
+
+### PARTIALLY RESOLVED - Stage 2/6/8: Generated PathWhiz protein-complex wrappers leak into proteins and bypass Stage 3 blocking
 
 **Files to change:** `src/t2pw/mapping/map_ids.py`, `src/t2pw/pipeline/process_normalizer.py`, `src/t2pw/app/streamlit_app.py`, `src/t2pw/pwml/ir.py`, tests covering mapping, normalization gates, and PWML export blocking.
+
+**Current status (2026-07-13):** The live Stage 2 pass is now annotation-only,
+Stage 6 is the sole wrapper-creating remap, generated wrappers carry explicit
+provenance and component-integrity requirements, and unresolved pre-export
+Stage 3 failures stop PWML generation. The remaining named-complex duplication
+case is not a Stage 2 wrapper leak: it is caused by Stage 3 location-reference
+normalization and is tracked in the open `NdmCDE` issue above.
 
 **Error / symptom:**
 PWML required-field validation reports errors such as:
@@ -878,3 +1284,122 @@ Added `map_payload` as the object-in/object-out mapping entry point and changed 
 
 **Pipeline consistency:**
 Mapping cache and ID assignment changes stay in `t2pw.mapping.map_ids`, which owns Stage 2 and post-audit remapping. Audit planning stays in `t2pw.curation.audit_json_llm`, and patch policy stays in `t2pw.curation.apply_audit_patch`. Existing `run_*` functions remain file adapters, and no Streamlit or normalization logic was moved into these stages.
+
+### 2026-07-10 — Live stage contracts and fresh audit gate cadence
+
+**Files changed:** `src/t2pw/app/streamlit_app.py`
+
+**Error / symptom:** Boundary validators existed only in tests, and audit rounds
+continued from a stale pre-audit gate report after accepting a repair patch.
+
+**Root cause:** The Streamlit orchestrator used ad hoc report inspection instead
+of the stage-contract API and never reran the cheap strict gate inside the audit
+loop. Its only live `map_payload` call is the post-curation remap, so there was
+also no honest Stage 2 mapping boundary to validate.
+
+**Fix:** Wired the live extraction, normalization, audit, remap, and pre-export
+boundaries to their contract functions; marked the existing remap call as the
+wrapper-creating Stage 6 pass; and reran only
+`run_strict_post_normalization_gates` after every selected patch with accepted
+operations. Fresh pointer-level failures are saved in the iteration and passed
+to the next audit prompt. No synthetic Stage 2 call was introduced.
+
+**Pipeline consistency:** Boundary coordination stays in the Streamlit
+orchestrator. Normalization still runs once before audit and once at export;
+the loop invokes only the Stage 3-owned strict gate.
+
+---
+
+### 2026-07-10 — Audit reuses Stage 3 validators and resolves enzyme-less reactions
+
+**Files changed:** `src/t2pw/curation/audit_json_llm.py`,
+`tests/test_audit_json_llm_payload.py`
+
+**Error / symptom:** Audit maintained separate composite/registry failure
+definitions and could not explicitly resolve an enzyme-less reaction as
+spontaneous.
+
+**Root cause:** Stage 4 had grown its own deterministic checks rather than
+consuming Stage 3's validators, and its patch policy had no allowed
+`spontaneous` operation.
+
+**Fix:** Audit now calls `validate_no_composites` and
+`validate_registry_references` for the shared failure definitions while keeping
+patch construction in Stage 4. When both enzyme rows and catalyst modifiers
+lack a real actor reference, deterministic audit emits a documented
+`spontaneous=true` patch.
+
+**Pipeline consistency:** Stage 3 remains the owner of normalized composite and
+registry validity. Stage 4 owns repair planning and is one of the two stages
+permitted to write `spontaneous`.
+
+---
+
+### 2026-07-10 — Extraction and audit spontaneity instructions
+
+**Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`,
+`src/t2pw/curation/audit_json_llm.py`
+
+**Error / symptom:** The model had no explicit distinction between
+source-supported spontaneous extraction and audit-time resolution of a missing
+enzyme.
+
+**Root cause:** Neither prompt stated which stages may set `spontaneous` or the
+enzyme-present contradiction.
+
+**Fix:** The extraction prompt permits `spontaneous=true` only from explicit
+source text. The audit prompt permits it only after checking both enzymes and
+catalyst modifiers and finding no real catalyst; both forbid the flag when an
+enzyme exists.
+
+**Pipeline consistency:** The prompts mirror field ownership: Stage 1 records
+explicit evidence and Stage 4 may resolve the absence of a real enzyme.
+
+---
+
+### 2026-07-10 — Concrete per-stage payload contracts
+
+**Files changed:** `docs/pipeline.md`
+
+**Error / symptom:** The eight stages described behavior but not exact input and
+output shapes, allowing field ownership and wrapper creation to drift.
+
+**Root cause:** Documentation named broad stage responsibilities without tying
+them to `schema.py` types, boundary validators, or failure effects.
+
+**Fix:** Added an eight-stage contract table naming the concrete TypedDict
+inputs/outputs, exit guarantees, validator ownership, audit cadence, and the
+Stage 2/Stage 6 wrapper-creation distinction. It also records that the current
+Streamlit path has no separate live Stage 2 `map_payload` call.
+
+**Pipeline consistency:** This documents the existing stage architecture and
+its enforceable boundaries without assigning implementation logic to docs or
+inventing an orchestration pass.
+
+---
+
+### 2026-07-10 — Remove the legacy non-IR PWML writer fallback
+
+**Files changed:** `src/t2pw/pwml/writer.py`, `src/pwml_writer.py`,
+`tests/test_pwml_writer.py`
+
+**Error / symptom:** The writer still contained a second raw-payload export
+implementation alongside the IR-backed pipeline. That branch used legacy
+defaults and process builders, so invoking a different entrypoint could produce
+PWML with behavior inconsistent with the validated Stage 8 path.
+
+**Root cause:** `_populate_sections` and nine associated entity, process, and
+layout builders predated the mapped-JSON → IR → PWML architecture but remained
+reachable through `load_extraction`, `run_writer`, a raw argparse surface, and
+the top-level `pwml_writer.py` shim.
+
+**Fix:** Removed the 1,701-line raw/non-IR builder branch, its loading and CLI
+entrypoints, and the obsolete top-level shim. The module entrypoint now exposes
+only `run_pwml_pipeline_export`; writer tests were converted to exercise the IR
+path or removed where they covered only the deleted fallback.
+
+**Pipeline consistency:** There is now one authoritative Stage 8 serialization
+route. Every command-line export passes through normalization, IR construction,
+contract validation, the deterministic IR writer, and PWML QA.
+
+---

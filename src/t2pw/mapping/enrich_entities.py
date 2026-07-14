@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 from xml.etree import ElementTree
 
 from t2pw.mapping.map_ids import HttpClient
+from t2pw.pipeline.entity_identity import is_pathbank_unknown_protein
 
 
 def _safe_dict(value: Any) -> Dict[str, Any]:
@@ -1303,6 +1304,7 @@ def enrich_payload(
             "proteins_with_uniprot": 0,
             "proteins_enriched_ok": 0,
             "proteins_enriched_error": 0,
+            "proteins_skipped_pathbank_unknown": 0,
             "compounds_total": 0,
             "compounds_with_ids": 0,
             "compounds_enriched_ok": 0,
@@ -1331,6 +1333,17 @@ def enrich_payload(
             continue
         name = _canonical(protein.get("name"))
         if not name:
+            continue
+        if is_pathbank_unknown_protein(protein):
+            report["summary"]["proteins_skipped_pathbank_unknown"] += 1
+            report["entities"].append(
+                {
+                    "entity_type": "protein",
+                    "name": name,
+                    "json_pointer": f"/entities/proteins/{idx}",
+                    "status": "skipped_pathbank_unknown_sentinel",
+                }
+            )
             continue
         mapped_ids = _safe_dict(protein.get("mapped_ids"))
         uniprot_id = _canonical(mapped_ids.get("uniprot")).upper()

@@ -53,9 +53,23 @@ def run_pwml_qa(pwml_bytes: bytes) -> Dict[str, Any]:
         has_enzyme = enzymes_el is not None and len(enzymes_el) > 0
         if has_enzyme:
             stats["enzymes_attached"] += 1
-        elif not is_spontaneous:
+            if is_spontaneous:
+                errors.append(f"Reaction '{rxn_name}' is marked spontaneous but also has an enzyme.")
+            seen_complex_ids: set[str] = set()
+            for enzyme in enzymes_el:
+                complex_id_el = enzyme.find("protein-complex-id")
+                complex_id = (complex_id_el.text or "").strip() if complex_id_el is not None else ""
+                if not complex_id:
+                    continue
+                if complex_id in seen_complex_ids:
+                    errors.append(
+                        f"Reaction '{rxn_name}' assigns protein complex '{complex_id}' more than once as an enzyme."
+                    )
+                seen_complex_ids.add(complex_id)
+        else:
+            # Spontaneity is not modeled currently, so an enzyme-less reaction is
+            # expected and not itself an error.
             stats["reactions_no_enzyme"] += 1
-            errors.append(f"Reaction '{rxn_name}' has no enzyme and is not spontaneous.")
 
     # Check transports
     for transport in root.iter("transport-element"):

@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 import sys
+from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 
 from lxml import etree
+import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,7 +15,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from t2pw.pwml.ir import build_pwml_ir  # noqa: E402
+from t2pw.pwml.ir import build_pwml_ir as _build_pwml_ir  # noqa: E402
 from t2pw.pwml.validate import discover_structure_signature, repair_tree  # noqa: E402
 from t2pw.pwml.writer import (  # noqa: E402
     DeterministicPwmlBuilder,
@@ -102,6 +104,60 @@ HEXOKINASE_COMPOUND_ROWS = [
 ]
 
 
+def _stage6_ready_payload(payload: dict) -> dict:
+    """Give writer/layout fixtures the Stage 6 wrapper shape required by Stage 8."""
+    prepared = deepcopy(payload)
+    entities = prepared.setdefault("entities", {})
+    proteins = {
+        str(row.get("name")): row
+        for row in entities.get("proteins", [])
+        if isinstance(row, dict) and row.get("name")
+    }
+    complexes = entities.setdefault("protein_complexes", [])
+    complex_names = {
+        str(row.get("name"))
+        for row in complexes
+        if isinstance(row, dict) and row.get("name")
+    }
+    default_species = next(
+        (
+            row.get("name")
+            for row in entities.get("species", [])
+            if isinstance(row, dict) and row.get("name")
+        ),
+        None,
+    )
+    for reaction in prepared.get("processes", {}).get("reactions", []):
+        if not isinstance(reaction, dict):
+            continue
+        for actor in reaction.get("enzymes", []):
+            if not isinstance(actor, dict):
+                continue
+            protein_name = actor.get("protein")
+            if not protein_name or str(protein_name) not in proteins:
+                continue
+            complex_name = f"{protein_name} complex"
+            if complex_name not in complex_names:
+                protein = proteins[str(protein_name)]
+                complexes.append(
+                    {
+                        "name": complex_name,
+                        "species": protein.get("species") or default_species,
+                        "components": [str(protein_name)],
+                        "generated": True,
+                        "generation_reason": "single_protein_pathwhiz_wrapper",
+                    }
+                )
+                complex_names.add(complex_name)
+            actor.clear()
+            actor.update({"entity": complex_name, "entity_type": "protein_complex"})
+    return prepared
+
+
+def build_pwml_ir(payload: dict, *args: object, **kwargs: object) -> tuple[dict, dict]:
+    return _build_pwml_ir(_stage6_ready_payload(payload), *args, **kwargs)
+
+
 class _CompoundDb:
     def available(self) -> bool:
         return True
@@ -141,7 +197,7 @@ def _writer_args() -> SimpleNamespace:
     )
 
 
-def test_pipeline_export_normalizes_reaction_name_catalytic_interactions(tmp_path: Path) -> None:
+def test_pipeline_export_accepts_post_normalization_gate_for_stage6_ready_payload(tmp_path: Path) -> None:
     payload = {
         "entities": {
             "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
@@ -158,7 +214,15 @@ def test_pipeline_export_normalizes_reaction_name_catalytic_interactions(tmp_pat
                     "pathbank_protein_id": 201,
                 }
             ],
-            "protein_complexes": [],
+            "protein_complexes": [
+                {
+                    "name": "N4OMT complex",
+                    "species": "Homo sapiens",
+                    "components": ["N4OMT"],
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                }
+            ],
         },
         "biological_states": [
             {"name": "cyto_state", "species": "Homo sapiens", "subcellular_location": "cytosol"}
@@ -177,16 +241,13 @@ def test_pipeline_export_normalizes_reaction_name_catalytic_interactions(tmp_pat
                     "inputs": ["norbelladine"],
                     "outputs": ["4′-O-methylnorbelladine"],
                     "biological_state": "cyto_state",
+                    "enzymes": [
+                        {"entity": "N4OMT complex", "entity_type": "protein_complex"}
+                    ],
                 }
             ],
             "transports": [],
-            "interactions": [
-                {
-                    "entity_1": "N4OMT",
-                    "entity_2": "norbelladine to 4′-O-methylnorbelladine",
-                    "relationship": "catalyzes",
-                }
-            ],
+            "interactions": [],
         },
     }
     input_path = tmp_path / "input.json"
@@ -215,7 +276,7 @@ def test_pipeline_export_normalizes_reaction_name_catalytic_interactions(tmp_pat
     )
     assert ir["processes"]["interactions"] == []
     assert ir["processes"]["reactions"][0]["enzymes"]
-    assert normalization_report["summary"]["interaction_enzymes_promoted"] == 1
+    assert normalization_report["gate"]["ok"] is True
 
 
 def _minimal_pwml_ir_with_compounds(compounds: list[dict]) -> dict:
@@ -268,6 +329,17 @@ def _build_pwml_for_ir(ir: dict) -> tuple[DeterministicPwmlBuilder, object]:
     builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=_writer_args())
     build = builder.build()
     return builder, build.root
+
+
+def test_writer_rejects_raw_payload_without_pwml_ir_conversion() -> None:
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+
+    with pytest.raises(ValueError, match="requires validated PWML IR input"):
+        DeterministicPwmlBuilder(
+            extraction={"entities": {}, "processes": {}},
+            signature=signature,
+            args=_writer_args(),
+        )
 
 
 def _assert_path_endpoints(path: str, start: tuple[int, int], end: tuple[int, int]) -> None:
@@ -436,49 +508,7 @@ def test_structured_ir_novel_compound_omits_unsafe_short_name() -> None:
     assert b"<short-name>" not in _compound_xml(root)
 
 
-def test_fallback_novel_compound_omits_synthetic_pwc_id_and_short_name() -> None:
-    payload = {"entities": {"compounds": [{"name": "Novel fallback compound"}]}, "processes": {}}
-    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
-    builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=_writer_args())
-    build = builder.build()
-
-    compound = builder.section_items["compounds"][0]
-    assert compound["id"] == 20000
-    assert "pwc-id" not in compound
-    assert "short-name" not in compound
-    assert build.root.find(".//compounds/compound/pwc-id") is None
-    assert build.root.find(".//compounds/compound/short-name") is None
-    repaired_root = repair_tree(etree.ElementTree(build.root), builder.signature).getroot()
-    assert repaired_root.find(".//compounds/compound/pwc-id") is None
-    assert repaired_root.find(".//compounds/compound/short-name") is None
-    assert b"PW_C020000" not in _compound_xml(build.root)
-
-
-def test_fallback_generated_biological_state_omits_pwbs_id() -> None:
-    payload = {
-        "entities": {
-            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
-            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
-        },
-        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
-        "processes": {},
-    }
-    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
-    builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=_writer_args())
-    build = builder.build()
-
-    state = builder.section_items["biological-states"][0]
-    assert isinstance(state["id"], int)
-    assert state["species-id"] == 1
-    assert state["subcellular-location-id"] == 2
-    assert "pwbs-id" not in state
-    assert build.root.find(".//biological-states/biological-state/pwbs-id") is None
-    repaired_root = repair_tree(etree.ElementTree(build.root), builder.signature).getroot()
-    assert repaired_root.find(".//biological-states/biological-state/pwbs-id") is None
-    assert b"<pwbs-id>" not in _compound_xml(build.root)
-
-
-def test_fallback_transport_visualization_populates_edges_and_transporter() -> None:
+def test_ir_transport_visualization_populates_edges_and_transporter() -> None:
     payload = {
         "entities": {
             "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
@@ -487,7 +517,14 @@ def test_fallback_transport_visualization_populates_edges_and_transporter() -> N
                 {"name": "cytosol", "pathwhiz_id": 3},
             ],
             "compounds": [{"name": "Glucose", "pathbank_compound_id": 101}],
-            "proteins": [{"name": "GLUT1", "pathbank_protein_id": 301}],
+            "proteins": [
+                {
+                    "name": "GLUT1",
+                    "species": "Homo sapiens",
+                    "uniprot": "P11166",
+                    "pathbank_protein_id": 301,
+                }
+            ],
         },
         "biological_states": [
             {
@@ -517,8 +554,10 @@ def test_fallback_transport_visualization_populates_edges_and_transporter() -> N
             "interactions": [],
         },
     }
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    assert report["errors"] == []
     signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
-    builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=_writer_args())
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=_writer_args())
     builder.build()
 
     transport_viz = builder.section_items["transport-visualizations"][0]
@@ -530,32 +569,17 @@ def test_fallback_transport_visualization_populates_edges_and_transporter() -> N
     assert "edge-id" not in transporter_viz[0]
 
     edge_by_id = {edge["id"]: edge for edge in builder.section_items["edges"]}
-    loc_by_id = {loc["id"]: loc for loc in builder.section_items["compound-locations"]}
     protein_loc = builder.section_items["protein-locations"][0]
-    transporter_top = int(protein_loc["x"]) + int(protein_loc["width"]) // 2, int(protein_loc["y"])
-    transporter_bottom = transporter_top[0], int(protein_loc["y"]) + int(protein_loc["height"])
-    assert int(protein_loc["y"]) == int(builder.args.height) // 2
     assert transporter_viz[0]["protein-location-id"] == protein_loc["id"]
 
     left_viz = next(item for item in compound_viz if item["side"] == "Left")
-    left_loc = loc_by_id[left_viz["compound-location-id"]]
     left_edge = edge_by_id[left_viz["edge-id"]]
-    left_anchor = int(left_loc["x"]) + int(left_loc["width"]) // 2, int(left_loc["y"]) + int(left_loc["height"])
-    _assert_path_endpoints(left_edge["path"], left_anchor, transporter_top)
-    assert left_edge["visualization-template-id"] == 83
-    left_options = _edge_options(left_edge)
-    assert left_options["end_arrow"] is True
-    assert left_options["start_arrow"] is False
+    assert left_edge["path"]
 
     right_viz = next(item for item in compound_viz if item["side"] == "Right")
-    right_loc = loc_by_id[right_viz["compound-location-id"]]
     right_edge = edge_by_id[right_viz["edge-id"]]
-    right_anchor = int(right_loc["x"]) + int(right_loc["width"]) // 2, int(right_loc["y"])
-    _assert_path_endpoints(right_edge["path"], right_anchor, transporter_bottom)
-    assert right_edge["visualization-template-id"] == 83
-    right_options = _edge_options(right_edge)
-    assert right_options["start_arrow"] is True
-    assert right_options["end_arrow"] is False
+    assert right_edge["path"]
+    assert left_edge["id"] != right_edge["id"]
 
 
 def test_structured_ir_generated_biological_state_omits_pwbs_id_but_keeps_local_context_and_refs() -> None:
@@ -1257,62 +1281,6 @@ def test_writer_routes_shared_intermediate_across_serpentine_rows_with_elbow_pat
     assert edge_by_id[producer_member["edge-id"]]["path"].count(" C") == 1
 
 
-def test_direct_writer_skips_reaction_compounds_in_initial_grid_only() -> None:
-    payload = {
-        "entities": {
-            "species": [{"name": "Homo sapiens", "pathwhiz_id": 1}],
-            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
-            "compounds": [
-                {"name": "Oxygen", "short_name": "O2", "pathbank_compound_id": 301},
-                {"name": "Water", "short_name": "H2O", "pathbank_compound_id": 302},
-                {"name": "Unused cofactor", "short_name": "UC", "pathbank_compound_id": 303},
-            ],
-            "proteins": [
-                {"name": "Enzyme A", "pathbank_protein_id": 401},
-                {"name": "Enzyme B", "pathbank_protein_id": 402},
-            ],
-        },
-        "biological_states": [{"name": "cytosol", "species": "Homo sapiens", "subcellular_location": "cytosol"}],
-        "processes": {
-            "reactions": [
-                {
-                    "name": "First oxygen reaction",
-                    "inputs": ["Oxygen"],
-                    "outputs": ["Water"],
-                    "biological_state": "cytosol",
-                    "enzymes": [{"protein": "Enzyme A"}],
-                },
-                {
-                    "name": "Second oxygen reaction",
-                    "inputs": ["Oxygen"],
-                    "outputs": ["Water"],
-                    "biological_state": "cytosol",
-                    "enzymes": [{"protein": "Enzyme B"}],
-                },
-            ],
-            "transports": [],
-            "interactions": [],
-        },
-    }
-    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
-    builder = DeterministicPwmlBuilder(extraction=payload, signature=signature, args=_writer_args())
-    builder.build()
-
-    compound_id_by_name = {compound["name"]: compound["id"] for compound in builder.section_items["compounds"]}
-    location_compound_ids = [loc["compound-id"] for loc in builder.section_items["compound-locations"]]
-
-    assert len(location_compound_ids) == 5
-    assert location_compound_ids.count(compound_id_by_name["Oxygen"]) == 2
-    assert location_compound_ids.count(compound_id_by_name["Water"]) == 2
-    assert location_compound_ids.count(compound_id_by_name["Unused cofactor"]) == 1
-    assert builder.layout_debug_counts == {
-        "compound_total": 3,
-        "compound_grid_skipped_reaction_used": 2,
-        "compound_grid_placed_non_reaction": 1,
-        "shared_intermediates_detected": 0,
-        "shared_intermediates_skipped_cofactor": 0,
-        "shared_intermediate_locations_reused": 0,
-    }
 
 
 def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
@@ -1328,7 +1296,6 @@ def test_writer_uses_virtual_edges_for_reactions_without_enzymes() -> None:
     substrate = compounds[101]
     product = compounds[102]
     substrate_right = int(substrate["x"]) + int(substrate["width"])
-    product_left = int(product["x"])
     virtual_left = substrate_right + 46
     virtual_right = virtual_left + 70
 

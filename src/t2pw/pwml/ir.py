@@ -4,6 +4,11 @@ import re
 from collections import defaultdict
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
+from t2pw.pipeline.entity_identity import (
+    is_generated_complex_wrapper as _is_generated_complex_row,
+    protein_external_identity as _protein_external_id,
+    protein_species_context as _entity_species_context,
+)
 from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
 
@@ -76,54 +81,6 @@ def _first_nonempty(row: Dict[str, Any], keys: Sequence[str]) -> Any:
             if key in top and top.get(key) not in (None, ""):
                 return top.get(key)
     return None
-
-
-def _protein_external_id(row: Dict[str, Any]) -> str:
-    keys = [
-        "uniprot",
-        "uniprot_id",
-        "uniprot-id",
-        "drugbank",
-        "drugbank_id",
-        "drugbank-id",
-    ]
-    value = _first_nonempty(row, keys)
-    if value not in (None, ""):
-        return _canonical(value)
-    for nested_key in ("mapped_ids", "ids", "mapping_meta"):
-        nested = _safe_dict(row.get(nested_key))
-        value = _first_nonempty(nested, keys)
-        if value not in (None, ""):
-            return _canonical(value)
-    return ""
-
-
-def _entity_species_context(row: Dict[str, Any]) -> Any:
-    return (
-        row.get("species")
-        or row.get("organism")
-        or row.get("taxonomy_id")
-        or row.get("species_id")
-        or row.get("pathbank_species_id")
-        or _safe_dict(row.get("species_ref")).get("pathbank_species_id")
-        or _safe_dict(row.get("species_ref")).get("name")
-        or _safe_dict(row.get("mapping_meta")).get("species")
-        or _safe_dict(row.get("mapping_meta")).get("species_id")
-    )
-
-
-def _is_generated_complex_row(row: Dict[str, Any]) -> bool:
-    meta = _safe_dict(row.get("mapping_meta"))
-    reason = _canonical(row.get("generation_reason") or meta.get("generation_reason")).casefold()
-    chosen_rule = _canonical(row.get("chosen_rule") or meta.get("chosen_rule")).casefold()
-    resolution = _safe_dict(meta.get("resolution"))
-    order_step = _canonical(resolution.get("order_step")).casefold()
-    return bool(
-        row.get("generated") is True
-        or reason == "single_protein_pathwhiz_wrapper"
-        or chosen_rule == "novel_enzyme_single_component_complex"
-        or order_step == "novel_enzyme_single_component_complex"
-    )
 
 
 def _db_id(row: Dict[str, Any], keys: Sequence[str]) -> Optional[int]:
@@ -416,6 +373,7 @@ def _copy_common_entity_fields(record: Dict[str, Any], raw: Dict[str, Any]) -> N
         "organism",
         "species_id",
         "pathbank_species_id",
+        "pw_protein_id",
         "hmdb_id",
         "kegg_id",
         "chebi_id",
@@ -976,20 +934,6 @@ def build_pwml_ir(
                 entity_name=pc.get("name"),
             )
 
-    enzyme_complex_by_protein_key: Dict[str, Dict[str, Any]] = {}
-    for pc in ir["entities"]["protein_complexes"]:
-        if not isinstance(pc, dict):
-            continue
-        components = _safe_list(pc.get("components"))
-        if len(components) != 1 or not isinstance(components[0], dict):
-            continue
-        protein_key = str(components[0].get("protein_key") or "")
-        if not protein_key or protein_key in enzyme_complex_by_protein_key:
-            continue
-        typed_pc = dict(pc)
-        typed_pc["entity_type"] = "protein_complex"
-        enzyme_complex_by_protein_key[protein_key] = typed_pc
-
     def resolve_component(source_key: str, value: Any, pointer: str) -> Optional[str]:
         name = _canonical(value)
         if not name:
@@ -1165,66 +1109,18 @@ def build_pwml_ir(
             return entity
         if entity.get("entity_type") != "protein":
             return entity
-        protein_key = str(entity.get("key") or "")
-        if not protein_key:
-            return entity
-        existing = enzyme_complex_by_protein_key.get(protein_key)
-        if existing:
-            return existing
-
-        protein_name = _canonical(entity.get("name")) or protein_key
-        missing_wrapper_fields: List[str] = []
-        if not _entity_species_context(entity):
-            missing_wrapper_fields.append("species")
-        if not _protein_external_id(entity):
-            missing_wrapper_fields.append("uniprot_or_drugbank")
-        if missing_wrapper_fields:
-            _add_issue(
-                report,
-                "error",
-                "enzyme_protein_complex_wrapper_invalid_component",
-                f"Reaction enzyme protein '{protein_name}' cannot be represented as a PathWhiz protein complex without species and UniProt/DrugBank on the source protein.",
-                pointer=pointer,
-                protein_key=protein_key,
-                protein_name=protein_name,
-                missing=missing_wrapper_fields,
-            )
-            return entity
-
-        base_name = f"{protein_name} complex"
-        complex_name = base_name
-        suffix = 2
-        while any(candidate.get("entity_type") == "protein_complex" for candidate in entity_by_name.get(_norm(complex_name), [])):
-            complex_name = f"{base_name} {suffix}"
-            suffix += 1
-        complex_record: Dict[str, Any] = {
-            "key": f"pc_{len(ir['entities']['protein_complexes']) + 1}",
-            "name": complex_name,
-            "components": [{"protein_key": protein_key, "stoichiometry": 1}],
-            "generated": True,
-            "generation_reason": "single_protein_pathwhiz_wrapper",
-            "mapping_meta": {"resolution": {"status": "novel", "issue": "enzyme_wrapped_direct_protein"}},
-        }
-        for species_key in ["species", "organism", "taxonomy_id", "species_id", "pathbank_species_id", "species_ref"]:
-            if entity.get(species_key):
-                complex_record[species_key] = entity.get(species_key)
-        ir["entities"]["protein_complexes"].append(complex_record)
-        typed_pc = dict(complex_record)
-        typed_pc["entity_type"] = "protein_complex"
-        entity_by_key[typed_pc["key"]] = typed_pc
-        entity_by_name[_norm(complex_name)].append(typed_pc)
-        enzyme_complex_by_protein_key[protein_key] = typed_pc
+        protein_name = _canonical(entity.get("name")) or str(entity.get("key") or "<unnamed>")
         _add_issue(
             report,
-            "warning",
-            "enzyme_protein_wrapped_as_complex",
-            f"Reaction enzyme protein '{protein_name}' was represented as a novel single-component protein complex.",
+            "error",
+            "reaction_enzyme_must_be_protein_complex",
+            f"Reaction enzyme '{protein_name}' is still a bare protein; Stage 6 must create its PathWhiz protein-complex wrapper before export.",
             pointer=pointer,
-            protein_key=protein_key,
-            protein_complex_key=complex_record["key"],
-            protein_complex_name=complex_name,
+            protein_key=entity.get("key"),
+            protein_name=protein_name,
+            entity_type="protein",
         )
-        return typed_pc
+        return entity
 
     location_by_tuple: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
 
@@ -1375,6 +1271,8 @@ def build_pwml_ir(
             "left": [],
             "right": [],
             "enzymes": [],
+            # Spontaneity is not modeled currently; every reaction is exported as non-spontaneous.
+            "spontaneous": False,
         }
         members_for_viz: List[Dict[str, Any]] = []
 
@@ -1446,15 +1344,17 @@ def build_pwml_ir(
                         }
                     )
 
-        enzyme_sources: List[Any] = []
-        enzyme_sources.extend(_safe_list(raw.get("enzymes")))
+        enzyme_sources: List[Tuple[Any, bool]] = [
+            (actor, False) for actor in _safe_list(raw.get("enzymes"))
+        ]
         for mod in _safe_list(raw.get("modifiers")):
             if not isinstance(mod, dict):
                 continue
             role = _canonical(mod.get("role")).lower()
             if role in {"catalyst", "activator", "inhibitor", "enzyme"}:
-                enzyme_sources.append(mod)
-        for eidx, actor in enumerate(enzyme_sources):
+                enzyme_sources.append((mod, True))
+        explicit_enzyme_actors: set[Tuple[str, str]] = set()
+        for eidx, (actor, is_modifier) in enumerate(enzyme_sources):
             name, hint, role = _actor_name_and_hint(actor)
             if not name:
                 if isinstance(actor, dict) and actor.get("evidence"):
@@ -1483,6 +1383,11 @@ def build_pwml_ir(
                 )
                 continue
             entity = ensure_enzyme_complex_entity(entity, f"/processes/reactions/{ridx}/enzymes/{eidx}")
+            logical_actor = (str(entity.get("key") or ""), role or "catalyst")
+            if is_modifier and logical_actor in explicit_enzyme_actors:
+                continue
+            if not is_modifier:
+                explicit_enzyme_actors.add(logical_actor)
             member_key = f"{rx_key}_enzyme_{len(reaction['enzymes']) + 1}"
             reaction["enzymes"].append(
                 {"key": member_key, "entity_type": entity["entity_type"], "entity_key": entity["key"], "role": role or "catalyst"}
@@ -1782,8 +1687,13 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
     """
     errors: List[Dict[str, Any]] = []
     warnings: List[Dict[str, Any]] = []
+    error_keys: set[Tuple[str, str]] = set()
 
     def err(code: str, message: str, pointer: str = "", **extra: Any) -> None:
+        issue_key = (code, pointer or message)
+        if issue_key in error_keys:
+            return
+        error_keys.add(issue_key)
         issue: Dict[str, Any] = {"code": code, "message": message}
         if pointer:
             issue["pointer"] = pointer
@@ -1910,6 +1820,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
     entities = _safe_dict(payload_or_ir.get("entities"))
     all_entity_names: set = set()
     all_entity_keys: set = set()
+    entity_type_by_key: Dict[str, str] = {}
     protein_names: set = set()
     proteins_by_key: Dict[str, Dict[str, Any]] = {}
     proteins_by_name: Dict[str, Dict[str, Any]] = {}
@@ -1931,6 +1842,10 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 k = e.get("key")
                 if k:
                     all_entity_keys.add(k)
+                    entity_type_by_key[str(k)] = next(
+                        (entity_type for entity_type, entity_bucket in ENTITY_BUCKETS.items() if entity_bucket == bucket),
+                        "",
+                    )
                 if bucket == "proteins":
                     if k:
                         proteins_by_key[str(k)] = e
@@ -2186,90 +2101,140 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                         reaction_name=rname,
                     )
 
-        # Enzyme references against entity registry
-        valid_canonical_protein_catalyst_norms: set = set()
-        if not is_ir:
-            for mod in _safe_list(rx.get("modifiers")):
-                if not isinstance(mod, dict):
-                    continue
-                mod_name = _canonical(mod.get("entity"))
-                mod_type = _canonical(mod.get("entity_type") or mod.get("type")).casefold()
-                mod_role = _canonical(mod.get("role") or "catalyst").casefold()
-                if (
-                    mod_name
-                    and mod_type == "protein"
-                    and mod_role == "catalyst"
-                    and _norm(mod_name) in protein_names
-                ):
-                    valid_canonical_protein_catalyst_norms.add(_norm(mod_name))
+        # Enzyme references against entity registry.  Stage 6 is the sole
+        # wrapper-creation boundary, so every surviving protein catalyst must
+        # already reference a declared protein_complex here.
+        enzyme_field = "enzymes" if rx.get("enzymes") is not None else "catalysts"
+        enzyme_raw = _safe_list(rx.get(enzyme_field))
 
-        enzyme_raw = _safe_list(rx.get("enzymes") or rx.get("catalysts"))
-        for eidx, actor in enumerate(enzyme_raw):
-            if is_ir:
-                # IR enzyme members use entity_key; cross-check against built keys
-                if isinstance(actor, dict):
-                    ekey = actor.get("entity_key")
-                    if ekey and ekey not in all_entity_keys:
-                        err(
-                            "enzyme_reference_not_found",
-                            f"Reaction '{rname}' enzyme entity_key '{ekey}' not found in entities.",
-                            f"/processes/reactions/{idx}/enzymes/{eidx}",
-                            reaction_name=rname,
-                            entity_key=ekey,
-                        )
-            else:
-                if isinstance(actor, str):
-                    ename = _canonical(actor)
-                elif isinstance(actor, dict):
-                    ename = _canonical(
-                        actor.get("name")
-                        or actor.get("protein")
-                        or actor.get("protein_complex")
-                        or actor.get("entity")
-                    )
-                    actor_type = _canonical(actor.get("entity_type") or actor.get("type")).casefold()
-                    has_canonical_protein_catalyst = _norm(ename) in valid_canonical_protein_catalyst_norms
-                    if actor_type == "protein" and not has_canonical_protein_catalyst:
-                        err(
-                            "reaction_enzyme_must_be_protein_complex",
-                            f"Reaction '{rname}' enzyme '{ename}' is still represented as a direct protein.",
-                            f"/processes/reactions/{idx}/enzymes/{eidx}",
-                            reaction_name=rname,
-                            enzyme_name=ename,
-                            entity_type=actor_type,
-                        )
-                    elif actor_type == "protein_complex" and ename and _norm(ename) not in protein_complex_names:
-                        err(
-                            "enzyme_reference_not_found",
-                            f"Reaction '{rname}' enzyme protein complex '{ename}' not found in entity registries.",
-                            f"/processes/reactions/{idx}/enzymes/{eidx}",
-                            reaction_name=rname,
-                            enzyme_name=ename,
-                        )
-                else:
+        actor_sources: List[Tuple[Any, str, bool]] = [
+            (actor, f"/processes/reactions/{idx}/{enzyme_field}/{eidx}", False)
+            for eidx, actor in enumerate(enzyme_raw)
+        ]
+        if not is_ir:
+            catalytic_modifier_roles = {"catalyst", "activator", "inhibitor", "enzyme"}
+            for midx, modifier in enumerate(_safe_list(rx.get("modifiers"))):
+                if not isinstance(modifier, dict):
                     continue
-                has_canonical_protein_catalyst = _norm(ename) in valid_canonical_protein_catalyst_norms
-                if (
-                    ename
-                    and _norm(ename) in protein_names
-                    and _norm(ename) not in protein_complex_names
-                    and not has_canonical_protein_catalyst
-                ):
-                    err(
-                        "reaction_enzyme_must_be_protein_complex",
-                        f"Reaction '{rname}' enzyme '{ename}' is still represented as a direct protein.",
-                        f"/processes/reactions/{idx}/enzymes/{eidx}",
-                        reaction_name=rname,
-                        enzyme_name=ename,
+                role = _canonical(modifier.get("role")).casefold()
+                if role in catalytic_modifier_roles:
+                    actor_sources.append(
+                        (modifier, f"/processes/reactions/{idx}/modifiers/{midx}", True)
                     )
-                if ename and _norm(ename) not in all_entity_names:
+
+        # ``modifiers`` is the canonical actor mirror retained alongside
+        # ``enzymes`` by Stage 6.  Repeating an actor within either collection
+        # is invalid, but the same actor once in each collection represents one
+        # logical catalyst and is not an intra-field duplicate.
+        seen_enzyme_complexes_by_source: Dict[bool, set[str]] = {
+            False: set(),
+            True: set(),
+        }
+        for actor, actor_pointer, is_modifier in actor_sources:
+            if is_ir:
+                if not isinstance(actor, dict):
+                    continue
+                entity_key = _canonical(actor.get("entity_key"))
+                declared_type = _canonical(actor.get("entity_type") or actor.get("type")).casefold()
+                referenced_type = entity_type_by_key.get(entity_key, "")
+                if entity_key and entity_key not in all_entity_keys:
                     err(
                         "enzyme_reference_not_found",
-                        f"Reaction '{rname}' enzyme '{ename}' not found in entity registries.",
-                        f"/processes/reactions/{idx}/enzymes/{eidx}",
+                        f"Reaction '{rname}' enzyme entity_key '{entity_key}' not found in entities.",
+                        actor_pointer,
                         reaction_name=rname,
-                        enzyme_name=ename,
+                        entity_key=entity_key,
                     )
+                if declared_type != "protein_complex" or referenced_type not in {"", "protein_complex"}:
+                    err(
+                        "reaction_enzyme_must_be_protein_complex",
+                        f"Reaction '{rname}' enzyme '{entity_key or '<missing>'}' must reference a protein_complex entity.",
+                        actor_pointer,
+                        reaction_name=rname,
+                        entity_key=entity_key,
+                        entity_type=referenced_type or declared_type,
+                    )
+                continue
+
+            if isinstance(actor, str):
+                enzyme_name = _canonical(actor)
+                declared_type = ""
+            elif isinstance(actor, dict):
+                enzyme_name, field_hint, _ = _actor_name_and_hint(actor)
+                declared_type = _canonical(actor.get("entity_type") or actor.get("type") or field_hint).casefold()
+            else:
+                continue
+
+            enzyme_norm = _norm(enzyme_name)
+            resolved_type = ""
+            if declared_type == "protein_complex" and enzyme_norm in protein_complex_names:
+                resolved_type = "protein_complex"
+            elif declared_type == "protein" and enzyme_norm in protein_names:
+                resolved_type = "protein"
+            elif not declared_type:
+                if enzyme_norm in protein_complex_names:
+                    resolved_type = "protein_complex"
+                elif enzyme_norm in protein_names:
+                    resolved_type = "protein"
+
+            # Non-protein catalytic modifiers are cofactors/effectors and are
+            # intentionally dropped by IR construction; they do not need a
+            # protein-complex wrapper.  Explicit enzyme rows have no exemption.
+            proteinish_modifier = bool(
+                declared_type in {"protein", "protein_complex"}
+                or resolved_type in {"protein", "protein_complex"}
+                or enzyme_norm in protein_names
+                or enzyme_norm in protein_complex_names
+            )
+            if is_modifier and not proteinish_modifier:
+                continue
+
+            if resolved_type != "protein_complex":
+                err(
+                    "reaction_enzyme_must_be_protein_complex",
+                    f"Reaction '{rname}' enzyme/modifier '{enzyme_name}' must reference a protein_complex entity.",
+                    actor_pointer,
+                    reaction_name=rname,
+                    enzyme_name=enzyme_name,
+                    entity_type=resolved_type or declared_type,
+                )
+
+            if declared_type == "protein_complex" and enzyme_name and enzyme_norm not in protein_complex_names:
+                err(
+                    "enzyme_reference_not_found",
+                    f"Reaction '{rname}' enzyme protein complex '{enzyme_name}' not found in entity registries.",
+                    actor_pointer,
+                    reaction_name=rname,
+                    enzyme_name=enzyme_name,
+                )
+            elif declared_type == "protein" and enzyme_name and enzyme_norm not in protein_names:
+                err(
+                    "enzyme_reference_not_found",
+                    f"Reaction '{rname}' enzyme protein '{enzyme_name}' not found in entity registries.",
+                    actor_pointer,
+                    reaction_name=rname,
+                    enzyme_name=enzyme_name,
+                )
+            elif enzyme_name and enzyme_norm not in all_entity_names:
+                err(
+                    "enzyme_reference_not_found",
+                    f"Reaction '{rname}' enzyme '{enzyme_name}' not found in entity registries.",
+                    actor_pointer,
+                    reaction_name=rname,
+                    enzyme_name=enzyme_name,
+                )
+
+            if resolved_type == "protein_complex":
+                seen_enzyme_complexes = seen_enzyme_complexes_by_source[is_modifier]
+                if enzyme_norm in seen_enzyme_complexes:
+                    err(
+                        "duplicate_reaction_enzyme_complex",
+                        f"Reaction '{rname}' assigns protein complex '{enzyme_name}' more than once.",
+                        actor_pointer,
+                        reaction_name=rname,
+                        enzyme_name=enzyme_name,
+                    )
+                seen_enzyme_complexes.add(enzyme_norm)
 
     # ── LOCATION / VISUALIZATION REFERENCES (IR only) ────────────────────────
     if not is_ir:

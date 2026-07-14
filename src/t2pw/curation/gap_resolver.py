@@ -361,6 +361,61 @@ _COMPARTMENT_ALIAS_MAP: Dict[str, str] = {
     "endosomal": "endosome",
 }
 
+_EUKARYOTIC_ONLY_LOCATION_TERMS = {
+    "chloroplast",
+    "endoplasmic reticulum",
+    "endoplasmic reticulum membrane",
+    "endosome",
+    "er membrane",
+    "golgi",
+    "golgi apparatus",
+    "lysosome",
+    "mitochondria",
+    "mitochondrial matrix",
+    "mitochondrial membrane",
+    "mitochondrion",
+    "nuclear membrane",
+    "nucleus",
+    "peroxisome",
+    "vacuole",
+}
+_NEUTRAL_LOCATION_TERMS = {
+    "cell",
+    "cell membrane",
+    "cytoplasm",
+    "cytosol",
+    "extracellular",
+    "extracellular space",
+    "inner membrane",
+    "outer membrane",
+    "periplasm",
+    "plasma membrane",
+}
+_PROKARYOTIC_ORGANISM_MARKERS = {
+    "archaea",
+    "bacteria",
+    "prokaryote",
+    "pseudomonas",
+    "escherichia",
+    "bacillus",
+    "streptomyces",
+    "staphylococcus",
+    "salmonella",
+    "klebsiella",
+    "mycobacterium",
+    "cyanobacter",
+}
+_EUKARYOTIC_ORGANISM_MARKERS = {
+    "eukaryota",
+    "animalia",
+    "fungi",
+    "metazoa",
+    "plantae",
+    "arabidopsis",
+    "homo sapiens",
+    "saccharomyces",
+}
+
 
 def _resolve_canonical_compartment(location: str) -> str:
     """Return canonical compartment name for location, or empty string if no match."""
@@ -377,6 +432,117 @@ def _resolve_canonical_compartment(location: str) -> str:
         if term in norm:
             return term
     return ""
+
+
+def _organism_taxonomy_context(payload: Dict[str, Any], organism: str) -> Dict[str, str]:
+    organism_name = _canonical(organism)
+    organism_norm = _normalize(organism_name)
+    entities = _safe_dict(payload.get("entities"))
+    matched: Dict[str, Any] = {}
+    for row in _safe_list(entities.get("species")):
+        if not isinstance(row, dict):
+            continue
+        row_name = _canonical(str(row.get("name") or row.get("species") or ""))
+        if organism_norm and _normalize(row_name) == organism_norm:
+            matched = row
+            break
+        if not organism_norm and not matched and row_name:
+            matched = row
+
+    taxonomy_id = _canonical(
+        str(
+            matched.get("taxonomy_id")
+            or matched.get("taxonomy-id")
+            or matched.get("ncbi_taxonomy_id")
+            or ""
+        )
+    )
+    lineage_parts = [
+        matched.get("domain"),
+        matched.get("kingdom"),
+        matched.get("superkingdom"),
+        matched.get("lineage"),
+        matched.get("taxonomy_lineage"),
+    ]
+    lineage = " ".join(str(part) for part in lineage_parts if _canonical(str(part or "")))
+    classification_text = _normalize(" ".join((organism_name, taxonomy_id, lineage)))
+    if taxonomy_id in {"2", "2157"} or any(
+        marker in classification_text for marker in _PROKARYOTIC_ORGANISM_MARKERS
+    ):
+        cell_type = "prokaryote"
+    elif taxonomy_id == "2759" or any(
+        marker in classification_text for marker in _EUKARYOTIC_ORGANISM_MARKERS
+    ):
+        cell_type = "eukaryote"
+    else:
+        cell_type = "unknown"
+    return {
+        "organism": organism_name,
+        "taxonomy_id": taxonomy_id,
+        "lineage": _canonical(lineage),
+        "cell_type": cell_type,
+    }
+
+
+def _location_term_matches(location: str, terms: set[str]) -> bool:
+    normalized = _normalize(location)
+    padded = f" {normalized} "
+    return any(f" {_normalize(term)} " in padded for term in terms)
+
+
+def _location_has_source_support(candidate: Dict[str, Any]) -> bool:
+    if candidate.get("source_supported") is True:
+        return True
+    source = _normalize(str(candidate.get("source") or ""))
+    evidence = _normalize(str(candidate.get("evidence") or ""))
+    return source in {"source text", "biological state", "explicit", "user"} or any(
+        marker in evidence for marker in ("source text", "explicit evidence", "biological state")
+    )
+
+
+def _rank_compatible_location_candidates(
+    candidates: List[Dict[str, Any]],
+    *,
+    organism_context: Dict[str, str],
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    cell_type = organism_context.get("cell_type", "unknown")
+    ranked: List[Tuple[Tuple[int, int, int, float, int], Dict[str, Any]]] = []
+    rejected: List[Dict[str, Any]] = []
+    for index, raw_candidate in enumerate(candidates):
+        if not isinstance(raw_candidate, dict):
+            continue
+        candidate = dict(raw_candidate)
+        location = _canonical(str(candidate.get("location") or ""))
+        if not location:
+            continue
+        eukaryotic_only = _location_term_matches(location, _EUKARYOTIC_ONLY_LOCATION_TERMS)
+        neutral = _location_term_matches(location, _NEUTRAL_LOCATION_TERMS)
+        source_supported = _location_has_source_support(candidate)
+        if cell_type == "prokaryote" and eukaryotic_only:
+            candidate["organism_compatibility"] = "incompatible_eukaryotic_organelle"
+            candidate["organism_context"] = dict(organism_context)
+            rejected.append(candidate)
+            continue
+
+        if cell_type == "unknown" and eukaryotic_only:
+            compatibility_rank = 0
+            compatibility = "uncertain_eukaryotic_organelle"
+        else:
+            compatibility_rank = 2 if cell_type != "unknown" or neutral else 1
+            compatibility = "compatible" if cell_type != "unknown" else "uncertain"
+        candidate["organism_compatibility"] = compatibility
+        candidate["organism_context"] = dict(organism_context)
+        score = _to_float(candidate.get("score"))
+        sort_key = (
+            1 if source_supported else 0,
+            compatibility_rank,
+            1 if neutral else 0,
+            score,
+            -index,
+        )
+        ranked.append((sort_key, candidate))
+    ranked.sort(key=lambda entry: entry[0], reverse=True)
+    return [candidate for _, candidate in ranked], rejected
 
 
 def _ensure_biological_state(
@@ -675,6 +841,186 @@ def _component_is_resolved(value: Any) -> bool:
     return str(value.get("mapping_status") or "").strip().lower() == "mapped"
 
 
+def _protein_member_identity(row: Dict[str, Any]) -> Dict[str, Any]:
+    identity: Dict[str, Any] = {}
+    for field in ("pathbank_protein_id", "pw_protein_id", "pathwhiz_id"):
+        if _present(row.get(field)):
+            identity[field] = row[field]
+
+    mapped_ids = dict(_safe_dict(row.get("mapped_ids")))
+    mapping_meta = _safe_dict(row.get("mapping_meta"))
+    for source_field, mapped_field in (
+        ("uniprot", "uniprot"),
+        ("uniprot_id", "uniprot"),
+        ("drugbank", "drugbank"),
+        ("drugbank_id", "drugbank"),
+    ):
+        value = _canonical(str(row.get(source_field) or mapping_meta.get(source_field) or ""))
+        if value and not mapped_ids.get(mapped_field):
+            mapped_ids[mapped_field] = value
+    if mapped_ids:
+        identity["mapped_ids"] = mapped_ids
+    return identity
+
+
+def _mapped_proteins_by_name(entities: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    indexed: Dict[str, Dict[str, Any]] = {}
+    for row in _safe_list(entities.get("proteins")):
+        if not isinstance(row, dict):
+            continue
+        name = _canonical(str(row.get("name") or ""))
+        identity = _protein_member_identity(row)
+        if name and identity:
+            indexed.setdefault(_normalize(name), row)
+    return indexed
+
+
+def _resolve_declared_complex_components(
+    complex_row: Dict[str, Any],
+    *,
+    complex_index: int,
+    proteins_by_name: Dict[str, Dict[str, Any]],
+) -> Dict[str, Any]:
+    original_components = _safe_list(complex_row.get("components"))
+    structured_components: List[Dict[str, Any]] = []
+    resolved_components: List[Dict[str, Any]] = []
+    unresolved_components: List[Dict[str, Any]] = []
+    missing_stoichiometry: List[Dict[str, Any]] = []
+
+    for component_index, raw_component in enumerate(original_components):
+        component_name = _component_name(raw_component)
+        pointer = f"/entities/protein_complexes/{complex_index}/components/{component_index}"
+        component = dict(raw_component) if isinstance(raw_component, dict) else {}
+        if component_name:
+            component["name"] = component_name
+
+        declared_protein = proteins_by_name.get(_normalize(component_name)) if component_name else None
+        member_identity = _protein_member_identity(declared_protein) if declared_protein else {}
+        if declared_protein is not None and member_identity:
+            component["name"] = _canonical(str(declared_protein.get("name") or component_name))
+            existing_ids = _safe_dict(component.get("mapped_ids"))
+            declared_ids = _safe_dict(member_identity.get("mapped_ids"))
+            if declared_ids or existing_ids:
+                component["mapped_ids"] = {**existing_ids, **declared_ids}
+            for field in ("pathbank_protein_id", "pw_protein_id", "pathwhiz_id"):
+                if _present(member_identity.get(field)):
+                    component[field] = member_identity[field]
+            component["mapping_status"] = "mapped"
+            resolved_components.append(
+                {
+                    "component_index": component_index,
+                    "component": component["name"],
+                    "path": pointer,
+                }
+            )
+        else:
+            unresolved_components.append(
+                {
+                    "component_index": component_index,
+                    "component": component_name or f"component_{component_index}",
+                    "path": pointer,
+                    "code": "component_protein_unresolved",
+                }
+            )
+
+        if not _component_has_stoichiometry(component):
+            missing_stoichiometry.append(
+                {
+                    "component_index": component_index,
+                    "component": component_name or f"component_{component_index}",
+                    "path": pointer,
+                    "code": "component_missing_stoichiometry",
+                    "resolution_owner": "audit",
+                }
+            )
+        structured_components.append(component)
+
+    if structured_components != original_components:
+        complex_row["components"] = structured_components
+    return {
+        "changed": structured_components != original_components,
+        "resolved_components": resolved_components,
+        "unresolved_components": unresolved_components,
+        "missing_stoichiometry": missing_stoichiometry,
+    }
+
+
+def _refresh_complex_component_issue(issue: Dict[str, Any], resolution: Dict[str, Any]) -> None:
+    unresolved_components = _safe_list(resolution.get("unresolved_components"))
+    missing_stoichiometry = _safe_list(resolution.get("missing_stoichiometry"))
+    issue["component_protein_unresolved"] = bool(unresolved_components)
+    issue["unresolved_components"] = unresolved_components
+    issue["component_missing_stoichiometry"] = bool(missing_stoichiometry)
+    issue["missing_component_stoichiometry"] = missing_stoichiometry
+    issue["needs_id_mapping"] = False
+    issue["complex_level_id_optional"] = True
+
+    reasons = [
+        reason
+        for reason in _safe_list(issue.get("reasons"))
+        if reason not in {"protein_complex_missing_id_mapping", "component_protein_unresolved", "component_missing_stoichiometry"}
+    ]
+    missing_fields = [
+        field
+        for field in _safe_list(issue.get("missing_fields"))
+        if field not in {"pathbank_protein_complex_id", "components.pathbank_protein_id", "components.stoichiometry"}
+    ]
+    if unresolved_components:
+        reasons.append("component_protein_unresolved")
+        missing_fields.append("components.member_identity")
+    if missing_stoichiometry:
+        reasons.append("component_missing_stoichiometry")
+        missing_fields.append("components.stoichiometry")
+    issue["reasons"] = reasons
+    issue["missing_fields"] = missing_fields
+    issue["resolved_by_gap_resolver"] = not bool(reasons)
+
+
+def _defer_complex_stoichiometry_patches(
+    patches: List[Dict[str, Any]],
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    allowed: List[Dict[str, Any]] = []
+    deferred: List[Dict[str, Any]] = []
+    pattern = re.compile(
+        r"^/entities/protein_complexes/\d+/components/\d+/(?:stoichiometry|coefficient)$"
+    )
+    for patch in patches:
+        if not isinstance(patch, dict):
+            continue
+        if pattern.match(_canonical(str(patch.get("path") or ""))):
+            deferred.append(
+                {
+                    **patch,
+                    "deferred_reason": "component_stoichiometry_requires_source_evidence_or_audit",
+                    "resolution_owner": "audit",
+                }
+            )
+            continue
+        allowed.append(patch)
+    return allowed, deferred
+
+
+def _append_unresolved_stage3_issues(
+    report: Dict[str, Any], issues: List[Dict[str, Any]]
+) -> None:
+    stage3 = _safe_dict(report.get("stage3"))
+    destination = stage3.setdefault("unresolved_issues", [])
+    if not isinstance(destination, list):
+        destination = []
+        stage3["unresolved_issues"] = destination
+    existing = {
+        (str(issue.get("code") or ""), str(issue.get("path") or ""))
+        for issue in destination
+        if isinstance(issue, dict)
+    }
+    for issue in issues:
+        identity = (str(issue.get("code") or ""), str(issue.get("path") or ""))
+        if identity in existing:
+            continue
+        destination.append(dict(issue))
+        existing.add(identity)
+
+
 def _indexed_locations(payload: Dict[str, Any]) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
     locations = _safe_dict(payload.get("element_locations"))
     out: Dict[str, Dict[str, List[Dict[str, Any]]]] = {
@@ -900,12 +1246,12 @@ def _collect_stage3_issues(payload: Dict[str, Any], *, max_items: int) -> List[D
                 )
         needs_species = not _has_species_ref(item)
         missing_components = not bool(components)
-        needs_id_mapping = not _has_entity_db_id(item, "protein_complex")
+        has_complex_db_id = _has_entity_db_id(item, "protein_complex")
+        # A novel complex is valid from its member structure. A PathBank-level
+        # complex ID is useful when available, but it is not a required gap.
+        needs_id_mapping = False
         missing_fields = []
         reasons = []
-        if needs_id_mapping:
-            missing_fields.append("pathbank_protein_complex_id")
-            reasons.append("protein_complex_missing_id_mapping")
         if needs_species:
             missing_fields.append("species")
             reasons.append("protein_complex_missing_species")
@@ -932,6 +1278,8 @@ def _collect_stage3_issues(payload: Dict[str, Any], *, max_items: int) -> List[D
                     "name": name,
                     "path": f"/entities/protein_complexes/{idx}",
                     "needs_id_mapping": needs_id_mapping,
+                    "has_complex_db_id": has_complex_db_id,
+                    "complex_level_id_optional": True,
                     "needs_species": needs_species,
                     "needs_location_link": bool(location_fields["needs_location_link"]),
                     "needs_location_state_fill": bool(location_fields["needs_location_state_fill"]),
@@ -2332,6 +2680,9 @@ def resolve_gaps(
             "organisms_added": 0,
             "locations_added": 0,
             "location_states_filled": 0,
+            "complex_components_structured": 0,
+            "complex_components_resolved": 0,
+            "complex_stoichiometry_issues_deferred": 0,
             "items_considered": 0,
         },
         "actions": [],
@@ -2340,6 +2691,7 @@ def resolve_gaps(
             "planner": {},
             "operations": [],
             "executions": [],
+            "unresolved_issues": [],
         },
     }
     entities = _safe_dict(working.get("entities"))
@@ -2372,7 +2724,11 @@ def resolve_gaps(
 
     issue_by_key = {str(issue.get("issue_key", "")): issue for issue in issues if isinstance(issue, dict)}
     entity_by_key: Dict[str, Dict[str, Any]] = {}
-    for kind, rows in [("protein", _safe_list(entities.get("proteins"))), ("compound", _safe_list(entities.get("compounds")))]:
+    for kind, rows in [
+        ("protein", _safe_list(entities.get("proteins"))),
+        ("compound", _safe_list(entities.get("compounds"))),
+        ("protein_complex", _safe_list(entities.get("protein_complexes"))),
+    ]:
         for row in rows:
             if not isinstance(row, dict):
                 continue
@@ -2380,6 +2736,7 @@ def resolve_gaps(
             if not name:
                 continue
             entity_by_key[_issue_key(kind, name)] = row
+    proteins_by_name = _mapped_proteins_by_name(entities)
 
     fallback_location = "cell"
     for op in operations:
@@ -2398,9 +2755,62 @@ def resolve_gaps(
         name = _canonical(str(issue.get("name", "")))
         op_exec: Dict[str, Any] = {"issue_key": issue_key, "entity_type": kind, "name": name, "status": "ok"}
 
-        if kind == "protein" and bool(issue.get("needs_organism")) and global_organism:
-            if not _canonical(str(item.get("organism", ""))):
-                item["organism"] = global_organism
+        if kind == "protein_complex":
+            complex_index = next(
+                (
+                    index
+                    for index, complex_row in enumerate(_safe_list(entities.get("protein_complexes")))
+                    if complex_row is item
+                ),
+                -1,
+            )
+            if complex_index >= 0:
+                component_resolution = _resolve_declared_complex_components(
+                    item,
+                    complex_index=complex_index,
+                    proteins_by_name=proteins_by_name,
+                )
+                _refresh_complex_component_issue(issue, component_resolution)
+                resolved_components = _safe_list(component_resolution.get("resolved_components"))
+                missing_stoichiometry = _safe_list(component_resolution.get("missing_stoichiometry"))
+                if component_resolution.get("changed"):
+                    report["summary"]["complex_components_structured"] += 1
+                report["summary"]["complex_components_resolved"] += len(resolved_components)
+                op_exec["component_resolution"] = component_resolution
+                if resolved_components:
+                    report["actions"].append(
+                        {
+                            "type": "protein_complex_components_resolved",
+                            "entity_type": kind,
+                            "name": name,
+                            "components": resolved_components,
+                            "source": "declared_mapped_proteins",
+                            "stage": "stage3",
+                        }
+                    )
+                if missing_stoichiometry:
+                    _append_unresolved_stage3_issues(report, missing_stoichiometry)
+                    report["summary"]["complex_stoichiometry_issues_deferred"] = len(
+                        report["stage3"]["unresolved_issues"]
+                    )
+                    op_exec["unresolved_issues"] = missing_stoichiometry
+
+        if kind in {"protein", "protein_complex"} and bool(
+            issue.get("needs_organism") or issue.get("needs_species")
+        ) and global_organism:
+            if not _has_species_ref(item):
+                species_field = "organism" if kind == "protein" else "species"
+                item[species_field] = global_organism
+                issue["needs_species"] = False
+                issue["needs_organism"] = False
+                issue["missing_fields"] = [
+                    field for field in _safe_list(issue.get("missing_fields")) if field != "species"
+                ]
+                issue["reasons"] = [
+                    reason
+                    for reason in _safe_list(issue.get("reasons"))
+                    if reason not in {"protein_missing_species", "protein_complex_missing_species"}
+                ]
                 report["summary"]["organisms_added"] += 1
                 report["actions"].append(
                     {
@@ -2539,10 +2949,29 @@ def resolve_gaps(
             need_add_row = not bool(rows)
 
             loc_candidates: List[Dict[str, Any]] = []
-            if loc_strategy in {"db_then_default"}:
+            if loc_strategy in {"db_then_default"} and kind in {"compound", "protein"}:
                 loc_candidates = _db_location_candidates(db, kind=kind, name=name, max_items=6)
+            entity_organism = (
+                _row_species_name(item)
+                if kind in {"protein", "protein_complex"}
+                else global_organism
+            ) or global_organism
+            organism_context = _organism_taxonomy_context(working, entity_organism)
+            loc_candidates, rejected_location_candidates = _rank_compatible_location_candidates(
+                loc_candidates,
+                organism_context=organism_context,
+            )
             if not loc_candidates:
-                loc_candidates = [{"location": fallback_location, "score": 1.0, "source": "default", "evidence": "fallback_cell"}]
+                loc_candidates = [
+                    {
+                        "location": fallback_location,
+                        "score": 1.0,
+                        "source": "default",
+                        "evidence": "fallback_cell",
+                        "organism_compatibility": "neutral_fallback",
+                        "organism_context": organism_context,
+                    }
+                ]
             loc_decision = _llm_choose_location(
                 kind=kind,
                 name=name,
@@ -2554,6 +2983,8 @@ def resolve_gaps(
             chosen_loc = _canonical(str(loc_decision.get("choice", ""))) or fallback_location
             state_name = _ensure_biological_state(working, chosen_loc, global_organism)
             op_exec["location_candidates"] = loc_candidates[:6]
+            op_exec["rejected_location_candidates"] = rejected_location_candidates[:6]
+            op_exec["organism_context"] = organism_context
             op_exec["location_decision"] = loc_decision
             op_exec["chosen_location"] = chosen_loc
             op_exec["chosen_state"] = state_name
@@ -2614,7 +3045,9 @@ def resolve_gaps(
     agent_issue_types = {"species", "biological_state", "protein_complex", "reaction_modifier"}
     stage3_agent_issues = [
         issue for issue in issues
-        if isinstance(issue, dict) and str(issue.get("entity_type") or "") in agent_issue_types
+        if isinstance(issue, dict)
+        and str(issue.get("entity_type") or "") in agent_issue_types
+        and not bool(issue.get("resolved_by_gap_resolver"))
     ]
     if use_llm and (qa_report is not None or stage3_agent_issues):
         enrichment_patches, enrichment_report = _run_enrichment_agent(
@@ -2630,6 +3063,31 @@ def resolve_gaps(
             stage3_issues=stage3_agent_issues,
         )
         report["enrichment"] = enrichment_report
+
+        if enrichment_patches:
+            enrichment_patches, deferred_stoichiometry_patches = _defer_complex_stoichiometry_patches(
+                enrichment_patches
+            )
+            report["enrichment"]["deferred_stoichiometry_patches"] = deferred_stoichiometry_patches
+            _append_unresolved_stage3_issues(
+                report,
+                [
+                    {
+                        "code": "component_missing_stoichiometry",
+                        "path": re.sub(
+                            r"/(?:stoichiometry|coefficient)$",
+                            "",
+                            str(patch.get("path") or ""),
+                        ),
+                        "resolution_owner": "audit",
+                        "reason": patch.get("deferred_reason", ""),
+                    }
+                    for patch in deferred_stoichiometry_patches
+                ],
+            )
+            report["summary"]["complex_stoichiometry_issues_deferred"] = len(
+                report["stage3"]["unresolved_issues"]
+            )
 
         if enrichment_patches:
             working, patch_apply_report = apply_patch_with_policy(

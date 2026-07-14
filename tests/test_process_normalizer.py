@@ -387,6 +387,78 @@ def test_attach_enzymes_from_reaction_evidence_emits_actor_dict_and_requires_cue
     assert report["summary"]["enzymes_attached_from_reaction_evidence"] == 1
 
 
+def test_attach_enzymes_from_evidence_is_idempotent_for_generated_wrapper() -> None:
+    payload = {
+        "entities": {
+            "proteins": [{"name": "NdmA"}],
+            "protein_complexes": [
+                {
+                    "name": "NdmA complex",
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                    "components": [{"name": "NdmA", "stoichiometry": 1}],
+                }
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "caffeine demethylation",
+                    "evidence": "NdmA catalyzes caffeine demethylation.",
+                    "enzymes": [
+                        {"entity": "NdmA complex", "entity_type": "protein_complex"}
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+    report = {"summary": {}, "actions": []}
+
+    attach_enzymes_from_reaction_evidence(payload, report=report)
+    attach_enzymes_from_reaction_evidence(payload, report=report)
+
+    assert payload["processes"]["reactions"][0]["enzymes"] == [
+        {"entity": "NdmA complex", "entity_type": "protein_complex"}
+    ]
+    assert report["summary"]["enzymes_attached_from_reaction_evidence"] == 0
+
+
+def test_multi_protein_complex_does_not_stand_in_for_one_member() -> None:
+    payload = {
+        "entities": {
+            "proteins": [{"name": "NdmA"}, {"name": "NdmB"}],
+            "protein_complexes": [
+                {
+                    "name": "NdmAB complex",
+                    "generated": True,
+                    "components": [
+                        {"name": "NdmA", "stoichiometry": 1},
+                        {"name": "NdmB", "stoichiometry": 1},
+                    ],
+                }
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "caffeine demethylation",
+                    "evidence": "NdmA catalyzes caffeine demethylation.",
+                    "enzymes": [
+                        {"entity": "NdmAB complex", "entity_type": "protein_complex"}
+                    ],
+                }
+            ],
+            "transports": [],
+        },
+    }
+
+    attach_enzymes_from_reaction_evidence(payload)
+
+    assert payload["processes"]["reactions"][0]["enzymes"][-1]["entity"] == "NdmA"
+    assert payload["processes"]["reactions"][0]["enzymes"][-1]["entity_type"] == "protein"
+
+
 def test_prune_disconnected_proteins_keeps_identified_proteins() -> None:
     payload = {
         "entities": {
@@ -894,8 +966,11 @@ def test_catalytic_interaction_to_reaction_name_is_promoted_and_removed() -> Non
     ir, ir_report = build_pwml_ir(normalized, strict_db=False)
     validation = validate_pwml_ir(ir)
 
-    assert not ir_report["errors"]
-    assert validation["ok"], validation["errors"]
+    assert "reaction_enzyme_must_be_protein_complex" in {
+        error["code"] for error in ir_report["errors"]
+    }
+    assert not validation["ok"]
+    assert ir["entities"]["protein_complexes"] == []
     assert ir["processes"]["interactions"] == []
     assert ir["processes"]["reactions"][0]["enzymes"]
 
@@ -1091,7 +1166,7 @@ def test_mixed_protein_and_plp_catalysts_keep_protein_drop_non_protein() -> None
     )
 
 
-def test_required_contract_accepts_generated_legacy_protein_enzyme_with_canonical_modifier() -> None:
+def test_stage8_rejects_bare_protein_enzyme_with_canonical_modifier() -> None:
     payload = {
         "metadata": {"name": "Norbelladine methylation", "subject": "metabolic"},
         "entities": {
@@ -1148,10 +1223,21 @@ def test_required_contract_accepts_generated_legacy_protein_enzyme_with_canonica
     ir, report = build_pwml_ir(payload, strict_db=True)
     validation = validate_pwml_ir(ir)
 
-    assert "reaction_enzyme_must_be_protein_complex" not in {err["code"] for err in contract["errors"]}
-    assert not report["errors"]
-    assert validation["ok"], validation["errors"]
-    assert ir["processes"]["reactions"][0]["enzymes"][0]["entity_type"] == "protein_complex"
+    wrapper_errors = [
+        err
+        for err in contract["errors"]
+        if err["code"] == "reaction_enzyme_must_be_protein_complex"
+    ]
+    assert {err["pointer"] for err in wrapper_errors} == {
+        "/processes/reactions/0/enzymes/0",
+        "/processes/reactions/0/modifiers/0",
+    }
+    assert len(wrapper_errors) == 2
+    assert "reaction_enzyme_must_be_protein_complex" in {
+        err["code"] for err in report["errors"]
+    }
+    assert not validation["ok"]
+    assert ir["processes"]["reactions"][0]["enzymes"][0]["entity_type"] == "protein"
 
 
 def test_mapping_route_and_species_id_helpers() -> None:
@@ -1354,6 +1440,69 @@ def test_stage3_gate_rejects_generated_complex_wrapper_under_proteins() -> None:
 
     errors = excinfo.value.details["errors"]
     assert any("must be listed under protein_complexes" in err["reason"] for err in errors)
+
+
+def test_normalize_composites_preserves_named_complex_in_protein_locations() -> None:
+    payload = {
+        "entities": {
+            "compounds": [{"name": "caffeine"}],
+            "proteins": [
+                {"name": "NdmC", "species": "Pseudomonas putida", "mapped_ids": {"uniprot": "Q9I147"}},
+                {"name": "NdmD", "species": "Pseudomonas putida", "mapped_ids": {"uniprot": "Q9I146"}},
+                {"name": "NdmE", "species": "Pseudomonas putida", "mapped_ids": {"uniprot": "Q9I145"}},
+            ],
+            "protein_complexes": [
+                {
+                    "name": "NdmCDE",
+                    "species": "Pseudomonas putida",
+                    "components": [{"name": "NdmC"}, {"name": "NdmD"}, {"name": "NdmE"}],
+                }
+            ],
+        },
+        "element_locations": {
+            "compound_locations": [],
+            "protein_locations": [{"protein": "ndmcde", "biological_state": "cyto_state"}],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    normalize_composites(payload)
+
+    assert [row["name"] for row in payload["entities"]["proteins"]] == ["NdmC", "NdmD", "NdmE"]
+    assert payload["entities"]["protein_complexes"][0]["name"] == "NdmCDE"
+    assert payload["element_locations"]["protein_locations"] == [
+        {"protein": "NdmCDE", "biological_state": "cyto_state"}
+    ]
+
+
+def test_stage3_gate_rejects_name_declared_as_protein_and_protein_complex() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {
+                    "name": "NdmCDE",
+                    "species": "Pseudomonas putida",
+                    "mapped_ids": {"uniprot": "Q9I147"},
+                }
+            ],
+            "protein_complexes": [
+                {
+                    "name": "NdmCDE",
+                    "species": "Pseudomonas putida",
+                    "components": [{"name": "NdmC"}, {"name": "NdmD"}, {"name": "NdmE"}],
+                }
+            ],
+        },
+        "processes": {"reactions": [], "transports": [], "interactions": []},
+    }
+
+    with pytest.raises(GateValidationError) as excinfo:
+        run_strict_post_normalization_gates(payload, enforce_all_proteins_connected=False)
+
+    errors = excinfo.value.details["errors"]
+    duplicate = next(err for err in errors if "declared as both a protein and a protein_complex" in err["reason"])
+    assert duplicate["path"] == "/entities/proteins/0/name"
+    assert "/entities/protein_complexes/0/name" in duplicate["reason"]
 
 
 def test_stage3_gate_rejects_generated_complex_component_without_uniprot_or_drugbank() -> None:

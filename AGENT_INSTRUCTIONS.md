@@ -10,19 +10,23 @@ Convert plain-text pathway descriptions into **SBML Level 3** files that can be 
 
 ```
 User text
-    ↓ LLM extraction (extract.py)
-Raw JSON (pathway schema)
-    ↓ Normalisation (process_normalizer.py)
+    ↓ Stage 1 LLM extraction + Stage 2A inference
+Merged JSON (pathway schema)
+    ↓ Stage 2B annotation-only ID mapping (cache enabled; no wrappers/cleanup)
+Mapped JSON
+    ↓ Stage 3 normalisation (process_normalizer.py)
 Normalised JSON
-    ↓ Audit / gap-fill (audit_json_llm.py, gap_resolver.py)
+    ↓ Stage 4 audit / gap-fill (audit_json_llm.py, gap_resolver.py)
 Audited JSON
-    ↓ ID mapping / enrichment (map_ids.py, enrich_entities.py)
-Mapped JSON  ← contains mapped_ids: {hmdb, kegg, chebi, uniprot, …}
-    ↓ SBML build (json_to_sbml.py)
-SBML file    ← targets PathWhiz import format
+    ↓ Stage 5 curate + Stage 6 wrapper-enabled remap (cache bypassed)
+Final mapped JSON  ← contains mapped_ids: {hmdb, kegg, chebi, uniprot, …}
+    ↓ Stage 7 optional enrichment + Stage 8 export
+PWML file (primary) / SBML file (legacy)
 ```
 
-The Streamlit front-end (`src/app.py`) orchestrates all steps. The user fills in DB credentials, pastes a pathway description, and clicks Run.
+The Streamlit front-end (`src/t2pw/app/streamlit_app.py`) orchestrates all
+steps. It exposes separate Stage 2B and Stage 6 mapping payloads/reports so the
+pre-normalization mapping result is not confused with the post-audit remap.
 
 ---
 
@@ -30,15 +34,16 @@ The Streamlit front-end (`src/app.py`) orchestrates all steps. The user fills in
 
 | File | Purpose |
 |------|---------|
-| `src/app.py` | Streamlit UI + pipeline orchestration |
-| `src/process_normalizer.py` | Normalises the LLM JSON output; contains hard-gate validation |
-| `src/json_to_sbml.py` | Builds the SBML file from mapped JSON |
-| `src/map_ids.py` | Resolves external database IDs (HMDB, KEGG, ChEBI, UniProt) |
-| `src/enrich_entities.py` | Enriches entities with additional xrefs via PathBankDB |
-| `src/qa_graph.py` | Builds a connectivity graph for validation |
-| `src/audit_json_llm.py` | LLM-based audit of the extracted JSON |
-| `src/gap_resolver.py` | Fills missing reactions/entities via LLM |
-| `src/build_pathwhiz_id_db.py` | (Legacy) Builds a local JSON lookup from PWML files — superseded by MySQL |
+| `src/t2pw/app/streamlit_app.py` | Streamlit UI + pipeline orchestration |
+| `src/t2pw/pipeline/process_normalizer.py` | Normalises the mapped JSON; contains strict Stage 3 gates |
+| `src/t2pw/pipeline/stage_contracts.py` | Structural/semantic boundary adapters and centralized runtime-schema rollout mode |
+| `src/t2pw/pipeline/payload_models.py` | Non-mutating recursive runtime payload-shape validation |
+| `src/t2pw/sbml/json_to_sbml.py` | Builds the legacy SBML file from mapped JSON |
+| `src/t2pw/mapping/map_ids.py` | Resolves external IDs at Stage 2B and Stage 6 |
+| `src/t2pw/mapping/enrich_entities.py` | Adds optional Stage 7 xrefs via PathBankDB/APIs |
+| `src/t2pw/pipeline/qa_graph.py` | Builds a connectivity graph for validation |
+| `src/t2pw/curation/audit_json_llm.py` | LLM-based audit of the normalized JSON |
+| `src/t2pw/curation/gap_resolver.py` | Fills missing reactions/entities during audit |
 
 ---
 
@@ -261,15 +266,16 @@ Fill in:
 ```
 Project14-T2PW/
 ├── src/
-│   ├── app.py                    # Streamlit UI
-│   ├── process_normalizer.py     # Normalisation + hard-gate validation
-│   ├── json_to_sbml.py           # SBML builder
-│   ├── map_ids.py                # External ID resolution
-│   ├── enrich_entities.py        # Entity enrichment
-│   ├── qa_graph.py               # Connectivity graph
-│   ├── audit_json_llm.py         # LLM audit
-│   ├── gap_resolver.py           # Gap filling
-│   └── build_pathwhiz_id_db.py   # (Legacy) PWML-based ID DB builder
+│   └── t2pw/
+│       ├── app/streamlit_app.py              # Streamlit UI/orchestrator
+│       ├── pipeline/process_normalizer.py     # Stage 3 normalization/gates
+│       ├── pipeline/stage_contracts.py        # Boundary contracts
+│       ├── pipeline/payload_models.py          # Runtime shape reports
+│       ├── mapping/map_ids.py                  # Stage 2B/6 ID mapping
+│       ├── mapping/enrich_entities.py          # Stage 7 enrichment
+│       ├── curation/audit_json_llm.py          # Stage 4 audit
+│       ├── curation/gap_resolver.py            # Stage 4 gap filling
+│       └── sbml/json_to_sbml.py                # Legacy SBML builder
 ├── AGENT_INSTRUCTIONS.md         # This file
 └── tmp/                          # Intermediate pipeline outputs
 ```

@@ -214,5 +214,7 @@ def test_stage3_complex_issue_can_be_fixed_with_agent_tools(monkeypatch: Any) ->
     assert complex_row["species_id"] == 1
     assert complex_row["components"][0]["pathbank_protein_id"] == 11
     assert complex_row["components"][0]["mapped_ids"]["uniprot"] == "Q9Y5U8"
-    assert complex_row["components"][0]["stoichiometry"] == 1
-    assert report["enrichment"]["patch_application"]["summary"]["accepted_count"] == 6
+    assert "stoichiometry" not in complex_row["components"][0]
+    assert report["enrichment"]["patch_application"]["summary"]["accepted_count"] == 5
+    assert report["enrichment"]["deferred_stoichiometry_patches"][0]["resolution_owner"] == "audit"
+    assert report["summary"]["complex_stoichiometry_issues_deferred"] == 1

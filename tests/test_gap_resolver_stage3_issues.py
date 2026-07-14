@@ -76,3 +76,60 @@ def test_collect_stage3_issues_includes_species_states_complexes_and_locations()
 
     direct_enzyme_issue = by_type["reaction_modifier"][0]
     assert direct_enzyme_issue["enzyme_still_direct_protein_when_complex_required"] is True
+
+
+def test_novel_complex_with_valid_members_does_not_require_complex_level_id() -> None:
+    payload = {
+        "entities": {
+            "species": [
+                {
+                    "name": "Pseudomonas putida",
+                    "taxonomy_id": "303",
+                    "pathbank_species_id": 7,
+                }
+            ],
+            "proteins": [
+                {
+                    "name": "NdmC",
+                    "species": "Pseudomonas putida",
+                    "mapped_ids": {"uniprot": "Q88FY2"},
+                }
+            ],
+            "protein_complexes": [
+                {
+                    "name": "NdmCDE",
+                    "species": "Pseudomonas putida",
+                    "components": [
+                        {
+                            "name": "NdmC",
+                            "stoichiometry": 1,
+                            "mapped_ids": {"uniprot": "Q88FY2"},
+                        }
+                    ],
+                }
+            ],
+            "compounds": [],
+        },
+        "biological_states": [
+            {
+                "name": "Pseudomonas cytosol",
+                "species": "Pseudomonas putida",
+                "subcellular_location": "cytosol",
+            }
+        ],
+        "element_locations": {
+            "compound_locations": [],
+            "protein_locations": [
+                {"protein": "NdmC", "biological_state": "Pseudomonas cytosol"},
+                {
+                    "protein_complex": "NdmCDE",
+                    "biological_state": "Pseudomonas cytosol",
+                },
+            ],
+        },
+        "processes": {"reactions": []},
+    }
+
+    by_type = _issues_by_type(payload)
+
+    assert "protein_complex" not in by_type
