@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 from lxml import etree
 
 from t2pw.paths import PROJECT_ROOT
-from t2pw.pipeline.entity_identity import component_stoichiometry
+from t2pw.pipeline.entity_identity import component_stoichiometry, is_pathbank_unknown_protein
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
@@ -1555,14 +1555,32 @@ class DeterministicPwmlBuilder:
                 comp_name = _component_name(component)
                 if not protein_key and comp_name:
                     protein_key = protein_key_by_name.get(_normalize_key(comp_name), "")
-                protein_location_id = protein_location_by_entity_state.get((protein_key, biological_state_key))
+                # Approach A (docs/pwml_coordinate_mapping.md #2F): the PathBank
+                # "Unknown" sentinel protein backs many unrelated generated enzyme
+                # complexes. Deduping its protein-location by (protein_key, state)
+                # would collapse every such complex onto ONE shared box, so all
+                # their reaction/enzyme edges converge on a single point. Real
+                # PathWhiz instead emits a separate protein-location per usage
+                # (reference/PW012926.pwml has several id-9659 locations at
+                # distinct coordinates). So for the sentinel we mint a fresh
+                # location per complex-visualization and never register it in the
+                # shared entity-state caches; real proteins keep normal dedup.
+                is_unknown_sentinel = is_pathbank_unknown_protein(
+                    raw_entity_by_key.get(protein_key, {})
+                )
+                protein_location_id = (
+                    None
+                    if is_unknown_sentinel
+                    else protein_location_by_entity_state.get((protein_key, biological_state_key))
+                )
                 if protein_location_id is None and protein_key:
                     protein_info = entity_info(protein_key)
                     biological_state_id = lookup("biological_states", item.get("biological_state_key"))
                     if protein_info is not None and biological_state_id is not None:
                         protein_location_id = self.ids.next()
-                        protein_location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
-                        location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
+                        if not is_unknown_sentinel:
+                            protein_location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
+                            location_by_entity_state[(protein_key, biological_state_key)] = protein_location_id
                         self.section_items["protein-locations"].append(
                             {
                                 "id": protein_location_id,
@@ -1573,7 +1591,20 @@ class DeterministicPwmlBuilder:
                                 "x": int(item.get("x") or 0),
                                 "y": int(item.get("y") or 0),
                                 "zindex": int(item.get("zindex") or 8),
-                                "label-type": "subunit",
+                                # Members of a protein-complex are labeled with
+                                # the complex name (the meaningful enzyme /
+                                # locus-tag identifier T2PW assigned), not the
+                                # constituent protein's name. PathWhiz's canvas
+                                # renderer routes label_type=="protein" to
+                                # protein_complex_visualization.name(); "subunit"
+                                # would show protein.name -- which is the bare
+                                # "Unknown" sentinel for unresolved enzymes and a
+                                # vague protein name otherwise. See
+                                # docs/pwml_coordinate_mapping.md #2G. (Real
+                                # PathWhiz uses this same "protein" label-type for
+                                # its Unknown-sentinel protein id 9659, e.g.
+                                # reference/PW012926.pwml.)
+                                "label-type": "protein",
                                 "font-size": "regular",
                                 "width": "150",
                                 "height": "70",

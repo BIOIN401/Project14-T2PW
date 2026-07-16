@@ -12,6 +12,11 @@ from t2pw.pipeline.entity_identity import (
 )
 from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
+from t2pw.pwml.name_index import PathwhizNameIndex, default_name_index
+
+# Sentinel so callers can pass ``name_index=None`` to explicitly disable the
+# offline canonicalization, distinct from "not provided -> load the default".
+_NAME_INDEX_UNSET = object()
 
 
 ENTITY_BUCKETS = {
@@ -547,6 +552,118 @@ def _normalize_compound_external_ids(row: Dict[str, Any]) -> Dict[str, Any]:
     return out
 
 
+def _compound_external_ids(row: Dict[str, Any]) -> Dict[str, Any]:
+    mapped = _safe_dict(row.get("mapped_ids"))
+
+    def _pick(*keys: str) -> Any:
+        for key in keys:
+            for source in (row, mapped):
+                value = source.get(key)
+                if value not in (None, ""):
+                    return value
+        return None
+
+    return {
+        "hmdb": _pick("hmdb_id", "hmdb"),
+        "kegg": _pick("kegg_id", "kegg"),
+        "chebi": _pick("chebi_id", "chebi"),
+        "pubchem": _pick("pubchem_cid", "pubchem_id", "pubchem"),
+        "drugbank": _pick("drugbank_id", "drugbank"),
+    }
+
+
+def _canonicalize_compound_offline(
+    row: Dict[str, Any],
+    *,
+    name_index: Optional[PathwhizNameIndex],
+    report: Dict[str, Any],
+) -> None:
+    """Apply the offline id->canonical-name mapping when the live DB didn't.
+
+    Only fires when the row does not already carry a resolved ``db_row`` name
+    (i.e. the live PathBank DB was unavailable or produced no confident match)
+    and the row's external ids hit a real PathWhiz DB row in the offline index.
+    Rows with no id hit are left untouched, preserving novel/extraction names.
+    """
+    if name_index is None:
+        return
+    existing_db_row = row.get("db_row") if isinstance(row.get("db_row"), dict) else {}
+    if _canonical(existing_db_row.get("name")):
+        return  # live-DB resolution already canonicalized this compound
+    hit = name_index.compound_canonical(**_compound_external_ids(row))
+    if not hit:
+        return
+    canonical = _canonical(hit.get("name"))
+    if not canonical:
+        return
+    extraction_name = _canonical(row.get("name"))
+    row.setdefault("raw_name", extraction_name)
+    row["name"] = canonical
+    # Provide a minimal db_row so the writer emits the canonical name and the
+    # compound is treated as a trusted, DB-backed identity.
+    row["db_row"] = {"id": hit.get("id"), "name": canonical}
+    row["db_status"] = "matched_offline_name_index"
+    if extraction_name and _norm(extraction_name) != _norm(canonical):
+        aliases = _dedupe_aliases([*_safe_list(row.get("aliases")), extraction_name])
+        if aliases:
+            row["aliases"] = aliases
+        report.setdefault("name_canonicalization", {}).setdefault("compounds", []).append(
+            {
+                "from": extraction_name,
+                "to": canonical,
+                "matched_on": hit.get("matched_on"),
+                "db_id": hit.get("id"),
+                "source": "pathwhiz_id_db.json",
+            }
+        )
+
+
+def _canonicalize_species_offline(
+    record: Dict[str, Any],
+    *,
+    name_index: Optional[PathwhizNameIndex],
+    report: Dict[str, Any],
+) -> None:
+    """Rename a species record to its PathWhiz canonical name via the offline index.
+
+    Species uniqueness in PathWhiz is on both ``name`` and ``taxonomy_id``; a
+    resolved species must therefore emit the DB row's exact name (often
+    strain-qualified, e.g. "Herbaspirillum huttiense IAM 15032"). Only fires on
+    a taxonomy/pathbank-id hit, so novel organisms keep their extraction name.
+    """
+    if name_index is None:
+        return
+    hit = name_index.species_canonical(
+        taxonomy_id=record.get("taxonomy_id"),
+        pathbank_species_id=record.get("pathbank_species_id")
+        or record.get("pw_species_id")
+        or record.get("pathwhiz_id"),
+        name=record.get("name"),
+    )
+    if not hit:
+        return
+    canonical = _canonical(hit.get("name"))
+    if not canonical:
+        return
+    extraction_name = _canonical(record.get("name"))
+    if extraction_name and _norm(extraction_name) == _norm(canonical):
+        return
+    record.setdefault("raw_name", extraction_name)
+    record["name"] = canonical
+    if extraction_name:
+        aliases = _dedupe_aliases([*_safe_list(record.get("aliases")), extraction_name])
+        if aliases:
+            record["aliases"] = aliases
+    report.setdefault("name_canonicalization", {}).setdefault("species", []).append(
+        {
+            "from": extraction_name,
+            "to": canonical,
+            "taxonomy_id": record.get("taxonomy_id"),
+            "source": "pathwhiz_id_db.json",
+        }
+    )
+
+
 def _resolve_compound_rows(
     rows: List[Dict[str, Any]],
     *,
@@ -554,6 +671,7 @@ def _resolve_compound_rows(
     strict_db: bool,
     report: Dict[str, Any],
     pointer_prefix: str,
+    name_index: Optional[PathwhizNameIndex] = None,
 ) -> List[Dict[str, Any]]:
     normalized = [_normalize_compound_external_ids(row) for row in rows]
     resolver: Optional[PathWhizCompoundResolver] = None
@@ -636,6 +754,9 @@ def _resolve_compound_rows(
             **issue,
         )
         resolved.append(apply_compound_db_resolution(row, match))
+
+    for row in resolved:
+        _canonicalize_compound_offline(row, name_index=name_index, report=report)
     return resolved
 
 
@@ -648,12 +769,15 @@ def build_pwml_ir(
     db_resolver: Any = None,
     width: int = 6400,
     height: int = 1400,
+    name_index: Any = _NAME_INDEX_UNSET,
 ) -> tuple[dict, dict]:
     report = _new_report()
     if not isinstance(payload, dict):
         ir = _empty_ir(pathway_name, pathway_subject, width, height)
         _add_issue(report, "error", "invalid_payload", "PWML IR input payload must be an object.")
         return ir, report
+
+    resolved_name_index = default_name_index() if name_index is _NAME_INDEX_UNSET else name_index
 
     ir = _empty_ir(pathway_name, pathway_subject, width, height)
     keys = _KeyFactory()
@@ -707,6 +831,9 @@ def build_pwml_ir(
             pointer_prefix=f"/entities/{source_key}",
         )
         ir[ir_key] = [_component_record(row, row["key"], db_keys) for row in rows]
+        if source_key == "species":
+            for record in ir[ir_key]:
+                _canonicalize_species_offline(record, name_index=resolved_name_index, report=report)
         by_name: Dict[str, Dict[str, Any]] = {}
         for row in ir[ir_key]:
             for alias in [row.get("name"), *_safe_list(row.get("aliases"))]:
@@ -774,6 +901,7 @@ def build_pwml_ir(
                 strict_db=strict_db,
                 report=report,
                 pointer_prefix=f"/entities/{source_key}",
+                name_index=resolved_name_index,
             )
         bucket = ENTITY_BUCKETS[entity_type]
         for row in rows:

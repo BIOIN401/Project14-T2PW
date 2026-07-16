@@ -138,6 +138,26 @@ def parse_pwml(path: Path, db: Dict[str, Any]) -> None:
                 db["biological_states"]["by_location_id"][str(sl_id)].append(bs_id)
 
     # ------------------------------------------------------------------
+    # Species
+    # ------------------------------------------------------------------
+    for sp in pv.findall(".//species/species"):
+        sp_id = _int(sp.find("id"))
+        if sp_id is None:
+            continue
+        name = _text(sp.find("name"))
+        taxonomy = _text(sp.find("taxonomy-id"))
+        classification = _text(sp.find("classification"))
+        common = _text(sp.find("common-name"))
+        db["species"]["by_id"][str(sp_id)] = {
+            "name": name,
+            "taxonomy_id": taxonomy,
+            "classification": classification,
+            "common_name": common,
+        }
+        if taxonomy:
+            db["species"]["taxonomy"][taxonomy] = sp_id
+
+    # ------------------------------------------------------------------
     # Compounds
     # ------------------------------------------------------------------
     for c in pv.findall(".//compounds/compound"):
@@ -282,6 +302,7 @@ def parse_pwml(path: Path, db: Dict[str, Any]) -> None:
 def build_db(pwml_dir: Path) -> Dict[str, Any]:
     db: Dict[str, Any] = {
         "compounds": {"hmdb": {}, "kegg": {}, "chebi": {}, "pubchem": {}, "drugbank": {}, "by_id": {}},
+        "species": {"taxonomy": {}, "by_id": {}},
         "proteins": {"uniprot": {}, "by_id": {}},
         "protein_complexes": {"by_id": {}},
         "element_collections": {"by_id": {}},
@@ -297,6 +318,7 @@ def build_db(pwml_dir: Path) -> Dict[str, Any]:
         parse_pwml(f, db)
 
     print(f"  Compounds: {len(db['compounds']['by_id'])}")
+    print(f"  Species:   {len(db['species']['by_id'])}")
     print(f"  Proteins:  {len(db['proteins']['by_id'])}")
     print(f"  ProteinComplexes: {len(db['protein_complexes']['by_id'])}")
     print(f"  ElementCollections: {len(db['element_collections']['by_id'])}")

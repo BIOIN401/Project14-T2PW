@@ -706,7 +706,10 @@ def test_writer_emits_visible_complex_and_reaction_enzyme_visualization() -> Non
     assert builder.section_items["compounds"][0]["id"] == 101
     assert builder.section_items["proteins"][0]["id"] != 201
     assert builder.section_items["protein-locations"][0]["visualization-template-id"] == 2
-    assert builder.section_items["protein-locations"][0]["label-type"] == "subunit"
+    # A protein-location that is a member of a protein-complex is labeled with
+    # the complex name (label-type "protein"), not the constituent protein's
+    # name ("subunit"). See docs/pwml_coordinate_mapping.md #2G.
+    assert builder.section_items["protein-locations"][0]["label-type"] == "protein"
     enzyme_viz = reaction_visualizations[0]["reaction_enzyme_visualizations"][0]
     assert enzyme_viz["protein-complex-visualization-id"] == complex_visualizations[0]["id"]
     assert "protein-location-id" not in enzyme_viz
@@ -1411,3 +1414,151 @@ def test_pwml_uses_db_exact_compound_rows_and_ids_for_hexokinase() -> None:
     assert all(rcv["compound-location-id"] in location_ids for rcv in rcvs)
     assert all(rcv["edge-id"] in edge_ids for rcv in rcvs)
     assert {rcv["side"] for rcv in rcvs} == {"Left", "Right"}
+
+
+# ---------------------------------------------------------------------------
+# Offline canonical-name index (no live PathBank DB): a compound/species that
+# resolves to a real PathWhiz DB row by external id must emit the DB row's
+# canonical name, while novel/unresolved entities keep their extraction name.
+# ---------------------------------------------------------------------------
+
+from t2pw.pwml.name_index import PathwhizNameIndex  # noqa: E402
+
+
+def _offline_index() -> PathwhizNameIndex:
+    return PathwhizNameIndex(
+        {
+            "compounds": {
+                "hmdb": {"HMDB0000115": 900, "HMDB0000902": 901},
+                "by_id": {
+                    "900": {
+                        "name": "Glycolic acid",
+                        "hmdb": "HMDB0000115",
+                        "kegg": "C00160",
+                        "chebi": "29805",
+                    },
+                    "901": {"name": "NAD", "hmdb": "HMDB0000902"},
+                },
+            },
+            "species": {
+                "taxonomy": {"863372": 5},
+                "by_id": {
+                    "5": {
+                        "name": "Herbaspirillum huttiense IAM 15032",
+                        "taxonomy_id": "863372",
+                        "classification": "Prokaryote",
+                    }
+                },
+            },
+        }
+    )
+
+
+def _canonicalization_payload() -> dict:
+    return {
+        "entities": {
+            "species": [
+                {
+                    "name": "Herbaspirillum huttiense",
+                    "taxonomy_id": "863372",
+                    "classification": "Prokaryote",
+                }
+            ],
+            "subcellular_locations": [{"name": "cytosol", "pathwhiz_id": 2}],
+            "compounds": [
+                # Resolves to a real DB row by HMDB id -> must be renamed.
+                {"name": "glycolate", "hmdb_id": "HMDB0000115"},
+                # Novel/invented -> no id hit -> keeps extraction name.
+                {"name": "L-KDP"},
+            ],
+            "proteins": [{"name": "Enz", "pathbank_protein_id": 201}],
+        },
+        "biological_states": [
+            {
+                "name": "cyto_state",
+                "species": "Herbaspirillum huttiense",
+                "subcellular_location": "cytosol",
+            }
+        ],
+        "processes": {
+            "reactions": [
+                {
+                    "name": "Glycolate turnover",
+                    "inputs": ["glycolate"],
+                    "outputs": ["L-KDP"],
+                    "biological_state": "cyto_state",
+                    "enzymes": [{"protein": "Enz"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+
+def test_offline_index_emits_canonical_compound_name() -> None:
+    # _EmptyCompoundDb forces the "no live DB match" path so the offline
+    # name-index is exercised deterministically, regardless of whether a live
+    # PathBank DB happens to be reachable from the test environment.
+    ir, report = build_pwml_ir(
+        _canonicalization_payload(),
+        strict_db=False,
+        db_resolver=_EmptyCompoundDb(),
+        name_index=_offline_index(),
+    )
+    names = {c["name"] for c in ir["entities"]["compounds"]}
+    # Resolved compound carries the DB canonical name, not the extraction name.
+    assert "Glycolic acid" in names
+    assert "glycolate" not in names
+    # Novel compound keeps its extraction name untouched.
+    assert "L-KDP" in names
+
+    resolved = next(c for c in ir["entities"]["compounds"] if c["name"] == "Glycolic acid")
+    assert resolved.get("raw_name") == "glycolate"
+    assert (resolved.get("db_row") or {}).get("name") == "Glycolic acid"
+    canon = report.get("name_canonicalization", {}).get("compounds", [])
+    assert any(entry["from"] == "glycolate" and entry["to"] == "Glycolic acid" for entry in canon)
+
+
+def test_offline_index_emits_canonical_species_name() -> None:
+    ir, _ = build_pwml_ir(
+        _canonicalization_payload(),
+        strict_db=False,
+        db_resolver=_EmptyCompoundDb(),
+        name_index=_offline_index(),
+    )
+    species_names = {s["name"] for s in ir["species"]}
+    assert "Herbaspirillum huttiense IAM 15032" in species_names
+    assert "Herbaspirillum huttiense" not in species_names
+
+
+def test_offline_index_disabled_keeps_extraction_names() -> None:
+    # No live DB match (empty resolver) and offline index disabled -> the
+    # extraction name must survive untouched.
+    ir, _ = build_pwml_ir(
+        _canonicalization_payload(),
+        strict_db=False,
+        db_resolver=_EmptyCompoundDb(),
+        name_index=None,
+    )
+    names = {c["name"] for c in ir["entities"]["compounds"]}
+    assert "glycolate" in names
+    assert "Glycolic acid" not in names
+
+
+def test_offline_index_canonical_name_reaches_written_pwml() -> None:
+    ir, report = build_pwml_ir(
+        _canonicalization_payload(),
+        strict_db=False,
+        db_resolver=_EmptyCompoundDb(),
+        name_index=_offline_index(),
+    )
+    assert not report["errors"]
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    builder = DeterministicPwmlBuilder(extraction=ir, signature=signature, args=_writer_args())
+    builder.build()
+    compound_names = {item["name"] for item in builder.section_items["compounds"]}
+    assert "Glycolic acid" in compound_names
+    assert "glycolate" not in compound_names
+    species_names = {item["name"] for item in builder.section_items["species"]}
+    assert "Herbaspirillum huttiense IAM 15032" in species_names

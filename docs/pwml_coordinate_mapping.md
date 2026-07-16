@@ -236,6 +236,177 @@ check — a narrow region (few reactions, e.g. the minimum-height regions
 described in §2B) combined with multiple columns could plausibly drive this
 negative. Worth a bounds-check test rather than assuming it can't happen.
 
+### 2F. [Critical] Unknown-sentinel enzymes collapse onto one shared protein-location, destroying the serpentine layout
+
+**Observed on:** `outputs/pathway (81).pwml` (Herbaspirillum huttiense
+xylose/arabinose degradation, 10 reactions, one source paper). Screenshot
+symptom: only **5 enzyme boxes render** for 10 reactions, and a fan of ~12
+golden enzyme edges all converge on a single green "Unknown" ellipse in the
+bottom-right corner (loc at x=2695, y=2445), cutting diagonally across the
+whole canvas. The user's intended boustrophedon ("S") layout is intact for
+compounds but visibly destroyed for enzymes.
+
+**What is actually correct in this file:** the *compound* serpentine is fine.
+`compound-locations` step left→right on row 1 (y≈255), right→left on row 2
+(y≈931–985), left→right on row 3 (y≈1631–1685), then down to row 4 (y≈2275+)
+— a proper S. The 4 enzymes that got real protein identity are also placed
+correctly on the S: protein-location 91 (`C785_RS00860`, Q6MEV0) at
+(355,345) row 1; 92 (`C785_RS13685`, A0A1G8J7Q2) at (1895,1045) row 2; 93
+(`C785_RS13675`, A0A090Q0Z5) and 94 (`C785_RS20555`, Q00796) at row 3. So
+the serpentine layout math (§2B) is **not** the culprit here.
+
+**Root cause — a mapping-stage identity collapse, not a layout-math bug:**
+
+1. Upstream, 6 of the 10 reaction enzymes (`C785_RS00855`, `C785_RS21245`,
+   `C785_RS21250`, `C785_RS13680`, `C785_RS13710`, `C785_RS20550`) fail every
+   normal protein-identity strategy and fall through to the **Stage-6 PathBank
+   Unknown-sentinel fallback**, `_apply_pathbank_unknown_enzyme_fallback`
+   (`map_ids.py:4861`). That fallback creates **exactly one** shared sentinel
+   protein for the whole pathway: `_ensure_unknown_protein`
+   (`map_ids.py:5042-5112`) memoizes it in `nonlocal unknown_row` and always
+   reuses the single `_PATHBANK_UNKNOWN_PROTEIN_ID` row (name "Unknown",
+   uniprot "Unknown", species = PathBank Unknown/Arabidopsis id 4). Each
+   enzyme keeps its *functional name* on its own generated protein-complex
+   (that's why complexes 40004–40009 have distinct names), but every one of
+   those complexes lists the **same** Unknown protein (id 9659) as its sole
+   component.
+
+2. In the writer, protein-locations are keyed by `(protein_key,
+   biological_state_key)` in `ensure_protein_location`
+   (`writer.py:1711-1738`). Because all 6 complexes share one protein entity
+   key, they all resolve to **one** protein-location (id 98). Their 6 distinct
+   `protein-complex-visualization`s (95/97/100/102/106/108/114 in the file)
+   therefore all point their single
+   `protein_complex_protein_visualization` at protein-location 98.
+
+3. `ProteinComplexVisualization#x/#y` on the PathWhiz/smpdb side is the *min
+   over its members' `protein_location.x/.y`* (§1a,
+   `protein_complex_visualization.rb:117-134`). With one shared member, all 6
+   complex visualizations compute the **identical** position — wherever loc 98
+   currently sits.
+
+4. Worse, loc 98's position is **overwritten once per reaction that uses it**.
+   The enzyme-placement loop (`writer.py:1765-1784`) walks reactions in id
+   order and, for each, sets `loc["x"]/loc["y"]` from that reaction's
+   serpentine slot (`_serpentine_reaction_position`). Since 6 reactions write
+   the *same* loc 98, **last-writer-wins**: the final coordinate is whatever
+   the last Unknown-enzyme reaction (50009, `C785_RS20550`, in the bottom row)
+   computed — (2695, 2445), bottom-right. Every earlier write is discarded.
+
+**Net effect:** the 4 real enzymes serpentine correctly; the 6 Unknown-
+sentinel enzymes are silently merged into one box parked at the bottom-right,
+and every one of their reaction→enzyme edges (which are still baked per
+reaction from each compound's correct S-position) is drawn to that single
+point — producing the cross-canvas fan and the "only 5 enzymes" appearance.
+
+**Why this is distinct from §2A–§2E:** those items are about compartments,
+transports, interactions, and negative coordinates. This one is a *node-
+identity* problem: two layers each behave "correctly" in isolation (the
+mapping fallback dedups to one sentinel by design; the writer dedups
+protein-locations by entity key by design) but compose into a layout
+collapse. Any pathway with ≥2 unresolved enzymes will show it; it gets worse
+linearly with the number of Unknown-sentinel enzymes.
+
+**Fix (implemented 2026-07-16 — "Approach A", sentinel-scoped):** the writer's
+complex-member protein-location creation (`writer.py:1558` region, inside the
+`protein_complex_visualizations` build loop) now detects the Unknown sentinel
+via `is_pathbank_unknown_protein(raw_entity_by_key[protein_key])` and, when the
+component protein **is** the sentinel, **mints a fresh protein-location per
+complex-visualization** instead of reusing the shared
+`(protein_key, biological_state)` entry — and does not register that location in
+the `protein_location_by_entity_state` / `location_by_entity_state` caches, so
+no later complex reuses it. Real proteins keep their normal dedup (a genuinely
+shared enzyme still gets one box). This mirrors real PathWhiz, which emits
+several distinct protein-locations all pointing at protein id 9659 at different
+coordinates (`reference/PW012926.pwml`).
+
+Result (verified end-to-end through `map_payload → normalize → build_pwml_ir →
+DeterministicPwmlBuilder`): N distinct unresolved enzymes now yield N distinct
+protein-locations at N distinct serpentine coordinates, each labeled
+`label-type: protein` (§2G) so each shows its own complex name — instead of one
+shared box carrying a single name with every enzyme edge converging on it.
+
+Scope notes / not done: this is deliberately **sentinel-only** ("Approach A").
+A real enzyme that legitimately catalyses two different reactions still shares
+one box (one protein identity → one location); if per-reaction boxes are ever
+wanted for real repeated enzymes too, that is a separate, broader change to the
+dedup key. The alternative of minting a distinct sentinel *protein row* per
+unresolved enzyme upstream in mapping was considered and not taken — keeping a
+single sentinel entity (all pointing at the same PathBank Unknown DB id) is
+correct for data identity and import; only the *visual* placement needed to
+diverge, which is why the fix lives in the writer.
+
+### 2G. [High] Enzyme nodes are labeled with the protein name, never the complex name
+
+**Observed on:** same `outputs/pathway (81).pwml`. The enzyme ellipses in the
+diagram read "Unknown", "Uncharacterized protein", "D-altronate dehydratase",
+"CoG1028" — i.e. the **constituent protein's** name — never the
+`C785_RS…`/`… complex` name that T2PW assigned to the enclosing
+protein-complex (and that PathWhiz stores correctly, visible on each
+complex's own detail page: PW_P040000–PW_P040009).
+
+**Root cause — a label-type choice in the writer, not a data problem.** The
+canvas label text is chosen entirely by the protein-location's `label_type`
+(`smpdb/app/assets/javascripts/backbone/models/visualization/protein_location.js.coffee:128-144`,
+method `text`):
+
+- `label_type == "subunit"` → `@name()` → **`@protein.name()`** (the protein)
+- `label_type == "protein"` → **`@protein_complex_visualizations.first().name()`** (the complex)
+- `label_type == "gene"` → `protein.gene_name`; `"uniprot"` → `protein.uniprot_id`
+- if the resolved text is empty, it hard-falls-back to the literal string
+  `"Unknown"` (lines 141-142).
+
+T2PW's `ensure_protein_location` (`writer.py:1711-1738`) writes
+**`"label-type": "subunit"` unconditionally** on every enzyme protein-location
+(`writer.py:1731`). So PathWhiz is explicitly told to label each enzyme node
+with its constituent protein's name. For the §2F Unknown-sentinel enzymes that
+protein's name is literally `"Unknown"`; for the resolved ones it is whatever
+vague protein name mapping found (`Uncharacterized protein`, `CoG1028`, …) —
+in **no** case the locus-tag complex name the user actually assigned.
+
+Note the two other places that DO surface the complex name and are therefore
+misleading as a sanity check: the complex **detail page** and the click-modal
+(`getDisplayName`, `protein_location.rb:48-53`, which returns the complex name
+when the location belongs to a complex). Only the on-canvas `text()` path is
+governed by `label_type`, and only it is wrong.
+
+**Relationship to §2F:** independent. §2F is *placement* (all sentinel
+enzymes collapse to one location). §2G is *labeling* (the node shows the
+protein name instead of the complex name) and affects **every** enzyme,
+resolved or not — even a perfectly-mapped single-protein enzyme complex will
+display its protein name rather than the assigned complex/locus-tag name.
+
+**Fix (implemented 2026-07-16):** `writer.py`'s complex-member protein-location
+creation (site at `writer.py:1576`, inside the
+`protein_complex_visualizations` build loop) now emits **`label-type: protein`**
+instead of `subunit`, so every protein that is a member of a complex is labeled
+with the complex name (`protein_complex_visualization.name()` = the `C785_RS…`
+locus-tag / enzyme name T2PW assigned) rather than the constituent protein's
+name. This was a deliberate choice to prefer the complex name for **every**
+complex, not just the Unknown-sentinel ones — the complex identifier is the
+meaningful enzyme label in this pipeline whether or not the underlying protein
+resolved. It also matches real PathWhiz's own convention: reference export
+`reference/PW012926.pwml` uses `label-type: protein` for exactly the same
+Unknown-sentinel protein id 9659.
+
+The **bare-protein enzyme** path (`ensure_protein_location`, `writer.py:1731`,
+reached only for `entity_type == "protein"` enzymes that are *not* wrapped in a
+complex) intentionally **keeps `subunit`** — such a location has no
+`protein_complex_visualization`, so `label_type == "protein"` would resolve to
+empty and the renderer's hard fallback (line 141-142) would print the literal
+`"Unknown"`. Test `test_writer_emits_visible_complex_and_reaction_enzyme_visualization`
+(`tests/test_pwml_writer.py:709`) was updated to assert `protein` for the
+complex-member case.
+
+Note this is a *labeling* fix only; it does not resolve §2F (the sentinel
+enzymes still collapse onto one shared location — they will now all read the
+correct distinct complex name but still stack at one point until §2F is fixed).
+**Not addressed:** the SBGN export path (`protein_complex_visualization.rb:214-234`
+→ `protein_location.rb:221`) collapses a single-member complex to its lone
+protein and labels via `protein.name` regardless of `label_type`, so SBGN still
+shows the protein name; if complex-name labels matter for SBGN too, that path
+needs its own change.
+
 ---
 
 ## 3. Already-known issues (cross-referenced, not duplicated)
