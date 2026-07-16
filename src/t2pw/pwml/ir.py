@@ -1996,6 +1996,45 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                             required_fields=["uniprot", "uniprot_id", "drugbank", "drugbank_id"],
                         )
 
+    # ── SPECIES ──────────────────────────────────────────────────────────────
+    # A species with no reference-DB identity will be created fresh in Rails,
+    # which requires a numeric taxonomy-id and a Prokaryote/Eukaryote
+    # classification. Missing either is fatal under strict_db so the run stops
+    # with the organism named — instead of failing opaquely at PWML upload when
+    # Species#save rolls back and cascades into the pathway.
+    species_rows = (
+        _safe_list(payload_or_ir.get("species"))
+        if is_ir
+        else _safe_list(_safe_dict(payload_or_ir.get("entities")).get("species"))
+    )
+    for idx, sp in enumerate(species_rows):
+        if not isinstance(sp, dict):
+            continue
+        if not strict_db:
+            continue
+        if db_id(sp, ["pathbank_species_id", "pw_species_id", "pathwhiz_id", "species_id"]) is not None:
+            continue
+        sp_name = _canonical(sp.get("name") or sp.get("display_name") or f"species[{idx}]")
+        pointer = f"/species/{idx}" if is_ir else f"/entities/species/{idx}"
+        taxonomy_id = _canonical(str(sp.get("taxonomy_id") or sp.get("taxonomy-id") or ""))
+        classification = _canonical(str(sp.get("classification") or ""))
+        if not (taxonomy_id.isdigit() and int(taxonomy_id) > 0):
+            err(
+                "species_missing_taxonomy",
+                f"No taxonomy ID found for species '{sp_name}' — Rails cannot create it. "
+                f"Resolve the organism against NCBI Taxonomy or supply a numeric taxonomy_id.",
+                pointer,
+                species_name=sp_name,
+            )
+        if classification not in ("Prokaryote", "Eukaryote"):
+            err(
+                "species_missing_classification",
+                f"Species '{sp_name}' has no valid classification "
+                f"(expected 'Prokaryote' or 'Eukaryote').",
+                pointer,
+                species_name=sp_name,
+            )
+
     # ── BIOLOGICAL STATES ────────────────────────────────────────────────────
     bio_states = _safe_list(payload_or_ir.get("biological_states"))
     if not bio_states:

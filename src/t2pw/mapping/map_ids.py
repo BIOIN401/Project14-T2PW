@@ -3035,11 +3035,208 @@ def _infer_species_with_gap_resolver(
     }
 
 
+# ── NCBI taxonomy backfill ────────────────────────────────────────────────────
+# When a species is not matched in the local PathBank DB and no protein
+# contributed a UniProt organism taxId, the organism reaches PWML with an empty
+# taxonomy-id / classification. Rails requires both to create a new species, so
+# this stage resolves the organism name against NCBI Taxonomy as a last-resort
+# fallback. Confined to the ID-mapping stage; the required-field gate enforces
+# the resulting contract.
+_NCBI_EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+_SPECIES_CLASSIFICATIONS = frozenset({"Prokaryote", "Eukaryote"})
+_STRAIN_SUFFIX_RE = re.compile(
+    r"\b(?:str\.?|strain|subsp\.?|serovar|pv\.?|bv\.?|var\.?|isolate|"
+    r"atcc|dsm|iam|jcm|nbrc|nrrl|ncimb|ccap|cbs|kctc|mtcc|lmg)\b",
+    re.IGNORECASE,
+)
+
+
+# NCBI E-utils allows 3 requests/sec without an API key (10/sec with one). Throttle
+# proactively so a burst of species lookups never trips a 429 (which HttpClient does
+# not retry, since it only retries 5xx).
+_NCBI_LAST_CALL = 0.0
+
+
+def _ncbi_throttle() -> None:
+    global _NCBI_LAST_CALL
+    interval = 0.11 if os.getenv("NCBI_API_KEY") else 0.35
+    wait = interval - (time.monotonic() - _NCBI_LAST_CALL)
+    if wait > 0:
+        time.sleep(wait)
+    _NCBI_LAST_CALL = time.monotonic()
+
+
+def _ncbi_eutils_params(extra: Dict[str, Any]) -> Dict[str, Any]:
+    params = dict(extra)
+    tool = os.getenv("NCBI_TOOL", "Project14-T2PW")
+    email = os.getenv("NCBI_EMAIL", "")
+    api_key = os.getenv("NCBI_API_KEY", "")
+    if tool:
+        params["tool"] = tool
+    if email:
+        params["email"] = email
+    if api_key:
+        params["api_key"] = api_key
+    return params
+
+
+def _binomial_from_organism(name: str) -> str:
+    """Reduce a strain-level organism name to its 'Genus species' binomial."""
+    text = _canonical_name(name)
+    if not text:
+        return ""
+    match = _STRAIN_SUFFIX_RE.search(text)
+    if match:
+        text = text[: match.start()].strip()
+    tokens = text.split()
+    if len(tokens) >= 2:
+        return " ".join(tokens[:2])
+    return text
+
+
+def _classification_from_taxonomy(division: str, lineage: str) -> str:
+    text = f"{division} {lineage}".casefold()
+    if "bacteria" in text or "archaea" in text:
+        return "Prokaryote"
+    if "eukaryot" in text:
+        return "Eukaryote"
+    return ""
+
+
+def _ncbi_esearch_taxid(client: HttpClient, term: str) -> str:
+    _ncbi_throttle()
+    try:
+        resp = client.get(
+            f"{_NCBI_EUTILS_BASE}/esearch.fcgi",
+            params=_ncbi_eutils_params({"db": "taxonomy", "term": term, "retmode": "json", "retmax": 1}),
+        )
+    except Exception:  # noqa: BLE001
+        return ""
+    if resp.status_code != 200:
+        return ""
+    try:
+        data = resp.json()
+    except ValueError:
+        return ""
+    for value in _safe_list(_safe_dict(data.get("esearchresult")).get("idlist")):
+        taxid = _canonical_name(str(value))
+        if taxid.isdigit():
+            return taxid
+    return ""
+
+
+def _ncbi_fetch_taxonomy_record(client: HttpClient, taxid: str) -> Dict[str, str]:
+    _ncbi_throttle()
+    try:
+        resp = client.get(
+            f"{_NCBI_EUTILS_BASE}/efetch.fcgi",
+            params=_ncbi_eutils_params({"db": "taxonomy", "id": taxid, "retmode": "xml"}),
+        )
+    except Exception:  # noqa: BLE001
+        return {}
+    if resp.status_code != 200 or not resp.text.strip():
+        return {}
+    try:
+        root = ElementTree.fromstring(resp.text)
+    except ElementTree.ParseError:
+        return {}
+    taxon = root.find("Taxon")
+    if taxon is None:
+        return {}
+    division = (taxon.findtext("Division") or "").strip()
+    lineage = (taxon.findtext("Lineage") or "").strip()
+    return {
+        "taxonomy_id": (taxon.findtext("TaxId") or taxid).strip(),
+        "classification": _classification_from_taxonomy(division, lineage),
+    }
+
+
+def _ncbi_taxonomy_lookup(client: HttpClient, name: str) -> Dict[str, str]:
+    """Resolve an organism name to ``{taxonomy_id, classification}`` via NCBI Taxonomy.
+
+    Fail-safe: returns ``{}`` on any network/parse error or no match. Tries the
+    full name first, then the 'Genus species' binomial for strain-level names
+    (e.g. 'Herbaspirillum huttiense IAM 15032' -> 'Herbaspirillum huttiense').
+    """
+    organism = _canonical_name(name)
+    if not organism:
+        return {}
+    terms: List[str] = [organism]
+    binomial = _binomial_from_organism(organism)
+    if binomial and _normalize_name(binomial) != _normalize_name(organism):
+        terms.append(binomial)
+    # Prefer exact scientific-name matches (strain first, then the binomial) before
+    # any loose full-text search, which can collide on shared name tokens.
+    queries = [f"{term}[Scientific Name]" for term in terms] + terms
+    for query in queries:
+        taxid = _ncbi_esearch_taxid(client, query)
+        if taxid:
+            record = _ncbi_fetch_taxonomy_record(client, taxid)
+            if record.get("taxonomy_id"):
+                return record
+    return {}
+
+
+def backfill_species_taxonomy(
+    payload: Dict[str, Any],
+    *,
+    client: Optional[HttpClient] = None,
+    enable_ncbi: bool = False,
+) -> Dict[str, Any]:
+    """Fill missing taxonomy-id / classification on species entities via NCBI.
+
+    Runs after species references are hydrated so the required-field gate and the
+    PWML writer see a numeric taxonomy id and a Prokaryote/Eukaryote
+    classification for every species — including novel organisms with no PathBank
+    match. Only species missing those fields are touched; resolved species are
+    left untouched. Network resolution only runs when ``enable_ncbi`` is set and a
+    client is available, keeping the default (and tests) fully offline.
+    """
+    report: Dict[str, Any] = {
+        "enabled": bool(enable_ncbi and client is not None),
+        "checked": 0,
+        "resolved": 0,
+        "unresolved": [],
+    }
+    entities = _safe_dict(payload.get("entities"))
+    for row in _safe_list(entities.get("species")):
+        if not isinstance(row, dict):
+            continue
+        name = _canonical_name(str(row.get("name") or ""))
+        taxonomy_id = _canonical_name(str(row.get("taxonomy_id") or row.get("taxonomy-id") or ""))
+        classification = _canonical_name(str(row.get("classification") or ""))
+        if taxonomy_id and classification in _SPECIES_CLASSIFICATIONS:
+            continue
+        report["checked"] += 1
+        if report["enabled"] and name:
+            result = _ncbi_taxonomy_lookup(client, name)  # type: ignore[arg-type]
+            if result.get("taxonomy_id") and not taxonomy_id:
+                row["taxonomy_id"] = result["taxonomy_id"]
+                taxonomy_id = result["taxonomy_id"]
+            if result.get("classification") and classification not in _SPECIES_CLASSIFICATIONS:
+                row["classification"] = result["classification"]
+                classification = result["classification"]
+        if taxonomy_id and classification in _SPECIES_CLASSIFICATIONS:
+            report["resolved"] += 1
+            meta = row.setdefault("mapping_meta", {})
+            if isinstance(meta, dict):
+                meta["taxonomy_backfill"] = {
+                    "source": "ncbi",
+                    "taxonomy_id": taxonomy_id,
+                    "classification": classification,
+                }
+        else:
+            report["unresolved"].append(name)
+    return report
+
+
 def hydrate_species_references(
     payload: Dict[str, Any],
     *,
     db: Optional[PathBankDbResolver] = None,
     use_llm: bool = True,
+    client: Optional[HttpClient] = None,
+    enable_ncbi: bool = False,
 ) -> Dict[str, Any]:
     """Hydrate protein/protein-complex species before ID mapping.
 
@@ -3126,6 +3323,9 @@ def hydrate_species_references(
                 }
             )
 
+    report["taxonomy_backfill"] = backfill_species_taxonomy(
+        payload, client=client, enable_ncbi=enable_ncbi
+    )
     return report
 
 
@@ -5639,7 +5839,10 @@ def map_payload(
     protein_like_names = _collect_protein_like_names(mapped)
 
     species_llm_enabled = str(os.getenv("T2PW_SPECIES_LLM", "1")).strip().lower() not in {"0", "false", "no", "off"}
-    species_report = hydrate_species_references(mapped, db=db, use_llm=species_llm_enabled)
+    species_ncbi_enabled = str(os.getenv("T2PW_SPECIES_NCBI", "1")).strip().lower() not in {"0", "false", "no", "off"}
+    species_report = hydrate_species_references(
+        mapped, db=db, use_llm=species_llm_enabled, client=client, enable_ncbi=species_ncbi_enabled
+    )
 
     global_organism = _extract_global_organism(mapped)
     protein_locations = _entity_locations(mapped, "protein_locations", "protein")
