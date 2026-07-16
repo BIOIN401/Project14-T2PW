@@ -32,7 +32,7 @@ Hard constraints:
 - Prefer add/replace over remove.
 - Every issue and patch must include concrete evidence from input JSON.
 - Be conservative: if uncertain, emit warning/suggestion instead of risky patch.
-- Patch protein-complex component stoichiometry only when payload evidence explicitly states one exact positive count for that named component. Never default stoichiometry to 1, infer it from symmetry or a total subunit count, or patch from approximate, ranged, or conflicting evidence. Leave unresolved stoichiometry as an error for review.
+- Patch protein-complex component stoichiometry only when payload evidence explicitly states one exact positive count for that named component. Never default stoichiometry to 1, infer it from symmetry or a total subunit count, or patch from approximate, ranged, or conflicting evidence. When the evidence states no exact count, leave the field absent and emit a warning, not an error: PathWhiz stores component stoichiometry as nullable, so an unstated count is exported blank and must never block export.
 - If upstream context includes a "selected_example" field (non-empty), any entity or process whose evidence quotes belong to a different named example than selected_example may be removed at high confidence (>= 0.90). This is a valid out-of-scope removal, not a data loss.
 - If upstream context indicates document_type = "multi_example_review" and selected_example is empty, do NOT repair the payload into a single pathway. Emit a scope_ambiguity error/warning in the issues block instead of adding bridging reactions or compartment assignments.
 
@@ -604,12 +604,22 @@ def _deterministic_audit(payload: Dict[str, Any], *, locked_reaction_indices: Op
                 )
             else:
                 explicit_count, count_evidence = _explicit_component_count(component_name, evidence_strings)
-            issues["errors"].append(
+            # Only an actionable finding is an error. With no explicit count in the
+            # evidence there is nothing to repair and nothing to fabricate, and
+            # PathWhiz accepts a nil stoichiometry, so record a warning instead of
+            # an error that would recur unresolved every audit round.
+            issues["errors" if explicit_count is not None else "warnings"].append(
                 {
                     "path": stoichiometry_pointer,
                     "reason": (
                         f"Protein complex '{complex_name}' component "
                         f"'{component_name or component_idx}' is missing positive stoichiometry."
+                        if explicit_count is not None
+                        else (
+                            f"Protein complex '{complex_name}' component "
+                            f"'{component_name or component_idx}' has no stated stoichiometry; "
+                            "leaving it blank for export."
+                        )
                     ),
                     "evidence": count_evidence or " | ".join(evidence_strings) or json.dumps(component, ensure_ascii=False),
                     "source": "deterministic",

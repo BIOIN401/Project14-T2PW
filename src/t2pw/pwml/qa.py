@@ -85,6 +85,11 @@ def run_pwml_qa(pwml_bytes: bytes) -> Dict[str, Any]:
 
     # Check stoichiometry values
     for stoich_el in root.iter("stoichiometry"):
+        # An explicitly nil stoichiometry is valid PWML: PathWhiz stores
+        # protein_complex_proteins.stoichiometry as a nullable column and its
+        # parser skips blank nodes, so an unstated count exports blank.
+        if stoich_el.get("nil"):
+            continue
         val_text = (stoich_el.text or "").strip()
         try:
             val = int(val_text)

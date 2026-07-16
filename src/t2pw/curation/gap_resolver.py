@@ -969,8 +969,13 @@ def _refresh_complex_component_issue(issue: Dict[str, Any], resolution: Dict[str
         reasons.append("component_protein_unresolved")
         missing_fields.append("components.member_identity")
     if missing_stoichiometry:
-        reasons.append("component_missing_stoichiometry")
         missing_fields.append("components.stoichiometry")
+    # An unstated stoichiometry is reported (above) but is deliberately not a
+    # reason to hold the issue open: PathWhiz accepts a nil coefficient, and any
+    # stoichiometry patch the enrichment agent produced would be discarded by
+    # _defer_complex_stoichiometry_patches anyway. Keeping it out of `reasons`
+    # stops a complex whose only gap is an unstated count from burning an
+    # enrichment round-trip on every run.
     issue["reasons"] = reasons
     issue["missing_fields"] = missing_fields
     issue["resolved_by_gap_resolver"] = not bool(reasons)

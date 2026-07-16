@@ -103,7 +103,9 @@ def test_reaction_ir_construction_refs_resolve() -> None:
     assert reaction["right"][0]["entity_key"] == ir["entities"]["compounds"][1]["key"]
     assert reaction["enzymes"][0]["entity_type"] == "protein_complex"
     assert reaction["enzymes"][0]["entity_key"] == ir["entities"]["protein_complexes"][0]["key"]
-    assert ir["entities"]["protein_complexes"][0]["components"] == [{"protein_key": ir["entities"]["proteins"][0]["key"], "stoichiometry": 1}]
+    assert ir["entities"]["protein_complexes"][0]["components"] == [
+        {"protein_key": ir["entities"]["proteins"][0]["key"]}
+    ]
     complex_viz = ir["protein_complex_visualizations"][0]
     assert complex_viz["entity_key"] == reaction["enzymes"][0]["entity_key"]
     assert complex_viz["biological_state_key"] == reaction["biological_state_key"]
@@ -116,6 +118,27 @@ def test_reaction_ir_construction_refs_resolve() -> None:
         reaction["left"][0]["key"],
         reaction["right"][0]["key"],
         reaction["enzymes"][0]["key"],
+    }
+
+
+def test_validate_pwml_ir_errors_on_protein_complex_missing_components() -> None:
+    payload = _base_payload()
+    payload["entities"]["protein_complexes"].append(
+        {"name": "oxoglutarate dehydrogenase complex", "species": "Homo sapiens", "components": []}
+    )
+
+    ir, report = build_pwml_ir(payload, strict_db=True)
+    # build_pwml_ir mirrors validate_pwml_ir's own errors into its report, so
+    # this surfaces here too -- catching the gap even earlier than export time.
+    assert "protein_complex_missing_components" in {
+        err["code"] for err in report["errors"]
+    }
+
+    validation = validate_pwml_ir(ir)
+
+    assert not validation["ok"]
+    assert "protein_complex_missing_components" in {
+        err["code"] for err in validation["errors"]
     }
 
 
@@ -553,7 +576,9 @@ def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None
     assert not report["errors"]
     assert validation["ok"], validation["errors"]
     complex_record = ir["entities"]["protein_complexes"][0]
-    assert complex_record["components"] == [{"protein_key": "prot_1", "stoichiometry": 1}]
+    # A bare-string component states no count, so stoichiometry stays absent
+    # rather than being assumed; PathWhiz accepts a nil coefficient.
+    assert complex_record["components"] == [{"protein_key": "prot_1"}]
 
     ref_path = ROOT / "reference" / "PW000001.pwml"
     signature = discover_structure_signature(ref_path)
@@ -572,7 +597,9 @@ def test_protein_complex_components_hydrate_and_export_as_protein_refs() -> None
 
     protein_id = builder.section_items["proteins"][0]["id"]
     complex_members = builder.section_items["protein-complexes"][0]["protein_complex-proteins"]
-    assert complex_members == [{"id": complex_members[0]["id"], "protein-id": protein_id, "stoichiometry": 1}]
+    assert complex_members == [
+        {"id": complex_members[0]["id"], "protein-id": protein_id, "stoichiometry": None}
+    ]
 
 
 def test_protein_complex_component_links_by_matching_uniprot_or_pathbank_id() -> None:
@@ -629,6 +656,13 @@ def test_protein_complex_unresolved_component_is_exportable_with_warnings() -> N
 
     assert any(w["code"] == "component_protein_unresolved" for w in report["warnings"])
     assert not any(err["code"] == "component_protein_unresolved" for err in report["errors"])
+    # A complex with a real PathBank identity (a non-generated row) is allowed
+    # to end up with zero components at export time -- real PathBank exports
+    # (e.g. reference/PW1.pwml's "alanine aminotransferase (ALT)" complex)
+    # carry a genuine pwp-id with an empty <protein_complex-proteins/>, so
+    # this is a warning, not an error. Only a pipeline-generated wrapper
+    # (see test_validate_pwml_ir_errors_on_protein_complex_missing_components)
+    # must always have at least one member.
     assert any(w["code"] == "protein_complex_missing_components" for w in validation["warnings"])
     assert not any(err["code"] == "protein_complex_missing_components" for err in validation["errors"])
     assert validation["ok"]

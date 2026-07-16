@@ -169,12 +169,20 @@ def test_deterministic_audit_does_not_infer_missing_or_ambiguous_component_count
 
         result = audit_payload(payload, use_llm=False)
 
-        errors = [
+        # Without an exact stated count there is nothing to repair and nothing may
+        # be inferred, and PathWhiz exports a nil coefficient happily -- so this is
+        # reported as a warning that never blocks export, not a recurring error.
+        assert not [
             error
             for error in result["report"]["errors"]
-            if "missing positive stoichiometry" in error["reason"]
+            if "stoichiometry" in error["reason"]
         ]
-        assert [error["path"] for error in errors] == [
+        unstated = [
+            warning
+            for warning in result["report"]["warnings"]
+            if "no stated stoichiometry" in warning["reason"]
+        ]
+        assert [warning["path"] for warning in unstated] == [
             f"/entities/protein_complexes/0/components/{idx}/stoichiometry"
             for idx in range(3)
         ]

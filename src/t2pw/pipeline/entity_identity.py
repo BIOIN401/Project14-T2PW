@@ -87,6 +87,37 @@ def is_pathbank_unknown_protein(row: Any) -> bool:
     )
 
 
+def component_stoichiometry(component: Any) -> Optional[int]:
+    """Return a complex component's explicit stoichiometry, or None when unstated.
+
+    PathWhiz stores this on ``protein_complex_proteins`` as a nullable column
+    validated with ``allow_nil: true``, and its PWML parser skips blank nodes,
+    so an unstated coefficient is left blank rather than assumed. This is the
+    single definition shared by mapping, IR construction, and the writer; they
+    previously each had their own and disagreed.
+    """
+
+    if isinstance(component, str) or not isinstance(component, dict):
+        return None
+    for key in ("stoichiometry", "coefficient"):
+        raw = component.get(key)
+        if raw is None or isinstance(raw, bool):
+            continue
+        try:
+            parsed = int(float(str(raw).strip()))
+        except (TypeError, ValueError):
+            continue
+        if parsed >= 1:
+            return parsed
+    return None
+
+
+def component_has_explicit_stoichiometry(component: Any) -> bool:
+    """Whether the source stated a usable stoichiometry for this component."""
+
+    return component_stoichiometry(component) is not None
+
+
 def protein_species_context(row: Any) -> Any:
     """Return the first species value used by the mapping and PWML gates."""
 

@@ -40085,6 +40085,4756 @@
         "status": "matched",
         "order_step": "synonym_or_fuzzy_species"
       }
+    },
+    "db::cs::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::cs::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"CS\" OR gene:\"CS\") AND organism_name:\"Unknown species\" | (protein_name:\"CS\" OR gene:\"CS\")",
+      "mapped_ids": {
+        "uniprot": "O75390"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O75390",
+          "protein_name": "Citrate synthase, mitochondrial",
+          "gene_names": [
+            "CS"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9CZU6",
+          "protein_name": "Citrate synthase, mitochondrial",
+          "gene_names": [
+            "Cs"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8VHF5",
+          "protein_name": "Citrate synthase, mitochondrial",
+          "gene_names": [
+            "Cs"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4U3F6",
+          "protein_name": "Alpha-copaene synthase",
+          "gene_names": [
+            "CS"
+          ],
+          "organism": "Helianthus annuus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P00889",
+          "protein_name": "Citrate synthase, mitochondrial",
+          "gene_names": [
+            "CS"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P16127",
+          "protein_name": "Magnesium-chelatase subunit ChlI-1, chloroplastic",
+          "gene_names": [
+            "CH42",
+            "CHLI1",
+            "CS"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2P1GIW2",
+          "protein_name": "Catharanthine synthase",
+          "gene_names": [
+            "CS",
+            "HL1"
+          ],
+          "organism": "Catharanthus roseus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9Y2C2",
+          "protein_name": "Uronyl 2-sulfotransferase",
+          "gene_names": [
+            "DS2ST",
+            "UST"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "CS",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"CS\" OR gene:\"CS\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"CS\" OR gene:\"CS\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Citrate synthase, mitochondrial",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::aco2::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::aco2::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"ACO2\" OR gene:\"ACO2\") AND organism_name:\"Unknown species\" | (protein_name:\"ACO2\" OR gene:\"ACO2\")",
+      "mapped_ids": {
+        "uniprot": "Q99798"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q99798",
+          "protein_name": "Aconitate hydratase, mitochondrial",
+          "gene_names": [
+            "ACO2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P20004",
+          "protein_name": "Aconitate hydratase, mitochondrial",
+          "gene_names": [
+            "ACO2"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9ER34",
+          "protein_name": "Aconitate hydratase, mitochondrial",
+          "gene_names": [
+            "Aco2"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q99KI0",
+          "protein_name": "Aconitate hydratase, mitochondrial",
+          "gene_names": [
+            "Aco2"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P39533",
+          "protein_name": "Homocitrate dehydratase, mitochondrial",
+          "gene_names": [
+            "ACO2"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q94A28",
+          "protein_name": "Aconitate hydratase 2, mitochondrial",
+          "gene_names": [
+            "ACO2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P16276",
+          "protein_name": "Aconitate hydratase, mitochondrial",
+          "gene_names": [
+            "ACO2"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q41931",
+          "protein_name": "1-aminocyclopropane-1-carboxylate oxidase 2",
+          "gene_names": [
+            "ACO2",
+            "EI305"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACO2",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"ACO2\" OR gene:\"ACO2\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"ACO2\" OR gene:\"ACO2\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Aconitate hydratase, mitochondrial",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::idh3::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::idh3::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"IDH3\" OR gene:\"IDH3\") AND organism_name:\"Unknown species\" | (protein_name:\"IDH3\" OR gene:\"IDH3\")",
+      "mapped_ids": {
+        "uniprot": "O81796"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O81796",
+          "protein_name": "Isocitrate dehydrogenase [NAD] regulatory subunit 3, mitochondrial",
+          "gene_names": [
+            "IDH3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D8UFZ3",
+          "protein_name": "Isocitrate dehydrogenase [NADP]",
+          "gene_names": [
+            "idh3"
+          ],
+          "organism": "Volvox carteri f. nagariensis",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AB34G0I1",
+          "protein_name": "Isocitrate dehydrogenase [NAD] subunit 2, mitochondrial",
+          "gene_names": [
+            "IDH3"
+          ],
+          "organism": "Purpureocillium lavendulum",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2I0B131",
+          "protein_name": "Isocitrate dehydrogenase [NAD] regulatory subunit 3, mitochondrial",
+          "gene_names": [
+            "IDH3"
+          ],
+          "organism": "Apostasia shenzhenica",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F0KKH3",
+          "protein_name": "isocitrate dehydrogenase (NADP(+))",
+          "gene_names": [
+            "idh3"
+          ],
+          "organism": "Acinetobacter pittii (strain PHEA-2)",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0K2VBG2",
+          "protein_name": "IDH3",
+          "gene_names": [],
+          "organism": "Lepeophtheirus salmonis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7R8D5I3",
+          "protein_name": "IDH3",
+          "gene_names": [],
+          "organism": "Lepeophtheirus salmonis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7R8HDG5",
+          "protein_name": "IDH3",
+          "gene_names": [],
+          "organism": "Lepeophtheirus salmonis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "IDH3",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"IDH3\" OR gene:\"IDH3\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"IDH3\" OR gene:\"IDH3\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Isocitrate dehydrogenase [NAD] regulatory subunit 3, mitochondrial",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::idh2::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::idh2::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"IDH2\" OR gene:\"IDH2\") AND organism_name:\"Unknown species\" | (protein_name:\"IDH2\" OR gene:\"IDH2\")",
+      "mapped_ids": {
+        "uniprot": "P48735"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P48735",
+          "protein_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+          "gene_names": [
+            "IDH2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P54071",
+          "protein_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+          "gene_names": [
+            "Idh2"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P56574",
+          "protein_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+          "gene_names": [
+            "Idh2"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q04467",
+          "protein_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+          "gene_names": [
+            "IDH2"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P33198",
+          "protein_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+          "gene_names": [
+            "IDH2"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P28241",
+          "protein_name": "Isocitrate dehydrogenase [NAD] subunit 2, mitochondrial",
+          "gene_names": [
+            "IDH2"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P93032",
+          "protein_name": "Isocitrate dehydrogenase [NAD] regulatory subunit 2, mitochondrial",
+          "gene_names": [
+            "IDH2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4R502",
+          "protein_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+          "gene_names": [
+            "IDH2"
+          ],
+          "organism": "Macaca fascicularis",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IDH2",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"IDH2\" OR gene:\"IDH2\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"IDH2\" OR gene:\"IDH2\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Isocitrate dehydrogenase [NADP], mitochondrial",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::scs::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::scs::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"SCS\" OR gene:\"SCS\") AND organism_name:\"Unknown species\" | (protein_name:\"SCS\" OR gene:\"SCS\")",
+      "mapped_ids": {
+        "uniprot": "G8GJ94"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "G8GJ94",
+          "protein_name": "Sclareol synthase, chloroplastic",
+          "gene_names": [
+            "SCS",
+            "SS",
+            "Tps1132"
+          ],
+          "organism": "Salvia sclarea",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q94523",
+          "protein_name": "Succinate dehydrogenase [ubiquinone] flavoprotein subunit, mitochondrial",
+          "gene_names": [
+            "Scs-fp",
+            "SdhA"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9P2R7",
+          "protein_name": "Succinate--CoA ligase [ADP-forming] subunit beta, mitochondrial",
+          "gene_names": [
+            "SUCLA2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q96I99",
+          "protein_name": "Succinate--CoA ligase [GDP-forming] subunit beta, mitochondrial",
+          "gene_names": [
+            "SUCLG2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P53597",
+          "protein_name": "Succinate--CoA ligase [ADP/GDP-forming] subunit alpha, mitochondrial",
+          "gene_names": [
+            "SUCLG1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P0AGE9",
+          "protein_name": "Succinate--CoA ligase [ADP-forming] subunit alpha",
+          "gene_names": [
+            "sucD"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P0A836",
+          "protein_name": "Succinate--CoA ligase [ADP-forming] subunit beta",
+          "gene_names": [
+            "sucC"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P53598",
+          "protein_name": "Succinate--CoA ligase [ADP-forming] subunit alpha, mitochondrial",
+          "gene_names": [
+            "LSC1"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "SCS",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"SCS\" OR gene:\"SCS\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"SCS\" OR gene:\"SCS\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Sclareol synthase, chloroplastic",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::fh::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::fh::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"FH\" OR gene:\"FH\") AND organism_name:\"Unknown species\" | (protein_name:\"FH\" OR gene:\"FH\")",
+      "mapped_ids": {
+        "uniprot": "P07954"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P07954",
+          "protein_name": "Fumarate hydratase, mitochondrial",
+          "gene_names": [
+            "FH"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9W385",
+          "protein_name": "Frataxin homolog, mitochondrial",
+          "gene_names": [
+            "fh"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P14408",
+          "protein_name": "Fumarate hydratase, mitochondrial",
+          "gene_names": [
+            "Fh",
+            "Fh1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P97807",
+          "protein_name": "Fumarate hydratase, mitochondrial",
+          "gene_names": [
+            "Fh",
+            "Fh1"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q7SX99",
+          "protein_name": "Fumarate hydratase, mitochondrial",
+          "gene_names": [
+            "fh"
+          ],
+          "organism": "Danio rerio",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P10173",
+          "protein_name": "Fumarate hydratase, mitochondrial",
+          "gene_names": [
+            "FH"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9ZR07",
+          "protein_name": "Frataxin, mitochondrial",
+          "gene_names": [
+            "FH"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q60HF9",
+          "protein_name": "Fumarate hydratase, mitochondrial",
+          "gene_names": [
+            "FH"
+          ],
+          "organism": "Macaca fascicularis",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FH",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"FH\" OR gene:\"FH\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"FH\" OR gene:\"FH\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Fumarate hydratase, mitochondrial",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::mdh2::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::mdh2::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"MDH2\" OR gene:\"MDH2\") AND organism_name:\"Unknown species\" | (protein_name:\"MDH2\" OR gene:\"MDH2\")",
+      "mapped_ids": {
+        "uniprot": "P40926"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P40926",
+          "protein_name": "Malate dehydrogenase, mitochondrial",
+          "gene_names": [
+            "MDH2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q32LG3",
+          "protein_name": "Malate dehydrogenase, mitochondrial",
+          "gene_names": [
+            "MDH2"
+          ],
+          "organism": "Bos taurus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P57106",
+          "protein_name": "Malate dehydrogenase 2, cytoplasmic",
+          "gene_names": [
+            "MDH2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P08249",
+          "protein_name": "Malate dehydrogenase, mitochondrial",
+          "gene_names": [
+            "Mdh2",
+            "Mor1"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P04636",
+          "protein_name": "Malate dehydrogenase, mitochondrial",
+          "gene_names": [
+            "Mdh2",
+            "Mor1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P22133",
+          "protein_name": "Malate dehydrogenase, cytoplasmic",
+          "gene_names": [
+            "MDH2"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P00346",
+          "protein_name": "Malate dehydrogenase, mitochondrial",
+          "gene_names": [
+            "MDH2"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "K0J107",
+          "protein_name": "Malate dehydrogenase, mitochondrial",
+          "gene_names": [
+            "MDH2"
+          ],
+          "organism": "Felis catus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "MDH2",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"MDH2\" OR gene:\"MDH2\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"MDH2\" OR gene:\"MDH2\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Malate dehydrogenase, mitochondrial",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::acl::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::acl::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"ACL\" OR gene:\"ACL\") AND organism_name:\"Unknown species\" | (protein_name:\"ACL\" OR gene:\"ACL\")",
+      "mapped_ids": {
+        "uniprot": "O80476"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O80476",
+          "protein_name": "Methylesterase 2",
+          "gene_names": [
+            "ACL",
+            "ME8",
+            "MES2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q61268",
+          "protein_name": "Apolipoprotein C-IV",
+          "gene_names": [
+            "Acl",
+            "Apoc4"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P49121",
+          "protein_name": "Basic phospholipase A2 homolog MT1",
+          "gene_names": [],
+          "organism": "Agkistrodon contortrix laticinctus",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q92032",
+          "protein_name": "Snake venom metalloproteinase ACLH",
+          "gene_names": [],
+          "organism": "Agkistrodon contortrix laticinctus",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P53396",
+          "protein_name": "ATP-citrate synthase",
+          "gene_names": [
+            "ACLY"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P0CC16",
+          "protein_name": "L-amino-acid oxidase",
+          "gene_names": [],
+          "organism": "Agkistrodon contortrix laticinctus",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q20800",
+          "protein_name": "Lysophosphatidylinositol acyltransferase 10",
+          "gene_names": [
+            "bus-18"
+          ],
+          "organism": "Caenorhabditis elegans",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A9NGK2",
+          "protein_name": "dITP/XTP pyrophosphatase",
+          "gene_names": [],
+          "organism": "Acholeplasma laidlawii (strain PG-8A)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "ACL",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"ACL\" OR gene:\"ACL\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"ACL\" OR gene:\"ACL\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Methylesterase 2",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::pc::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::pc::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"PC\" OR gene:\"PC\") AND organism_name:\"Unknown species\" | (protein_name:\"PC\" OR gene:\"PC\")",
+      "mapped_ids": {
+        "uniprot": "P26017"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P26017",
+          "protein_name": "Polycomb group protein Pc",
+          "gene_names": [
+            "Pc"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P11498",
+          "protein_name": "Pyruvate carboxylase, mitochondrial",
+          "gene_names": [
+            "PC"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P52873",
+          "protein_name": "Pyruvate carboxylase, mitochondrial",
+          "gene_names": [
+            "Pc"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q05920",
+          "protein_name": "Pyruvate carboxylase, mitochondrial",
+          "gene_names": [
+            "Pc",
+            "Pcx"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9S7G7",
+          "protein_name": "Transcription factor MYB3R-1",
+          "gene_names": [
+            "MYB3R1",
+            "PC-MYB1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9BYE9",
+          "protein_name": "Cadherin-related family member 2",
+          "gene_names": [
+            "CDHR2",
+            "PCDH24",
+            "PCLKC"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O00592",
+          "protein_name": "Podocalyxin",
+          "gene_names": [
+            "PCLP",
+            "PCLP1",
+            "PODXL"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9UKL6",
+          "protein_name": "Phosphatidylcholine transfer protein",
+          "gene_names": [
+            "PCTP",
+            "STARD2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "PC",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PC\" OR gene:\"PC\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"PC\" OR gene:\"PC\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Polycomb group protein Pc",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::ndmb::pseudomonas sp cbb1::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Pseudomonas sp. CBB1",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::ndmb::pseudomonas sp cbb1::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"NdmB\" OR gene:\"NdmB\") AND organism_name:\"Pseudomonas sp. CBB1\" | (protein_name:\"NdmB\" OR gene:\"NdmB\")",
+      "mapped_ids": {
+        "uniprot": "H9N290"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "H9N290",
+          "protein_name": "Methylxanthine N3-demethylase NdmB",
+          "gene_names": [
+            "ndmB"
+          ],
+          "organism": "Pseudomonas putida",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "NdmB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0M6Y2C4",
+          "protein_name": "Methylxanthine N3-demethylase NdmB",
+          "gene_names": [
+            "ndmB"
+          ],
+          "organism": "Roseibium aggregatum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NdmB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1B8YEA5",
+          "protein_name": "Methylxanthine N3-demethylase NdmB",
+          "gene_names": [
+            "ndmB"
+          ],
+          "organism": "Photorhabdus namnaonensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NdmB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A5P9QDM2",
+          "protein_name": "Methylxanthine N(3)-demethylase",
+          "gene_names": [
+            "ndmB"
+          ],
+          "organism": "Luteimicrobium xylanilyticum",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NdmB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6J5FKR7",
+          "protein_name": "Methylxanthine N3-demethylase NdmB",
+          "gene_names": [
+            "ndmB_1"
+          ],
+          "organism": "Paraburkholderia caffeinitolerans",
+          "reviewed": false,
+          "score": 0.0767,
+          "matched_query": "NdmB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A6J5FW49",
+          "protein_name": "Methylxanthine N3-demethylase NdmB",
+          "gene_names": [
+            "ndmB_2"
+          ],
+          "organism": "Paraburkholderia caffeinitolerans",
+          "reviewed": false,
+          "score": 0.0767,
+          "matched_query": "NdmB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAD9F4K5",
+          "protein_name": "Methylxanthine N3-demethylase NdmB",
+          "gene_names": [],
+          "organism": "Dissostichus eleginoides",
+          "reviewed": false,
+          "score": 0.0767,
+          "matched_query": "NdmB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NdmB\" OR gene:\"NdmB\") AND organism_name:\"Pseudomonas sp. CBB1\"",
+        "(protein_name:\"NdmB\" OR gene:\"NdmB\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Methylxanthine N3-demethylase NdmB",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::caffeine dehydrogenase::pseudomonas sp cbb1::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Pseudomonas sp. CBB1",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::caffeine dehydrogenase::pseudomonas sp cbb1::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"caffeine dehydrogenase\" OR gene:\"caffeine dehydrogenase\") AND organism_name:\"Pseudomonas sp. CBB1\" | (protein_name:\"caffeine dehydrogenase\" OR gene:\"caffeine dehydrogenase\")",
+      "mapped_ids": {
+        "uniprot": "D7REY4"
+      },
+      "confidence": 0.185,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "D7REY4",
+          "protein_name": "Caffeine dehydrogenase subunit beta",
+          "gene_names": [
+            "cdhB"
+          ],
+          "organism": "Pseudomonas sp. (strain CBB1)",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7REY3",
+          "protein_name": "Caffeine dehydrogenase subunit alpha",
+          "gene_names": [
+            "cdhA"
+          ],
+          "organism": "Pseudomonas sp. (strain CBB1)",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7REY5",
+          "protein_name": "Caffeine dehydrogenase subunit gamma",
+          "gene_names": [
+            "cdhC"
+          ],
+          "organism": "Pseudomonas sp. (strain CBB1)",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U9YYI6",
+          "protein_name": "Caffeine dehydrogenase subunit alpha",
+          "gene_names": [
+            "cdhA"
+          ],
+          "organism": "Martelella mediterranea DSM 17316",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1Y2MIZ9",
+          "protein_name": "Caffeine dehydrogenase subunit gamma",
+          "gene_names": [
+            "cdhC_3"
+          ],
+          "organism": "Pseudonocardia autotrophica",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A916NDV3",
+          "protein_name": "Caffeine dehydrogenase subunit alpha",
+          "gene_names": [
+            "cdhA_1"
+          ],
+          "organism": "Cupriavidus yeoncheonensis",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A090MRI3",
+          "protein_name": "Caffeine dehydrogenase subunit beta",
+          "gene_names": [
+            "cdhB"
+          ],
+          "organism": "Afipia felis",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0H2M3B1",
+          "protein_name": "Caffeine dehydrogenase subunit alpha",
+          "gene_names": [
+            "cdhA1"
+          ],
+          "organism": "Variovorax paradoxus",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "caffeine dehydrogenase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"caffeine dehydrogenase\" OR gene:\"caffeine dehydrogenase\") AND organism_name:\"Pseudomonas sp. CBB1\"",
+        "(protein_name:\"caffeine dehydrogenase\" OR gene:\"caffeine dehydrogenase\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Caffeine dehydrogenase subunit beta",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::urate oxidase::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::urate oxidase::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"urate oxidase\" OR gene:\"urate oxidase\") AND organism_name:\"Unknown species\" | (protein_name:\"urate oxidase\" OR gene:\"urate oxidase\")",
+      "mapped_ids": {
+        "uniprot": "P16163"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P16163",
+          "protein_name": "Uricase",
+          "gene_names": [
+            "UO",
+            "Uro"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P25688",
+          "protein_name": "Uricase",
+          "gene_names": [
+            "Uox"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6DG85",
+          "protein_name": "Uricase",
+          "gene_names": [
+            "uox"
+          ],
+          "organism": "Danio rerio",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P09118",
+          "protein_name": "Uricase",
+          "gene_names": [
+            "Uox"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q00511",
+          "protein_name": "Uricase",
+          "gene_names": [
+            "Uox",
+            "uaZ"
+          ],
+          "organism": "Aspergillus flavus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O04420",
+          "protein_name": "Uricase",
+          "gene_names": [],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P04670",
+          "protein_name": "Uricase-2 isozyme 1",
+          "gene_names": [],
+          "organism": "Glycine max",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P16164",
+          "protein_name": "Uricase",
+          "gene_names": [
+            "UOX"
+          ],
+          "organism": "Sus scrofa",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "urate oxidase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"urate oxidase\" OR gene:\"urate oxidase\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"urate oxidase\" OR gene:\"urate oxidase\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Uricase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::allantoinase::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::allantoinase::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"allantoinase\" OR gene:\"allantoinase\") AND organism_name:\"Unknown species\" | (protein_name:\"allantoinase\" OR gene:\"allantoinase\")",
+      "mapped_ids": {
+        "uniprot": "Q94AP0"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q94AP0",
+          "protein_name": "Allantoinase",
+          "gene_names": [
+            "ALN"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P77671",
+          "protein_name": "Allantoinase",
+          "gene_names": [
+            "allB",
+            "glxB3",
+            "ybbX"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O32137",
+          "protein_name": "Allantoinase",
+          "gene_names": [
+            "allB",
+            "pucH",
+            "yunH"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P32375",
+          "protein_name": "Allantoinase",
+          "gene_names": [
+            "DAL1"
+          ],
+          "organism": "Saccharomyces cerevisiae (strain ATCC 204508 / S288c)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B1LKD0",
+          "protein_name": "Allantoinase",
+          "gene_names": [
+            "allB"
+          ],
+          "organism": "Escherichia coli (strain SMS-3-5 / SECEC)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B5BD11",
+          "protein_name": "Allantoinase",
+          "gene_names": [
+            "allB"
+          ],
+          "organism": "Salmonella paratyphi A (strain AKU_12601)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B9FDB8",
+          "protein_name": "Probable allantoinase",
+          "gene_names": [
+            "ALN"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P40757",
+          "protein_name": "Allantoinase, mitochondrial",
+          "gene_names": [
+            "ALN"
+          ],
+          "organism": "Aquarana catesbeiana",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "allantoinase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"allantoinase\" OR gene:\"allantoinase\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"allantoinase\" OR gene:\"allantoinase\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Allantoinase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::nocb::unknown species::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::nocb::unknown species::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"NocB\" OR gene:\"NocB\") AND organism_name:\"Unknown species\" | (protein_name:\"NocB\" OR gene:\"NocB\")",
+      "mapped_ids": {
+        "uniprot": "A0A186QIJ2"
+      },
+      "confidence": 0.51,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0A186QIJ2",
+          "protein_name": "Acireductone dioxygenase",
+          "gene_names": [
+            "mtnD",
+            "nocB"
+          ],
+          "organism": "Nostoc sp. CCAP 1453/38",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1S7B4A6",
+          "protein_name": "Acireductone dioxygenase",
+          "gene_names": [
+            "mtnD",
+            "nocB"
+          ],
+          "organism": "Nodularia sp. HBU26",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "E5DUG3",
+          "protein_name": "NocB",
+          "gene_names": [
+            "nocB"
+          ],
+          "organism": "Nocardia sp. ATCC 202099",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5J1Q6",
+          "protein_name": "NocB",
+          "gene_names": [
+            "nocB"
+          ],
+          "organism": "Nocardia uniformis subsp. tsuyamanensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABX8U105",
+          "protein_name": "A50926 NRPS, module 3",
+          "gene_names": [
+            "nocB"
+          ],
+          "organism": "Nonomuraea coxensis DSM 45129",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABU1PVG6",
+          "protein_name": "Nocardicin nonribosomal peptide synthetase NocB",
+          "gene_names": [],
+          "organism": "Saccharothrix longispora",
+          "reviewed": false,
+          "score": 0.03,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A542DFE1",
+          "protein_name": "Nocardicin nonribosomal peptide synthetase NocB",
+          "gene_names": [],
+          "organism": "Amycolatopsis cihanbeyliensis",
+          "reviewed": false,
+          "score": 0.03,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A561VIE3",
+          "protein_name": "Nocardicin nonribosomal peptide synthetase NocB",
+          "gene_names": [],
+          "organism": "Actinoplanes teichomyceticus",
+          "reviewed": false,
+          "score": 0.03,
+          "matched_query": "NocB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NocB\" OR gene:\"NocB\") AND organism_name:\"Unknown species\"",
+        "(protein_name:\"NocB\" OR gene:\"NocB\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "Acireductone dioxygenase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::pntm::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::pntm::streptomyces antibioticus::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"PntM\" OR gene:\"PntM\")",
+      "mapped_ids": {
+        "uniprot": "E3VWI3"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "E3VWI3",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces arenae",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2N9BJN2",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Streptomyces chartreusis NRRL 3882",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0BTW4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Actinomadura macrotermitis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A7K0DYT4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "pntM"
+          ],
+          "organism": "Nocardia aurantia",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW0BAM4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces mutomycini",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABV3LSP6",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces huasconensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABW8LVR4",
+          "protein_name": "Pentalenolactone synthase",
+          "gene_names": [
+            "penM",
+            "pntM"
+          ],
+          "organism": "Streptomyces milbemycinicus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "PntM",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"PntM\" OR gene:\"PntM\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"PntM\" OR gene:\"PntM\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Pentalenolactone synthase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::btme::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::btme::streptomyces antibioticus::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"BtmE\" OR gene:\"BtmE\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"BtmE\" OR gene:\"BtmE\") | (protein_name:\"excision\" OR gene:\"excision\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"excision\" OR gene:\"excision\") | \"excision\" AND organism_name:\"Streptomyces antibioticus\" | \"excision\" | (protein_name:\"microenvironment\" OR gene:\"microenvironment\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"microenvironment\" OR gene:\"microenvironment\") | \"microenvironment\" AND organism_name:\"Streptomyces antibioticus\" | \"microenvironment\"",
+      "mapped_ids": {
+        "uniprot": "A0AAE7CK71"
+      },
+      "confidence": 0.25,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0AAE7CK71",
+          "protein_name": "UvrABC system protein A",
+          "gene_names": [
+            "uvrA"
+          ],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        },
+        {
+          "accession": "A0AAE6Y5H6",
+          "protein_name": "UvrABC system protein B",
+          "gene_names": [
+            "uvrB"
+          ],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        },
+        {
+          "accession": "Q93F95",
+          "protein_name": "Endonuclease III",
+          "gene_names": [
+            "nth"
+          ],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        },
+        {
+          "accession": "A0ABX3LI31",
+          "protein_name": "Endonuclease III",
+          "gene_names": [
+            "nth"
+          ],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        },
+        {
+          "accession": "A0AAE6YDS8",
+          "protein_name": "Formamidopyrimidine-DNA glycosylase",
+          "gene_names": [
+            "fpg",
+            "mutM"
+          ],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        },
+        {
+          "accession": "A0ABX3L986",
+          "protein_name": "Probable bifunctional transcriptional activator/DNA repair enzyme AlkA",
+          "gene_names": [],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        },
+        {
+          "accession": "A0ABX3LMH3",
+          "protein_name": "Probable endonuclease 4",
+          "gene_names": [
+            "nfo"
+          ],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        },
+        {
+          "accession": "A0AAE6Y7R6",
+          "protein_name": "UvrABC system protein C",
+          "gene_names": [
+            "uvrC"
+          ],
+          "organism": "Streptomyces antibioticus",
+          "reviewed": false,
+          "score": 0.25,
+          "matched_query": "excision",
+          "alias_source": "literature_alias",
+          "matched_alias": "excision"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"BtmE\" OR gene:\"BtmE\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"BtmE\" OR gene:\"BtmE\")",
+        "(protein_name:\"excision\" OR gene:\"excision\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"excision\" OR gene:\"excision\")",
+        "\"excision\" AND organism_name:\"Streptomyces antibioticus\"",
+        "\"excision\"",
+        "(protein_name:\"microenvironment\" OR gene:\"microenvironment\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"microenvironment\" OR gene:\"microenvironment\")",
+        "\"microenvironment\" AND organism_name:\"Streptomyces antibioticus\"",
+        "\"microenvironment\""
+      ],
+      "reviewed": false,
+      "resolved_name": "UvrABC system protein A",
+      "literature_aliases": [
+        {
+          "alias": "excision",
+          "source": "literature_alias"
+        },
+        {
+          "alias": "microenvironment",
+          "source": "literature_alias"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::btmf::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::btmf::streptomyces antibioticus::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"BtmF\" OR gene:\"BtmF\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"BtmF\" OR gene:\"BtmF\")",
+      "mapped_ids": {
+        "uniprot": "A0A0R3QRK4"
+      },
+      "confidence": -0.04,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0A0R3QRK4",
+          "protein_name": "Protein-lysine N-methyltransferase BTMF_LOCUS8390",
+          "gene_names": [],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0R3Q4I4",
+          "protein_name": "Protein-lysine N-methyltransferase BTMF_LOCUS566",
+          "gene_names": [],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0R3QNK1",
+          "protein_name": "Sterol carrier protein 2",
+          "gene_names": [],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0R3Q418",
+          "protein_name": "Flavin-containing monooxygenase",
+          "gene_names": [],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0R3QNR9",
+          "protein_name": "Flavin-containing monooxygenase",
+          "gene_names": [],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0R3Q305",
+          "protein_name": "Ribonuclease",
+          "gene_names": [],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0R3Q3A6",
+          "protein_name": "RNA-splicing ligase RtcB homolog",
+          "gene_names": [],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A3P7V4Q4",
+          "protein_name": "Katanin p60 ATPase-containing subunit A1",
+          "gene_names": [
+            "KATNA1"
+          ],
+          "organism": "Brugia timori",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "BtmF",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"BtmF\" OR gene:\"BtmF\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"BtmF\" OR gene:\"BtmF\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "Protein-lysine N-methyltransferase BTMF_LOCUS8390",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::klpd::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::klpd::streptomyces antibioticus::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"KlpD\" OR gene:\"KlpD\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"KlpD\" OR gene:\"KlpD\") | (protein_name:\"bifunctional cyclodehydratase\" OR gene:\"bifunctional cyclodehydratase\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"bifunctional cyclodehydratase\" OR gene:\"bifunctional cyclodehydratase\") | \"bifunctional cyclodehydratase\" AND organism_name:\"Streptomyces antibioticus\" | \"bifunctional cyclodehydratase\" | (protein_name:\"klpD\" OR gene:\"klpD\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"klpD\" OR gene:\"klpD\") | \"klpD\" AND organism_name:\"Streptomyces antibioticus\" | \"klpD\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "bifunctional cyclodehydratase",
+          "source": "literature_function"
+        },
+        {
+          "alias": "klpD",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::nosl::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::nosl::streptomyces antibioticus::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"NosL\" OR gene:\"NosL\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"NosL\" OR gene:\"NosL\")",
+      "mapped_ids": {
+        "uniprot": "O68481"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O68481",
+          "protein_name": "Copper-binding lipoprotein NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Achromobacter cycloclastes",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q52529",
+          "protein_name": "Copper-binding lipoprotein NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Stutzerimonas stutzeri",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0F6TMC5",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Paracoccus sp. SY",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "C6FX51",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Streptomyces actuosus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O07331",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Rhizobium meliloti",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9F0W0",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Pseudomonas fluorescens",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9XCW7",
+          "protein_name": "NosL",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Cereibacter sphaeroides f. sp. denitrificans",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "H7C803",
+          "protein_name": "NosL protein",
+          "gene_names": [
+            "nosL"
+          ],
+          "organism": "Bradyrhizobium diazoefficiens (strain JCM 10833 / BCRC 13528 / IAM 13628 / NBRC 14792 / USDA 110)",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosL",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosL\" OR gene:\"NosL\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"NosL\" OR gene:\"NosL\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Copper-binding lipoprotein NosL",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::nosj::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::nosj::streptomyces antibioticus::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"NosJ\" OR gene:\"NosJ\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"NosJ\" OR gene:\"NosJ\")",
+      "mapped_ids": {
+        "uniprot": "A0ABP2RDK7"
+      },
+      "confidence": -0.04,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0ABP2RDK7",
+          "protein_name": "COX2/NosJ periplasmic domain protein",
+          "gene_names": [],
+          "organism": "Leptospira licerasiae str. MMD4847",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "NosJ",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosJ\" OR gene:\"NosJ\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"NosJ\" OR gene:\"NosJ\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "COX2/NosJ periplasmic domain protein",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::nosk::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::nosk::streptomyces antibioticus::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"NosK\" OR gene:\"NosK\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"NosK\" OR gene:\"NosK\")",
+      "mapped_ids": {
+        "uniprot": "C6FX50"
+      },
+      "confidence": 0.51,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "C6FX50",
+          "protein_name": "NosK",
+          "gene_names": [
+            "nosK"
+          ],
+          "organism": "Streptomyces actuosus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "NosK",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosK\" OR gene:\"NosK\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"NosK\" OR gene:\"NosK\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "NosK",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::nosn::streptomyces antibioticus::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Streptomyces antibioticus",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::nosn::streptomyces antibioticus::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"NosN\" OR gene:\"NosN\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"NosN\" OR gene:\"NosN\") | (protein_name:\"black\" OR gene:\"black\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"black\" OR gene:\"black\") | \"black\" AND organism_name:\"Streptomyces antibioticus\" | \"black\" | (protein_name:\"observed, suggesting that neither residue acts as a direct general base\" OR gene:\"observed, suggesting that neither residue acts as a direct general base\") AND organism_name:\"Streptomyces antibioticus\" | (protein_name:\"observed, suggesting that neither residue acts as a direct general base\" OR gene:\"observed, suggesting that neither residue acts as a direct general base\") | \"observed, suggesting that neither residue acts as a direct general base\" AND organism_name:\"Streptomyces antibioticus\" | \"observed, suggesting that neither residue acts as a direct general base\"",
+      "mapped_ids": {
+        "uniprot": "X2J8B3"
+      },
+      "confidence": 0.51,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "X2J8B3",
+          "protein_name": "Black, isoform C",
+          "gene_names": [
+            "ADC",
+            "ADC/CSADC",
+            "Adc",
+            "B",
+            "BG:DS00941.5",
+            "Black",
+            "DGad2",
+            "Dm-ADC"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        },
+        {
+          "accession": "Q7KTA6",
+          "protein_name": "Black, isoform A",
+          "gene_names": [
+            "ADC",
+            "ADC/CSADC",
+            "Adc",
+            "B",
+            "BG:DS00941.5",
+            "Black",
+            "DGad2",
+            "Dm-ADC"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        },
+        {
+          "accession": "A0A8K1X5N7",
+          "protein_name": "Black",
+          "gene_names": [
+            "black"
+          ],
+          "organism": "Henosepilachna vigintioctopunctata",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        },
+        {
+          "accession": "A0A146B0F7",
+          "protein_name": "Black",
+          "gene_names": [
+            "black"
+          ],
+          "organism": "Oncopeltus fasciatus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        },
+        {
+          "accession": "D4AH66",
+          "protein_name": "Black",
+          "gene_names": [
+            "black"
+          ],
+          "organism": "Papilio xuthus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        },
+        {
+          "accession": "A0A9P9YU10",
+          "protein_name": "Black",
+          "gene_names": [],
+          "organism": "Drosophila gunungcola",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        },
+        {
+          "accession": "A0A9R1U2H5",
+          "protein_name": "Cysteine sulfinic acid decarboxylase",
+          "gene_names": [
+            "black"
+          ],
+          "organism": "Fopius arisanus",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        },
+        {
+          "accession": "Q9VF08",
+          "protein_name": "Mitochondrial import inner membrane translocase subunit Tim16",
+          "gene_names": [
+            "blp"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "black",
+          "alias_source": "literature_alias",
+          "matched_alias": "black"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"NosN\" OR gene:\"NosN\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"NosN\" OR gene:\"NosN\")",
+        "(protein_name:\"black\" OR gene:\"black\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"black\" OR gene:\"black\")",
+        "\"black\" AND organism_name:\"Streptomyces antibioticus\"",
+        "\"black\"",
+        "(protein_name:\"observed, suggesting that neither residue acts as a direct general base\" OR gene:\"observed, suggesting that neither residue acts as a direct general base\") AND organism_name:\"Streptomyces antibioticus\"",
+        "(protein_name:\"observed, suggesting that neither residue acts as a direct general base\" OR gene:\"observed, suggesting that neither residue acts as a direct general base\")",
+        "\"observed, suggesting that neither residue acts as a direct general base\" AND organism_name:\"Streptomyces antibioticus\"",
+        "\"observed, suggesting that neither residue acts as a direct general base\""
+      ],
+      "reviewed": false,
+      "resolved_name": "Black, isoform C",
+      "literature_aliases": [
+        {
+          "alias": "black",
+          "source": "literature_alias"
+        },
+        {
+          "alias": "observed, suggesting that neither residue acts as a direct general base",
+          "source": "literature_function"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abci1::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abci1::syzygium aromaticum::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"ABCI-1\" OR gene:\"ABCI-1\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCI 1\" OR gene:\"ABCI 1\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCI-1\" OR gene:\"ABCI-1\") | (protein_name:\"ABCI 1\" OR gene:\"ABCI 1\")",
+      "mapped_ids": {
+        "uniprot": "Q9C8T1"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q9C8T1",
+          "protein_name": "ABC transporter I family member 1",
+          "gene_names": [
+            "ABCI1",
+            "CCMA",
+            "NAP10"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "ABCI-1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"ABCI-1\" OR gene:\"ABCI-1\") AND organism_name:\"Syzygium aromaticum\"",
+        "(protein_name:\"ABCI 1\" OR gene:\"ABCI 1\") AND organism_name:\"Syzygium aromaticum\"",
+        "(protein_name:\"ABCI-1\" OR gene:\"ABCI-1\")",
+        "(protein_name:\"ABCI 1\" OR gene:\"ABCI 1\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "ABC transporter I family member 1",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abcc41::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abcc41::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABCC-41\" OR gene:\"ABCC-41\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCC 41\" OR gene:\"ABCC 41\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCC-41\" OR gene:\"ABCC-41\") | (protein_name:\"ABCC 41\" OR gene:\"ABCC 41\")",
+      "candidates": [],
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abcg61::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abcg61::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABCG-61\" OR gene:\"ABCG-61\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG 61\" OR gene:\"ABCG 61\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG-61\" OR gene:\"ABCG-61\") | (protein_name:\"ABCG 61\" OR gene:\"ABCG 61\")",
+      "candidates": [],
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abcg62::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abcg62::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABCG-62\" OR gene:\"ABCG-62\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG 62\" OR gene:\"ABCG 62\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG-62\" OR gene:\"ABCG-62\") | (protein_name:\"ABCG 62\" OR gene:\"ABCG 62\") | (protein_name:\"ABCG62\" OR gene:\"ABCG62\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG62\" OR gene:\"ABCG62\") | \"ABCG62\" AND organism_name:\"Syzygium aromaticum\" | \"ABCG62\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "ABCG62",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abcg64::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abcg64::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABCG-64\" OR gene:\"ABCG-64\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG 64\" OR gene:\"ABCG 64\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG-64\" OR gene:\"ABCG-64\") | (protein_name:\"ABCG 64\" OR gene:\"ABCG 64\")",
+      "candidates": [],
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abc272::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abc272::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABC2-72\" OR gene:\"ABC2-72\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2 72\" OR gene:\"ABC2 72\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2-72\" OR gene:\"ABC2-72\") | (protein_name:\"ABC2 72\" OR gene:\"ABC2 72\") | (protein_name:\"ABC2-72\" OR gene:\"ABC2-72\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2-72\" OR gene:\"ABC2-72\") | \"ABC2-72\" AND organism_name:\"Syzygium aromaticum\" | \"ABC2-72\" | (protein_name:\"ABC2 72\" OR gene:\"ABC2 72\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2 72\" OR gene:\"ABC2 72\") | \"ABC2 72\" AND organism_name:\"Syzygium aromaticum\" | \"ABC2 72\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "ABC2-72",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abc2113::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abc2113::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABC2-113\" OR gene:\"ABC2-113\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2 113\" OR gene:\"ABC2 113\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2-113\" OR gene:\"ABC2-113\") | (protein_name:\"ABC2 113\" OR gene:\"ABC2 113\") | (protein_name:\"ABC2-113\" OR gene:\"ABC2-113\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2-113\" OR gene:\"ABC2-113\") | \"ABC2-113\" AND organism_name:\"Syzygium aromaticum\" | \"ABC2-113\" | (protein_name:\"ABC2 113\" OR gene:\"ABC2 113\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2 113\" OR gene:\"ABC2 113\") | \"ABC2 113\" AND organism_name:\"Syzygium aromaticum\" | \"ABC2 113\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "ABC2-113",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abc2115::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abc2115::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABC2-115\" OR gene:\"ABC2-115\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2 115\" OR gene:\"ABC2 115\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2-115\" OR gene:\"ABC2-115\") | (protein_name:\"ABC2 115\" OR gene:\"ABC2 115\") | (protein_name:\"ABC2-115\" OR gene:\"ABC2-115\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2-115\" OR gene:\"ABC2-115\") | \"ABC2-115\" AND organism_name:\"Syzygium aromaticum\" | \"ABC2-115\" | (protein_name:\"ABC2 115\" OR gene:\"ABC2 115\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABC2 115\" OR gene:\"ABC2 115\") | \"ABC2 115\" AND organism_name:\"Syzygium aromaticum\" | \"ABC2 115\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "ABC2-115",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abcg131::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abcg131::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABCG-131\" OR gene:\"ABCG-131\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG 131\" OR gene:\"ABCG 131\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG-131\" OR gene:\"ABCG-131\") | (protein_name:\"ABCG 131\" OR gene:\"ABCG 131\")",
+      "candidates": [],
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::abcg143::syzygium aromaticum::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::abcg143::syzygium aromaticum::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"ABCG-143\" OR gene:\"ABCG-143\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG 143\" OR gene:\"ABCG 143\") AND organism_name:\"Syzygium aromaticum\" | (protein_name:\"ABCG-143\" OR gene:\"ABCG-143\") | (protein_name:\"ABCG 143\" OR gene:\"ABCG 143\")",
+      "candidates": [],
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::egs1::ocimum basilicum and petunia hybrida::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Ocimum basilicum and Petunia hybrida",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::egs1::ocimum basilicum and petunia hybrida::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"EGS1\" OR gene:\"EGS1\") AND organism_name:\"Ocimum basilicum and Petunia hybrida\" | (protein_name:\"EGS1\" OR gene:\"EGS1\")",
+      "mapped_ids": {
+        "uniprot": "Q15GI4"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q15GI4",
+          "protein_name": "Eugenol synthase 1",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Ocimum basilicum",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B2WSN1",
+          "protein_name": "Eugenol synthase 1",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D0VWT0",
+          "protein_name": "Eugenol synthase 1",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Clarkia breweri",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0E3KXU6",
+          "protein_name": "Eugenol synthase 1",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Gymnadenia conopsea",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0E3NCN9",
+          "protein_name": "Eugenol synthase 1",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Gymnadenia odoratissima",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "M1FGX5",
+          "protein_name": "Eugenol synthase",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Rosa chinensis",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A371EFN8",
+          "protein_name": "Eugenol synthase 1",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Mucuna pruriens",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAV9DL69",
+          "protein_name": "Eugenol synthase 1",
+          "gene_names": [
+            "EGS1"
+          ],
+          "organism": "Acorus calamus",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "EGS1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"EGS1\" OR gene:\"EGS1\") AND organism_name:\"Ocimum basilicum and Petunia hybrida\"",
+        "(protein_name:\"EGS1\" OR gene:\"EGS1\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Eugenol synthase 1",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::igs1::ocimum basilicum and petunia hybrida::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Ocimum basilicum and Petunia hybrida",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::igs1::ocimum basilicum and petunia hybrida::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"IGS1\" OR gene:\"IGS1\") AND organism_name:\"Ocimum basilicum and Petunia hybrida\" | (protein_name:\"IGS1\" OR gene:\"IGS1\")",
+      "mapped_ids": {
+        "uniprot": "Q15GI3"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q15GI3",
+          "protein_name": "Isoeugenol synthase 1",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Petunia hybrida",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B2WSM8",
+          "protein_name": "Isoeugenol synthase 1",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Clarkia breweri",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A513U864",
+          "protein_name": "T-anol/isoeugenol synthase",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Foeniculum vulgare",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAV9FFD0",
+          "protein_name": "Isoeugenol synthase 1",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Acorus calamus",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAV9FHB8",
+          "protein_name": "Isoeugenol synthase 1",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Acorus calamus",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A371E1Q8",
+          "protein_name": "Isoeugenol synthase 1",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Mucuna pruriens",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAV9FIY6",
+          "protein_name": "Isoeugenol synthase 1",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Acorus calamus",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0AAV9FMR9",
+          "protein_name": "Isoeugenol synthase 1",
+          "gene_names": [
+            "IGS1"
+          ],
+          "organism": "Acorus calamus",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "IGS1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"IGS1\" OR gene:\"IGS1\") AND organism_name:\"Ocimum basilicum and Petunia hybrida\"",
+        "(protein_name:\"IGS1\" OR gene:\"IGS1\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Isoeugenol synthase 1",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lvaa::pseudomonas putida kt2440::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::lvaa::pseudomonas putida kt2440::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"LvaA\" OR gene:\"LvaA\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"LvaA\" OR gene:\"LvaA\") | (protein_name:\"Q88G01\" OR gene:\"Q88G01\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"Q88G01\" OR gene:\"Q88G01\") | \"Q88G01\" AND organism_name:\"Pseudomonas putida KT2440\" | \"Q88G01\" | (protein_name:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\") | \"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\" AND organism_name:\"Pseudomonas putida KT2440\" | \"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\" | (protein_name:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\") | \"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\" AND organism_name:\"Pseudomonas putida KT2440\" | \"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\"",
+      "mapped_ids": {
+        "uniprot": "Q88G01"
+      },
+      "confidence": -0.04,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q88G01",
+          "protein_name": "Aminoglycoside phosphotransferase domain-containing protein",
+          "gene_names": [],
+          "organism": "Pseudomonas putida (strain ATCC 47054 / DSM 6125 / CFBP 8728 / NCIMB 11950 / KT2440)",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "Q88G01",
+          "alias_source": "literature_alias",
+          "matched_alias": "Q88G01"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"LvaA\" OR gene:\"LvaA\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"LvaA\" OR gene:\"LvaA\")",
+        "(protein_name:\"Q88G01\" OR gene:\"Q88G01\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"Q88G01\" OR gene:\"Q88G01\")",
+        "\"Q88G01\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"Q88G01\"",
+        "(protein_name:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\")",
+        "\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase\"",
+        "(protein_name:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\" OR gene:\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\")",
+        "\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"subsequently converted to pentenoyl CoA by LvaC a member of the acyl CoA dehydrogenase\""
+      ],
+      "reviewed": false,
+      "resolved_name": "Aminoglycoside phosphotransferase domain-containing protein",
+      "literature_aliases": [
+        {
+          "alias": "Q88G01",
+          "source": "literature_alias"
+        },
+        {
+          "alias": "subsequently converted to pentenoyl-CoA by LvaC, a member of the acyl-CoA dehydrogenase",
+          "source": "literature_function"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lvab::pseudomonas putida kt2440::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::lvab::pseudomonas putida kt2440::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"LvaB\" OR gene:\"LvaB\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"LvaB\" OR gene:\"LvaB\")",
+      "mapped_ids": {
+        "uniprot": "A0ACG1UY68"
+      },
+      "confidence": 0.51,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0ACG1UY68",
+          "protein_name": "4-hydroxypentanoyl-CoA kinase subunit LvaB",
+          "gene_names": [
+            "lvaB"
+          ],
+          "organism": "Pseudomonas monteilii",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "LvaB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"LvaB\" OR gene:\"LvaB\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"LvaB\" OR gene:\"LvaB\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "4-hydroxypentanoyl-CoA kinase subunit LvaB",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lvac::pseudomonas putida kt2440::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::lvac::pseudomonas putida kt2440::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"LvaC\" OR gene:\"LvaC\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"LvaC\" OR gene:\"LvaC\") | (protein_name:\"PP_2793\" OR gene:\"PP_2793\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"PP_2793\" OR gene:\"PP_2793\") | \"PP_2793\" AND organism_name:\"Pseudomonas putida KT2440\" | \"PP_2793\" | (protein_name:\"PP 2793\" OR gene:\"PP 2793\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"PP 2793\" OR gene:\"PP 2793\") | \"PP 2793\" AND organism_name:\"Pseudomonas putida KT2440\" | \"PP 2793\"",
+      "mapped_ids": {
+        "uniprot": "Q88J56"
+      },
+      "confidence": -0.04,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q88J56",
+          "protein_name": "long-chain-acyl-CoA dehydrogenase",
+          "gene_names": [],
+          "organism": "Pseudomonas putida (strain ATCC 47054 / DSM 6125 / CFBP 8728 / NCIMB 11950 / KT2440)",
+          "reviewed": false,
+          "score": -0.04,
+          "matched_query": "PP_2793",
+          "alias_source": "literature_alias",
+          "matched_alias": "PP_2793"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"LvaC\" OR gene:\"LvaC\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"LvaC\" OR gene:\"LvaC\")",
+        "(protein_name:\"PP_2793\" OR gene:\"PP_2793\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"PP_2793\" OR gene:\"PP_2793\")",
+        "\"PP_2793\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"PP_2793\"",
+        "(protein_name:\"PP 2793\" OR gene:\"PP 2793\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"PP 2793\" OR gene:\"PP 2793\")",
+        "\"PP 2793\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"PP 2793\""
+      ],
+      "reviewed": false,
+      "resolved_name": "long-chain-acyl-CoA dehydrogenase",
+      "literature_aliases": [
+        {
+          "alias": "PP_2793",
+          "source": "literature_alias"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lvad::pseudomonas putida kt2440::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::lvad::pseudomonas putida kt2440::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"LvaD\" OR gene:\"LvaD\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"LvaD\" OR gene:\"LvaD\") | (protein_name:\"PP_2794\" OR gene:\"PP_2794\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"PP_2794\" OR gene:\"PP_2794\") | \"PP_2794\" AND organism_name:\"Pseudomonas putida KT2440\" | \"PP_2794\" | (protein_name:\"PP 2794\" OR gene:\"PP 2794\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"PP 2794\" OR gene:\"PP 2794\") | \"PP 2794\" AND organism_name:\"Pseudomonas putida KT2440\" | \"PP 2794\" | (protein_name:\"oxidoreductase\" OR gene:\"oxidoreductase\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"oxidoreductase\" OR gene:\"oxidoreductase\") | \"oxidoreductase\" AND organism_name:\"Pseudomonas putida KT2440\" | \"oxidoreductase\"",
+      "mapped_ids": {
+        "uniprot": "Q9Y6N5"
+      },
+      "confidence": 0.1267,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q9Y6N5",
+          "protein_name": "Sulfide:quinone oxidoreductase, mitochondrial",
+          "gene_names": [
+            "SQOR",
+            "SQRDL"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        },
+        {
+          "accession": "Q9NZC7",
+          "protein_name": "WW domain-containing oxidoreductase",
+          "gene_names": [
+            "FOR",
+            "SDR41C1",
+            "WOX1",
+            "WWOX"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        },
+        {
+          "accession": "Q9UHB4",
+          "protein_name": "NADPH-dependent diflavin oxidoreductase 1",
+          "gene_names": [
+            "NDOR1",
+            "NR1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        },
+        {
+          "accession": "P03915",
+          "protein_name": "NADH-ubiquinone oxidoreductase chain 5",
+          "gene_names": [
+            "MT-ND5",
+            "MTND5",
+            "NADH5",
+            "ND5"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        },
+        {
+          "accession": "P03905",
+          "protein_name": "NADH-ubiquinone oxidoreductase chain 4",
+          "gene_names": [
+            "MT-ND4",
+            "MTND4",
+            "NADH4",
+            "ND4"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        },
+        {
+          "accession": "P03897",
+          "protein_name": "NADH-ubiquinone oxidoreductase chain 3",
+          "gene_names": [
+            "MT-ND3",
+            "MTND3",
+            "NADH3",
+            "ND3"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        },
+        {
+          "accession": "P03891",
+          "protein_name": "NADH-ubiquinone oxidoreductase chain 2",
+          "gene_names": [
+            "MT-ND2",
+            "MTND2",
+            "NADH2",
+            "ND2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        },
+        {
+          "accession": "P03886",
+          "protein_name": "NADH-ubiquinone oxidoreductase chain 1",
+          "gene_names": [
+            "MT-ND1",
+            "MTND1",
+            "NADH1",
+            "ND1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.0975,
+          "matched_query": "oxidoreductase",
+          "alias_source": "literature_alias",
+          "matched_alias": "oxidoreductase"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"LvaD\" OR gene:\"LvaD\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"LvaD\" OR gene:\"LvaD\")",
+        "(protein_name:\"PP_2794\" OR gene:\"PP_2794\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"PP_2794\" OR gene:\"PP_2794\")",
+        "\"PP_2794\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"PP_2794\"",
+        "(protein_name:\"PP 2794\" OR gene:\"PP 2794\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"PP 2794\" OR gene:\"PP 2794\")",
+        "\"PP 2794\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"PP 2794\"",
+        "(protein_name:\"oxidoreductase\" OR gene:\"oxidoreductase\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"oxidoreductase\" OR gene:\"oxidoreductase\")",
+        "\"oxidoreductase\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"oxidoreductase\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Sulfide:quinone oxidoreductase, mitochondrial",
+      "literature_aliases": [
+        {
+          "alias": "PP_2794",
+          "source": "literature_alias"
+        },
+        {
+          "alias": "oxidoreductase",
+          "source": "literature_alias"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::lvae::pseudomonas putida kt2440::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::lvae::pseudomonas putida kt2440::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"LvaE\" OR gene:\"LvaE\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"LvaE\" OR gene:\"LvaE\") | (protein_name:\"synthetase\" OR gene:\"synthetase\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"synthetase\" OR gene:\"synthetase\") | \"synthetase\" AND organism_name:\"Pseudomonas putida KT2440\" | \"synthetase\" | (protein_name:\"novel levulinyl-CoA synthetase\" OR gene:\"novel levulinyl-CoA synthetase\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"novel levulinyl-CoA synthetase\" OR gene:\"novel levulinyl-CoA synthetase\") | \"novel levulinyl-CoA synthetase\" AND organism_name:\"Pseudomonas putida KT2440\" | \"novel levulinyl-CoA synthetase\" | (protein_name:\"novel levulinyl CoA synthetase\" OR gene:\"novel levulinyl CoA synthetase\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"novel levulinyl CoA synthetase\" OR gene:\"novel levulinyl CoA synthetase\") | \"novel levulinyl CoA synthetase\" AND organism_name:\"Pseudomonas putida KT2440\" | \"novel levulinyl CoA synthetase\"",
+      "mapped_ids": {
+        "uniprot": "P41250"
+      },
+      "confidence": 0.185,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P41250",
+          "protein_name": "Glycine--tRNA ligase",
+          "gene_names": [
+            "GARS",
+            "GARS1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        },
+        {
+          "accession": "Q9HAB8",
+          "protein_name": "Phosphopantothenate--cysteine ligase",
+          "gene_names": [
+            "COAB",
+            "PPCS"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        },
+        {
+          "accession": "P48637",
+          "protein_name": "Glutathione synthetase",
+          "gene_names": [
+            "GSS"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        },
+        {
+          "accession": "Q9NR19",
+          "protein_name": "Acetyl-coenzyme A synthetase, cytoplasmic",
+          "gene_names": [
+            "ACAS2",
+            "ACSS2"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        },
+        {
+          "accession": "Q6IA69",
+          "protein_name": "Glutamine-dependent NAD(+) synthetase",
+          "gene_names": [
+            "NADSYN1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        },
+        {
+          "accession": "Q5ST30",
+          "protein_name": "Valine--tRNA ligase, mitochondrial",
+          "gene_names": [
+            "KIAA1885",
+            "VARS2",
+            "VARS2L",
+            "VARSL"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        },
+        {
+          "accession": "O43776",
+          "protein_name": "Asparagine--tRNA ligase, cytoplasmic",
+          "gene_names": [
+            "NARS",
+            "NARS1",
+            "NRS"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        },
+        {
+          "accession": "P0A8L1",
+          "protein_name": "Serine--tRNA ligase",
+          "gene_names": [
+            "serS"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "synthetase",
+          "alias_source": "literature_alias",
+          "matched_alias": "synthetase"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"LvaE\" OR gene:\"LvaE\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"LvaE\" OR gene:\"LvaE\")",
+        "(protein_name:\"synthetase\" OR gene:\"synthetase\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"synthetase\" OR gene:\"synthetase\")",
+        "\"synthetase\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"synthetase\"",
+        "(protein_name:\"novel levulinyl-CoA synthetase\" OR gene:\"novel levulinyl-CoA synthetase\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"novel levulinyl-CoA synthetase\" OR gene:\"novel levulinyl-CoA synthetase\")",
+        "\"novel levulinyl-CoA synthetase\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"novel levulinyl-CoA synthetase\"",
+        "(protein_name:\"novel levulinyl CoA synthetase\" OR gene:\"novel levulinyl CoA synthetase\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"novel levulinyl CoA synthetase\" OR gene:\"novel levulinyl CoA synthetase\")",
+        "\"novel levulinyl CoA synthetase\" AND organism_name:\"Pseudomonas putida KT2440\"",
+        "\"novel levulinyl CoA synthetase\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Glycine--tRNA ligase",
+      "literature_aliases": [
+        {
+          "alias": "synthetase",
+          "source": "literature_alias"
+        },
+        {
+          "alias": "novel levulinyl-CoA synthetase",
+          "source": "literature_function"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::fada::pseudomonas putida kt2440::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::fada::pseudomonas putida kt2440::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"FadA\" OR gene:\"FadA\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"FadA\" OR gene:\"FadA\")",
+      "mapped_ids": {
+        "uniprot": "P21151"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P21151",
+          "protein_name": "3-ketoacyl-CoA thiolase FadA",
+          "gene_names": [
+            "fadA",
+            "oldA"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9Y1W0",
+          "protein_name": "Delta(5) fatty acid desaturase A",
+          "gene_names": [
+            "des5-1",
+            "fadA"
+          ],
+          "organism": "Dictyostelium discoideum",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9SZ42",
+          "protein_name": "Fatty acid desaturase 4, chloroplastic",
+          "gene_names": [
+            "FAD4",
+            "FADA"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q00743",
+          "protein_name": "Guanine nucleotide-binding protein subunit alpha",
+          "gene_names": [
+            "fadA"
+          ],
+          "organism": "Emericella nidulans (strain FGSC A4 / ATCC 38163 / CBS 112.46 / NRRL 194 / M139)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P28790",
+          "protein_name": "3-ketoacyl-CoA thiolase",
+          "gene_names": [
+            "fadA",
+            "faoB"
+          ],
+          "organism": "Pseudomonas fragi",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O32177",
+          "protein_name": "3-ketoacyl-CoA thiolase",
+          "gene_names": [
+            "fadA",
+            "yusK"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9R9W0",
+          "protein_name": "3-ketoacyl-CoA thiolase",
+          "gene_names": [
+            "fadA"
+          ],
+          "organism": "Pseudomonas putida",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9F0Y6",
+          "protein_name": "3-ketoacyl-CoA thiolase",
+          "gene_names": [
+            "fadA"
+          ],
+          "organism": "Enterobacter cloacae",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadA",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"FadA\" OR gene:\"FadA\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"FadA\" OR gene:\"FadA\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "3-ketoacyl-CoA thiolase FadA",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::fadb::pseudomonas putida kt2440::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::fadb::pseudomonas putida kt2440::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"FadB\" OR gene:\"FadB\") AND organism_name:\"Pseudomonas putida KT2440\" | (protein_name:\"FadB\" OR gene:\"FadB\")",
+      "mapped_ids": {
+        "uniprot": "Q949X0"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q949X0",
+          "protein_name": "Palmitoyl-monogalactosyldiacylglycerol delta-7 desaturase, chloroplastic",
+          "gene_names": [
+            "ADS3",
+            "FAD5",
+            "FADB"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P21177",
+          "protein_name": "Fatty acid oxidation complex subunit alpha",
+          "gene_names": [
+            "fadB",
+            "oldB"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O96099",
+          "protein_name": "Acyl-lipid (8-3)-desaturase B",
+          "gene_names": [
+            "des5-2",
+            "fadB"
+          ],
+          "organism": "Dictyostelium discoideum",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5QXH7",
+          "protein_name": "Fatty acid oxidation complex subunit alpha",
+          "gene_names": [
+            "fadB"
+          ],
+          "organism": "Idiomarina loihiensis (strain ATCC BAA-735 / DSM 15497 / L2-TR)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6DAP5",
+          "protein_name": "Fatty acid oxidation complex subunit alpha",
+          "gene_names": [
+            "fadB"
+          ],
+          "organism": "Pectobacterium atrosepticum (strain SCRI 1043 / ATCC BAA-672)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q87TN9",
+          "protein_name": "Fatty acid oxidation complex subunit alpha",
+          "gene_names": [
+            "fadB"
+          ],
+          "organism": "Vibrio parahaemolyticus serotype O3:K6 (strain RIMD 2210633)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6LW06",
+          "protein_name": "Fatty acid oxidation complex subunit alpha",
+          "gene_names": [
+            "fadB"
+          ],
+          "organism": "Photobacterium profundum (strain SS9)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q7MQH9",
+          "protein_name": "Fatty acid oxidation complex subunit alpha",
+          "gene_names": [
+            "fadB"
+          ],
+          "organism": "Vibrio vulnificus (strain YJ016)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "FadB",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"FadB\" OR gene:\"FadB\") AND organism_name:\"Pseudomonas putida KT2440\"",
+        "(protein_name:\"FadB\" OR gene:\"FadB\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Palmitoyl-monogalactosyldiacylglycerol delta-7 desaturase, chloroplastic",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::c785rs13685::herbaspirillum huttiense iam 15032::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Herbaspirillum huttiense IAM 15032",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::c785rs13685::herbaspirillum huttiense iam 15032::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"C785_RS13685\" OR gene:\"C785_RS13685\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785 RS13685\" OR gene:\"C785 RS13685\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785_RS13685\" OR gene:\"C785_RS13685\") | (protein_name:\"C785 RS13685\" OR gene:\"C785 RS13685\") | (protein_name:\"member of the d-altronate dehydratase\" OR gene:\"member of the d-altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"member of the d-altronate dehydratase\" OR gene:\"member of the d-altronate dehydratase\") | \"member of the d-altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"member of the d-altronate dehydratase\" | (protein_name:\"member of the d altronate dehydratase\" OR gene:\"member of the d altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"member of the d altronate dehydratase\" OR gene:\"member of the d altronate dehydratase\") | \"member of the d altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"member of the d altronate dehydratase\" | (protein_name:\"d-altronate dehydratase\" OR gene:\"d-altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"d-altronate dehydratase\" OR gene:\"d-altronate dehydratase\") | \"d-altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"d-altronate dehydratase\" | (protein_name:\"d altronate dehydratase\" OR gene:\"d altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"d altronate dehydratase\" OR gene:\"d altronate dehydratase\") | \"d altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"d altronate dehydratase\"",
+      "mapped_ids": {
+        "uniprot": "A0A1G8J7Q2"
+      },
+      "confidence": 0.51,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0A1G8J7Q2",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Paenibacillus typhae",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        },
+        {
+          "accession": "A0A1H0EYY1",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Alkalicoccus daliensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        },
+        {
+          "accession": "A0A1I0B8Y1",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Halanaerobium congolense",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        },
+        {
+          "accession": "A0A1I0EID6",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Enterocloster lavalensis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        },
+        {
+          "accession": "A0A1I5D922",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Anaerocolumna aminovalerica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        },
+        {
+          "accession": "A0A1I7BGW5",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Kosakonia arachidis",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        },
+        {
+          "accession": "A0A1M7YEV9",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Desulfopila aestuarii DSM 18488",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        },
+        {
+          "accession": "A0A1W1XIU8",
+          "protein_name": "D-altronate dehydratase",
+          "gene_names": [],
+          "organism": "Clostridium acidisoli DSM 12555",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "d-altronate dehydratase",
+          "alias_source": "literature_function",
+          "matched_alias": "d-altronate dehydratase"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"C785_RS13685\" OR gene:\"C785_RS13685\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"C785 RS13685\" OR gene:\"C785 RS13685\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"C785_RS13685\" OR gene:\"C785_RS13685\")",
+        "(protein_name:\"C785 RS13685\" OR gene:\"C785 RS13685\")",
+        "(protein_name:\"member of the d-altronate dehydratase\" OR gene:\"member of the d-altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"member of the d-altronate dehydratase\" OR gene:\"member of the d-altronate dehydratase\")",
+        "\"member of the d-altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"member of the d-altronate dehydratase\"",
+        "(protein_name:\"member of the d altronate dehydratase\" OR gene:\"member of the d altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"member of the d altronate dehydratase\" OR gene:\"member of the d altronate dehydratase\")",
+        "\"member of the d altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"member of the d altronate dehydratase\"",
+        "(protein_name:\"d-altronate dehydratase\" OR gene:\"d-altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"d-altronate dehydratase\" OR gene:\"d-altronate dehydratase\")",
+        "\"d-altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"d-altronate dehydratase\"",
+        "(protein_name:\"d altronate dehydratase\" OR gene:\"d altronate dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"d altronate dehydratase\" OR gene:\"d altronate dehydratase\")",
+        "\"d altronate dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"d altronate dehydratase\""
+      ],
+      "reviewed": false,
+      "resolved_name": "D-altronate dehydratase",
+      "literature_aliases": [
+        {
+          "alias": "member of the d-altronate dehydratase",
+          "source": "literature_function"
+        },
+        {
+          "alias": "d-altronate dehydratase",
+          "source": "literature_function"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::c785rs13680::herbaspirillum huttiense iam 15032::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Herbaspirillum huttiense IAM 15032",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::c785rs13680::herbaspirillum huttiense iam 15032::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"C785_RS13680\" OR gene:\"C785_RS13680\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785 RS13680\" OR gene:\"C785 RS13680\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785_RS13680\" OR gene:\"C785_RS13680\") | (protein_name:\"C785 RS13680\" OR gene:\"C785 RS13680\") | (protein_name:\"KDP dehydratase\" OR gene:\"KDP dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"KDP dehydratase\" OR gene:\"KDP dehydratase\") | \"KDP dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"KDP dehydratase\" | (protein_name:\"RS13680\" OR gene:\"RS13680\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"RS13680\" OR gene:\"RS13680\") | \"RS13680\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"RS13680\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "KDP dehydratase",
+          "source": "literature_function"
+        },
+        {
+          "alias": "RS13680",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::c785rs13710::herbaspirillum huttiense iam 15032::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Herbaspirillum huttiense IAM 15032",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::c785rs13710::herbaspirillum huttiense iam 15032::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"C785_RS13710\" OR gene:\"C785_RS13710\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785 RS13710\" OR gene:\"C785 RS13710\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785_RS13710\" OR gene:\"C785_RS13710\") | (protein_name:\"C785 RS13710\" OR gene:\"C785 RS13710\") | (protein_name:\"KDP dehydratase\" OR gene:\"KDP dehydratase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"KDP dehydratase\" OR gene:\"KDP dehydratase\") | \"KDP dehydratase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"KDP dehydratase\" | (protein_name:\"RS13710\" OR gene:\"RS13710\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"RS13710\" OR gene:\"RS13710\") | \"RS13710\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"RS13710\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "KDP dehydratase",
+          "source": "literature_function"
+        },
+        {
+          "alias": "RS13710",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::c785rs13675::herbaspirillum huttiense iam 15032::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Herbaspirillum huttiense IAM 15032",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::c785rs13675::herbaspirillum huttiense iam 15032::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"C785_RS13675\" OR gene:\"C785_RS13675\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785 RS13675\" OR gene:\"C785 RS13675\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785_RS13675\" OR gene:\"C785_RS13675\") | (protein_name:\"C785 RS13675\" OR gene:\"C785 RS13675\") | (protein_name:\"COG1028\" OR gene:\"COG1028\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"COG1028\" OR gene:\"COG1028\") | \"COG1028\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"COG1028\" | (protein_name:\"D-KDP 4-dehydrogenase\" OR gene:\"D-KDP 4-dehydrogenase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"D-KDP 4-dehydrogenase\" OR gene:\"D-KDP 4-dehydrogenase\") | \"D-KDP 4-dehydrogenase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"D-KDP 4-dehydrogenase\" | (protein_name:\"D KDP 4 dehydrogenase\" OR gene:\"D KDP 4 dehydrogenase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"D KDP 4 dehydrogenase\" OR gene:\"D KDP 4 dehydrogenase\") | \"D KDP 4 dehydrogenase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"D KDP 4 dehydrogenase\"",
+      "mapped_ids": {
+        "uniprot": "A0A090Q0Z5"
+      },
+      "confidence": 0.51,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0A090Q0Z5",
+          "protein_name": "CoG1028",
+          "gene_names": [],
+          "organism": "Nonlabens tegetincola",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        },
+        {
+          "accession": "P0AFS3",
+          "protein_name": "Dihydromonapterin reductase",
+          "gene_names": [
+            "folM",
+            "ydgB"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        },
+        {
+          "accession": "P15047",
+          "protein_name": "2,3-dihydro-2,3-dihydroxybenzoate dehydrogenase",
+          "gene_names": [
+            "entA"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        },
+        {
+          "accession": "P37769",
+          "protein_name": "2-dehydro-3-deoxy-D-gluconate 5-dehydrogenase",
+          "gene_names": [
+            "kduD",
+            "ygeC",
+            "yqeD"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        },
+        {
+          "accession": "P39644",
+          "protein_name": "NADPH-dependent reductase BacG",
+          "gene_names": [
+            "bacG",
+            "ywfH"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        },
+        {
+          "accession": "P40806",
+          "protein_name": "Polyketide synthase PksJ",
+          "gene_names": [
+            "pksJ",
+            "pksK"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        },
+        {
+          "accession": "P71079",
+          "protein_name": "Enoyl-[acyl-carrier-protein] reductase [NADPH] FabL",
+          "gene_names": [
+            "fabL",
+            "yfhR",
+            "ygaA"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        },
+        {
+          "accession": "P0AEK2",
+          "protein_name": "3-oxoacyl-[acyl-carrier-protein] reductase FabG",
+          "gene_names": [
+            "fabG"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "COG1028",
+          "alias_source": "literature_alias",
+          "matched_alias": "COG1028"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"C785_RS13675\" OR gene:\"C785_RS13675\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"C785 RS13675\" OR gene:\"C785 RS13675\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"C785_RS13675\" OR gene:\"C785_RS13675\")",
+        "(protein_name:\"C785 RS13675\" OR gene:\"C785 RS13675\")",
+        "(protein_name:\"COG1028\" OR gene:\"COG1028\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"COG1028\" OR gene:\"COG1028\")",
+        "\"COG1028\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"COG1028\"",
+        "(protein_name:\"D-KDP 4-dehydrogenase\" OR gene:\"D-KDP 4-dehydrogenase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"D-KDP 4-dehydrogenase\" OR gene:\"D-KDP 4-dehydrogenase\")",
+        "\"D-KDP 4-dehydrogenase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"D-KDP 4-dehydrogenase\"",
+        "(protein_name:\"D KDP 4 dehydrogenase\" OR gene:\"D KDP 4 dehydrogenase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"D KDP 4 dehydrogenase\" OR gene:\"D KDP 4 dehydrogenase\")",
+        "\"D KDP 4 dehydrogenase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"D KDP 4 dehydrogenase\""
+      ],
+      "reviewed": false,
+      "resolved_name": "CoG1028",
+      "literature_aliases": [
+        {
+          "alias": "COG1028",
+          "source": "literature_alias"
+        },
+        {
+          "alias": "D-KDP 4-dehydrogenase",
+          "source": "literature_function"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::c785rs20555::herbaspirillum huttiense iam 15032::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Herbaspirillum huttiense IAM 15032",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::c785rs20555::herbaspirillum huttiense iam 15032::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"C785_RS20555\" OR gene:\"C785_RS20555\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785 RS20555\" OR gene:\"C785 RS20555\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785_RS20555\" OR gene:\"C785_RS20555\") | (protein_name:\"C785 RS20555\" OR gene:\"C785 RS20555\") | (protein_name:\"dehydrogenase\" OR gene:\"dehydrogenase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"dehydrogenase\" OR gene:\"dehydrogenase\") | \"dehydrogenase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"dehydrogenase\"",
+      "mapped_ids": {
+        "uniprot": "Q00796"
+      },
+      "confidence": 0.185,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q00796",
+          "protein_name": "Sorbitol dehydrogenase",
+          "gene_names": [
+            "SORD"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        },
+        {
+          "accession": "Q12882",
+          "protein_name": "Dihydropyrimidine dehydrogenase [NADP(+)]",
+          "gene_names": [
+            "DPYD"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        },
+        {
+          "accession": "P49189",
+          "protein_name": "4-trimethylaminobutyraldehyde dehydrogenase",
+          "gene_names": [
+            "ALDH4",
+            "ALDH7",
+            "ALDH9",
+            "ALDH9A1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        },
+        {
+          "accession": "P49419",
+          "protein_name": "Alpha-aminoadipic semialdehyde dehydrogenase",
+          "gene_names": [
+            "ALDH7A1",
+            "ATQ1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        },
+        {
+          "accession": "Q9UQ10",
+          "protein_name": "Trans-1,2-dihydrobenzene-1,2-diol dehydrogenase",
+          "gene_names": [
+            "2DD",
+            "DHDH"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        },
+        {
+          "accession": "P11766",
+          "protein_name": "Alcohol dehydrogenase class-3",
+          "gene_names": [
+            "ADH5",
+            "ADHX",
+            "FDH"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        },
+        {
+          "accession": "P23883",
+          "protein_name": "NADP/NAD-dependent aldehyde dehydrogenase PuuC",
+          "gene_names": [
+            "aldH",
+            "puuC"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        },
+        {
+          "accession": "Q9BPX1",
+          "protein_name": "L-fucose dehydrogenase",
+          "gene_names": [
+            "DHRS10",
+            "HSD17B14",
+            "SDR3",
+            "SDR47C1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "dehydrogenase",
+          "alias_source": "literature_alias",
+          "matched_alias": "dehydrogenase"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"C785_RS20555\" OR gene:\"C785_RS20555\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"C785 RS20555\" OR gene:\"C785 RS20555\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"C785_RS20555\" OR gene:\"C785_RS20555\")",
+        "(protein_name:\"C785 RS20555\" OR gene:\"C785 RS20555\")",
+        "(protein_name:\"dehydrogenase\" OR gene:\"dehydrogenase\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "(protein_name:\"dehydrogenase\" OR gene:\"dehydrogenase\")",
+        "\"dehydrogenase\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\"",
+        "\"dehydrogenase\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Sorbitol dehydrogenase",
+      "literature_aliases": [
+        {
+          "alias": "dehydrogenase",
+          "source": "literature_alias"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::c785rs20550::herbaspirillum huttiense iam 15032::::{}": {
+      "status": "unmapped",
+      "reason": "species_not_found:Herbaspirillum huttiense IAM 15032",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "api-v7::c785rs20550::herbaspirillum huttiense iam 15032::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"C785_RS20550\" OR gene:\"C785_RS20550\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785 RS20550\" OR gene:\"C785 RS20550\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"C785_RS20550\" OR gene:\"C785_RS20550\") | (protein_name:\"C785 RS20550\" OR gene:\"C785 RS20550\") | (protein_name:\"RS20550\" OR gene:\"RS20550\") AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | (protein_name:\"RS20550\" OR gene:\"RS20550\") | \"RS20550\" AND organism_name:\"Herbaspirillum huttiense IAM 15032\" | \"RS20550\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "RS20550",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -68979,6 +73729,362 @@
         "issue": "ambiguous_exact_name",
         "order_step": "exact_normalized_name"
       }
+    },
+    "db::kg::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::linear pentathiazolyl nosiheptide intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::miabound pentathiazolyl nosiheptide intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::pcoumaroylcoa::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 41476,
+          "name": "4-Coumaroyl-CoA",
+          "short_name": "4CC",
+          "score": 0.95,
+          "mapped_ids": {
+            "chebi": "CHEBI:15499",
+            "pubchem": "324",
+            "pathbank_compound_id": "41476"
+          }
+        },
+        {
+          "pathbank_compound_id": 41674,
+          "name": "Coumaroyl-CoA",
+          "short_name": "CoumCoA",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0060153",
+            "kegg": "C00223",
+            "chebi": "CHEBI:15499",
+            "pubchem": "6440013",
+            "cas": "119785-99-8",
+            "biocyc": "P-COUMAROYL-COA",
+            "chemspider": "21864784",
+            "pathbank_compound_id": "41674"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_synonym",
+        "order_step": "synonym"
+      }
+    },
+    "db::levulinic acid::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000720",
+        "chebi": "CHEBI:45630",
+        "pubchem": "11579",
+        "cas": "123-76-2",
+        "chemspider": "11091",
+        "drugbank": "DB02239",
+        "pathbank_compound_id": "571"
+      },
+      "pathbank_compound_id": 571,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 571,
+          "name": "Levulinic acid",
+          "short_name": "Levulat",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000720",
+            "chebi": "CHEBI:45630",
+            "pubchem": "11579",
+            "cas": "123-76-2",
+            "chemspider": "11091",
+            "drugbank": "DB02239",
+            "pathbank_compound_id": "571"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::levulinylcoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::4hydroxyvalerylcoa::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "pathbank_compound_id": "111998"
+      },
+      "pathbank_compound_id": 111998,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 111998,
+          "name": "4-Hydroxyvaleryl-CoA",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "pathbank_compound_id": "111998"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::4phosphovalerylcoa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::3hydroxyvalerylcoa::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "pathbank_compound_id": "112001"
+      },
+      "pathbank_compound_id": 112001,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 112001,
+          "name": "3-Hydroxyvaleryl-CoA",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "pathbank_compound_id": "112001"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::darabinonate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::dkdp::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lkdp::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::kgsa::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::5hydroxy24dioxopentanonate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glycolate::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000115",
+        "kegg": "C00160",
+        "chebi": "CHEBI:17497",
+        "pubchem": "3698251",
+        "cas": "79-14-1",
+        "biocyc": "GLYCOLLATE",
+        "chemspider": "737",
+        "drugbank": "DB03085",
+        "pathbank_compound_id": "73"
+      },
+      "pathbank_compound_id": 73,
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 73,
+          "name": "Glycolic acid",
+          "short_name": "Glypure",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0000115",
+            "kegg": "C00160",
+            "chebi": "CHEBI:17497",
+            "pubchem": "3698251",
+            "cas": "79-14-1",
+            "biocyc": "GLYCOLLATE",
+            "chemspider": "737",
+            "drugbank": "DB03085",
+            "pathbank_compound_id": "73"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym"
+      }
+    },
+    "db::daltronate::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "chebi": "CHEBI:17360",
+        "pathbank_compound_id": "41006"
+      },
+      "pathbank_compound_id": 41006,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 41006,
+          "name": "D-Altronate",
+          "short_name": "D-Altro",
+          "score": 1.0,
+          "mapped_ids": {
+            "chebi": "CHEBI:17360",
+            "pathbank_compound_id": "41006"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::lfuconate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -75577,6 +80683,310 @@
       "resolution": {
         "status": "matched",
         "order_step": "complex_name_species"
+      }
+    },
+    "db::ogdh complex::unknown species::::[]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::sdh complex::unknown species::::[]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::pdhc complex::unknown species::::[]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [],
+      "issues": [],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::ndmcde protein complex::unknown species::::[{\"ids\": {}, \"name\": \"NdmC\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"NdmD\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"NdmE\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "NdmC",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "NdmD",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "NdmE",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmC",
+          "component_index": 0,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmD",
+          "component_index": 1,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmE",
+          "component_index": 2,
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::cdh::unknown species::::[{\"ids\": {}, \"name\": \"\\u03b1 subunit\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"\\u03b2 subunit\", \"stoichiometry\": 1}, {\"ids\": {}, \"name\": \"\\u03b3 subunit\", \"stoichiometry\": 1}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "α subunit",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "β subunit",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "γ subunit",
+          "stoichiometry": 1,
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "α subunit",
+          "component_index": 0,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "β subunit",
+          "component_index": 1,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "γ subunit",
+          "component_index": 2,
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::ndmcde protein complex::unknown species::::[{\"ids\": {}, \"name\": \"NdmC\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"NdmD\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"NdmE\", \"stoichiometry\": null}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "NdmC",
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "NdmD",
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "NdmE",
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmC",
+          "component_index": 0,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmD",
+          "component_index": 1,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmE",
+          "component_index": 2,
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::caffeine dehydrogenase::unknown species::::[{\"ids\": {}, \"name\": \"CdhA\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"CdhB\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"CdhC\", \"stoichiometry\": null}]": {
+      "status": "unmapped",
+      "reason": "species_not_found:Unknown species",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "CdhA",
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "CdhB",
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "name": "CdhC",
+          "mapping_status": "unmapped",
+          "mapping_rule": "",
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CdhA",
+          "component_index": 0,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CdhB",
+          "component_index": 1,
+          "reason": "species_not_found:Unknown species"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "CdhC",
+          "component_index": 2,
+          "reason": "species_not_found:Unknown species"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "species_not_found"
+      }
+    },
+    "db::lvaab complex::pseudomonas putida kt2440::::[{\"ids\": {}, \"name\": \"LvaA\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"LvaB\", \"stoichiometry\": null}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "LvaA",
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        },
+        {
+          "name": "LvaB",
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "LvaA",
+          "component_index": 0,
+          "reason": "novel_protein"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "LvaB",
+          "component_index": 1,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
       }
     }
   },

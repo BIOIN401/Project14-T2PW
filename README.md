@@ -57,3 +57,4 @@ python scripts/run_pwml.py --in final.mapped.json --out-dir outputs --non-strict
 - [Setup](docs/setup.md)
 - [Architecture](docs/architecture.md)
 - [Pipeline](docs/pipeline.md)
+- [PWML Coordinate & Layout Mapping](docs/pwml_coordinate_mapping.md)

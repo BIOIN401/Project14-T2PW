@@ -579,6 +579,22 @@ and the original target organism in mapping metadata. This fallback:
 - is skipped by later UniProt enrichment and recognized on repeated mapping so
   it cannot recursively wrap or duplicate `Unknown`.
 
+The same `Unknown`-sentinel mechanism also applies directly to any
+`protein_complexes[]` row that still has zero resolved components after normal
+mapping and gap-resolution, independent of whether it is referenced by a
+reaction/transport actor. This covers a name-only complex (e.g. a paper
+mentioning "X dehydrogenase complex" without enumerating subunits) that is
+never picked up by the actor-driven fallback above, so it still reaches a
+valid exportable state instead of reaching the writer with `components: []`.
+It does not apply to a complex that already carries a real complex-level
+PathBank ID: at Stage 8, a complex with zero components is only a hard export
+error when it also has no confirmed identity of its own. A complex Stage 6
+matched to a real PathBank record whose own component list is genuinely empty
+is left exactly as mapped and exports with an empty
+`<protein_complex-proteins/>` — this is not hypothetical leniency; real prior
+PathBank exports (`reference/PW1.pwml`'s "alanine aminotransferase (ALT)"
+complex, `pwp-id PW_P000036`) are shaped exactly this way.
+
 ---
 
 ### Stage 7 — Enrich (optional)

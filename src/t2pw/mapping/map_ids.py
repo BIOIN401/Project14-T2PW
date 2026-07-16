@@ -18,6 +18,7 @@ from t2pw.pipeline.entity_identity import (
     PATHBANK_UNKNOWN_PROTEIN_ID,
     PATHBANK_UNKNOWN_PROTEIN_NAME,
     PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+    component_stoichiometry,
     has_protein_external_identity,
     is_pathbank_unknown_protein,
     route_entity_for_mapping,
@@ -526,12 +527,8 @@ def _component_name(value: Any) -> str:
     )
 
 
-def _component_stoichiometry(value: Any) -> int:
-    if isinstance(value, dict):
-        parsed = _to_positive_int(value.get("stoichiometry") or value.get("coefficient"))
-        if parsed:
-            return parsed
-    return 1
+def _component_stoichiometry(value: Any) -> Optional[int]:
+    return component_stoichiometry(value)
 
 
 def _component_mapped_ids(value: Any) -> Dict[str, Any]:
@@ -2139,10 +2136,14 @@ class PathBankDbResolver:
 
             hydrated: Dict[str, Any] = {
                 "name": name,
-                "stoichiometry": _component_stoichiometry(raw_component),
                 "mapping_status": str(protein_result.get("status") or "unmapped"),
                 "mapping_rule": str(protein_result.get("chosen_rule") or ""),
             }
+            # Carry a stated stoichiometry through; leave it absent when the source
+            # never gave one rather than inventing a subunit count.
+            hydrated_stoich = _component_stoichiometry(raw_component)
+            if hydrated_stoich is not None:
+                hydrated["stoichiometry"] = hydrated_stoich
             if protein_result.get("pathbank_protein_id"):
                 hydrated["pathbank_protein_id"] = int(protein_result["pathbank_protein_id"])
             mapped_ids = _merge_mapped_ids(component_ids, _safe_dict(protein_result.get("mapped_ids")))
@@ -5320,6 +5321,185 @@ def _apply_pathbank_unknown_enzyme_fallback(mapped: Dict[str, Any]) -> Dict[str,
     return {"summary": summary, "actions": actions}
 
 
+def _apply_pathbank_unknown_complex_fallback(mapped: Dict[str, Any]) -> Dict[str, Any]:
+    """Use PathBank's Unknown protein for any protein_complexes[] row still empty.
+
+    This is the entity-driven counterpart to ``_apply_pathbank_unknown_enzyme_fallback``.
+    That function only wraps complexes reachable by walking reaction enzyme /
+    transport transporter actors; a complex that is never referenced as a
+    single actor by exact name (e.g. a paper-named complex whose subunits
+    were never enumerated, and which isn't tied to one reaction actor) can
+    still have ``components: []`` after normal mapping and gap-resolution.
+    This pass scans ``entities.protein_complexes[]`` directly and closes
+    that gap so every complex reaches a valid exportable state.
+    """
+
+    entities = _safe_dict(mapped.setdefault("entities", {}))
+    proteins = _safe_list(entities.setdefault("proteins", []))
+    complexes = _safe_list(entities.setdefault("protein_complexes", []))
+    summary = {"complex_missing_components_unknown_fallbacks": 0}
+    actions: List[Dict[str, Any]] = []
+
+    def _has_real_complex_identity(row: Dict[str, Any]) -> bool:
+        meta = _safe_dict(row.get("mapping_meta"))
+        return bool(
+            _to_positive_int(row.get("pathbank_complex_id"))
+            or _to_positive_int(row.get("pathbank_protein_complex_id"))
+            or _to_positive_int(meta.get("pathbank_complex_id"))
+            or _to_positive_int(meta.get("pathbank_protein_complex_id"))
+        )
+
+    def _ensure_unknown_species() -> bool:
+        species_rows = _safe_list(entities.setdefault("species", []))
+        for row in species_rows:
+            if not isinstance(row, dict):
+                continue
+            sid = _to_positive_int(row.get("pathbank_species_id") or row.get("species_id"))
+            row_norm = _normalize_name(str(row.get("name") or ""))
+            if sid == _PATHBANK_UNKNOWN_SPECIES_ID and row_norm not in {
+                "",
+                _normalize_name(_PATHBANK_UNKNOWN_SPECIES_NAME),
+            }:
+                return False
+            if sid == _PATHBANK_UNKNOWN_SPECIES_ID or row_norm == _normalize_name(_PATHBANK_UNKNOWN_SPECIES_NAME):
+                row.setdefault("name", _PATHBANK_UNKNOWN_SPECIES_NAME)
+                row.setdefault("taxonomy_id", _PATHBANK_UNKNOWN_TAXONOMY_ID)
+                row.setdefault("pathbank_species_id", _PATHBANK_UNKNOWN_SPECIES_ID)
+                row.setdefault("species_id", _PATHBANK_UNKNOWN_SPECIES_ID)
+                return True
+        species_rows.append(
+            {
+                "name": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                "taxonomy_id": _PATHBANK_UNKNOWN_TAXONOMY_ID,
+                "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+            }
+        )
+        return True
+
+    unknown_row: Optional[Dict[str, Any]] = None
+
+    def _ensure_unknown_protein() -> Optional[Dict[str, Any]]:
+        nonlocal unknown_row
+        if unknown_row is not None:
+            return unknown_row
+        by_id = next(
+            (
+                row
+                for row in proteins
+                if isinstance(row, dict)
+                and _to_positive_int(
+                    row.get("pathbank_protein_id")
+                    or _safe_dict(row.get("mapped_ids")).get("pathbank_protein_id")
+                    or _safe_dict(row.get("mapping_meta")).get("pathbank_protein_id")
+                )
+                == _PATHBANK_UNKNOWN_PROTEIN_ID
+            ),
+            None,
+        )
+        by_name = next(
+            (
+                row
+                for row in proteins
+                if isinstance(row, dict)
+                and _normalize_name(str(row.get("name") or ""))
+                == _normalize_name(_PATHBANK_UNKNOWN_PROTEIN_NAME)
+            ),
+            None,
+        )
+        candidate = by_id or by_name
+        if candidate is not None and not is_pathbank_unknown_protein(candidate):
+            if _to_positive_int(candidate.get("pathbank_protein_id")) or has_protein_external_identity(candidate):
+                return None
+        if not _ensure_unknown_species():
+            return None
+        if candidate is None:
+            candidate = {"name": _PATHBANK_UNKNOWN_PROTEIN_NAME}
+            proteins.append(candidate)
+        candidate.update(
+            {
+                "name": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                "species": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                "organism": _PATHBANK_UNKNOWN_SPECIES_NAME,
+                "species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                "pathbank_species_id": _PATHBANK_UNKNOWN_SPECIES_ID,
+                "taxonomy_id": _PATHBANK_UNKNOWN_TAXONOMY_ID,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "pw_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "uniprot_id": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                "mapped_ids": {
+                    **_safe_dict(candidate.get("mapped_ids")),
+                    "uniprot": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                },
+            }
+        )
+        candidate.setdefault("mapping_meta", {}).update(
+            {
+                "provider": "PathBankDB",
+                "source": "db",
+                "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                "confidence": 0.0,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "fallback_used": True,
+                "fallback_reason": "all_normal_protein_identity_strategies_failed",
+                "cross_species_placeholder": True,
+            }
+        )
+        unknown_row = candidate
+        return candidate
+
+    for idx, complex_row in enumerate(complexes):
+        if not isinstance(complex_row, dict):
+            continue
+        if _safe_list(complex_row.get("components")):
+            continue
+        if _has_real_complex_identity(complex_row):
+            continue
+        sentinel = _ensure_unknown_protein()
+        if sentinel is None:
+            continue
+        complex_row["components"] = [
+            {
+                "name": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                "stoichiometry": 1,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "mapped_ids": {
+                    "uniprot": _PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
+                    "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                },
+            }
+        ]
+        complex_row.setdefault("species", _PATHBANK_UNKNOWN_SPECIES_NAME)
+        complex_row.setdefault("organism", _PATHBANK_UNKNOWN_SPECIES_NAME)
+        complex_row.setdefault("species_id", _PATHBANK_UNKNOWN_SPECIES_ID)
+        complex_row.setdefault("pathbank_species_id", _PATHBANK_UNKNOWN_SPECIES_ID)
+        complex_row.setdefault("mapping_meta", {}).update(
+            {
+                "provider": "PathBankDB",
+                "source": "db",
+                "chosen_rule": _PATHBANK_UNKNOWN_FALLBACK_RULE,
+                "confidence": 0.0,
+                "fallback_used": True,
+                "fallback_reason": "complex_has_no_resolvable_components",
+                "cross_species_placeholder": True,
+            }
+        )
+        summary["complex_missing_components_unknown_fallbacks"] += 1
+        actions.append(
+            {
+                "type": "protein_complex_missing_components_unknown_fallback",
+                "json_pointer": f"/entities/protein_complexes/{idx}",
+                "protein_complex": complex_row.get("name"),
+                "component_protein": _PATHBANK_UNKNOWN_PROTEIN_NAME,
+                "pathbank_protein_id": _PATHBANK_UNKNOWN_PROTEIN_ID,
+                "reason": "complex has no resolvable components after normal mapping/gap-resolution",
+            }
+        )
+
+    return {"summary": summary, "actions": actions}
+
+
 def _invalidate_cache_entries(cache: MappingCache, invalidate_cache_keys: Any = None) -> int:
     if not invalidate_cache_keys:
         return 0
@@ -6014,6 +6194,13 @@ def map_payload(
         )
         enzyme_complex_report.setdefault("actions", []).extend(
             _safe_list(unknown_fallback_report.get("actions"))
+        )
+        complex_unknown_fallback_report = _apply_pathbank_unknown_complex_fallback(mapped)
+        enzyme_complex_report.setdefault("summary", {}).update(
+            _safe_dict(complex_unknown_fallback_report.get("summary"))
+        )
+        enzyme_complex_report.setdefault("actions", []).extend(
+            _safe_list(complex_unknown_fallback_report.get("actions"))
         )
         proteins = _safe_list(entities.get("proteins"))
         protein_complexes = _safe_list(entities.get("protein_complexes"))

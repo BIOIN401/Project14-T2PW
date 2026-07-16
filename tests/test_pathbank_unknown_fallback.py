@@ -9,7 +9,7 @@ from t2pw.mapping.enrich_entities import enrich_payload
 from t2pw.mapping.map_ids import map_payload
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pipeline.stage_contracts import validate_post_normalization, validate_post_remap
-from t2pw.pwml.ir import build_pwml_ir, validate_required_pwml_contract
+from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract
 from t2pw.pwml.validate import discover_structure_signature
 from t2pw.pwml.writer import DeterministicPwmlBuilder
 
@@ -426,3 +426,151 @@ def test_unknown_fallback_passes_stage3_and_serializes_exact_pathbank_sentinel(t
     member = root.find(".//protein-complex-protein")
     assert member is not None, [element.tag for element in root.iter() if "protein" in str(element.tag)]
     assert member.findtext("protein-id") == "9659"
+
+
+def test_orphan_named_complex_referenced_as_enzyme_gets_wrapped(tmp_path: Path) -> None:
+    payload = _payload(include_enzyme=False)
+    payload["entities"]["protein_complexes"] = [
+        {"name": "oxoglutarate dehydrogenase complex", "components": []}
+    ]
+    payload["processes"]["reactions"][0]["enzymes"] = [
+        {
+            "entity": "oxoglutarate dehydrogenase complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+        }
+    ]
+    result = _map(payload, tmp_path, protein_result=_unmapped_result())
+
+    complex_row = result["payload"]["entities"]["protein_complexes"][0]
+    assert complex_row["components"] == [
+        {
+            "name": "Unknown",
+            "stoichiometry": 1,
+            "pathbank_protein_id": 9659,
+            "mapped_ids": {"uniprot": "Unknown", "pathbank_protein_id": 9659},
+        }
+    ]
+    assert complex_row["mapping_meta"]["chosen_rule"] == "pathbank_unknown_protein_fallback"
+    assert result["report"]["summary"]["complex_missing_components_unknown_fallbacks"] == 0
+
+
+def test_orphan_named_complex_not_referenced_anywhere_still_gets_wrapped(tmp_path: Path) -> None:
+    payload = _payload(include_enzyme=False)
+    payload["entities"]["protein_complexes"] = [
+        {"name": "oxoglutarate dehydrogenase complex", "components": []}
+    ]
+    result = _map(payload, tmp_path, protein_result=_unmapped_result())
+
+    complex_row = result["payload"]["entities"]["protein_complexes"][0]
+    assert complex_row["components"] == [
+        {
+            "name": "Unknown",
+            "stoichiometry": 1,
+            "pathbank_protein_id": 9659,
+            "mapped_ids": {"uniprot": "Unknown", "pathbank_protein_id": 9659},
+        }
+    ]
+    assert complex_row["mapping_meta"]["chosen_rule"] == "pathbank_unknown_protein_fallback"
+    assert complex_row["mapping_meta"]["fallback_reason"] == "complex_has_no_resolvable_components"
+    assert result["report"]["summary"]["complex_missing_components_unknown_fallbacks"] == 1
+
+
+def test_stage2_wrapper_disabled_does_not_wrap_orphan_complex(tmp_path: Path) -> None:
+    payload = _payload(include_enzyme=False)
+    payload["entities"]["protein_complexes"] = [
+        {"name": "oxoglutarate dehydrogenase complex", "components": []}
+    ]
+    result = _map(
+        payload,
+        tmp_path,
+        protein_result=_unmapped_result(),
+        allow_complex_wrapper_creation=False,
+    )
+
+    assert result["payload"]["entities"]["protein_complexes"][0]["components"] == []
+    assert "complex_missing_components_unknown_fallbacks" not in result["report"]["summary"]
+
+
+def test_complex_with_real_pathbank_id_is_not_wrapped_despite_empty_components(tmp_path: Path) -> None:
+    payload = _payload(include_enzyme=False)
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "oxoglutarate dehydrogenase complex",
+            "components": [],
+            "pathbank_complex_id": 555,
+        }
+    ]
+    result = _map(payload, tmp_path, protein_result=_unmapped_result())
+
+    complex_row = result["payload"]["entities"]["protein_complexes"][0]
+    assert complex_row["components"] == []
+    assert result["report"]["summary"]["complex_missing_components_unknown_fallbacks"] == 0
+
+
+def test_real_pathbank_complex_with_no_listed_components_exports_with_empty_members(tmp_path: Path) -> None:
+    """A complex with a confirmed PathBank identity may have zero listed subunits.
+
+    reference/PW1.pwml's "alanine aminotransferase (ALT)" complex (pwp-id
+    PW_P000036) is a real PathBank export with exactly this shape: a genuine
+    complex-level identity and a self-closing, empty
+    <protein_complex-proteins/>. This does not go through map_payload's
+    Unknown-sentinel fallback at all -- it proves the fallback isn't the only
+    thing keeping this shape exportable; the writer and validate_pwml_ir must
+    also accept it directly.
+    """
+    payload = _payload(include_enzyme=False)
+    payload["entities"]["proteins"] = []
+    payload["entities"]["protein_complexes"] = [
+        {
+            "name": "alanine aminotransferase (ALT)",
+            "species": "Camellia sinensis",
+            "organism": "Camellia sinensis",
+            "pathbank_complex_id": 36,
+            "components": [],
+        }
+    ]
+    payload["processes"]["reactions"][0]["enzymes"] = [
+        {
+            "entity": "alanine aminotransferase (ALT)",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+        }
+    ]
+    payload["element_locations"]["protein_locations"] = []
+
+    normalized, normalization_report = normalize_process_payload(payload)
+    stage3_report = validate_post_normalization(normalized, normalization_report["gate"])
+    assert stage3_report["ok"] is True
+    assert validate_required_pwml_contract(normalized, strict_db=False)["ok"] is True
+
+    ir, ir_report = build_pwml_ir(normalized, strict_db=False)
+    assert ir_report["errors"] == []
+
+    validation = validate_pwml_ir(ir)
+    assert validation["ok"] is True
+    assert any(w["code"] == "protein_complex_missing_components" for w in validation["warnings"])
+
+    signature = discover_structure_signature(ROOT / "reference" / "PW000001.pwml")
+    builder = DeterministicPwmlBuilder(
+        extraction=ir,
+        signature=signature,
+        args=SimpleNamespace(
+            name="Caffeine degradation",
+            description="",
+            subject="Metabolic",
+            pw_id="PW000000",
+            height=1400,
+            width=3200,
+            background_color="#FFFFFF",
+            ref=str(ROOT / "reference" / "PW000001.pwml"),
+        ),
+    )
+    root = builder.build().root
+
+    complex_el = root.find(".//protein-complexes/protein-complex")
+    assert complex_el is not None
+    assert complex_el.findtext("name") == "alanine aminotransferase (ALT)"
+    members_el = complex_el.find("protein_complex-proteins")
+    assert members_el is not None
+    assert list(members_el) == []

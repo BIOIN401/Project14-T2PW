@@ -5,6 +5,7 @@ from collections import defaultdict
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from t2pw.pipeline.entity_identity import (
+    component_stoichiometry,
     is_generated_complex_wrapper as _is_generated_complex_row,
     protein_external_identity as _protein_external_id,
     protein_species_context as _entity_species_context,
@@ -488,14 +489,7 @@ def _component_protein_name(component: Any) -> str:
 
 
 def _component_stoichiometry(component: Any) -> Optional[int]:
-    if isinstance(component, str):
-        return 1
-    if not isinstance(component, dict):
-        return None
-    stoich = _to_int(component.get("stoichiometry") or component.get("coefficient"))
-    if stoich is None or stoich < 1:
-        return None
-    return stoich
+    return component_stoichiometry(component)
 
 
 def _actor_name_and_hint(item: Any) -> Tuple[str, str, str]:
@@ -893,15 +887,14 @@ def build_pwml_ir(
             if stoich is None:
                 _add_issue(
                     report,
-                    "error",
-                    "component_missing_stoichiometry",
-                    f"Component[{comp_idx}] in complex '{pc.get('name')}' is missing stoichiometry.",
+                    "warning",
+                    "component_stoichiometry_unstated",
+                    f"Component[{comp_idx}] in complex '{pc.get('name')}' has no stated stoichiometry; leaving it blank.",
                     pointer=pointer,
                     complex_key=pc.get("key"),
                     complex_name=pc.get("name"),
                     component_name=comp_name,
                 )
-                continue
             if protein is None:
                 _add_issue(
                     report,
@@ -915,12 +908,10 @@ def build_pwml_ir(
                 )
                 continue
 
-            structured_components.append(
-                {
-                    "protein_key": str(protein["key"]),
-                    "stoichiometry": stoich,
-                }
-            )
+            structured_record: Dict[str, Any] = {"protein_key": str(protein["key"])}
+            if stoich is not None:
+                structured_record["stoichiometry"] = stoich
+            structured_components.append(structured_record)
 
         pc["components"] = structured_components
         if not structured_components:
@@ -1931,9 +1922,12 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 comp_name = _component_protein_name(comp)
                 stoich = _component_stoichiometry(comp)
                 if stoich is None:
-                    err(
-                        "component_missing_stoichiometry",
-                        f"Component[{cidx}] in complex '{pcname}' is missing stoichiometry.",
+                    # PathWhiz's protein_complex_proteins.stoichiometry is nullable and
+                    # validated with allow_nil, so an unstated coefficient is exportable.
+                    # Papers routinely omit subunit counts; never block export on it.
+                    warn(
+                        "component_stoichiometry_unstated",
+                        f"Component[{cidx}] in complex '{pcname}' has no stated stoichiometry; exporting it blank.",
                         pointer,
                         complex_name=pcname,
                         component_name=comp_name,
@@ -2015,6 +2009,7 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
             has_subcell = bool(state.get("subcellular_location_key"))
             species_ref = state.get("species_key")
             subcell_ref = state.get("subcellular_location_key")
+            has_other_component = bool(state.get("tissue_key") or state.get("cell_type_key"))
         else:
             species_ref = state.get("species") or state.get("organism") or state.get("taxonomy_id")
             subcell_ref = (
@@ -2033,20 +2028,38 @@ def validate_required_pwml_contract(payload_or_ir: Any, *, strict_db: bool = Tru
                 or state.get("subcellular_location_id")
                 or state.get("pathbank_subcellular_location_id")
             )
-        if not has_species:
+            has_other_component = bool(
+                state.get("tissue")
+                or state.get("tissue_id")
+                or state.get("cell_type")
+                or state.get("cell_type_id")
+            )
+        # PathWhiz's BiologicalState#has_at_least_one_component requires one of
+        # species / tissue / cell_type / subcellular_location — not every one of
+        # them. A state carrying any of the four is exportable, so only a fully
+        # empty state is fatal; the individual gaps stay visible as warnings.
+        if not (has_species or has_subcell or has_other_component):
             err(
-                "biological_state_missing_species",
-                f"Biological state '{sname}' is missing species.",
+                "biological_state_missing_components",
+                f"Biological state '{sname}' has no species, tissue, cell type, or subcellular location.",
                 f"/biological_states/{idx}",
                 state_name=sname,
             )
-        if not has_subcell:
-            err(
-                "biological_state_missing_subcellular_location",
-                f"Biological state '{sname}' has no subcellular location.",
-                f"/biological_states/{idx}",
-                state_name=sname,
-            )
+        else:
+            if not has_species:
+                warn(
+                    "biological_state_missing_species",
+                    f"Biological state '{sname}' is missing species.",
+                    f"/biological_states/{idx}",
+                    state_name=sname,
+                )
+            if not has_subcell:
+                warn(
+                    "biological_state_missing_subcellular_location",
+                    f"Biological state '{sname}' has no subcellular location.",
+                    f"/biological_states/{idx}",
+                    state_name=sname,
+                )
 
     # ── REACTIONS ─────────────────────────────────────────────────────────────
     processes = _safe_dict(payload_or_ir.get("processes"))
@@ -2389,7 +2402,16 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
             continue
         components = _safe_list(record.get("components"))
         if not components:
-            warning(
+            # A complex with a real, confirmed PathBank complex-level identity
+            # may legitimately have zero listed subunits -- reference exports
+            # (e.g. reference/PW1.pwml's "alanine aminotransferase (ALT)"
+            # complex, pwp-id PW_P000036) carry exactly this shape. Only a
+            # complex with no real identity of its own -- which, after Stage
+            # 6's PathBank Unknown-sentinel fallback runs, should only be a
+            # pipeline-generated wrapper that failed to get even that
+            # fallback -- is required to have at least one member.
+            has_real_identity = bool(_to_int(record.get("pathbank_complex_id")) or _to_int(record.get("pathwhiz_id")))
+            (warning if has_real_identity else error)(
                 "protein_complex_missing_components",
                 f"Protein complex '{record.get('name') or idx}' has no protein components.",
                 f"/entities/protein_complexes/{idx}/components",
@@ -2405,7 +2427,6 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
                 )
                 continue
             protein_key = component.get("protein_key")
-            stoich = _to_int(component.get("stoichiometry"))
             if protein_key not in entity_keys_by_type["protein"]:
                 warning(
                     "component_protein_unresolved",
@@ -2413,10 +2434,12 @@ def validate_pwml_ir(ir: Dict[str, Any]) -> Dict[str, Any]:
                     pointer,
                     protein_key=protein_key,
                 )
-            if stoich is None or stoich < 1:
-                error(
-                    "component_missing_stoichiometry",
-                    "Protein complex component is missing positive stoichiometry.",
+            if "stoichiometry" in component and _component_stoichiometry(component) is None:
+                # A present-but-unusable value is a real defect; an absent one is
+                # simply an unstated coefficient, which PathWhiz accepts as nil.
+                warning(
+                    "component_stoichiometry_unusable",
+                    "Protein complex component has a stoichiometry that is not a positive integer; exporting it blank.",
                     pointer,
                     protein_key=protein_key,
                 )

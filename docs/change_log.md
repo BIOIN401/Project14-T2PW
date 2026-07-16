@@ -9,6 +9,190 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-15 — An unstated complex-component stoichiometry is blank, not an error
+
+**Files changed:** `src/t2pw/pipeline/entity_identity.py`,
+`src/t2pw/pwml/ir.py`, `src/t2pw/pwml/writer.py`, `src/t2pw/pwml/qa.py`,
+`src/t2pw/mapping/map_ids.py`, `src/t2pw/curation/audit_json_llm.py`,
+`src/t2pw/curation/gap_resolver.py`, `tests/test_pwml_ir.py`,
+`tests/test_audit_json_llm_payload.py`, `docs/change_log.md`.
+
+**Error / symptom:** Export blocked at the Stage 8 strict gate with four
+pointer-level errors on a caffeine-degradation run:
+`/entities/protein_complexes/0/components/0 - Component[0] in complex 'NdmCDE
+protein complex' is missing stoichiometry.` (likewise components 1–2 and
+`Cdh`). This symptom class had already been "fixed" repeatedly —
+`docs/pathwhiz_requirements.md` §4.2 records it as entry #6 of an 8-entry
+circular-fix chain.
+
+**Root cause:** two independent defects.
+
+First, the requirement was never real. PathWhiz's own
+`ProteinComplexProtein` declares
+`validates :stoichiometry, allow_nil: true, numericality: {only_integer: true}`
+over a nullable `protein_complex_proteins.stoichiometry` column, and
+`lib/pwml_parser.rb` skips any node whose content is blank. An unstated
+coefficient is valid PathWhiz. The pipeline was enforcing a constraint the
+target system does not have — deliberately so, since `bound_elements` *does*
+declare `presence: true`. Worse, `build_pwml_ir` *dropped* the offending
+component, which manufactured an empty complex and violated the rule PathWhiz
+actually has (`protein_complex_proteins, length: {minimum: 1}`).
+
+Second, five enforcement points each owned a private copy of the rule and
+disagreed: `map_ids._component_stoichiometry` defaulted to 1;
+`ir._component_stoichiometry` and `writer._component_stoichiometry` returned
+None; `build_pwml_ir`, `validate_required_pwml_contract` and
+`validate_pwml_ir` each re-implemented the check; and `pwml/qa.py` rejected an
+empty value outright. A fix landing in one copy left the others intact — the
+re-divergence mechanism named in `docs/pathwhiz_requirements.md` §5 items 2–3.
+
+The deadlock was then held in place by policy: Stage 4a's
+`_defer_complex_stoichiometry_patches` refuses (correctly) to fabricate a
+count and defers to audit, while the audit prompt instructed the model to
+"leave unresolved stoichiometry as an error for review". A paper that never
+states subunit counts — the normal case — could therefore never satisfy the
+gate, and each run burned an enrichment round-trip on a patch that would be
+discarded anyway.
+
+**Fix:** one shared `component_stoichiometry` in `entity_identity.py` (the
+module `map_ids` and `ir` already both import) returns an explicit count or
+None; mapping, IR and the writer now delegate to it instead of re-deriving it.
+An unstated count is left blank end-to-end rather than assumed: `map_ids`
+omits the field, `build_pwml_ir` keeps the component and omits the key, the
+writer emits `<stoichiometry nil="true" type="integer"/>` via the existing
+`_append_scalar` nil path, and `qa.py` skips nil nodes exactly as its
+neighbouring `hmdb-id` check already did. All three IR validators now warn
+(`component_stoichiometry_unstated`) instead of erroring, the writer no longer
+raises, deterministic audit reports an error only when evidence gives an exact
+count it can act on, and `gap_resolver` no longer holds a complex open on an
+unstated count. A stated value is still preserved verbatim, and nothing infers
+one.
+
+Separately, the biological-state gate required species *and* subcellular
+location as hard errors; PathWhiz's `BiologicalState#has_at_least_one_component`
+requires one of species/tissue/cell_type/subcellular_location. Only a fully
+empty state is now fatal; individual gaps are warnings.
+
+**Verified:** the previously blocked payload exports (`ok = True`, zero QA
+errors) with `NdmCDE` retaining all three members at `nil="true"`, `Cdh`
+retaining one, and `NdmA complex` still carrying its explicit `1`. Suite: 359
+passed, 0 failed (baseline 358/1; the 55 errors are a pre-existing `tmp_path`
+environment fault, unchanged).
+
+**Pipeline consistency:** field ownership is unchanged — Stage 1 records
+stated evidence, Stage 4 may still patch a count from explicit evidence, and
+Stage 8 remains the export authority. What changed is that the rule now has a
+single definition, and that definition matches PathWhiz ground truth rather
+than a stricter invention. This is the §5 item 2/3 collapse applied to one
+concrete field: unknown stays blank, as the Unknown-protein sentinel already
+does for identity.
+
+---
+
+### 2026-07-15 — Wrap name-only protein complexes with the PathBank Unknown sentinel
+
+**Files changed:** `src/t2pw/mapping/map_ids.py`, `src/t2pw/pwml/ir.py`,
+`tests/test_pathbank_unknown_fallback.py`, `tests/test_pwml_ir.py`,
+`docs/pipeline.md`, `docs/change_log.md`.
+
+**Error / symptom:** Raw, uncaught `ValueError` in `writer.py`:
+`PWML export failed: Protein complex 'oxoglutarate dehydrogenase complex' has
+no protein_complex-proteins to export.` — a crash deep in
+`_protein_complex_members` instead of a clean export-time error, for a
+`protein_complexes[]` row that reached final PWML serialization with an empty
+`components` list.
+
+**Root cause:** the 2026-07-14 "NAME-BASED COMPLEX RULE" fix (above)
+correctly routes any entity whose name contains "complex" into
+`entities.protein_complexes[]` even when the source paper never enumerates
+subunits, using `components: []` intentionally in that case. Nothing
+downstream reliably backfills that for every row: Stage 4a's gap-resolver can
+only fill components from evidence text that names real subunits, and Stage
+6's existing `_apply_pathbank_unknown_enzyme_fallback` — the established
+pattern for "genuinely unresolvable, must not block export" proteins — is
+actor-driven; it only walks `processes.reactions[].enzymes[]` and
+`processes.transports[].transporters[]` looking for an exact-name match, so a
+`protein_complexes[]` row never tied to exactly one reaction/transport actor
+sails through untouched. Separately, `validate_pwml_ir` — the gate the
+writer and `run_pwml_export` both call before serialization — only logged
+`protein_complex_missing_components` as a `warning`, so `ok` stayed `True`
+and nothing stopped the payload before the writer's hard crash.
+
+**Fix:** two changes. (1) Added
+`_apply_pathbank_unknown_complex_fallback` in `map_ids.py`, structurally
+parallel to `_apply_pathbank_unknown_enzyme_fallback` but entity-driven: it
+scans `entities.protein_complexes[]` directly, and for any row whose
+`components` is still empty after normal mapping/gap-resolution/the
+actor-driven fallback have all run, and which has no real complex-level
+PathBank ID (`pathbank_complex_id`/`pathbank_protein_complex_id` on the row
+or its `mapping_meta`), attaches a single component built from PathBank's
+`Unknown` sentinel protein (id `9659`, species *Arabidopsis thaliana*),
+registers that protein in `entities.proteins`, and stamps `mapping_meta`
+with `chosen_rule=pathbank_unknown_protein_fallback`,
+`fallback_reason="complex_has_no_resolvable_components"`, and
+`cross_species_placeholder=true`. It runs only when
+`allow_complex_wrapper_creation=True`, wired in immediately after the
+existing actor-driven fallback call in `map_payload`, and tracks a new
+`complex_missing_components_unknown_fallbacks` summary counter. (2) In
+`validate_pwml_ir` (`ir.py`) and the writer's own `_protein_complex_members`
+(`writer.py`), a complex still at zero components now only fails cleanly if
+it also has no real, confirmed complex-level PathBank identity
+(`pathbank_complex_id`/`pathwhiz_id` on the IR record) — checked directly
+against `reference/PW1.pwml`, a real prior PathBank export, which contains
+two `<protein-complex>` records (e.g. "alanine aminotransferase (ALT)",
+`pwp-id PW_P000036`) with a genuine identity and a self-closing, empty
+`<protein_complex-proteins/>`. SPMDB does not itself require every complex to
+have a member; only a complex with no real identity of its own (which, after
+Fix (1), should only be a generated wrapper that somehow missed even the
+Unknown-sentinel fallback) is required to. `validate_pwml_ir` now raises
+`error` only in that case and `warning` otherwise (previously an unconditional
+`error`, which would have wrongly blocked a real, confirmed complex whose
+PathBank record legitimately lists no subunits); `_protein_complex_members`
+takes a matching `allow_empty` flag driven by the same check, so it no longer
+raises unconditionally either. `build_pwml_ir`'s own internal bookkeeping
+warning and `validate_required_pwml_contract`'s already-correct
+generated-complex-only strictness (a Stage 3 pre-remap check, which runs
+before any complex has a real ID to check) were both left untouched.
+
+**Pipeline consistency:** this stays entirely inside Stage 6's existing
+wrapper-creation ownership (`map_ids.py`, gated by
+`allow_complex_wrapper_creation`, the sole module allowed to create
+wrappers) and Stage 8's validate-only role (`ir.py`'s `validate_pwml_ir`
+gates export, it does not mutate the payload). It does not reach into Stage
+3's pre-remap gate or Stage 4/4a, matching "stages are independent." This is
+the closing case of the same PathBank-Unknown-sentinel fallback family as
+the 2026-07-13 Stage 6 entry and the 2026-07-14 "Widen the Stage 6 PathBank
+Unknown fallback to cover transporter-only proteins" entry above — those
+made the sentinel reachable for every *actor role*; this makes it reachable
+for every *entity*, regardless of whether an actor ever references it.
+
+**Verification:** `tests/test_pathbank_unknown_fallback.py` gained
+`test_orphan_named_complex_referenced_as_enzyme_gets_wrapped` (actor-driven
+and entity-driven passes agree for a referenced complex),
+`test_orphan_named_complex_not_referenced_anywhere_still_gets_wrapped` (the
+case the old actor-driven-only fallback missed),
+`test_stage2_wrapper_disabled_does_not_wrap_orphan_complex` (disabled when
+`allow_complex_wrapper_creation=False`), and
+`test_complex_with_real_pathbank_id_is_not_wrapped_despite_empty_components`
+(a real DB identity is never overwritten), and
+`test_real_pathbank_complex_with_no_listed_components_exports_with_empty_members`
+(a hand-built payload shaped exactly like `reference/PW1.pwml`'s ALT complex —
+real `pathbank_complex_id`, empty `components`, never touched by `map_payload`
+at all — passes Stage 3, `validate_pwml_ir` (as a warning, `ok=True`), and the
+writer, producing an actual empty `<protein_complex-proteins/>` element,
+proving Fix (2)'s leniency holds independently of Fix (1)). `tests/test_pwml_ir.py`
+gained `test_validate_pwml_ir_errors_on_protein_complex_missing_components`
+(no real identity → still an error) and kept
+`test_protein_complex_unresolved_component_is_exportable_with_warnings`
+passing under the corrected, identity-based rule (a complex with a real
+`pathbank_complex_id` whose one listed component fails to resolve still ends
+up exportable with a warning, not an error, matching the ALT-complex
+precedent — component-level identity resolution failures are a separate,
+already-covered concern from "does this complex exist"). Full suite re-run:
+414 passing.
+
+---
+
 ### 2026-07-14 — Tighten default reaction scope and wire the out-of-scope reaction filter
 
 **Files changed:** `src/t2pw/llm/prompts/pwml_system.txt`, `src/t2pw/app/streamlit_app.py`,

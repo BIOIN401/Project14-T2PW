@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 from lxml import etree
 
 from t2pw.paths import PROJECT_ROOT
+from t2pw.pipeline.entity_identity import component_stoichiometry
 from t2pw.pipeline.process_normalizer import normalize_process_payload
 from t2pw.pwml.compound_templates import TEMPLATE_DIMS, select_compound_template_id
 from t2pw.pwml.ir import build_pwml_ir, is_pwml_ir, validate_pwml_ir
@@ -564,11 +565,7 @@ def _component_name(component: Any) -> str:
 
 
 def _component_stoichiometry(component: Any) -> Optional[int]:
-    if isinstance(component, str):
-        return 1
-    if not isinstance(component, dict):
-        return None
-    return _to_positive_int(component.get("stoichiometry") or component.get("coefficient"))
+    return component_stoichiometry(component)
 
 
 
@@ -760,12 +757,14 @@ class DeterministicPwmlBuilder:
         protein_id_by_name: Dict[str, int],
         protein_id_by_db_id: Dict[int, int],
         protein_id_by_uniprot: Dict[str, int],
+        allow_empty: bool = False,
     ) -> List[Dict[str, Any]]:
         members: List[Dict[str, Any]] = []
         for idx, component in enumerate(components if isinstance(components, list) else []):
+            # An unstated stoichiometry stays blank: PathWhiz's column is nullable
+            # and _append_scalar emits <stoichiometry nil="true"/>, which its PWML
+            # parser skips. Only a missing protein reference is fatal here.
             stoich = _component_stoichiometry(component)
-            if stoich is None:
-                raise ValueError(f"Protein complex '{complex_name}' component[{idx}] is missing stoichiometry.")
 
             protein_id: Optional[int] = None
             if isinstance(component, dict):
@@ -806,9 +805,15 @@ class DeterministicPwmlBuilder:
                     f"Protein complex '{complex_name}' component '{label}' does not reference an existing protein."
                 )
 
-            members.append({"id": self.ids.next(), "protein-id": int(protein_id), "stoichiometry": stoich})
+            members.append(
+                {
+                    "id": self.ids.next(),
+                    "protein-id": int(protein_id),
+                    "stoichiometry": stoich if stoich is None else int(stoich),
+                }
+            )
 
-        if not members:
+        if not members and not allow_empty:
             raise ValueError(f"Protein complex '{complex_name}' has no protein_complex-proteins to export.")
         return members
 
@@ -1238,6 +1243,16 @@ class DeterministicPwmlBuilder:
                 protein_id_by_name=protein_id_by_name,
                 protein_id_by_db_id=protein_id_by_db_id,
                 protein_id_by_uniprot=protein_id_by_uniprot,
+                # A complex with a real, confirmed PathBank complex-level
+                # identity may legitimately have no listed subunits --
+                # reference exports (e.g. PW1.pwml's "alanine aminotransferase
+                # (ALT)" complex, pwp-id PW_P000036) carry exactly this shape.
+                # Matches the identical check in ir.py's validate_pwml_ir,
+                # which already gated this record's way in here.
+                allow_empty=bool(
+                    _to_positive_int(record.get("pathbank_complex_id"))
+                    or _to_positive_int(record.get("pathwhiz_id"))
+                ),
             )
             self.section_items["protein-complexes"].append(
                 {
