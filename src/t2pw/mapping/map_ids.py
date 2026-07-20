@@ -660,6 +660,16 @@ class PathBankDbResolver:
 
     @classmethod
     def from_env(cls, overrides: Optional[Dict[str, Any]] = None) -> Optional["PathBankDbResolver"]:
+        # Ensure the project .env is loaded before reading os.getenv, so the
+        # resolution DB connects regardless of import order (the root cause of
+        # spurious ``db_not_configured`` offline degradation).
+        try:
+            from t2pw.config import ensure_dotenv_loaded
+
+            ensure_dotenv_loaded()
+        except Exception:  # noqa: BLE001 - never let config loading break resolution
+            pass
+
         cfg = _safe_dict(overrides)
 
         def _pick(key: str, env_key: str, default: str = "") -> str:

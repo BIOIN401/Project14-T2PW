@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import re
 from collections import defaultdict
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
@@ -13,6 +14,8 @@ from t2pw.pipeline.entity_identity import (
 from t2pw.pwml.compound_templates import select_compound_template_id
 from t2pw.pwml.db_resolver import PathWhizCompoundResolver, apply_compound_db_resolution, normalize_chebi_id
 from t2pw.pwml.name_index import PathwhizNameIndex, default_name_index
+
+logger = logging.getLogger(__name__)
 
 # Sentinel so callers can pass ``name_index=None`` to explicitly disable the
 # offline canonicalization, distinct from "not provided -> load the default".
@@ -618,50 +621,177 @@ def _canonicalize_compound_offline(
         )
 
 
+# Culture-collection acronyms and strain markers used to detect the
+# strain-qualifier suffix on an organism name. Kept deliberately small and
+# case-insensitive; the heuristic below only strips a *trailing run* of such
+# tokens, so unrelated words in the binomial are never affected.
+_STRAIN_MARKERS = {
+    "str",
+    "str.",
+    "strain",
+    "substr",
+    "substr.",
+    "subsp",
+    "subsp.",
+    "serovar",
+    "biovar",
+    "pathovar",
+    "pv",
+    "pv.",
+    "var",
+    "var.",
+    "isolate",
+    "clone",
+    "type",
+}
+
+
+def _looks_like_strain_token(token: str) -> bool:
+    """True when a trailing token is part of a strain/substrain designation."""
+    if not token:
+        return False
+    low = token.casefold().strip(".")
+    if low in {marker.strip(".") for marker in _STRAIN_MARKERS}:
+        return True
+    if any(ch.isdigit() for ch in token):
+        return True  # collection numbers, e.g. "15032", "K-12", "MG1655", "S288C"
+    # All-caps alphanumeric codes / culture-collection acronyms, e.g. "IAM",
+    # "ATCC", "DSM". Require length >= 2 to avoid stripping a stray initial.
+    letters = re.sub(r"[^A-Za-z]", "", token)
+    if len(token) >= 2 and letters and token == token.upper() and token != token.casefold():
+        return True
+    return False
+
+
+# Sub-species / strain rank markers (period-stripped, lowercased). When one of
+# these appears *after* the binomial, everything from it onward is a
+# strain/sub-species qualifier and is dropped for determinism.
+_STRAIN_RANK_MARKERS = frozenset(
+    {"str", "strain", "substr", "subsp", "ssp", "serovar", "biovar", "pathovar", "pv", "var"}
+)
+
+
+def _deterministic_species_name(name: Any) -> str:
+    """Return a run-stable canonical species name.
+
+    The LLM/extraction emits the same organism under drifting strain-qualified
+    variants (e.g. "Herbaspirillum huttiense IAM 15032" vs "Herbaspirillum
+    huttiense" vs "Herbaspirillum huttiense subsp. huttiense IAM 15032"), which
+    then collide on import against whichever variant the DB stored first. This
+    collapses such variants deterministically by (a) truncating at the first
+    sub-species/strain rank marker after the binomial and (b) stripping a
+    trailing run of strain-code tokens, always preserving at least the leading
+    genus + species epithet. It is a pure function of the input string, so the
+    same taxonomy_id yields the same name on every run.
+    """
+    text = _canonical(name)
+    if not text:
+        return ""
+    tokens = text.split(" ")
+    cut = len(tokens)
+    # (a) truncate at the first infix strain/sub-species rank marker.
+    for idx in range(2, len(tokens)):
+        if tokens[idx].casefold().rstrip(".") in _STRAIN_RANK_MARKERS:
+            cut = idx
+            break
+    # (b) strip a trailing run of strain-code tokens (collection numbers, codes).
+    while cut > 2 and _looks_like_strain_token(tokens[cut - 1]):
+        cut -= 1
+    return " ".join(tokens[:cut])
+
+
+_SPECIES_CREATE_DEFAULT_CANON_NORMS = frozenset(
+    _norm(entry.get("name"))
+    for entry in SPECIES_CREATE_DEFAULTS.values()
+    if _norm(entry.get("name"))
+)
+
+
 def _canonicalize_species_offline(
     record: Dict[str, Any],
     *,
     name_index: Optional[PathwhizNameIndex],
     report: Dict[str, Any],
-) -> None:
-    """Rename a species record to its PathWhiz canonical name via the offline index.
+) -> str:
+    """Emit a deterministic, preferably-canonical name for a species record.
 
-    Species uniqueness in PathWhiz is on both ``name`` and ``taxonomy_id``; a
-    resolved species must therefore emit the DB row's exact name (often
-    strain-qualified, e.g. "Herbaspirillum huttiense IAM 15032"). Only fires on
-    a taxonomy/pathbank-id hit, so novel organisms keep their extraction name.
+    Precedence (documented in docs/setup.md -> "Deterministic species names"):
+      1. live resolution-DB name (applied upstream in stage-2 hydration; if the
+         record already carries a DB-matched name it flows through unchanged);
+      2. offline name-index species-by-taxonomy / pathbank-species-id, plus the
+         curated ``SPECIES_CREATE_DEFAULTS`` (both are already canonical);
+      3. (reserved) a canonical NCBI-taxonomy-id derived name -- no reliable
+         offline source is bundled today, so this is a documented follow-up;
+      4. a deterministic normalization of the candidate name (strip strain
+         qualifiers) for any *taxonomy-identified* species so the same
+         taxonomy_id always emits the same name across runs.
+
+    Species uniqueness in PathWhiz is on both ``name`` and ``taxonomy_id``.
+    Truly novel organisms (no taxonomy_id) keep their extraction name.
+
+    Returns a status: ``"canonical"`` (covered by the DB/offline index/curated
+    default), ``"deterministic"`` (taxonomy-identified but only normalized -- may
+    still collide on import), or ``"novel"`` (no taxonomy id, left untouched). The
+    record itself is never tagged, so its emitted shape is unchanged.
     """
-    if name_index is None:
-        return
-    hit = name_index.species_canonical(
-        taxonomy_id=record.get("taxonomy_id"),
-        pathbank_species_id=record.get("pathbank_species_id")
-        or record.get("pw_species_id")
-        or record.get("pathwhiz_id"),
-        name=record.get("name"),
-    )
-    if not hit:
-        return
-    canonical = _canonical(hit.get("name"))
-    if not canonical:
-        return
+    canon = report.setdefault("name_canonicalization", {}).setdefault("species", [])
+
+    # (2) offline index by taxonomy / pathbank id -- authoritative when present.
+    if name_index is not None:
+        hit = name_index.species_canonical(
+            taxonomy_id=record.get("taxonomy_id"),
+            pathbank_species_id=record.get("pathbank_species_id")
+            or record.get("pw_species_id")
+            or record.get("pathwhiz_id"),
+            name=record.get("name"),
+        )
+        canonical = _canonical(hit.get("name")) if hit else ""
+        if canonical:
+            extraction_name = _canonical(record.get("name"))
+            if extraction_name and _norm(extraction_name) == _norm(canonical):
+                return "canonical"
+            record.setdefault("raw_name", extraction_name)
+            record["name"] = canonical
+            if extraction_name:
+                aliases = _dedupe_aliases([*_safe_list(record.get("aliases")), extraction_name])
+                if aliases:
+                    record["aliases"] = aliases
+            canon.append(
+                {
+                    "from": extraction_name,
+                    "to": canonical,
+                    "taxonomy_id": record.get("taxonomy_id"),
+                    "source": "pathwhiz_id_db.json",
+                }
+            )
+            return "canonical"
+
+    # (4) deterministic normalization for taxonomy-identified species only.
+    taxonomy_id = _canonical(record.get("taxonomy_id"))
+    if not taxonomy_id:
+        return "novel"  # truly novel / unidentified -> keep extraction name verbatim
     extraction_name = _canonical(record.get("name"))
-    if extraction_name and _norm(extraction_name) == _norm(canonical):
-        return
-    record.setdefault("raw_name", extraction_name)
-    record["name"] = canonical
-    if extraction_name:
+    if not extraction_name:
+        return "novel"
+    # A curated create-default name is already the canonical, deterministic form.
+    if _norm(extraction_name) in _SPECIES_CREATE_DEFAULT_CANON_NORMS:
+        return "canonical"
+    canonical = _deterministic_species_name(extraction_name)
+    if canonical and _norm(canonical) != _norm(extraction_name):
+        record.setdefault("raw_name", extraction_name)
+        record["name"] = canonical
         aliases = _dedupe_aliases([*_safe_list(record.get("aliases")), extraction_name])
         if aliases:
             record["aliases"] = aliases
-    report.setdefault("name_canonicalization", {}).setdefault("species", []).append(
-        {
-            "from": extraction_name,
-            "to": canonical,
-            "taxonomy_id": record.get("taxonomy_id"),
-            "source": "pathwhiz_id_db.json",
-        }
-    )
+        canon.append(
+            {
+                "from": extraction_name,
+                "to": canonical,
+                "taxonomy_id": taxonomy_id,
+                "source": "deterministic_strain_normalization",
+            }
+        )
+    return "deterministic"
 
 
 def _resolve_compound_rows(
@@ -693,6 +823,13 @@ def _resolve_compound_rows(
         db_reason = str(getattr(db_resolver, "last_error", "") or "db_unavailable")
     elif not db_reason:
         db_reason = "db_not_configured"
+
+    # Surface whether the live resolution DB was actually consulted so the
+    # preflight can warn when compound names may be non-canonical.
+    db_resolution = report.setdefault("db_resolution", {})
+    db_resolution["available"] = resolver is not None
+    if db_reason:
+        db_resolution["reason"] = db_reason
 
     resolved: List[Dict[str, Any]] = []
     for idx, row in enumerate(normalized):
@@ -758,6 +895,72 @@ def _resolve_compound_rows(
     for row in resolved:
         _canonicalize_compound_offline(row, name_index=name_index, report=report)
     return resolved
+
+
+def _emit_canonicalization_preflight(ir: Dict[str, Any], report: Dict[str, Any]) -> None:
+    """Loudly warn when names may be non-canonical and will collide on import.
+
+    Silent offline degradation is the root bug: when the live resolution DB was
+    never consulted *and* the offline index does not cover an entity, T2PW emits
+    the extraction name, which mismatches the DB's canonical name and fails the
+    importer's name+id lookup. This surfaces that condition at WARNING level and
+    in the run report (``report['preflight']``) instead of hiding it.
+    """
+    db_resolution = _safe_dict(report.get("db_resolution"))
+    db_available = bool(db_resolution.get("available"))
+
+    at_risk_compounds: List[str] = []
+    for rec in _safe_list(_safe_dict(ir.get("entities")).get("compounds")):
+        if not isinstance(rec, dict):
+            continue
+        if _canonical(_safe_dict(rec.get("db_row")).get("name")):
+            continue  # canonicalized by the live DB or the offline index
+        if rec.get("pathwhiz_id") is not None:
+            continue  # has a strong DB identity -> importer matches by id, not name
+        ids = _compound_external_ids(rec)
+        if any(ids.get(key) for key in ("hmdb", "kegg", "chebi", "pubchem", "drugbank")):
+            at_risk_compounds.append(_canonical(rec.get("name")))
+
+    # Species at-risk set is computed during canonicalization (a taxonomy-
+    # identified species whose name was only deterministically normalized, not
+    # confirmed against the DB / offline index).
+    at_risk_species = [
+        str(name) for name in report.pop("_species_at_risk", []) if str(name).strip()
+    ]
+
+    if db_available or (not at_risk_compounds and not at_risk_species):
+        return
+
+    detail = {
+        "db_available": False,
+        "db_reason": str(db_resolution.get("reason") or "db_not_configured"),
+        "compounds": at_risk_compounds,
+        "species": at_risk_species,
+    }
+    report["preflight"] = detail
+    message = (
+        "Resolution DB unavailable ({reason}) and the offline name index does not "
+        "cover {nc} compound(s) and {ns} species; their names may be non-canonical "
+        "and will collide with existing rows on PathWhiz import. "
+        "Configure the resolution DB (see docs/setup.md) or refresh the offline "
+        "index. compounds={cn}; species={sn}".format(
+            reason=detail["db_reason"],
+            nc=len(at_risk_compounds),
+            ns=len(at_risk_species),
+            cn=at_risk_compounds[:20],
+            sn=at_risk_species[:20],
+        )
+    )
+    logger.warning(message)
+    _add_issue(
+        report,
+        "warning",
+        "noncanonical_names_collision_risk",
+        message,
+        db_reason=detail["db_reason"],
+        compounds=at_risk_compounds,
+        species=at_risk_species,
+    )
 
 
 def build_pwml_ir(
@@ -832,8 +1035,14 @@ def build_pwml_ir(
         )
         ir[ir_key] = [_component_record(row, row["key"], db_keys) for row in rows]
         if source_key == "species":
+            species_at_risk: List[str] = []
             for record in ir[ir_key]:
-                _canonicalize_species_offline(record, name_index=resolved_name_index, report=report)
+                status = _canonicalize_species_offline(
+                    record, name_index=resolved_name_index, report=report
+                )
+                if status == "deterministic":
+                    species_at_risk.append(_canonical(record.get("name")))
+            report["_species_at_risk"] = species_at_risk
         by_name: Dict[str, Dict[str, Any]] = {}
         for row in ir[ir_key]:
             for alias in [row.get("name"), *_safe_list(row.get("aliases"))]:
@@ -1769,6 +1978,8 @@ def build_pwml_ir(
                 "compound_member_location_keys": [],
             }
         )
+
+    _emit_canonicalization_preflight(ir, report)
 
     validation = validate_pwml_ir(ir)
     report["ir_validation"] = validation
