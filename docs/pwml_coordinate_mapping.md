@@ -336,6 +336,35 @@ single sentinel entity (all pointing at the same PathBank Unknown DB id) is
 correct for data identity and import; only the *visual* placement needed to
 diverge, which is why the fix lives in the writer.
 
+#### 2F-followup. [TODO — "Approach B"] Real repeated proteins still collapse
+
+**Observed 2026-07-20 on the caffeine-degradation pathway** (Pseudomonas
+putida, NdmA/NdmB/NdmCDE demethylase system, `outputs/pathway.pwml` at the
+time; preserved copy in the session scratchpad as `caffeine_pathway.pwml`).
+The main flow renders cleanly left→right (enzymes aligned at `y=811`,
+`x≈355→2115`; compounds `x≈109→2156`), but **three protein-locations sit at the
+exact same coordinate `(1040, 1150)`** — the shared **NdmD** protein, reused as
+the electron-transfer partner across the NdmA/NdmB/NdmC reactions
+(`NdmD electron transfer to NdmA/B/C`). Because NdmD is a *real* protein (not
+the Unknown sentinel), Approach A does not touch it, so its three usages
+dedup onto one location → three enzyme boxes overlap.
+
+This is the exact "real repeated enzyme" case flagged in the Scope note above,
+now confirmed in practice. It is a **visual blemish, not a broken import** (the
+pathway imports and is otherwise consistent), so it is deferred.
+
+**Fix direction when we get to it ("Approach B"):** extend the fresh-location
+logic from "protein is the Unknown sentinel" to "protein participates as an
+enzyme/complex-member in more than one reaction-visualization" — i.e. key the
+enzyme protein-location by the *complex-visualization* (or `(protein_key,
+reaction/enzyme-slot)`) rather than by the shared `(protein_key,
+biological_state)` whenever the same protein backs multiple distinct enzyme
+occurrences. Real PathWhiz does exactly this (multiple protein-locations for
+one protein id at distinct coordinates). Watch for the case where the same
+protein is a genuine *single* multi-subunit complex vs. the *same* protein
+reused across *different* complexes — only the latter should be spread; a true
+multimer's subunits are already distinct proteins.
+
 ### 2G. [High] Enzyme nodes are labeled with the protein name, never the complex name
 
 **Observed on:** same `outputs/pathway (81).pwml`. The enzyme ellipses in the

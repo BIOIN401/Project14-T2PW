@@ -44835,6 +44835,520 @@
         "issue": "no_match",
         "order_step": "api_uniprot"
       }
+    },
+    "db::lipoxygenase::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.8233,
+      "candidates": [
+        {
+          "pathbank_protein_id": 22867,
+          "name": "Lipoxygenase 2, chloroplastic",
+          "gene_name": "LOX2",
+          "uniprot": "P38418",
+          "species_id": 4,
+          "score": 0.8233
+        },
+        {
+          "pathbank_protein_id": 22958,
+          "name": "Lipoxygenase 3, chloroplastic",
+          "gene_name": "LOX3",
+          "uniprot": "Q9LNR3",
+          "species_id": 4,
+          "score": 0.8233
+        },
+        {
+          "pathbank_protein_id": 22965,
+          "name": "Linoleate 9S-lipoxygenase 5",
+          "gene_name": "LOX5",
+          "uniprot": "Q9LUW0",
+          "species_id": 4,
+          "score": 0.78
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::allene oxide synthase::arabidopsis thaliana::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q96242",
+        "pathbank_protein_id": "22869"
+      },
+      "pathbank_protein_id": 22869,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 22869,
+          "name": "Allene oxide synthase, chloroplastic",
+          "gene_name": "CYP74A",
+          "uniprot": "Q96242",
+          "species_id": 4,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 161361,
+          "name": "Allene oxide synthase, chloroplastic",
+          "gene_name": "CYP74A",
+          "uniprot": "Q96242",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::allene oxide cyclase::arabidopsis thaliana::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Q9LS02",
+        "pathbank_protein_id": "22870"
+      },
+      "pathbank_protein_id": 22870,
+      "confidence": 0.962,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 22870,
+          "name": "Allene oxide cyclase 2, chloroplastic",
+          "gene_name": "AOC2",
+          "uniprot": "Q9LS02",
+          "species_id": 4,
+          "score": 0.962
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::opda reductase 3::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::opda reductase 3::arabidopsis thaliana::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"OPDA reductase 3\" OR gene:\"OPDA reductase 3\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPDA reductase 3\" OR gene:\"OPDA reductase 3\")",
+      "mapped_ids": {
+        "uniprot": "Q9FUP0"
+      },
+      "confidence": 0.475,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q9FUP0",
+          "protein_name": "12-oxophytodienoate reductase 3",
+          "gene_names": [
+            "DDE1",
+            "OPR3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "OPDA reductase 3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9FEW9",
+          "protein_name": "12-oxophytodienoate reductase 3",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Solanum lycopersicum",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "OPDA reductase 3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q69TH6",
+          "protein_name": "Putative 12-oxophytodienoate reductase 3",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Oryza sativa subsp. japonica",
+          "reviewed": true,
+          "score": 0.15,
+          "matched_query": "OPDA reductase 3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A223FQV3",
+          "protein_name": "OPDA-reductase 3",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Ulmus americana",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "OPDA reductase 3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7L9D4",
+          "protein_name": "Opda-reductase 3",
+          "gene_names": [
+            "OPR3"
+          ],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "OPDA reductase 3",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABP0MPD7",
+          "protein_name": "11-reductase 3 (OPDA-reductase 3 (LeOPR3",
+          "gene_names": [],
+          "organism": "Durusdinium trenchii",
+          "reviewed": false,
+          "score": 0.0183,
+          "matched_query": "OPDA reductase 3",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"OPDA reductase 3\" OR gene:\"OPDA reductase 3\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPDA reductase 3\" OR gene:\"OPDA reductase 3\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "12-oxophytodienoate reductase 3",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::opcl1::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::opcl1::arabidopsis thaliana::::{}::[]": {
+      "status": "mapped",
+      "query": "(protein_name:\"OPCL1\" OR gene:\"OPCL1\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"OPCL1\" OR gene:\"OPCL1\")",
+      "mapped_ids": {
+        "uniprot": "Q84P21"
+      },
+      "confidence": 1.0,
+      "chosen_rule": "top_unique_candidate",
+      "candidates": [
+        {
+          "accession": "Q84P21",
+          "protein_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+          "gene_names": [
+            "4CLL5",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 1.0,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4HST9",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1P8AUM2",
+          "protein_name": "OPC-8:0 CoA ligase1",
+          "gene_names": [
+            "OPC-8:0 CoA ligase1",
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD3DFF9",
+          "protein_name": "4-coumarate--CoA ligase-like 5",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Castilleja foliolosa",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABD1FNN9",
+          "protein_name": "4-coumarate--CoA ligase-like 5",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Salvia divinorum",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "D7KJ24",
+          "protein_name": "Opc-8:0 CoA ligase1",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Arabidopsis lyrata subsp. lyrata",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A251T171",
+          "protein_name": "AMP-dependent synthetase/ligase, AMP-binding enzyme domain-containing protein",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Helianthus annuus",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ABS8SHJ7",
+          "protein_name": "4-coumarate--CoA ligase-like 5",
+          "gene_names": [
+            "OPCL1"
+          ],
+          "organism": "Datura stramonium",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "OPCL1",
+          "alias_source": "primary_name"
+        }
+      ],
+      "reviewed": true,
+      "queries_tried": [
+        "(protein_name:\"OPCL1\" OR gene:\"OPCL1\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"OPCL1\" OR gene:\"OPCL1\")"
+      ],
+      "matched_alias": "",
+      "alias_source": "primary_name",
+      "resolved_name": "Peroxisomal OPC-8:0-CoA ligase 1",
+      "literature_aliases": [],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::comatose::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::comatose::arabidopsis thaliana::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"COMATOSE\" OR gene:\"COMATOSE\") AND organism_name:\"Arabidopsis thaliana\" | (protein_name:\"COMATOSE\" OR gene:\"COMATOSE\")",
+      "mapped_ids": {
+        "uniprot": "F4JJ27"
+      },
+      "confidence": 0.97,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "F4JJ27",
+          "protein_name": "Peroxisomal ABC transporter 1",
+          "gene_names": [
+            "ABCD1",
+            "ACN2",
+            "ATP-binding cassette D1",
+            "AtABCD1",
+            "COMATOSE",
+            "CTS",
+            "PED3",
+            "PEROXISOME DEFECTIVE 3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "COMATOSE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "F4JJ28",
+          "protein_name": "Peroxisomal ABC transporter 1",
+          "gene_names": [
+            "ABCD1",
+            "ACN2",
+            "ATP-binding cassette D1",
+            "AtABCD1",
+            "COMATOSE",
+            "CTS",
+            "PED3",
+            "PEROXISOME DEFECTIVE 3"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": false,
+          "score": 0.97,
+          "matched_query": "COMATOSE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q94FB9",
+          "protein_name": "ABC transporter D family member 1",
+          "gene_names": [
+            "ABCD1",
+            "ACN2",
+            "CTS",
+            "PED3",
+            "PMP2",
+            "PXA1"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.475,
+          "matched_query": "COMATOSE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P46461",
+          "protein_name": "Vesicle-fusing ATPase 1",
+          "gene_names": [
+            "Nsf",
+            "Nsf1",
+            "comt"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "COMATOSE",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"COMATOSE\" OR gene:\"COMATOSE\") AND organism_name:\"Arabidopsis thaliana\"",
+        "(protein_name:\"COMATOSE\" OR gene:\"COMATOSE\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "Peroxisomal ABC transporter 1",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::acylcoa oxidase::arabidopsis thaliana::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "Z0Z000",
+        "pathbank_protein_id": "11613",
+        "gene_name": "?"
+      },
+      "pathbank_protein_id": 11613,
+      "confidence": 1.0,
+      "chosen_rule": "exact_protein_name_species",
+      "candidates": [
+        {
+          "pathbank_protein_id": 11613,
+          "name": "acyl-CoA oxidase",
+          "uniprot": "Z0Z000",
+          "gene_name": "?",
+          "species_id": 4,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_protein_name_species"
+      }
+    },
+    "db::multifunctional protein::arabidopsis thaliana::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.7986,
+      "candidates": [
+        {
+          "pathbank_protein_id": 11216,
+          "name": "Peroxisomal fatty acid beta-oxidation multifunctional protein MFP2",
+          "gene_name": "MFP2",
+          "uniprot": "Q9ZPI5",
+          "species_id": 4,
+          "score": 0.7986
+        },
+        {
+          "pathbank_protein_id": 11614,
+          "name": "peroxisomal fatty acid beta-oxidation multifunctional protein A1M1",
+          "gene_name": "AIM1",
+          "uniprot": "Q9ZPI6",
+          "species_id": 4,
+          "score": 0.7986
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "synonym_or_fuzzy_species"
+      }
     }
   },
   "compounds": {
@@ -74085,6 +74599,34 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::11shydroperoxyhexadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1011sepoxyhexadecatrienoic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {
@@ -80981,6 +81523,59 @@
           "issue": "component_protein_unresolved",
           "component": "LvaB",
           "component_index": 1,
+          "reason": "novel_protein"
+        }
+      ],
+      "resolution": {
+        "status": "unresolved",
+        "issue": "component_proteins_unresolved"
+      }
+    },
+    "db::ndmcde::pseudomonas putida::::[{\"ids\": {}, \"name\": \"NdmC\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"NdmD\", \"stoichiometry\": null}, {\"ids\": {}, \"name\": \"NdmE\", \"stoichiometry\": null}]": {
+      "status": "unmapped",
+      "reason": "component_proteins_unresolved",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "",
+      "candidates": [],
+      "components": [
+        {
+          "name": "NdmC",
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        },
+        {
+          "name": "NdmD",
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        },
+        {
+          "name": "NdmE",
+          "mapping_status": "unmapped",
+          "mapping_rule": "novel_protein",
+          "reason": "novel_protein"
+        }
+      ],
+      "issues": [
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmC",
+          "component_index": 0,
+          "reason": "novel_protein"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmD",
+          "component_index": 1,
+          "reason": "novel_protein"
+        },
+        {
+          "issue": "component_protein_unresolved",
+          "component": "NdmE",
+          "component_index": 2,
           "reason": "novel_protein"
         }
       ],

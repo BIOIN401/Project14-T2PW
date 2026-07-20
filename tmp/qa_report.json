@@ -1,171 +1,152 @@
 {
   "summary": {
-    "total_species": 17,
-    "total_reactions": 6,
-    "completeness_score": 0.0
+    "total_species": 27,
+    "total_reactions": 14,
+    "completeness_score": 0.341
   },
   "flags": {
-    "missing_compartments": [
-      {
-        "entity": "D-arabinonate",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "D-KDP",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "L-KDP",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "αKGSA",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "5-hydroxy-2,4-dioxo-pentanonate",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "pyruvate",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "glycolate",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "NAD+",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "D-altronate",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "L-fuconate",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "C785_RS13685",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "C785_RS13680",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "C785_RS13710",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "C785_RS13675",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "C785_RS20555",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "C785_RS20550",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "NAD",
-        "reason": "no subcellular location recorded"
-      }
-    ],
+    "missing_compartments": [],
     "missing_modifiers": [],
-    "possible_complexes": [],
-    "transport_like_reactions": [],
-    "orphan_nodes": [
+    "possible_complexes": [
       {
-        "entity": "NAD+",
-        "degree": 0
+        "entity": "OPC-8:0",
+        "reason": "name suggests a complex or subunit"
       },
       {
-        "entity": "D-altronate",
-        "degree": 0
+        "entity": "OPC-6:0",
+        "reason": "name suggests a complex or subunit"
       },
       {
-        "entity": "L-fuconate",
-        "degree": 0
+        "entity": "OPC-8:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-4:0",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
+        "reason": "name suggests a complex or subunit"
+      },
+      {
+        "entity": "OPC-4:0-CoA",
+        "reason": "name suggests a complex or subunit"
       }
     ],
+    "transport_like_reactions": [],
+    "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "D-arabinonate",
+        "entity": "linolenic acid",
         "type": "compound"
       },
       {
-        "entity": "D-KDP",
+        "entity": "hexadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "L-KDP",
+        "entity": "O2",
         "type": "compound"
       },
       {
-        "entity": "αKGSA",
+        "entity": "13(S)-hydroperoxy-octadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "5-hydroxy-2,4-dioxo-pentanonate",
+        "entity": "11(S)-hydroperoxy-hexadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "pyruvate",
+        "entity": "12,13(S)-epoxy-octadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "glycolate",
+        "entity": "10,11(S)-epoxyhexadecatrienoic acid",
         "type": "compound"
       },
       {
-        "entity": "NAD+",
+        "entity": "12-oxophytodienoic acid",
         "type": "compound"
       },
       {
-        "entity": "D-altronate",
+        "entity": "dinor-OPDA",
         "type": "compound"
       },
       {
-        "entity": "L-fuconate",
+        "entity": "OPC-8:0",
         "type": "compound"
       },
       {
-        "entity": "C785_RS13685",
+        "entity": "OPC-6:0",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-8:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "jasmonoyl-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "jasmonic acid",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-4:0",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-6:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "OPC-4:0-CoA",
+        "type": "compound"
+      },
+      {
+        "entity": "lipoxygenase",
         "type": "protein"
       },
       {
-        "entity": "C785_RS13680",
+        "entity": "allene oxide synthase",
         "type": "protein"
       },
       {
-        "entity": "C785_RS13710",
+        "entity": "allene oxide cyclase",
         "type": "protein"
       },
       {
-        "entity": "C785_RS13675",
+        "entity": "OPDA reductase 3",
         "type": "protein"
       },
       {
-        "entity": "C785_RS20555",
+        "entity": "OPCL1",
         "type": "protein"
       },
       {
-        "entity": "C785_RS20550",
+        "entity": "COMATOSE",
+        "type": "protein"
+      },
+      {
+        "entity": "acyl-CoA oxidase",
+        "type": "protein"
+      },
+      {
+        "entity": "multifunctional protein",
+        "type": "protein"
+      },
+      {
+        "entity": "3-ketoacyl-CoA thiolase",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [
-      {
-        "entity_a": "NAD+",
-        "entity_b": "NAD",
-        "reason": "normalized label collision"
-      }
-    ],
+    "duplicate_species": [],
     "inconsistent_class": []
   }
 }
