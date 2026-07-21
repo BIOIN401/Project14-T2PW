@@ -9,6 +9,728 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-21 — RAG deep-dive: four live-run defects that emptied or degraded multi-paper output
+
+**Files changed:** `src/t2pw/app/streamlit_app.py`, `src/t2pw/rag/retrieve.py`,
+`src/t2pw/rag/store.py`, `src/t2pw/rag/select.py`, `.env`,
+`tests/test_rag_retrieve.py`, `tests/test_rag_foundation.py`,
+`tests/test_rag_select.py`, `docs/change_log.md`.
+
+**What was the error:** with `RAG_ENABLED=true` and the "unknown / incomplete"
+box checked, a real seed pathway (caffeine degradation, *Pseudomonas putida*)
+came back with a **completely empty** `processes.reactions` — the pathway summary
+and final merged JSON showed only a species and a biological state. The RAG unit
+suite was fully green (offline fixtures), so none of these surfaced until the
+subsystem actually ran end-to-end against LM Studio + live literature APIs. Four
+independent defects, all inside `t2pw.rag` + the app orchestrator.
+
+*Defect 1 (the empty payload — seed reactions dropped).* `maybe_run_rag` passed
+`synthesize_with_report(seed_payload, bundles, seed_context_text)` a **string**
+(`format_context_header(...)`) as the seed context. But `synthesize`'s
+`_seed_source_descriptor` only accepts a **dict** carrying a `source_id`, so it
+returned `None`; `_seed_reactions` then treated every seed reaction as having "no
+supporting evidence" and **omitted all of them** (the no-invention guardrail,
+misfiring on the seed paper). Synthesis emitted zero reactions.
+
+*Defect 2 (the wipe).* Seam S3 replaced `final_payload = rag_result.payload`
+wholesale whenever `rag_result.synthesized` was truthy — so the empty synthesized
+payload from Defect 1 *overwrote* the real Stage 1/2 extraction. (The seed's
+`species` / `biological_states` survived only because WP5's
+`_carry_forward_scaffolding` re-copies them; the reactions did not.)
+
+*Defect 3 (silent retrieval death — embedding dim mismatch).* `MemoryVectorStore.query`
+scored every candidate with `_cosine`, which returns `0.0` on a length mismatch.
+A lexical-fallback vector (256-dim) cached while the embeddings endpoint was down
+(the user's exact earlier state) then sits in `embeddings_cache.json` beside real
+API vectors (768-dim); once LM Studio is up, query 768 vs cached-chunk 256 → every
+score `0.0` → semantic retrieval silently returns arbitrary chunks.
+
+*Defect 4 (lost gap symbols).* `retrieve._reaction_symbols` read
+`reaction["inputs"]/["outputs"]` only as `str`, but the real payload carries
+participants as dicts (`{"name": "caffeine"}`). So a dangling-reaction gap query
+lost its exact substrate/product symbols — the lexical half of the hybrid scorer
+had only the reaction name and enzyme to match on.
+
+Plus one robustness hole (Defect 5): `select._candidate_context` called the reused
+`preprocess` per candidate **unguarded**, inside `maybe_run_rag`'s single
+try/except — so one flaky LLM call (rate limit / timeout) among up to
+`RAG_ACQUIRE_MAX_PAPERS` candidates aborted the *entire* RAG run.
+
+**Why it appeared:** every WP was built and verified with offline, in-memory
+fixtures where the seed context was already a dict, embeddings were a single
+consistent width, and `preprocess` was mocked. The string-vs-dict seam (D1), the
+wholesale replace (D2), the cache-poisoning dim mismatch (D3), the str-only
+participant read (D4), and the unguarded fan-out (D5) are all boundary conditions
+that only exist in a live run, so the green unit suite never exercised them.
+
+**How the fix stays consistent with the design:** every change lives in
+`t2pw.rag` + the app orchestrator (`src/t2pw/app`); no pipeline stage module was
+edited and the separation invariant (docs/rag/03_separation_invariant.md) holds.
+*D1:* `maybe_run_rag` now builds a seed **source descriptor** dict
+(`{"text": seed_context_text, "source": {"source_id": "seed_paper",
+"source_title": <pathway name>, "source_type": "paper"}}`) and passes it to
+synthesis — the uploaded paper is legitimately evidence for its own reactions
+(exactly what `_seed_source_descriptor`'s docstring intends), so seed reactions
+carry `rag_provenance` and survive. *D2:* the S3 adoption is now guarded — the
+synthesized payload replaces `final_payload` only when it preserves at least the
+seed's reaction count (`_n_reactions(synth) >= max(1, _n_reactions(final))`),
+otherwise the single-paper extraction is kept and a `st.warning` explains why; an
+evidence-starved synthesis can never again blank the pathway. *D3:*
+`MemoryVectorStore.query` falls back to lexical overlap whenever the query/chunk
+vector widths differ (or either is missing) instead of scoring a silent `0.0`.
+*D4:* `_reaction_symbols` now also reads dict-shaped participants
+(`name`/`entity`/`compound`/…). *D5:* `_candidate_context` wraps `preprocess` in a
+per-candidate try/except, degrading one failure to an organism-only context
+rather than sinking the run. `.env` keeps `RAG_ENABLED=true` (LM Studio embeddings
+verified reachable) now that the wipe is guarded. All fixes are additive/guarding;
+with `RAG_ENABLED=false` the single-paper path is byte-for-byte unchanged.
+
+**Verified:** offline repros confirmed each defect and its fix (string seed
+context → 0 reactions vs dict → all preserved; 256-vs-768 cosine `0.0` → lexical
+`0.4`; dict participants → symbols now include `caffeine`/`theobromine`). Three
+regression tests added — `test_dangling_reaction_gap_captures_dict_participant_symbols`
+(D4), `test_memory_query_dim_mismatch_falls_back_to_lexical` (D3),
+`test_select_survives_a_failing_preprocess` (D5). RAG suite: 88 → **91 passed**;
+full suite **515 passed, 0 failures**.
+
+**Known limitation (not a regression — flagged for follow-up):** evidence-derived
+reactions are still only transcribed from **arrow-style equations**
+(`synthesize._parse_reaction_line`), which paper *prose* rarely contains, so
+cross-paper stitching materializes almost entirely from structured DB records, not
+free text. Until an LLM prose→reaction extraction step is added, multi-paper
+synthesis will stay sparse even with all four defects fixed.
+
+---
+
+### 2026-07-21 — RAG synthesis: stop emitting `" ; "`-joined pathway-metadata blobs as entities (+ core defense-in-depth)
+
+**Files changed:** `src/t2pw/rag/synthesize.py`,
+`src/t2pw/pipeline/process_normalizer.py`, `tests/test_rag_synthesize.py`,
+`tests/test_process_normalizer.py`, `docs/rag/03_separation_invariant.md`,
+`docs/change_log.md`.
+
+**Separation-invariant note (read this first):** this entry contains a **deliberate,
+user-authorized exception** to the separation invariant
+(docs/rag/03_separation_invariant.md): CHANGE 2 edits a **core stage module**
+(`process_normalizer.py`). Every prior RAG entry kept all logic inside `t2pw.rag`;
+this one does not, by explicit decision, to add defense-in-depth against a malformed
+name class regardless of who produces it. The primary fix (CHANGE 1) is still fully
+inside `t2pw.rag`; CHANGE 2 is an additive, narrowly-gated guard that changes no
+existing behavior (zero test regressions). See the doc's new "Sanctioned exceptions"
+section.
+
+**What was the error:** with RAG enabled, the mapped pathway failed the pre-export
+Stage 3 revalidation with "Protein '<blob>' is missing a UniProt or DrugBank
+identifier.", where `<blob>` was an entire pathway serialized with `" ; "` separators
+— e.g. `"Pathway12926 ; Arabidopsis thaliana, Cell, Plant-Type Vacuole ; Arabidopsis
+thaliana, Cell, Cytosol ; ... ; Water ; Hydrogen Ion ; Triglyceride ; ... ; Glycerol
+3-phosphate transporter ; Water"` (the Arabidopsis glycerolipid pathway), plus a
+sibling `"Pathway4 ; Homo sapiens ... ; Adenosine triphosphate complex"` (glutathione)
+routed into `protein_complexes` by the NAME-BASED COMPLEX RULE. Neither pathway was the
+uploaded seed (a caffeine-degradation paper) — they were **retrieved corpus entries**.
+
+**Root cause:** RAG synthesis re-parsed retrieved *evidence* chunk text as reaction
+chemistry, but for corpus (`source_type="pwml_example"`) and DB (`pathbank`/`kegg`)
+hits that text is not a clean equation — it is a `" ; "`-joined **bag** of
+pathway-id + species + compartments + compounds + reaction-patterns that `ingest.py`
+builds for *lexical scoring* (`_corpus_text_for_file` / `_extract_pwml_text` /
+`_reaction_record_text`, all `" ; ".join(...)`). Every such bag contains a reaction
+arrow somewhere (from the SBML `reaction_patterns`), so `synthesize._reactions_from_bundle`
+→ `_parse_reaction_line` treated the whole ~800-token window as one equation, and
+`_parse_side` — which split participants **only** on `" + "` (`_PLUS_SPLIT_RE`), never
+on `" ; "` — collapsed the entire pre-arrow text into a **single giant participant
+name**. That name became a compound entity (and, ending in "complex", a protein
+complex), reaching the gate as an unresolvable protein/complex. Confirmed by live
+repro: `_corpus_text_for_file('reference/PW012926 (1).sbml')` → first window →
+`_parse_reaction_line(...)` returned a reaction whose `inputs[0].name` was the full
+blob; the entity was present in `tmp/draft_graph.json` (built pre-mapping/pre-audit),
+proving synthesis — not the audit or mapping — was the origin.
+
+**Why the earlier robustness fixes did not catch it:** two structural reasons, i.e.
+this is a genuine case of RAG **not** plugging into the prior stages despite the intent.
+(1) Synthesis builds entities with its **own** ad-hoc parser (`_parse_reaction_line` /
+`_parse_side`), far weaker than Stage 1 LLM extraction + `process_normalizer`; the prior
+composite-splitting / name-sanitization fixes live in the extraction+normalizer path and
+were never in synthesis's code path. (2) `" ; "` is a **RAG-invented** join delimiter —
+the core normalizer's composite splitter keys on `" + "` / `_has_plus_token` and the core
+pipeline never produced `" ; "`-joined names, so even downstream the splitter did not
+recognize the blob as a composite and it survived to the gate untouched. Underneath both:
+`build_motif_entry`'s corpus text is *lexical-retrieval scaffolding* (a token bag), never
+meant to be round-tripped back into structured reactions.
+
+**Fix — CHANGE 1 (primary, inside `t2pw.rag`, `synthesize.py`):** (a)
+`_reactions_from_bundle` now reads `chunk.source_type` defensively and only transcribes
+chunks whose type is in `{"paper", ""}` (+None) — `pwml_example` corpus scaffolding and
+`pathbank`/`kegg` metadata bags are never parsed into reactions. (b) `_parse_side` /
+`_parse_reaction_line` are hardened even for the chunks still parsed: participant sides
+split on `";"` as well as `" + "` (`_SIDE_SPLIT_RE`), and any token that is clearly not a
+single chemical species is rejected (`_is_invalid_species_token`: `^Pathway\d`, a
+`", Cell,"`/biological-state descriptor, or > 12 words / > 120 chars); enzymes pass the
+same filter; a reaction left with no valid participants is discarded. (c) Genuine
+equations are unaffected (`"theobromine + O2 -> 7-methylxanthine + formaldehyde"` still
+parses to 2+2; charge notation `NAD+`/`H+` survives — the split requires surrounding
+spaces).
+
+**Fix — CHANGE 2 (defense-in-depth, core exception, `process_normalizer.py`):** a
+conservative, narrow guard `_quarantine_pathway_metadata_blobs`, called at the top of
+`normalize_composites`, drops a `compounds`/`proteins`/`protein_complexes` row **only**
+when its name contains `" ; "` **and** matches the garbage signature (`^Pathway\d` OR
+`", Cell,"` OR > 12 words), recording a `pathway_metadata_blob_quarantined` action. The
+**narrow guard was chosen over a broad `";"`-split** deliberately: the existing `" + "`
+path *materializes a protein complex* (wrong semantics for a metadata bag), and the
+narrow guard is the zero-regression path — the full suite confirmed no broadening was
+needed. Real single-entity names essentially never contain `" ; "` (composites use
+`" + "`), so the false-positive surface is negligible.
+
+**Verified:** original bug reproduced then confirmed clean (the corpus blob no longer
+yields a `" ; "` participant — the chunk is skipped, and the parser guards shatter the
+bag even if it is mislabeled). New tests: `test_corpus_pwml_chunk_never_emits_pathway_blob_entities`
+and `test_genuine_paper_equation_chunk_still_parses_cleanly`
+(`tests/test_rag_synthesize.py`), `test_pathway_metadata_blob_is_quarantined_by_normalizer`
+(`tests/test_process_normalizer.py`). Full suite: **512 passed, 0 failures** (509
+baseline + 3 new); **no existing test regressed**. `ruff check src/t2pw/rag
+src/t2pw/pipeline/process_normalizer.py` clean, no new violations.
+
+---
+
+### 2026-07-21 — RAG synthesis: carry the seed's species scaffolding + stop the `provenance` key collision
+
+**Files changed:** `src/t2pw/rag/synthesize.py`, `src/t2pw/rag/provenance.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_rag_synthesize.py`,
+`tests/test_rag_provenance_gates.py`, `tests/test_rag_foundation.py`,
+`docs/rag/03_separation_invariant.md`, `docs/rag/00_overview.md`,
+`docs/rag/agents/wp0_foundation.md`, `docs/rag/agents/wp5_synthesis.md`,
+`docs/change_log.md`.
+
+**What was the error:** with RAG enabled, a caffeine-degradation seed paper aborted
+at the Stage 2B mapping output → Stage 3 normalization input boundary
+(`validate_post_mapping`) with one error — `species_required`, "Mapped payload must
+include at least one species row." — accompanied by 63 `runtime_schema_type_error`
+warnings, one per compound, all "Expected a string." at
+`/entities/compounds/N/provenance`. Two independent defects, both introduced by the
+RAG work packages, both fixable entirely inside `t2pw.rag` + the app orchestrator.
+
+*Defect 1 (the abort).* WP7 wires the synthesized payload to **replace**
+`final_payload` wholesale at seam S3 (`streamlit_app.py`: `final_payload =
+rag_result.payload`). But WP5 synthesis rebuilds the payload **from reactions only**:
+`_build_entities`/`to_payload` emit just `entities.compounds` and `entities.proteins`
+and never read `seed_payload["entities"]`. So the seed's contextual scaffolding —
+`species`, `subcellular_locations`, `cell_types`, `tissues`, and top-level
+`biological_states` — was silently dropped. Stage 2B mapping then produced a payload
+with zero species rows, and the post-mapping gate (which legitimately requires
+`entities.species` to be a non-empty list) aborted.
+
+*Defect 2 (the 63 warnings).* WP0 chose `provenance` as one of the four additive RAG
+keys, and WP5's `_attach_provenance` wrote a **dict** there
+(`row["provenance"] = dict(primary)`). But `provenance` is **not** a free additive
+name: the core schema already owns it as a *string*
+(`PayloadProvenance = Literal["extracted","inferred","curated","enriched"]`, present
+on every entity/process via `PayloadCommonRecord`). RAG was therefore repurposing and
+retyping a core-owned field — exactly what the separation invariant's
+additive-metadata rule forbids — which the runtime shape validator flagged (in report
+mode, so non-fatal) on every compound.
+
+**Why it appeared:** WP5 was written and reviewed as an *additive-evidence* layer, and
+its own brief (docs/rag/agents/wp5_synthesis.md) called `species`/`subcellular_locations`
+"contextual scaffolding … never emitted by RAG synthesis." That was harmless while
+synthesis output only *augmented* the seed, but WP7 later made it *replace* the seed
+payload, at which point "never emitted" became "silently deleted." The `provenance`
+collision was latent from WP0: the additive keys were never checked against core-owned
+field names, and because the shape validator runs in report mode the collision only
+ever surfaced as a warning, so it was never treated as a defect.
+
+**How the fix stays consistent with the design:** both fixes stay entirely inside
+`t2pw.rag` + the app orchestrator; no stage module was edited and the separation
+invariant (docs/rag/03_separation_invariant.md) holds. *Defect 1:* a new
+`_carry_forward_scaffolding(payload, seed_payload)` in `synthesize.py` deep-copies the
+seed's non-reaction scaffolding buckets (`species`, `subcellular_locations`,
+`cell_types`, `tissues` into `entities`; `biological_states` at payload top level) into
+the synthesized payload — only when present and not already rebuilt, so the
+evidence-built `compounds`/`proteins` are never clobbered — guarded against a non-dict
+seed / missing entities, and run before the existing `validate_post_extraction`
+self-check. These buckets are evidence-*exempt* (they are not reaction chemistry; see
+`_EVIDENCE_ENTITY_BUCKETS` in `provenance.py`), so carrying them verbatim does not
+violate the "no element without evidence" guarantee. *Defect 2:* the additive source
+pointer is renamed `provenance` → `rag_provenance` everywhere it is emitted or read as
+the RAG key (`RAG_ADDITIVE_KEYS`, `RagAdditiveMetadata`, `_has_resolvable_source`,
+`_attach_provenance`, `strip_provenance`/`validate_provenance` via the tuple, and the
+app's provenance viewer). The core `provenance` string field is left untouched — in
+particular `_seed_row_provenance` still reads the seed's core `provenance` string — so
+a RAG-off or RAG-unaware stage sees an unchanged core row, and the namespaced `rag_*`
+key can never again shadow a core one. The additive keys stay optional/additive and
+`strip_provenance` still removes exactly `RAG_ADDITIVE_KEYS`.
+
+**Verified:** new/extended tests in `tests/test_rag_synthesize.py` prove the seed's
+`species` (and the other scaffolding) is carried forward and satisfies the
+`validate_post_mapping` species predicate, that synthesized rows carry `rag_provenance`
+(a dict) and never a dict under the core `provenance` key, and that `strip_provenance`
+removes it; a new end-to-end test
+(`test_synthesized_payload_survives_real_stage2b_mapping`) drives a synthesized payload
+through the **real** `map_ids.map_payload` and asserts the **real**
+`validate_post_mapping` passes with no `species_required` error and the seed species row
+survives mapping with its `mapping_meta` (external resolver calls mocked offline,
+mirroring `tests/test_stage2_mapping_boundary.py`; the gate is never stubbed).
+`tests/test_rag_provenance_gates.py` and `tests/test_rag_foundation.py` updated for the
+renamed key. Full suite: **509 passed, 0 failures** (508 baseline + 1 new integration
+test); ruff clean on `src/t2pw/rag` with zero new violations in `streamlit_app.py`
+(its pre-existing 34 E402 sys.path-shim baseline is unchanged). With `RAG_ENABLED=false`
+the payload carries neither `rag_provenance` nor the carried-forward path, so today's
+single-paper pipeline is byte-for-byte unchanged.
+
+---
+
+### 2026-07-20 — RAG defaults: dedicated embeddings endpoint + toggle-on default
+
+**Files changed:** `src/t2pw/config.py`, `src/t2pw/rag/embed.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_rag_foundation.py`, `.env`,
+`docs/change_log.md`.
+
+**What was the error:** the embedder (`embed.py`) reused the shared chat client
+(`t2pw.llm.client._client`) for embeddings and ignored `RAG_EMBEDDING_PROVIDER`.
+With `LLM_PROVIDER=openrouter` that meant embedding calls went to OpenRouter,
+which has **no embeddings endpoint**, so every call failed and silently dropped
+to the lexical fallback — "full embeddings" could never actually run. The RAG
+toggle also defaulted off and the master flag defaulted off, so RAG was never the
+active default.
+
+**Why it appeared:** WP0 wired embeddings against the single shared client on the
+assumption chat and embeddings share a host. They don't when chat is OpenRouter.
+
+**How the fix stays consistent with the design:** it stays entirely inside
+`t2pw.rag` + config + the S5 orchestrator (no stage-module edit; separation
+invariant intact). `config.py` gains two optional, default-safe keys
+(`RAG_EMBEDDING_BASE_URL`, `RAG_EMBEDDING_API_KEY`); `embed.py` builds a
+dedicated OpenAI-compatible client pointed at that base_url when set (e.g. LM
+Studio at `http://127.0.0.1:1234/v1`) and otherwise reuses the shared client
+exactly as before — the lexical offline fallback is unchanged, so a missing/
+unreachable endpoint still degrades gracefully. The app toggle now defaults ON
+(RAG is the default) and, when turned OFF, still takes the byte-for-byte pre-RAG
+single-paper path (the orchestration call is guarded on both `RAG_ENABLED` and
+the toggle). `.env` enables RAG with the `memory` vector backend (full semantic
+search over real embeddings, no chromadb dependency) and LM Studio embeddings.
+Blank config reproduces WP0 behavior, so `RAG_ENABLED=false` remains today's
+pipeline.
+
+---
+
+### 2026-07-20 — RAG orchestration, UI & triage (WP7): wire R0–R5 behind the flag, no logic in the app
+
+**Files changed:** `src/t2pw/rag/triage.py`, `src/t2pw/app/streamlit_app.py`,
+`tests/test_rag_triage_orchestration.py`, `docs/change_log.md`.
+
+**What this introduces:** the final RAG work package — stage **R0** (triage) plus the
+orchestrator wiring (seam **S5**) that ties R0–R5 together and exposes them, without
+moving any logic into the app. `triage.py` gains `should_run_rag(context, user_flag,
+reports=None) -> TriageDecision` (the *one* piece of RAG decision logic the invariant
+permits outside the app): an explicit user flag always runs RAG; otherwise it
+auto-triggers on a low Stage-0 `scope_clarity_score` (< 0.5) or, when the core's
+read-only reports are supplied, on the WP4 gap signals (dangling reactions, orphan
+metabolites, unmapped enzymes) — delegating gap classification to `retrieve.detect_gaps`
+(lazy import, so `import t2pw.rag.triage` needs no chromadb); a clean, in-scope pathway
+returns `run=False`. `streamlit_app.py` gains **wiring only**: a thin, importable
+`maybe_run_rag(...)` helper that CALLS `acquire.search_candidates` / `fetch_full_text`
+-> `select.select` -> `ingest.ingest` -> `retrieve.detect_gaps` / `retrieve_evidence` /
+`format_retrieval_context` -> `synthesize.synthesize_with_report` -> `validate_provenance`
+and passes their results between the seams; the UI (a "This pathway is unknown /
+incomplete (enable multi-paper RAG)" checkbox, a fetched+selected papers panel from the
+WP1/WP2 reports, and a provenance viewer showing source papers per reaction/entity from
+the WP5/WP6 provenance). Evidence rides the **existing** seams: S1 (folded into
+`user_task_context`), S2 (appended to the audit's `retrieval_context` via a new
+defaulted `rag_evidence_context=""` param), and S3 (the synthesized standard `Payload`
+handed to the post-pipeline path).
+
+**Why it appeared:** WP0–WP6 built the RAG subsystem but nothing exposed it or decided
+*when* it should run. WP7 is that trigger + orchestration + UI layer: the last step that
+makes multi-paper RAG reachable from the app while keeping it invisible when off.
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly. **S5 = wiring only, no logic:**
+the app contains no normalization/mapping/retrieval/synthesis logic — `maybe_run_rag`
+and `render_rag_panels` only call `t2pw.rag` (and existing stage) functions and read
+their returned values; the sole RAG *decision* logic lives in `t2pw.rag.triage`, not the
+app. **RAG-off byte-identity (definition of done):** every RAG addition is guarded by
+`if rag_config()["enabled"]` (and `maybe_run_rag` returns `None` before importing or
+calling any chain function when disabled or when triage declines), so with the default
+`RAG_ENABLED=false` the checkbox is not rendered, the orchestration block and UI panels
+do not run, `user_task_context`/`retrieval_context`/`final_payload` are untouched, and
+the app path is identical to pre-initiative `main` — the new `rag_evidence_context`
+param defaults to `""` (no-op), proven by the extracted-function orchestration test
+still passing unchanged. **No core stage edited:** the only non-rag file changed is
+`src/t2pw/app/streamlit_app.py` (the orchestrator, in `src/t2pw/app`, not a stage dir);
+`git status --porcelain` on `pipeline`/`pwml`/`curation`/`mapping`/`schema.py`/`sbml`
+shows no modified files, and no stage module imports `t2pw.rag` (`grep -rn "t2pw.rag"`
+over the stage dirs is empty). Tests are offline, deterministic, self-contained (the
+guarded `openai` + a MagicMock `streamlit` stub let the app-helper import run alone):
+they cover the triage cases and a guard/wiring test proving the RAG path is not entered
+with `RAG_ENABLED` off (`acquire` is never called) yet *is* entered when enabled+flagged.
+Baseline 494 + 11 new = 505 passed, 0 failures; zero new ruff (streamlit_app.py stays at
+34, the added import carries a scoped `# noqa: E402` matching the file's pre-existing
+sys.path-shim pattern).
+
+---
+
+### 2026-07-20 — RAG provenance & gates (WP6): evidence-bound validation + the gate tripwire
+
+**Files changed:** `src/t2pw/rag/provenance.py`, `tests/test_rag_provenance_gates.py`,
+`docs/change_log.md`.
+
+**What this introduces:** stage R6 of the RAG subsystem — the layer that *proves*
+the initiative's core promise, **no element without evidence**, and that a
+synthesized payload survives the existing Stage 3/8 gates unmodified. `provenance.py`
+(the WP0 additive-key stub) is extended with: `validate_provenance(payload) ->
+ProvenanceReport` — a read-only check that every reaction (`processes.reactions`) and
+every non-cofactor entity (`entities.{compounds,proteins,protein_complexes}`) carries
+at least one resolvable `source_id`/`source_uri` (via any of the four additive
+carriers or the core-typed `source_refs`), flagging any that do not; the
+`ProvenanceReport` / `ProvenanceIssue` dataclasses that carry the result; and
+`strip_provenance(payload) -> Payload` — a deep copy with every `RAG_ADDITIVE_KEYS`
+key removed at any depth (input never mutated), i.e. the plain payload a RAG-unaware
+or RAG-off stage sees. The cofactor exemption reuses WP5's `COFACTOR_NAMES` (lazy
+import to avoid a circular dependency and to keep the module import-cheap — verified
+`import t2pw.rag.provenance` still needs no chromadb).
+
+**Why it appeared:** WP5 emits a synthesized payload with additive provenance, but
+nothing yet *enforced* that every element is evidence-bound, nor *demonstrated* that
+the additive keys pass the core gates untouched. WP6 is that enforcement-and-proof
+step: `validate_provenance` is the guardrail that catches an unsourced (invented)
+element, and the tests are the tripwire that catches anyone loosening a gate to push
+RAG output through.
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly. **Gates called unmodified,
+directly:** the tests import and call the **real** `run_strict_post_normalization_gates`
+(Stage 3) and `validate_required_pwml_contract` (Stage 8) — no RAG-specific variant,
+no fork, no special-case — and assert a good synthesized payload passes both, and that
+the *same* gates pass on `strip_provenance(payload)` (provenance is purely additive and
+ignored). **Never weaken a gate:** no stage-module file was edited (verified: `git
+status --porcelain` on the stage dirs / `schema.py` / `sbml` shows no modified files;
+`process_normalizer.py` and `pwml/ir.py` are byte-unchanged); the gate-ready fixture is
+built *honestly* — where Stage 3/8 legitimately require a mapped payload (external DB
+identities, `biological_states`, generated-complex wrappers that the core mapping stage
+adds *after* seam S3, needing the offline-unavailable reference DB), the fixture supplies
+that mapping result rather than stubbing the gate, and a separate test ties it back to
+reality by asserting genuine (un-mapped) `synthesize` output already satisfies
+`validate_provenance`. **Additive-only provenance:** `strip_provenance` removes exactly
+the four `RAG_ADDITIVE_KEYS`; a test proves none survive and that both gates still pass;
+the `RAG_ENABLED=false` path asserts the plain payload carries no provenance keys and the
+gates behave identically. **RAG → core only:** all code lives in `t2pw.rag`; nothing in
+any stage module imports `t2pw.rag` (verified: `grep -rn "t2pw.rag"
+src/t2pw/{pipeline,pwml,mapping,curation,sbml}` is empty). Tests are offline,
+deterministic, and self-contained (the guarded `openai` stub keeps them passing run
+alone) — baseline 486 + 8 new = 494 passed, 0 failures; zero new ruff.
+
+---
+
+### 2026-07-20 — RAG synthesis (WP5): stitch + reconcile + resolve + provenance → one standard Payload
+
+**Files changed:** `src/t2pw/rag/synthesize.py`, `tests/test_rag_synthesize.py`,
+`docs/change_log.md`.
+
+**What this introduces:** stage R5 of the RAG subsystem — the layer that merges the
+seed extraction plus WP4's per-gap `EvidenceBundle`s into **one connected pathway**
+and emits it as a **standard** `Payload` (the `TypedDict` shapes in `t2pw.schema`) at
+seam **S3**. `synthesize.py` adds: `synthesize(seed_payload, evidence_bundles,
+seed_context) -> Payload` (the seam-S3 entry point named in wp5_synthesis.md) and its
+sibling `synthesize_with_report(...) -> SynthesisResult`, which returns the same
+payload **plus** the reports that ride alongside it (`unresolved_gaps`, `conflicts`,
+`stitched`, `contract_report`); and `to_payload(entities, reactions) -> Payload`,
+which assembles only the core `entities`/`processes` buckets. The four synthesis
+steps: (1) **stitch** — reactions stated in evidence chunks are transcribed and
+connected so a product feeds the next reaction's input across papers; a dangling end
+is closed *only* where a retrieved reaction supplies the missing metabolite
+(cross-paper links are detected and recorded in `stitched`); (2) **reconcile
+synonyms** — every name is canonicalized through the core `BIOCHEMICAL_ALIAS_MAP`
+(imported **read-only** from `process_normalizer`, the same casefold-keyed lookup it
+performs, reproduced without importing RAG into it); (3) **resolve conflicts** —
+reactions grouped by their unordered participant set; when variants disagree on
+direction / stoichiometry / compartment the highest evidence-weight variant wins and
+the losers are recorded in `conflicts` (nothing dropped silently); (4) **attach
+provenance** — every reaction and every non-cofactor entity carries the additive
+provenance keys WP0 defined (`provenance` / `evidence` / `source_papers` /
+`rag_confidence`, `RAG_ADDITIVE_KEYS`) plus a core-typed `source_refs: List[str]`
+pointer. Enzymes are emitted as canonical Actor rows (`entity` / `entity_type` /
+`role`). Merging is out of scope for gate *enforcement* (WP6) and orchestration/UI
+(WP7).
+
+**Why it appeared:** WP0–WP4 built the store, embedder, hybrid scorer, and gap
+retrieval, but nothing yet *assembled* the retrieved evidence into a single
+exportable pathway. WP5 is that assembly step — the place the "novel pathway" (a
+novel *connection* of individually evidence-backed steps; docs/rag/00_overview.md) is
+actually built. It reuses landed pieces rather than duplicating them: WP4's
+`EvidenceBundle` / `Gap` and the store `Chunk` / `Retrieved` are consumed by **duck
+typing** (only their attributes are read) so importing `synthesize` pulls neither the
+retrieval/ingest stack nor chromadb; the core alias map is imported read-only; and
+the output is checked with the core `validate_post_extraction` before return.
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly. **Standard Payload at S3:**
+`to_payload` emits only the core `entities`/`processes` buckets — the shape Stage 2B
+already consumes — and the output **passes `validate_post_extraction`** (the module
+imports and calls it as a self-check, raising `StageContractError` on any structural
+failure; it never edits or weakens that contract). **Additive-only provenance:** the
+only extra keys are the four `RAG_ADDITIVE_KEYS` plus the core-owned `source_refs`;
+all are optional and ignored by any stage that does not know them (a test strips
+every one and the payload still passes `validate_post_extraction`) — no RAG-only
+*required* key is added. Runtime shape validation runs in report mode
+(`RUNTIME_SCHEMA_MODE="report"`), so the additive keys surface as non-fatal warnings,
+never errors. **No invented chemistry:** every reaction and every non-cofactor entity
+must carry ≥1 provenance pointer; an element with none is **omitted** and reported in
+`unresolved_gaps` (a gap whose evidence bundle has no hits stays unfilled and is
+surfaced — never fabricated). **No pre-running the core:** synthesis does not
+normalize, map, or audit — it emits the payload and lets Stage 2B→8 run. **RAG →
+core only:** all code lives in `t2pw.rag`; it imports `BIOCHEMICAL_ALIAS_MAP`,
+`validate_post_extraction`, and `RAG_ADDITIVE_KEYS` from core, and nothing in any
+stage module imports `t2pw.rag` (verified: `grep -rn "t2pw.rag"
+src/t2pw/{pipeline,mapping,curation,pwml,sbml}` is empty). No stage-module file was
+edited (verified: `git status --porcelain` on the stage dirs / `schema.py` / `sbml`
+shows no modified stage files). Tests are offline, deterministic, and self-contained
+(the guarded `openai` stub is only needed to build the WP4 fixtures) and pass run
+alone.
+
+---
+
+### 2026-07-20 — RAG gap retrieval (WP4): detect gaps → query → retrieve evidence → format context
+
+**Files changed:** `src/t2pw/rag/retrieve.py`, `tests/test_rag_retrieve.py`,
+`docs/change_log.md`.
+
+**What this introduces:** stage R4 of the RAG subsystem — the layer that turns the
+core's read-only gap signals into gap-targeted evidence and renders it to a string
+the existing prompts already accept. `retrieve.py` adds: `detect_gaps(payload,
+reports) -> list[Gap]`, which reads `qa_graph` connectivity/degree output (both the
+`generate_qa_report` `flags` shape and the CLI `dangling_nodes` /
+`missing_links_suspected` / `orphan_components` shape), the Stage-3 strict gate
+report's `errors` list (from `run_strict_post_normalization_gates`), and mapping
+reports (entities with `status="unmapped"`), classifying each into one of
+`dangling_reaction` / `orphan_metabolite` / `unmapped_enzyme` / `missing_precursor`
+/ `missing_compartment` (reaction gaps enriched, read-only, with participant/enzyme
+symbols from the payload); `query_for_gap(gap, seed_context) -> str`, a
+natural-language ask plus the exact gene/compound symbols (so the hybrid scorer's
+lexical half never loses an exact symbol); `retrieve_evidence(gap, store, *,
+top_k=rag_config()["retrieve_top_k"]) -> EvidenceBundle`, which retrieves via the
+WP3 `build_hybrid_scorer(store)` and keeps each hit's `source_id` / `source_uri`
+provenance; and `format_retrieval_context(bundles) -> str`, which mirrors/wraps the
+existing `t2pw.sbml.examples.build_retrieval_context` renderer and appends the
+mandatory additive provenance line per hit. `Gap` and `EvidenceBundle` are defined
+within `t2pw.rag`. Merging evidence into a final payload (WP5) and gate enforcement
+(WP6) are out of scope.
+
+**Why it appeared:** WP0–WP3 built the store, embedder, and hybrid scorer, but
+nothing yet detected *which* pieces of a pathway are missing, formed queries for
+them, or rendered the retrieved evidence for injection. WP4 is that missing step. It
+reuses the landed pieces rather than duplicating them: the WP3
+`build_hybrid_scorer` (never a second scorer), the WP0 `VectorStore` / `Retrieved` /
+`Chunk`, `rag_config()` for `retrieve_top_k`, and — critically — it **wraps** the
+existing renderer `t2pw.sbml.examples.build_retrieval_context` (feeding it a
+synthetic single-entry index with a self-matching query so it always renders, then
+swapping its `[Example i]` header for a gap-tagged `[Evidence i]` header) instead of
+writing a second formatter. Offline-first holds end to end: import requires no
+chromadb / network / LLM, and with the `memory` backend + a stubbed embedder the
+lexical half still retrieves an exact symbol (e.g. `NdmA`).
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly, and this is the first WP to
+touch the core seams. **Evidence rides only the EXISTING seam params:**
+`format_retrieval_context` returns a plain **string** meant to be folded into the
+already-present `pathway_context` / `user_task_context` params of
+`run_extraction_pipeline` (S1) and passed to the already-present
+`run_audit(..., retrieval_context=...)` param (S2) — no new parameter is added to,
+and no body is edited in, `pipeline.py` or `run_audit`; the actual wiring is left to
+WP7 (S5). **Reports are read-only (S4):** `detect_gaps` inspects the `qa_graph` /
+gate / mapping artifacts and never writes back (a test deep-compares `payload` and
+`reports` before/after and asserts they are unchanged). All new code lives in
+`t2pw.rag`; the dependency arrow points RAG → core only — `retrieve.py` imports the
+WP3 scorer, the WP0 store, `rag_config`, and `t2pw.sbml.examples`, and nothing in any
+stage module imports `t2pw.rag` (verified: `grep -rn "t2pw.rag"
+src/t2pw/{pipeline,mapping,curation,pwml,sbml}` is empty). No stage-module file was
+edited (verified: `git status --porcelain` on the stage dirs / `schema.py` /
+`sbml` shows no modified stage files). Tests use the `memory` backend with a stubbed
+offline embedder — no chromadb, no network, no live LLM — and pass run alone.
+
+---
+
+### 2026-07-20 — RAG ingest & index (WP3): chunk → embed → vector store + hybrid scorer
+
+**Files changed:** `src/t2pw/rag/ingest.py`, `tests/test_rag_ingest.py`,
+`docs/change_log.md`.
+
+**What this introduces:** stage R3 of the RAG subsystem — the layer that turns the
+WP2-selected papers (plus structured DB reaction records and the existing on-disk
+example corpus) into a populated, persisted `VectorStore`, and exposes the hybrid
+retriever WP4 will call. `ingest.py` adds: `chunk_paper(candidate) -> list[Chunk]`
+(section-aware splitting into abstract / introduction / methods / results /
+discussion / figure-caption chunks of ~500–1000 tokens with overlap, each carrying
+`source_id` / `source_uri` / `organism` provenance and a chunk `id` that is a
+stable hash of `(source_id, section, offset)`); `chunk_db_reactions(records) ->
+list[Chunk]` (one chunk per reaction, `source_type` `"pathbank"` / `"kegg"`);
+`chunk_corpus(dir)` (one-or-more chunks per `reference/*.pwml` / `*.sbml` file,
+tagged `source_type="pwml_example"`); `ingest(selection) -> IngestReport` (chunk →
+embed via the WP0 `Embedder` → `upsert` → `persist`); and
+`build_hybrid_scorer(store)`, the WP4-facing callable that blends the store's
+semantic score with the lexical motif score at `0.7*semantic + 0.3*lexical`
+(weights tunable). No gap detection, query formulation, or synthesis happens here —
+that is WP4/WP5.
+
+**Why it appeared:** WP0–WP2 built the store/embedder and produced a small, on-topic
+set of papers, but nothing yet chunked, embedded, indexed, or retrieved them. WP3
+is that missing middle. It deliberately **reuses** the landed pieces rather than
+duplicating them: the WP0 `Chunk` / `VectorStore` / `get_vector_store` / `Embedder`
+(the embedder's cache means an unchanged chunk is never re-embedded), the WP1
+`CandidatePaper`, and — critically — it **wraps** the existing lexical layer
+`t2pw.sbml.examples` (`parse_sbml` + `build_motif_entry` for corpus text extraction,
+and `_score_entry` for the lexical half of the hybrid scorer) instead of writing a
+second token-overlap scorer. Offline-first is preserved end to end: with no
+embedding endpoint the embedder falls back to its deterministic lexical vectors, and
+the hybrid scorer's lexical half guarantees an exact gene/compound symbol (e.g.
+`NdmA`) is still retrieved when embeddings are unavailable. Re-ingesting an unchanged
+paper is a no-op — stable chunk ids overwrite the same records and the embedding
+cache reports zero new embeddings.
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly. All new code lives in
+`t2pw.rag`; the dependency arrow points RAG → core only — `ingest.py` imports the
+WP0 store/embedder, the WP1 `CandidatePaper`, and `t2pw.sbml.examples`, and nothing
+in `t2pw.sbml` (or any stage module) imports `t2pw.rag` (verified: `grep -rn
+"t2pw.rag" src/t2pw/{pipeline,mapping,curation,pwml,sbml}` is empty). The lexical
+layer is **wrapped, not edited** — `src/t2pw/sbml/examples.py` is untouched (verified:
+`git status --porcelain` on it is empty); no RAG logic was added to any stage module.
+WP3 uses **no** core seam: it changes no pipeline behavior and only builds the store
+and scorer that WP4 will consume. All configuration is read through `rag_config()`;
+tests use the `memory` backend with a stubbed offline embedder — no chromadb, no
+network, no live LLM — and pass run alone.
+
+---
+
+### 2026-07-20 — RAG selection (WP2): rank / dedupe / cap candidates for embedding
+
+**Files changed:** `src/t2pw/rag/select.py`, `tests/test_rag_select.py`,
+`docs/change_log.md`.
+
+**What this introduces:** stage R2 of the RAG subsystem — the selection layer
+that turns the WP1 candidate papers into the small, on-topic subset worth
+embedding (WP3). `select.py` adds `score_candidate(candidate, seed_context) ->
+SelectionScore`, which combines organism match, overlap of the candidate's
+entities with the seed's `key_compounds` / `key_proteins` / `gap_terms` /
+`pathway_name`, the preprocessor's `pathway_relevance_score`, and a penalty for a
+`multi_example_review` whose examples do not match the seed. `select(candidates,
+seed_context, *, max_papers=RAG_SELECT_MAX_PAPERS) -> Selection` scores every
+candidate, ranks them deterministically (score desc, then paper id), dedupes by
+PMCID/PMID/DOI/normalized-title (reusing `CandidatePaper.identity_keys`), caps at
+`RAG_SELECT_MAX_PAPERS`, and returns the kept subset plus a `selection_report`
+that gives one entry per candidate and an explicit reason for **every** drop
+(duplicate, non-matching `multi_example_review` below the score floor, or below
+the cap). No chunking, embedding, or retrieval happens here — that is WP3/WP4.
+
+**Why it appeared:** WP1 over-fetches candidates from several literature APIs; if
+all of them reached the (expensive) embedding step, unrelated review examples
+would bleed into the corpus and the pathway synthesis would be polluted. WP2 is
+the gate that stops that. It deliberately **reuses the existing preprocessor**
+(`t2pw.pipeline.preprocessor.preprocess`, run per candidate on its abstract or a
+truncated full text, plus `is_ambiguous_multi_example_review_context`) rather
+than building a second classifier, and reuses the name-normalization / safe-access
+helpers from `t2pw.mapping.map_ids`. The `multi_example_review` handling follows
+`preprocess_system.txt` STEP 3 locality discipline: a review whose examples do
+not match the seed is penalized so it is dropped, and one whose example *does*
+match is example-scoped and ranked below on-topic primary research — never
+ingested wholesale.
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly. All new code lives in
+`t2pw.rag`; the dependency arrow points RAG → core only — `select.py` imports
+from `t2pw.pipeline.preprocessor` and `t2pw.mapping.map_ids`, and nothing in
+`t2pw.pipeline` (or any stage module) imports `t2pw.rag` (verified: `grep -rn
+"t2pw.rag" src/t2pw/{pipeline,mapping,curation,pwml}` is empty). WP2 uses **no**
+core seam: it changes no pipeline behavior and edits no stage module — it only
+filters the WP1 `list[CandidatePaper]` down for WP3 to consume. Determinism is
+structural: given a fixed `preprocess` output the module is pure arithmetic and
+stable sorting, so a re-run yields the same ranking and report; tests mock
+`preprocess` and never touch the network / LLM. All configuration is read through
+`rag_config()` (`RAG_SELECT_MAX_PAPERS`); nothing is hardcoded.
+
+---
+
+### 2026-07-20 — RAG acquisition (WP1): candidate paper fetch + offline cache
+
+**Files changed:** `src/t2pw/rag/acquire.py`, `tests/test_rag_acquire.py`,
+`docs/change_log.md`.
+
+**What this introduces:** stage R1 of the RAG subsystem — the acquisition layer
+that turns a seed pathway context into candidate papers. `acquire.py` adds a
+`CandidatePaper` dataclass (`id, source, title, abstract, organism, full_text,
+source_uri, year`), `search_candidates(context, *, sources, max_papers)` which
+builds organism-scoped queries from the seed context (`pathway_name`,
+`likely_organism`, `key_compounds`, `key_proteins`, `gap_terms`) and fetches from
+EuropePMC and NCBI eutils (with optional Crossref / Semantic Scholar / bioRxiv
+sources behind the `sources` flag), and `fetch_full_text(candidate)` which
+downloads `fullTextXML` and converts it to plain text. Candidates are deduped
+against the seed and each other by PMCID/PMID/DOI/normalized-title, capped at
+`RAG_ACQUIRE_MAX_PAPERS`, and cached on disk under
+`data/rag_index/acquire_cache/` keyed by a query hash. No ranking, chunking, or
+embedding happens here — that is WP2/WP3.
+
+**Why it appeared:** the RAG initiative needs an evidence source before it can
+select (WP2) or embed (WP3). WP1 is that source. It deliberately reuses the
+existing HTTP plumbing in `t2pw.mapping.map_ids` (`HttpClient`,
+`_europepmc_full_text`, the `_NCBI_EUTILS_BASE` / `_ncbi_eutils_params` /
+`_ncbi_throttle` eutils helpers) rather than re-deriving URL, retry, or
+rate-limit logic, so acquisition inherits the same session, backoff, and NCBI
+throttle the core already tuned.
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly. All new code lives in
+`t2pw.rag`; the dependency arrow points RAG → core only — `acquire.py` imports
+from `t2pw.mapping.map_ids`, and nothing in `t2pw.mapping` (or any stage module)
+imports `t2pw.rag` (verified: `grep -rn "t2pw.rag"
+src/t2pw/{pipeline,mapping,curation,pwml}` is empty). WP1 uses **no** core seam:
+it changes no pipeline behavior and edits no stage module — it only produces a
+`list[CandidatePaper]` for WP2 to consume. Offline-first is honored structurally,
+matching the `id_mapping_cache.json` precedent: every network fetch is fail-safe
+(a missing network or API error contributes an empty list, never a raised
+exception), and the per-query-hash disk cache means a re-run is served from cache
+without re-hitting the network. All configuration is read through `rag_config()`;
+nothing is hardcoded.
+
+---
+
+### 2026-07-20 — RAG subsystem foundation (WP0): package, vector store, config, provenance
+
+**Files changed:** `src/t2pw/rag/__init__.py`, `src/t2pw/rag/store.py`,
+`src/t2pw/rag/embed.py`, `src/t2pw/rag/provenance.py`,
+`src/t2pw/rag/{acquire,select,ingest,retrieve,synthesize,triage}.py` (stubs),
+`src/t2pw/config.py`, `requirements.txt`, `.gitignore`,
+`tests/test_rag_foundation.py`, `docs/change_log.md`.
+
+**What this introduces:** the shared scaffolding for the RAG initiative — a new,
+optional `t2pw.rag` package with a `VectorStore` `Protocol` plus a `memory` and a
+default `chroma` backend, an offline-capable embedding client with a JSON cache,
+a `rag_config()` reader for every `RAG_*` variable, and `TypedDict` definitions
+for the additive provenance keys (`provenance`, `evidence`, `source_papers`,
+`rag_confidence`). No pipeline behavior changes: with `RAG_ENABLED` unset,
+nothing here runs and no core module imports it.
+
+**Why it appeared:** the RAG initiative (docs/rag/) needs a single foundation
+every later work package (WP1–WP7) builds on. Landing it first, fully green and
+inert, lets those packages depend on stable interfaces instead of re-deriving
+them, and keeps the risky pieces (an optional heavy dependency, a network
+embedder) isolated behind guards from day one.
+
+**How it stays consistent with the separation design:** it obeys the separation
+invariant (docs/rag/03_separation_invariant.md) exactly. All RAG code lives in
+`t2pw.rag`; the dependency arrow points RAG → core only (verified: `grep -rn
+"t2pw.rag" src/t2pw/{pipeline,mapping,curation,pwml}` is empty). WP0 touches no
+seam except adding config: no stage module was edited, and the additive
+provenance keys are optional `TypedDict`s that existing stages ignore —
+`t2pw.schema` is referenced, never modified. The optional-dependency and
+offline-first rules are honored structurally: `chromadb` is imported lazily and
+guarded (importing the package never requires it), the embedder imports the LLM
+client lazily and degrades to a deterministic lexical vector when no endpoint is
+reachable, and the index lives in git-ignored `data/rag_index/` like the other
+rebuildable caches. This mirrors the pipeline's own rule that logic spanning
+stages belongs in the orchestrator, not inside a stage — here, RAG is that
+independent subsystem.
+
+---
+
 ### 2026-07-15 — An unstated complex-component stoichiometry is blank, not an error
 
 **Files changed:** `src/t2pw/pipeline/entity_identity.py`,

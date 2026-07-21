@@ -72,7 +72,11 @@ from t2pw.pipeline.qa_graph import generate_qa_report
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
 from t2pw.pipeline.reaction_preservation_validator import write_reaction_preservation_report_if_manifest
 from t2pw.curation.completeness_audit import run_final_completeness_audit
-from t2pw.pipeline.preprocessor import is_ambiguous_multi_example_review_context, preprocess
+from t2pw.pipeline.preprocessor import (
+    format_context_header,
+    is_ambiguous_multi_example_review_context,
+    preprocess,
+)
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
 from t2pw.pwml.writer import (
@@ -83,6 +87,7 @@ from t2pw.pwml.writer import (
 from t2pw.pwml.ir import build_pwml_ir, validate_pwml_ir, validate_required_pwml_contract
 from t2pw.pwml.qa import run_pwml_qa
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, get_entities, node
+from t2pw.config import rag_config  # noqa: E402  (all imports here follow the sys.path shim above)
 
 st.set_page_config(page_title="PWML Multi-Stage Pipeline", layout="wide")
 st.title("PWML Extraction -> Inference Pipeline (LM Studio)")
@@ -102,6 +107,251 @@ REFINEMENT_STATE_DEFAULTS = {
     "refinement_gate_errors": [],
     "refinement_checkpoints": [],
 }
+
+
+# ── RAG orchestration (seam S5) — WIRING ONLY, NO LOGIC ─────────────────────
+# Per the separation invariant (docs/rag/03_separation_invariant.md), the
+# orchestrator *calls* t2pw.rag functions and passes their results between the
+# existing seams; it contains no acquisition / selection / retrieval / synthesis
+# logic itself. Every entry point below is guarded so that with RAG_ENABLED off
+# (the default) the app takes exactly today's branch: ``maybe_run_rag`` returns
+# ``None`` before importing or calling any t2pw.rag function, and every call site
+# is behind ``if rag_config()["enabled"]``.
+class RagOrchestrationResult(SimpleNamespace):
+    """Bundle the RAG chain's outputs the app wires into seams S1/S2/S3 + UI.
+
+    ``evidence_context`` is the formatted retrieval string injected via S1
+    (``user_task_context``) and S2 (``retrieval_context=``). ``payload`` is the
+    synthesized standard Payload for S3 (``None`` when nothing was synthesized).
+    ``synthesized`` marks whether ``payload`` should replace the seed. The
+    remaining fields (``decision``, ``selection``, ``candidates``,
+    ``provenance``, ``synthesis``) drive the fetched-papers panel and provenance
+    viewer. Nothing here is computed in the app — each is a t2pw.rag return value.
+    """
+
+
+def maybe_run_rag(
+    *,
+    pathway_context: Dict[str, Any],
+    user_flag: bool,
+    seed_payload: Dict[str, Any],
+    reports: Optional[Dict[str, Any]] = None,
+) -> Optional[RagOrchestrationResult]:
+    """Run R0–R5 and return their outputs, or ``None`` for today's flow.
+
+    Returns ``None`` — the untouched single-paper path — whenever RAG is
+    disabled (``rag_config()["enabled"]`` false) or triage declines
+    (``should_run_rag`` false); in that case no t2pw.rag chain function
+    (``acquire`` etc.) is imported or called. Otherwise it wires the chain:
+    ``acquire.search_candidates`` -> ``acquire.fetch_full_text`` (per kept paper)
+    -> ``select.select`` -> ``ingest.ingest`` -> ``retrieve.detect_gaps`` /
+    ``retrieve.retrieve_evidence`` -> ``retrieve.format_retrieval_context`` (S1/S2
+    evidence) -> ``synthesize.synthesize_with_report`` (S3 Payload) ->
+    ``provenance.validate_provenance``. Any failure in the optional network chain
+    degrades to ``None`` so RAG never breaks the core run.
+    """
+    if not rag_config()["enabled"]:
+        return None
+
+    # Triage (the one piece of RAG decision logic — lives in t2pw.rag).
+    from t2pw.rag.triage import should_run_rag
+
+    decision = should_run_rag(pathway_context, user_flag, reports=reports)
+    if not decision.run:
+        return None
+
+    try:
+        from t2pw.rag import acquire, ingest, provenance, retrieve, select, synthesize
+
+        # R1 acquire -> R2 select -> (full text for kept) -> R3 ingest.
+        candidates = acquire.search_candidates(pathway_context)
+        selection = select.select(candidates, pathway_context)
+        for paper in getattr(selection, "selected", []) or []:
+            paper.full_text = acquire.fetch_full_text(paper)
+        embedder = ingest.Embedder(config=rag_config())
+        store = ingest.get_vector_store(embed_fn=embedder.embed)
+        ingest_report = ingest.ingest(selection, store=store, embedder=embedder)
+
+        # R4 gap-retrieve: detect gaps from read-only reports, retrieve per gap.
+        seed_context_text = format_context_header(pathway_context)
+        gaps = retrieve.detect_gaps(seed_payload, reports)
+        bundles = [
+            retrieve.retrieve_evidence(gap, store, seed_context=seed_context_text)
+            for gap in gaps
+        ]
+        evidence_context = retrieve.format_retrieval_context(bundles)
+
+        # R5 synthesize -> standard Payload (S3); validate provenance (WP6).
+        # The seed context must be a *dict* carrying a source descriptor: the
+        # uploaded seed paper is itself evidence for its own reactions, so its
+        # identity has to reach synthesis. Passing the plain text header instead
+        # makes _seed_source_descriptor return None, which omits every seed
+        # reaction as "unsupported" and yields an empty pathway.
+        _seed_name = ""
+        if isinstance(pathway_context, dict):
+            _seed_name = str(
+                pathway_context.get("pathway_name")
+                or pathway_context.get("title")
+                or ""
+            ).strip()
+        seed_source_context = {
+            "text": seed_context_text,
+            "source": {
+                "source_id": "seed_paper",
+                "source_title": _seed_name or "uploaded seed paper",
+                "source_type": "paper",
+            },
+        }
+        synthesis = synthesize.synthesize_with_report(
+            seed_payload, bundles, seed_source_context
+        )
+        prov_report = provenance.validate_provenance(synthesis.payload)
+    except Exception as exc:  # noqa: BLE001 - RAG must never break the core run
+        return RagOrchestrationResult(
+            decision=decision,
+            evidence_context="",
+            payload=None,
+            synthesized=False,
+            selection=None,
+            candidates=[],
+            ingest_report=None,
+            synthesis=None,
+            provenance=None,
+            error=str(exc),
+        )
+
+    return RagOrchestrationResult(
+        decision=decision,
+        evidence_context=evidence_context,
+        payload=synthesis.payload,
+        synthesized=bool(synthesis.payload) and bool(bundles),
+        selection=selection,
+        candidates=candidates,
+        ingest_report=ingest_report,
+        synthesis=synthesis,
+        provenance=prov_report,
+        error="",
+    )
+
+
+def render_rag_panels(rag_result: "RagOrchestrationResult") -> None:
+    """Render the RAG UI: triage note, fetched/selected papers, provenance viewer.
+
+    Pure presentation of :func:`maybe_run_rag`'s outputs — it only *reads* the
+    t2pw.rag return values (selection report, candidate list, the synthesized
+    payload's additive provenance keys, the WP6 provenance report). It computes
+    nothing about the pathway. Callers guard it behind ``rag_config()["enabled"]``.
+    """
+    if rag_result is None:
+        return
+
+    decision = getattr(rag_result, "decision", None)
+    st.subheader("Multi-paper RAG")
+    if decision is not None:
+        st.caption(f"Triage: {'ON' if getattr(decision, 'run', False) else 'off'} - {getattr(decision, 'reason', '')}")
+    if getattr(rag_result, "error", ""):
+        st.warning(f"RAG chain degraded (core run unaffected): {rag_result.error}")
+
+    ingest_report = getattr(rag_result, "ingest_report", None)
+    if ingest_report is not None and hasattr(ingest_report, "to_dict"):
+        with st.expander("Ingest report", expanded=False):
+            st.json(ingest_report.to_dict())
+
+    # Panel 1 — fetched + selected papers (WP1/WP2 reports).
+    selection = getattr(rag_result, "selection", None)
+    candidates = getattr(rag_result, "candidates", None) or []
+    with st.expander(f"Fetched papers ({len(candidates)}) and selection", expanded=False):
+        if candidates:
+            st.markdown("**Fetched candidates (WP1 acquire)**")
+            st.json([c.to_dict() for c in candidates if hasattr(c, "to_dict")])
+        if selection is not None:
+            kept = selection.kept_entries()
+            st.markdown(f"**Selected papers (WP2): {len(kept)} kept**")
+            st.json([e.to_dict() for e in kept])
+            dropped = selection.dropped_entries()
+            if dropped:
+                st.markdown(f"**Dropped ({len(dropped)}) - with reason**")
+                st.json([e.to_dict() for e in dropped])
+
+    # Panel 2 — provenance viewer: source papers per reaction / entity (WP5/WP6).
+    payload = getattr(rag_result, "payload", None)
+    prov = getattr(rag_result, "provenance", None)
+    with st.expander("Provenance viewer (source papers per element)", expanded=False):
+        if prov is not None:
+            st.caption(
+                f"Evidence-bound check (WP6): {'OK - every element sourced' if getattr(prov, 'ok', False) else 'ISSUES'} "
+                f"(reactions checked={getattr(prov, 'checked_reactions', 0)}, "
+                f"entities checked={getattr(prov, 'checked_entities', 0)})"
+            )
+            issues = getattr(prov, "issues", None) or []
+            if issues:
+                st.json([
+                    {"kind": i.kind, "label": i.label, "pointer": i.pointer, "reason": i.reason}
+                    for i in issues
+                ])
+        rows = _rag_provenance_rows(payload)
+        if rows:
+            st.table(rows)
+        else:
+            st.caption("No synthesized elements with provenance to display.")
+
+
+def _rag_provenance_rows(payload: Any) -> List[Dict[str, Any]]:
+    """Flatten a synthesized payload into (element, type, source papers) rows.
+
+    Read-only presentation helper: it reads the additive provenance carriers
+    (``source_papers`` / ``rag_provenance`` / ``evidence`` / ``source_refs``) WP5
+    attaches to each reaction and entity. No pipeline logic — display only.
+    """
+    if not isinstance(payload, dict):
+        return []
+
+    def _sources(row: Dict[str, Any]) -> str:
+        ids: List[str] = []
+        for paper in _safe_list(row.get("source_papers")):
+            if isinstance(paper, dict):
+                ident = str(paper.get("source_id") or paper.get("uri") or "").strip()
+                if ident:
+                    ids.append(ident)
+        prov = row.get("rag_provenance")
+        if isinstance(prov, dict):
+            ident = str(prov.get("source_id") or prov.get("source_uri") or "").strip()
+            if ident:
+                ids.append(ident)
+        for ev in _safe_list(row.get("evidence")):
+            if isinstance(ev, dict):
+                ident = str(ev.get("source_id") or ev.get("source_uri") or "").strip()
+                if ident:
+                    ids.append(ident)
+        for ref in _safe_list(row.get("source_refs")):
+            if isinstance(ref, str) and ref.strip():
+                ids.append(ref.strip())
+        # Stable de-dupe for display.
+        seen: List[str] = []
+        for ident in ids:
+            if ident not in seen:
+                seen.append(ident)
+        return ", ".join(seen) if seen else "(none)"
+
+    rows: List[Dict[str, Any]] = []
+    processes = _safe_dict(payload.get("processes"))
+    for rxn in _safe_list(processes.get("reactions")):
+        if isinstance(rxn, dict):
+            rows.append({
+                "element": str(rxn.get("name") or "(unnamed reaction)"),
+                "type": "reaction",
+                "source_papers": _sources(rxn),
+            })
+    entities = _safe_dict(payload.get("entities"))
+    for bucket in ("compounds", "proteins", "protein_complexes"):
+        for ent in _safe_list(entities.get(bucket)):
+            if isinstance(ent, dict):
+                rows.append({
+                    "element": str(ent.get("name") or f"(unnamed {bucket[:-1]})"),
+                    "type": bucket[:-1],
+                    "source_papers": _sources(ent),
+                })
+    return rows
 
 
 def reset_refinement_state() -> None:
@@ -1011,6 +1261,7 @@ def run_post_pipeline_sbml_artifacts(
     qa_report: Optional[Dict[str, Any]] = None,
     reaction_summary: Optional[str] = None,
     use_stoich_agent: bool = False,
+    rag_evidence_context: str = "",
 ) -> Dict[str, Any]:
     project_root = PROJECT_ROOT
     cache_path = Path(mapping_cache_path)
@@ -1387,6 +1638,13 @@ def run_post_pipeline_sbml_artifacts(
                     motif_index_data,
                     top_k=retrieval_top_k,
                     max_chars=3800,
+                )
+            # S2 — append RAG gap-targeted evidence (if any) to the audit's
+            # retrieval_context. Defaulted to "" so with RAG off this is a no-op
+            # and retrieval_context stays exactly as built above.
+            if rag_evidence_context:
+                retrieval_context = "\n\n".join(
+                    part for part in (retrieval_context, rag_evidence_context) if part
                 )
 
             for cand_idx in range(candidate_count):
@@ -2264,6 +2522,23 @@ with st.form("pwml_pipeline"):
         help="When enabled, Stage 1 splits long inputs into overlapping chunks before extraction.",
     )
 
+    # ── RAG flag (seam S5) — rendered only when RAG is enabled, so the form is
+    # byte-identical to today with RAG_ENABLED off. ──────────────────────────
+    if rag_config()["enabled"]:
+        rag_incomplete_flag = st.toggle(
+            "Multi-paper RAG (novel pathway from multiple papers)",
+            value=True,
+            help=(
+                "ON (default): fetches and selects related papers, retrieves "
+                "gap-targeted evidence, and synthesizes one connected, "
+                "provenance-tagged pathway. "
+                "OFF: runs exactly the standard single-paper pipeline — no papers "
+                "are fetched and nothing about the run changes (pre-RAG behavior)."
+            ),
+        )
+    else:
+        rag_incomplete_flag = False
+
     col_a, col_b, col_c, col_d = st.columns(4)
     extract_attempts = col_a.number_input(
         "Stage 1 auto-repair attempts",
@@ -2479,6 +2754,35 @@ if submit:
             f"before Stage 2: {', '.join(out_of_scope_removed_reactions)}"
         )
 
+    # ── RAG orchestration (seam S5) — WIRING ONLY; identical path when off ───
+    # Guarded on BOTH the deploy switch (RAG_ENABLED) and the per-run UI toggle
+    # (rag_incomplete_flag). With either off, nothing here runs and
+    # user_task_context / the flow stay exactly as today — the standard
+    # single-paper pipeline, byte-for-byte. Only when the user turns the toggle
+    # on does maybe_run_rag run the whole R1–R5 chain and return its outputs; the
+    # app then folds the retrieved evidence through the existing S1
+    # (user_task_context) and S2 (the audit's retrieval_context, via
+    # session_state) params, and hands the synthesized Payload to the
+    # post-pipeline path (S3) below.
+    rag_result = None
+    if rag_config()["enabled"] and rag_incomplete_flag:
+        _rag_seed_graph = build_draft_graph(stage_one_in_scope)
+        rag_result = maybe_run_rag(
+            pathway_context=pathway_context,
+            user_flag=bool(rag_incomplete_flag),
+            seed_payload=stage_one_in_scope,
+            reports={"qa_graph": generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
+        )
+        if rag_result is not None:
+            st.session_state["rag_result"] = rag_result
+            if rag_result.evidence_context:
+                user_task_context = "\n\n".join(
+                    part
+                    for part in (user_task_context, rag_result.evidence_context)
+                    if part
+                )  # S1
+                st.session_state["rag_evidence_context"] = rag_result.evidence_context  # S2
+
     final_payload = stage_one_in_scope
     stage_two = None
     stage_two_chunks: List[Dict[str, Any]] = []
@@ -2511,6 +2815,28 @@ if submit:
 
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
         final_payload = merge_additions(stage_one_in_scope, stage_two if isinstance(stage_two, dict) else {})
+
+    # S3 — hand R5's synthesized, provenance-tagged Payload to the post-pipeline
+    # path. A no-op with RAG off (rag_result is None): final_payload is untouched.
+    # Guard: synthesis merges the seed extraction with retrieved evidence, so it
+    # must never emit FEWER reactions than the seed already had. If it does (e.g.
+    # no reachable embeddings endpoint / no papers fetched => zero evidence, zero
+    # synthesized reactions), adopting it would silently wipe the real pathway —
+    # so keep the single-paper extraction and surface why.
+    if rag_result is not None and rag_result.synthesized and rag_result.payload:
+        def _n_reactions(payload: Any) -> int:
+            processes = payload.get("processes") if isinstance(payload, dict) else None
+            reactions = processes.get("reactions") if isinstance(processes, dict) else None
+            return len(reactions) if isinstance(reactions, list) else 0
+
+        if _n_reactions(rag_result.payload) >= max(1, _n_reactions(final_payload)):
+            final_payload = rag_result.payload
+        else:
+            st.warning(
+                "Multi-paper RAG produced no additional reactions (no evidence "
+                "retrieved — check that the embeddings endpoint is running and "
+                "papers were fetched). Keeping the single-paper extraction."
+            )
 
     stage2_preservation_report = _write_reaction_preservation_report("after_stage2", final_payload)
 
@@ -2563,6 +2889,10 @@ if st.session_state.get("pipeline_ready"):
                 f"${llm_client_module._COST_OUTPUT_PER_M}/1M output. "
                 "Override with LLM_COST_INPUT_PER_M / LLM_COST_OUTPUT_PER_M in .env"
             )
+
+    # RAG panels (seam S5) — only when RAG is on and a run produced a result.
+    if rag_config()["enabled"] and st.session_state.get("rag_result") is not None:
+        render_rag_panels(st.session_state.get("rag_result"))
 
     st.subheader("Stage 1 - Strict extraction")
     st.caption(f"Stage 1 QA: {qa_summary_line(stage_one)}")
@@ -3512,6 +3842,11 @@ if st.session_state.get("pipeline_ready"):
                         qa_report=st.session_state.get("qa_report"),
                         reaction_summary=st.session_state.get("reaction_summary"),
                         use_stoich_agent=bool(use_stoich_agent),
+                        rag_evidence_context=(
+                            st.session_state.get("rag_evidence_context") or ""
+                            if rag_config()["enabled"]
+                            else ""
+                        ),  # S2 — "" when RAG off, keeping today's path
                     )
                 st.session_state["post_pipeline_artifacts"] = artifacts
                 _pa = _safe_dict(artifacts)

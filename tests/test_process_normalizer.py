@@ -1965,3 +1965,41 @@ def test_full_normalization_resolves_bare_cofactor_and_flags_missing_ion() -> No
     # (feeding the audit loop) instead of silently reaching Stage 8 export.
     gate_errors = report["gate"]["errors"]
     assert any("Ca2" in err.get("reason", "") for err in gate_errors)
+
+
+def test_pathway_metadata_blob_is_quarantined_by_normalizer() -> None:
+    """A " ; "-joined pathway-metadata blob name is dropped, not passed to the gate.
+
+    Defense-in-depth: a RAG synthesis defect could emit an entity whose name is
+    an entire pathway serialized with " ; " separators. normalize_composites
+    must quarantine it so it never reaches the pre-export gate as one giant
+    "protein"/"compound" name, while genuine entities are untouched.
+    """
+    blob = (
+        "Pathway12926 ; Arabidopsis thaliana, Cell, Plant-Type Vacuole ; "
+        "Arabidopsis thaliana, Cell, Cytosol ; Water ; Hydrogen Ion ; "
+        "Triglyceride ; Glycerol 3-phosphate transporter ; Water"
+    )
+    payload = {
+        "entities": {
+            "compounds": [{"name": blob}, {"name": "theobromine"}],
+            "proteins": [{"name": blob + " complex"}],
+            "protein_complexes": [],
+        },
+        "processes": {"reactions": []},
+    }
+
+    normalize_composites(payload)
+
+    compound_names = [c["name"] for c in payload["entities"]["compounds"]]
+    protein_names = [p["name"] for p in payload["entities"].get("proteins", [])]
+    complex_names = [c["name"] for c in payload["entities"].get("protein_complexes", [])]
+    all_names = compound_names + protein_names + complex_names
+
+    # The garbage blob is gone from every bucket...
+    for name in all_names:
+        assert " ; " not in name, name
+        assert not name.lower().startswith("pathway"), name
+        assert ", Cell," not in name, name
+    # ...but the legitimate compound is preserved.
+    assert "theobromine" in compound_names

@@ -74627,6 +74627,1077 @@
         "issue": "no_db_candidates",
         "order_step": "novel_compound"
       }
+    },
+    "db::12diglyceride::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.35,
+      "candidates": [
+        {
+          "pathbank_compound_id": 41020,
+          "name": "a CDP-diacylglycerol",
+          "short_name": "ACD",
+          "score": 0.35,
+          "mapped_ids": {
+            "kegg": "C00269"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::12diglyceride  hydrogen ion::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::1monoacylglycerol  glycerol::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::2acylglycerol::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.705,
+      "candidates": [
+        {
+          "pathbank_compound_id": 40486,
+          "name": "1-alkyl-2-acylglycerol",
+          "short_name": "1A2A",
+          "score": 0.705,
+          "mapped_ids": {
+            "hmdb": "HMDB0061333"
+          }
+        },
+        {
+          "pathbank_compound_id": 40482,
+          "name": "1-alkyl-2-acylglycerol 3 phosphate(18:0/20:4)",
+          "short_name": "1A2A3PP",
+          "score": 0.54,
+          "mapped_ids": {
+            "hmdb": "HMDB0061332"
+          }
+        },
+        {
+          "pathbank_compound_id": 40487,
+          "name": "1-alkyl-2-acylglycerol 3 phosphoethanolamine(18:0/20:4)",
+          "short_name": "1A2A3PE",
+          "score": 0.54,
+          "mapped_ids": {
+            "hmdb": "HMDB0061334"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::adenosine diphosphate::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001341",
+        "kegg": "C00008",
+        "chebi": "CHEBI:16761",
+        "pubchem": "6022",
+        "cas": "58-64-0",
+        "biocyc": "ADP",
+        "chemspider": "5800",
+        "pathbank_compound_id": "1034"
+      },
+      "pathbank_compound_id": 1034,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1034,
+          "name": "Adenosine diphosphate",
+          "short_name": "ADP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001341",
+            "kegg": "C00008",
+            "chebi": "CHEBI:16761",
+            "pubchem": "6022",
+            "cas": "58-64-0",
+            "biocyc": "ADP",
+            "chemspider": "5800",
+            "pathbank_compound_id": "1034"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::adenosine diphosphate  glycerol 3phosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::adenosine monophosphate::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000045",
+        "kegg": "C00020",
+        "chebi": "CHEBI:16027",
+        "pubchem": "6083",
+        "cas": "61-19-8",
+        "biocyc": "AMP",
+        "chemspider": "5858",
+        "drugbank": "DB00131",
+        "pathbank_compound_id": "32"
+      },
+      "pathbank_compound_id": 32,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 32,
+          "name": "Adenosine monophosphate",
+          "short_name": "AMP",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000045",
+            "kegg": "C00020",
+            "chebi": "CHEBI:16027",
+            "pubchem": "6083",
+            "cas": "61-19-8",
+            "biocyc": "AMP",
+            "chemspider": "5858",
+            "drugbank": "DB00131",
+            "pathbank_compound_id": "32"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::adenosine triphosphate  glycerol 3phosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::an electrontransfer quinone  glycerone phosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::atp  homoargininosuccinic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::carbamoyl phosphate  carbamoyl phosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::carbon dioxide::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1316,
+          "name": "Carbon dioxide",
+          "short_name": "CO2",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001967",
+            "kegg": "C00011",
+            "chebi": "CHEBI:16526",
+            "pubchem": "280",
+            "cas": "124-38-9",
+            "chemspider": "274",
+            "pathbank_compound_id": "1316"
+          }
+        },
+        {
+          "pathbank_compound_id": 113249,
+          "name": "Carbon Dioxide",
+          "short_name": "CD",
+          "score": 1.0,
+          "mapped_ids": {
+            "kegg": "99987",
+            "pubchem": "6757657575",
+            "cas": "765",
+            "biocyc": "7576565",
+            "chemspider": "5765765756757",
+            "pathbank_compound_id": "113249"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_exact_name",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::cysteinylglycine  cysteinylglycine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::electrontransfer quinol  glycerol 3phosphate  glycerol 3phosphate    triglyceride::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::fatty acid  2acylglycerol  1monoacylglycerol  water::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::fatty acid  glycerol::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::fatty acid  water::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glutathione  hydrogen bromide::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glutathione  smethylglutathione::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glycine::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 78,
+          "name": "Glycine",
+          "short_name": "Gly",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000123",
+            "kegg": "C00037",
+            "chebi": "CHEBI:15428",
+            "pubchem": "5257127",
+            "cas": "56-40-6",
+            "biocyc": "GLY",
+            "chemspider": "730",
+            "drugbank": "DB00145",
+            "pathbank_compound_id": "78"
+          }
+        },
+        {
+          "pathbank_compound_id": 109420,
+          "name": "Glycine ",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "pubchem": "750",
+            "pathbank_compound_id": "109420"
+          }
+        },
+        {
+          "pathbank_compound_id": 247609,
+          "name": "glycine",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "pathbank_compound_id": "247609"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_exact_name",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::glycine  adenosine triphosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glycine  glutathione::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::homolarginine  homolarginine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::hydrogen ion::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0059597",
+        "kegg": "C00080",
+        "chebi": "CHEBI:15378",
+        "pubchem": "1038",
+        "chemspider": "1010",
+        "pathbank_compound_id": "40034"
+      },
+      "pathbank_compound_id": 40034,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 40034,
+          "name": "Hydrogen Ion",
+          "short_name": "H+",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0059597",
+            "kegg": "C00080",
+            "chebi": "CHEBI:15378",
+            "pubchem": "1038",
+            "chemspider": "1010",
+            "pathbank_compound_id": "40034"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::hydrogen peroxide  oxidized glutathione::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lamino acid  5lglutamyllamino acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lamino acid  oxidized glutathione::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::larginine  homolarginine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::laspartic acid::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000191",
+        "kegg": "C00049",
+        "chebi": "CHEBI:17053",
+        "pubchem": "44367445",
+        "cas": "56-84-8",
+        "biocyc": "L-ASPARTATE",
+        "chemspider": "5745",
+        "drugbank": "DB00128",
+        "pathbank_compound_id": "123"
+      },
+      "pathbank_compound_id": 123,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 123,
+          "name": "L-Aspartic acid",
+          "short_name": "Asp",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000191",
+            "kegg": "C00049",
+            "chebi": "CHEBI:17053",
+            "pubchem": "44367445",
+            "cas": "56-84-8",
+            "biocyc": "L-ASPARTATE",
+            "chemspider": "5745",
+            "drugbank": "DB00128",
+            "pathbank_compound_id": "123"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::lcysteine  adenosine diphosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lglutamic acid::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000148",
+        "kegg": "C00025",
+        "chebi": "CHEBI:16015",
+        "pubchem": "33032",
+        "cas": "56-86-0",
+        "biocyc": "GLT",
+        "chemspider": "30572",
+        "drugbank": "DB00142",
+        "pathbank_compound_id": "95"
+      },
+      "pathbank_compound_id": 95,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 95,
+          "name": "L-Glutamic acid",
+          "short_name": "Glu",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000148",
+            "kegg": "C00025",
+            "chebi": "CHEBI:16015",
+            "pubchem": "33032",
+            "cas": "56-86-0",
+            "biocyc": "GLT",
+            "chemspider": "30572",
+            "drugbank": "DB00142",
+            "pathbank_compound_id": "95"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::lglutamic acid  glutamylcysteine  lcysteine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::llysine  homocitrulline::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::llysine  llysine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::methylscysteinylglycine  methylscysteinylglycine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::nadp  glutathione::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::nadph  glutathione::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::ornithine  ammonia  ammonia  homolarginine  homolarginine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::phosphate  homocitrulline::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::phosphoric acid::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0002142",
+        "kegg": "C00009",
+        "chebi": "CHEBI:26078",
+        "pubchem": "1004",
+        "cas": "7664-38-2",
+        "chemspider": "979",
+        "pathbank_compound_id": "1441"
+      },
+      "pathbank_compound_id": 1441,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1441,
+          "name": "Phosphoric acid",
+          "short_name": "PhosfrA",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0002142",
+            "kegg": "C00009",
+            "chebi": "CHEBI:26078",
+            "pubchem": "1004",
+            "cas": "7664-38-2",
+            "chemspider": "979",
+            "pathbank_compound_id": "1441"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::pyroglutamic acid::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000267",
+        "kegg": "C01879",
+        "chebi": "CHEBI:18183",
+        "pubchem": "7405",
+        "cas": "98-79-3",
+        "biocyc": "CPD-589",
+        "chemspider": "7127",
+        "drugbank": "DB03088",
+        "pathbank_compound_id": "182"
+      },
+      "pathbank_compound_id": 182,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 182,
+          "name": "Pyroglutamic acid",
+          "short_name": "Pyroglu",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000267",
+            "kegg": "C01879",
+            "chebi": "CHEBI:18183",
+            "pubchem": "7405",
+            "cas": "98-79-3",
+            "biocyc": "CPD-589",
+            "chemspider": "7127",
+            "drugbank": "DB03088",
+            "pathbank_compound_id": "182"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::pyroglutamic acid  5lglutamyllamino acid  pyroglutamic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::pyrophosphate  homoargininosuccinic acid  fumaric acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::smethylglutathione  glutathione  glutathione    lglutamic acid  lcysteine    lcysteine  ::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::triglyceride::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "chebi": "CHEBI:17855",
+        "pathbank_compound_id": "273633"
+      },
+      "pathbank_compound_id": 273633,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 273633,
+          "name": "Triglyceride",
+          "short_name": "",
+          "score": 1.0,
+          "mapped_ids": {
+            "chebi": "CHEBI:17855",
+            "pathbank_compound_id": "273633"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::water  adenosine diphosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::water  lcysteine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::water  lglutamic acid::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::water  methylscystein::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::water  urea::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::water  bromomethane::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::glutamylcysteine::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001049",
+        "kegg": "C00669",
+        "chebi": "CHEBI:17515",
+        "pubchem": "123938",
+        "cas": "636-58-8",
+        "biocyc": "L-GAMMA-GLUTAMYLCYSTEINE",
+        "chemspider": "110467",
+        "drugbank": "DB03408",
+        "pathbank_compound_id": "826"
+      },
+      "pathbank_compound_id": 826,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 826,
+          "name": "γ-Glutamylcysteine",
+          "short_name": "γGluCys",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001049",
+            "kegg": "C00669",
+            "chebi": "CHEBI:17515",
+            "pubchem": "123938",
+            "cas": "636-58-8",
+            "biocyc": "L-GAMMA-GLUTAMYLCYSTEINE",
+            "chemspider": "110467",
+            "drugbank": "DB03408",
+            "pathbank_compound_id": "826"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::glutamylcysteine  adenosine triphosphate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
     }
   },
   "complexes": {

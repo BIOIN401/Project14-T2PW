@@ -231,6 +231,70 @@ def _split_composite(value: str) -> List[str]:
     return [part.strip() for part in re.split(r"\s*\+\s*", text) if part.strip()]
 
 
+# ---------------------------------------------------------------------------
+# Defense-in-depth against " ; "-joined pathway-metadata garbage names.
+#
+# A RAG synthesis defect can emit an entity whose *name* is an entire pathway
+# serialized with " ; " separators (a pathway id + species + compartments +
+# every compound). Such a name is not chemistry and must never reach the
+# pre-export gate as one giant "protein"/"compound". This mirrors, at the core,
+# the way " + " composites are already caught — but is deliberately NARROW: it
+# fires only on the unambiguous garbage signature (a " ; " separator AND a
+# pathway-id / biological-state descriptor / absurd word count), so no
+# legitimately-named entity is ever affected.
+# ---------------------------------------------------------------------------
+_PATHWAY_METADATA_SEP = " ; "
+_PATHWAY_BLOB_ID_RE = re.compile(r"^pathway\d", re.IGNORECASE)
+_PATHWAY_BLOB_STATE_RE = re.compile(r",\s*cell\s*,", re.IGNORECASE)
+_PATHWAY_BLOB_MAX_WORDS = 12
+
+
+def _is_pathway_metadata_blob(name: str) -> bool:
+    """True for a " ; "-joined pathway-metadata blob masquerading as a name."""
+    text = _canonical(name)
+    if _PATHWAY_METADATA_SEP not in text:
+        return False
+    if _PATHWAY_BLOB_ID_RE.match(text):
+        return True
+    if _PATHWAY_BLOB_STATE_RE.search(text):
+        return True
+    return len(text.split()) > _PATHWAY_BLOB_MAX_WORDS
+
+
+def _quarantine_pathway_metadata_blobs(
+    payload: Dict[str, Any], report: Dict[str, Any]
+) -> None:
+    """Drop any entity whose name is a " ; "-joined pathway-metadata blob.
+
+    Runs before composite handling so the garbage never reaches the gate as a
+    single giant name. Only the narrow garbage signature is matched
+    (:func:`_is_pathway_metadata_blob`); legitimate names are untouched.
+    """
+    entities = _safe_dict(payload.get("entities"))
+    for bucket in ("compounds", "proteins", "protein_complexes"):
+        rows = entities.get(bucket)
+        if not isinstance(rows, list):
+            continue
+        kept: List[Any] = []
+        for row in rows:
+            name = (
+                _canonical(str(row.get("name", "")))
+                if isinstance(row, dict)
+                else ""
+            )
+            if name and _is_pathway_metadata_blob(name):
+                report.setdefault("actions", []).append(
+                    {
+                        "type": "pathway_metadata_blob_quarantined",
+                        "bucket": bucket,
+                        "name": name[:240],
+                    }
+                )
+                continue
+            kept.append(row)
+        rows[:] = kept
+
+
 def _composite_key(value: str) -> str:
     parts = [_normalize(part) for part in _split_composite(value)]
     parts = [part for part in parts if part]
@@ -1045,6 +1109,10 @@ def _rewrite_element_locations(payload: Dict[str, Any], rewrite_map: Dict[str, s
 
 def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
+    # Defense-in-depth: strip any " ; "-joined pathway-metadata blob that leaked
+    # in as an entity name before any composite handling runs, so it can never
+    # reach the pre-export gate as one giant name.
+    _quarantine_pathway_metadata_blobs(payload, rep)
     compounds, proteins, complexes = _entity_lists(payload)
     _process_lists(payload)
 

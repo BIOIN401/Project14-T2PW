@@ -85,3 +85,120 @@ def resolution_db_configured(overrides: Optional[Dict[str, Any]] = None) -> bool
     """True when the minimum settings (host + user) needed to connect are present."""
     config = resolution_db_config(overrides)
     return bool(config.get("host") and config.get("user"))
+
+
+# ---------------------------------------------------------------------------
+# RAG subsystem configuration (WP0)
+# ---------------------------------------------------------------------------
+# The RAG subsystem (``t2pw.rag``) is an optional, opt-in evidence layer. Like
+# the resolution DB above, every knob is read from the environment / ``.env``
+# here rather than via scattered ``os.getenv`` calls, so behavior is stable
+# regardless of import order. All values are default-safe: with nothing set,
+# ``RAG_ENABLED`` is ``False`` and the core pipeline behaves exactly as today.
+# The single source of truth for the RAG env var names; keep in sync with
+# docs/rag/02_vector_store.md.
+RAG_ENV = {
+    "enabled": "RAG_ENABLED",
+    "vector_backend": "RAG_VECTOR_BACKEND",
+    "index_dir": "RAG_INDEX_DIR",
+    "embedding_provider": "RAG_EMBEDDING_PROVIDER",
+    "embedding_model": "RAG_EMBEDDING_MODEL",
+    "embedding_base_url": "RAG_EMBEDDING_BASE_URL",
+    "embedding_api_key": "RAG_EMBEDDING_API_KEY",
+    "embedding_dim": "RAG_EMBEDDING_DIM",
+    "acquire_max_papers": "RAG_ACQUIRE_MAX_PAPERS",
+    "select_max_papers": "RAG_SELECT_MAX_PAPERS",
+    "retrieve_top_k": "RAG_RETRIEVE_TOP_K",
+}
+
+# Default-safe values used when an env var is unset or blank.
+RAG_DEFAULTS: Dict[str, Any] = {
+    "enabled": False,
+    "vector_backend": "chroma",
+    "index_dir": "data/rag_index",
+    "embedding_provider": "",  # blank -> falls back to LLM_PROVIDER at read time
+    "embedding_model": "",
+    # Dedicated embeddings endpoint. Blank -> the embedder reuses the shared LLM
+    # client (t2pw.llm.client). Set these when embeddings live on a different
+    # host than chat (e.g. OpenRouter serves chat but not embeddings, so point
+    # these at LM Studio / OpenAI / another OpenAI-compatible embeddings server).
+    "embedding_base_url": "",
+    "embedding_api_key": "",
+    "embedding_dim": 0,  # 0 == unset; validated on upsert only when > 0
+    "acquire_max_papers": 20,
+    "select_max_papers": 8,
+    "retrieve_top_k": 8,
+}
+
+_TRUE_TOKENS = {"1", "true", "yes", "on", "y", "t"}
+
+
+def _as_bool(value: Any, default: bool = False) -> bool:
+    if isinstance(value, bool):
+        return value
+    text = str(value if value is not None else "").strip().lower()
+    if not text:
+        return default
+    return text in _TRUE_TOKENS
+
+
+def _as_int(value: Any, default: int) -> int:
+    text = str(value if value is not None else "").strip()
+    if not text:
+        return default
+    try:
+        return int(float(text))
+    except (TypeError, ValueError):
+        return default
+
+
+def rag_config(overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Return the RAG subsystem settings from env / ``.env`` / ``overrides``.
+
+    Every value is default-safe (see ``RAG_DEFAULTS``); a fully unset
+    environment yields ``enabled=False`` and today's behavior. ``overrides``
+    (keyed like ``RAG_ENV``) win over the environment. ``embedding_provider``
+    defaults to ``LLM_PROVIDER`` when left blank, mirroring the vector-store
+    spec. Types are normalized: ``enabled`` is a ``bool``; the ``*_max_papers``,
+    ``retrieve_top_k`` and ``embedding_dim`` values are ``int``s; everything else
+    is a stripped ``str``.
+    """
+    ensure_dotenv_loaded()
+    over = overrides if isinstance(overrides, dict) else {}
+
+    def _raw(key: str) -> Any:
+        value = over.get(key)
+        if value is None or (isinstance(value, str) and value.strip() == ""):
+            value = os.getenv(RAG_ENV[key], "")
+        return value
+
+    config: Dict[str, Any] = {
+        "enabled": _as_bool(_raw("enabled"), bool(RAG_DEFAULTS["enabled"])),
+        "vector_backend": (str(_raw("vector_backend") or "").strip().lower()
+                           or str(RAG_DEFAULTS["vector_backend"])),
+        "index_dir": (str(_raw("index_dir") or "").strip()
+                      or str(RAG_DEFAULTS["index_dir"])),
+        "embedding_provider": str(_raw("embedding_provider") or "").strip(),
+        "embedding_model": str(_raw("embedding_model") or "").strip(),
+        "embedding_base_url": str(_raw("embedding_base_url") or "").strip(),
+        "embedding_api_key": str(_raw("embedding_api_key") or "").strip(),
+        "embedding_dim": _as_int(_raw("embedding_dim"), int(RAG_DEFAULTS["embedding_dim"])),
+        "acquire_max_papers": _as_int(
+            _raw("acquire_max_papers"), int(RAG_DEFAULTS["acquire_max_papers"])
+        ),
+        "select_max_papers": _as_int(
+            _raw("select_max_papers"), int(RAG_DEFAULTS["select_max_papers"])
+        ),
+        "retrieve_top_k": _as_int(_raw("retrieve_top_k"), int(RAG_DEFAULTS["retrieve_top_k"])),
+    }
+
+    if not config["embedding_provider"]:
+        # Mirror the LLM client default so the embedder targets the same backend.
+        config["embedding_provider"] = (os.getenv("LLM_PROVIDER", "local") or "local").strip().lower()
+
+    return config
+
+
+def rag_enabled(overrides: Optional[Dict[str, Any]] = None) -> bool:
+    """True when the RAG subsystem master switch (``RAG_ENABLED``) is on."""
+    return bool(rag_config(overrides)["enabled"])

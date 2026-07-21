@@ -43,3 +43,12 @@ pypdf>=4.0.0
 # Install tesseract separately: apt-get install -y tesseract-ocr poppler-utils
 pytesseract>=0.3.13
 Pillow>=10.0.0
+
+# RAG (optional) — evidence/vector-store subsystem (t2pw.rag).
+# Only needed with RAG_ENABLED=true and RAG_VECTOR_BACKEND=chroma. Imported
+# lazily/guarded, so the base pipeline and tests run fine without these.
+# chromadb is the default backend; faiss-cpu is a supported alternative
+# (RAG_VECTOR_BACKEND=faiss, a later WP) if chromadb is unavailable. numpy is
+# already pulled in transitively.
+# chromadb>=0.5.0
+# faiss-cpu>=1.8.0        # alternative to chromadb

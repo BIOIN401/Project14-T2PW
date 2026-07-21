@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "pathway_name": "",
+    "organism": "",
+    "node_count": 3,
+    "edge_count": 2
+  },
+  "nodes": [
+    {
+      "id": "compound:a",
+      "label": "A",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:b",
+      "label": "B",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:kept reaction",
+      "label": "kept reaction",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    }
+  ],
+  "edges": [
+    {
+      "source": "compound:a",
+      "target": "reaction:kept reaction",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:kept reaction",
+      "target": "compound:b",
+      "role": "product",
+      "confidence": 1.0
+    }
+  ]
+}

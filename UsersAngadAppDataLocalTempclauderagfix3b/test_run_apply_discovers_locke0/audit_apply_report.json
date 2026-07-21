@@ -1,0 +1,40 @@
+{
+  "summary": {
+    "accepted_count": 0,
+    "rejected_count": 1,
+    "total": 1
+  },
+  "accepted": [],
+  "rejected": [
+    {
+      "index": 0,
+      "reason": "attempted_to_replace_reactions_array",
+      "op": {
+        "op": "replace",
+        "path": "/processes/reactions",
+        "value": [],
+        "confidence": 0.99,
+        "evidence": "Rewrite reactions."
+      }
+    }
+  ],
+  "lock_policy": {
+    "enabled": true,
+    "locked_reaction_count": 1
+  },
+  "applied_patch_log": [],
+  "rejected_patch_log": [
+    {
+      "stage": "audit_round_1",
+      "patch": {
+        "op": "replace",
+        "path": "/processes/reactions",
+        "value": [],
+        "confidence": 0.99,
+        "evidence": "Rewrite reactions."
+      },
+      "reason": "attempted_to_replace_reactions_array",
+      "locked_reaction_id": ""
+    }
+  ]
+}
