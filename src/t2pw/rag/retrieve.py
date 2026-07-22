@@ -155,6 +155,47 @@ def _reaction_rows(payload: Dict[str, Any]) -> List[Any]:
     return _safe_list(_safe_dict(payload.get("processes")).get("reactions"))
 
 
+def _participant_name(token: Any) -> str:
+    """Return a participant's display name, or ``""`` (read-only).
+
+    Reaction participants are either bare strings (``"caffeine"``) or dicts in
+    the real payload (``{"name": "caffeine"}`` / ``{"name": ..., "stoichiometry":
+    ...}``); both shapes must yield the exact compound symbol so it is never
+    dropped from a gap query.
+    """
+    if isinstance(token, str):
+        return token.strip()
+    if isinstance(token, dict):
+        for field_name in (
+            "name",
+            "entity",
+            "compound",
+            "element",
+            "element_collection",
+            "nucleic_acid",
+        ):
+            val = token.get(field_name)
+            if isinstance(val, str) and val.strip():
+                return val.strip()
+    return ""
+
+
+def _enzyme_symbols(row: Any) -> List[str]:
+    """Return the enzyme / modifier names of a reaction row (read-only)."""
+    symbols: List[str] = []
+    if not isinstance(row, dict):
+        return symbols
+    for key in ("enzymes", "modifiers"):
+        for actor in _safe_list(row.get(key)):
+            if isinstance(actor, dict):
+                for field_name in ("entity", "protein", "protein_complex", "name"):
+                    val = actor.get(field_name)
+                    if isinstance(val, str) and val.strip():
+                        symbols.append(val.strip())
+                        break
+    return symbols
+
+
 def _reaction_symbols(row: Any) -> Tuple[str, List[str]]:
     """Return ``(display_name, symbols)`` from a reaction row (read-only)."""
     if not isinstance(row, dict):
@@ -165,33 +206,28 @@ def _reaction_symbols(row: Any) -> Tuple[str, List[str]]:
         symbols.append(name)
     for side in ("inputs", "outputs"):
         for token in _safe_list(row.get(side)):
-            if isinstance(token, str) and token.strip():
-                symbols.append(token.strip())
-            elif isinstance(token, dict):
-                # Reaction participants are dicts in the real payload
-                # (``{"name": "caffeine"}``); pull the compound/entity name so the
-                # gap query still carries its exact substrate/product symbols.
-                for field_name in (
-                    "name",
-                    "entity",
-                    "compound",
-                    "element",
-                    "element_collection",
-                    "nucleic_acid",
-                ):
-                    val = token.get(field_name)
-                    if isinstance(val, str) and val.strip():
-                        symbols.append(val.strip())
-                        break
-    for key in ("enzymes", "modifiers"):
-        for actor in _safe_list(row.get(key)):
-            if isinstance(actor, dict):
-                for field_name in ("entity", "protein", "protein_complex", "name"):
-                    val = actor.get(field_name)
-                    if isinstance(val, str) and val.strip():
-                        symbols.append(val.strip())
-                        break
+            participant = _participant_name(token)
+            if participant:
+                symbols.append(participant)
+    symbols.extend(_enzyme_symbols(row))
     return (name, symbols)
+
+
+def _cofactor_names() -> frozenset:
+    """The ubiquitous-cofactor set, reused from WP5 synthesis (single source).
+
+    Imported lazily (the same pattern as
+    :func:`t2pw.rag.provenance._cofactor_names`) so this module stays
+    import-cheap and free of any circular dependency. Falls back to an empty set
+    if synthesis is unavailable, in which case a terminal cofactor is simply
+    reported as a connectivity gap — noisier, never *wrong*.
+    """
+    try:
+        from t2pw.rag.synthesize import COFACTOR_NAMES
+
+        return frozenset(COFACTOR_NAMES)
+    except Exception:  # pragma: no cover - defensive; synthesize is a sibling
+        return frozenset()
 
 
 def _dedupe(symbols: List[str]) -> List[str]:
@@ -221,6 +257,13 @@ def detect_gaps(
     ``status="unmapped"``). Each gap is classified as one of
     ``dangling_reaction`` / ``orphan_metabolite`` / ``unmapped_enzyme`` /
     ``missing_precursor`` / ``missing_compartment``.
+
+    Connectivity ("dangling end") gaps are additionally derived **directly from
+    ``payload``** by :func:`_connectivity_gaps`, so they no longer depend on the
+    caller supplying a particular report shape — ``reports={}`` / ``None`` still
+    yields the terminal-product / unfed-substrate gaps that drive cross-paper
+    stitching. Report-derived gaps are emitted first and deduplicated against, so
+    the existing report behaviour is unchanged.
 
     Nothing here mutates ``payload`` or any report — they are inspected only
     (seam S4). Reaction gaps are enriched with the reaction's participant/enzyme
@@ -398,6 +441,109 @@ def detect_gaps(
                 )
             )
 
+    # --- payload-derived connectivity gaps (no report required) ---
+    for gap in _connectivity_gaps(reactions):
+        _add(gap)
+
+    return gaps
+
+
+# ---------------------------------------------------------------------------
+# Payload-derived connectivity ("dangling end") detection.
+# ---------------------------------------------------------------------------
+def _connectivity_gaps(reactions: List[Any]) -> List[Gap]:
+    """Derive the pathway's open ends straight from the reaction list (read-only).
+
+    The reaction graph is walked to find the two shapes that make a pathway
+    *extendable* — the ones a report may or may not surface, so they are computed
+    here instead of depending on any particular caller-supplied report shape:
+
+    * **terminal product** — a metabolite produced by some reaction and consumed
+      by none (e.g. ``Kdo2-lipid A`` at the end of the lipid A pathway);
+    * **unfed substrate** — a metabolite consumed by some reaction and produced
+      by none.
+
+    Each such metabolite becomes a :data:`GAP_ORPHAN_METABOLITE` gap, whose
+    :func:`query_for_gap` intent is exactly "find a reaction that produces or
+    consumes '<metabolite>' so it links into the pathway" — i.e. the search that
+    stitches a *second* paper's reaction onto this pathway. The reaction sitting
+    on that open end additionally becomes a :data:`GAP_DANGLING_REACTION` gap so
+    the connecting step can be searched for from the reaction side too.
+
+    Ubiquitous cofactors (:func:`_cofactor_names`) are excluded: a terminal
+    H2O / ATP / CO2 is not a pathway gap. Nothing here mutates ``reactions``;
+    ordering follows the payload so the result is deterministic.
+    """
+    cofactors = _cofactor_names()
+    produced: Dict[str, str] = {}
+    consumed: Dict[str, str] = {}
+    for row in reactions:
+        if not isinstance(row, dict):
+            continue
+        for side, bucket in (("inputs", consumed), ("outputs", produced)):
+            for token in _safe_list(row.get(side)):
+                name = _participant_name(token)
+                if name:
+                    bucket.setdefault(name.casefold(), name)
+
+    def _is_open(name: str, other_side: Dict[str, str]) -> bool:
+        folded = name.casefold()
+        return folded not in other_side and folded not in cofactors
+
+    gaps: List[Gap] = []
+    for idx, row in enumerate(reactions):
+        if not isinstance(row, dict):
+            continue
+        display, symbols = _reaction_symbols(row)
+        enzymes = _enzyme_symbols(row)
+        for side, other_side, detail_fmt in (
+            (
+                "outputs",
+                consumed,
+                "terminal product: produced by '{rxn}' but consumed by no reaction",
+            ),
+            (
+                "inputs",
+                produced,
+                "unfed substrate: consumed by '{rxn}' but produced by no reaction",
+            ),
+        ):
+            open_names = [
+                name
+                for name in (
+                    _participant_name(token) for token in _safe_list(row.get(side))
+                )
+                if name and _is_open(name, other_side)
+            ]
+            if not open_names:
+                continue
+            rxn = display or f"#{idx + 1}"
+            detail = detail_fmt.format(rxn=rxn)
+            for name in open_names:
+                gaps.append(
+                    Gap(
+                        kind=GAP_ORPHAN_METABOLITE,
+                        label=name,
+                        detail=detail,
+                        node=f"compound:{name}",
+                        symbols=[name] + ([display] if display else []) + enzymes,
+                        source="payload",
+                    )
+                )
+            if display:
+                gaps.append(
+                    Gap(
+                        kind=GAP_DANGLING_REACTION,
+                        label=display,
+                        detail=(
+                            f"{detail_fmt.split(':')[0]}(s) "
+                            f"{', '.join(open_names)} not linked to any other reaction"
+                        ),
+                        node=f"reaction:#{idx + 1}",
+                        symbols=symbols or [display],
+                        source="payload",
+                    )
+                )
     return gaps
 
 

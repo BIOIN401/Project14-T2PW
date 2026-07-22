@@ -439,11 +439,116 @@ def _parse_reaction_line(line: str) -> Optional[Dict[str, Any]]:
     }
 
 
-def _reactions_from_bundle(bundle: Any) -> List[_Reaction]:
+# ---------------------------------------------------------------------------
+# LLM prose→reaction extraction (opt-in; the arrow parser handles equations).
+# ---------------------------------------------------------------------------
+# Hard cap on how many distinct evidence passages one synthesis run sends to the
+# prose extractor, bounding LLM cost/latency regardless of gap/top-k counts.
+_EXTRACT_MAX_PASSAGES = 24
+
+
+def _reaction_from_extracted(
+    parsed: Any,
+    prov: Dict[str, Any],
+    evidence: Dict[str, Any],
+    paper: Dict[str, Any],
+    score: float,
+) -> Optional[_Reaction]:
+    """Build a provenance-bound :class:`_Reaction` from one extracted reaction dict.
+
+    ``parsed`` is a clean dict from :func:`t2pw.rag.extract.extract_reactions_from_text`
+    (``{"name", "inputs", "outputs", "enzymes", "reversible"}``). Names are
+    canonicalized and junk tokens rejected exactly as the arrow-parser path does,
+    and the chunk's provenance is attached so the reaction stays evidence-bound.
+    Returns ``None`` when nothing usable survives.
+    """
+    if not isinstance(parsed, dict):
+        return None
+    inputs = [
+        p
+        for p in _participants_from_field(parsed.get("inputs"))
+        if not _is_invalid_species_token(p.name)
+    ]
+    outputs = [
+        p
+        for p in _participants_from_field(parsed.get("outputs"))
+        if not _is_invalid_species_token(p.name)
+    ]
+    if not inputs and not outputs:
+        return None
+    enzymes: List[str] = []
+    for raw in _safe_list(parsed.get("enzymes")):
+        if isinstance(raw, str):
+            name = canonical_name(raw)
+            if name and not _is_invalid_species_token(name):
+                enzymes.append(name)
+    name = _text(parsed.get("name"))
+    if name and _is_invalid_species_token(name):
+        name = ""
+    if not name:
+        left = inputs[0].name if inputs else "?"
+        right = outputs[0].name if outputs else "?"
+        name = f"{left} -> {right}"
+    return _Reaction(
+        name=name,
+        inputs=inputs,
+        outputs=outputs,
+        enzymes=enzymes,
+        reversible=bool(parsed.get("reversible")),
+        provenance=[dict(prov)],
+        evidence=[dict(evidence)],
+        source_papers=[dict(paper)],
+        scores=[float(score)],
+    )
+
+
+def _make_memoized_extractor(prose_extractor: Optional[Any]) -> Optional[Any]:
+    """Wrap a ``text -> [reaction dict]`` callable into a memoized ``chunk ->`` one.
+
+    Returns ``None`` when ``prose_extractor`` is ``None`` (arrow-only, today's
+    behavior). Otherwise each distinct chunk (by id) is extracted **at most once**
+    — so the two passes over the bundles (main synthesis + unfilled-gap
+    detection) never double-call the model — up to :data:`_EXTRACT_MAX_PASSAGES`
+    passages per run. Every call fails closed: a per-chunk error yields ``[]`` so
+    extraction can only add reactions, never break synthesis.
+    """
+    if prose_extractor is None:
+        return None
+    memo: Dict[str, List[Dict[str, Any]]] = {}
+    budget = {"used": 0}
+
+    def _run(chunk: Any) -> List[Dict[str, Any]]:
+        cid = _text(getattr(chunk, "id", "")) or _text(getattr(chunk, "text", ""))[:80]
+        if cid in memo:
+            return memo[cid]
+        text = _text(getattr(chunk, "text", ""))
+        if not text or budget["used"] >= _EXTRACT_MAX_PASSAGES:
+            memo[cid] = []
+            return []
+        budget["used"] += 1
+        try:
+            result = list(prose_extractor(text) or [])
+        except Exception:  # noqa: BLE001 - extraction must never break synthesis
+            result = []
+        memo[cid] = result
+        return result
+
+    return _run
+
+
+def _reactions_from_bundle(
+    bundle: Any, extractor: Optional[Any] = None
+) -> List[_Reaction]:
     """Transcribe every reaction stated in a bundle's evidence hits.
 
     Each parsed reaction inherits the provenance/evidence/source-paper pointers
-    of the chunk that stated it — so it is evidence-bound by construction.
+    of the chunk that stated it — so it is evidence-bound by construction. Two
+    transcription paths run per chunk: the deterministic arrow-equation parser
+    (``A + B -> C``) and, when ``extractor`` is supplied, the LLM prose extractor
+    (``t2pw.rag.extract``) that recovers reactions stated in ordinary sentences.
+    ``extractor`` is the memoized per-chunk callable built by
+    :func:`_make_memoized_extractor`; ``None`` (the default) means arrow-only,
+    exactly today's behavior.
     """
     reactions: List[_Reaction] = []
     for hit in _safe_list(getattr(bundle, "hits", [])):
@@ -478,6 +583,11 @@ def _reactions_from_bundle(bundle: Any) -> List[_Reaction]:
                     scores=[score],
                 )
             )
+        if extractor is not None:
+            for pr in extractor(chunk):
+                rxn = _reaction_from_extracted(pr, prov, evidence, paper, score)
+                if rxn is not None:
+                    reactions.append(rxn)
     return reactions
 
 
@@ -991,6 +1101,8 @@ def synthesize_with_report(
     seed_payload: Any,
     evidence_bundles: Optional[List[Any]] = None,
     seed_context: Any = "",
+    *,
+    prose_extractor: Optional[Any] = None,
 ) -> SynthesisResult:
     """Full synthesis: returns the payload *plus* the reports that ride with it.
 
@@ -1000,11 +1112,12 @@ def synthesize_with_report(
     """
     bundles = list(evidence_bundles or [])
     seed_source = _seed_source_descriptor(seed_context)
+    extractor = _make_memoized_extractor(prose_extractor)
 
     seed_rxns, seed_omitted = _seed_reactions(seed_payload, seed_source)
     evidence_rxns: List[_Reaction] = []
     for bundle in bundles:
-        evidence_rxns.extend(_reactions_from_bundle(bundle))
+        evidence_rxns.extend(_reactions_from_bundle(bundle, extractor))
 
     all_rxns = seed_rxns + evidence_rxns
     resolved, conflicts = _resolve_reactions(all_rxns)
@@ -1012,7 +1125,7 @@ def synthesize_with_report(
     entities, entity_omitted = _build_entities(resolved)
 
     unresolved = list(seed_omitted) + list(entity_omitted)
-    unresolved.extend(_unfilled_gap_reports(bundles, resolved))
+    unresolved.extend(_unfilled_gap_reports(bundles, resolved, extractor))
 
     payload = to_payload(entities, resolved)
     # Carry the seed's contextual scaffolding (species / compartments / cell
@@ -1035,15 +1148,20 @@ def synthesize(
     seed_payload: Any,
     evidence_bundles: Optional[List[Any]] = None,
     seed_context: Any = "",
+    *,
+    prose_extractor: Optional[Any] = None,
 ) -> "Payload":
     """Merge seed + evidence into one connected, validated standard ``Payload``.
 
     This is the seam-S3 entry point named in wp5_synthesis.md. The unresolved-
     gaps report and conflict record are exposed via
     :func:`synthesize_with_report`; this function returns only the ``Payload`` so
-    its type matches the brief exactly.
+    its type matches the brief exactly. ``prose_extractor`` (optional) is the
+    LLM prose→reaction callable; omit it for arrow-only synthesis.
     """
-    return synthesize_with_report(seed_payload, evidence_bundles, seed_context).payload
+    return synthesize_with_report(
+        seed_payload, evidence_bundles, seed_context, prose_extractor=prose_extractor
+    ).payload
 
 
 def _gap_of(bundle: Any) -> Any:
@@ -1051,14 +1169,17 @@ def _gap_of(bundle: Any) -> Any:
 
 
 def _unfilled_gap_reports(
-    bundles: List[Any], reactions: List[_Reaction]
+    bundles: List[Any], reactions: List[_Reaction], extractor: Optional[Any] = None
 ) -> List[Dict[str, Any]]:
     """Report every gap that no evidence could fill (nothing invented for it).
 
     A gap is *filled* only if at least one of its evidence hits stated a reaction
     that references the gap's target (so it now connects into the graph). A
     bundle with no hits — or hits that stated nothing about the target — leaves
-    its gap unfilled and it is surfaced here.
+    its gap unfilled and it is surfaced here. ``extractor`` is the same memoized
+    prose extractor the main pass used, so a gap filled only by a prose-extracted
+    reaction is correctly counted as filled (and the model is not re-called — the
+    per-chunk results are memoized).
     """
     reports: List[Dict[str, Any]] = []
     for bundle in bundles:
@@ -1067,7 +1188,7 @@ def _unfilled_gap_reports(
             continue
         label = _text(getattr(gap, "label", ""))
         target = canonical_name(label)
-        bundle_rxns = _reactions_from_bundle(bundle)
+        bundle_rxns = _reactions_from_bundle(bundle, extractor)
         referenced = any(
             target.casefold() in {n.casefold() for n in rxn.participant_names()}
             or target.casefold() in {e.casefold() for e in rxn.enzymes}

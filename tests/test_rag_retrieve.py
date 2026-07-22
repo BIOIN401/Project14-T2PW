@@ -309,3 +309,123 @@ def test_dangling_reaction_gap_captures_dict_participant_symbols() -> None:
     assert dangling
     symbols = {s.casefold() for s in dangling[0].symbols}
     assert {"caffeine", "theobromine", "formaldehyde", "ndma"}.issubset(symbols)
+
+
+# ---------------------------------------------------------------------------
+# Payload-derived connectivity gaps ("dangling ends") — no report required.
+# ---------------------------------------------------------------------------
+def _lipid_a_payload() -> dict:
+    """Two linked reactions ending in an unconsumed Kdo2-lipid A (the real case)."""
+    return {
+        "processes": {
+            "reactions": [
+                {
+                    "name": "lipid IVA acylation",
+                    "inputs": ["lipid IVA", "ATP"],
+                    "outputs": ["lipid A", "ADP"],
+                    "enzymes": [{"protein": "LpxL"}],
+                },
+                {
+                    "name": "Kdo transfer",
+                    "inputs": ["lipid A", "CMP-Kdo"],
+                    "outputs": ["Kdo2-lipid A", "H2O"],
+                    "enzymes": [{"protein": "WaaA"}],
+                },
+            ]
+        }
+    }
+
+
+def test_terminal_product_yields_connectivity_gap_without_any_report() -> None:
+    # The pathway's last product is consumed by no reaction -> a gap naming it,
+    # so RAG can search for the reaction that EXTENDS the pathway. No reports
+    # are supplied at all (the production case the live app hits).
+    gaps = detect_gaps(_lipid_a_payload(), {})
+    labels = {g.label.casefold() for g in gaps}
+    assert "kdo2-lipid a" in labels
+
+    terminal = [g for g in gaps if g.label.casefold() == "kdo2-lipid a"]
+    assert terminal, "expected a gap for the terminal product"
+    gap = terminal[0]
+    assert gap.kind == "orphan_metabolite"
+    assert gap.source == "payload"
+    assert "terminal product" in gap.detail
+    # The generated query asks for the reaction that would connect it.
+    query = query_for_gap(gap)
+    assert "Kdo2-lipid A" in query
+    assert "links into the pathway" in query
+
+    # The reaction sitting on the open end is reachable as a dangling reaction.
+    dangling = [g for g in gaps if g.kind == "dangling_reaction"]
+    assert any(g.label == "Kdo transfer" for g in dangling)
+
+    # ``lipid A`` is produced AND consumed -> internal, never a gap.
+    assert "lipid a" not in labels
+
+
+def test_connectivity_gaps_flag_unfed_substrates() -> None:
+    gaps = detect_gaps(_lipid_a_payload(), None)
+    unfed = [g for g in gaps if "unfed substrate" in g.detail]
+    labels = {g.label.casefold() for g in unfed}
+    assert "lipid iva" in labels  # consumed by reaction 1, produced by nothing
+    assert "cmp-kdo" in labels
+
+
+def test_connectivity_gaps_skip_ubiquitous_cofactors() -> None:
+    # A pathway whose only open ends are cofactors yields no connectivity gap.
+    payload = {
+        "processes": {
+            "reactions": [
+                {
+                    "name": "cofactor-only turnover",
+                    "inputs": ["ATP", "H2O"],
+                    "outputs": ["ADP", "Pi"],
+                }
+            ]
+        }
+    }
+    gaps = detect_gaps(payload, {})
+    assert gaps == []
+
+    # And in a real pathway the cofactor by-products are not gaps either.
+    labels = {g.label.casefold() for g in detect_gaps(_lipid_a_payload(), {})}
+    for cofactor in ("atp", "adp", "h2o"):
+        assert cofactor not in labels
+
+
+def test_connectivity_gaps_handle_dict_participants() -> None:
+    payload = {
+        "processes": {
+            "reactions": [
+                {
+                    "name": "Kdo transfer",
+                    "inputs": [{"name": "lipid A", "stoichiometry": 1}],
+                    "outputs": [{"name": "Kdo2-lipid A", "stoichiometry": 1}],
+                }
+            ]
+        }
+    }
+    labels = {g.label for g in detect_gaps(payload, {})}
+    assert "Kdo2-lipid A" in labels
+    assert "lipid A" in labels
+
+
+def test_connectivity_gaps_do_not_duplicate_report_gaps() -> None:
+    # ``theobromine`` is both a report-flagged orphan and a payload terminal
+    # product; it must be emitted once.
+    reports = {
+        "qa_graph": {
+            "dangling_nodes": [{"node": "reaction:#1", "degree": 1}],
+            "missing_links_suspected": [{"node": "compound:theobromine"}],
+        }
+    }
+    gaps = detect_gaps(_dangling_payload(), reports)
+    assert len([g for g in gaps if g.label.casefold() == "theobromine"]) == 1
+    assert len([g for g in gaps if g.kind == "dangling_reaction"]) == 1
+
+
+def test_connectivity_detection_is_read_only() -> None:
+    payload = _lipid_a_payload()
+    before = copy.deepcopy(payload)
+    detect_gaps(payload, {})
+    assert payload == before

@@ -109,6 +109,7 @@ RAG_ENV = {
     "acquire_max_papers": "RAG_ACQUIRE_MAX_PAPERS",
     "select_max_papers": "RAG_SELECT_MAX_PAPERS",
     "retrieve_top_k": "RAG_RETRIEVE_TOP_K",
+    "extract_reactions": "RAG_EXTRACT_REACTIONS",
 }
 
 # Default-safe values used when an env var is unset or blank.
@@ -128,6 +129,10 @@ RAG_DEFAULTS: Dict[str, Any] = {
     "acquire_max_papers": 20,
     "select_max_papers": 8,
     "retrieve_top_k": 8,
+    # LLM prose→reaction extraction over retrieved passages (t2pw.rag.extract).
+    # On by default when RAG runs; the app only wires it when this is true, and
+    # every call fails closed, so it can add reactions but never break synthesis.
+    "extract_reactions": True,
 }
 
 _TRUE_TOKENS = {"1", "true", "yes", "on", "y", "t"}
@@ -190,6 +195,9 @@ def rag_config(overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             _raw("select_max_papers"), int(RAG_DEFAULTS["select_max_papers"])
         ),
         "retrieve_top_k": _as_int(_raw("retrieve_top_k"), int(RAG_DEFAULTS["retrieve_top_k"])),
+        "extract_reactions": _as_bool(
+            _raw("extract_reactions"), bool(RAG_DEFAULTS["extract_reactions"])
+        ),
     }
 
     if not config["embedding_provider"]:

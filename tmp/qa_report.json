@@ -1,18 +1,441 @@
 {
   "summary": {
-    "total_species": 0,
-    "total_reactions": 0,
-    "completeness_score": 1.0
+    "total_species": 50,
+    "total_reactions": 26,
+    "completeness_score": 0.0
   },
   "flags": {
-    "missing_compartments": [],
+    "missing_compartments": [
+      {
+        "entity": "(3R)-hydroxymyristoyl acyl carrier protein",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "acyl chain",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "acyl-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "beta-hydroxymyristoyl-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "bound acyl-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "CMP-KDO",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "fatty acids",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "free fatty acids",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GPL",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GPL donor",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GPLs",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "hepta-acylated LPS",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "KDO2-lipid IV_A",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipid A",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipid A anchor of LPS",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipid A disaccharide",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipid A synthesis",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipid A synthesis intermediates",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipid IV_A",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipid X",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "lipoprotein",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LPL",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LPLs",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "mislocalized GPLs",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "palmitate",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "R -3-hydroxymyristoyl-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "R-3-hydroxymyristoyl-ACP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "surface GPLs",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "UDP-2,3-bis(beta-hydroxymyristoyl)-D-glucosamine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "UDP-2,3-diacylglucosamine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "UDP-3-O-[beta-hydroxymyristoyl]-NAc",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "UDP-DAGn",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "UDP-GlcNAc",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "UDP-N-acetylglucosamine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Aas",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "cytoplasmic acyltransferase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "FabZ",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Lnt",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LpxA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LpxB",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LpxC",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LpxG",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LpxH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LpxI",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "LpxK",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PagP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "PldA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "WaaA",
+        "reason": "no subcellular location recorded"
+      }
+    ],
     "missing_modifiers": [],
     "possible_complexes": [],
-    "transport_like_reactions": [],
+    "transport_like_reactions": [
+      {
+        "reaction": "lipid A synthesis intermediates -> lipid A synthesis intermediates",
+        "reason": "same species appear as both input and output"
+      }
+    ],
     "orphan_nodes": [],
-    "missing_ids": [],
-    "empty_reactions": [],
-    "duplicate_species": [],
+    "missing_ids": [
+      {
+        "entity": "(3R)-hydroxymyristoyl acyl carrier protein",
+        "type": "compound"
+      },
+      {
+        "entity": "ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "acyl chain",
+        "type": "compound"
+      },
+      {
+        "entity": "acyl-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "beta-hydroxymyristoyl-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "bound acyl-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "CMP-KDO",
+        "type": "compound"
+      },
+      {
+        "entity": "fatty acids",
+        "type": "compound"
+      },
+      {
+        "entity": "free fatty acids",
+        "type": "compound"
+      },
+      {
+        "entity": "GPL",
+        "type": "compound"
+      },
+      {
+        "entity": "GPL donor",
+        "type": "compound"
+      },
+      {
+        "entity": "GPLs",
+        "type": "compound"
+      },
+      {
+        "entity": "hepta-acylated LPS",
+        "type": "compound"
+      },
+      {
+        "entity": "KDO2-lipid IV_A",
+        "type": "compound"
+      },
+      {
+        "entity": "lipid A",
+        "type": "compound"
+      },
+      {
+        "entity": "lipid A anchor of LPS",
+        "type": "compound"
+      },
+      {
+        "entity": "lipid A disaccharide",
+        "type": "compound"
+      },
+      {
+        "entity": "lipid A synthesis",
+        "type": "compound"
+      },
+      {
+        "entity": "lipid A synthesis intermediates",
+        "type": "compound"
+      },
+      {
+        "entity": "lipid IV_A",
+        "type": "compound"
+      },
+      {
+        "entity": "lipid X",
+        "type": "compound"
+      },
+      {
+        "entity": "lipoprotein",
+        "type": "compound"
+      },
+      {
+        "entity": "LPL",
+        "type": "compound"
+      },
+      {
+        "entity": "LPLs",
+        "type": "compound"
+      },
+      {
+        "entity": "mislocalized GPLs",
+        "type": "compound"
+      },
+      {
+        "entity": "palmitate",
+        "type": "compound"
+      },
+      {
+        "entity": "R -3-hydroxymyristoyl-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "R-3-hydroxymyristoyl-ACP",
+        "type": "compound"
+      },
+      {
+        "entity": "surface GPLs",
+        "type": "compound"
+      },
+      {
+        "entity": "UDP-2,3-bis(beta-hydroxymyristoyl)-D-glucosamine",
+        "type": "compound"
+      },
+      {
+        "entity": "UDP-2,3-diacylglucosamine",
+        "type": "compound"
+      },
+      {
+        "entity": "UDP-3-O-(R-3-hydroxymyristoyl)-N-acetylglucosamine",
+        "type": "compound"
+      },
+      {
+        "entity": "UDP-3-O-[beta-hydroxymyristoyl]-NAc",
+        "type": "compound"
+      },
+      {
+        "entity": "UDP-DAGn",
+        "type": "compound"
+      },
+      {
+        "entity": "UDP-GlcNAc",
+        "type": "compound"
+      },
+      {
+        "entity": "UDP-N-acetylglucosamine",
+        "type": "compound"
+      },
+      {
+        "entity": "Aas",
+        "type": "protein"
+      },
+      {
+        "entity": "cytoplasmic acyltransferase",
+        "type": "protein"
+      },
+      {
+        "entity": "FabZ",
+        "type": "protein"
+      },
+      {
+        "entity": "Lnt",
+        "type": "protein"
+      },
+      {
+        "entity": "LpxA",
+        "type": "protein"
+      },
+      {
+        "entity": "LpxB",
+        "type": "protein"
+      },
+      {
+        "entity": "LpxC",
+        "type": "protein"
+      },
+      {
+        "entity": "LpxG",
+        "type": "protein"
+      },
+      {
+        "entity": "LpxH",
+        "type": "protein"
+      },
+      {
+        "entity": "LpxI",
+        "type": "protein"
+      },
+      {
+        "entity": "LpxK",
+        "type": "protein"
+      },
+      {
+        "entity": "PagP",
+        "type": "protein"
+      },
+      {
+        "entity": "PldA",
+        "type": "protein"
+      },
+      {
+        "entity": "WaaA",
+        "type": "protein"
+      }
+    ],
+    "empty_reactions": [
+      {
+        "reaction": "R-3-hydroxymyristoyl-ACP -> ?"
+      },
+      {
+        "reaction": "UDP-N-acetylglucosamine -> ?"
+      },
+      {
+        "reaction": "(3R)-hydroxymyristoyl acyl carrier protein dehydration"
+      }
+    ],
+    "duplicate_species": [
+      {
+        "entity_a": "R -3-hydroxymyristoyl-ACP",
+        "entity_b": "R-3-hydroxymyristoyl-ACP",
+        "reason": "normalized label collision"
+      }
+    ],
     "inconsistent_class": []
   }
 }

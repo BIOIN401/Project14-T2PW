@@ -176,6 +176,44 @@ def _hash_key(payload: Dict[str, Any]) -> str:
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:32]
 
 
+# HTTP statuses that mean "the API refused us", not "nothing matched". 429 is
+# NCBI/EuropePMC rate limiting (NCBI allows only 3 req/s without an API key).
+_THROTTLE_STATUSES = frozenset({429, 503})
+
+
+class _RecordingClient:
+    """Wrap an HTTP client, recording each call's outcome for diagnostics.
+
+    Every per-source fetcher deliberately swallows transport failures and returns
+    ``[]`` so a dead or throttled API can never break a run. The side effect is
+    that a rate-limit (HTTP 429), a server error and a genuinely empty search are
+    all indistinguishable downstream — they collapse to "0 candidates". This
+    proxy records what actually happened so :func:`search_candidates` can report
+    the difference without any fetcher needing to change.
+    """
+
+    def __init__(self, inner: Any) -> None:
+        self._inner = inner
+        self.calls: List[Dict[str, Any]] = []
+
+    def get(self, url: Any, **kwargs: Any) -> Any:
+        try:
+            resp = self._inner.get(url, **kwargs)
+        except Exception as exc:  # noqa: BLE001 - record, then re-raise unchanged
+            self.calls.append(
+                {"url": str(url), "status": None, "error": type(exc).__name__}
+            )
+            raise
+        self.calls.append(
+            {"url": str(url), "status": getattr(resp, "status_code", None), "error": ""}
+        )
+        return resp
+
+    def __getattr__(self, name: str) -> Any:
+        # Pass through anything else the fetchers/stubs may use.
+        return getattr(self._inner, name)
+
+
 # ---------------------------------------------------------------------------
 # Query construction from the seed context.
 # ---------------------------------------------------------------------------
@@ -641,6 +679,7 @@ def search_candidates(
     cache_dir: Optional[Path] = None,
     use_cache: bool = True,
     refresh: bool = False,
+    status: Optional[Dict[str, Any]] = None,
 ) -> List[CandidatePaper]:
     """Fetch candidate papers for a seed pathway context.
 
@@ -657,6 +696,11 @@ def search_candidates(
     ``data/rag_index/acquire_cache/``. A cache hit is returned without any
     network call; a missing network yields whatever is cached or an empty list,
     never a raised exception.
+
+    Two rules keep the cache from memoizing a silent zero: an empty query (no
+    EuropePMC query *and* no NCBI term — an upstream/Stage-0 failure) returns
+    ``[]`` immediately without reading, writing, or querying anything; and a
+    zero-result search is never persisted, so it is retried on the next run.
     """
     cfg = rag_config()
     cap = max_papers if isinstance(max_papers, int) and max_papers > 0 else int(
@@ -675,36 +719,77 @@ def search_candidates(
     }
     key = _hash_key(cache_payload)
 
+    # An empty query is an upstream error (a failed/empty Stage-0 context), not a
+    # search result: never consult or write the cache for it, and do not pretend a
+    # search happened. Caching it would memoize a permanent, silent zero for every
+    # later run whose context also came back empty (the hash of an empty query is
+    # stable), so short-circuit before touching the cache or the network.
+    if not cache_payload["europepmc_query"] and not cache_payload["ncbi_term"]:
+        if isinstance(status, dict):
+            status.update(
+                {"query": "", "empty_query": True, "from_cache": False, "requests": []}
+            )
+        return []
+
     if use_cache and not refresh:
         cached = cache.get(key)
         if cached is not None:
+            if isinstance(status, dict):
+                status.update(
+                    {
+                        "query": cache_payload["europepmc_query"],
+                        "empty_query": False,
+                        "from_cache": True,
+                        "requests": [],
+                    }
+                )
             return [
                 CandidatePaper.from_dict(item)
                 for item in _safe_list(cached.get("candidates"))
             ]
 
     http = client if client is not None else HttpClient()
+    recorder = _RecordingClient(http)
     per_source = max(cap * 2, cap + 5)  # over-fetch a little before dedupe/cap
     collected: List[CandidatePaper] = []
     for source in active:
         fetcher = _SOURCE_FETCHERS[source]
         try:
             collected.extend(
-                _call_fetcher(fetcher, http, context, per_source, terms["organism"])
+                _call_fetcher(fetcher, recorder, context, per_source, terms["organism"])
             )
         except Exception:  # noqa: BLE001 - a bad source must not sink the rest
             continue
 
+    if isinstance(status, dict):
+        seen_statuses = [c["status"] for c in recorder.calls if c["status"] is not None]
+        status.update(
+            {
+                "query": cache_payload["europepmc_query"],
+                "empty_query": False,
+                "from_cache": False,
+                "requests": len(recorder.calls),
+                "http_statuses": sorted(set(seen_statuses)),
+                "errors": sorted({c["error"] for c in recorder.calls if c["error"]}),
+                "rate_limited": any(s in _THROTTLE_STATUSES for s in seen_statuses),
+                "transport_failed": any(c["status"] is None for c in recorder.calls),
+            }
+        )
+
     seed_keys = _seed_identity_keys(context)
     deduped = _dedupe(collected, seed_keys)[:cap]
 
-    cache.set(
-        key,
-        {
-            "query": cache_payload,
-            "candidates": [paper.to_dict() for paper in deduped],
-        },
-    )
+    # Only NON-empty results are memoized. A zero-result search is usually a
+    # transient failure (offline, API error, rate limit) and must be retried on the
+    # next run rather than frozen into the cache as a permanent zero.
+    if deduped:
+        cache.set(
+            key,
+            {
+                "query": cache_payload,
+                "candidates": [paper.to_dict() for paper in deduped],
+            },
+        )
     return deduped
 
 

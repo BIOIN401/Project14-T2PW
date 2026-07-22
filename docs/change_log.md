@@ -9,6 +9,70 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-21 — RAG prose→reaction extraction (closes the arrow-only limitation)
+
+**Files changed:** `src/t2pw/rag/extract.py` (new), `src/t2pw/rag/synthesize.py`,
+`src/t2pw/config.py`, `src/t2pw/app/streamlit_app.py`, `.env`,
+`tests/test_rag_extract.py` (new), `docs/change_log.md`.
+
+**What was the limitation:** the RAG deep-dive entry below flagged that evidence
+reactions were transcribed **only** from arrow-style equations
+(`synthesize._parse_reaction_line`, e.g. `caffeine + O2 -> theobromine`). Paper
+*prose* — "NdmB catalyzes the N3-demethylation of theobromine, producing
+7-methylxanthine" — has no arrow, so it parsed to nothing. Cross-paper stitching
+therefore materialized almost entirely from structured DB records, not from the
+fetched papers, so multi-paper synthesis stayed sparse even after the four live-run
+defects were fixed. This is the missing piece that makes "novel pathway from
+multiple papers" actually work on real literature.
+
+**Why it appeared:** WP5 shipped with only the deterministic parser (correct but
+narrow — it never fabricates, but only catches equations). An LLM extraction step
+was always the intended follow-on; it was simply not part of the WP0–WP7 scope.
+
+**What this introduces:** a new `t2pw.rag.extract` module — `extract_reactions_from_text(text,
+*, chat_fn=None)` sends one retrieved passage to an LLM and returns the reactions
+it **explicitly states** as clean reaction dicts (`name` / `inputs` / `outputs` /
+`enzymes` / `reversible`), plus `make_prose_extractor(chat_fn=None)` returning the
+`text -> [reaction]` callable the orchestrator wires. `synthesize_with_report` /
+`synthesize` gain an **opt-in** `prose_extractor` keyword; when supplied,
+`_reactions_from_bundle` runs it per paper chunk alongside the arrow parser and
+converts each result to a provenance-bound `_Reaction` (reusing
+`_participants_from_field` for canonicalization and `_is_invalid_species_token`
+for junk rejection — the same discipline the arrow path uses). Extraction is
+memoized per chunk (`_make_memoized_extractor`) and capped at `_EXTRACT_MAX_PASSAGES`
+= 24 passages/run, so the two passes over the bundles (synthesis + unfilled-gap
+detection) never double-call the model and cost is bounded. The app builds the
+extractor from the shared client and passes it, gated on the new
+`RAG_EXTRACT_REACTIONS` config flag (default on).
+
+**How it stays consistent with the design:** it obeys the separation invariant
+exactly. **Evidence-bound / no invention:** the system prompt forbids inference
+and background knowledge — the model transcribes only what the passage states, or
+returns `{"reactions": []}` — and every extracted reaction inherits the source
+chunk's provenance, so the WP6 "no element without evidence" guarantee still holds
+(a reaction the passage does not state is never produced). **RAG → core only, no
+stage edits:** all code lives in `t2pw.rag`; the shared `t2pw.llm.client.chat` is
+imported **lazily** (importing `extract` needs no LLM client / key / network) and
+no stage module is touched. **Offline / opt-in / fails closed:** the default
+`prose_extractor=None` is byte-for-byte today's arrow-only synthesis (every
+pre-existing synthesize test passes unchanged); extraction runs only when the app
+wires it, and every call fails closed — an empty passage, a missing endpoint, a
+malformed response, or a model that rejects JSON mode all degrade to `[]`, so prose
+extraction can only *add* reactions, never break synthesis. With `RAG_ENABLED=false`
+(or `RAG_EXTRACT_REACTIONS=false`) nothing here runs.
+
+**Verified:** 10 new tests in `tests/test_rag_extract.py` — prose→structured parse,
+markdown-fence tolerance, the no-reaction case, the empty-text short-circuit (no
+model call), fail-closed on a raising `chat_fn`, garbage output → `[]`,
+participant-less reaction dropped, and two end-to-end synthesis integration tests
+proving a prose bundle adds an evidence-bound NdmB reaction *with* the extractor and
+adds nothing *without* it, plus per-chunk memoization (exactly one call). A live
+ad-hoc call against the configured model correctly extracted
+`theobromine -> 7-methylxanthine (NdmB)` from a plain sentence. Full suite:
+515 → **525 passed, 0 failures**.
+
+---
+
 ### 2026-07-21 — RAG deep-dive: four live-run defects that emptied or degraded multi-paper output
 
 **Files changed:** `src/t2pw/app/streamlit_app.py`, `src/t2pw/rag/retrieve.py`,

@@ -227,6 +227,76 @@ def test_cache_hit_avoids_second_network_call(
     assert [p.id for p in second] == [p.id for p in first]
 
 
+class _EmptyResultClient(_FakeClient):
+    """Reachable APIs that legitimately return zero results."""
+
+    def get(self, url: str, **kwargs: Any) -> _FakeResponse:
+        self.calls.append(url)
+        return _FakeResponse({"resultList": {"result": []}})
+
+
+def test_empty_query_short_circuits_without_network_or_cache(
+    clean_env: None, tmp_path: Path
+) -> None:
+    # An empty Stage-0 context builds no query at all. That is an upstream error,
+    # not a search: no HTTP call, no cache file, and nothing to memoize.
+    client = _FakeClient()
+    papers = search_candidates(
+        {}, sources=("europepmc", "ncbi"), client=client, cache_dir=tmp_path
+    )
+    assert papers == []
+    assert client.calls == []
+    assert list(tmp_path.glob("*.json")) == []
+
+
+def test_zero_result_search_is_not_cached(clean_env: None, tmp_path: Path) -> None:
+    # A search that returns nothing must be retried next run, never memoized.
+    client = _EmptyResultClient()
+    assert (
+        search_candidates(
+            _SEED_CONTEXT, sources=("europepmc",), client=client, cache_dir=tmp_path
+        )
+        == []
+    )
+    assert client.calls  # the network was actually queried
+    assert list(tmp_path.glob("*.json")) == []  # nothing persisted
+
+    client2 = _FakeClient()
+    papers = search_candidates(
+        _SEED_CONTEXT, sources=("europepmc",), client=client2, cache_dir=tmp_path
+    )
+    assert client2.calls  # re-queried rather than served an empty cache entry
+    assert [p.id for p in papers]  # and the retry now yields real candidates
+
+
+def test_non_empty_result_is_still_cached(clean_env: None, tmp_path: Path) -> None:
+    # Regression guard: legitimate caching of non-empty results is unchanged.
+    client = _FakeClient()
+    first = search_candidates(
+        _SEED_CONTEXT, sources=("europepmc",), client=client, cache_dir=tmp_path
+    )
+    assert first
+    assert len(list(tmp_path.glob("*.json"))) == 1
+
+    client2 = _FakeClient()
+    second = search_candidates(
+        _SEED_CONTEXT, sources=("europepmc",), client=client2, cache_dir=tmp_path
+    )
+    assert client2.calls == []
+    assert [p.id for p in second] == [p.id for p in first]
+
+
+def test_offline_zero_result_is_not_cached(clean_env: None, tmp_path: Path) -> None:
+    # The poisoning case: an offline run must not freeze a zero into the cache.
+    search_candidates(
+        _SEED_CONTEXT,
+        sources=("europepmc",),
+        client=_OfflineClient(),
+        cache_dir=tmp_path,
+    )
+    assert list(tmp_path.glob("*.json")) == []
+
+
 def test_refresh_bypasses_cache(clean_env: None, tmp_path: Path) -> None:
     client = _FakeClient()
     search_candidates(

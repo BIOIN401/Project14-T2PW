@@ -130,6 +130,40 @@ class RagOrchestrationResult(SimpleNamespace):
     """
 
 
+def _count_reactions(payload: Any) -> int:
+    """Number of ``processes.reactions`` rows in a payload (0 for any bad shape)."""
+    processes = payload.get("processes") if isinstance(payload, dict) else None
+    reactions = processes.get("reactions") if isinstance(processes, dict) else None
+    return len(reactions) if isinstance(reactions, list) else 0
+
+
+# Bounded head of the document used when retrying a failed Stage-0 pass. The
+# pathway name / organism / key entities live in the title, abstract and intro,
+# and ``t2pw.rag.select`` already caps this same ``preprocess`` call at 6000
+# chars for exactly this reason.
+_PREPROCESS_RETRY_CHARS = 20000
+
+
+def _has_usable_context(ctx: Any) -> bool:
+    """True when Stage 0 produced at least one term usable as a search anchor.
+
+    Mirrors precisely what ``t2pw.rag.acquire.build_query`` needs: without a
+    pathway name, an organism, or any compound/protein/gap term, the literature
+    query is the empty string and no paper can ever be fetched.
+    """
+    if not isinstance(ctx, dict):
+        return False
+    if str(ctx.get("pathway_name") or "").strip():
+        return True
+    if str(ctx.get("likely_organism") or ctx.get("organism") or "").strip():
+        return True
+    for key in ("key_compounds", "key_proteins", "gap_terms"):
+        value = ctx.get(key)
+        if isinstance(value, list) and any(str(v or "").strip() for v in value):
+            return True
+    return False
+
+
 def maybe_run_rag(
     *,
     pathway_context: Dict[str, Any],
@@ -161,13 +195,57 @@ def maybe_run_rag(
         return None
 
     try:
-        from t2pw.rag import acquire, ingest, provenance, retrieve, select, synthesize
+        from t2pw.rag import (
+            acquire,
+            extract,
+            ingest,
+            provenance,
+            retrieve,
+            select,
+            synthesize,
+        )
 
         # R1 acquire -> R2 select -> (full text for kept) -> R3 ingest.
-        candidates = acquire.search_candidates(pathway_context)
+        acquire_status: Dict[str, Any] = {}
+        candidates = acquire.search_candidates(pathway_context, status=acquire_status)
+        # Display-only: a zero-candidate acquisition used to be a silent no-op, and
+        # a rate-limited API looked identical to an empty search. ``acquire_status``
+        # records what actually happened, so name the REAL cause. No control flow
+        # changes — the chain continues exactly as before.
+        if not candidates:
+            if acquire_status.get("empty_query"):
+                _why = (
+                    "Stage 0 produced no usable search terms, so the literature "
+                    "query was empty and no search was performed. Re-run — this is "
+                    "usually a transient preprocessing LLM failure."
+                )
+            elif acquire_status.get("rate_limited"):
+                _why = (
+                    "the literature APIs rate-limited us (HTTP "
+                    f"{acquire_status.get('http_statuses')}). NCBI allows only 3 "
+                    "requests/second without an API key — set NCBI_API_KEY and "
+                    "NCBI_EMAIL in .env to raise it to 10/s, then re-run."
+                )
+            elif acquire_status.get("transport_failed"):
+                _why = (
+                    "the literature APIs were unreachable "
+                    f"({acquire_status.get('errors')}). Check network access."
+                )
+            elif acquire_status.get("from_cache"):
+                _why = "a cached empty result was served for this query."
+            else:
+                _why = (
+                    "the search ran but matched nothing (HTTP "
+                    f"{acquire_status.get('http_statuses')}). The query may be too "
+                    "narrow — check the organism and pathway name."
+                )
+            st.warning(f"RAG acquisition fetched 0 candidate papers: {_why}")
         selection = select.select(candidates, pathway_context)
+        full_text_papers = 0
         for paper in getattr(selection, "selected", []) or []:
             paper.full_text = acquire.fetch_full_text(paper)
+            if str(getattr(paper, "full_text", "") or "").strip():
+                full_text_papers += 1
         embedder = ingest.Embedder(config=rag_config())
         store = ingest.get_vector_store(embed_fn=embedder.embed)
         ingest_report = ingest.ingest(selection, store=store, embedder=embedder)
@@ -202,10 +280,51 @@ def maybe_run_rag(
                 "source_type": "paper",
             },
         }
+        # Prose→reaction extraction: recover reactions stated in paper prose (not
+        # just arrow equations). Opt-in via RAG_EXTRACT_REACTIONS; fails closed so
+        # it can only add reactions, never break synthesis.
+        prose_extractor = (
+            extract.make_prose_extractor()
+            if rag_config()["extract_reactions"]
+            else None
+        )
         synthesis = synthesize.synthesize_with_report(
-            seed_payload, bundles, seed_source_context
+            seed_payload, bundles, seed_source_context, prose_extractor=prose_extractor
         )
         prov_report = provenance.validate_provenance(synthesis.payload)
+
+        # Funnel diagnostics — read-only counts of the t2pw.rag return values, so
+        # "RAG added nothing" can be traced to the stage it stopped at (no papers
+        # / no full text / no gaps / no evidence / nothing extracted) instead of
+        # being an unexplained empty result. Computes nothing about the pathway.
+        _gap_counts: Dict[str, int] = {}
+        for _gap in gaps:
+            _kind = str(getattr(_gap, "kind", "") or "unknown")
+            _gap_counts[_kind] = _gap_counts.get(_kind, 0) + 1
+        diagnostics = {
+            "stage0_pathway_name": str(
+                (pathway_context or {}).get("pathway_name") or ""
+            ),
+            "stage0_organism": str(
+                (pathway_context or {}).get("likely_organism") or ""
+            ),
+            "acquire_query": str(acquire_status.get("query") or "")[:300],
+            "acquire_http": acquire_status.get("http_statuses"),
+            "acquire_rate_limited": acquire_status.get("rate_limited"),
+            "acquire_from_cache": acquire_status.get("from_cache"),
+            "candidates_fetched": len(candidates),
+            "papers_selected": len(getattr(selection, "selected", []) or []),
+            "papers_with_full_text": full_text_papers,
+            "chunks_indexed": int(getattr(ingest_report, "chunks", 0) or 0),
+            "gaps_detected": len(gaps),
+            "gaps_by_kind": _gap_counts,
+            "evidence_hits": sum(len(getattr(b, "hits", []) or []) for b in bundles),
+            "prose_extraction_enabled": prose_extractor is not None,
+            "seed_reactions": _count_reactions(seed_payload),
+            "synthesized_reactions": _count_reactions(synthesis.payload),
+            "cross_paper_stitches": len(getattr(synthesis, "stitched", []) or []),
+            "unresolved_gaps": len(getattr(synthesis, "unresolved_gaps", []) or []),
+        }
     except Exception as exc:  # noqa: BLE001 - RAG must never break the core run
         return RagOrchestrationResult(
             decision=decision,
@@ -217,6 +336,9 @@ def maybe_run_rag(
             ingest_report=None,
             synthesis=None,
             provenance=None,
+            gaps=[],
+            bundles=[],
+            diagnostics={},
             error=str(exc),
         )
 
@@ -230,7 +352,62 @@ def maybe_run_rag(
         ingest_report=ingest_report,
         synthesis=synthesis,
         provenance=prov_report,
+        gaps=gaps,
+        bundles=bundles,
+        diagnostics=diagnostics,
         error="",
+    )
+
+
+def _rag_funnel_verdict(diag: Dict[str, Any]) -> str:
+    """Plain-language read of the RAG funnel: the first zero is the cause.
+
+    Display-only. Each check mirrors one stage of the chain in order, so the
+    returned sentence names the stage that stopped it — turning "RAG added
+    nothing" into an actionable diagnosis instead of an unexplained empty result.
+    """
+    if diag.get("candidates_fetched", 0) == 0:
+        return (
+            "No candidate papers were fetched — the literature query returned nothing. "
+            "The query is organism-scoped, so check the pathway name / organism in the "
+            "Stage-0 context (a vague or missing organism narrows it to nothing), or "
+            "network access to EuropePMC/NCBI."
+        )
+    if diag.get("papers_selected", 0) == 0:
+        return (
+            "Papers were fetched but every one was dropped in selection — see the drop "
+            "reasons below. Common cause: candidates classified as a multi_example_review "
+            "with no seed-matching example are penalized below the score floor and dropped."
+        )
+    if diag.get("papers_with_full_text", 0) == 0:
+        return (
+            "Papers were selected but none had retrievable full text (all abstract-only). "
+            "Abstracts rarely state reaction mechanisms, so there is little to extract — "
+            "this is the PMC open-access limit, not a bug."
+        )
+    if diag.get("gaps_detected", 0) == 0:
+        return (
+            "No gaps were detected in the seed pathway, so RAG had nothing to search for. "
+            "This is a legitimate no-op — the seed extraction was already connected. Use a "
+            "sparser / more incomplete seed to create the gaps RAG is meant to fill."
+        )
+    if diag.get("evidence_hits", 0) == 0:
+        return (
+            "Gaps were detected but retrieval returned no evidence — the indexed passages "
+            "did not match the gap queries."
+        )
+    if diag.get("synthesized_reactions", 0) <= diag.get("seed_reactions", 0):
+        return (
+            "Evidence was retrieved but produced no NEW reactions: the passages did not "
+            "state a transcribable reaction, or prose extraction is off "
+            f"(enabled={diag.get('prose_extraction_enabled')}). Synthesized "
+            f"({diag.get('synthesized_reactions', 0)}) did not exceed the seed "
+            f"({diag.get('seed_reactions', 0)}), so the single-paper extraction was kept."
+        )
+    return (
+        f"RAG added reactions: {diag.get('seed_reactions', 0)} seed -> "
+        f"{diag.get('synthesized_reactions', 0)} synthesized, with "
+        f"{diag.get('cross_paper_stitches', 0)} cross-paper stitch(es)."
     )
 
 
@@ -251,6 +428,24 @@ def render_rag_panels(rag_result: "RagOrchestrationResult") -> None:
         st.caption(f"Triage: {'ON' if getattr(decision, 'run', False) else 'off'} - {getattr(decision, 'reason', '')}")
     if getattr(rag_result, "error", ""):
         st.warning(f"RAG chain degraded (core run unaffected): {rag_result.error}")
+
+    # Panel 0 — the funnel. Read this first when RAG "added nothing": each number
+    # feeds the next stage, so the first zero is the cause.
+    diag = getattr(rag_result, "diagnostics", None) or {}
+    if diag:
+        with st.expander("RAG funnel — why RAG did / didn't add reactions", expanded=True):
+            st.caption(_rag_funnel_verdict(diag))
+            row1 = st.columns(4)
+            row1[0].metric("Papers fetched", diag.get("candidates_fetched", 0))
+            row1[1].metric("Selected", diag.get("papers_selected", 0))
+            row1[2].metric("With full text", diag.get("papers_with_full_text", 0))
+            row1[3].metric("Chunks indexed", diag.get("chunks_indexed", 0))
+            row2 = st.columns(4)
+            row2[0].metric("Gaps detected", diag.get("gaps_detected", 0))
+            row2[1].metric("Evidence hits", diag.get("evidence_hits", 0))
+            row2[2].metric("Seed reactions", diag.get("seed_reactions", 0))
+            row2[3].metric("Synthesized", diag.get("synthesized_reactions", 0))
+            st.json(diag)
 
     ingest_report = getattr(rag_result, "ingest_report", None)
     if ingest_report is not None and hasattr(ingest_report, "to_dict"):
@@ -2692,6 +2887,24 @@ if submit:
     # Preprocessing: lightweight context summary to guide extraction and inference
     with st.spinner("Running preprocessor..."):
         pathway_context = preprocess(text, temperature=temperature)
+        # Stage 0 fails CLOSED to an empty context (a swallowed LLM error or an
+        # unparseable reply are both logged, not raised). An empty context
+        # silently disables RAG: build_query() then returns "", so zero papers
+        # can ever be fetched. Retry once on a bounded head of the document —
+        # the pathway name / organism / key entities live in the title, abstract
+        # and intro, and the smaller payload also dodges transient failures.
+        if not _has_usable_context(pathway_context) and len(text) > _PREPROCESS_RETRY_CHARS:
+            pathway_context = preprocess(
+                text[:_PREPROCESS_RETRY_CHARS], temperature=temperature
+            )
+        if not _has_usable_context(pathway_context):
+            st.warning(
+                "Stage 0 (preprocessor) returned no usable context — no pathway name, "
+                "organism, compounds or proteins. Extraction will be unguided, and "
+                "multi-paper RAG cannot build a literature query, so no papers will be "
+                "fetched. This is usually a transient LLM failure — re-running often "
+                "fixes it."
+            )
 
     if is_ambiguous_multi_example_review_context(pathway_context):
         candidate_examples = pathway_context.get("candidate_examples", [])
@@ -2824,12 +3037,7 @@ if submit:
     # synthesized reactions), adopting it would silently wipe the real pathway —
     # so keep the single-paper extraction and surface why.
     if rag_result is not None and rag_result.synthesized and rag_result.payload:
-        def _n_reactions(payload: Any) -> int:
-            processes = payload.get("processes") if isinstance(payload, dict) else None
-            reactions = processes.get("reactions") if isinstance(processes, dict) else None
-            return len(reactions) if isinstance(reactions, list) else 0
-
-        if _n_reactions(rag_result.payload) >= max(1, _n_reactions(final_payload)):
+        if _count_reactions(rag_result.payload) >= max(1, _count_reactions(final_payload)):
             final_payload = rag_result.payload
         else:
             st.warning(
