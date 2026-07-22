@@ -59,6 +59,7 @@ from t2pw.pipeline.stage_contracts import (
 )
 from t2pw.pipeline.pipeline import (
     PipelineFailure,
+    apply_post_merge_cleanup,
     build_qa_feedback,
     build_and_save_draft_graph,
     filter_out_of_scope_reactions,
@@ -70,7 +71,10 @@ from t2pw.pipeline.pipeline import (
 from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
-from t2pw.pipeline.reaction_preservation_validator import write_reaction_preservation_report_if_manifest
+from t2pw.pipeline.reaction_preservation_validator import (
+    load_locked_reaction_manifest,
+    write_reaction_preservation_report_if_manifest,
+)
 from t2pw.curation.completeness_audit import run_final_completeness_audit
 from t2pw.pipeline.preprocessor import (
     format_context_header,
@@ -3031,19 +3035,47 @@ if submit:
 
     # S3 — hand R5's synthesized, provenance-tagged Payload to the post-pipeline
     # path. A no-op with RAG off (rag_result is None): final_payload is untouched.
-    # Guard: synthesis merges the seed extraction with retrieved evidence, so it
-    # must never emit FEWER reactions than the seed already had. If it does (e.g.
-    # no reachable embeddings endpoint / no papers fetched => zero evidence, zero
-    # synthesized reactions), adopting it would silently wipe the real pathway —
-    # so keep the single-paper extraction and surface why.
+    #
+    # Synthesis REPLACES the merged payload rather than adding to it, so it skips
+    # the hardening merge_additions applies on its way out. Run that same cleanup
+    # here — folding modifiers into enzymes, deduping actors by name and dropping
+    # reactions with an empty or unresolvable side — so no unhardened row reaches
+    # the required-field gate.
+    #
+    # Then the count guard: synthesis merges the seed extraction with retrieved
+    # evidence, so it must never emit FEWER reactions than the seed already had.
+    # If it does (e.g. no reachable embeddings endpoint / no papers fetched => zero
+    # evidence, zero synthesized reactions), adopting it would silently wipe the
+    # real pathway — so keep the single-paper extraction and surface why. Counting
+    # after the cleanup means the comparison weighs usable reactions.
     if rag_result is not None and rag_result.synthesized and rag_result.payload:
-        if _count_reactions(rag_result.payload) >= max(1, _count_reactions(final_payload)):
-            final_payload = rag_result.payload
+        # Pass the lock manifest so a locked Stage-1 reaction that synthesis
+        # mangled is quarantined for inspection rather than deleted outright.
+        rag_payload, rag_removed_reactions = apply_post_merge_cleanup(
+            deepcopy(rag_result.payload),
+            locked_manifest=load_locked_reaction_manifest(
+                PROJECT_ROOT / "tmp" / "locked_reaction_manifest.json"
+            ),
+            quarantine_output_path=PROJECT_ROOT / "tmp" / "quarantined_rag_reactions.json",
+        )
+        if _count_reactions(rag_payload) >= max(1, _count_reactions(final_payload)):
+            final_payload = rag_payload
+            if rag_removed_reactions:
+                st.info(
+                    f"Dropped {len(rag_removed_reactions)} unusable RAG reaction(s) "
+                    f"before export: {', '.join(rag_removed_reactions)}"
+                )
         else:
             st.warning(
-                "Multi-paper RAG produced no additional reactions (no evidence "
+                "Multi-paper RAG produced no additional usable reactions (no evidence "
                 "retrieved — check that the embeddings endpoint is running and "
                 "papers were fetched). Keeping the single-paper extraction."
+                + (
+                    f" {len(rag_removed_reactions)} synthesized reaction(s) were "
+                    f"dropped as unusable: {', '.join(rag_removed_reactions)}."
+                    if rag_removed_reactions
+                    else ""
+                )
             )
 
     stage2_preservation_report = _write_reaction_preservation_report("after_stage2", final_payload)

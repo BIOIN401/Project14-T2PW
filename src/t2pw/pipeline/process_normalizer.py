@@ -3161,8 +3161,12 @@ def promote_interaction_enzymes(payload: Dict[str, Any], *, report: Optional[Dic
         if not isinstance(rxn.get("modifiers"), list):
             rxn["modifiers"] = []
         modifiers_list = rxn["modifiers"]
+        # Check both actor collections: ``enzymes`` is canonical and ``modifiers``
+        # its mirror, so a protein already recorded as an enzyme must not be
+        # promoted again — the export gate counts that as the same protein complex
+        # assigned twice.
         modifier_entity_norms: set = set()
-        for mod in modifiers_list:
+        for mod in list(modifiers_list) + _safe_list(rxn.get("enzymes")):
             if isinstance(mod, dict):
                 for k in ["entity", "protein", "protein_complex", "name"]:
                     v = _canonical(str(mod.get(k, "")))
@@ -3223,17 +3227,23 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
         for token in outputs:
             for part in _complex_components(token, payload=payload):
                 output_complex_parts.add(_normalize(part))
+        # Dedupe promoted catalysts against BOTH actor collections. ``enzymes`` is
+        # the canonical list and ``modifiers`` its mirror, so an actor already
+        # recorded as an enzyme must not be promoted a second time — that hands the
+        # required-field gate the same protein complex twice
+        # (``duplicate_reaction_enzyme_complex``), once via each collection.
         modifier_entity_norms: Set[str] = set()
-        for mod in modifiers_list:
-            if not isinstance(mod, dict):
+        for actor in list(modifiers_list) + _safe_list(reaction.get("enzymes")):
+            if not isinstance(actor, dict):
                 continue
             for key in ["entity", "protein", "protein_complex", "name"]:
-                value = _canonical(str(mod.get(key, "")))
+                value = _canonical(str(actor.get(key, "")))
                 if value:
                     modifier_entity_norms.add(_normalize(value))
                     break
 
         kept_inputs: List[str] = []
+        promotable: List[str] = []
         for token in inputs:
             norm = _normalize(token)
             is_protein_token = norm in protein_norms or _is_protein_like(token, payload)
@@ -3246,20 +3256,11 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
             if norm in output_complex_parts:
                 kept_inputs.append(token)
                 continue
-            if norm not in modifier_entity_norms:
-                entity_type = "protein_complex" if norm in complex_norms else "protein"
-                modifiers_list.append({
-                    "entity": token,
-                    "entity_type": entity_type,
-                    "role": "catalyst",
-                    "evidence": "",
-                    "confidence": 1.0,
-                    "provenance": "extracted",
-                })
-                modifier_entity_norms.add(norm)
-                rep["summary"]["catalysts_promoted_to_enzymes"] += 1
-                rep["actions"].append({"type": "catalyst_promoted_to_modifier", "json_pointer": f"/processes/reactions/{ridx}/inputs", "name": token})
+            promotable.append(token)
 
+        # Restore complex scaffolds before deciding whether the reaction still has
+        # reactants: a row whose declared inputs were all promotable proteins is
+        # usually left with a legitimate scaffold input by this pass.
         present_inputs = {_normalize(token) for token in kept_inputs}
         for out_token in outputs:
             parts = _complex_components(out_token, payload=payload)
@@ -3273,6 +3274,37 @@ def promote_catalysts(payload: Dict[str, Any], *, report: Optional[Dict[str, Any
                 _ensure_protein(scaffold, payload, rep)
                 rep["summary"]["scaffold_inputs_added"] += 1
                 rep["actions"].append({"type": "scaffold_input_added", "json_pointer": f"/processes/reactions/{ridx}/inputs", "name": scaffold, "for_output_complex": out_token})
+
+        # If promotion would still leave the reaction with no reactants at all, the
+        # required-field gate rejects it as ``reaction_missing_left_participants``.
+        # A row whose only inputs are proteins and which gains no scaffold is
+        # usually a mis-parse rather than a real catalytic step, so leave it intact
+        # and let filter_unresolvable_reactions judge it on its merits instead of
+        # silently hollowing it out here.
+        if promotable and not kept_inputs:
+            kept_inputs.extend(promotable)
+            rep["actions"].append({
+                "type": "catalyst_promotion_skipped_would_empty_inputs",
+                "json_pointer": f"/processes/reactions/{ridx}/inputs",
+                "names": list(promotable),
+            })
+            promotable = []
+
+        for token in promotable:
+            norm = _normalize(token)
+            if norm not in modifier_entity_norms:
+                entity_type = "protein_complex" if norm in complex_norms else "protein"
+                modifiers_list.append({
+                    "entity": token,
+                    "entity_type": entity_type,
+                    "role": "catalyst",
+                    "evidence": "",
+                    "confidence": 1.0,
+                    "provenance": "extracted",
+                })
+                modifier_entity_norms.add(norm)
+                rep["summary"]["catalysts_promoted_to_enzymes"] += 1
+                rep["actions"].append({"type": "catalyst_promoted_to_modifier", "json_pointer": f"/processes/reactions/{ridx}/inputs", "name": token})
 
         reaction["inputs"] = _dedupe_preserve(kept_inputs)
         reaction["outputs"] = _dedupe_preserve(outputs)

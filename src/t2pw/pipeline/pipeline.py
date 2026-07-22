@@ -1011,6 +1011,39 @@ def _looks_like_metabolite_fragment(component: Any, compound_names: set[str]) ->
     return any(normalized != compound and normalized in compound for compound in compound_names)
 
 
+def apply_post_merge_cleanup(
+    payload: Dict[str, Any],
+    *,
+    locked_manifest: Optional[Any] = None,
+    quarantine_output_path: Optional[Path | str] = None,
+) -> Tuple[Dict[str, Any], List[str]]:
+    """Harden a payload structurally before it enters the post-pipeline path.
+
+    Folds raw ``modifiers`` into the canonical ``enzymes`` list and dedupes actors
+    by name, removes reactions with an empty or unresolvable side, and dedupes
+    element locations. Returns the payload and the names of the reactions removed.
+
+    Every payload handed downstream must pass through here. ``merge_additions``
+    has always applied these passes to the Stage-1+Stage-2 merge; factoring them
+    out lets any other payload-producing path — notably the multi-paper RAG
+    synthesis, which *replaces* the merged payload rather than adding to it — get
+    the same treatment instead of silently bypassing it.
+
+    Deliberately excludes ``_inject_name_based_modifiers``: that is a Stage-2
+    omission heuristic keyed on a row's evidence sentence, not a validity guard,
+    and it belongs to the merge path alone.
+    """
+    _normalize_reaction_actors(payload)
+    payload, removed_names = filter_unresolvable_reactions(
+        payload,
+        locked_manifest=locked_manifest,
+        quarantine_output_path=quarantine_output_path,
+    )
+    if isinstance(payload.get("element_locations"), dict):
+        _dedup_element_locations(payload["element_locations"])
+    return payload, removed_names
+
+
 def merge_additions(
     base: Dict[str, Any],
     inference_additions: Dict[str, Any],
@@ -1059,10 +1092,7 @@ def merge_additions(
             _extend_unique(merged["element_locations"][key], items)
 
     _inject_name_based_modifiers(merged)
-    _normalize_reaction_actors(merged)
-    filter_unresolvable_reactions(merged)
-    if isinstance(merged.get("element_locations"), dict):
-        _dedup_element_locations(merged["element_locations"])
+    merged, _removed = apply_post_merge_cleanup(merged)
 
     return merged
 
@@ -1571,13 +1601,37 @@ def _clean_element_locations(locations: Dict[str, Any]) -> Dict[str, Any]:
             biological_state = (item.get("biological_state") or "").strip()
             if biological_state:
                 entry["biological_state"] = biological_state
-            evidence = (item.get("evidence") or "").strip()
+            evidence = _evidence_text(item.get("evidence")).strip()
             if evidence:
                 entry["evidence"] = evidence
             items.append(entry)
         if items:
             cleaned[key] = items
     return cleaned
+
+
+def _evidence_text(value: Any) -> str:
+    """Flatten an ``evidence`` field to plain text.
+
+    Core stages store a sentence under this key; the RAG subsystem stores a list
+    of evidence records (``{"text": ..., "source_id": ...}``) under the same one.
+    Callers only ever substring-match or truncate the value, so both shapes are
+    reduced to a single string here rather than making every call site branch.
+    """
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict):
+        text = value.get("text")
+        return text if isinstance(text, str) else ""
+    if isinstance(value, list):
+        parts: List[str] = []
+        for item in value:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict) and isinstance(item.get("text"), str):
+                parts.append(item["text"])
+        return " ".join(parts)
+    return ""
 
 
 def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
@@ -1613,7 +1667,7 @@ def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
                 entry["protein_complex"] = protein_complex
             else:
                 entry["protein"] = plain_protein
-        evidence = (item.get("evidence") or "").strip()
+        evidence = _evidence_text(item.get("evidence")).strip()
         if evidence:
             entry["evidence"] = evidence
         inference = item.get("inference")
@@ -1639,7 +1693,7 @@ def _clean_elements_with_states(items: Any) -> List[Dict[str, Any]]:
         biological_state = (item.get("biological_state") or "").strip()
         if biological_state:
             entry["biological_state"] = biological_state
-        evidence = (item.get("evidence") or "").strip()
+        evidence = _evidence_text(item.get("evidence")).strip()
         if evidence:
             entry["evidence"] = evidence
         cleaned.append(entry)
@@ -1688,7 +1742,7 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         biological_state = (item.get("biological_state") or "").strip()
         if biological_state:
             entry["biological_state"] = biological_state
-        evidence = (item.get("evidence") or "").strip()
+        evidence = _evidence_text(item.get("evidence")).strip()
         if evidence:
             entry["evidence"] = evidence
         inference = item.get("inference")
@@ -1722,7 +1776,7 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         elements = _clean_elements_with_states(item.get("elements_with_states"))
         if elements:
             entry["elements_with_states"] = elements
-        evidence = (item.get("evidence") or "").strip()
+        evidence = _evidence_text(item.get("evidence")).strip()
         if evidence:
             entry["evidence"] = evidence
         inference = item.get("inference")
@@ -1754,7 +1808,7 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         elements = _clean_elements_with_states(item.get("elements_with_states"))
         if elements:
             entry["elements_with_states"] = elements
-        evidence = (item.get("evidence") or "").strip()
+        evidence = _evidence_text(item.get("evidence")).strip()
         if evidence:
             entry["evidence"] = evidence
         inference = item.get("inference")
@@ -1784,7 +1838,7 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         biological_state = (item.get("biological_state") or "").strip()
         if biological_state:
             entry["biological_state"] = biological_state
-        evidence = (item.get("evidence") or "").strip()
+        evidence = _evidence_text(item.get("evidence")).strip()
         if evidence:
             entry["evidence"] = evidence
         inference = item.get("inference")
@@ -2048,15 +2102,35 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     reactions = _sl(processes.get("reactions", []))
     transports = _sl(processes.get("transports", []))
 
+    def _row_evidence(row: Dict[str, Any]) -> str:
+        """Only the core's one-sentence evidence field feeds this heuristic.
+
+        A RAG-synthesized row stores a *list* of retrieved passages under the same
+        key — often most of a paper. Substring-matching every protein name against
+        that corpus would attach every enzyme to every reaction, so a non-string
+        evidence field contributes nothing here.
+        """
+        value = row.get("evidence")
+        return value if isinstance(value, str) else ""
+
+    # Resolve each row's name/evidence once; re-deriving it per actor is quadratic.
+    reaction_rows = [
+        (reaction, (reaction.get("name") or "").lower(), _row_evidence(reaction))
+        for reaction in reactions
+        if isinstance(reaction, dict)
+    ]
+    transport_rows = [
+        (transport, (transport.get("name") or "").lower(), _row_evidence(transport))
+        for transport in transports
+        if isinstance(transport, dict)
+    ]
+
     for pname, entity_type in actors:
         pname_lower = pname.lower()
 
         # --- Reactions: inject missing catalyst modifiers ---
-        for reaction in reactions:
-            if not isinstance(reaction, dict):
-                continue
-            rname = (reaction.get("name") or "").lower()
-            revidence = (reaction.get("evidence") or "").lower()
+        for reaction, rname, revidence_text in reaction_rows:
+            revidence = revidence_text.lower()
             if pname_lower not in rname and pname_lower not in revidence:
                 continue
             existing_modifiers = _sl(reaction.get("modifiers", []))
@@ -2071,18 +2145,15 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
                 "entity": pname,
                 "entity_type": entity_type,
                 "role": "catalyst",
-                "evidence": (reaction.get("evidence") or "")[:120],
+                "evidence": revidence_text[:120],
                 "confidence": 0.9,
                 "provenance": "inferred",
-                "source_refs": [(reaction.get("evidence") or "")[:120]],
+                "source_refs": [revidence_text[:120]],
             })
 
         # --- Transports: inject missing transporter protein_complex entries ---
-        for transport in transports:
-            if not isinstance(transport, dict):
-                continue
-            tname = (transport.get("name") or "").lower()
-            tevidence = (transport.get("evidence") or "").lower()
+        for transport, tname, tevidence_text in transport_rows:
+            tevidence = tevidence_text.lower()
             if pname_lower not in tname and pname_lower not in tevidence:
                 continue
             existing_transporters = _sl(transport.get("transporters", []))

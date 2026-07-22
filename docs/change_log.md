@@ -2900,3 +2900,64 @@ route. Every command-line export passes through normalization, IR construction,
 contract validation, the deterministic IR writer, and PWML QA.
 
 ---
+
+### 2026-07-22 — RAG-synthesized payload bypassed post-merge hardening
+
+**Files changed:** `src/t2pw/app/streamlit_app.py`,
+`src/t2pw/pipeline/pipeline.py`, `src/t2pw/pipeline/process_normalizer.py`,
+`src/t2pw/mapping/map_ids.py`, `src/t2pw/rag/extract.py`,
+`src/t2pw/rag/ingest.py`, `src/t2pw/rag/synthesize.py`,
+`tests/test_rag_payload_gate_guardrails.py`
+
+**Error / symptom:** With RAG enabled, the PWML required-field gate failed the
+export with 6 errors: `reaction_missing_right_participants` on reactions 5 and
+19 (named `R-3-hydroxymyristoyl-ACP -> ?` and `UDP-N-acetylglucosamine -> ?`),
+and `reaction_missing_left_participants`, `reaction_missing_right_participants`
+plus two `duplicate_reaction_enzyme_complex` on reaction 23,
+`(3R)-hydroxymyristoyl acyl carrier protein dehydration`. Stage 1 had extracted
+5 well-formed reactions; the payload reaching the gate held 25.
+
+**Root cause:** Four defects, all on RAG-added rows.
+
+1. *Ordering.* `merge_additions` ends by hardening the merged payload
+   (`_normalize_reaction_actors` for actor dedup, `filter_unresolvable_reactions`
+   for empty/unresolvable sides). The orchestrator then replaced that hardened
+   payload wholesale with `rag_result.payload` on a bare reaction-count
+   comparison, so no RAG row was ever hardened. The guards that previously fixed
+   this error class were present and correct — they simply never ran.
+2. *One-sided transcription.* The three RAG reaction builders dropped a candidate
+   only when **both** sides were empty, so a passage naming a substrate but no
+   product became a live reaction; the name fallback rendered it `"<name> -> ?"`.
+3. *Catalyst promotion.* `promote_catalysts` deduped only against `modifiers`
+   (never `enzymes`) and stripped protein-like tokens out of `inputs` without
+   checking anything survived — which is what emptied reaction 23.
+4. *Post-mapping collision.* Two distinct actor names can resolve to one PathWhiz
+   complex during Stage 6 wrapper rewriting, and nothing deduped afterwards.
+
+Reaction 23 existed at all because the reference list was mined as prose: the
+back matter carried no section label, so it was absorbed into the preceding body
+section, and cited title #53 became a "reaction". Reaction 24 is the same defect
+with a luckier parse — it cleared the gate as bogus content.
+
+**Fix:** Extracted `apply_post_merge_cleanup` in `pipeline.py` and applied it to
+the adopted RAG payload *before* the count comparison, threading the lock
+manifest so a mangled locked reaction is quarantined rather than deleted. The
+RAG builders now require both sides. `promote_catalysts` dedupes against both
+actor collections and refuses to hollow out a reaction, deferring the verdict to
+`filter_unresolvable_reactions`. Stage 6 merges actors that collide after
+renaming, preserving their evidence. Ingest labels `references` /
+`acknowledgments` (matched on the last occurrence, tail-anchored) and never
+chunks them, with a citation-density backstop in synthesis for papers whose
+headers do not parse.
+
+`_inject_name_based_modifiers` is deliberately excluded from the shared cleanup:
+it substring-matches protein names against a row's evidence, and a RAG row's
+evidence is a list of retrieved passages rather than one sentence. Running it
+over that corpus attached every enzyme to every reaction — 99 spurious
+`reaction_enzyme_must_be_protein_complex` errors. It now reads string evidence
+only and stays in the merge path.
+
+**Pipeline consistency:** Every payload entering the post-pipeline path is
+hardened by the same function, whether it came from Stage 2 merging or from
+multi-paper synthesis. Replaying the failing payload takes it from 6 errors to a
+clean gate, removing 3 unusable reactions and keeping the other 22.

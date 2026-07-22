@@ -104,6 +104,28 @@ _HEADER_KEYWORDS: List[tuple] = [
     ("conclusion", r"\bconclusions?\b"),
 ]
 
+# Back-matter headers, matched separately from the body ones above. A reference
+# list is not prose: it is a run of cited titles, and an extractor reading it
+# transcribes those titles as reactions (a cited title like "An Escherichia coli
+# gene (FabZ) encoding (3R)-hydroxymyristoyl acyl carrier protein dehydrase"
+# becomes a reaction with no substrate or product). Without a label for it the
+# bibliography was absorbed into whichever body section matched last and mined
+# like any other passage.
+#
+# These match on the LAST occurrence and only in the document tail: the words
+# occur in ordinary prose ("see references therein"), and binding the boundary to
+# an early mention would discard the entire body.
+_BACK_MATTER_KEYWORDS: List[tuple] = [
+    ("references", r"\b(?:references|bibliography|literature cited)\b"),
+    ("acknowledgments", r"\backnowledge?ments?\b"),
+]
+
+# Fraction of the document a back-matter header must start beyond to count.
+_BACK_MATTER_MIN_POSITION = 0.55
+
+# Sections that are never handed to retrieval or reaction extraction.
+_NON_EXTRACTABLE_SECTIONS = frozenset({"references", "acknowledgments"})
+
 _FIGURE_RE = re.compile(r"(?i)\b(?:fig(?:ure)?\.?)\s*\d+")
 
 
@@ -193,6 +215,18 @@ def _split_sections(full_text: str) -> List[tuple]:
         match = re.search(pattern, lowered)
         if match:
             boundaries[label] = match.start()
+
+    # Back matter binds to its last mention, and only in the document tail.
+    tail_start = int(len(lowered) * _BACK_MATTER_MIN_POSITION)
+    for label, pattern in _BACK_MATTER_KEYWORDS:
+        if label in boundaries:
+            continue
+        last_start = -1
+        for match in re.finditer(pattern, lowered):
+            last_start = match.start()
+        if last_start >= tail_start:
+            boundaries[label] = last_start
+
     points = sorted(boundaries.items(), key=lambda kv: kv[1])
     if not points:
         return [("body", text)]
@@ -271,9 +305,17 @@ def chunk_paper(
 
     full_text = str(candidate.full_text or "").strip()
     if full_text:
-        for section, span in _split_sections(full_text):
+        body_spans = [
+            (section, span)
+            for section, span in _split_sections(full_text)
+            if section not in _NON_EXTRACTABLE_SECTIONS
+        ]
+        for section, span in body_spans:
             _emit(section, span, chunks)
-        for ordinal, caption in enumerate(_figure_captions(full_text)):
+        # Caption scanning reads the retained body only, so "Fig." mentions inside
+        # cited titles do not smuggle the bibliography back in.
+        caption_source = "\n".join(span for _section, span in body_spans) or full_text
+        for ordinal, caption in enumerate(_figure_captions(caption_source)):
             chunks.append(
                 Chunk(
                     id=_chunk_id(source_id, "figure", ordinal),

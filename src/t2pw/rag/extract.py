@@ -207,8 +207,15 @@ def _parse_reactions_json(raw: Any) -> List[Dict[str, Any]]:
 
     Output shape per reaction (matching what ``synthesize`` consumes):
     ``{"name": str, "inputs": [{"name", "stoichiometry"}], "outputs": [...],
-    "enzymes": [str], "reversible": bool}``. A reaction with neither inputs nor
-    outputs is dropped.
+    "enzymes": [str], "reversible": bool}``.
+
+    A reaction missing **either** side is dropped. A passage often names a
+    substrate without ever stating the product ("LpxC activity drives the
+    consumption of R-3-hydroxymyristoyl-ACP"); transcribing that as a one-sided
+    reaction produces a row PWML cannot express — synthesis names it
+    ``"<substrate> -> ?"`` and the required-field gate rejects it with
+    ``reaction_missing_right_participants``. A half-read statement is not a
+    reaction, so it is left out rather than emitted incomplete.
     """
     data = _loads_lenient(raw)
     if not isinstance(data, dict):
@@ -222,7 +229,7 @@ def _parse_reactions_json(raw: Any) -> List[Dict[str, Any]]:
             continue
         inputs = _clean_side(item.get("inputs"))
         outputs = _clean_side(item.get("outputs"))
-        if not inputs and not outputs:
+        if not inputs or not outputs:
             continue
         enzymes = [
             e.strip()

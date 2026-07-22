@@ -418,9 +418,11 @@ def _parse_reaction_line(line: str) -> Optional[Dict[str, Any]]:
     lhs, rhs, reversible = parsed
     inputs = _parse_side(lhs)
     outputs = _parse_side(rhs)
-    # A "reaction" that lost every participant to the species guards was garbage
-    # (e.g. a " ; "-joined metadata bag) — discard it entirely.
-    if not inputs and not outputs:
+    # A "reaction" that lost participants to the species guards was garbage (e.g.
+    # a " ; "-joined metadata bag) — discard it entirely. Both sides are required:
+    # a one-sided row cannot be expressed in PWML, and the name fallback below
+    # would render it "<participant> -> ?", which the required-field gate rejects.
+    if not inputs or not outputs:
         return None
     # Reject a reaction name that is itself pathway-metadata garbage; fall back
     # to a participant-derived name instead.
@@ -474,7 +476,10 @@ def _reaction_from_extracted(
         for p in _participants_from_field(parsed.get("outputs"))
         if not _is_invalid_species_token(p.name)
     ]
-    if not inputs and not outputs:
+    # Both sides are required — see ``_parse_reaction_line``. A passage that names
+    # only a substrate (or whose other side was entirely junk tokens) yields no
+    # exportable reaction, so it is dropped here rather than named "<name> -> ?".
+    if not inputs or not outputs:
         return None
     enzymes: List[str] = []
     for raw in _safe_list(parsed.get("enzymes")):
@@ -536,6 +541,36 @@ def _make_memoized_extractor(prose_extractor: Optional[Any]) -> Optional[Any]:
     return _run
 
 
+_DOI_RE = re.compile(r"doi:\s*10\.", re.IGNORECASE)
+_ACCESSION_RE = re.compile(r"\b(?:PMC\d{4,}|PMID\s*:?\s*\d{4,})\b", re.IGNORECASE)
+_CITATION_YEAR_RE = re.compile(r"\b(?:19|20)\d{2}\s*[.;]")
+
+# A chunk needs this many citation markers, this many dated entries, and this
+# marker density (per 1000 characters) before it is treated as a reference list.
+_BIBLIOGRAPHY_MIN_MARKERS = 3
+_BIBLIOGRAPHY_MIN_ENTRIES = 3
+_BIBLIOGRAPHY_MARKERS_PER_1K = 2.0
+
+
+def _is_bibliography_text(text: str) -> bool:
+    """True when a passage reads as a reference list rather than prose.
+
+    Keyed on density, not on absolute counts: ordinary discussion cites a DOI or
+    two, whereas a bibliography packs an accession and a dated entry into every
+    line. Requiring markers *and* dated entries *and* a per-length density keeps
+    a paragraph that happens to quote a reference from being discarded.
+    """
+    body = text or ""
+    if len(body) < 200:
+        return False
+    markers = len(_DOI_RE.findall(body)) + len(_ACCESSION_RE.findall(body))
+    if markers < _BIBLIOGRAPHY_MIN_MARKERS:
+        return False
+    if len(_CITATION_YEAR_RE.findall(body)) < _BIBLIOGRAPHY_MIN_ENTRIES:
+        return False
+    return (markers * 1000.0 / len(body)) >= _BIBLIOGRAPHY_MARKERS_PER_1K
+
+
 def _reactions_from_bundle(
     bundle: Any, extractor: Optional[Any] = None
 ) -> List[_Reaction]:
@@ -561,6 +596,14 @@ def _reactions_from_bundle(
         # clean single equation — so its (incidental) arrow must not be parsed.
         source_type = _text(getattr(chunk, "source_type", "")).lower()
         if source_type not in _PARSEABLE_SOURCE_TYPES:
+            continue
+        # Back-matter is labelled and dropped at ingest, but header detection is
+        # best-effort — a paper whose only "methods" match lands inside its
+        # reference list leaves the bibliography tagged as body text. Cited titles
+        # read as reaction descriptions ("... gene (FabZ) encoding
+        # (3R)-hydroxymyristoyl acyl carrier protein dehydrase"), so a
+        # citation-dense chunk is refused here as well.
+        if _is_bibliography_text(_text(getattr(chunk, "text", ""))):
             continue
         prov = _provenance_from_chunk(chunk)
         evidence = _evidence_from_hit(hit)

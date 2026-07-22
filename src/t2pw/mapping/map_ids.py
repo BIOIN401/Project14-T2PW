@@ -4774,7 +4774,18 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                 continue
             name_norm = _normalize_name(name)
             if actor_type == "protein_complex" or name_norm in complexes_by_norm:
-                rewritten.append({"entity": complexes_by_norm.get(name_norm, {}).get("name", name), "entity_type": "protein_complex", "role": role or "catalyst"})
+                canonical_row = {
+                    "entity": complexes_by_norm.get(name_norm, {}).get("name", name),
+                    "entity_type": "protein_complex",
+                    "role": role or "catalyst",
+                }
+                # Carry the actor's supporting metadata across the rename, as the
+                # protein->complex branch below does. Dropping it here discarded the
+                # evidence behind every already-typed protein_complex actor.
+                for keep_key in ["evidence", "confidence", "provenance", "biological_state"]:
+                    if keep_key in actor_dict:
+                        canonical_row[keep_key] = actor_dict[keep_key]
+                rewritten.append(canonical_row)
                 continue
             protein_row = proteins_by_norm.get(name_norm)
             if name_norm in dropped_protein_norms:
@@ -4847,6 +4858,77 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             )
         return rewritten
 
+    def _merge_actor_row(target: Dict[str, Any], other: Dict[str, Any]) -> None:
+        """Fold ``other`` into ``target``, keeping the richer evidence of the two."""
+        for field in ("evidence", "source_refs"):
+            incoming = other.get(field)
+            if not incoming:
+                continue
+            existing = target.get(field)
+            if not existing:
+                target[field] = incoming
+            elif isinstance(existing, list) and isinstance(incoming, list):
+                target[field] = existing + [row for row in incoming if row not in existing]
+            elif isinstance(existing, str) and isinstance(incoming, str) and incoming not in existing:
+                target[field] = f"{existing} {incoming}".strip()
+        for value in (other.get("confidence"),):
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                current = target.get("confidence")
+                if not isinstance(current, (int, float)) or isinstance(current, bool) or value > current:
+                    target["confidence"] = value
+        # An observed actor outranks an inferred one.
+        rank = {"extracted": 3, "curated": 2, "enriched": 1, "inferred": 0}
+        if rank.get(str(other.get("provenance") or ""), -1) > rank.get(str(target.get("provenance") or ""), -1):
+            target["provenance"] = other["provenance"]
+
+    def _dedupe_actor_rows(rows: List[Any], pointer_prefix: str) -> List[Any]:
+        """Collapse actor rows that only became identical during complex rewriting.
+
+        Two genuinely different protein names can resolve to one PathWhiz complex —
+        a catalyst promoted from a reaction's inputs and the enzyme the paper named,
+        for instance — and this is the single point where that collision becomes
+        visible. Left in place, the export gate rejects the reaction with
+        ``duplicate_reaction_enzyme_complex``, once per collection since it tracks
+        ``enzymes`` and ``modifiers`` separately. Rows are merged rather than
+        discarded so no evidence is lost.
+        """
+        deduped: List[Any] = []
+        index_by_key: Dict[Tuple[str, str, str, str], int] = {}
+        for idx, row in enumerate(rows):
+            if not isinstance(row, dict):
+                deduped.append(row)
+                continue
+            name = _normalize_name(
+                str(row.get("entity") or row.get("protein_complex") or row.get("protein") or "")
+            )
+            if not name:
+                deduped.append(row)
+                continue
+            key = (
+                name,
+                str(row.get("entity_type") or ""),
+                str(row.get("role") or ""),
+                str(row.get("biological_state") or ""),
+            )
+            target_idx = index_by_key.get(key)
+            if target_idx is None:
+                index_by_key[key] = len(deduped)
+                deduped.append(row)
+                continue
+            _merge_actor_row(deduped[target_idx], row)
+            summary["reaction_enzyme_duplicate_actors_merged"] = (
+                summary.get("reaction_enzyme_duplicate_actors_merged", 0) + 1
+            )
+            actions.append(
+                {
+                    "type": "reaction_enzyme_duplicate_actor_merged",
+                    "json_pointer": f"{pointer_prefix}/{idx}",
+                    "entity": row.get("entity"),
+                    "reason": "distinct source names resolved to the same protein complex",
+                }
+            )
+        return deduped
+
     for ridx, reaction in enumerate(reactions):
         if not isinstance(reaction, dict):
             continue
@@ -4854,7 +4936,8 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             rows = _safe_list(reaction.get(key))
             if not rows:
                 continue
-            reaction[key] = _rewrite_rows(rows, f"/processes/reactions/{ridx}/{key}", reaction)
+            pointer = f"/processes/reactions/{ridx}/{key}"
+            reaction[key] = _dedupe_actor_rows(_rewrite_rows(rows, pointer, reaction), pointer)
 
     return {"summary": summary, "actions": actions}
 
