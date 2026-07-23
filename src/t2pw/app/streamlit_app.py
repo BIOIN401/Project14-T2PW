@@ -77,9 +77,11 @@ from t2pw.pipeline.reaction_preservation_validator import (
 )
 from t2pw.curation.completeness_audit import run_final_completeness_audit
 from t2pw.pipeline.preprocessor import (
+    describe_preprocess_status,
     format_context_header,
     is_ambiguous_multi_example_review_context,
     preprocess,
+    strip_preprocess_status,
 )
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
 from t2pw.pwml.validate import discover_structure_signature, repair_tree, validate_generated_tree
@@ -2927,7 +2929,8 @@ if submit:
             pathway_context
         ):
             st.warning(
-                "Stage 0 (preprocessor) returned no usable context — no pathway name, "
+                f"Stage 0 failed: {describe_preprocess_status(pathway_context)}\n\n"
+                "It returned no usable context — no pathway name, "
                 "organism, compounds or proteins. Extraction will be unguided, and "
                 "multi-paper RAG cannot build a literature query, so no papers will be "
                 "fetched. This is usually a transient LLM failure — re-running often "
@@ -4361,7 +4364,12 @@ if st.session_state.get("pipeline_ready"):
                     try:
                         _completeness_report = run_final_completeness_audit(
                             source_text=_source_text_for_audit,
-                            preprocessor_context=st.session_state.get("pathway_context"),
+                            # strip_*: this context is json.dumps'd straight into
+                            # the audit prompt, and the Stage 0 diagnostic block
+                            # can hold a preview of an untrusted raw model reply.
+                            preprocessor_context=strip_preprocess_status(
+                                st.session_state.get("pathway_context")
+                            ),
                             locked_manifest_path=_audit_manifest_path if _audit_manifest_path.exists() else None,
                             final_pathway_json=_audit_final_json,
                             final_preservation_report=_audit_pres_report,

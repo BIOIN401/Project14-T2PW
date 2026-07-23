@@ -9,6 +9,62 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-23 — Stage 0 never received the user's scope context, and its failures were indistinguishable
+
+**Files changed:** `src/t2pw/pipeline/preprocessor.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_preprocessor.py`,
+`docs/change_log.md`
+
+**Error / symptom:** On a multi-example review (the PNAS queuosine salvage
+paper), Stage 0 reported `Ambiguous review scope: … no target example was
+selected` with `candidate_examples` populated and every pathway field blank, so
+RAG built an empty literature query and fetched 0 papers. Naming a target example
+in the "Optional extraction focus / task context" box changed nothing. A later run
+instead reported `Stage 0 (preprocessor) returned no usable context` with no
+candidate examples at all — a different failure that looked identical in the UI.
+
+**Root cause:** Two defects on the same surface.
+
+1. *Scope context never reached Stage 0.* `preprocess_system.txt` branches on a
+   `<user_task_context>` / `<pathway_scope>` block (Case B — "a specific example
+   IS named"), but `preprocess()` had no such parameter and its user message
+   carried only the document text. The app collected `user_task_context` and
+   passed it to Stage 1 and later stages — never to Stage 0. Case B was therefore
+   structurally unreachable, and every `multi_example_review` fell through to
+   Case C, which *deliberately* blanks `pathway_name` / `key_compounds` /
+   `key_proteins` rather than merge examples. No prompt wording could fix it.
+2. *Failures were indistinguishable.* `preprocess()` fails closed: an API
+   exception, a non-JSON reply, and a genuinely empty result all returned the same
+   `_EMPTY_CONTEXT`, with only a `logger.warning` the UI never surfaces. The
+   generic "usually a transient LLM failure" warning also fired on the deliberate
+   Case C guardrail, where the blank fields are by design, the outcome is
+   deterministic, and re-running never helps.
+
+**Fix:** `preprocess()` takes an optional `user_task_context` and prepends it as
+an escaped `<user_task_context>` block ahead of the document text; both call sites
+forward it, **including the long-document retry** that would otherwise silently
+drop the scope. The close-tag escape is replicated from
+`pipeline._format_user_task_context` rather than imported, because `pipeline`
+already imports `preprocessor` and importing back is a circular import. Every
+result now carries a `preprocess_status` diagnostic (`ok` / `llm_error` /
+`unparseable` / `empty_reply`, with a 200-char capped raw preview), written
+*after* the model's own keys are merged so a model reply containing that key can
+never masquerade as the real status; the Stage 0 warning reports it. The
+transient-failure warning is suppressed on the ambiguous-review branch, which
+raises its own error, and that error now tells the user to name a target example.
+
+**Pipeline consistency:** With `user_task_context` absent, the Stage 0 messages
+are byte-identical to before, so single-paper runs are unchanged. Case B is now
+reachable exactly as the prompt already documented — verified against the PNAS
+paper, where Stage 0 returns `scope_status: "targeted"` with the selected example
+and organism populated instead of a blank context. `preprocess()` still returns
+every `_EMPTY_CONTEXT` key on every path. Because the diagnostic carries an
+untrusted raw model reply, the one seam that serialized the whole context into
+another prompt (`completeness_audit`'s `json.dumps(preprocessor_context)`) now
+receives a stripped copy, so a raw model reply can never re-enter an LLM prompt.
+
+---
+
 ### 2026-07-23 — RAG under-merged cross-paper synonym duplicates
 
 **Files changed:** `src/t2pw/rag/synonyms.py` (new), `src/t2pw/rag/synthesize.py`,

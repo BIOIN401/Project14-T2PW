@@ -19,6 +19,26 @@ _EMPTY_CONTEXT: Dict[str, Any] = {
     "pathway_relevance_score": 0.0,
 }
 
+#: Top-level key on every :func:`preprocess` result holding *why* Stage 0
+#: produced what it produced.  Without it an API error, a malformed reply and a
+#: genuinely empty result are indistinguishable to callers and in the UI.
+#:
+#: The value is always a dict::
+#:
+#:     {
+#:       "status": "ok" | "llm_error" | "unparseable" | "empty_reply",
+#:       "detail": "<one-line human-readable cause>",
+#:       "raw_len": <int>,       # reply paths only (unparseable / empty_reply)
+#:       "raw_preview": "<str>", # reply paths only, capped at _RAW_PREVIEW_LIMIT
+#:     }
+#:
+#: It is written *after* the model's own keys are merged in, so a model reply
+#: that happens to contain this key can never masquerade as the real status.
+PREPROCESS_STATUS_KEY = "preprocess_status"
+
+#: Hard cap (in characters, marker included) on the raw-reply preview.
+_RAW_PREVIEW_LIMIT = 200
+
 
 def _format_user_task_context(user_task_context: Optional[str]) -> str:
     """
@@ -59,6 +79,11 @@ def preprocess(
     The returned dict always has all keys from _EMPTY_CONTEXT.  If the LLM
     fails or returns unparseable output, the empty context is returned so
     callers never need to handle None.
+
+    It additionally always carries :data:`PREPROCESS_STATUS_KEY`, recording why
+    the result looks the way it does (``ok`` / ``llm_error`` / ``unparseable`` /
+    ``empty_reply``) so an empty context is never ambiguous.  That key is set
+    last, after the model's own keys are merged, so it cannot be clobbered.
     """
     system_prompt = (PROMPTS_DIR / "preprocess_system.txt").read_text(encoding="utf-8")
     task_context_block = _format_user_task_context(user_task_context)
@@ -75,6 +100,8 @@ def preprocess(
         {"role": "user", "content": user_prompt},
     ]
 
+    context: Dict[str, Any]
+    status: Dict[str, Any]
     try:
         raw = chat(
             messages,
@@ -86,12 +113,83 @@ def preprocess(
         )
         result = _parse_json(raw)
         if isinstance(result, dict):
-            return {**_EMPTY_CONTEXT, **result}
-        logger.warning("Preprocessor returned non-dict JSON; using empty context.")
+            context = {**_EMPTY_CONTEXT, **result}
+            status = {
+                "status": "ok",
+                "detail": "Stage 0 returned a JSON object.",
+            }
+        else:
+            raw_text = raw if isinstance(raw, str) else ("" if raw is None else str(raw))
+            context = dict(_EMPTY_CONTEXT)
+            if not raw_text.strip():
+                # Distinct from `unparseable`: there was nothing to parse at all.
+                logger.warning("Preprocessor returned an empty reply; using empty context.")
+                status = {
+                    "status": "empty_reply",
+                    "detail": f"The model returned an empty reply ({len(raw_text)} chars).",
+                    "raw_len": len(raw_text),
+                    "raw_preview": "",
+                }
+            else:
+                logger.warning("Preprocessor returned non-dict JSON; using empty context.")
+                status = {
+                    "status": "unparseable",
+                    "detail": (
+                        f"The model reply ({len(raw_text)} chars) was not a JSON object."
+                    ),
+                    "raw_len": len(raw_text),
+                    "raw_preview": _preview(raw_text),
+                }
     except Exception as exc:
         logger.warning("Preprocessor call failed: %s", exc)
+        context = dict(_EMPTY_CONTEXT)
+        status = {
+            "status": "llm_error",
+            "detail": f"{type(exc).__name__}: {exc}",
+        }
 
-    return dict(_EMPTY_CONTEXT)
+    # Set last, so a model-supplied key of the same name cannot shadow the
+    # real status.  Every path above starts from _EMPTY_CONTEXT, so the
+    # "all _EMPTY_CONTEXT keys are present" invariant holds unconditionally.
+    context[PREPROCESS_STATUS_KEY] = status
+    return context
+
+
+def describe_preprocess_status(ctx: Optional[Dict[str, Any]]) -> str:
+    """
+    Render :data:`PREPROCESS_STATUS_KEY` as a single human-readable clause for
+    the UI, e.g. ``"llm_error - ConnectionError: timed out"`` or
+    ``"returned unparseable JSON (1234 chars): {oops..."``.
+
+    Returns ``"unknown (no status recorded)"`` when the key is missing, which
+    only happens for contexts that did not come from :func:`preprocess`.
+    """
+    status = ctx.get(PREPROCESS_STATUS_KEY) if isinstance(ctx, dict) else None
+    if not isinstance(status, dict):
+        return "unknown (no status recorded)"
+
+    name = _clean_scalar(status.get("status")) or "unknown"
+    detail = _clean_scalar(status.get("detail"))
+    if name == "unparseable":
+        preview = _clean_scalar(status.get("raw_preview"))
+        return f"returned unparseable JSON ({status.get('raw_len')} chars): {preview}"
+    if detail:
+        return f"{name} - {detail}"
+    return name
+
+
+def strip_preprocess_status(ctx: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """
+    Return ``ctx`` without :data:`PREPROCESS_STATUS_KEY`.
+
+    Use this at any call site that serializes the whole context into an LLM
+    prompt (e.g. the final completeness audit): the diagnostic block can carry a
+    preview of an untrusted raw model reply, which has no business being
+    replayed into another prompt.
+    """
+    if not isinstance(ctx, dict) or PREPROCESS_STATUS_KEY not in ctx:
+        return ctx
+    return {key: value for key, value in ctx.items() if key != PREPROCESS_STATUS_KEY}
 
 
 def format_context_header(ctx: Optional[Dict[str, Any]]) -> str:
@@ -176,6 +274,17 @@ def is_ambiguous_multi_example_review_context(ctx: Optional[Dict[str, Any]]) -> 
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
+def _preview(text: str, limit: int = _RAW_PREVIEW_LIMIT) -> str:
+    """
+    Collapse whitespace and hard-cap ``text`` at ``limit`` characters (the
+    truncation marker counts toward the cap, so ``len(result) <= limit`` always).
+    """
+    collapsed = " ".join(text.split())
+    if len(collapsed) <= limit:
+        return collapsed
+    return collapsed[: max(limit - 3, 0)] + "..."
+
 
 def _clean_scalar(value: Any) -> str:
     if value is None:
