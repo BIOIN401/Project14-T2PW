@@ -20,23 +20,51 @@ _EMPTY_CONTEXT: Dict[str, Any] = {
 }
 
 
+def _format_user_task_context(user_task_context: Optional[str]) -> str:
+    """
+    Format optional user scoping context for the Stage 0 prompt.
+
+    Source of truth: ``t2pw.pipeline.pipeline._format_user_task_context``.  It is
+    replicated here rather than imported because ``pipeline`` already imports
+    this module (``from t2pw.pipeline.preprocessor import ...``), so importing it
+    back would create a circular import.  Keep the two in sync.
+
+    The context is untrusted text; neutralize matching close-tags so user text
+    cannot break out of the intended block in the prompt.
+    """
+    if not user_task_context or not user_task_context.strip():
+        return ""
+    safe_context = user_task_context.strip().replace("</user_task_context>", "<\\/user_task_context>")
+    return f"<user_task_context>\n{safe_context}\n</user_task_context>"
+
+
 def preprocess(
     text: str,
     *,
     temperature: float = 0.0,
     max_tokens: int = 500,
+    user_task_context: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Lightweight preprocessing pass: sends raw text to the LLM and returns a
     structured biological context summary.
+
+    ``user_task_context`` is the optional user-supplied extraction focus.  When
+    non-blank it is prepended to the user message as a ``<user_task_context>``
+    block so the Stage 0 system prompt can reach its "specific example named"
+    branch (Case B); without it every multi-example review deterministically
+    falls through to the ambiguous Case C.  When it is None/blank the messages
+    are byte-identical to the no-context form.
 
     The returned dict always has all keys from _EMPTY_CONTEXT.  If the LLM
     fails or returns unparseable output, the empty context is returned so
     callers never need to handle None.
     """
     system_prompt = (PROMPTS_DIR / "preprocess_system.txt").read_text(encoding="utf-8")
+    task_context_block = _format_user_task_context(user_task_context)
     user_prompt = (
-        "Analyze the following text and return the structured context summary JSON.\n\n"
+        (f"{task_context_block}\n\n" if task_context_block else "")
+        + "Analyze the following text and return the structured context summary JSON.\n\n"
         "<<<\n"
         f"{text.strip()}\n"
         ">>>"

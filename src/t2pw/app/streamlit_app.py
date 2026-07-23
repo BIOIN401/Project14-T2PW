@@ -2904,7 +2904,9 @@ if submit:
 
     # Preprocessing: lightweight context summary to guide extraction and inference
     with st.spinner("Running preprocessor..."):
-        pathway_context = preprocess(text, temperature=temperature)
+        pathway_context = preprocess(
+            text, temperature=temperature, user_task_context=user_task_context
+        )
         # Stage 0 fails CLOSED to an empty context (a swallowed LLM error or an
         # unparseable reply are both logged, not raised). An empty context
         # silently disables RAG: build_query() then returns "", so zero papers
@@ -2913,9 +2915,17 @@ if submit:
         # and intro, and the smaller payload also dodges transient failures.
         if not _has_usable_context(pathway_context) and len(text) > _PREPROCESS_RETRY_CHARS:
             pathway_context = preprocess(
-                text[:_PREPROCESS_RETRY_CHARS], temperature=temperature
+                text[:_PREPROCESS_RETRY_CHARS],
+                temperature=temperature,
+                user_task_context=user_task_context,
             )
-        if not _has_usable_context(pathway_context):
+        # A deliberate Case C ambiguous multi-example review also has blank
+        # pathway fields, but that is the prompt's guardrail, not a flaky call:
+        # it is deterministic and re-running never helps. The branch below
+        # raises its own error, so stay quiet here.
+        if not _has_usable_context(pathway_context) and not is_ambiguous_multi_example_review_context(
+            pathway_context
+        ):
             st.warning(
                 "Stage 0 (preprocessor) returned no usable context — no pathway name, "
                 "organism, compounds or proteins. Extraction will be unguided, and "
@@ -2938,7 +2948,9 @@ if submit:
         }
         st.error(
             "Ambiguous review scope: this looks like a multi-example review, but no target example was selected. "
-            "Choose one candidate example and rerun extraction."
+            "Name the example you want in the \"Optional extraction focus / task context\" box above "
+            "(one of the candidate example names below works), then re-run. "
+            "Re-running without naming a target will produce this same result."
         )
         if candidate_examples:
             st.subheader("Candidate examples")

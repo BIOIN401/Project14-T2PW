@@ -1,133 +1,169 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: LpxA reaction
+REACTION 1: LpxA forward reaction
   Reactants: UDP-N-acetylglucosamine [unknown], β-hydroxymyristoyl-ACP [unknown]
-  Products:  UDP-3-O-(β-hydroxymyristoyl)-N-acetylglucosamine [unknown], ACP [unknown]
+  Products:  UDP-3-O-[β-hydroxymyristoyl]-N-acetylglucosamine [unknown], ACP [unknown]
   Modifier:  LpxA [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: LpxC reaction
-  Reactants: UDP-3-O-(β-hydroxymyristoyl)-N-acetylglucosamine [unknown]
-  Products:  UDP-2,3-bis(β-hydroxymyristoyl)-D-glucosamine [unknown], acetate [unknown]
+REACTION 2: LpxA reverse reaction
+  Reactants: UDP-3-O-[β-hydroxymyristoyl]-N-acetylglucosamine [unknown], ACP [unknown]
+  Products:  UDP-N-acetylglucosamine [unknown], β-hydroxymyristoyl-ACP [unknown]
+  Modifier:  LpxA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 3: LpxC deacetylation
+  Reactants: UDP-3-O-[β-hydroxymyristoyl]-N-acetylglucosamine [unknown]
+  Products:  UDP-3-O-(β-hydroxymyristoyl)-D-glucosamine [unknown]
   Modifier:  LpxC [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: LpxD reaction
-  Reactants: UDP-3-O-(β-hydroxymyristoyl)-N-acetylglucosamine [unknown], β-hydroxymyristoyl-ACP [unknown]
+REACTION 4: LpxD acylation
+  Reactants: UDP-3-O-(β-hydroxymyristoyl)-D-glucosamine [unknown], β-hydroxymyristoyl-ACP [unknown]
   Products:  UDP-2,3-bis(β-hydroxymyristoyl)-D-glucosamine [unknown], ACP [unknown]
   Modifier:  LpxD [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: LpxH reaction
+REACTION 5: LpxH cleavage
   Reactants: UDP-2,3-bis(β-hydroxymyristoyl)-D-glucosamine [unknown]
-  Products:  lipid X [unknown], UMP [unknown]
+  Products:  lipid X [unknown], UDP [unknown]
   Modifier:  LpxH [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 5: LpxB reaction
+REACTION 6: LpxB condensation
   Reactants: lipid X [unknown], UDP-2,3-bis(β-hydroxymyristoyl)-D-glucosamine [unknown]
-  Products:  lipid A disaccharide [unknown], UMP [unknown]
+  Products:  lipid A disaccharide [unknown], UDP [unknown]
   Modifier:  LpxB [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: LpxK reaction
+REACTION 7: LpxK phosphorylation
   Reactants: lipid A disaccharide [unknown], ATP [unknown]
-  Products:  lipid IV [unknown], ADP [unknown]
+  Products:  lipid IV_A [unknown], ADP [unknown]
   Modifier:  LpxK [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 7: WaaA reaction (first KDO transfer)
-  Reactants: lipid IV [unknown], CMP-KDO [unknown]
-  Products:  KDO-lipid IV [unknown], CMP [unknown]
+REACTION 8: WaaA KDO transfer
+  Reactants: lipid IV_A [unknown], CMP-KDO [unknown]
+  Products:  KDO_2-lipid IV_A [unknown], CMP [unknown]
   Modifier:  WaaA [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 8: WaaA reaction (second KDO transfer)
-  Reactants: KDO-lipid IV [unknown], CMP-KDO [unknown]
-  Products:  KDO2-lipid IV [unknown], CMP [unknown]
+REACTION 9: WaaA reverse reaction
+  Reactants: KDO_2-lipid IV_A [unknown], CMP [unknown]
+  Products:  KDO-lipid IV_A [unknown], CMP-KDO [unknown]
   Modifier:  WaaA [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 9: WaaA alternative reaction
-  Reactants: KDO2-lipid A [unknown], CMP-KDO [unknown]
-  Products:  alternate lipid A [unknown], CMP [unknown]
-  Modifier:  WaaA [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 10: LpxL reaction
-  Reactants: KDO2-lipid IV [unknown], laurate [unknown]
-  Products:  KDO2-lipid A [unknown], ACP [unknown]
-  Modifier:  LpxL [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 11: LpxM reaction
-  Reactants: KDO2-lipid A [unknown], myristate [unknown]
-  Products:  KDO2-lipid A [unknown], ACP [unknown]
-  Modifier:  LpxM [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  transport_like — same species appear as both input and output
-
-REACTION 12: reversible acylation of UDP-GlcNAc
-  Reactants: UDP-GlcNAc [unknown], β-hydroxyacyl-ACP [unknown]
-  Products:  LpxA product [unknown]
-  Modifier:  LpxA [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 13: LpxA acylation of UDP-GlcNAc
-  Reactants: uridine diphosphate-N-acetyl-glucosamine (UDP-GlcNAc) [unknown], β-hydroxyacyl-acyl carrier protein (ACP) [unknown]
-  Products:  LpxA product [unknown]
-  Modifier:  LpxA [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 14: phosphorylation of tetra-acylated disaccharide intermediate
-  Reactants: tetra-acylated disaccharide intermediate [unknown]
-  Products:  lipid IV A [unknown]
-  Modifier:  LpxK [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 15: addition of Kdo residues to lipid IV A
-  Reactants: lipid IV A [unknown], Kdo residues [unknown]
-  Products:  Kdo-lipid IV A [unknown]
-  Modifier:  WaaA [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 16: acylation of Kdo-lipid IV A
-  Reactants: Kdo-lipid IV A [unknown]
-  Products:  Kdo-lipid A [unknown]
+REACTION 10: Late acylations by LpxL and LpxM
+  Reactants: KDO_2-lipid IV_A [unknown]
+  Products:  KDO_2-lipid A [unknown]
   Modifier:  LpxL [unknown] (role=catalyst, confidence=1.0), LpxM [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 17: formation of a tetra-acylated disaccharide intermediate
-  Reactants: tetra-acylated disaccharide intermediate [unknown]
-  Products:  tetra-acylated disaccharide intermediate [unknown]
-  Modifier:  LpxB [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  transport_like — same species appear as both input and output
-
-REACTION 18: Kdo residues -> first sugar(s) of the c
-  Reactants: Kdo residues [unknown]
-  Products:  first sugar(s) of the c [unknown]
-  Modifier:  WaaA [unknown] (role=catalyst, confidence=1.0)
+REACTION 11: UDP-DAGn -> lipid X
+  Reactants: UDP-DAGn [unknown]
+  Products:  lipid X [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 19: proteolysis of Ec LpxC
-  Reactants: Ec LpxC [unknown]
-  Products:  Ec LpxC [unknown]
-  Modifier:  FtsH [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  transport_like — same species appear as both input and output
+REACTION 12: lipoprotein maturation
+  Reactants: GPL donor [unknown]
+  Products:  lipoprotein [unknown]
+  Modifier:  Lnt [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
 
-REACTION 20: degrades GPLs to produce lysophospholipids and fatty acids
+REACTION 13: GPL cleavage
   Reactants: GPLs [unknown]
-  Products:  lysophospholipids [unknown], fatty acids [unknown]
+  Products:  LPLs [unknown], fatty acids [unknown]
   Modifier:  PldA [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 21: activates exogenous fatty acids with coenzyme A to produce cytosolic acyl-CoA species
-  Reactants: exogenous fatty acids [unknown], CoA-SH [unknown]
-  Products:  cytosolic acyl-CoA species [unknown]
-  Modifier:  FadD [unknown] (role=catalyst, confidence=1.0)
+REACTION 14: palmitate transfer
+  Reactants: GPL [unknown], lipid A [unknown]
+  Products:  hepta-acylated LPS [unknown], LPL [unknown]
+  Modifier:  PagP [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 15: lipoprotein maturation
+  Reactants: GPL [unknown], lipoprotein [unknown]
+  Products:  LPL [unknown]
+  Modifier:  Lnt [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 16: degradation of mislocalized GPLs
+  Reactants: GPLs [unknown]
+  Products:  LPLs [unknown], free fatty acids [unknown]
+  Modifier:  PldA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 17: acyl chain transfer to LPS
+  Reactants: surface GPLs [unknown], lipid A anchor of LPS [unknown]
+  Products:  LPLs [unknown]
+  Modifier:  PagP [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 18: LPL acylation
+  Reactants: LPLs [unknown], acyl-ACP [unknown]
+  Products:  GPLs [unknown]
+  Modifier:  Aas [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 19: acylation of UDP-GlcNAc
+  Reactants: UDP-GlcNAc [unknown], R -3-hydroxymyristoyl-ACP [unknown]
+  Products:  lipid A [unknown]
+  Modifier:  LpxA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 20: UDP-GlcNAc -> lipid A
+  Reactants: UDP-GlcNAc [unknown], R-3-hydroxymyristoyl-ACP [unknown]
+  Products:  lipid A [unknown]
+  Modifier:  LpxA [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 21: PagP acyltransferase activity
+  Reactants: GPLs [unknown], palmitate [unknown]
+  Products:  hepta-acylated LPS [unknown], LPL [unknown]
+  Modifier:  PagP [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 22: Aas acyl-ACP synthetase activity
+  Reactants: free fatty acids [unknown], ACP [unknown]
+  Products:  acyl-ACP [unknown]
+  Modifier:  Aas [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 23: acylates them to regenerate GPLs
+  Reactants: LPLs [unknown]
+  Products:  GPLs [unknown]
+  Modifier:  Aas [unknown] (role=catalyst, confidence=1.0)
+  QA flags:  none
+
+REACTION 24: DGGGOH -> archaeol
+  Reactants: DGGGOH [unknown]
+  Products:  archaeol [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 25: DGGGOH -> GDGT
+  Reactants: DGGGOH [unknown]
+  Products:  GDGT [unknown], macrocyclic archaeol [unknown], GTGT [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 26: UDP-2,3-diacylglucosamine -> lipid X
+  Reactants: UDP-2,3-diacylglucosamine [unknown]
+  Products:  lipid X [unknown]
+  Modifier:  MISSING
+  QA flags:  none
+
+REACTION 27: acylation of UDP-N-acetylglucosamine
+  Reactants: UDP-N-acetylglucosamine [unknown]
+  Products:  LPS [unknown]
+  Modifier:  LpxA [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 LOCKED REACTION FILTER
-12 locked reactions found
-11 exported
+10 locked reactions found
+10 exported
 0 quarantined reactions due to unresolved compound reference
