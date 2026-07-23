@@ -9,6 +9,107 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-23 — RAG under-merged cross-paper synonym duplicates
+
+**Files changed:** `src/t2pw/rag/synonyms.py` (new), `src/t2pw/rag/synthesize.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_rag_synonym_merge.py` (new),
+`docs/change_log.md`
+
+**Error / symptom:** With RAG enabled, the synthesized pathway carried redundant
+reactions and entity nodes that describe the same chemistry under different
+names — e.g. the seed's `LpxA reaction` on `UDP-N-acetylglucosamine` plus a
+retrieved twin on `UDP-GlcNAc` (the same molecule, ChEBI:16264) survived as two
+separate reactions, and the two names appeared as two distinct species. A
+12-reaction seed inflated toward ~21 reactions / ~50 species. This is the "RAG
+creates entities in an unexpected manner" symptom that surfaced alongside the
+locked-reaction gate failure (see the sibling entry below); the single-paper
+pipeline never hit it because one paper names a compound consistently — synonym
+reconciliation is inherently a multi-paper (RAG) concern.
+
+**Root cause:** `synthesize` reconciles cross-paper synonyms only through the
+core's small hand-curated `BIOCHEMICAL_ALIAS_MAP` (`canonical_name`). Any synonym
+absent from that map never collapses, so `_Reaction.conflict_key` /
+`signature` (reaction grouping) and `_build_entities` (entity grouping) — all
+keyed on casefolded literal names — treated `UDP-GlcNAc` and
+`UDP-N-acetylglucosamine` as different nodes and never merged the reactions built
+on them. The project already resolves these synonyms elsewhere: the ID-mapping
+cache (`data/id_mapping_cache.json`) records both names against the same external
+IDs (`CHEBI:16264` / `C00043`), but nothing fed that knowledge into synthesis.
+
+**Fix:** New `t2pw.rag.synonyms.build_offline_synonym_resolver` reads the existing
+`id_mapping_cache.json` and builds an offline `normalized name -> stable-ID token`
+index (first present of chebi/kegg/hmdb/pubchem/cas/pathbank id), so two names
+sharing an external ID resolve to one namespaced grouping token. It is injected
+into `synthesize_with_report` / `synthesize` as an optional `synonym_resolver`
+(default `None` ⇒ prior behavior byte-for-byte, mirroring the `prose_extractor`
+seam) and threaded into `conflict_key`, `signature`, and `_build_entities`.
+Crucially it is **grouping-only**: it feeds the merge/dedup KEYS but never
+rewrites an emitted reaction or entity name — survivors keep the merge winner's
+real names (seed/locked rows win by evidence weight), so locked-reaction matching
+on raw names is unaffected. The real resolver is wired at the single caller
+(`streamlit_app.py`). Offline and deterministic (pure file reads, no network / no
+live LLM); a `llm_fallback` extension hook exists for names the cache misses but
+is default-off to preserve those guarantees.
+
+**Pipeline consistency:** The default (`synonym_resolver=None`) path is unchanged,
+so single-paper runs and the full suite behave exactly as before. Grouping-only
+merging leaves the locked-reaction accounting intact — verified end-to-end that
+all 12 locked reactions still export with `unaccounted_locked_reactions == 0`
+with the resolver active. Scope is deliberately bounded: participants that are
+unmapped placeholders (`status == "unmapped"`, e.g. `LpxA product`) share no ID,
+so they correctly do **not** merge, and genuinely new cross-paper reactions are
+untouched — collapsing placeholder restatements is left to a separate
+prose-extraction quality gate.
+
+---
+
+### 2026-07-23 — Reversible reaction dropped a locked direction (accounting gate failure)
+
+**Files changed:** `src/t2pw/rag/synthesize.py`,
+`tests/test_rag_reversible_reaction_preservation.py` (new),
+`tests/test_rag_synthesize.py`, `docs/change_log.md`
+
+**Error / symptom:** With RAG enabled, the post-normalization hard gate aborted
+the run with `Locked reaction accounting failed: 1 locked reaction(s) are neither
+active nor quarantined` (raised in `run_strict_post_normalization_gates`, written
+to `tmp/gate_fail_report.json`). The lock report held 12 locked reactions found,
+11 exported, 0 quarantined. The missing one was `rxn_lock_002`
+(`LpxA reverse reaction`) — the exact reverse of `rxn_lock_001`. Preservation
+reports showed it already gone at the Stage-2 checkpoint (the RAG seam), not in
+normalization or audit.
+
+**Root cause:** `_Reaction.conflict_key` grouped reactions by the *unordered set
+of all participants* (inputs and outputs merged). A reversible reaction given as
+an explicit forward + reverse pair has the identical participant set — only the
+input/output sides are swapped — so both directions keyed to the same group.
+`_resolve_reactions` then saw two different `signature()`s, declared them
+conflicting variants of one reaction, kept the higher-evidence-weight direction
+and dropped the other as a mere "conflict alternative." The dropped direction
+carried a locked-reaction id, so it later showed up as unaccounted at the gate.
+Pre-RAG this could not happen: the core `dedupe_processes` keys sorted inputs and
+sorted outputs as *separate* slots, so a forward/reverse pair produces two
+distinct keys and both survive. The RAG resolver's merged-set key lost that
+distinction.
+
+**Fix:** `conflict_key` is now direction-aware — keyed on the
+`(sorted input names, sorted output names)` pair, matching the core
+`dedupe_processes` key that the single-paper pipeline already relied on. Opposite
+directions key to distinct groups and both survive; same-direction disagreements
+(stoichiometry / compartment / reversible flag) are still grouped and resolved by
+evidence weight. The existing `test_conflict_resolved_by_evidence_weight`, which
+had encoded the buggy opposite-direction collapse (`A -> B` vs `B -> A`), was
+re-pointed at a genuine same-direction stoichiometry conflict so the weight-based
+resolution path stays covered rather than deleted.
+
+**Pipeline consistency:** Restores the pre-RAG behavior — both directions of a
+reversible reaction preserved — inside the RAG synthesis path, without touching
+any core stage module (RAG → core dependency arrow unchanged). Verified
+end-to-end that the reverse reaction is re-tagged as `rxn_lock_002` and all 12
+locked reactions account to `unaccounted_locked_reactions == 0`, clearing the
+gate that raised the error.
+
+---
+
 ### 2026-07-22 — RAG-synthesized payload bypassed post-merge hardening
 
 **Files changed:** `src/t2pw/app/streamlit_app.py`,
