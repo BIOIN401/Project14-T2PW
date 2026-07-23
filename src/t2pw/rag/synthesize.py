@@ -17,9 +17,11 @@ What synthesis does (docs/rag/agents/wp5_synthesis.md):
 2. **Reconcile synonyms** — unify cross-paper names by canonicalizing through the
    core's ``BIOCHEMICAL_ALIAS_MAP`` (imported **read-only**; this module is never
    imported *by* ``process_normalizer``).
-3. **Resolve conflicts** — when papers disagree on direction / stoichiometry /
-   compartment for the same reaction, pick the variant with the greater evidence
-   weight and record the alternatives in the returned report.
+3. **Resolve conflicts** — when papers disagree on stoichiometry / compartment /
+   reversible flag for the *same-direction* reaction, pick the variant with the
+   greater evidence weight and record the alternatives in the returned report.
+   Opposite directions (a forward/reverse pair) are *not* a conflict — they key to
+   distinct reactions and both survive, matching the core pipeline.
 4. **Attach provenance** — every synthesized reaction, and every non-cofactor
    entity, carries at least one provenance pointer keyed to ``source_id`` /
    ``source_uri``. An element with no supporting evidence is **omitted** and
@@ -218,15 +220,59 @@ class _Reaction:
             return total
         return float(len(self.provenance))
 
-    def conflict_key(self) -> Tuple[str, ...]:
-        """Unordered set of all participants — same underlying reaction."""
-        return tuple(sorted({n.casefold() for n in self.participant_names()}))
+    def conflict_key(self, resolver: Optional[Any] = None) -> Tuple[Any, ...]:
+        """Direction-aware reaction identity: same inputs->outputs is the same reaction.
 
-    def signature(self) -> Tuple[Any, ...]:
-        """Distinguishes conflicting *variants* of the same reaction."""
-        ins = tuple(sorted((p.name.casefold(), p.stoichiometry) for p in self.inputs))
+        Keyed on the (sorted input names, sorted output names) PAIR, not one merged
+        participant set, so a reversible reaction represented as an explicit forward
+        and reverse pair (identical participants, inputs/outputs swapped) keys to two
+        distinct groups and BOTH survive conflict resolution. This matches the core
+        ``dedupe_processes`` reaction key (the pre-RAG single-paper behavior); the old
+        merged-set key collapsed the pair into one group and silently dropped a
+        direction — deleting a locked reaction and tripping the locked-reaction
+        accounting gate.
+
+        ``resolver`` (optional, GROUPING-ONLY) maps each participant name to a
+        synonym-canonical token so cross-paper duplicates that differ only by a
+        compound/enzyme SYNONYM key to the same group and merge. When it is ``None``
+        (the default) the key is byte-identical to the pre-resolver behavior (plain
+        ``casefold``) — the emitted rows always keep their original names regardless.
+        """
+        if resolver is None:
+            ins = tuple(sorted(n.casefold() for n in self.input_names()))
+            outs = tuple(sorted(n.casefold() for n in self.output_names()))
+            return (ins, outs)
+        ins = tuple(sorted(resolver(n) for n in self.input_names()))
+        outs = tuple(sorted(resolver(n) for n in self.output_names()))
+        return (ins, outs)
+
+    def signature(self, resolver: Optional[Any] = None) -> Tuple[Any, ...]:
+        """Distinguishes conflicting *variants* of the same reaction.
+
+        ``resolver`` (optional, GROUPING-ONLY) canonicalizes participant names to
+        synonym tokens exactly as :meth:`conflict_key` does. When ``None`` the
+        signature is byte-identical to the pre-resolver behavior. When active, the
+        sort is made robust to two synonyms collapsing to the SAME token within one
+        reaction (a token tie would otherwise force an unorderable ``None`` vs float
+        stoichiometry comparison) while preserving the (token, stoichiometry)
+        equality semantics used to detect variant disagreements.
+        """
+        if resolver is None:
+            ins = tuple(sorted((p.name.casefold(), p.stoichiometry) for p in self.inputs))
+            outs = tuple(
+                sorted((p.name.casefold(), p.stoichiometry) for p in self.outputs)
+            )
+            return (ins, outs, self.reversible, self.compartment.casefold())
+
+        def _sort_key(pair: Tuple[str, Optional[float]]) -> Tuple[str, bool, float]:
+            token, stoich = pair
+            return (token, stoich is None, 0.0 if stoich is None else float(stoich))
+
+        ins = tuple(
+            sorted(((resolver(p.name), p.stoichiometry) for p in self.inputs), key=_sort_key)
+        )
         outs = tuple(
-            sorted((p.name.casefold(), p.stoichiometry) for p in self.outputs)
+            sorted(((resolver(p.name), p.stoichiometry) for p in self.outputs), key=_sort_key)
         )
         return (ins, outs, self.reversible, self.compartment.casefold())
 
@@ -793,26 +839,37 @@ def _merge_into(target: _Reaction, other: _Reaction) -> None:
 
 def _resolve_reactions(
     reactions: List[_Reaction],
+    resolver: Optional[Any] = None,
 ) -> Tuple[List[_Reaction], List[Dict[str, Any]]]:
     """Dedupe identical reactions and resolve conflicting variants by weight.
 
-    Reactions are grouped by their unordered participant set (the same
-    underlying reaction). Within a group, identical *signatures* are merged; when
-    two or more distinct signatures disagree on direction / stoichiometry /
-    compartment, the highest-evidence-weight variant wins and the losers are
+    Reactions are grouped by their direction-aware ``conflict_key`` — the (sorted
+    inputs, sorted outputs) pair, i.e. the same inputs->outputs mapping is the same
+    underlying reaction. Opposite directions (a forward/reverse pair) key to
+    *different* groups and both survive, mirroring the core pipeline. Within a
+    group, identical *signatures* are merged; when two or more distinct signatures
+    disagree on stoichiometry / compartment / reversible flag (a *same-direction*
+    disagreement), the highest-evidence-weight variant wins and the losers are
     recorded as ``conflicts`` (nothing is dropped silently).
+
+    ``resolver`` (optional, GROUPING-ONLY) feeds the synonym-canonical token into
+    both keys so cross-paper duplicates differing only by a compound/enzyme SYNONYM
+    collapse to one row (provenance unioned). ``None`` (default) = today's exact
+    grouping. The surviving row always keeps its own real names — only the KEYS are
+    synonym-aware, never the emitted display names.
     """
-    groups: Dict[Tuple[str, ...], List[_Reaction]] = {}
-    order: List[Tuple[str, ...]] = []
+    groups: Dict[Tuple[Any, ...], List[_Reaction]] = {}
+    order: List[Tuple[Any, ...]] = []
     for rxn in reactions:
-        key = rxn.conflict_key()
+        key = rxn.conflict_key(resolver)
         if key not in groups:
             groups[key] = []
             order.append(key)
         # Merge into an existing identical-signature variant if present.
         merged = False
+        rxn_sig = rxn.signature(resolver)
         for existing in groups[key]:
-            if existing.signature() == rxn.signature():
+            if existing.signature(resolver) == rxn_sig:
                 _merge_into(existing, rxn)
                 merged = True
                 break
@@ -910,6 +967,7 @@ def _detect_stitches(reactions: List[_Reaction]) -> List[Dict[str, Any]]:
 # ---------------------------------------------------------------------------
 def _build_entities(
     reactions: List[_Reaction],
+    resolver: Optional[Any] = None,
 ) -> Tuple[Dict[str, List[Dict[str, Any]]], List[Dict[str, Any]]]:
     """Collect compounds & proteins referenced by evidence-backed reactions.
 
@@ -917,14 +975,25 @@ def _build_entities(
     that references it. A **non-cofactor** entity that ends up with no provenance
     is omitted and reported (guardrail); cofactors are exempt from the
     requirement but still carry provenance when it is available.
+
+    ``resolver`` (optional, GROUPING-ONLY) unifies entity nodes that are the same
+    compound/protein under different SYNONYMS: they register under one synonym
+    token key, so the payload lists the species ONCE. The kept display name is the
+    first-seen original name (``setdefault``) — never a rewritten canonical form —
+    so this only affects the ``entities`` buckets, never the reaction rows the
+    locked-reaction gate matches on. ``None`` (default) = today's ``casefold`` key.
     """
-    enzyme_names = {e.casefold() for rxn in reactions for e in rxn.enzymes}
+
+    def _entity_key(name: str) -> str:
+        return name.casefold() if resolver is None else resolver(name)
+
+    enzyme_names = {_entity_key(e) for rxn in reactions for e in rxn.enzymes}
     prov_by_name: Dict[str, List[Dict[str, Any]]] = {}
     display_by_name: Dict[str, str] = {}
     scores_by_name: Dict[str, List[float]] = {}
 
     def _register(name: str, prov: List[Dict[str, Any]], scores: List[float]) -> None:
-        key = name.casefold()
+        key = _entity_key(name)
         display_by_name.setdefault(key, name)
         bucket = prov_by_name.setdefault(key, [])
         seen = {(p.get("source_id"), p.get("chunk_id")) for p in bucket}
@@ -1146,12 +1215,19 @@ def synthesize_with_report(
     seed_context: Any = "",
     *,
     prose_extractor: Optional[Any] = None,
+    synonym_resolver: Optional[Any] = None,
 ) -> SynthesisResult:
     """Full synthesis: returns the payload *plus* the reports that ride with it.
 
     See module docstring for the four steps. The returned payload has already
     passed ``validate_post_extraction`` (raising ``StageContractError`` if it
     could not) so the caller receives a Stage-2B-ready payload or a clear failure.
+
+    ``synonym_resolver`` (optional, mirrors ``prose_extractor``) is a
+    ``name -> grouping-token`` callable — see :mod:`t2pw.rag.synonyms`. When
+    supplied it drives GROUPING/merge KEYS ONLY, so reactions that are duplicates
+    except for a compound/enzyme SYNONYM collapse to one row; the emitted names are
+    never rewritten. ``None`` (default) reproduces today's behavior byte-for-byte.
     """
     bundles = list(evidence_bundles or [])
     seed_source = _seed_source_descriptor(seed_context)
@@ -1163,9 +1239,9 @@ def synthesize_with_report(
         evidence_rxns.extend(_reactions_from_bundle(bundle, extractor))
 
     all_rxns = seed_rxns + evidence_rxns
-    resolved, conflicts = _resolve_reactions(all_rxns)
+    resolved, conflicts = _resolve_reactions(all_rxns, synonym_resolver)
     stitched = _detect_stitches(resolved)
-    entities, entity_omitted = _build_entities(resolved)
+    entities, entity_omitted = _build_entities(resolved, synonym_resolver)
 
     unresolved = list(seed_omitted) + list(entity_omitted)
     unresolved.extend(_unfilled_gap_reports(bundles, resolved, extractor))
@@ -1193,6 +1269,7 @@ def synthesize(
     seed_context: Any = "",
     *,
     prose_extractor: Optional[Any] = None,
+    synonym_resolver: Optional[Any] = None,
 ) -> "Payload":
     """Merge seed + evidence into one connected, validated standard ``Payload``.
 
@@ -1201,9 +1278,15 @@ def synthesize(
     :func:`synthesize_with_report`; this function returns only the ``Payload`` so
     its type matches the brief exactly. ``prose_extractor`` (optional) is the
     LLM prose→reaction callable; omit it for arrow-only synthesis.
+    ``synonym_resolver`` (optional) is the synonym-canonical GROUPING resolver —
+    see :func:`synthesize_with_report`; omit it for today's exact grouping.
     """
     return synthesize_with_report(
-        seed_payload, evidence_bundles, seed_context, prose_extractor=prose_extractor
+        seed_payload,
+        evidence_bundles,
+        seed_context,
+        prose_extractor=prose_extractor,
+        synonym_resolver=synonym_resolver,
     ).payload
 
 

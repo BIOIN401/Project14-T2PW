@@ -206,6 +206,7 @@ def maybe_run_rag(
             provenance,
             retrieve,
             select,
+            synonyms,
             synthesize,
         )
 
@@ -292,8 +293,21 @@ def maybe_run_rag(
             if rag_config()["extract_reactions"]
             else None
         )
+        # Synonym-canonical merge: collapse cross-paper reaction duplicates that
+        # differ only by a compound/enzyme SYNONYM, reusing the project's EXISTING
+        # offline id-mapping cache. GROUPING-ONLY (drives merge keys, never rewrites
+        # emitted names) so locked-reaction matching is unaffected. Offline +
+        # deterministic — no network, no live LLM — and fails safe to a plain
+        # normalizer if the cache file is absent, so it can only add merges, never
+        # break synthesis. Enabled unconditionally for real runs (mirrors the
+        # opt-in ``prose_extractor`` seam; no config.py flag is added).
+        synonym_resolver = synonyms.build_offline_synonym_resolver()
         synthesis = synthesize.synthesize_with_report(
-            seed_payload, bundles, seed_source_context, prose_extractor=prose_extractor
+            seed_payload,
+            bundles,
+            seed_source_context,
+            prose_extractor=prose_extractor,
+            synonym_resolver=synonym_resolver,
         )
         prov_report = provenance.validate_provenance(synthesis.payload)
 

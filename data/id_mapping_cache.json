@@ -46879,6 +46879,216 @@
         "status": "matched",
         "order_step": "api_uniprot"
       }
+    },
+    "db::fadd::escherichia coli::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "uniprot": "P69451",
+        "pathbank_protein_id": "6689"
+      },
+      "pathbank_protein_id": 6689,
+      "confidence": 1.0,
+      "chosen_rule": "db_top_candidate_relaxed",
+      "candidates": [
+        {
+          "pathbank_protein_id": 6689,
+          "name": "Long-chain-fatty-acid--CoA ligase",
+          "gene_name": "fadD",
+          "uniprot": "P69451",
+          "species_id": 3,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 10241,
+          "name": "Long-chain-fatty-acid--CoA ligase domain protein",
+          "gene_name": "fadD",
+          "uniprot": "A0A090JGL9",
+          "species_id": 3,
+          "score": 1.0
+        },
+        {
+          "pathbank_protein_id": 95880,
+          "name": "Long-chain-fatty-acid--CoA ligase",
+          "gene_name": "fadD",
+          "uniprot": "A0A3L0YHN2",
+          "species_id": 3,
+          "score": 1.0
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym_or_fuzzy_species"
+      }
+    },
+    "db::hydroxyacylacyl carrier protein acp::escherichia coli::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::hydroxyacylacyl carrier protein acp::escherichia coli::::{}::[{\"alias\": \"ACP\", \"source\": \"parenthetical_gene_symbol\"}, {\"alias\": \"\\u03b2-hydroxyacyl-acyl carrier protein\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"β-hydroxyacyl-acyl carrier protein (ACP)\" OR gene:\"β-hydroxyacyl-acyl carrier protein (ACP)\") AND organism_name:\"Escherichia coli\" | (protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\") AND organism_name:\"Escherichia coli\" | (protein_name:\"β hydroxyacyl acyl carrier protein (ACP)\" OR gene:\"β hydroxyacyl acyl carrier protein (ACP)\") AND organism_name:\"Escherichia coli\" | (protein_name:\"β-hydroxyacyl-acyl carrier (ACP)\" OR gene:\"β-hydroxyacyl-acyl carrier (ACP)\") AND organism_name:\"Escherichia coli\" | (protein_name:\"β-hydroxyacyl-acyl carrier protein (ACP)\" OR gene:\"β-hydroxyacyl-acyl carrier protein (ACP)\") | (protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\") | (protein_name:\"ACP\" OR gene:\"ACP\") AND organism_name:\"Escherichia coli\" | (protein_name:\"ACP\" OR gene:\"ACP\") | \"ACP\" AND organism_name:\"Escherichia coli\" | \"ACP\" | (protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\") AND organism_name:\"Escherichia coli\" | (protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\") | \"β-hydroxyacyl-acyl carrier protein\" AND organism_name:\"Escherichia coli\" | \"β-hydroxyacyl-acyl carrier protein\" | (protein_name:\"β hydroxyacyl acyl carrier protein\" OR gene:\"β hydroxyacyl acyl carrier protein\") AND organism_name:\"Escherichia coli\" | (protein_name:\"β hydroxyacyl acyl carrier protein\" OR gene:\"β hydroxyacyl acyl carrier protein\") | \"β hydroxyacyl acyl carrier protein\" AND organism_name:\"Escherichia coli\" | \"β hydroxyacyl acyl carrier protein\"",
+      "mapped_ids": {
+        "uniprot": "P0AEK2"
+      },
+      "confidence": 0.44,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P0AEK2",
+          "protein_name": "3-oxoacyl-[acyl-carrier-protein] reductase FabG",
+          "gene_names": [
+            "fabG"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.44,
+          "matched_query": "β-hydroxyacyl-acyl carrier protein",
+          "alias_source": "name_without_parenthetical",
+          "matched_alias": "β-hydroxyacyl-acyl carrier protein"
+        },
+        {
+          "accession": "Q47319",
+          "protein_name": "tRNA-uridine aminocarboxypropyltransferase",
+          "gene_names": [
+            "tapT",
+            "tuaA",
+            "yfiP"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.37,
+          "matched_query": "ACP",
+          "alias_source": "parenthetical_gene_symbol",
+          "matched_alias": "ACP"
+        },
+        {
+          "accession": "P0A6Q6",
+          "protein_name": "3-hydroxyacyl-[acyl-carrier-protein] dehydratase FabZ",
+          "gene_names": [
+            "fabZ",
+            "sefA",
+            "yaeA"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "ACP",
+          "alias_source": "parenthetical_gene_symbol",
+          "matched_alias": "ACP"
+        },
+        {
+          "accession": "P24224",
+          "protein_name": "Holo-[acyl-carrier-protein] synthase",
+          "gene_names": [
+            "acpS",
+            "dpj"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "ACP",
+          "alias_source": "parenthetical_gene_symbol",
+          "matched_alias": "ACP"
+        },
+        {
+          "accession": "P0AEK4",
+          "protein_name": "Enoyl-[acyl-carrier-protein] reductase [NADH] FabI",
+          "gene_names": [
+            "envM",
+            "fabI"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "ACP",
+          "alias_source": "parenthetical_gene_symbol",
+          "matched_alias": "ACP"
+        },
+        {
+          "accession": "P0A6A8",
+          "protein_name": "Acyl carrier protein",
+          "gene_names": [
+            "acpP"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "ACP",
+          "alias_source": "parenthetical_gene_symbol",
+          "matched_alias": "ACP"
+        },
+        {
+          "accession": "P0AAI5",
+          "protein_name": "3-oxoacyl-[acyl-carrier-protein] synthase 2",
+          "gene_names": [
+            "fabF",
+            "fabJ"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "ACP",
+          "alias_source": "parenthetical_gene_symbol",
+          "matched_alias": "ACP"
+        },
+        {
+          "accession": "P0A953",
+          "protein_name": "3-oxoacyl-[acyl-carrier-protein] synthase 1",
+          "gene_names": [
+            "fabB",
+            "fabC"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.3,
+          "matched_query": "ACP",
+          "alias_source": "parenthetical_gene_symbol",
+          "matched_alias": "ACP"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"β-hydroxyacyl-acyl carrier protein (ACP)\" OR gene:\"β-hydroxyacyl-acyl carrier protein (ACP)\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"β hydroxyacyl acyl carrier protein (ACP)\" OR gene:\"β hydroxyacyl acyl carrier protein (ACP)\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"β-hydroxyacyl-acyl carrier (ACP)\" OR gene:\"β-hydroxyacyl-acyl carrier (ACP)\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"β-hydroxyacyl-acyl carrier protein (ACP)\" OR gene:\"β-hydroxyacyl-acyl carrier protein (ACP)\")",
+        "(protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\")",
+        "(protein_name:\"ACP\" OR gene:\"ACP\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"ACP\" OR gene:\"ACP\")",
+        "\"ACP\" AND organism_name:\"Escherichia coli\"",
+        "\"ACP\"",
+        "(protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"β-hydroxyacyl-acyl carrier protein\" OR gene:\"β-hydroxyacyl-acyl carrier protein\")",
+        "\"β-hydroxyacyl-acyl carrier protein\" AND organism_name:\"Escherichia coli\"",
+        "\"β-hydroxyacyl-acyl carrier protein\"",
+        "(protein_name:\"β hydroxyacyl acyl carrier protein\" OR gene:\"β hydroxyacyl acyl carrier protein\") AND organism_name:\"Escherichia coli\"",
+        "(protein_name:\"β hydroxyacyl acyl carrier protein\" OR gene:\"β hydroxyacyl acyl carrier protein\")",
+        "\"β hydroxyacyl acyl carrier protein\" AND organism_name:\"Escherichia coli\"",
+        "\"β hydroxyacyl acyl carrier protein\""
+      ],
+      "reviewed": true,
+      "resolved_name": "3-oxoacyl-[acyl-carrier-protein] reductase FabG",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -78220,6 +78430,467 @@
       }
     },
     "db::udp3obetahydroxymyristoylnac::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::alternate lipid a::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::cytosolic acylcoa species::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::ec lpxc::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::exogenous fatty acids::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::first sugars of the c::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::kdo residues::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::kdolipid a::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::kdolipid iv::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::kdolipid iv a::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::kdo2lipid iv::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.6133,
+      "candidates": [
+        {
+          "pathbank_compound_id": 41586,
+          "name": "KDO(2)-lipid IV(A)",
+          "short_name": "KLIA",
+          "score": 0.6133,
+          "mapped_ids": {
+            "pubchem": "3083382"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::laurate::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 497,
+          "name": "Dodecanoic acid",
+          "short_name": "12:0",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0000638",
+            "kegg": "C02679",
+            "chebi": "CHEBI:30805",
+            "pubchem": "3893",
+            "cas": "143-07-7",
+            "chemspider": "3756",
+            "drugbank": "DB03017",
+            "pathbank_compound_id": "497"
+          }
+        },
+        {
+          "pathbank_compound_id": 44513,
+          "name": "Dodecanoate (N-C12:0)",
+          "short_name": "Laate",
+          "score": 0.95,
+          "mapped_ids": {
+            "kegg": "C02679",
+            "chebi": "CHEBI:18262",
+            "pubchem": "4149208",
+            "pathbank_compound_id": "44513"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_synonym",
+        "order_step": "synonym"
+      }
+    },
+    "db::lipid iv::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.65,
+      "candidates": [
+        {
+          "pathbank_compound_id": 41586,
+          "name": "KDO(2)-lipid IV(A)",
+          "short_name": "KLIA",
+          "score": 0.65,
+          "mapped_ids": {
+            "pubchem": "3083382"
+          }
+        },
+        {
+          "pathbank_compound_id": 40982,
+          "name": "lipid IVA",
+          "short_name": "LLIVA",
+          "score": 0.6133,
+          "mapped_ids": {
+            "chebi": "CHEBI:58603"
+          }
+        },
+        {
+          "pathbank_compound_id": 41345,
+          "name": "Lipid IVb",
+          "short_name": "LI",
+          "score": 0.6133,
+          "mapped_ids": {
+            "pubchem": "25203200"
+          }
+        },
+        {
+          "pathbank_compound_id": 41585,
+          "name": "KDO(2)-lipid IV(A) with laurate",
+          "short_name": "KLLI",
+          "score": 0.5871,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 285696,
+          "name": "(KDO)2-[(3R)-3-hydroxymyristoyl]-penta-acylated lipid IVA",
+          "short_name": "",
+          "score": 0.5675,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 41463,
+          "name": "KDO2-(palmitoleoyl)-lipid IVA",
+          "short_name": "KPLI",
+          "score": 0.54,
+          "mapped_ids": {
+            "pubchem": "25203723"
+          }
+        },
+        {
+          "pathbank_compound_id": 40739,
+          "name": "(KDO)2-(lauroyl)-lipid IVA",
+          "short_name": "K2LLI",
+          "score": 0.5217,
+          "mapped_ids": {
+            "kegg": "C06251",
+            "chebi": "CHEBI:61524",
+            "pubchem": "8490"
+          }
+        },
+        {
+          "pathbank_compound_id": 40986,
+          "name": "α-Kdo-(2→6)-lipid IVA \t",
+          "short_name": "αK2LI",
+          "score": 0.5217,
+          "mapped_ids": {
+            "chebi": "CHEBI:60364"
+          }
+        },
+        {
+          "pathbank_compound_id": 285267,
+          "name": "(KDO)2-(palmitoleoyl)-lipid IVA",
+          "short_name": "",
+          "score": 0.5217,
+          "mapped_ids": {}
+        },
+        {
+          "pathbank_compound_id": 40738,
+          "name": "a-Kdo-(2->4)-a-Kdo-(2->6)-lipid IVA",
+          "short_name": "KdoIVA",
+          "score": 0.4987,
+          "mapped_ids": {
+            "kegg": "C06025",
+            "chebi": "CHEBI:60365"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::lipid iv a::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lpxa product::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::lysophospholipids::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::myristate::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0000806",
+        "kegg": "C06424",
+        "chebi": "CHEBI:28875",
+        "pubchem": "11005",
+        "cas": "544-63-8",
+        "chemspider": "10539",
+        "drugbank": "DB08231",
+        "pathbank_compound_id": "643"
+      },
+      "pathbank_compound_id": 643,
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 643,
+          "name": "Myristic acid",
+          "short_name": "14:0",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0000806",
+            "kegg": "C06424",
+            "chebi": "CHEBI:28875",
+            "pubchem": "11005",
+            "cas": "544-63-8",
+            "chemspider": "10539",
+            "drugbank": "DB08231",
+            "pathbank_compound_id": "643"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym"
+      }
+    },
+    "db::tetraacylated disaccharide intermediate::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::udp3ohydroxymyristoylnacetylglucosamine::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::ump::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "chebi": "CHEBI:17277",
+        "pubchem": "440448",
+        "pathbank_compound_id": "41234"
+      },
+      "pathbank_compound_id": 41234,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 41234,
+          "name": "UDP-N-Acetylmuramoyl-L-alanyl-D-glutamyl-L-lysyl-D-alanyl-D-alanine",
+          "short_name": "UMP",
+          "score": 1.0,
+          "mapped_ids": {
+            "chebi": "CHEBI:17277",
+            "pubchem": "440448",
+            "pathbank_compound_id": "41234"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::uridine diphosphatenacetylglucosamine udpglcnac::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::hydroxyacylacp::::{}": {
       "status": "unmapped",
       "reason": "novel_compound",
       "provider": "PathBankDB",

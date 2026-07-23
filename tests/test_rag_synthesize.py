@@ -293,20 +293,29 @@ def test_gap_without_evidence_stays_unfilled_and_reported():
 
 # ---------------------------------------------------------------------------
 # Test 3 — conflict resolution by evidence weight, alternatives recorded.
+#
+# NOTE: this conflict is a *same-direction* disagreement (both papers say
+# A -> B, but differ on the stoichiometry of A). Opposite-direction pairs
+# (A -> B vs B -> A) are NO LONGER a conflict — they are two distinct reactions
+# that both survive (see test_rag_reversible_reaction_preservation.py). This
+# test intentionally exercises the surviving weight-based conflict-resolution
+# path (distinct signatures within one direction-aware conflict_key group).
 # ---------------------------------------------------------------------------
 def test_conflict_resolved_by_evidence_weight():
-    # Two papers disagree on the direction of the same A/B reaction.
-    forward = Chunk(
+    # Two papers agree on the direction (A -> B) but disagree on stoichiometry:
+    # one says "2 A -> B", the other "A -> B". Same direction-aware conflict_key,
+    # distinct signatures -> the heavier-evidence variant wins, loser recorded.
+    heavy = Chunk(
         id="cf1",
-        text="A -> B | enzyme: EnzX",
-        source_id="PMID:F",
+        text="2 A -> B | enzyme: EnzX",
+        source_id="PMID:HEAVY",
         source_type="paper",
         source_uri="u1",
     )
-    reverse = Chunk(
+    light = Chunk(
         id="cr1",
-        text="B -> A | enzyme: EnzX",
-        source_id="PMID:R",
+        text="A -> B | enzyme: EnzX",
+        source_id="PMID:LIGHT",
         source_type="paper",
         source_uri="u2",
     )
@@ -315,12 +324,12 @@ def test_conflict_resolved_by_evidence_weight():
         EvidenceBundle(
             gap=gap,
             query="q",
-            hits=[Retrieved(chunk=forward, score=0.9)],  # heavier evidence
+            hits=[Retrieved(chunk=heavy, score=0.9)],  # heavier evidence
         ),
         EvidenceBundle(
             gap=gap,
             query="q",
-            hits=[Retrieved(chunk=reverse, score=0.2)],  # lighter
+            hits=[Retrieved(chunk=light, score=0.2)],  # lighter
         ),
     ]
     minimal_seed = {"entities": {}, "processes": {"reactions": []}}
@@ -330,12 +339,17 @@ def test_conflict_resolved_by_evidence_weight():
     assert len(reactions) == 1  # one variant survives
     winner = reactions[0]
     assert _names(winner["inputs"]) == ["A"]
-    assert _names(winner["outputs"]) == ["B"]  # forward (heavier) won
+    assert _names(winner["outputs"]) == ["B"]  # heavier variant won
+    # The winning variant is the heavier "2 A -> B".
+    assert winner["inputs"][0]["stoichiometry"] == 2
 
     assert len(result.conflicts) == 1
     conflict = result.conflicts[0]
+    # Same direction on both sides; the loser is the lighter-evidence variant.
     assert conflict["chosen"]["outputs"] == ["B"]
-    assert conflict["alternatives"][0]["outputs"] == ["A"]
+    assert conflict["chosen"]["source_ids"] == ["PMID:HEAVY"]
+    assert conflict["alternatives"][0]["source_ids"] == ["PMID:LIGHT"]
+    assert conflict["chosen"]["weight"] > conflict["alternatives"][0]["weight"]
 
 
 # ---------------------------------------------------------------------------

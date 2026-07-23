@@ -1,12 +1,10 @@
 {
-  "compound:ACP|CHEBI:18359": {
+  "compound:ADP|HMDB0001341": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Acyl-carrier protein",
+    "primary_name": "ADP",
     "synonyms": [
-      "Acyl-carrier protein",
-      "ACP",
-      "[Acyl-carrier protein]",
-      "Holo-[acyl-carrier protein]"
+      "ADP",
+      "Adenosine 5'-diphosphate"
     ],
     "description": "",
     "taxonomy": {},
@@ -14,69 +12,109 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "HSR",
+    "formula": "C10H15N5O10P2",
     "charge": 0,
-    "mass_monoisotopic": 0.0,
-    "mass_average": 0.0,
+    "mass_monoisotopic": 427.0294,
+    "mass_average": 427.2,
     "chebi_roles": [],
     "ontology_parents": [],
-    "kegg_class": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Nucleic acids",
+      "Nucleotides",
+      "Ribonucleotides",
+      "C00008 ADP",
+      "Glycosides [BR:br08021]",
+      "N-glycosides"
+    ],
     "pathways": [
-      "Fatty acid biosynthesis",
-      "Fatty acid degradation",
-      "Mycolic acid biosynthesis",
-      "Neomycin, kanamycin and gentamicin biosynthesis",
-      "Lipopolysaccharide biosynthesis",
-      "Pantothenate and CoA biosynthesis",
+      "Oxidative phosphorylation",
+      "Photosynthesis",
+      "Purine metabolism",
+      "Zeatin biosynthesis",
       "Metabolic pathways",
       "Biosynthesis of secondary metabolites",
-      "Fatty acid metabolism"
+      "Nucleotide metabolism",
+      "Biosynthesis of cofactors",
+      "FoxO signaling pathway",
+      "Neuroactive ligand-receptor interaction",
+      "Neuroactive ligand signaling",
+      "Lysosome biogenesis",
+      "AMPK signaling pathway",
+      "Platelet activation",
+      "Thermogenesis",
+      "Taste transduction",
+      "Renin secretion",
+      "Parkinson disease",
+      "Amyotrophic lateral sclerosis",
+      "Pathways of neurodegeneration - multiple diseases"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C00229",
-      "chebi_id": "CHEBI:18359",
-      "pubchem_id": "3528",
-      "pathbank_compound_id": "104621"
+      "hmdb_id": "HMDB0001341",
+      "kegg_id": "C00008",
+      "chebi_id": "CHEBI:16761",
+      "pubchem_id": "6022",
+      "cas": "58-64-0",
+      "biocyc": "ADP",
+      "chemspider": "5800",
+      "pathbank_compound_id": "1034"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00229",
-      "primary_name": "Acyl-carrier protein",
+      "id": "C00008",
+      "primary_name": "ADP",
       "synonyms": [
-        "Acyl-carrier protein",
-        "ACP",
-        "[Acyl-carrier protein]",
-        "Holo-[acyl-carrier protein]"
+        "ADP",
+        "Adenosine 5'-diphosphate"
       ],
-      "formula": "HSR",
-      "mass_monoisotopic": 0.0,
-      "mass_average": 0.0,
+      "formula": "C10H15N5O10P2",
+      "mass_monoisotopic": 427.0294,
+      "mass_average": 427.2,
       "pathways": [
-        "Fatty acid biosynthesis",
-        "Fatty acid degradation",
-        "Mycolic acid biosynthesis",
-        "Neomycin, kanamycin and gentamicin biosynthesis",
-        "Lipopolysaccharide biosynthesis",
-        "Pantothenate and CoA biosynthesis",
+        "Oxidative phosphorylation",
+        "Photosynthesis",
+        "Purine metabolism",
+        "Zeatin biosynthesis",
         "Metabolic pathways",
         "Biosynthesis of secondary metabolites",
-        "Fatty acid metabolism"
+        "Nucleotide metabolism",
+        "Biosynthesis of cofactors",
+        "FoxO signaling pathway",
+        "Neuroactive ligand-receptor interaction",
+        "Neuroactive ligand signaling",
+        "Lysosome biogenesis",
+        "AMPK signaling pathway",
+        "Platelet activation",
+        "Thermogenesis",
+        "Taste transduction",
+        "Renin secretion",
+        "Parkinson disease",
+        "Amyotrophic lateral sclerosis",
+        "Pathways of neurodegeneration - multiple diseases"
       ],
-      "kegg_class": [],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Nucleic acids",
+        "Nucleotides",
+        "Ribonucleotides",
+        "C00008 ADP",
+        "Glycosides [BR:br08021]",
+        "N-glycosides"
+      ],
       "cross_references": {
-        "kegg_id": "C00229",
-        "pubchem_id": "3528",
-        "chebi_id": "18359"
+        "kegg_id": "C00008",
+        "pubchem_id": "3310",
+        "chebi_id": "16761"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00229",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00229",
-        "retrieved_at": "2026-07-22T20:19:02Z",
+        "id": "C00008",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00008",
+        "retrieved_at": "2026-03-20T19:31:56Z",
         "status": "ok"
       }
     },
@@ -85,36 +123,52 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:18359",
+        "id": "CHEBI:16761",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-07-22T20:19:01Z"
+        "retrieved_at": "2026-03-20T19:31:56Z"
       }
     },
-    "hmdb": {},
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0001341",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0001341",
+        "retrieved_at": "2026-03-20T19:31:56Z"
+      }
+    },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:18359",
-        "retrieved_at": "2026-07-22T20:19:01Z",
+        "id": "CHEBI:16761",
+        "retrieved_at": "2026-03-20T19:31:56Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
+        "source": "HMDB",
+        "id": "HMDB0001341",
+        "retrieved_at": "2026-03-20T19:31:56Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
         "source": "KEGG",
-        "id": "C00229",
-        "retrieved_at": "2026-07-22T20:19:02Z",
+        "id": "C00008",
+        "retrieved_at": "2026-03-20T19:31:56Z",
         "status": "ok",
         "error_if_any": ""
       }
     ]
   },
-  "compound:acyl chain|33184": {
-    "enrichment_status": "ok",
-    "primary_name": "Long-chain acyl-CoA",
+  "compound:ATP|HMDB0000538": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "ATP",
     "synonyms": [
-      "Long-chain acyl-CoA",
-      "Long-chain-fatty acyl-CoA"
+      "ATP",
+      "Adenosine 5'-triphosphate"
     ],
     "description": "",
     "taxonomy": {},
@@ -122,75 +176,349 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C23H38N7O17P3S(CH2)2n",
+    "formula": "C10H16N5O13P3",
     "charge": 0,
-    "mass_monoisotopic": 0.0,
-    "mass_average": 0.0,
+    "mass_monoisotopic": 506.9957,
+    "mass_average": 507.18,
     "chebi_roles": [],
     "ontology_parents": [],
-    "kegg_class": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Nucleic acids",
+      "Nucleotides",
+      "Ribonucleotides",
+      "C00002 ATP",
+      "Vitamins and cofactors",
+      "Cofactors",
+      "Coenzymes",
+      "Glycosides [BR:br08021]",
+      "N-glycosides",
+      "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D08646)]",
+      "C CARDIOVASCULAR SYSTEM",
+      "C01 CARDIAC THERAPY",
+      "C01E OTHER CARDIAC PREPARATIONS",
+      "C01EB Other cardiac preparations",
+      "C01EB10 Adenosine",
+      "D08646 Triphosadenine (DCF)",
+      "Risk category of Japanese OTC drugs [BR:br08312(D08646)]",
+      "Second-class OTC drugs",
+      "Inorganic and organic chemicals",
+      "Adenosinetriphosphoric acid",
+      "Target-based classification of drugs [BR:br08310(D08646)]",
+      "G Protein-coupled receptors",
+      "Rhodopsin family",
+      "Adenosine",
+      "ADORA"
+    ],
     "pathways": [
-      "Fatty acid biosynthesis",
-      "Fatty acid elongation",
-      "Cutin, suberine and wax biosynthesis",
-      "Mycolic acid biosynthesis",
+      "Oxidative phosphorylation",
+      "Photosynthesis",
+      "Purine metabolism",
+      "One carbon pool by folate",
+      "Zeatin biosynthesis",
+      "Biosynthesis of various antibiotics",
       "Metabolic pathways",
       "Biosynthesis of secondary metabolites",
-      "Insulin resistance",
+      "Nucleotide metabolism",
+      "Biosynthesis of cofactors",
+      "Bacterial secretion system",
+      "Calcium signaling pathway",
+      "HIF-1 signaling pathway",
+      "Neuroactive ligand-receptor interaction",
+      "Neuroactive ligand signaling",
+      "Lysosome biogenesis",
+      "Efferocytosis",
+      "Necroptosis",
+      "Platelet activation",
+      "NOD-like receptor signaling pathway",
+      "Thermogenesis",
+      "Synaptic vesicle cycle",
+      "Taste transduction",
+      "Inflammatory mediator regulation of TRP channels",
+      "Insulin secretion",
+      "Prolactin signaling pathway",
+      "Renin secretion",
+      "Type II diabetes mellitus",
+      "Parkinson disease",
+      "Pathways of neurodegeneration - multiple diseases",
+      "Pertussis",
+      "Hypertrophic cardiomyopathy",
       "Diabetic cardiomyopathy"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "kegg_id": "C02843",
-      "pubchem_id": "5783",
-      "chebi_id": "33184"
+      "hmdb_id": "HMDB0000538",
+      "kegg_id": "C00002",
+      "chebi_id": "CHEBI:15422",
+      "pubchem_id": "5957",
+      "cas": "56-65-5",
+      "biocyc": "ATP",
+      "chemspider": "5742",
+      "drugbank_id": "DB00171",
+      "pathbank_compound_id": "414"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C02843",
-      "primary_name": "Long-chain acyl-CoA",
+      "id": "C00002",
+      "primary_name": "ATP",
       "synonyms": [
-        "Long-chain acyl-CoA",
-        "Long-chain-fatty acyl-CoA"
+        "ATP",
+        "Adenosine 5'-triphosphate"
       ],
-      "formula": "C23H38N7O17P3S(CH2)2n",
-      "mass_monoisotopic": 0.0,
-      "mass_average": 0.0,
+      "formula": "C10H16N5O13P3",
+      "mass_monoisotopic": 506.9957,
+      "mass_average": 507.18,
       "pathways": [
-        "Fatty acid biosynthesis",
-        "Fatty acid elongation",
-        "Cutin, suberine and wax biosynthesis",
-        "Mycolic acid biosynthesis",
+        "Oxidative phosphorylation",
+        "Photosynthesis",
+        "Purine metabolism",
+        "One carbon pool by folate",
+        "Zeatin biosynthesis",
+        "Biosynthesis of various antibiotics",
         "Metabolic pathways",
         "Biosynthesis of secondary metabolites",
-        "Insulin resistance",
+        "Nucleotide metabolism",
+        "Biosynthesis of cofactors",
+        "Bacterial secretion system",
+        "Calcium signaling pathway",
+        "HIF-1 signaling pathway",
+        "Neuroactive ligand-receptor interaction",
+        "Neuroactive ligand signaling",
+        "Lysosome biogenesis",
+        "Efferocytosis",
+        "Necroptosis",
+        "Platelet activation",
+        "NOD-like receptor signaling pathway",
+        "Thermogenesis",
+        "Synaptic vesicle cycle",
+        "Taste transduction",
+        "Inflammatory mediator regulation of TRP channels",
+        "Insulin secretion",
+        "Prolactin signaling pathway",
+        "Renin secretion",
+        "Type II diabetes mellitus",
+        "Parkinson disease",
+        "Pathways of neurodegeneration - multiple diseases",
+        "Pertussis",
+        "Hypertrophic cardiomyopathy",
         "Diabetic cardiomyopathy"
       ],
-      "kegg_class": [],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Nucleic acids",
+        "Nucleotides",
+        "Ribonucleotides",
+        "C00002 ATP",
+        "Vitamins and cofactors",
+        "Cofactors",
+        "Coenzymes",
+        "Glycosides [BR:br08021]",
+        "N-glycosides",
+        "Anatomical Therapeutic Chemical (ATC) classification [BR:br08303(D08646)]",
+        "C CARDIOVASCULAR SYSTEM",
+        "C01 CARDIAC THERAPY",
+        "C01E OTHER CARDIAC PREPARATIONS",
+        "C01EB Other cardiac preparations",
+        "C01EB10 Adenosine",
+        "D08646 Triphosadenine (DCF)",
+        "Risk category of Japanese OTC drugs [BR:br08312(D08646)]",
+        "Second-class OTC drugs",
+        "Inorganic and organic chemicals",
+        "Adenosinetriphosphoric acid",
+        "Target-based classification of drugs [BR:br08310(D08646)]",
+        "G Protein-coupled receptors",
+        "Rhodopsin family",
+        "Adenosine",
+        "ADORA"
+      ],
       "cross_references": {
-        "kegg_id": "C02843",
-        "pubchem_id": "5783",
-        "chebi_id": "33184"
+        "kegg_id": "C00002",
+        "pubchem_id": "3304",
+        "chebi_id": "15422"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C02843",
-        "source_url": "https://rest.kegg.jp/get/cpd:C02843",
-        "retrieved_at": "2026-07-22T20:19:02Z",
+        "id": "C00002",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00002",
+        "retrieved_at": "2026-03-20T19:31:31Z",
         "status": "ok"
       }
     },
-    "chebi": {},
-    "hmdb": {},
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:15422",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-03-20T19:31:30Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000538",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000538",
+        "retrieved_at": "2026-03-20T19:31:30Z"
+      }
+    },
     "is_generic_class": false,
     "sources": [
       {
+        "source": "ChEBI",
+        "id": "CHEBI:15422",
+        "retrieved_at": "2026-03-20T19:31:30Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000538",
+        "retrieved_at": "2026-03-20T19:31:30Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
         "source": "KEGG",
-        "id": "C02843",
-        "retrieved_at": "2026-07-22T20:19:02Z",
+        "id": "C00002",
+        "retrieved_at": "2026-03-20T19:31:31Z",
+        "status": "ok",
+        "error_if_any": ""
+      }
+    ]
+  },
+  "compound:CMP|HMDB0000095": {
+    "enrichment_status": "ok_with_warnings",
+    "primary_name": "CMP",
+    "synonyms": [
+      "CMP",
+      "Cytidine-5'-monophosphate",
+      "Cytidylic acid"
+    ],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "C9H14N3O8P",
+    "charge": 0,
+    "mass_monoisotopic": 323.0519,
+    "mass_average": 323.2,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [
+      "Compounds with biological roles [BR:br08001]",
+      "Nucleic acids",
+      "Nucleotides",
+      "Ribonucleotides",
+      "C00055 CMP",
+      "Glycosides [BR:br08021]",
+      "N-glycosides"
+    ],
+    "pathways": [
+      "Pyrimidine metabolism",
+      "Metabolic pathways",
+      "Nucleotide metabolism"
+    ],
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "hmdb_id": "HMDB0000095",
+      "kegg_id": "C00055",
+      "chebi_id": "CHEBI:17361",
+      "pubchem_id": "6131",
+      "cas": "63-37-6",
+      "biocyc": "CMP",
+      "chemspider": "5901",
+      "pathbank_compound_id": "64"
+    },
+    "kegg": {
+      "status": "ok",
+      "source": "KEGG",
+      "id": "C00055",
+      "primary_name": "CMP",
+      "synonyms": [
+        "CMP",
+        "Cytidine-5'-monophosphate",
+        "Cytidylic acid"
+      ],
+      "formula": "C9H14N3O8P",
+      "mass_monoisotopic": 323.0519,
+      "mass_average": 323.2,
+      "pathways": [
+        "Pyrimidine metabolism",
+        "Metabolic pathways",
+        "Nucleotide metabolism"
+      ],
+      "kegg_class": [
+        "Compounds with biological roles [BR:br08001]",
+        "Nucleic acids",
+        "Nucleotides",
+        "Ribonucleotides",
+        "C00055 CMP",
+        "Glycosides [BR:br08021]",
+        "N-glycosides"
+      ],
+      "cross_references": {
+        "kegg_id": "C00055",
+        "pubchem_id": "3357",
+        "chebi_id": "17361"
+      },
+      "provenance": {
+        "source": "KEGG",
+        "id": "C00055",
+        "source_url": "https://rest.kegg.jp/get/cpd:C00055",
+        "retrieved_at": "2026-07-22T18:32:03Z",
+        "status": "ok"
+      }
+    },
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17361",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-07-22T18:32:02Z"
+      }
+    },
+    "hmdb": {
+      "status": "not_found",
+      "error_message": "HTTP 403",
+      "provenance": {
+        "source": "HMDB",
+        "id": "HMDB0000095",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000095",
+        "retrieved_at": "2026-07-22T18:32:03Z"
+      }
+    },
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17361",
+        "retrieved_at": "2026-07-22T18:32:02Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      },
+      {
+        "source": "HMDB",
+        "id": "HMDB0000095",
+        "retrieved_at": "2026-07-22T18:32:03Z",
+        "status": "not_found",
+        "error_if_any": "HTTP 403"
+      },
+      {
+        "source": "KEGG",
+        "id": "C00055",
+        "retrieved_at": "2026-07-22T18:32:03Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -303,118 +631,51 @@
       }
     ]
   },
-  "compound:lipid A|HMDB0013244": {
-    "enrichment_status": "ok_with_warnings",
-    "primary_name": "Diphosphoryl hexaacyl lipid A",
-    "synonyms": [
-      "Diphosphoryl hexaacyl lipid A"
-    ],
+  "compound:CoA-SH|CHEBI:57287": {
+    "enrichment_status": "error",
+    "primary_name": "",
+    "synonyms": [],
     "description": "",
     "taxonomy": {},
     "ontology_classification": {},
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C94H178N2O25P2",
+    "formula": "",
     "charge": 0,
-    "mass_monoisotopic": 1797.2194,
-    "mass_average": 1798.36,
+    "mass_monoisotopic": 0.0,
+    "mass_average": 0.0,
     "chebi_roles": [],
     "ontology_parents": [],
-    "kegg_class": [
-      "Lipids [BR:br08002]",
-      "SL Saccharolipids",
-      "SL01 Acylaminosugars",
-      "SL0106 Hexaacylaminosugars",
-      "C13908 Diphosphoryl hexaacyl lipid A"
-    ],
+    "kegg_class": [],
     "pathways": [],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0013244",
-      "kegg_id": "C13908",
-      "chebi_id": "CHEBI:47040",
-      "pubchem_id": "9877306",
-      "biocyc": "CPD0-1283",
-      "chemspider": "8052983",
-      "pathbank_compound_id": "8270"
+      "chebi_id": "CHEBI:57287",
+      "pathbank_compound_id": "282377"
     },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C13908",
-      "primary_name": "Diphosphoryl hexaacyl lipid A",
-      "synonyms": [
-        "Diphosphoryl hexaacyl lipid A"
-      ],
-      "formula": "C94H178N2O25P2",
-      "mass_monoisotopic": 1797.2194,
-      "mass_average": 1798.36,
-      "pathways": [],
-      "kegg_class": [
-        "Lipids [BR:br08002]",
-        "SL Saccharolipids",
-        "SL01 Acylaminosugars",
-        "SL0106 Hexaacylaminosugars",
-        "C13908 Diphosphoryl hexaacyl lipid A"
-      ],
-      "cross_references": {
-        "kegg_id": "C13908",
-        "pubchem_id": "854153",
-        "chebi_id": "34724"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C13908",
-        "source_url": "https://rest.kegg.jp/get/cpd:C13908",
-        "retrieved_at": "2026-07-22T20:19:07Z",
-        "status": "ok"
-      }
-    },
+    "kegg": {},
     "chebi": {
       "status": "error",
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:47040",
+        "id": "CHEBI:57287",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-07-22T20:19:07Z"
+        "retrieved_at": "2026-07-13T23:21:04Z"
       }
     },
-    "hmdb": {
-      "status": "not_found",
-      "error_message": "HTTP 403",
-      "provenance": {
-        "source": "HMDB",
-        "id": "HMDB0013244",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0013244",
-        "retrieved_at": "2026-07-22T20:19:07Z"
-      }
-    },
+    "hmdb": {},
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:47040",
-        "retrieved_at": "2026-07-22T20:19:07Z",
+        "id": "CHEBI:57287",
+        "retrieved_at": "2026-07-13T23:21:04Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      },
-      {
-        "source": "HMDB",
-        "id": "HMDB0013244",
-        "retrieved_at": "2026-07-22T20:19:07Z",
-        "status": "not_found",
-        "error_if_any": "HTTP 403"
-      },
-      {
-        "source": "KEGG",
-        "id": "C13908",
-        "retrieved_at": "2026-07-22T20:19:07Z",
-        "status": "ok",
-        "error_if_any": ""
       }
     ]
   },
@@ -466,145 +727,13 @@
       }
     ]
   },
-  "compound:lipid IV_A|CHEBI:58603": {
-    "enrichment_status": "error",
-    "primary_name": "",
-    "synonyms": [],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "",
-    "charge": 0,
-    "mass_monoisotopic": 0.0,
-    "mass_average": 0.0,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [],
-    "pathways": [],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "chebi_id": "CHEBI:58603",
-      "pathbank_compound_id": "40982"
-    },
-    "kegg": {},
-    "chebi": {
-      "status": "error",
-      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
-      "provenance": {
-        "source": "ChEBI",
-        "id": "CHEBI:58603",
-        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-07-22T18:31:45Z"
-      }
-    },
-    "hmdb": {},
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "ChEBI",
-        "id": "CHEBI:58603",
-        "retrieved_at": "2026-07-22T18:31:45Z",
-        "status": "error",
-        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
-      }
-    ]
-  },
-  "compound:LPL|9037": {
-    "enrichment_status": "ok",
-    "primary_name": "Sarracine",
-    "synonyms": [
-      "Sarracine",
-      "7-Angelyl-9-sarracinylplatynecine"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C18H27NO5",
-    "charge": 0,
-    "mass_monoisotopic": 337.1889,
-    "mass_average": 337.41,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Phytochemical compounds [BR:br08003]",
-      "Alkaloids",
-      "Alkaloids derived from ornithine",
-      "Pyrrolizidine alkaloids",
-      "C10383 Sarracine"
-    ],
-    "pathways": [],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C10383",
-      "pubchem_id": "12569",
-      "chebi_id": "9037"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C10383",
-      "primary_name": "Sarracine",
-      "synonyms": [
-        "Sarracine",
-        "7-Angelyl-9-sarracinylplatynecine"
-      ],
-      "formula": "C18H27NO5",
-      "mass_monoisotopic": 337.1889,
-      "mass_average": 337.41,
-      "pathways": [],
-      "kegg_class": [
-        "Phytochemical compounds [BR:br08003]",
-        "Alkaloids",
-        "Alkaloids derived from ornithine",
-        "Pyrrolizidine alkaloids",
-        "C10383 Sarracine"
-      ],
-      "cross_references": {
-        "kegg_id": "C10383",
-        "pubchem_id": "12569",
-        "chebi_id": "9037"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C10383",
-        "source_url": "https://rest.kegg.jp/get/cpd:C10383",
-        "retrieved_at": "2026-07-22T20:19:07Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {},
-    "hmdb": {},
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "KEGG",
-        "id": "C10383",
-        "retrieved_at": "2026-07-22T20:19:07Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:palmitate|HMDB0000220": {
+  "compound:myristate|HMDB0000806": {
     "enrichment_status": "ok_with_warnings",
-    "primary_name": "Hexadecanoic acid",
+    "primary_name": "Tetradecanoic acid",
     "synonyms": [
-      "Hexadecanoic acid",
-      "Hexadecanoate",
-      "Hexadecylic acid",
-      "Palmitic acid",
-      "Palmitate",
-      "Cetylic acid"
+      "Tetradecanoic acid",
+      "Tetradecanoate",
+      "Myristic acid"
     ],
     "description": "",
     "taxonomy": {},
@@ -612,10 +741,10 @@
     "inchi": "",
     "inchikey": "",
     "smiles": "",
-    "formula": "C16H32O2",
+    "formula": "C14H28O2",
     "charge": 0,
-    "mass_monoisotopic": 256.2402,
-    "mass_average": 256.42,
+    "mass_monoisotopic": 228.2089,
+    "mass_average": 228.37,
     "chebi_roles": [],
     "ontology_parents": [],
     "kegg_class": [
@@ -623,93 +752,75 @@
       "Lipids",
       "Fatty acids",
       "Saturated fatty acids",
-      "C00249 Palmitic acid (16:0)",
+      "C06424 Myristic acid (14:0)",
       "Lipids [BR:br08002]",
       "FA Fatty acyls",
       "FA01 Fatty Acids and Conjugates",
       "FA0101 Straight chain fatty acids",
-      "C00249 Hexadecanoic acid",
+      "C06424 Tetradecanoic acid",
       "Phytochemical compounds [BR:br08003]",
       "Fatty acids related compounds",
-      "C00249 Palmitic acid"
+      "C06424 Myristic acid"
     ],
     "pathways": [
       "Fatty acid biosynthesis",
-      "Fatty acid elongation",
-      "Fatty acid degradation",
-      "Cutin, suberine and wax biosynthesis",
-      "Glycosylphosphatidylinositol (GPI)-anchor biosynthesis",
-      "Biosynthesis of unsaturated fatty acids",
-      "Biosynthesis of plant secondary metabolites",
-      "Metabolic pathways",
-      "Fatty acid metabolism"
+      "Metabolic pathways"
     ],
     "cellular_locations": [],
     "tissue_locations": [],
     "biofluid_locations": [],
     "cross_references": {
-      "hmdb_id": "HMDB0000220",
-      "kegg_id": "C00249",
-      "chebi_id": "CHEBI:15756",
-      "pubchem_id": "985",
-      "cas": "57-10-3",
-      "biocyc": "CPD-8475",
-      "chemspider": "960",
-      "drugbank_id": "DB03796",
-      "pathbank_compound_id": "145"
+      "hmdb_id": "HMDB0000806",
+      "kegg_id": "C06424",
+      "chebi_id": "CHEBI:28875",
+      "pubchem_id": "11005",
+      "cas": "544-63-8",
+      "chemspider": "10539",
+      "drugbank_id": "DB08231",
+      "pathbank_compound_id": "643"
     },
     "kegg": {
       "status": "ok",
       "source": "KEGG",
-      "id": "C00249",
-      "primary_name": "Hexadecanoic acid",
+      "id": "C06424",
+      "primary_name": "Tetradecanoic acid",
       "synonyms": [
-        "Hexadecanoic acid",
-        "Hexadecanoate",
-        "Hexadecylic acid",
-        "Palmitic acid",
-        "Palmitate",
-        "Cetylic acid"
+        "Tetradecanoic acid",
+        "Tetradecanoate",
+        "Myristic acid"
       ],
-      "formula": "C16H32O2",
-      "mass_monoisotopic": 256.2402,
-      "mass_average": 256.42,
+      "formula": "C14H28O2",
+      "mass_monoisotopic": 228.2089,
+      "mass_average": 228.37,
       "pathways": [
         "Fatty acid biosynthesis",
-        "Fatty acid elongation",
-        "Fatty acid degradation",
-        "Cutin, suberine and wax biosynthesis",
-        "Glycosylphosphatidylinositol (GPI)-anchor biosynthesis",
-        "Biosynthesis of unsaturated fatty acids",
-        "Biosynthesis of plant secondary metabolites",
-        "Metabolic pathways",
-        "Fatty acid metabolism"
+        "Metabolic pathways"
       ],
       "kegg_class": [
         "Compounds with biological roles [BR:br08001]",
         "Lipids",
         "Fatty acids",
         "Saturated fatty acids",
-        "C00249 Palmitic acid (16:0)",
+        "C06424 Myristic acid (14:0)",
         "Lipids [BR:br08002]",
         "FA Fatty acyls",
         "FA01 Fatty Acids and Conjugates",
         "FA0101 Straight chain fatty acids",
-        "C00249 Hexadecanoic acid",
+        "C06424 Tetradecanoic acid",
         "Phytochemical compounds [BR:br08003]",
         "Fatty acids related compounds",
-        "C00249 Palmitic acid"
+        "C06424 Myristic acid"
       ],
       "cross_references": {
-        "kegg_id": "C00249",
-        "pubchem_id": "3548",
-        "chebi_id": "15756"
+        "kegg_id": "C06424",
+        "pubchem_id": "8659",
+        "chebi_id": "28875"
       },
       "provenance": {
         "source": "KEGG",
-        "id": "C00249",
-        "source_url": "https://rest.kegg.jp/get/cpd:C00249",
-        "retrieved_at": "2026-07-22T20:19:12Z",
+        "id": "C06424",
+        "source_url": "https://rest.kegg.jp/get/cpd:C06424",
+        "retrieved_at": "2026-07-23T16:12:03Z",
         "status": "ok"
       }
     },
@@ -718,9 +829,9 @@
       "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
       "provenance": {
         "source": "ChEBI",
-        "id": "CHEBI:15756",
+        "id": "CHEBI:28875",
         "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
-        "retrieved_at": "2026-07-22T20:19:12Z"
+        "retrieved_at": "2026-07-23T16:12:01Z"
       }
     },
     "hmdb": {
@@ -728,122 +839,31 @@
       "error_message": "HTTP 403",
       "provenance": {
         "source": "HMDB",
-        "id": "HMDB0000220",
-        "source_url": "https://hmdb.ca/metabolites/HMDB0000220",
-        "retrieved_at": "2026-07-22T20:19:12Z"
+        "id": "HMDB0000806",
+        "source_url": "https://hmdb.ca/metabolites/HMDB0000806",
+        "retrieved_at": "2026-07-23T16:12:01Z"
       }
     },
     "is_generic_class": false,
     "sources": [
       {
         "source": "ChEBI",
-        "id": "CHEBI:15756",
-        "retrieved_at": "2026-07-22T20:19:12Z",
+        "id": "CHEBI:28875",
+        "retrieved_at": "2026-07-23T16:12:01Z",
         "status": "error",
         "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
       },
       {
         "source": "HMDB",
-        "id": "HMDB0000220",
-        "retrieved_at": "2026-07-22T20:19:12Z",
+        "id": "HMDB0000806",
+        "retrieved_at": "2026-07-23T16:12:01Z",
         "status": "not_found",
         "error_if_any": "HTTP 403"
       },
       {
         "source": "KEGG",
-        "id": "C00249",
-        "retrieved_at": "2026-07-22T20:19:12Z",
-        "status": "ok",
-        "error_if_any": ""
-      }
-    ]
-  },
-  "compound:UDP-2,3-bis(beta-hydroxymyristoyl)-D-glucosamine|17787": {
-    "enrichment_status": "ok",
-    "primary_name": "UDP-2,3-bis(3-hydroxytetradecanoyl)glucosamine",
-    "synonyms": [
-      "UDP-2,3-bis(3-hydroxytetradecanoyl)glucosamine",
-      "UDP-2,3-bis(beta-hydroxymyristoyl)-D-glucosamine",
-      "UDP-2,3-bis(3-hydroxytetradecanoyl)-D-glucosamine",
-      "UDP-2,3-bis[O-(3R)-3-hydroxymyristoyl]-alpha-D-glucosamine"
-    ],
-    "description": "",
-    "taxonomy": {},
-    "ontology_classification": {},
-    "inchi": "",
-    "inchikey": "",
-    "smiles": "",
-    "formula": "C43H77N3O20P2",
-    "charge": 0,
-    "mass_monoisotopic": 1017.4576,
-    "mass_average": 1018.03,
-    "chebi_roles": [],
-    "ontology_parents": [],
-    "kegg_class": [
-      "Lipids [BR:br08002]",
-      "SL Saccharolipids",
-      "SL01 Acylaminosugars",
-      "SL0102 Diacylaminosugars",
-      "C04652 UDP-2,3-bis(3-hydroxytetradecanoyl)-D-glucosamine"
-    ],
-    "pathways": [
-      "Lipopolysaccharide biosynthesis",
-      "Metabolic pathways"
-    ],
-    "cellular_locations": [],
-    "tissue_locations": [],
-    "biofluid_locations": [],
-    "cross_references": {
-      "kegg_id": "C04652",
-      "pubchem_id": "7239",
-      "chebi_id": "17787"
-    },
-    "kegg": {
-      "status": "ok",
-      "source": "KEGG",
-      "id": "C04652",
-      "primary_name": "UDP-2,3-bis(3-hydroxytetradecanoyl)glucosamine",
-      "synonyms": [
-        "UDP-2,3-bis(3-hydroxytetradecanoyl)glucosamine",
-        "UDP-2,3-bis(beta-hydroxymyristoyl)-D-glucosamine",
-        "UDP-2,3-bis(3-hydroxytetradecanoyl)-D-glucosamine",
-        "UDP-2,3-bis[O-(3R)-3-hydroxymyristoyl]-alpha-D-glucosamine"
-      ],
-      "formula": "C43H77N3O20P2",
-      "mass_monoisotopic": 1017.4576,
-      "mass_average": 1018.03,
-      "pathways": [
-        "Lipopolysaccharide biosynthesis",
-        "Metabolic pathways"
-      ],
-      "kegg_class": [
-        "Lipids [BR:br08002]",
-        "SL Saccharolipids",
-        "SL01 Acylaminosugars",
-        "SL0102 Diacylaminosugars",
-        "C04652 UDP-2,3-bis(3-hydroxytetradecanoyl)-D-glucosamine"
-      ],
-      "cross_references": {
-        "kegg_id": "C04652",
-        "pubchem_id": "7239",
-        "chebi_id": "17787"
-      },
-      "provenance": {
-        "source": "KEGG",
-        "id": "C04652",
-        "source_url": "https://rest.kegg.jp/get/cpd:C04652",
-        "retrieved_at": "2026-07-22T20:19:12Z",
-        "status": "ok"
-      }
-    },
-    "chebi": {},
-    "hmdb": {},
-    "is_generic_class": false,
-    "sources": [
-      {
-        "source": "KEGG",
-        "id": "C04652",
-        "retrieved_at": "2026-07-22T20:19:12Z",
+        "id": "C06424",
+        "retrieved_at": "2026-07-23T16:12:03Z",
         "status": "ok",
         "error_if_any": ""
       }
@@ -1157,272 +1177,216 @@
       }
     ]
   },
-  "protein:Aas|P31119": {
-    "status": "ok",
-    "uniprot_id": "P31119",
-    "recommended_name": "Bifunctional protein Aas",
-    "alternative_names": [],
-    "gene_names": [
-      "aas"
-    ],
-    "organism": "Escherichia coli (strain K12)",
-    "taxonomy_id": "83333",
-    "function_text": "Plays a role in lysophospholipid acylation. Transfers fatty acids to the 1-position via an enzyme-bound acyl-ACP intermediate in the presence of ATP and magnesium. Its physiological function is to regenerate phosphatidylethanolamine from 2-acyl-glycero-3-phosphoethanolamine (2-acyl-GPE) formed by transacylation reactions or degradation by phospholipase A1",
-    "catalytic_activity": [
-      "a 2-acyl-sn-glycero-3-phosphoethanolamine + a fatty acyl-[ACP] = a 1,2-diacyl-sn-glycero-3-phosphoethanolamine + holo-[ACP]",
-      "a long-chain fatty acid + holo-[ACP] + ATP = a long-chain fatty acyl-[ACP] + AMP + diphosphate"
-    ],
-    "enzyme_commission": [
-      "2.3.1.40",
-      "6.2.1.20"
-    ],
+  "compound:UMP|CHEBI:17277": {
+    "enrichment_status": "error",
+    "primary_name": "",
+    "synonyms": [],
+    "description": "",
+    "taxonomy": {},
+    "ontology_classification": {},
+    "inchi": "",
+    "inchikey": "",
+    "smiles": "",
+    "formula": "",
+    "charge": 0,
+    "mass_monoisotopic": 0.0,
+    "mass_average": 0.0,
+    "chebi_roles": [],
+    "ontology_parents": [],
+    "kegg_class": [],
     "pathways": [],
-    "keywords": [
-      "Acyltransferase",
-      "ATP-binding",
-      "Cell inner membrane",
-      "Cell membrane",
-      "Ligase",
-      "Membrane",
-      "Multifunctional enzyme",
-      "Nucleotide-binding",
-      "Reference proteome",
-      "Transferase",
-      "Transmembrane",
-      "Transmembrane helix"
-    ],
-    "subcellular_locations": [
-      "Cell inner membrane"
-    ],
-    "go_mf_ids": [
-      "GO:0008779",
-      "GO:0005524",
-      "GO:0008922",
-      "GO:0004467",
-      "GO:0044325"
-    ],
-    "go_bp_ids": [
-      "GO:0006631",
-      "GO:0008654"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0016020",
-      "GO:0005886"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 719,
-    "transmembrane_regions_count": 2,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
+    "cellular_locations": [],
+    "tissue_locations": [],
+    "biofluid_locations": [],
+    "cross_references": {
+      "chebi_id": "CHEBI:17277",
+      "pubchem_id": "440448",
+      "pathbank_compound_id": "41234"
     },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "511145.b2836",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P31119",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P31119.json",
-      "retrieved_at": "2026-07-22T20:18:55Z"
-    }
-  },
-  "protein:cytoplasmic acyltransferase|Q6V4K5": {
-    "status": "ok",
-    "uniprot_id": "Q6V4K5",
-    "recommended_name": "",
-    "alternative_names": [],
-    "gene_names": [
-      "aatB"
-    ],
-    "organism": "Escherichia coli",
-    "taxonomy_id": "562",
-    "function_text": "",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
-    "pathways": [],
-    "keywords": [
-      "Membrane",
-      "Plasmid",
-      "Transmembrane",
-      "Transmembrane helix"
-    ],
-    "subcellular_locations": [],
-    "go_mf_ids": [],
-    "go_bp_ids": [],
-    "go_cellular_component_ids": [],
-    "protein_existence": "4: Predicted",
-    "sequence_length": 273,
-    "transmembrane_regions_count": 1,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
+    "kegg": {},
+    "chebi": {
+      "status": "error",
+      "error_message": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500",
+      "provenance": {
+        "source": "ChEBI",
+        "id": "CHEBI:17277",
+        "source_url": "https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity",
+        "retrieved_at": "2026-07-23T16:12:07Z"
+      }
     },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "",
-    "provenance": {
-      "source": "UniProt",
-      "query": "Q6V4K5",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q6V4K5.json",
-      "retrieved_at": "2026-07-22T21:01:43Z"
-    }
+    "hmdb": {},
+    "is_generic_class": false,
+    "sources": [
+      {
+        "source": "ChEBI",
+        "id": "CHEBI:17277",
+        "retrieved_at": "2026-07-23T16:12:07Z",
+        "status": "error",
+        "error_if_any": "request_failed:HTTP request failed after retries: https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity; last error: Server error 500"
+      }
+    ]
   },
-  "protein:FabZ|P0A6Q6": {
+  "protein:FadD|P69451": {
     "status": "ok",
-    "uniprot_id": "P0A6Q6",
-    "recommended_name": "3-hydroxyacyl-[acyl-carrier-protein] dehydratase FabZ",
+    "uniprot_id": "P69451",
+    "recommended_name": "Long-chain-fatty-acid--CoA ligase",
     "alternative_names": [
-      "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
-      "17 kDa actomyosin component",
-      "Beta-hydroxyacyl-ACP dehydratase"
+      "Long-chain acyl-CoA synthetase"
     ],
     "gene_names": [
-      "fabZ",
-      "sefA",
-      "yaeA"
+      "fadD",
+      "oldD"
     ],
     "organism": "Escherichia coli (strain K12)",
     "taxonomy_id": "83333",
-    "function_text": "Involved in unsaturated fatty acids biosynthesis. Catalyzes the dehydration of short chain beta-hydroxyacyl-ACPs and long chain saturated and unsaturated beta-hydroxyacyl-ACPs",
+    "function_text": "Catalyzes the esterification, concomitant with transport, of exogenous long-chain fatty acids into metabolically active CoA thioesters for subsequent degradation or incorporation into phospholipids. Activity is the highest with fatty acid substrates of > 10 carbon atoms (PubMed:15213221). Is involved in the aerobic beta-oxidative degradation of fatty acids, which allows aerobic growth of E.coli on fatty acids as a sole carbon and energy source (PubMed:12535077)",
     "catalytic_activity": [
-      "a (3R)-hydroxyacyl-[ACP] = a (2E)-enoyl-[ACP] + H2O",
-      "(3R)-hydroxybutanoyl-[ACP] = (2E)-butenoyl-[ACP] + H2O",
-      "(3R)-hydroxyhexanoyl-[ACP] = (2E)-hexenoyl-[ACP] + H2O",
-      "(3R)-hydroxyoctanoyl-[ACP] = (2E)-octenoyl-[ACP] + H2O",
-      "(3R)-hydroxydecanoyl-[ACP] = (2E)-decenoyl-[ACP] + H2O",
-      "(3R)-hydroxydodecanoyl-[ACP] = (2E)-dodecenoyl-[ACP] + H2O",
-      "(3R)-hydroxytetradecanoyl-[ACP] = (2E)-tetradecenoyl-[ACP] + H2O",
-      "(3R)-hydroxyhexadecanoyl-[ACP] = (2E)-hexadecenoyl-[ACP] + H2O",
-      "(3R)-hydroxy-(9Z)-hexadecenoyl-[ACP] = (2E,9Z)-hexadecadienoyl-[ACP] + H2O",
-      "(3R)-hydroxy-5-methylhexanoyl-[ACP] = (2E)-5-methylhexenoyl-[ACP] + H2O"
+      "a long-chain fatty acid + ATP + CoA = a long-chain fatty acyl-CoA + AMP + diphosphate",
+      "hexadecanoate + ATP + CoA = hexadecanoyl-CoA + AMP + diphosphate",
+      "dodecanoate + ATP + CoA = dodecanoyl-CoA + AMP + diphosphate",
+      "(9Z)-octadecenoate + ATP + CoA = (9Z)-octadecenoyl-CoA + AMP + diphosphate",
+      "tetradecanoate + ATP + CoA = tetradecanoyl-CoA + AMP + diphosphate",
+      "decanoate + ATP + CoA = decanoyl-CoA + AMP + diphosphate",
+      "octanoate + ATP + CoA = octanoyl-CoA + AMP + diphosphate"
     ],
     "enzyme_commission": [
-      "4.2.1.59"
+      "6.2.1.3"
     ],
-    "pathways": [],
+    "pathways": [
+      "Lipid metabolism; fatty acid beta-oxidation"
+    ],
     "keywords": [
-      "3D-structure",
-      "Cytoplasm",
+      "ATP-binding",
+      "Cell membrane",
       "Direct protein sequencing",
-      "Lipid A biosynthesis",
-      "Lipid biosynthesis",
+      "Fatty acid metabolism",
+      "Ligase",
       "Lipid metabolism",
-      "Lyase",
+      "Magnesium",
+      "Membrane",
+      "Nucleotide-binding",
       "Reference proteome"
     ],
     "subcellular_locations": [
-      "Cytoplasm"
+      "Cell membrane"
     ],
     "go_mf_ids": [
-      "GO:0019171",
-      "GO:0042802"
+      "GO:0005524",
+      "GO:0016405",
+      "GO:0102391",
+      "GO:0005504",
+      "GO:0004467",
+      "GO:0070538",
+      "GO:0042803"
     ],
     "go_bp_ids": [
-      "GO:0006633",
-      "GO:0009245"
+      "GO:0006637",
+      "GO:0006635",
+      "GO:0006631",
+      "GO:0015908",
+      "GO:0006629",
+      "GO:0008654",
+      "GO:0009411"
     ],
     "go_cellular_component_ids": [
       "GO:0005737",
-      "GO:0016020"
+      "GO:0009898",
+      "GO:0005829"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 151,
+    "sequence_length": 561,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
-    "pdb_ids": [
-      "6N3P"
-    ],
+    "pdb_ids": [],
     "reactome_ids": [],
-    "string_id": "511145.b0180",
+    "string_id": "511145.b1805",
     "provenance": {
       "source": "UniProt",
-      "query": "P0A6Q6",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P0A6Q6.json",
-      "retrieved_at": "2026-07-22T21:01:43Z"
+      "query": "P69451",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P69451.json",
+      "retrieved_at": "2026-07-23T16:11:57Z"
     }
   },
-  "protein:Lnt|P23930": {
+  "protein:FtsH|P0AAI3": {
     "status": "ok",
-    "uniprot_id": "P23930",
-    "recommended_name": "Apolipoprotein N-acyltransferase",
+    "uniprot_id": "P0AAI3",
+    "recommended_name": "ATP-dependent zinc metalloprotease FtsH",
     "alternative_names": [
-      "Copper homeostasis protein CutE"
+      "Cell division protease FtsH"
     ],
     "gene_names": [
-      "lnt",
-      "cutE"
+      "ftsH",
+      "hflB",
+      "mrsC",
+      "std",
+      "tolZ"
     ],
     "organism": "Escherichia coli (strain K12)",
     "taxonomy_id": "83333",
-    "function_text": "Catalyzes the phospholipid dependent N-acylation of the N-terminal cysteine of apolipoprotein, the last step in lipoprotein maturation (PubMed:2032623, PubMed:21676878, PubMed:28675161, PubMed:28885614). Utilizes a two-step reaction via a ping-pong mechanism (PubMed:21676878, PubMed:28675161). Lnt undergoes covalent modification in the presence of phospholipids, resulting in a thioester acyl-enzyme intermediate. It then transfers the acyl chain to the amine group of the N-terminal diacylglyceryl-modified cysteine of apolipoprotein, leading to the formation of mature triacylated lipoprotein (PubMed:21676878, PubMed:28675161). In vitro, can utilize the phospholipids phosphatidylethanolamine (PE), phosphatidylglycerol (PG), phosphatidic acid (PA) or cardiolipin (CL) (PubMed:2032623, PubMed:21676878). PE is the most efficient acyl donor (PubMed:21676878)",
-    "catalytic_activity": [
-      "N-terminal S-1,2-diacyl-sn-glyceryl-L-cysteinyl-[lipoprotein] + a glycerophospholipid = N-acyl-S-1,2-diacyl-sn-glyceryl-L-cysteinyl-[lipoprotein] + a 2-acyl-sn-glycero-3-phospholipid + H(+)"
-    ],
-    "enzyme_commission": [
-      "2.3.1.269"
-    ],
-    "pathways": [
-      "Protein modification; lipoprotein biosynthesis (N-acyl transfer)"
-    ],
+    "function_text": "Acts as a processive, ATP-dependent zinc metallopeptidase for both cytoplasmic and membrane proteins. Plays a role in the quality control of integral membrane proteins. Degrades a few membrane proteins that have not been assembled into complexes such as SecY, F(0) ATPase subunit a and YccA, and also cytoplasmic proteins sigma-32, LpxC, KdtA and phage lambda cII protein among others. Degrades membrane proteins in a processive manner starting at either the N- or C-terminus; recognition requires a cytoplasmic tail of about 20 residues with no apparent sequence requirements. It presumably dislocates membrane-spanning and periplasmic segments of the protein into the cytoplasm to degrade them, this probably requires ATP. Degrades C-terminal-tagged cytoplasmic proteins which are tagged with an 11-amino-acid nonpolar destabilizing tail via a mechanism involving the 10SA (SsrA) stable RNA As FtsH regulates the levels of both LpxC and KdtA it is required for synthesis of both the protein and lipid components of lipopolysaccharide (LPS) (Microbial infection) Probably transports the toxic C-terminal region of CdiA from E.coli strain 536, E.cloacae strain ATCC 13047 and of Y.pestis strain A across the inner membrane to the cytoplasm, where CdiA has a toxic effect. Toxin transport is strain-specific, mutations in this gene do not confer resistance to several other tested CdiA toxins",
+    "catalytic_activity": [],
+    "enzyme_commission": [],
+    "pathways": [],
     "keywords": [
       "3D-structure",
-      "Acyltransferase",
+      "ATP-binding",
       "Cell inner membrane",
       "Cell membrane",
+      "Hydrolase",
       "Membrane",
+      "Metal-binding",
+      "Metalloprotease",
+      "Nucleotide-binding",
+      "Protease",
       "Reference proteome",
-      "Transferase",
       "Transmembrane",
-      "Transmembrane helix"
+      "Transmembrane helix",
+      "Zinc"
     ],
     "subcellular_locations": [
       "Cell inner membrane"
     ],
     "go_mf_ids": [
-      "GO:0016410"
+      "GO:0005524",
+      "GO:0016887",
+      "GO:0004176",
+      "GO:0004222",
+      "GO:0008270"
     ],
     "go_bp_ids": [
-      "GO:0042158"
+      "GO:0030163",
+      "GO:0006508"
     ],
     "go_cellular_component_ids": [
-      "GO:0030288",
+      "GO:0098796",
       "GO:0005886"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 512,
-    "transmembrane_regions_count": 8,
+    "sequence_length": 644,
+    "transmembrane_regions_count": 2,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "5N6H",
-      "5N6L",
-      "5XHQ",
-      "6NWR",
-      "6Q3A",
-      "7ACI",
-      "8AQ3",
-      "8AQ4",
-      "8B0K",
-      "8B0L",
-      "8B0M",
-      "8B0N",
-      "8B0O",
-      "8B0P",
-      "8Q2P",
-      "8RQR"
+      "1LV7",
+      "4V0B",
+      "7VHP",
+      "7VHQ",
+      "7WI3",
+      "7WI4",
+      "9CZ2"
     ],
     "reactome_ids": [],
-    "string_id": "511145.b0657",
+    "string_id": "511145.b3178",
     "provenance": {
       "source": "UniProt",
-      "query": "P23930",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P23930.json",
-      "retrieved_at": "2026-07-22T20:18:56Z"
+      "query": "P0AAI3",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P0AAI3.json",
+      "retrieved_at": "2026-07-22T18:31:26Z"
     }
   },
   "protein:LpxA|P0A722": {
@@ -1643,65 +1607,89 @@
       "retrieved_at": "2026-07-22T18:31:24Z"
     }
   },
-  "protein:LpxG|O84467": {
+  "protein:LpxD|P21645": {
     "status": "ok",
-    "uniprot_id": "O84467",
-    "recommended_name": "UDP-2,3-diacylglucosamine pyrophosphatase LpxG",
+    "uniprot_id": "P21645",
+    "recommended_name": "UDP-3-O-(3-hydroxymyristoyl)glucosamine N-acyltransferase",
     "alternative_names": [
-      "UDP-2,3-diacylglucosamine hydrolase LpxG"
+      "Protein FirA",
+      "Rifampicin resistance protein",
+      "UDP-3-O-(3-hydroxytetradecanoyl)glucosamine N-acyltransferase"
     ],
     "gene_names": [
-      "lpxG"
+      "lpxD",
+      "firA",
+      "omsA"
     ],
-    "organism": "Chlamydia trachomatis serovar D (strain ATCC VR-885 / DSM 19411 / UW-3/Cx)",
-    "taxonomy_id": "272561",
-    "function_text": "Hydrolyzes the pyrophosphate bond of UDP-2,3-diacylglucosamine to form 2,3-diacylglucosamine 1-phosphate (lipid X) and UMP by catalyzing the attack of water at the alpha-P atom. Involved in the biosynthesis of lipid A, a phosphorylated glycolipid that anchors the lipooligosaccharide (LOS) to the outer membrane of the cell. Can functionally complement lpxH deficiency in E.coli. Overexpression of LpxG results in toxic accumulation of lipid X and profoundly reduces the infectivity of C.trachomatis. Can utilize UDP-2-N,3-O-bis((3R)-3-hydroxytetradecanoyl)-alpha-D-glucosamine as substrate in vitro, but the substrate is likely UDP-2-N-((3R)-3-hydroxyicosanoyl),3-O-(tetradecanoyl)-alpha-D-glucosamine in vivo",
+    "organism": "Escherichia coli (strain K12)",
+    "taxonomy_id": "83333",
+    "function_text": "Catalyzes the N-acylation of UDP-3-O-(hydroxytetradecanoyl)glucosamine using 3-hydroxytetradecanoyl-ACP as the acyl donor. Is involved in the biosynthesis of lipid A, a phosphorylated glycolipid that anchors the lipopolysaccharide to the outer membrane of the cell. Prefers (3R)-3-hydroxytetradecanoyl-ACP over (3R)-3-hydroxyhexadecanoyl-ACP as the acyl donor in vitro, which is consistent with the structure of E.coli lipid A that contains over 95% (R)-3-hydroxytetradecanoate at the 2 and 2' positions",
     "catalytic_activity": [
-      "UDP-2,3-diacyl-alpha-D-glucosamine + H2O = 2,3-diacyl-alpha-D-glucosaminyl 1-phosphate + UMP + 2 H(+)"
+      "a UDP-3-O-[(3R)-3-hydroxyacyl]-alpha-D-glucosamine + a (3R)-hydroxyacyl-[ACP] = a UDP-2-N,3-O-bis[(3R)-3-hydroxyacyl]-alpha-D-glucosamine + holo-[ACP] + H(+)",
+      "UDP-3-O-[(3R)-3-hydroxytetradecanoyl]-alpha-D-glucosamine + (3R)-hydroxytetradecanoyl-[ACP] = UDP-2-N,3-O-bis[(3R)-3-hydroxytetradecanoyl]-alpha-D-glucosamine + holo-[ACP] + H(+)"
     ],
-    "enzyme_commission": [],
+    "enzyme_commission": [
+      "2.3.1.191"
+    ],
     "pathways": [
-      "Glycolipid biosynthesis; lipid IV(A) biosynthesis"
+      "Glycolipid biosynthesis; lipid IV(A) biosynthesis; lipid IV(A) from (3R)-3-hydroxytetradecanoyl-[acyl-carrier-protein] and UDP-N-acetyl-alpha-D-glucosamine: step 3/6"
     ],
     "keywords": [
-      "Cell inner membrane",
-      "Cell membrane",
-      "Hydrolase",
-      "Manganese",
-      "Membrane",
-      "Metal-binding",
+      "3D-structure",
+      "Acyltransferase",
+      "Antibiotic resistance",
+      "Direct protein sequencing",
+      "Lipid A biosynthesis",
+      "Lipid biosynthesis",
+      "Lipid metabolism",
       "Reference proteome",
-      "Transmembrane",
-      "Transmembrane helix"
+      "Repeat",
+      "Transferase"
     ],
-    "subcellular_locations": [
-      "Cell inner membrane"
-    ],
+    "subcellular_locations": [],
     "go_mf_ids": [
-      "GO:0046872",
-      "GO:0008758"
+      "GO:0042802",
+      "GO:0016410",
+      "GO:0103118"
     ],
     "go_bp_ids": [
-      "GO:0009245"
+      "GO:0009245",
+      "GO:0046677"
     ],
     "go_cellular_component_ids": [
-      "GO:0005886"
+      "GO:0005737",
+      "GO:0005829",
+      "GO:0016020"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 329,
-    "transmembrane_regions_count": 1,
+    "sequence_length": 341,
+    "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
-    "pdb_ids": [],
+    "pdb_ids": [
+      "3EH0",
+      "4IHF",
+      "4IHG",
+      "4IHH",
+      "6P83",
+      "6P84",
+      "6P85",
+      "6P86",
+      "6P87",
+      "6P88",
+      "6P89",
+      "6P8A",
+      "6P8B"
+    ],
     "reactome_ids": [],
-    "string_id": "272561.CT_461",
+    "string_id": "511145.b0179",
     "provenance": {
       "source": "UniProt",
-      "query": "O84467",
-      "source_url": "https://rest.uniprot.org/uniprotkb/O84467.json",
-      "retrieved_at": "2026-07-22T20:18:56Z"
+      "query": "P21645",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P21645.json",
+      "retrieved_at": "2026-07-22T18:31:24Z"
     }
   },
   "protein:LpxH|P43341": {
@@ -1776,72 +1764,6 @@
       "retrieved_at": "2026-07-22T18:31:24Z"
     }
   },
-  "protein:LpxI|Q9A716": {
-    "status": "ok",
-    "uniprot_id": "Q9A716",
-    "recommended_name": "UDP-2,3-diacylglucosamine pyrophosphatase LpxI",
-    "alternative_names": [
-      "UDP-2,3-diacylglucosamine hydrolase LpxI"
-    ],
-    "gene_names": [
-      "lpxI"
-    ],
-    "organism": "Caulobacter vibrioides (strain ATCC 19089 / CIP 103742 / CB 15)",
-    "taxonomy_id": "190650",
-    "function_text": "Hydrolyzes the pyrophosphate bond of UDP-2,3-diacylglucosamine to form 2,3-diacylglucosamine 1-phosphate (lipid X) and UMP by catalyzing the attack of water at the beta-P atom. Involved in the biosynthesis of lipid A, a phosphorylated glycolipid that anchors the lipopolysaccharide to the outer membrane of the cell. Can functionally complement lpxH deficiency in E.coli. Cannot use CDP-diacylglycerol as substrate",
-    "catalytic_activity": [
-      "UDP-2-N,3-O-bis[(3R)-3-hydroxytetradecanoyl]-alpha-D-glucosamine + H2O = 2-N,3-O-bis[(3R)-3-hydroxytetradecanoyl]-alpha-D-glucosaminyl 1-phosphate + UMP + 2 H(+)"
-    ],
-    "enzyme_commission": [
-      "3.6.1.54"
-    ],
-    "pathways": [
-      "Glycolipid biosynthesis; lipid IV(A) biosynthesis; lipid IV(A) from (3R)-3-hydroxytetradecanoyl-[acyl-carrier-protein] and UDP-N-acetyl-alpha-D-glucosamine: step 4/6"
-    ],
-    "keywords": [
-      "3D-structure",
-      "Cell inner membrane",
-      "Cell membrane",
-      "Hydrolase",
-      "Lipid A biosynthesis",
-      "Lipid biosynthesis",
-      "Lipid metabolism",
-      "Magnesium",
-      "Membrane",
-      "Reference proteome"
-    ],
-    "subcellular_locations": [
-      "Cell inner membrane"
-    ],
-    "go_mf_ids": [
-      "GO:0008758"
-    ],
-    "go_bp_ids": [
-      "GO:0009245"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005886"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 280,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [
-      "4GGM",
-      "4J6E"
-    ],
-    "reactome_ids": [],
-    "string_id": "190650.CC_1910",
-    "provenance": {
-      "source": "UniProt",
-      "query": "Q9A716",
-      "source_url": "https://rest.uniprot.org/uniprotkb/Q9A716.json",
-      "retrieved_at": "2026-07-22T20:18:56Z"
-    }
-  },
   "protein:LpxK|P27300": {
     "status": "ok",
     "uniprot_id": "P27300",
@@ -1906,72 +1828,146 @@
       "retrieved_at": "2026-07-22T18:31:24Z"
     }
   },
-  "protein:PagP|P37001": {
+  "protein:LpxL|P0ACV0": {
     "status": "ok",
-    "uniprot_id": "P37001",
-    "recommended_name": "Lipid A palmitoyltransferase PagP",
+    "uniprot_id": "P0ACV0",
+    "recommended_name": "Lipid A biosynthesis lauroyltransferase",
     "alternative_names": [
-      "Lipid A acylation protein"
+      "Kdo(2)-lipid IV(A) lauroyltransferase"
     ],
     "gene_names": [
-      "pagP",
-      "crcA",
-      "ybeG"
+      "lpxL",
+      "htrB",
+      "waaM"
     ],
     "organism": "Escherichia coli (strain K12)",
     "taxonomy_id": "83333",
-    "function_text": "Transfers a palmitate residue from the sn-1 position of a phospholipid to the N-linked hydroxymyristate on the proximal unit of lipid A or its precursors. Phosphatidylglycerol (PtdGro), phosphatidylethanolamine (PtdEtn), phosphatidylserine (PtdSer) and phosphatidic acid (Ptd-OH) are all effective acyl donors",
+    "function_text": "Catalyzes the transfer of laurate from lauroyl-[acyl-carrier-protein] (ACP) to Kdo(2)-lipid IV(A) to form Kdo(2)-(lauroyl)-lipid IV(A). Has 10 fold selectivity for lauroyl-ACP over myristoyl-ACP. In vitro, can also catalyze a slow second acylation reaction leading to the formation of Kdo(2)-(dilauroyl)-lipid IV(A)",
     "catalytic_activity": [
-      "lipid A (E. coli) + a 1-hexadecanoyl-2-acyl-sn-glycero-3-phosphocholine = hepta-acyl lipid A (E. coli) + a 2-acyl-sn-glycero-3-phosphocholine",
-      "lipid IIA + a 1-hexadecanoyl-2-acyl-sn-glycero-3-phosphocholine = lipid IIB + a 2-acyl-sn-glycero-3-phosphocholine",
-      "lipid IVA (E. coli) + a 1-hexadecanoyl-2-acyl-sn-glycero-3-phosphocholine = lipid IVB (E. coli) + a 2-acyl-sn-glycero-3-phosphocholine"
+      "dodecanoyl-[ACP] + alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-lipid IVA (E. coli) = alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-(dodecanoyl)-lipid IVA (E. coli) + holo-[ACP]"
     ],
     "enzyme_commission": [
-      "2.3.1.251"
+      "2.3.1.241"
     ],
-    "pathways": [],
+    "pathways": [
+      "Glycolipid biosynthesis; KDO(2)-lipid A biosynthesis; KDO(2)-lipid A from CMP-3-deoxy-D-manno-octulosonate and lipid IV(A): step 3/4",
+      "Bacterial outer membrane biogenesis; lipopolysaccharide biosynthesis"
+    ],
     "keywords": [
-      "3D-structure",
       "Acyltransferase",
-      "Cell outer membrane",
-      "Direct protein sequencing",
+      "Cell inner membrane",
+      "Cell membrane",
+      "Lipopolysaccharide biosynthesis",
       "Membrane",
       "Reference proteome",
-      "Signal",
-      "Transferase"
+      "Transferase",
+      "Transmembrane",
+      "Transmembrane helix"
     ],
     "subcellular_locations": [
-      "Cell outer membrane"
+      "Cell inner membrane"
     ],
     "go_mf_ids": [
-      "GO:0016416"
+      "GO:0016746",
+      "GO:0008913",
+      "GO:0016740"
     ],
     "go_bp_ids": [
-      "GO:0009245"
+      "GO:0036104",
+      "GO:0009245",
+      "GO:0009103",
+      "GO:0006950"
     ],
     "go_cellular_component_ids": [
-      "GO:0009279"
+      "GO:0016020",
+      "GO:0005886"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 186,
-    "transmembrane_regions_count": 0,
+    "sequence_length": 306,
+    "transmembrane_regions_count": 1,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
-    "pdb_ids": [
-      "1MM4",
-      "1MM5",
-      "1THQ",
-      "3GP6"
-    ],
+    "pdb_ids": [],
     "reactome_ids": [],
-    "string_id": "511145.b0622",
+    "string_id": "511145.b1054",
     "provenance": {
       "source": "UniProt",
-      "query": "P37001",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P37001.json",
-      "retrieved_at": "2026-07-22T20:18:56Z"
+      "query": "P0ACV0",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P0ACV0.json",
+      "retrieved_at": "2026-07-22T18:31:25Z"
+    }
+  },
+  "protein:LpxM|P24205": {
+    "status": "ok",
+    "uniprot_id": "P24205",
+    "recommended_name": "Lipid A biosynthesis myristoyltransferase",
+    "alternative_names": [
+      "Kdo(2)-lauroyl-lipid IV(A) myristoyltransferase"
+    ],
+    "gene_names": [
+      "lpxM",
+      "msbB"
+    ],
+    "organism": "Escherichia coli (strain K12)",
+    "taxonomy_id": "83333",
+    "function_text": "Catalyzes the transfer of myristate from myristoyl-[acyl-carrier-protein] (ACP) to Kdo(2)-(lauroyl)-lipid IV(A) to form Kdo(2)-lipid A. Can probably also catalyze the transfer of myristate to Kdo(2)-(palmitoleoyl)-lipid IV(A) to form the cold-adapted Kdo(2)-lipid A. In vitro, can acylate Kdo(2)-lipid IV(A), but acylation of (KDO)2-(lauroyl)-lipid IV(A) is about 100 times faster. In vitro, can use lauroyl-ACP but displays a slight kinetic preference for myristoyl-ACP",
+    "catalytic_activity": [
+      "alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-(dodecanoyl)-lipid IVA (E. coli) + tetradecanoyl-[ACP] = alpha-Kdo-(2->4)-alpha-Kdo-(2->6)-lipid A (E. coli) + holo-[ACP]",
+      "(9Z)-hexadecenoyl-(Kdo)2-lipid IVA (E. coli) + tetradecanoyl-[ACP] = ((9Z)-hexadecenoyl-tetradecanoyl)-(Kdo)2-lipid A + holo-[ACP]"
+    ],
+    "enzyme_commission": [
+      "2.3.1.243"
+    ],
+    "pathways": [
+      "Glycolipid biosynthesis; KDO(2)-lipid A biosynthesis; KDO(2)-lipid A from CMP-3-deoxy-D-manno-octulosonate and lipid IV(A): step 4/4",
+      "Bacterial outer membrane biogenesis; lipopolysaccharide biosynthesis"
+    ],
+    "keywords": [
+      "Acyltransferase",
+      "Cell inner membrane",
+      "Cell membrane",
+      "Lipopolysaccharide biosynthesis",
+      "Membrane",
+      "Reference proteome",
+      "Transferase",
+      "Transmembrane",
+      "Transmembrane helix"
+    ],
+    "subcellular_locations": [
+      "Cell inner membrane"
+    ],
+    "go_mf_ids": [
+      "GO:0016746",
+      "GO:0016747",
+      "GO:0019107"
+    ],
+    "go_bp_ids": [
+      "GO:0009247",
+      "GO:0036104",
+      "GO:0009103"
+    ],
+    "go_cellular_component_ids": [
+      "GO:0009276",
+      "GO:0016020",
+      "GO:0005886"
+    ],
+    "protein_existence": "1: Evidence at protein level",
+    "sequence_length": 323,
+    "transmembrane_regions_count": 1,
+    "signal_peptide": {
+      "present": false,
+      "region": ""
+    },
+    "pdb_ids": [],
+    "reactome_ids": [],
+    "string_id": "511145.b1855",
+    "provenance": {
+      "source": "UniProt",
+      "query": "P24205",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P24205.json",
+      "retrieved_at": "2026-07-22T18:31:25Z"
     }
   },
   "protein:PldA|P0A921": {
@@ -2130,133 +2126,91 @@
       "retrieved_at": "2026-07-22T18:31:25Z"
     }
   },
-  "protein:lipoprotein|P04846": {
+  "protein:β-hydroxyacyl-acyl carrier protein (ACP)|P0AEK2": {
     "status": "ok",
-    "uniprot_id": "P04846",
-    "recommended_name": "Lipoprotein 28",
-    "alternative_names": [],
-    "gene_names": [
-      "nlpA"
-    ],
-    "organism": "Escherichia coli (strain K12)",
-    "taxonomy_id": "83333",
-    "function_text": "",
-    "catalytic_activity": [],
-    "enzyme_commission": [],
-    "pathways": [],
-    "keywords": [
-      "Cell inner membrane",
-      "Cell membrane",
-      "Lipoprotein",
-      "Membrane",
-      "Palmitate",
-      "Reference proteome",
-      "Signal"
-    ],
-    "subcellular_locations": [
-      "Cell inner membrane"
-    ],
-    "go_mf_ids": [],
-    "go_bp_ids": [
-      "GO:0048473",
-      "GO:1903692",
-      "GO:0015821"
-    ],
-    "go_cellular_component_ids": [
-      "GO:0005886"
-    ],
-    "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 272,
-    "transmembrane_regions_count": 0,
-    "signal_peptide": {
-      "present": false,
-      "region": ""
-    },
-    "pdb_ids": [],
-    "reactome_ids": [],
-    "string_id": "511145.b3661",
-    "provenance": {
-      "source": "UniProt",
-      "query": "P04846",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P04846.json",
-      "retrieved_at": "2026-07-22T20:18:57Z"
-    }
-  },
-  "protein:(3R)-hydroxymyristoyl acyl carrier protein|P0A6Q6": {
-    "status": "ok",
-    "uniprot_id": "P0A6Q6",
-    "recommended_name": "3-hydroxyacyl-[acyl-carrier-protein] dehydratase FabZ",
+    "uniprot_id": "P0AEK2",
+    "recommended_name": "3-oxoacyl-[acyl-carrier-protein] reductase FabG",
     "alternative_names": [
-      "(3R)-hydroxymyristoyl-[acyl-carrier-protein] dehydratase",
-      "17 kDa actomyosin component",
-      "Beta-hydroxyacyl-ACP dehydratase"
+      "3-ketoacyl-acyl carrier protein reductase",
+      "Beta-Ketoacyl-acyl carrier protein reductase",
+      "Beta-ketoacyl-ACP reductase"
     ],
     "gene_names": [
-      "fabZ",
-      "sefA",
-      "yaeA"
+      "fabG"
     ],
     "organism": "Escherichia coli (strain K12)",
     "taxonomy_id": "83333",
-    "function_text": "Involved in unsaturated fatty acids biosynthesis. Catalyzes the dehydration of short chain beta-hydroxyacyl-ACPs and long chain saturated and unsaturated beta-hydroxyacyl-ACPs",
+    "function_text": "Catalyzes the NADPH-dependent reduction of beta-ketoacyl-ACP substrates to beta-hydroxyacyl-ACP products, the first reductive step in the elongation cycle of fatty acid biosynthesis",
     "catalytic_activity": [
-      "a (3R)-hydroxyacyl-[ACP] = a (2E)-enoyl-[ACP] + H2O",
-      "(3R)-hydroxybutanoyl-[ACP] = (2E)-butenoyl-[ACP] + H2O",
-      "(3R)-hydroxyhexanoyl-[ACP] = (2E)-hexenoyl-[ACP] + H2O",
-      "(3R)-hydroxyoctanoyl-[ACP] = (2E)-octenoyl-[ACP] + H2O",
-      "(3R)-hydroxydecanoyl-[ACP] = (2E)-decenoyl-[ACP] + H2O",
-      "(3R)-hydroxydodecanoyl-[ACP] = (2E)-dodecenoyl-[ACP] + H2O",
-      "(3R)-hydroxytetradecanoyl-[ACP] = (2E)-tetradecenoyl-[ACP] + H2O",
-      "(3R)-hydroxyhexadecanoyl-[ACP] = (2E)-hexadecenoyl-[ACP] + H2O",
-      "(3R)-hydroxy-(9Z)-hexadecenoyl-[ACP] = (2E,9Z)-hexadecadienoyl-[ACP] + H2O",
-      "(3R)-hydroxy-5-methylhexanoyl-[ACP] = (2E)-5-methylhexenoyl-[ACP] + H2O"
+      "a (3R)-hydroxyacyl-[ACP] + NADP(+) = a 3-oxoacyl-[ACP] + NADPH + H(+)",
+      "3-oxobutanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxybutanoyl-[ACP] + NADP(+)",
+      "3-oxopentanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxypentanoyl-[ACP] + NADP(+)",
+      "3-oxohexanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxyhexanoyl-[ACP] + NADP(+)",
+      "3-oxoheptanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxyheptanoyl-[ACP] + NADP(+)",
+      "3-oxooctanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxyoctanoyl-[ACP] + NADP(+)",
+      "3-oxononanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxynonanoyl-[ACP] + NADP(+)",
+      "3-oxodecanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxydecanoyl-[ACP] + NADP(+)",
+      "3-oxohexadecanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxyhexadecanoyl-[ACP] + NADP(+)",
+      "3-oxo-(9Z)-hexadecenoyl-[ACP] + NADPH + H(+) = (3R)-hydroxy-(9Z)-hexadecenoyl-[ACP] + NADP(+)",
+      "4-methyl-3-oxopentanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxy-4-methylpentanoyl-[ACP] + NADP(+)",
+      "5-methyl-3-oxohexanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxy-5-methylhexanoyl-[ACP] + NADP(+)",
+      "4-methyl-3-oxohexanoyl-[ACP] + NADPH + H(+) = (3R)-hydroxy-4-methylhexanoyl-[ACP] + NADP(+)"
     ],
     "enzyme_commission": [
-      "4.2.1.59"
+      "1.1.1.100"
     ],
-    "pathways": [],
+    "pathways": [
+      "Lipid metabolism; fatty acid biosynthesis"
+    ],
     "keywords": [
       "3D-structure",
-      "Cytoplasm",
-      "Direct protein sequencing",
-      "Lipid A biosynthesis",
+      "Calcium",
+      "Fatty acid biosynthesis",
+      "Fatty acid metabolism",
       "Lipid biosynthesis",
       "Lipid metabolism",
-      "Lyase",
+      "Metal-binding",
+      "NADP",
+      "Oxidoreductase",
       "Reference proteome"
     ],
-    "subcellular_locations": [
-      "Cytoplasm"
-    ],
+    "subcellular_locations": [],
     "go_mf_ids": [
-      "GO:0019171",
-      "GO:0042802"
+      "GO:0004316",
+      "GO:0042802",
+      "GO:0046872",
+      "GO:0051287",
+      "GO:0050661",
+      "GO:0016616"
     ],
     "go_bp_ids": [
+      "GO:0009102",
       "GO:0006633",
-      "GO:0009245"
+      "GO:0030497",
+      "GO:0008610"
     ],
     "go_cellular_component_ids": [
-      "GO:0005737",
-      "GO:0016020"
+      "GO:0005829"
     ],
     "protein_existence": "1: Evidence at protein level",
-    "sequence_length": 151,
+    "sequence_length": 244,
     "transmembrane_regions_count": 0,
     "signal_peptide": {
       "present": false,
       "region": ""
     },
     "pdb_ids": [
-      "6N3P"
+      "1I01",
+      "1Q7B",
+      "1Q7C"
     ],
     "reactome_ids": [],
-    "string_id": "511145.b0180",
+    "string_id": "511145.b1093",
     "provenance": {
       "source": "UniProt",
-      "query": "P0A6Q6",
-      "source_url": "https://rest.uniprot.org/uniprotkb/P0A6Q6.json",
-      "retrieved_at": "2026-07-22T21:01:43Z"
+      "query": "P0AEK2",
+      "source_url": "https://rest.uniprot.org/uniprotkb/P0AEK2.json",
+      "retrieved_at": "2026-07-23T16:11:57Z"
     }
   }
 }
