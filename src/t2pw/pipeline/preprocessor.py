@@ -27,10 +27,18 @@ _EMPTY_CONTEXT: Dict[str, Any] = {
 #:
 #:     {
 #:       "status": "ok" | "llm_error" | "unparseable" | "empty_reply",
+#:       "recovered": <bool>,    # ok path only; True == repaired truncated reply
 #:       "detail": "<one-line human-readable cause>",
-#:       "raw_len": <int>,       # reply paths only (unparseable / empty_reply)
+#:       "raw_len": <int>,       # reply paths only (unparseable / empty_reply /
+#:                               # recovered ok)
 #:       "raw_preview": "<str>", # reply paths only, capped at _RAW_PREVIEW_LIMIT
 #:     }
+#:
+#: ``recovered`` is always present on the ``ok`` path and is ``False`` for a
+#: clean parse.  ``True`` means the model reply was cut off mid-JSON (a
+#: ``max_tokens`` truncation) and was structurally repaired, so the context is
+#: real but may be *incomplete* — callers and the UI must be able to tell that
+#: apart from a fully clean Stage 0 run.
 #:
 #: It is written *after* the model's own keys are merged in, so a model reply
 #: that happens to contain this key can never masquerade as the real status.
@@ -38,6 +46,11 @@ PREPROCESS_STATUS_KEY = "preprocess_status"
 
 #: Hard cap (in characters, marker included) on the raw-reply preview.
 _RAW_PREVIEW_LIMIT = 200
+
+#: Most-recent candidate cut points the truncation repair will try, newest
+#: first.  Bounds the worst case on a very long reply; the usable cut is always
+#: near the truncation point, so the cap never costs a real recovery.
+_REPAIR_MAX_CANDIDATES = 400
 
 
 def _format_user_task_context(user_task_context: Optional[str]) -> str:
@@ -62,7 +75,7 @@ def preprocess(
     text: str,
     *,
     temperature: float = 0.0,
-    max_tokens: int = 500,
+    max_tokens: int = 2000,
     user_task_context: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
@@ -76,13 +89,22 @@ def preprocess(
     falls through to the ambiguous Case C.  When it is None/blank the messages
     are byte-identical to the no-context form.
 
+    ``max_tokens`` defaults to 2000 because the Stage 0 output contract is
+    large: Case B of ``preprocess_system.txt`` asks for ``selected_example``
+    plus up to ten fully-described ``candidate_examples`` plus every standard
+    field.  The previous default of 500 truncated real replies mid-JSON, which
+    threw away a perfectly correct answer.  It stays a parameter so callers can
+    tighten it.
+
     The returned dict always has all keys from _EMPTY_CONTEXT.  If the LLM
     fails or returns unparseable output, the empty context is returned so
     callers never need to handle None.
 
     It additionally always carries :data:`PREPROCESS_STATUS_KEY`, recording why
     the result looks the way it does (``ok`` / ``llm_error`` / ``unparseable`` /
-    ``empty_reply``) so an empty context is never ambiguous.  That key is set
+    ``empty_reply``) so an empty context is never ambiguous.  On the ``ok`` path
+    it also carries ``recovered``: ``True`` means the reply arrived truncated
+    and was structurally repaired, so fields may be missing.  That key is set
     last, after the model's own keys are merged, so it cannot be clobbered.
     """
     system_prompt = (PROMPTS_DIR / "preprocess_system.txt").read_text(encoding="utf-8")
@@ -111,15 +133,35 @@ def preprocess(
             model_env_var="OPENROUTER_PREPROCESSOR_MODEL",
             stage_name="preprocessor",
         )
-        result = _parse_json(raw)
+        result, recovered = _parse_json_reply(raw)
+        raw_text = raw if isinstance(raw, str) else ("" if raw is None else str(raw))
         if isinstance(result, dict):
             context = {**_EMPTY_CONTEXT, **result}
-            status = {
-                "status": "ok",
-                "detail": "Stage 0 returned a JSON object.",
-            }
+            if recovered:
+                # Never silent: a repaired reply is a *partial* reply.
+                logger.warning(
+                    "Preprocessor reply was truncated (%d chars); recovered %d field(s) "
+                    "by repairing the JSON.",
+                    len(raw_text),
+                    len(result),
+                )
+                status = {
+                    "status": "ok",
+                    "recovered": True,
+                    "detail": (
+                        f"The model reply ({len(raw_text)} chars) was truncated mid-JSON "
+                        "and was repaired; some fields may be missing."
+                    ),
+                    "raw_len": len(raw_text),
+                    "raw_preview": _preview(raw_text),
+                }
+            else:
+                status = {
+                    "status": "ok",
+                    "recovered": False,
+                    "detail": "Stage 0 returned a JSON object.",
+                }
         else:
-            raw_text = raw if isinstance(raw, str) else ("" if raw is None else str(raw))
             context = dict(_EMPTY_CONTEXT)
             if not raw_text.strip():
                 # Distinct from `unparseable`: there was nothing to parse at all.
@@ -173,9 +215,24 @@ def describe_preprocess_status(ctx: Optional[Dict[str, Any]]) -> str:
     if name == "unparseable":
         preview = _clean_scalar(status.get("raw_preview"))
         return f"returned unparseable JSON ({status.get('raw_len')} chars): {preview}"
+    if status.get("recovered"):
+        # A repaired truncation must never read like a clean success.
+        return f"{name} (recovered from a truncated reply) - {detail or 'reply was repaired'}"
     if detail:
         return f"{name} - {detail}"
     return name
+
+
+def preprocess_was_recovered(ctx: Optional[Dict[str, Any]]) -> bool:
+    """
+    True when this context only exists because a truncated Stage 0 reply was
+    repaired.  The parsed fields are genuine, but the reply was cut off, so
+    fields the model had not written yet are simply absent.
+    """
+    status = ctx.get(PREPROCESS_STATUS_KEY) if isinstance(ctx, dict) else None
+    if not isinstance(status, dict):
+        return False
+    return bool(status.get("recovered"))
 
 
 def strip_preprocess_status(ctx: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
@@ -315,31 +372,52 @@ def _candidate_example_names(candidate_examples: Any) -> list[str]:
             names.append(name)
     return names
 
-def _parse_json(raw: str) -> Optional[Any]:
+def _parse_json_reply(raw: str) -> tuple[Optional[Any], bool]:
+    """
+    Parse a Stage 0 reply, returning ``(value, recovered)``.
+
+    ``recovered`` is True only when the reply could not be parsed as-is and was
+    salvaged by :func:`_repair_truncated_json` — i.e. the model was cut off
+    mid-JSON.  Order is deliberate: code-fence stripping, then the raw parse,
+    then the trailing-comma parse, and only then the truncation repair.
+    """
     text = (raw or "").strip()
     if not text:
-        return None
+        return None, False
 
     # Strip common code-fence markers without dropping content.
     text = text.replace("```json", "```").replace("```", "")
 
     start = text.find("{")
     if start == -1:
-        return None
+        return None, False
 
     # Try the text from the first '{' to the end.
     candidate = text[start:]
     try:
-        return json.loads(candidate)
+        return json.loads(candidate), False
     except json.JSONDecodeError:
         pass
 
     # Try stripping trailing commas and re-parsing.
     cleaned = _strip_trailing_commas(candidate)
     try:
-        return json.loads(cleaned)
+        return json.loads(cleaned), False
     except json.JSONDecodeError:
-        return None
+        pass
+
+    # Last resort: the reply is very likely a `max_tokens` truncation.  Salvage
+    # the complete prefix rather than discarding a correct answer.
+    repaired = _repair_truncated_json(candidate)
+    if repaired is not None:
+        return repaired, True
+    return None, False
+
+
+def _parse_json(raw: str) -> Optional[Any]:
+    """Backwards-compatible view of :func:`_parse_json_reply` (value only)."""
+    value, _recovered = _parse_json_reply(raw)
+    return value
 
 
 def _strip_trailing_commas(text: str) -> str:
@@ -349,3 +427,76 @@ def _strip_trailing_commas(text: str) -> str:
         previous = cleaned
         cleaned = re.sub(r",\s*([}\]])", r"\1", cleaned)
     return cleaned
+
+
+def _repair_truncated_json(text: str) -> Optional[Any]:
+    """
+    Salvage a JSON object that was cut off mid-write (``max_tokens``).
+
+    Strategy: scan once, tracking string state so a brace/bracket that merely
+    *appears inside a string value* is never mistaken for structure, and record
+    every position that is provably an element boundary together with the stack
+    of containers open at that position.  Then, newest boundary first, cut the
+    text there, append the closers for the still-open containers in reverse
+    order of opening, and try ``json.loads``.  The first candidate that parses
+    wins; if none do, return ``None`` exactly as before.
+
+    Only three boundary kinds are recorded, and each one is a place where the
+    prefix is a whole number of complete elements:
+
+    * a ``,`` inside a container (cut *before* the comma),
+    * the position just after a ``}``/``]`` that closed a nested container,
+    * the position just after a closing string quote.
+
+    A bare token (number / ``true`` / ``false`` / ``null``) that runs to the end
+    of the text is deliberately *not* a boundary: ``123`` truncated to ``12``
+    would parse fine and silently yield the wrong value.
+    """
+    # (cut_index, open_container_stack_at_that_point)
+    candidates: list[tuple[int, str]] = []
+    stack: list[str] = []
+    in_string = False
+    escaped = False
+
+    def closers() -> str:
+        return "".join("}" if opener == "{" else "]" for opener in reversed(stack))
+
+    for index, char in enumerate(text):
+        if in_string:
+            if escaped:
+                # This character is consumed by the preceding backslash: it is
+                # never structural, not even `"` / `{` / `}`.
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+                if stack:
+                    candidates.append((index + 1, closers()))
+            continue
+
+        if char == '"':
+            in_string = True
+        elif char in "{[":
+            stack.append(char)
+        elif char in "}]":
+            if not stack:
+                # Unbalanced close: nothing sane left to salvage.
+                break
+            opener = stack.pop()
+            if (opener == "{") != (char == "}"):
+                # Mismatched pair: the text is malformed, not truncated.
+                return None
+            if stack:
+                candidates.append((index + 1, closers()))
+        elif char == "," and stack:
+            # Cut *before* the comma, dropping the (possibly partial) element
+            # that followed it.
+            candidates.append((index, closers()))
+
+    for cut, closing in reversed(candidates[-_REPAIR_MAX_CANDIDATES:]):
+        try:
+            return json.loads(text[:cut] + closing)
+        except json.JSONDecodeError:
+            continue
+    return None

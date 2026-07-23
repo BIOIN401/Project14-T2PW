@@ -9,6 +9,53 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+### 2026-07-23 — Stage 0 replies truncated mid-JSON were discarded whole
+
+**Files changed:** `src/t2pw/pipeline/preprocessor.py`,
+`src/t2pw/app/streamlit_app.py`, `tests/test_preprocessor.py`,
+`docs/change_log.md`
+
+**Error / symptom:** With the Stage 0 diagnostic in place, a run reported
+`Stage 0 failed: returned unparseable JSON (1373 chars): { "document_type":
+"multi_example_review", … "scope_status": "targeted", "pathway_name":
+"Clostridioides difficile queuosine salvage route", …`. The model had produced
+the **correct** answer — Case B fired and the scope was targeted — but the reply
+was cut off mid-object, so the entire context was discarded, every pathway field
+came back blank, and RAG built an empty literature query and fetched 0 papers.
+
+**Root cause:** Two parts.
+
+1. *Output budget too small.* `preprocess()` requested `max_tokens=500` while
+   `chat()`'s own default is 800. The Stage 0 output contract is large — Case B
+   must emit `selected_example`, up to ten `candidate_examples` (each with five
+   sub-fields), `excluded_examples`, and every standard field — so 500 output
+   tokens truncates an ordinary targeted reply (1373 chars ÷ 500 ≈ 2.7
+   chars/token, a textbook cap hit).
+2. *No salvage.* `_parse_json` handled code fences and trailing commas but had no
+   repair for an unclosed object, so a reply whose tail was cut returned `None`
+   even though its leading fields were complete and valid.
+
+**Fix:** The Stage 0 output budget is raised to 2000 tokens (still a parameter so
+callers can override; `chat()`'s default is untouched). `_parse_json` gains a
+final repair pass that runs only after the existing attempts fail: one
+left-to-right scan tracks string-literal state and backslash escapes so a `{`,
+`}`, `[`, `]` or escaped quote *inside a value* can never be read as structure;
+it records only provable element boundaries as cut candidates and tries them
+newest-first with the still-open containers closed in reverse order. A bare token
+running to end-of-input is deliberately never a boundary, so a truncated `0.95`
+is dropped rather than silently parsed as `0.9`.
+
+**Pipeline consistency:** Recovery is never silent — a repaired result carries
+`recovered: True` in the `preprocess_status` diagnostic along with the original
+raw length, a "some fields may be missing" detail, and a distinct Streamlit
+warning, so a clean parse is always distinguishable from a salvaged one. A
+property check over *every* truncation point of a representative Stage 0 object
+(725 cut points) confirmed the repair never invents a key and never alters a
+value: 683 points recovered a strict subset of the original, 42 returned nothing,
+zero violations.
+
+---
+
 ### 2026-07-23 — Stage 0 never received the user's scope context, and its failures were indistinguishable
 
 **Files changed:** `src/t2pw/pipeline/preprocessor.py`,

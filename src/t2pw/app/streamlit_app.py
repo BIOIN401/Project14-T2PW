@@ -81,6 +81,7 @@ from t2pw.pipeline.preprocessor import (
     format_context_header,
     is_ambiguous_multi_example_review_context,
     preprocess,
+    preprocess_was_recovered,
     strip_preprocess_status,
 )
 from t2pw.extraction.pdf_parser import parse_pdf, SKIP_SECTIONS
@@ -2935,6 +2936,15 @@ if submit:
                 "multi-paper RAG cannot build a literature query, so no papers will be "
                 "fetched. This is usually a transient LLM failure — re-running often "
                 "fixes it."
+            )
+        elif preprocess_was_recovered(pathway_context):
+            # Not an error: the context is real. But it came from a reply that
+            # was cut off mid-JSON, so fields the model never wrote are absent.
+            st.warning(
+                f"Stage 0 partially recovered: {describe_preprocess_status(pathway_context)}\n\n"
+                "The reply was cut off and repaired, so some context fields "
+                "(e.g. candidate examples, key compounds) may be missing. Re-run "
+                "if the context below looks incomplete."
             )
 
     if is_ambiguous_multi_example_review_context(pathway_context):

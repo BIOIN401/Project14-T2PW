@@ -23,6 +23,7 @@ from t2pw.pipeline.preprocessor import (  # noqa: E402
     format_context_header,
     is_ambiguous_multi_example_review_context,
     preprocess,
+    preprocess_was_recovered,
     strip_preprocess_status,
 )
 from t2pw.pipeline.pipeline import (  # noqa: E402
@@ -334,6 +335,226 @@ def test_streamlit_strips_diagnostics_before_the_completeness_audit_prompt() -> 
             and isinstance(kwarg.value.func, ast.Name)
             and kwarg.value.func.id == "strip_preprocess_status"
         ), f"call at line {call.lineno} feeds raw Stage 0 diagnostics into a prompt"
+
+
+# ---------------------------------------------------------------------------
+# Stage 0 truncation (max_tokens) budget + truncated-reply repair
+# ---------------------------------------------------------------------------
+
+def _capture_chat_kwargs(monkeypatch, reply: Any) -> list[dict[str, Any]]:
+    seen: list[dict[str, Any]] = []
+
+    def fake_chat(messages: list[dict[str, str]], **kwargs: Any):
+        seen.append(kwargs)
+        return reply
+
+    monkeypatch.setattr(preprocessor_module, "chat", fake_chat)
+    return seen
+
+
+def test_preprocess_requests_a_large_enough_output_budget(monkeypatch) -> None:
+    """
+    The Case B contract (selected_example + up to 10 fully described
+    candidate_examples + every standard field) does not fit in 500 tokens; a
+    short budget truncates a *correct* answer mid-JSON.
+    """
+    seen = _capture_chat_kwargs(monkeypatch, json.dumps({"pathway_name": "P"}))
+
+    preprocess(DOC_TEXT)
+
+    assert seen[0]["max_tokens"] == 2000
+
+
+def test_preprocess_max_tokens_is_still_overridable(monkeypatch) -> None:
+    seen = _capture_chat_kwargs(monkeypatch, json.dumps({"pathway_name": "P"}))
+
+    preprocess(DOC_TEXT, max_tokens=64)
+
+    assert seen[0]["max_tokens"] == 64
+
+
+# The real-world failure: a correct reply cut off mid-`likely_organism`.
+TRUNCATED_PNAS_REPLY = (
+    '{ "document_type": "multi_example_review", '
+    '"context_type": "single_example_review_section", '
+    '"scope_status": "targeted", '
+    '"pathway_name": "Clostridioides difficile queuosine salvage route", '
+    '"scope_clarity_score": 0.9, '
+    '"key_compounds": ["queuine", "preQ1"], '
+    '"likely_organism": "Clostri'
+)
+
+
+def test_preprocess_recovers_fields_from_a_truncated_reply(monkeypatch) -> None:
+    _patch_chat(monkeypatch, reply=TRUNCATED_PNAS_REPLY)
+
+    ctx = preprocess(DOC_TEXT)
+
+    _assert_empty_context_invariant(ctx)
+    # Everything written before the cut survives.
+    assert ctx["pathway_name"] == "Clostridioides difficile queuosine salvage route"
+    assert ctx["document_type"] == "multi_example_review"
+    assert ctx["scope_status"] == "targeted"
+    assert ctx["scope_clarity_score"] == 0.9
+    assert ctx["key_compounds"] == ["queuine", "preQ1"]
+    # The half-written field is dropped, not guessed: it falls back to the default.
+    assert ctx["likely_organism"] == ""
+
+    status = ctx[PREPROCESS_STATUS_KEY]
+    assert status["status"] == "ok"
+    assert status["recovered"] is True
+    assert status["raw_len"] == len(TRUNCATED_PNAS_REPLY)
+    assert "truncated" in status["detail"]
+    assert preprocess_was_recovered(ctx)
+    # The UI string must not read like a clean success.
+    assert "recovered" in describe_preprocess_status(ctx)
+
+
+def test_preprocess_recovers_a_truncated_nested_list_of_examples(monkeypatch) -> None:
+    reply = (
+        '{"pathway_name": "P", "candidate_examples": ['
+        '{"name": "Example A", "organism": "Sp. one"}, '
+        '{"name": "Example B", "organism": "Sp. tw'
+    )
+    _patch_chat(monkeypatch, reply=reply)
+
+    ctx = preprocess(DOC_TEXT)
+
+    assert ctx["pathway_name"] == "P"
+    # The repair cuts back to the *last complete element*, which is the closing
+    # quote of "Example B" — so the second example survives with only its
+    # complete keys. No value is ever half-decoded.
+    assert ctx["candidate_examples"] == [
+        {"name": "Example A", "organism": "Sp. one"},
+        {"name": "Example B"},
+    ]
+    assert ctx[PREPROCESS_STATUS_KEY]["recovered"] is True
+
+
+def test_repair_never_treats_braces_inside_strings_as_structure(monkeypatch) -> None:
+    """
+    The critical correctness requirement: brackets, braces and escaped quotes
+    *inside string values* are data, not structure. The repair must either
+    recover the exact original values or bail out — never invent a value.
+    """
+    tricky_name = 'Route {A} [B] with a \\"quoted\\" bit and a } stray brace'
+    reply = (
+        '{"pathway_name": "' + tricky_name + '", '
+        '"key_compounds": ["cpd [1]", "cpd {2}"], '
+        '"likely_organism": "Escheri'
+    )
+    _patch_chat(monkeypatch, reply=reply)
+
+    ctx = preprocess(DOC_TEXT)
+
+    assert ctx["pathway_name"] == 'Route {A} [B] with a "quoted" bit and a } stray brace'
+    assert ctx["key_compounds"] == ["cpd [1]", "cpd {2}"]
+    assert ctx["likely_organism"] == ""
+    assert ctx[PREPROCESS_STATUS_KEY]["recovered"] is True
+
+
+def test_repair_does_not_close_a_brace_that_only_exists_inside_a_string(monkeypatch) -> None:
+    """A trailing string containing '}' must not be read as closing the object."""
+    reply = '{"pathway_name": "P", "warning": "unbalanced } and ] inside a cut-off strin'
+    _patch_chat(monkeypatch, reply=reply)
+
+    ctx = preprocess(DOC_TEXT)
+
+    assert ctx["pathway_name"] == "P"
+    # The truncated string is dropped wholesale rather than half-decoded.
+    assert "warning" not in ctx or ctx["warning"] == ""
+    assert ctx[PREPROCESS_STATUS_KEY]["recovered"] is True
+
+
+def test_repair_does_not_invent_a_truncated_number(monkeypatch) -> None:
+    """`0.95` cut to `0.9` must be dropped, not accepted as a different value."""
+    reply = '{"pathway_name": "P", "scope_clarity_score": 0.9'
+    _patch_chat(monkeypatch, reply=reply)
+
+    ctx = preprocess(DOC_TEXT)
+
+    assert ctx["pathway_name"] == "P"
+    assert "scope_clarity_score" not in ctx
+    assert ctx[PREPROCESS_STATUS_KEY]["recovered"] is True
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        '{',
+        '{ ',
+        '{"pathway_na',
+        '{"pathway_name"',
+        '{"pathway_name": "Clostri',
+        '{"pathway_name": ',
+    ],
+)
+def test_truncation_before_any_complete_field_yields_an_empty_context(monkeypatch, reply) -> None:
+    """No complete field means no salvage: an empty context beats a bogus one."""
+    _patch_chat(monkeypatch, reply=reply)
+
+    ctx = preprocess(DOC_TEXT)
+
+    _assert_empty_context_invariant(ctx)
+    assert ctx["pathway_name"] == ""
+    assert ctx[PREPROCESS_STATUS_KEY]["status"] == "unparseable"
+    assert not preprocess_was_recovered(ctx)
+
+
+def test_clean_reply_is_not_flagged_as_recovered(monkeypatch) -> None:
+    _patch_chat(monkeypatch, reply=json.dumps({"pathway_name": "P", "key_compounds": ["c"]}))
+
+    ctx = preprocess(DOC_TEXT)
+
+    status = ctx[PREPROCESS_STATUS_KEY]
+    assert status["status"] == "ok"
+    assert status["recovered"] is False
+    assert not preprocess_was_recovered(ctx)
+    assert "recovered" not in describe_preprocess_status(ctx)
+
+
+def test_trailing_comma_reply_still_parses_on_the_clean_path(monkeypatch) -> None:
+    _patch_chat(monkeypatch, reply='{"pathway_name": "P", "key_compounds": ["c",],}')
+
+    ctx = preprocess(DOC_TEXT)
+
+    assert ctx["pathway_name"] == "P"
+    assert ctx["key_compounds"] == ["c"]
+    # Trailing commas are handled *before* the repair pass, so this is not a
+    # recovery.
+    assert ctx[PREPROCESS_STATUS_KEY]["recovered"] is False
+
+
+def test_code_fenced_reply_still_parses_on_the_clean_path(monkeypatch) -> None:
+    _patch_chat(monkeypatch, reply='```json\n{"pathway_name": "P"}\n```')
+
+    ctx = preprocess(DOC_TEXT)
+
+    assert ctx["pathway_name"] == "P"
+    assert ctx[PREPROCESS_STATUS_KEY]["recovered"] is False
+
+
+def test_code_fenced_truncated_reply_is_repaired(monkeypatch) -> None:
+    _patch_chat(monkeypatch, reply='```json\n{"pathway_name": "P", "likely_organism": "Clos')
+
+    ctx = preprocess(DOC_TEXT)
+
+    assert ctx["pathway_name"] == "P"
+    assert ctx[PREPROCESS_STATUS_KEY]["recovered"] is True
+
+
+def test_preprocess_was_recovered_is_safe_on_foreign_contexts() -> None:
+    assert not preprocess_was_recovered(None)
+    assert not preprocess_was_recovered({})
+    assert not preprocess_was_recovered({PREPROCESS_STATUS_KEY: "not a dict"})
+
+
+def test_streamlit_surfaces_a_recovered_stage_zero_context() -> None:
+    """A repaired truncation must be visible in the UI, and not as an error."""
+    app_path = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+    source = app_path.read_text(encoding="utf-8")
+    assert "preprocess_was_recovered(pathway_context)" in source
+    assert "Stage 0 partially recovered" in source
 
 
 def test_format_context_header_includes_scope_metadata_without_pathway_fields() -> None:
