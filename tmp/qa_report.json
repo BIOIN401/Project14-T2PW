@@ -1,13 +1,21 @@
 {
   "summary": {
-    "total_species": 10,
-    "total_reactions": 3,
+    "total_species": 40,
+    "total_reactions": 17,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "5'deoxyadenosine",
+        "entity": "5'-deoxyadenosine",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "7-aminomethyl-7-deazaguanine (preQ 1)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "7-cyano-7-deazaguanine (preQ 0)",
         "reason": "no subcellular location recorded"
       },
       {
@@ -15,7 +23,27 @@
         "reason": "no subcellular location recorded"
       },
       {
+        "entity": "guanine at position 34 of target tRNAs",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "preQ 0",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "preQ 1",
+        "reason": "no subcellular location recorded"
+      },
+      {
         "entity": "preQ1",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Q",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Q nucleoside",
         "reason": "no subcellular location recorded"
       },
       {
@@ -27,33 +55,147 @@
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "queuosine",
+        "entity": "queuine (q)",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "S-adenosyl-L-methionine",
+        "entity": "queuosine (Q)",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "CD1682",
+        "entity": "SAM",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "CD1684",
+        "entity": "GTP",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "CD2802",
+        "entity": "target tRNAs",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "tRNAs",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "bacterial TGT",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "bTGT",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "Chlamydia trachomatis bTGT",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "eTGT",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "GCHI",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QTRT1/QTRT2 complex",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueA",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueC",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueD",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueE",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueF",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueG",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueG or QueH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueH",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueK",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueK (CD1682)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueL",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "QueL (CD1684)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "queuine lyase (QueL)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "TGT (CD2802)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "tRNA guanine-34 transglycosylase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
-    "possible_complexes": [],
-    "transport_like_reactions": [],
+    "possible_complexes": [
+      {
+        "entity": "QTRT1/QTRT2 complex",
+        "reason": "name suggests a complex or subunit"
+      }
+    ],
+    "transport_like_reactions": [
+      {
+        "reaction": "q -> Q",
+        "reason": "same species appear as both input and output"
+      },
+      {
+        "reaction": "exchange of guanine at position 34 of target tRNAs with q",
+        "reason": "same species appear as both input and output"
+      }
+    ],
     "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "5'deoxyadenosine",
+        "entity": "5'-deoxyadenosine",
+        "type": "compound"
+      },
+      {
+        "entity": "7-aminomethyl-7-deazaguanine (preQ 1)",
+        "type": "compound"
+      },
+      {
+        "entity": "7-cyano-7-deazaguanine (preQ 0)",
         "type": "compound"
       },
       {
@@ -61,7 +203,27 @@
         "type": "compound"
       },
       {
+        "entity": "guanine at position 34 of target tRNAs",
+        "type": "compound"
+      },
+      {
+        "entity": "preQ 0",
+        "type": "compound"
+      },
+      {
+        "entity": "preQ 1",
+        "type": "compound"
+      },
+      {
         "entity": "preQ1",
+        "type": "compound"
+      },
+      {
+        "entity": "Q",
+        "type": "compound"
+      },
+      {
+        "entity": "Q nucleoside",
         "type": "compound"
       },
       {
@@ -73,28 +235,126 @@
         "type": "compound"
       },
       {
-        "entity": "queuosine",
+        "entity": "queuine (q)",
         "type": "compound"
       },
       {
-        "entity": "S-adenosyl-L-methionine",
+        "entity": "queuosine (Q)",
         "type": "compound"
       },
       {
-        "entity": "CD1682",
+        "entity": "SAM",
+        "type": "compound"
+      },
+      {
+        "entity": "GTP",
+        "type": "compound"
+      },
+      {
+        "entity": "target tRNAs",
+        "type": "compound"
+      },
+      {
+        "entity": "tRNAs",
+        "type": "compound"
+      },
+      {
+        "entity": "bacterial TGT",
         "type": "protein"
       },
       {
-        "entity": "CD1684",
+        "entity": "bTGT",
         "type": "protein"
       },
       {
-        "entity": "CD2802",
+        "entity": "Chlamydia trachomatis bTGT",
+        "type": "protein"
+      },
+      {
+        "entity": "eTGT",
+        "type": "protein"
+      },
+      {
+        "entity": "GCHI",
+        "type": "protein"
+      },
+      {
+        "entity": "QTRT1/QTRT2 complex",
+        "type": "protein"
+      },
+      {
+        "entity": "QueA",
+        "type": "protein"
+      },
+      {
+        "entity": "QueC",
+        "type": "protein"
+      },
+      {
+        "entity": "QueD",
+        "type": "protein"
+      },
+      {
+        "entity": "QueE",
+        "type": "protein"
+      },
+      {
+        "entity": "QueF",
+        "type": "protein"
+      },
+      {
+        "entity": "QueG",
+        "type": "protein"
+      },
+      {
+        "entity": "QueG or QueH",
+        "type": "protein"
+      },
+      {
+        "entity": "QueH",
+        "type": "protein"
+      },
+      {
+        "entity": "QueK",
+        "type": "protein"
+      },
+      {
+        "entity": "QueK (CD1682)",
+        "type": "protein"
+      },
+      {
+        "entity": "QueL",
+        "type": "protein"
+      },
+      {
+        "entity": "QueL (CD1684)",
+        "type": "protein"
+      },
+      {
+        "entity": "queuine lyase (QueL)",
+        "type": "protein"
+      },
+      {
+        "entity": "TGT (CD2802)",
+        "type": "protein"
+      },
+      {
+        "entity": "tRNA guanine-34 transglycosylase",
+        "type": "protein"
+      },
+      {
+        "entity": "tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [],
+    "duplicate_species": [
+      {
+        "entity_a": "preQ 1",
+        "entity_b": "preQ1",
+        "reason": "normalized label collision"
+      }
+    ],
     "inconsistent_class": []
   }
 }

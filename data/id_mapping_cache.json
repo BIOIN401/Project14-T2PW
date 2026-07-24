@@ -47089,6 +47089,2733 @@
         "status": "matched",
         "order_step": "api_uniprot"
       }
+    },
+    "db::bacterial tgt::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::bacterial tgt::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"bacterial TGT\" OR gene:\"bacterial TGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"bacterial TGT\" OR gene:\"bacterial TGT\") | (protein_name:\"tgg\" OR gene:\"tgg\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tgg\" OR gene:\"tgg\") | \"tgg\" AND organism_name:\"Clostridioides difficile NAP08\" | \"tgg\" | (protein_name:\"tRNA guanylyltransferase\" OR gene:\"tRNA guanylyltransferase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA guanylyltransferase\" OR gene:\"tRNA guanylyltransferase\") | \"tRNA guanylyltransferase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"tRNA guanylyltransferase\" | (protein_name:\"tRNA guanylyltransferase/guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase/guanosine methyltransferase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA guanylyltransferase/guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase/guanosine methyltransferase\") | \"tRNA guanylyltransferase/guanosine methyltransferase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"tRNA guanylyltransferase/guanosine methyltransferase\" | (protein_name:\"tRNA guanylyltransferase guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase guanosine methyltransferase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA guanylyltransferase guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase guanosine methyltransferase\") | \"tRNA guanylyltransferase guanosine methyltransferase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"tRNA guanylyltransferase guanosine methyltransferase\"",
+      "mapped_ids": {
+        "uniprot": "A0ACF1AYM8"
+      },
+      "confidence": 0.51,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0ACF1AYM8",
+          "protein_name": "tRNA guanylyltransferase",
+          "gene_names": [],
+          "organism": "Histoplasma ohiense",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        },
+        {
+          "accession": "A0A420I5I5",
+          "protein_name": "tRNA guanylyltransferase",
+          "gene_names": [],
+          "organism": "Erysiphe neolycopersici",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        },
+        {
+          "accession": "C0NEY0",
+          "protein_name": "tRNA guanylyltransferase",
+          "gene_names": [],
+          "organism": "Ajellomyces capsulatus (strain G186AR / H82 / ATCC MYA-2454 / RMSCC 2432)",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        },
+        {
+          "accession": "A0AC62A916",
+          "protein_name": "tRNA guanylyltransferase",
+          "gene_names": [],
+          "organism": "Tupanvirus soda lake",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        },
+        {
+          "accession": "A0A2H6K9R4",
+          "protein_name": "tRNA guanylyltransferase",
+          "gene_names": [],
+          "organism": "Babesia ovata",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        },
+        {
+          "accession": "M7TYJ1",
+          "protein_name": "Putative trna guanylyltransferase protein",
+          "gene_names": [],
+          "organism": "Eutypa lata (strain UCR-EL1)",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        },
+        {
+          "accession": "R8BGC1",
+          "protein_name": "Putative trna guanylyltransferase protein",
+          "gene_names": [],
+          "organism": "Phaeoacremonium minimum (strain UCR-PA7)",
+          "reviewed": false,
+          "score": 0.135,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        },
+        {
+          "accession": "Q9NWX6",
+          "protein_name": "Probable tRNA(His) guanylyltransferase",
+          "gene_names": [
+            "ICF45",
+            "THG1L"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "tRNA guanylyltransferase",
+          "alias_source": "synonym",
+          "matched_alias": "tRNA guanylyltransferase"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"bacterial TGT\" OR gene:\"bacterial TGT\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"bacterial TGT\" OR gene:\"bacterial TGT\")",
+        "(protein_name:\"tgg\" OR gene:\"tgg\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tgg\" OR gene:\"tgg\")",
+        "\"tgg\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"tgg\"",
+        "(protein_name:\"tRNA guanylyltransferase\" OR gene:\"tRNA guanylyltransferase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA guanylyltransferase\" OR gene:\"tRNA guanylyltransferase\")",
+        "\"tRNA guanylyltransferase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"tRNA guanylyltransferase\"",
+        "(protein_name:\"tRNA guanylyltransferase/guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase/guanosine methyltransferase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA guanylyltransferase/guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase/guanosine methyltransferase\")",
+        "\"tRNA guanylyltransferase/guanosine methyltransferase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"tRNA guanylyltransferase/guanosine methyltransferase\"",
+        "(protein_name:\"tRNA guanylyltransferase guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase guanosine methyltransferase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA guanylyltransferase guanosine methyltransferase\" OR gene:\"tRNA guanylyltransferase guanosine methyltransferase\")",
+        "\"tRNA guanylyltransferase guanosine methyltransferase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"tRNA guanylyltransferase guanosine methyltransferase\""
+      ],
+      "reviewed": false,
+      "resolved_name": "tRNA guanylyltransferase",
+      "literature_aliases": [
+        {
+          "alias": "tgg",
+          "source": "gene_name"
+        },
+        {
+          "alias": "tRNA guanylyltransferase",
+          "source": "synonym"
+        },
+        {
+          "alias": "tRNA guanylyltransferase/guanosine methyltransferase",
+          "source": "synonym"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::btgt::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::btgt::clostridioides difficile nap08::::{}::[]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"bTGT\" OR gene:\"bTGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"bTGT\" OR gene:\"bTGT\") | (protein_name:\"bTGT\" OR gene:\"bTGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"bTGT\" OR gene:\"bTGT\") | \"bTGT\" AND organism_name:\"Clostridioides difficile NAP08\" | \"bTGT\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "bTGT",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::chlamydia trachomatis btgt::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::chlamydia trachomatis btgt::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"Chlamydia trachomatis bTGT\" OR gene:\"Chlamydia trachomatis bTGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"Chlamydia trachomatis bTGT\" OR gene:\"Chlamydia trachomatis bTGT\") | (protein_name:\"bTGT\" OR gene:\"bTGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"bTGT\" OR gene:\"bTGT\") | \"bTGT\" AND organism_name:\"Clostridioides difficile NAP08\" | \"bTGT\" | (protein_name:\"tracheal cytotoxin\" OR gene:\"tracheal cytotoxin\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tracheal cytotoxin\" OR gene:\"tracheal cytotoxin\") | \"tracheal cytotoxin\" AND organism_name:\"Clostridioides difficile NAP08\" | \"tracheal cytotoxin\"",
+      "mapped_ids": {
+        "uniprot": "Q9Y239"
+      },
+      "confidence": 0.01,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q9Y239",
+          "protein_name": "Nucleotide-binding oligomerization domain-containing protein 1",
+          "gene_names": [
+            "CARD4",
+            "NOD1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "tracheal cytotoxin",
+          "alias_source": "synonym",
+          "matched_alias": "tracheal cytotoxin"
+        },
+        {
+          "accession": "Q8BHB0",
+          "protein_name": "Nucleotide-binding oligomerization domain-containing protein 1",
+          "gene_names": [
+            "Nod1"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "tracheal cytotoxin",
+          "alias_source": "synonym",
+          "matched_alias": "tracheal cytotoxin"
+        },
+        {
+          "accession": "Q9GNK5",
+          "protein_name": "Peptidoglycan-recognition protein LC",
+          "gene_names": [
+            "PGRP-LC",
+            "PGRPLC",
+            "ird7"
+          ],
+          "organism": "Drosophila melanogaster",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "tracheal cytotoxin",
+          "alias_source": "synonym",
+          "matched_alias": "tracheal cytotoxin"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"Chlamydia trachomatis bTGT\" OR gene:\"Chlamydia trachomatis bTGT\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"Chlamydia trachomatis bTGT\" OR gene:\"Chlamydia trachomatis bTGT\")",
+        "(protein_name:\"bTGT\" OR gene:\"bTGT\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"bTGT\" OR gene:\"bTGT\")",
+        "\"bTGT\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"bTGT\"",
+        "(protein_name:\"tracheal cytotoxin\" OR gene:\"tracheal cytotoxin\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tracheal cytotoxin\" OR gene:\"tracheal cytotoxin\")",
+        "\"tracheal cytotoxin\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"tracheal cytotoxin\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Nucleotide-binding oligomerization domain-containing protein 1",
+      "literature_aliases": [
+        {
+          "alias": "bTGT",
+          "source": "gene_name"
+        },
+        {
+          "alias": "tracheal cytotoxin",
+          "source": "synonym"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::etgt::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::etgt::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"eTGT\" OR gene:\"eTGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"eTGT\" OR gene:\"eTGT\") | (protein_name:\"transglycosylase\" OR gene:\"transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"transglycosylase\" OR gene:\"transglycosylase\") | \"transglycosylase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"transglycosylase\"",
+      "mapped_ids": {
+        "uniprot": "P27380"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P27380",
+          "protein_name": "Transglycosylase",
+          "gene_names": [
+            "VII"
+          ],
+          "organism": "Enterobacteria phage PRD1",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        },
+        {
+          "accession": "Q9BXR0",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "QTRT1",
+            "TGT",
+            "TGUT"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        },
+        {
+          "accession": "P0A847",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        },
+        {
+          "accession": "Q9JMA2",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "Qtrt1",
+            "Tgt",
+            "Tgut"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        },
+        {
+          "accession": "Q4QR99",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "Qtrt1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        },
+        {
+          "accession": "P28306",
+          "protein_name": "Endolytic murein transglycosylase",
+          "gene_names": [
+            "mltG",
+            "yceG"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        },
+        {
+          "accession": "P46022",
+          "protein_name": "Biosynthetic peptidoglycan transglycosylase",
+          "gene_names": [
+            "mgt",
+            "mtgA",
+            "yrbM"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        },
+        {
+          "accession": "A0A0H2ZLQ1",
+          "protein_name": "Endolytic murein transglycosylase",
+          "gene_names": [
+            "mltG"
+          ],
+          "organism": "Streptococcus pneumoniae serotype 2 (strain D39 / NCTC 7466)",
+          "reviewed": true,
+          "score": 0.1267,
+          "matched_query": "transglycosylase",
+          "alias_source": "literature_alias",
+          "matched_alias": "transglycosylase"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"eTGT\" OR gene:\"eTGT\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"eTGT\" OR gene:\"eTGT\")",
+        "(protein_name:\"transglycosylase\" OR gene:\"transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"transglycosylase\" OR gene:\"transglycosylase\")",
+        "\"transglycosylase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"transglycosylase\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Transglycosylase",
+      "literature_aliases": [
+        {
+          "alias": "transglycosylase",
+          "source": "literature_alias"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::gchi::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::gchi::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"GCHI\" OR gene:\"GCHI\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"GCHI\" OR gene:\"GCHI\")",
+      "mapped_ids": {
+        "uniprot": "Q9SFV7"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q9SFV7",
+          "protein_name": "GTP cyclohydrolase 1",
+          "gene_names": [
+            "GCH1",
+            "GCHI"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "GCHI",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8VYU3",
+          "protein_name": "GTP cyclohydrolase 1",
+          "gene_names": [
+            "GCH1",
+            "GCHI"
+          ],
+          "organism": "Solanum lycopersicum",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "GCHI",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "W6FFI6",
+          "protein_name": "GTP cyclohydrolase 1",
+          "gene_names": [
+            "gchI"
+          ],
+          "organism": "Vitis vinifera",
+          "reviewed": false,
+          "score": 0.68,
+          "matched_query": "GCHI",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"GCHI\" OR gene:\"GCHI\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"GCHI\" OR gene:\"GCHI\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "GTP cyclohydrolase 1",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::qtrt1qtrt2 complex::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::qtrt1qtrt2 complex::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QTRT1/QTRT2 complex\" OR gene:\"QTRT1/QTRT2 complex\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QTRT1 QTRT2 complex\" OR gene:\"QTRT1 QTRT2 complex\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QTRT1/QTRT2\" OR gene:\"QTRT1/QTRT2\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QTRT1/QTRT2 complex\" OR gene:\"QTRT1/QTRT2 complex\") | (protein_name:\"QTRT1 QTRT2 complex\" OR gene:\"QTRT1 QTRT2 complex\") | (protein_name:\"qtrt1\" OR gene:\"qtrt1\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"qtrt1\" OR gene:\"qtrt1\") | \"qtrt1\" AND organism_name:\"Clostridioides difficile NAP08\" | \"qtrt1\" | (protein_name:\"qtrt2\" OR gene:\"qtrt2\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"qtrt2\" OR gene:\"qtrt2\") | \"qtrt2\" AND organism_name:\"Clostridioides difficile NAP08\" | \"qtrt2\" | (protein_name:\"glutaminyl-tRNA transferase\" OR gene:\"glutaminyl-tRNA transferase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"glutaminyl-tRNA transferase\" OR gene:\"glutaminyl-tRNA transferase\") | \"glutaminyl-tRNA transferase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"glutaminyl-tRNA transferase\" | (protein_name:\"glutaminyl tRNA transferase\" OR gene:\"glutaminyl tRNA transferase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"glutaminyl tRNA transferase\" OR gene:\"glutaminyl tRNA transferase\") | \"glutaminyl tRNA transferase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"glutaminyl tRNA transferase\"",
+      "mapped_ids": {
+        "uniprot": "Q9BXR0"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q9BXR0",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "QTRT1",
+            "TGT",
+            "TGUT"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt1",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt1"
+        },
+        {
+          "accession": "Q4QR99",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "Qtrt1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt1",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt1"
+        },
+        {
+          "accession": "Q9JMA2",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "Qtrt1",
+            "Tgt",
+            "Tgut"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt1",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt1"
+        },
+        {
+          "accession": "Q7SYK1",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "qtrt1"
+          ],
+          "organism": "Danio rerio",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt1",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt1"
+        },
+        {
+          "accession": "Q4QQY7",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "qtrt1"
+          ],
+          "organism": "Xenopus laevis",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt1",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt1"
+        },
+        {
+          "accession": "Q28HC6",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "qtrt1"
+          ],
+          "organism": "Xenopus tropicalis",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt1",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt1"
+        },
+        {
+          "accession": "Q9H974",
+          "protein_name": "Queuine tRNA-ribosyltransferase accessory subunit 2",
+          "gene_names": [
+            "QTRT2",
+            "QTRTD1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt2",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt2"
+        },
+        {
+          "accession": "B8ZXI1",
+          "protein_name": "Queuine tRNA-ribosyltransferase accessory subunit 2",
+          "gene_names": [
+            "Qtrt2",
+            "Qtrtd1"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "qtrt2",
+          "alias_source": "gene_name",
+          "matched_alias": "qtrt2"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QTRT1/QTRT2 complex\" OR gene:\"QTRT1/QTRT2 complex\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QTRT1 QTRT2 complex\" OR gene:\"QTRT1 QTRT2 complex\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QTRT1/QTRT2\" OR gene:\"QTRT1/QTRT2\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QTRT1/QTRT2 complex\" OR gene:\"QTRT1/QTRT2 complex\")",
+        "(protein_name:\"QTRT1 QTRT2 complex\" OR gene:\"QTRT1 QTRT2 complex\")",
+        "(protein_name:\"qtrt1\" OR gene:\"qtrt1\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"qtrt1\" OR gene:\"qtrt1\")",
+        "\"qtrt1\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"qtrt1\"",
+        "(protein_name:\"qtrt2\" OR gene:\"qtrt2\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"qtrt2\" OR gene:\"qtrt2\")",
+        "\"qtrt2\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"qtrt2\"",
+        "(protein_name:\"glutaminyl-tRNA transferase\" OR gene:\"glutaminyl-tRNA transferase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"glutaminyl-tRNA transferase\" OR gene:\"glutaminyl-tRNA transferase\")",
+        "\"glutaminyl-tRNA transferase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"glutaminyl-tRNA transferase\"",
+        "(protein_name:\"glutaminyl tRNA transferase\" OR gene:\"glutaminyl tRNA transferase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"glutaminyl tRNA transferase\" OR gene:\"glutaminyl tRNA transferase\")",
+        "\"glutaminyl tRNA transferase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"glutaminyl tRNA transferase\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+      "literature_aliases": [
+        {
+          "alias": "qtrt1",
+          "source": "gene_name"
+        },
+        {
+          "alias": "qtrt2",
+          "source": "gene_name"
+        },
+        {
+          "alias": "glutaminyl-tRNA transferase",
+          "source": "synonym"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quea::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quea::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueA\" OR gene:\"QueA\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueA\" OR gene:\"QueA\")",
+      "mapped_ids": {
+        "uniprot": "P0A7F9"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P0A7F9",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O32054",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8DPA0",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Streptococcus pneumoniae (strain ATCC BAA-255 / R6)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5ZU04",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Legionella pneumophila subsp. pneumophila (strain Philadelphia 1 / ATCC 33152 / DSM 7513)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A8AYK5",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Streptococcus gordonii (strain Challis / ATCC 35105 / BCRC 15272 / CH1 / DL1 / V288)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4UMM7",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Rickettsia felis (strain ATCC VR-1525 / URRWXCal2)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A1TZN6",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Marinobacter nauticus (strain ATCC 700491 / DSM 11845 / VT8)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q317N3",
+          "protein_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+          "gene_names": [
+            "queA"
+          ],
+          "organism": "Oleidesulfovibrio alaskensis (strain ATCC BAA-1058 / DSM 17464 / G20)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueA",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueA\" OR gene:\"QueA\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueA\" OR gene:\"QueA\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "S-adenosylmethionine:tRNA ribosyltransferase-isomerase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quec::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quec::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueC\" OR gene:\"QueC\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueC\" OR gene:\"QueC\")",
+      "mapped_ids": {
+        "uniprot": "O31675"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O31675",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC",
+            "toyM",
+            "ykvJ"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P77756",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC",
+            "ybaX"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5L1C0",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC"
+          ],
+          "organism": "Geobacillus kaustophilus (strain HTA426)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q6D820",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC"
+          ],
+          "organism": "Pectobacterium atrosepticum (strain SCRI 1043 / ATCC BAA-672)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q981C9",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC"
+          ],
+          "organism": "Saccharolobus solfataricus (strain ATCC 35092 / DSM 1617 / JCM 11322 / P2)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A7Z3Y6",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC"
+          ],
+          "organism": "Bacillus velezensis (strain DSM 23117 / BGSC 10A6 / LMG 26770 / FZB42)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4JBY3",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC"
+          ],
+          "organism": "Sulfolobus acidocaldarius (strain ATCC 33909 / DSM 639 / JCM 8929 / NBRC 15157 / NCIMB 11770)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0RBG1",
+          "protein_name": "7-cyano-7-deazaguanine synthase",
+          "gene_names": [
+            "queC"
+          ],
+          "organism": "Bacillus thuringiensis (strain Al Hakam)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueC",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueC\" OR gene:\"QueC\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueC\" OR gene:\"QueC\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "7-cyano-7-deazaguanine synthase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::qued::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::qued::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueD\" OR gene:\"QueD\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueD\" OR gene:\"QueD\")",
+      "mapped_ids": {
+        "uniprot": "P65870"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P65870",
+          "protein_name": "6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD",
+            "ygcM"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O31676",
+          "protein_name": "6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD",
+            "ykvK"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q68XI9",
+          "protein_name": "6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD"
+          ],
+          "organism": "Rickettsia typhi (strain ATCC VR-144 / Wilmington)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q55798",
+          "protein_name": "6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD"
+          ],
+          "organism": "Synechocystis sp. (strain ATCC 27184 / PCC 6803 / Kazusa)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q92J44",
+          "protein_name": "6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD"
+          ],
+          "organism": "Rickettsia conorii (strain ATCC VR-613 / Malish 7)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9ZDY5",
+          "protein_name": "6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD"
+          ],
+          "organism": "Rickettsia prowazekii (strain Madrid E)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q58668",
+          "protein_name": "Putative 6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD"
+          ],
+          "organism": "Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O59602",
+          "protein_name": "Putative 6-carboxy-5,6,7,8-tetrahydropterin synthase",
+          "gene_names": [
+            "queD"
+          ],
+          "organism": "Pyrococcus horikoshii (strain ATCC 700860 / DSM 12428 / JCM 9974 / NBRC 100139 / OT-3)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueD",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueD\" OR gene:\"QueD\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueD\" OR gene:\"QueD\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "6-carboxy-5,6,7,8-tetrahydropterin synthase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quee::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quee::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueE\" OR gene:\"QueE\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueE\" OR gene:\"QueE\")",
+      "mapped_ids": {
+        "uniprot": "O31677"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O31677",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE",
+            "ykvL"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0H3KB22",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE"
+          ],
+          "organism": "Burkholderia multivorans (strain ATCC 17616 / 249)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P64554",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE",
+            "ygcF"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8TX58",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE"
+          ],
+          "organism": "Methanopyrus kandleri (strain AV19 / DSM 6324 / JCM 9639 / NBRC 100938)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A6H1N2",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE"
+          ],
+          "organism": "Flavobacterium psychrophilum (strain ATCC 49511 / DSM 21280 / CIP 103535 / JIP02/86)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q59039",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE"
+          ],
+          "organism": "Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5JGE6",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE"
+          ],
+          "organism": "Thermococcus kodakarensis (strain ATCC BAA-918 / JCM 12380 / KOD1)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q89SC0",
+          "protein_name": "7-carboxy-7-deazaguanine synthase",
+          "gene_names": [
+            "queE"
+          ],
+          "organism": "Bradyrhizobium diazoefficiens (strain JCM 10833 / BCRC 13528 / IAM 13628 / NBRC 14792 / USDA 110)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueE",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueE\" OR gene:\"QueE\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueE\" OR gene:\"QueE\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "7-carboxy-7-deazaguanine synthase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quef::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quef::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueF\" OR gene:\"QueF\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueF\" OR gene:\"QueF\")",
+      "mapped_ids": {
+        "uniprot": "O31678"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "O31678",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF",
+            "ykvM"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q46920",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF",
+            "yqcD"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q5L1B7",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF"
+          ],
+          "organism": "Geobacillus kaustophilus (strain HTA426)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9KTK0",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF"
+          ],
+          "organism": "Vibrio cholerae serotype O1 (strain ATCC 39315 / El Tor Inaba N16961)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B2FJS1",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF"
+          ],
+          "organism": "Stenotrophomonas maltophilia (strain K279a)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "B5QWQ2",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF"
+          ],
+          "organism": "Salmonella enteritidis PT4 (strain P125109)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q1MDH2",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF"
+          ],
+          "organism": "Rhizobium johnstonii (strain DSM 114642 / LMG 32736 / 3841)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q2KXN2",
+          "protein_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+          "gene_names": [
+            "queF"
+          ],
+          "organism": "Bordetella avium (strain 197N)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueF",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueF\" OR gene:\"QueF\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueF\" OR gene:\"QueF\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "NADPH-dependent 7-cyano-7-deazaguanine reductase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::queg::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::queg::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueG\" OR gene:\"QueG\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueG\" OR gene:\"QueG\")",
+      "mapped_ids": {
+        "uniprot": "P97030"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P97030",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG",
+            "ygaP",
+            "yhbA"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P39288",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG",
+            "yjeS"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q7NKL3",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Gloeobacter violaceus (strain ATCC 29082 / PCC 7421)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q63WN0",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Burkholderia pseudomallei (strain K96243)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8DLA9",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Thermosynechococcus vestitus (strain NIES-2133 / IAM M-273 / BP-1)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P73526",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Synechocystis sp. (strain ATCC 27184 / PCC 6803 / Kazusa)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q8ZKA8",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Salmonella typhimurium (strain LT2 / SGSC1412 / ATCC 700720)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A6H1G2",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Flavobacterium psychrophilum (strain ATCC 49511 / DSM 21280 / CIP 103535 / JIP02/86)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueG",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueG\" OR gene:\"QueG\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueG\" OR gene:\"QueG\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Epoxyqueuosine reductase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::queg or queh::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::queg or queh::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueG or QueH\" OR gene:\"QueG or QueH\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueG or QueH\" OR gene:\"QueG or QueH\") | (protein_name:\"queG\" OR gene:\"queG\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queG\" OR gene:\"queG\") | \"queG\" AND organism_name:\"Clostridioides difficile NAP08\" | \"queG\" | (protein_name:\"queH\" OR gene:\"queH\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queH\" OR gene:\"queH\") | \"queH\" AND organism_name:\"Clostridioides difficile NAP08\" | \"queH\" | (protein_name:\"7-carboxy-7-deazafluorescein synthase\" OR gene:\"7-carboxy-7-deazafluorescein synthase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"7-carboxy-7-deazafluorescein synthase\" OR gene:\"7-carboxy-7-deazafluorescein synthase\") | \"7-carboxy-7-deazafluorescein synthase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"7-carboxy-7-deazafluorescein synthase\" | (protein_name:\"7 carboxy 7 deazafluorescein synthase\" OR gene:\"7 carboxy 7 deazafluorescein synthase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"7 carboxy 7 deazafluorescein synthase\" OR gene:\"7 carboxy 7 deazafluorescein synthase\") | \"7 carboxy 7 deazafluorescein synthase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"7 carboxy 7 deazafluorescein synthase\"",
+      "mapped_ids": {
+        "uniprot": "P97030"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P97030",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG",
+            "ygaP",
+            "yhbA"
+          ],
+          "organism": "Bacillus subtilis (strain 168)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        },
+        {
+          "accession": "P39288",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG",
+            "yjeS"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        },
+        {
+          "accession": "Q7NKL3",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Gloeobacter violaceus (strain ATCC 29082 / PCC 7421)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        },
+        {
+          "accession": "Q63WN0",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Burkholderia pseudomallei (strain K96243)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        },
+        {
+          "accession": "Q8DLA9",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Thermosynechococcus vestitus (strain NIES-2133 / IAM M-273 / BP-1)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        },
+        {
+          "accession": "P73526",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Synechocystis sp. (strain ATCC 27184 / PCC 6803 / Kazusa)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        },
+        {
+          "accession": "Q8ZKA8",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Salmonella typhimurium (strain LT2 / SGSC1412 / ATCC 700720)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        },
+        {
+          "accession": "A6H1G2",
+          "protein_name": "Epoxyqueuosine reductase",
+          "gene_names": [
+            "queG"
+          ],
+          "organism": "Flavobacterium psychrophilum (strain ATCC 49511 / DSM 21280 / CIP 103535 / JIP02/86)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "queG",
+          "alias_source": "gene_name",
+          "matched_alias": "queG"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueG or QueH\" OR gene:\"QueG or QueH\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueG or QueH\" OR gene:\"QueG or QueH\")",
+        "(protein_name:\"queG\" OR gene:\"queG\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"queG\" OR gene:\"queG\")",
+        "\"queG\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"queG\"",
+        "(protein_name:\"queH\" OR gene:\"queH\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"queH\" OR gene:\"queH\")",
+        "\"queH\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"queH\"",
+        "(protein_name:\"7-carboxy-7-deazafluorescein synthase\" OR gene:\"7-carboxy-7-deazafluorescein synthase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"7-carboxy-7-deazafluorescein synthase\" OR gene:\"7-carboxy-7-deazafluorescein synthase\")",
+        "\"7-carboxy-7-deazafluorescein synthase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"7-carboxy-7-deazafluorescein synthase\"",
+        "(protein_name:\"7 carboxy 7 deazafluorescein synthase\" OR gene:\"7 carboxy 7 deazafluorescein synthase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"7 carboxy 7 deazafluorescein synthase\" OR gene:\"7 carboxy 7 deazafluorescein synthase\")",
+        "\"7 carboxy 7 deazafluorescein synthase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"7 carboxy 7 deazafluorescein synthase\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Epoxyqueuosine reductase",
+      "literature_aliases": [
+        {
+          "alias": "queG",
+          "source": "gene_name"
+        },
+        {
+          "alias": "queH",
+          "source": "gene_name"
+        },
+        {
+          "alias": "7-carboxy-7-deazafluorescein synthase",
+          "source": "synonym"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::queh::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::queh::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueH\" OR gene:\"QueH\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueH\" OR gene:\"QueH\")",
+      "mapped_ids": {
+        "uniprot": "Q6FAK7"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q6FAK7",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Acinetobacter baylyi (strain ATCC 33305 / BD413 / ADP1)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q7VYQ1",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Bordetella pertussis (strain Tohama I / ATCC BAA-589 / NCTC 13251)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0H3JUG6",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Staphylococcus aureus (strain Mu50 / ATCC 700699)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q3Z8V0",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Dehalococcoides mccartyi (strain ATCC BAA-2266 / KCTC 15142 / 195)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O24926",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Helicobacter pylori (strain ATCC 700392 / 26695)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P44068",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Haemophilus influenzae (strain ATCC 51907 / DSM 11121 / KW20 / Rd)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A0H2VKG8",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Staphylococcus epidermidis (strain ATCC 12228 / FDA PCI 1200)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q0I1Q0",
+          "protein_name": "Epoxyqueuosine reductase QueH",
+          "gene_names": [
+            "queH"
+          ],
+          "organism": "Histophilus somni (strain 129Pt)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "QueH",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueH\" OR gene:\"QueH\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueH\" OR gene:\"QueH\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Epoxyqueuosine reductase QueH",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quek::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quek::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueK\" OR gene:\"QueK\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueK\" OR gene:\"QueK\")",
+      "mapped_ids": {
+        "uniprot": "P79701"
+      },
+      "confidence": 0.185,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P79701",
+          "protein_name": "Vascular endothelial growth factor receptor 3",
+          "gene_names": [
+            "FLT4",
+            "K2",
+            "VEGFR3"
+          ],
+          "organism": "Coturnix coturnix",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "QueK",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P52583",
+          "protein_name": "Vascular endothelial growth factor receptor 2",
+          "gene_names": [
+            "EK1",
+            "FLK-1",
+            "KDR"
+          ],
+          "organism": "Coturnix japonica",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "QueK",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueK\" OR gene:\"QueK\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueK\" OR gene:\"QueK\")"
+      ],
+      "reviewed": true,
+      "resolved_name": "Vascular endothelial growth factor receptor 3",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quek cd1682::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quek cd1682::clostridioides difficile nap08::::{}::[{\"alias\": \"CD1682\", \"source\": \"parenthetical_gene_symbol\"}, {\"alias\": \"QueK\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueK (CD1682)\" OR gene:\"QueK (CD1682)\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueK\" OR gene:\"QueK\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueK (CD1682)\" OR gene:\"QueK (CD1682)\") | (protein_name:\"QueK\" OR gene:\"QueK\") | (protein_name:\"CD1682\" OR gene:\"CD1682\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"CD1682\" OR gene:\"CD1682\") | \"CD1682\" AND organism_name:\"Clostridioides difficile NAP08\" | \"CD1682\" | (protein_name:\"QueK\" OR gene:\"QueK\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueK\" OR gene:\"QueK\") | \"QueK\" AND organism_name:\"Clostridioides difficile NAP08\" | \"QueK\"",
+      "mapped_ids": {
+        "uniprot": "P79701"
+      },
+      "confidence": 0.185,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P79701",
+          "protein_name": "Vascular endothelial growth factor receptor 3",
+          "gene_names": [
+            "FLT4",
+            "K2",
+            "VEGFR3"
+          ],
+          "organism": "Coturnix coturnix",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "QueK",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P52583",
+          "protein_name": "Vascular endothelial growth factor receptor 2",
+          "gene_names": [
+            "EK1",
+            "FLK-1",
+            "KDR"
+          ],
+          "organism": "Coturnix japonica",
+          "reviewed": true,
+          "score": 0.185,
+          "matched_query": "QueK",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O40955",
+          "protein_name": "Non-structural polyprotein p200",
+          "gene_names": [],
+          "organism": "Rubella virus (strain RA27/3 vaccine)",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "QueK",
+          "alias_source": "name_without_parenthetical",
+          "matched_alias": "QueK"
+        },
+        {
+          "accession": "Q5U3U7",
+          "protein_name": "Sodium-dependent lysophosphatidylcholine symporter 1-A",
+          "gene_names": [
+            "mfsd2a",
+            "mfsd2aa",
+            "nls1a"
+          ],
+          "organism": "Danio rerio",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "QueK",
+          "alias_source": "name_without_parenthetical",
+          "matched_alias": "QueK"
+        },
+        {
+          "accession": "Q98TW1",
+          "protein_name": "Nuclear receptor coactivator 2",
+          "gene_names": [
+            "grip1",
+            "ncoa2",
+            "src2",
+            "tif2"
+          ],
+          "organism": "Danio rerio",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "QueK",
+          "alias_source": "name_without_parenthetical",
+          "matched_alias": "QueK"
+        },
+        {
+          "accession": "Q8NA29",
+          "protein_name": "Sodium-dependent lysophosphatidylcholine symporter 1",
+          "gene_names": [
+            "MFSD2",
+            "MFSD2A",
+            "NLS1"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "QueK",
+          "alias_source": "name_without_parenthetical",
+          "matched_alias": "QueK"
+        },
+        {
+          "accession": "P53621",
+          "protein_name": "Coatomer subunit alpha",
+          "gene_names": [
+            "COPA"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "QueK",
+          "alias_source": "name_without_parenthetical",
+          "matched_alias": "QueK"
+        },
+        {
+          "accession": "Q39261",
+          "protein_name": "Zinc finger protein 2",
+          "gene_names": [
+            "ZFP2"
+          ],
+          "organism": "Arabidopsis thaliana",
+          "reviewed": true,
+          "score": 0.01,
+          "matched_query": "QueK",
+          "alias_source": "name_without_parenthetical",
+          "matched_alias": "QueK"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueK (CD1682)\" OR gene:\"QueK (CD1682)\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueK\" OR gene:\"QueK\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueK (CD1682)\" OR gene:\"QueK (CD1682)\")",
+        "(protein_name:\"QueK\" OR gene:\"QueK\")",
+        "(protein_name:\"CD1682\" OR gene:\"CD1682\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"CD1682\" OR gene:\"CD1682\")",
+        "\"CD1682\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"CD1682\"",
+        "(protein_name:\"QueK\" OR gene:\"QueK\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueK\" OR gene:\"QueK\")",
+        "\"QueK\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"QueK\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Vascular endothelial growth factor receptor 3",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quel::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quel::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"QueL\" OR gene:\"QueL\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueL\" OR gene:\"QueL\") | (protein_name:\"Care\" OR gene:\"Care\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"Care\" OR gene:\"Care\") | \"Care\" AND organism_name:\"Clostridioides difficile NAP08\" | \"Care\"",
+      "mapped_ids": {
+        "uniprot": "H6LGM8"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "H6LGM8",
+          "protein_name": "Caffeyl-CoA reductase-Etf complex subunit CarE",
+          "gene_names": [
+            "carE"
+          ],
+          "organism": "Acetobacterium woodii (strain ATCC 29683 / DSM 1030 / JCM 2381 / KCTC 1655 / WB1)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        },
+        {
+          "accession": "P21542",
+          "protein_name": "4''-mycarosyl isovaleryl-CoA transferase",
+          "gene_names": [
+            "acyB1",
+            "carE"
+          ],
+          "organism": "Streptomyces thermotolerans",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        },
+        {
+          "accession": "Q0GMK3",
+          "protein_name": "CarE",
+          "gene_names": [
+            "carE"
+          ],
+          "organism": "Acetobacterium woodii",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        },
+        {
+          "accession": "A0ABM9EV39",
+          "protein_name": "Caffeyl-CoA reductase-Etf complex subunit CarE",
+          "gene_names": [
+            "carE"
+          ],
+          "organism": "Neobacillus rhizosphaerae",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        },
+        {
+          "accession": "A0A508T5H4",
+          "protein_name": "Caffeyl-CoA reductase-Etf complex subunit CarE",
+          "gene_names": [
+            "carE"
+          ],
+          "organism": "Bradyrhizobium ivorense",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        },
+        {
+          "accession": "A0A7L4ZQ64",
+          "protein_name": "Caffeyl-CoA reductase-Etf complex subunit CarE",
+          "gene_names": [
+            "carE"
+          ],
+          "organism": "Kordia antarctica",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        },
+        {
+          "accession": "A0A9X2AAY5",
+          "protein_name": "Caffeyl-CoA reductase-Etf complex subunit CarE",
+          "gene_names": [
+            "carE"
+          ],
+          "organism": "Sulfoacidibacillus ferrooxidans",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        },
+        {
+          "accession": "C7G573",
+          "protein_name": "Caffeyl-CoA reductase-Etf complex subunit CarE",
+          "gene_names": [
+            "carE"
+          ],
+          "organism": "Roseburia intestinalis L1-82",
+          "reviewed": false,
+          "score": 0.51,
+          "matched_query": "Care",
+          "alias_source": "literature_alias",
+          "matched_alias": "Care"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"QueL\" OR gene:\"QueL\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"QueL\" OR gene:\"QueL\")",
+        "(protein_name:\"Care\" OR gene:\"Care\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"Care\" OR gene:\"Care\")",
+        "\"Care\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"Care\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Caffeyl-CoA reductase-Etf complex subunit CarE",
+      "literature_aliases": [
+        {
+          "alias": "Care",
+          "source": "literature_alias"
+        }
+      ],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::quel cd1684::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::quel cd1684::clostridioides difficile nap08::::{}::[{\"alias\": \"CD1684\", \"source\": \"parenthetical_gene_symbol\"}, {\"alias\": \"QueL\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"QueL (CD1684)\" OR gene:\"QueL (CD1684)\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueL\" OR gene:\"QueL\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueL (CD1684)\" OR gene:\"QueL (CD1684)\") | (protein_name:\"QueL\" OR gene:\"QueL\") | (protein_name:\"CD1684\" OR gene:\"CD1684\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"CD1684\" OR gene:\"CD1684\") | \"CD1684\" AND organism_name:\"Clostridioides difficile NAP08\" | \"CD1684\" | (protein_name:\"QueL\" OR gene:\"QueL\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"QueL\" OR gene:\"QueL\") | \"QueL\" AND organism_name:\"Clostridioides difficile NAP08\" | \"QueL\" | (protein_name:\"queL-like protein\" OR gene:\"queL-like protein\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queL-like protein\" OR gene:\"queL-like protein\") | \"queL-like protein\" AND organism_name:\"Clostridioides difficile NAP08\" | \"queL-like protein\" | (protein_name:\"queL like protein\" OR gene:\"queL like protein\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queL like protein\" OR gene:\"queL like protein\") | \"queL like protein\" AND organism_name:\"Clostridioides difficile NAP08\" | \"queL like protein\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "queL-like protein",
+          "source": "synonym"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::queuine lyase quel::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::queuine lyase quel::clostridioides difficile nap08::::{}::[{\"alias\": \"queuine lyase\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "unmapped",
+      "reason": "no_match",
+      "query": "(protein_name:\"queuine lyase (QueL)\" OR gene:\"queuine lyase (QueL)\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queuine lyase\" OR gene:\"queuine lyase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queuine lyase (QueL)\" OR gene:\"queuine lyase (QueL)\") | (protein_name:\"queuine lyase\" OR gene:\"queuine lyase\") | (protein_name:\"queuine lyase\" OR gene:\"queuine lyase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queuine lyase\" OR gene:\"queuine lyase\") | \"queuine lyase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"queuine lyase\" | (protein_name:\"queL\" OR gene:\"queL\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"queL\" OR gene:\"queL\") | \"queL\" AND organism_name:\"Clostridioides difficile NAP08\" | \"queL\"",
+      "candidates": [],
+      "literature_aliases": [
+        {
+          "alias": "queL",
+          "source": "gene_name"
+        }
+      ],
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "unresolved",
+        "issue": "no_match",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::tgt cd2802::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::tgt cd2802::clostridioides difficile nap08::::{}::[{\"alias\": \"CD2802\", \"source\": \"parenthetical_gene_symbol\"}, {\"alias\": \"TGT\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"TGT (CD2802)\" OR gene:\"TGT (CD2802)\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"TGT\" OR gene:\"TGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"TGT (CD2802)\" OR gene:\"TGT (CD2802)\") | (protein_name:\"TGT\" OR gene:\"TGT\") | (protein_name:\"CD2802\" OR gene:\"CD2802\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"CD2802\" OR gene:\"CD2802\") | \"CD2802\" AND organism_name:\"Clostridioides difficile NAP08\" | \"CD2802\" | (protein_name:\"TGT\" OR gene:\"TGT\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"TGT\" OR gene:\"TGT\") | \"TGT\" AND organism_name:\"Clostridioides difficile NAP08\" | \"TGT\"",
+      "mapped_ids": {
+        "uniprot": "P54578"
+      },
+      "confidence": 0.73,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "P54578",
+          "protein_name": "Ubiquitin carboxyl-terminal hydrolase 14",
+          "gene_names": [
+            "TGT",
+            "USP14"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9BXR0",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "QTRT1",
+            "TGT",
+            "TGUT"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P0A847",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9JMA2",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "Qtrt1",
+            "Tgt",
+            "Tgut"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P28720",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Zymomonas mobilis subsp. mobilis (strain ATCC 31821 / ZM4 / CP4)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O08314",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Helicobacter pylori (strain ATCC 700392 / 26695)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P40826",
+          "protein_name": "Ubiquitin carboxyl-terminal hydrolase 14",
+          "gene_names": [
+            "TGT",
+            "USP14"
+          ],
+          "organism": "Oryctolagus cuniculus",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9X1P7",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Thermotoga maritima (strain ATCC 43589 / DSM 3109 / JCM 10099 / NBRC 100826 / MSB8)",
+          "reviewed": true,
+          "score": 0.73,
+          "matched_query": "TGT",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"TGT (CD2802)\" OR gene:\"TGT (CD2802)\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"TGT\" OR gene:\"TGT\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"TGT (CD2802)\" OR gene:\"TGT (CD2802)\")",
+        "(protein_name:\"TGT\" OR gene:\"TGT\")",
+        "(protein_name:\"CD2802\" OR gene:\"CD2802\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"CD2802\" OR gene:\"CD2802\")",
+        "\"CD2802\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"CD2802\"",
+        "(protein_name:\"TGT\" OR gene:\"TGT\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"TGT\" OR gene:\"TGT\")",
+        "\"TGT\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"TGT\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Ubiquitin carboxyl-terminal hydrolase 14",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::trna guanine34 transglycosylase::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::trna guanine34 transglycosylase::clostridioides difficile nap08::::{}::[]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"tRNA guanine-34 transglycosylase\" OR gene:\"tRNA guanine-34 transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA guanine 34 transglycosylase\" OR gene:\"tRNA guanine 34 transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA guanine-34 transglycosylase\" OR gene:\"tRNA guanine-34 transglycosylase\") | (protein_name:\"tRNA guanine 34 transglycosylase\" OR gene:\"tRNA guanine 34 transglycosylase\")",
+      "mapped_ids": {
+        "uniprot": "A0A1U7NIZ5"
+      },
+      "confidence": 0.0475,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "A0A1U7NIZ5",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Ileibacterium valens",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1Y4LIE6",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Faecalitalea cylindroides",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A2R5L358",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Hirondellea gigas",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A1U7NQG1",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Dubosiella newyorkensis",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A3E2H0H7",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Scytalidium lignicola",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ACG4MEP5",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Helianthus anomalus",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0ACG4ML01",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Helianthus anomalus",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "A0A3E2H1A7",
+          "protein_name": "tRNA-guanine(34) transglycosylase",
+          "gene_names": [],
+          "organism": "Scytalidium lignicola",
+          "reviewed": false,
+          "score": 0.0475,
+          "matched_query": "tRNA guanine-34 transglycosylase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"tRNA guanine-34 transglycosylase\" OR gene:\"tRNA guanine-34 transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA guanine 34 transglycosylase\" OR gene:\"tRNA guanine 34 transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA guanine-34 transglycosylase\" OR gene:\"tRNA guanine-34 transglycosylase\")",
+        "(protein_name:\"tRNA guanine 34 transglycosylase\" OR gene:\"tRNA guanine 34 transglycosylase\")"
+      ],
+      "reviewed": false,
+      "resolved_name": "tRNA-guanine(34) transglycosylase",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
+    },
+    "db::trnaguanine 34 transglycosylase bacterial tgt btgt::clostridioides difficile nap08::::{}": {
+      "status": "unmapped",
+      "reason": "novel_protein",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_protein",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_protein"
+      }
+    },
+    "api-v7::trnaguanine 34 transglycosylase bacterial tgt btgt::clostridioides difficile nap08::::{}::[{\"alias\": \"tRNA-guanine transglycosylase\", \"source\": \"name_without_parenthetical\"}]": {
+      "status": "mapped",
+      "reason": "best_effort_fallback",
+      "query": "(protein_name:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\" OR gene:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA guanine (34) transglycosylase (bacterial TGT bTGT)\" OR gene:\"tRNA guanine (34) transglycosylase (bacterial TGT bTGT)\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\" OR gene:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\") | (protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\") | (protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\") | \"tRNA-guanine transglycosylase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"tRNA-guanine transglycosylase\" | (protein_name:\"tRNA guanine transglycosylase\" OR gene:\"tRNA guanine transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\" | (protein_name:\"tRNA guanine transglycosylase\" OR gene:\"tRNA guanine transglycosylase\") | \"tRNA guanine transglycosylase\" AND organism_name:\"Clostridioides difficile NAP08\" | \"tRNA guanine transglycosylase\"",
+      "mapped_ids": {
+        "uniprot": "Q9BXR0"
+      },
+      "confidence": 0.56,
+      "chosen_rule": "best_effort_fallback",
+      "candidates": [
+        {
+          "accession": "Q9BXR0",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "QTRT1",
+            "TGT",
+            "TGUT"
+          ],
+          "organism": "Homo sapiens",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P0A847",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Escherichia coli (strain K12)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9JMA2",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "Qtrt1",
+            "Tgt",
+            "Tgut"
+          ],
+          "organism": "Mus musculus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q4QR99",
+          "protein_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+          "gene_names": [
+            "Qtrt1"
+          ],
+          "organism": "Rattus norvegicus",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "P28720",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Zymomonas mobilis subsp. mobilis (strain ATCC 31821 / ZM4 / CP4)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "O08314",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Helicobacter pylori (strain ATCC 700392 / 26695)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q54177",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt",
+            "vacC"
+          ],
+          "organism": "Shigella flexneri",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        },
+        {
+          "accession": "Q9X1P7",
+          "protein_name": "Queuine tRNA-ribosyltransferase",
+          "gene_names": [
+            "tgt"
+          ],
+          "organism": "Thermotoga maritima (strain ATCC 43589 / DSM 3109 / JCM 10099 / NBRC 100826 / MSB8)",
+          "reviewed": true,
+          "score": 0.56,
+          "matched_query": "tRNA-guanine transglycosylase",
+          "alias_source": "primary_name"
+        }
+      ],
+      "queries_tried": [
+        "(protein_name:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\" OR gene:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA guanine (34) transglycosylase (bacterial TGT bTGT)\" OR gene:\"tRNA guanine (34) transglycosylase (bacterial TGT bTGT)\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\" OR gene:\"tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)\")",
+        "(protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\")",
+        "(protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA-guanine transglycosylase\" OR gene:\"tRNA-guanine transglycosylase\")",
+        "\"tRNA-guanine transglycosylase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"tRNA-guanine transglycosylase\"",
+        "(protein_name:\"tRNA guanine transglycosylase\" OR gene:\"tRNA guanine transglycosylase\") AND organism_name:\"Clostridioides difficile NAP08\"",
+        "(protein_name:\"tRNA guanine transglycosylase\" OR gene:\"tRNA guanine transglycosylase\")",
+        "\"tRNA guanine transglycosylase\" AND organism_name:\"Clostridioides difficile NAP08\"",
+        "\"tRNA guanine transglycosylase\""
+      ],
+      "reviewed": true,
+      "resolved_name": "Queuine tRNA-ribosyltransferase catalytic subunit 1",
+      "literature_aliases": [],
+      "best_effort": true,
+      "provider": "UniProt",
+      "source": "api",
+      "resolution": {
+        "status": "matched",
+        "order_step": "api_uniprot"
+      }
     }
   },
   "compounds": {
@@ -79053,6 +81780,423 @@
         "status": "ambiguous",
         "issue": "ambiguous_exact_name",
         "order_step": "exact_normalized_name"
+      }
+    },
+    "db::5deoxyadenosine::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001983",
+        "kegg": "C05198",
+        "chebi": "CHEBI:17319",
+        "pubchem": "439182",
+        "cas": "4754-39-6",
+        "biocyc": "CH33ADO",
+        "chemspider": "388325",
+        "pathbank_compound_id": "1329"
+      },
+      "pathbank_compound_id": 1329,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1329,
+          "name": "5'-Deoxyadenosine",
+          "short_name": "CH3Ado",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001983",
+            "kegg": "C05198",
+            "chebi": "CHEBI:17319",
+            "pubchem": "439182",
+            "cas": "4754-39-6",
+            "biocyc": "CH33ADO",
+            "chemspider": "388325",
+            "pathbank_compound_id": "1329"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::7aminomethyl7deazaguanine preq 1::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.4733,
+      "candidates": [
+        {
+          "pathbank_compound_id": 7268,
+          "name": "7-Aminomethyl-7-carbaguanine",
+          "short_name": "7AmCarb",
+          "score": 0.4733,
+          "mapped_ids": {
+            "hmdb": "HMDB0011690",
+            "kegg": "C16675",
+            "chebi": "CHEBI:45126",
+            "pubchem": "171",
+            "chemspider": "166"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::7cyano7deazaguanine preq 0::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.4733,
+      "candidates": [
+        {
+          "pathbank_compound_id": 41287,
+          "name": "7-Cyano-7-carbaguanine",
+          "short_name": "7CyCarb",
+          "score": 0.4733,
+          "mapped_ids": {
+            "chebi": "CHEBI:45075",
+            "pubchem": "446357"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::g34trna::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::guanine at position 34 of target trnas::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::preq 0::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.32,
+      "candidates": [
+        {
+          "pathbank_compound_id": 41287,
+          "name": "7-Cyano-7-carbaguanine",
+          "short_name": "7CyCarb",
+          "score": 0.32,
+          "mapped_ids": {
+            "chebi": "CHEBI:45075",
+            "pubchem": "446357"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::preq 1::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.32,
+      "candidates": [
+        {
+          "pathbank_compound_id": 7268,
+          "name": "7-Aminomethyl-7-carbaguanine",
+          "short_name": "7AmCarb",
+          "score": 0.32,
+          "mapped_ids": {
+            "hmdb": "HMDB0011690",
+            "kegg": "C16675",
+            "chebi": "CHEBI:45126",
+            "pubchem": "171",
+            "chemspider": "166"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::preq1::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0011690",
+        "kegg": "C16675",
+        "chebi": "CHEBI:45126",
+        "pubchem": "171",
+        "chemspider": "166",
+        "pathbank_compound_id": "7268"
+      },
+      "pathbank_compound_id": 7268,
+      "confidence": 0.95,
+      "chosen_rule": "synonym",
+      "candidates": [
+        {
+          "pathbank_compound_id": 7268,
+          "name": "7-Aminomethyl-7-carbaguanine",
+          "short_name": "7AmCarb",
+          "score": 0.95,
+          "mapped_ids": {
+            "hmdb": "HMDB0011690",
+            "kegg": "C16675",
+            "chebi": "CHEBI:45126",
+            "pubchem": "171",
+            "chemspider": "166",
+            "pathbank_compound_id": "7268"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "synonym"
+      }
+    },
+    "db::q::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 613,
+          "name": "Pseudouridine",
+          "short_name": "Q",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0000767",
+            "kegg": "C02067",
+            "chebi": "CHEBI:17802",
+            "pubchem": "15047",
+            "cas": "1445-07-4",
+            "chemspider": "14319",
+            "pathbank_compound_id": "613"
+          }
+        },
+        {
+          "pathbank_compound_id": 40099,
+          "name": "Q",
+          "short_name": "Q",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0059662",
+            "chebi": "CHEBI:60193",
+            "pubchem": "42119",
+            "cas": "57072-36-3",
+            "chemspider": "38409",
+            "pathbank_compound_id": "40099"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous_exact_name",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::q nucleoside::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::q34trna::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::queuine::::{}": {
+      "status": "mapped",
+      "provider": "PathBankDB",
+      "source": "db",
+      "mapped_ids": {
+        "hmdb": "HMDB0001495",
+        "kegg": "C01449",
+        "chebi": "CHEBI:17433",
+        "pubchem": "53477731",
+        "cas": "72496-59-4",
+        "biocyc": "QUEUINE",
+        "chemspider": "30776547",
+        "pathbank_compound_id": "1152"
+      },
+      "pathbank_compound_id": 1152,
+      "confidence": 1.0,
+      "chosen_rule": "exact_normalized_name",
+      "candidates": [
+        {
+          "pathbank_compound_id": 1152,
+          "name": "Queuine",
+          "short_name": "Queuine",
+          "score": 1.0,
+          "mapped_ids": {
+            "hmdb": "HMDB0001495",
+            "kegg": "C01449",
+            "chebi": "CHEBI:17433",
+            "pubchem": "53477731",
+            "cas": "72496-59-4",
+            "biocyc": "QUEUINE",
+            "chemspider": "30776547",
+            "pathbank_compound_id": "1152"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "matched",
+        "order_step": "exact_normalized_name"
+      }
+    },
+    "db::queuine q::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.565,
+      "candidates": [
+        {
+          "pathbank_compound_id": 1152,
+          "name": "Queuine",
+          "short_name": "Queuine",
+          "score": 0.565,
+          "mapped_ids": {
+            "hmdb": "HMDB0001495",
+            "kegg": "C01449",
+            "chebi": "CHEBI:17433",
+            "pubchem": "53477731",
+            "cas": "72496-59-4",
+            "biocyc": "QUEUINE",
+            "chemspider": "30776547"
+          }
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::queuosine q::::{}": {
+      "status": "unmapped",
+      "reason": "ambiguous",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.565,
+      "candidates": [
+        {
+          "pathbank_compound_id": 7192,
+          "name": "Queuosine",
+          "short_name": "Queuosi",
+          "score": 0.565,
+          "mapped_ids": {
+            "hmdb": "HMDB0011596",
+            "pubchem": "53481002",
+            "cas": "57072-36-3",
+            "biocyc": "CPD-8536"
+          }
+        },
+        {
+          "pathbank_compound_id": 43043,
+          "name": "(((2,3-epoxy-4,5-cis-dihydroxycyclopent-1-yl)amino)methyl)-7-deazaguanosine",
+          "short_name": "NO",
+          "score": 0.4733,
+          "mapped_ids": {
+            "chebi": "CHEBI:63792"
+          }
+        },
+        {
+          "pathbank_compound_id": 42656,
+          "name": "epoxyqueuosine",
+          "short_name": "epoxyqu",
+          "score": 0.29,
+          "mapped_ids": {}
+        }
+      ],
+      "resolution": {
+        "status": "ambiguous",
+        "issue": "ambiguous",
+        "order_step": "high_confidence_fuzzy"
+      }
+    },
+    "db::target trnas::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
+      }
+    },
+    "db::trnas::::{}": {
+      "status": "unmapped",
+      "reason": "novel_compound",
+      "provider": "PathBankDB",
+      "source": "db",
+      "confidence": 0.0,
+      "chosen_rule": "novel_compound",
+      "candidates": [],
+      "resolution": {
+        "status": "novel",
+        "issue": "no_db_candidates",
+        "order_step": "novel_compound"
       }
     }
   },

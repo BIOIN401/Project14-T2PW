@@ -2,13 +2,31 @@
   "metadata": {
     "pathway_name": "",
     "organism": "",
-    "node_count": 13,
-    "edge_count": 12
+    "node_count": 57,
+    "edge_count": 66
   },
   "nodes": [
     {
-      "id": "compound:5'deoxyadenosine",
-      "label": "5'deoxyadenosine",
+      "id": "compound:5'-deoxyadenosine",
+      "label": "5'-deoxyadenosine",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:7-aminomethyl-7-deazaguanine (preq 1)",
+      "label": "7-aminomethyl-7-deazaguanine (preQ 1)",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:7-cyano-7-deazaguanine (preq 0)",
+      "label": "7-cyano-7-deazaguanine (preQ 0)",
       "kind": "compound",
       "cls": "",
       "compartment": "",
@@ -25,8 +43,53 @@
       "provenance": "extracted"
     },
     {
+      "id": "compound:guanine at position 34 of target trnas",
+      "label": "guanine at position 34 of target tRNAs",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:preq 0",
+      "label": "preQ 0",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:preq 1",
+      "label": "preQ 1",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
       "id": "compound:preq1",
       "label": "preQ1",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:q",
+      "label": "Q",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:q nucleoside",
+      "label": "Q nucleoside",
       "kind": "compound",
       "cls": "",
       "compartment": "",
@@ -52,8 +115,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:queuosine",
-      "label": "queuosine",
+      "id": "compound:queuine (q)",
+      "label": "queuine (q)",
       "kind": "compound",
       "cls": "",
       "compartment": "",
@@ -61,8 +124,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "compound:s-adenosyl-l-methionine",
-      "label": "S-adenosyl-L-methionine",
+      "id": "compound:queuosine (q)",
+      "label": "queuosine (Q)",
       "kind": "compound",
       "cls": "",
       "compartment": "",
@@ -70,8 +133,44 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:cd1682",
-      "label": "CD1682",
+      "id": "compound:sam",
+      "label": "SAM",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:gtp",
+      "label": "GTP",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:target trnas",
+      "label": "target tRNAs",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "compound:trnas",
+      "label": "tRNAs",
+      "kind": "compound",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:bacterial tgt",
+      "label": "bacterial TGT",
       "kind": "protein",
       "cls": "",
       "compartment": "",
@@ -79,8 +178,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:cd1684",
-      "label": "CD1684",
+      "id": "protein:btgt",
+      "label": "bTGT",
       "kind": "protein",
       "cls": "",
       "compartment": "",
@@ -88,8 +187,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "protein:cd2802",
-      "label": "CD2802",
+      "id": "protein:chlamydia trachomatis btgt",
+      "label": "Chlamydia trachomatis bTGT",
       "kind": "protein",
       "cls": "",
       "compartment": "",
@@ -97,8 +196,179 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:cd1682 queuosine hydrolysis",
-      "label": "CD1682 queuosine hydrolysis",
+      "id": "protein:etgt",
+      "label": "eTGT",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:gchi",
+      "label": "GCHI",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:qtrt1/qtrt2 complex",
+      "label": "QTRT1/QTRT2 complex",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quea",
+      "label": "QueA",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quec",
+      "label": "QueC",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:qued",
+      "label": "QueD",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quee",
+      "label": "QueE",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quef",
+      "label": "QueF",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:queg",
+      "label": "QueG",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:queg or queh",
+      "label": "QueG or QueH",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:queh",
+      "label": "QueH",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quek",
+      "label": "QueK",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quek (cd1682)",
+      "label": "QueK (CD1682)",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quel",
+      "label": "QueL",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:quel (cd1684)",
+      "label": "QueL (CD1684)",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:queuine lyase (quel)",
+      "label": "queuine lyase (QueL)",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:tgt (cd2802)",
+      "label": "TGT (CD2802)",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:trna guanine-34 transglycosylase",
+      "label": "tRNA guanine-34 transglycosylase",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "protein:trna-guanine (34) transglycosylase (bacterial tgt, btgt)",
+      "label": "tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)",
+      "kind": "protein",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:quek-catalyzed queuosine hydrolysis",
+      "label": "QueK-catalyzed queuosine hydrolysis",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -106,8 +376,8 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:cd1684 queuine lyase reaction",
-      "label": "CD1684 queuine lyase reaction",
+      "id": "reaction:quel-catalyzed queuine lyase reaction",
+      "label": "QueL-catalyzed queuine lyase reaction",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -115,8 +385,134 @@
       "provenance": "extracted"
     },
     {
-      "id": "reaction:cd2802 tgt reaction",
-      "label": "CD2802 TGT reaction",
+      "id": "reaction:tgt-catalyzed preq1 insertion into trna",
+      "label": "TGT-catalyzed preQ1 insertion into tRNA",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:preq1 -> q",
+      "label": "preQ1 -> Q",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:q -> q",
+      "label": "q -> Q",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:queuine -> preq 1",
+      "label": "queuine -> preQ 1",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:gtp to 7-cyano-7-deazaguanine (preq 0) synthesis",
+      "label": "GTP to 7-cyano-7-deazaguanine (preQ 0) synthesis",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:preq 0 reduction to 7-aminomethyl-7-deazaguanine (preq 1)",
+      "label": "preQ 0 reduction to 7-aminomethyl-7-deazaguanine (preQ 1)",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:insertion of preq 1 into trnas",
+      "label": "insertion of preQ 1 into tRNAs",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:conversion of preq 1 to q",
+      "label": "conversion of preQ 1 to Q",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:incorporation of queuine (q) into target trnas",
+      "label": "incorporation of queuine (q) into target tRNAs",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:insertion of q into trnas in chlamydia trachomatis",
+      "label": "insertion of q into tRNAs in Chlamydia trachomatis",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:regeneration of preq 1 from q",
+      "label": "regeneration of preQ 1 from q",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:hydrolysis of the q nucleoside",
+      "label": "hydrolysis of the Q nucleoside",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:synthesis of preq 1 precursor base",
+      "label": "synthesis of preQ 1 precursor base",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:exchange of guanine at position 34 of target trnas with preq 1",
+      "label": "exchange of guanine at position 34 of target tRNAs with preQ 1",
+      "kind": "reaction",
+      "cls": "",
+      "compartment": "",
+      "confidence": 1.0,
+      "provenance": "extracted"
+    },
+    {
+      "id": "reaction:exchange of guanine at position 34 of target trnas with q",
+      "label": "exchange of guanine at position 34 of target tRNAs with q",
       "kind": "reaction",
       "cls": "",
       "compartment": "",
@@ -126,74 +522,398 @@
   ],
   "edges": [
     {
-      "source": "compound:queuosine",
-      "target": "reaction:cd1682 queuosine hydrolysis",
+      "source": "compound:queuosine (q)",
+      "target": "reaction:quek-catalyzed queuosine hydrolysis",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:cd1682 queuosine hydrolysis",
-      "target": "compound:queuine",
+      "source": "reaction:quek-catalyzed queuosine hydrolysis",
+      "target": "compound:queuine (q)",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:cd1682",
-      "target": "reaction:cd1682 queuosine hydrolysis",
+      "source": "protein:quek (cd1682)",
+      "target": "reaction:quek-catalyzed queuosine hydrolysis",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
-      "source": "compound:queuine",
-      "target": "reaction:cd1684 queuine lyase reaction",
+      "source": "compound:queuine (q)",
+      "target": "reaction:quel-catalyzed queuine lyase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "compound:s-adenosyl-l-methionine",
-      "target": "reaction:cd1684 queuine lyase reaction",
+      "source": "compound:sam",
+      "target": "reaction:quel-catalyzed queuine lyase reaction",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:cd1684 queuine lyase reaction",
+      "source": "reaction:quel-catalyzed queuine lyase reaction",
       "target": "compound:preq1",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "reaction:cd1684 queuine lyase reaction",
-      "target": "compound:5'deoxyadenosine",
+      "source": "reaction:quel-catalyzed queuine lyase reaction",
+      "target": "compound:5'-deoxyadenosine",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:cd1684",
-      "target": "reaction:cd1684 queuine lyase reaction",
+      "source": "protein:quel (cd1684)",
+      "target": "reaction:quel-catalyzed queuine lyase reaction",
       "role": "catalyst",
       "confidence": 1.0
     },
     {
       "source": "compound:preq1",
-      "target": "reaction:cd2802 tgt reaction",
+      "target": "reaction:tgt-catalyzed preq1 insertion into trna",
       "role": "reactant",
       "confidence": 1.0
     },
     {
       "source": "compound:g34-trna",
-      "target": "reaction:cd2802 tgt reaction",
+      "target": "reaction:tgt-catalyzed preq1 insertion into trna",
       "role": "reactant",
       "confidence": 1.0
     },
     {
-      "source": "reaction:cd2802 tgt reaction",
+      "source": "reaction:tgt-catalyzed preq1 insertion into trna",
       "target": "compound:q34-trna",
       "role": "product",
       "confidence": 1.0
     },
     {
-      "source": "protein:cd2802",
-      "target": "reaction:cd2802 tgt reaction",
+      "source": "protein:tgt (cd2802)",
+      "target": "reaction:tgt-catalyzed preq1 insertion into trna",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:preq1",
+      "target": "reaction:preq1 -> q",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:preq1 -> q",
+      "target": "compound:q",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:q",
+      "target": "reaction:q -> q",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:q -> q",
+      "target": "compound:q",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:queuine",
+      "target": "reaction:queuine -> preq 1",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:queuine -> preq 1",
+      "target": "compound:preq 1",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:gtp",
+      "target": "reaction:gtp to 7-cyano-7-deazaguanine (preq 0) synthesis",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:gtp to 7-cyano-7-deazaguanine (preq 0) synthesis",
+      "target": "compound:7-cyano-7-deazaguanine (preq 0)",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:gchi",
+      "target": "reaction:gtp to 7-cyano-7-deazaguanine (preq 0) synthesis",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:qued",
+      "target": "reaction:gtp to 7-cyano-7-deazaguanine (preq 0) synthesis",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quee",
+      "target": "reaction:gtp to 7-cyano-7-deazaguanine (preq 0) synthesis",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quec",
+      "target": "reaction:gtp to 7-cyano-7-deazaguanine (preq 0) synthesis",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:preq 0",
+      "target": "reaction:preq 0 reduction to 7-aminomethyl-7-deazaguanine (preq 1)",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:preq 0 reduction to 7-aminomethyl-7-deazaguanine (preq 1)",
+      "target": "compound:7-aminomethyl-7-deazaguanine (preq 1)",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quef",
+      "target": "reaction:preq 0 reduction to 7-aminomethyl-7-deazaguanine (preq 1)",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:preq 1",
+      "target": "reaction:insertion of preq 1 into trnas",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:insertion of preq 1 into trnas",
+      "target": "compound:trnas",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:trna guanine-34 transglycosylase",
+      "target": "reaction:insertion of preq 1 into trnas",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:bacterial tgt",
+      "target": "reaction:insertion of preq 1 into trnas",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:btgt",
+      "target": "reaction:insertion of preq 1 into trnas",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:preq 1",
+      "target": "reaction:conversion of preq 1 to q",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:conversion of preq 1 to q",
+      "target": "compound:q",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quea",
+      "target": "reaction:conversion of preq 1 to q",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:queg",
+      "target": "reaction:conversion of preq 1 to q",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:queh",
+      "target": "reaction:conversion of preq 1 to q",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:queg or queh",
+      "target": "reaction:conversion of preq 1 to q",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:queuine (q)",
+      "target": "reaction:incorporation of queuine (q) into target trnas",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:incorporation of queuine (q) into target trnas",
+      "target": "compound:target trnas",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:etgt",
+      "target": "reaction:incorporation of queuine (q) into target trnas",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:qtrt1/qtrt2 complex",
+      "target": "reaction:incorporation of queuine (q) into target trnas",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:q",
+      "target": "reaction:insertion of q into trnas in chlamydia trachomatis",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:insertion of q into trnas in chlamydia trachomatis",
+      "target": "compound:trnas",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:chlamydia trachomatis btgt",
+      "target": "reaction:insertion of q into trnas in chlamydia trachomatis",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:q",
+      "target": "reaction:regeneration of preq 1 from q",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:regeneration of preq 1 from q",
+      "target": "compound:preq 1",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quel",
+      "target": "reaction:regeneration of preq 1 from q",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:queuine lyase (quel)",
+      "target": "reaction:regeneration of preq 1 from q",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:q nucleoside",
+      "target": "reaction:hydrolysis of the q nucleoside",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:hydrolysis of the q nucleoside",
+      "target": "compound:q",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quek",
+      "target": "reaction:hydrolysis of the q nucleoside",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:gtp",
+      "target": "reaction:synthesis of preq 1 precursor base",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:synthesis of preq 1 precursor base",
+      "target": "compound:7-aminomethyl-7-deazaguanine (preq 1)",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:qued",
+      "target": "reaction:synthesis of preq 1 precursor base",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quee",
+      "target": "reaction:synthesis of preq 1 precursor base",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quec",
+      "target": "reaction:synthesis of preq 1 precursor base",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:quef",
+      "target": "reaction:synthesis of preq 1 precursor base",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:preq 1",
+      "target": "reaction:exchange of guanine at position 34 of target trnas with preq 1",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:guanine at position 34 of target trnas",
+      "target": "reaction:exchange of guanine at position 34 of target trnas with preq 1",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:exchange of guanine at position 34 of target trnas with preq 1",
+      "target": "compound:7-aminomethyl-7-deazaguanine (preq 1)",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:trna-guanine (34) transglycosylase (bacterial tgt, btgt)",
+      "target": "reaction:exchange of guanine at position 34 of target trnas with preq 1",
+      "role": "catalyst",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:q",
+      "target": "reaction:exchange of guanine at position 34 of target trnas with q",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "compound:guanine at position 34 of target trnas",
+      "target": "reaction:exchange of guanine at position 34 of target trnas with q",
+      "role": "reactant",
+      "confidence": 1.0
+    },
+    {
+      "source": "reaction:exchange of guanine at position 34 of target trnas with q",
+      "target": "compound:q",
+      "role": "product",
+      "confidence": 1.0
+    },
+    {
+      "source": "protein:btgt",
+      "target": "reaction:exchange of guanine at position 34 of target trnas with q",
       "role": "catalyst",
       "confidence": 1.0
     }
