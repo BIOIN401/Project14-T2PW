@@ -346,6 +346,252 @@ Ordered by impact on getting a clean PWML out with RAG on:
 
 ---
 
+## 6. Proposed fix designs (PENDING AUTHORIZATION — no code changed)
+
+> **Status: PROPOSED. Nothing here is implemented.** These outlines were produced
+> by read-only design agents against the `rag-payload-gate-guardrails` code, then
+> put through an adversarial **clash-check** (do the fixes conflict?) and a
+> per-fix **eye-test** (does the fix introduce a *new* problem or new contract
+> failure?). Only proposals that survived both are written as "APPROVED FOR
+> IMPLEMENTATION"; where a proposal failed the eye-test, the failure and the
+> required amendment are recorded rather than hidden. Author to review and
+> authorize before any code is written.
+
+### 6.0 Cross-fix clash matrix
+
+| Pair | Shared surface | Clash? | Resolution |
+|---|---|---|---|
+| A ↔ B/C/E | none (A is in `map_ids.py`/cache; B/C/E in RAG + preprocessor) | No | Land independently |
+| A ↔ D | none | No | Independent. Note: D must **not** sanitize `enzyme_complexes` cache keys (`map_ids.py:4687`) or it would mass-invalidate the namespace |
+| B/C/E ↔ D | `preprocessor.py`, `pipeline.py` — **different functions** | Soft | Co-design: land together; D's escapers must wrap the seed-derived `user_task_context` that C newly threads into candidate `preprocess`. `_EMPTY_CONTEXT` (E) and `_format_user_task_context` (D) are different hunks → merge-clean |
+| B ↔ E (internal) | `should_run_rag` decision path | Coupled | E's "do **not** default `scope_clarity_score` low" is load-bearing so a transient Stage-0 failure doesn't auto-fire RAG; must land with B |
+
+No two approved fixes touch the same function. The only real coupling is the
+B+E ordering and the B/C/E+D co-design, both noted per-fix below.
+
+---
+
+### 6.A Wrapper regression — stale `enzyme_complexes` cache · ✅ APPROVED FOR IMPLEMENTATION
+
+**Approach (two parts):**
+1. **One-time data purge** — drop the 19 stale rows in the `enzyme_complexes`
+   namespace of `data/id_mapping_cache.json` (this is what HEAD commit `0690f71`
+   should have done; the namespace is fully regenerable derived data).
+2. **Durable read-side guard** — in `map_ids._resolve_complex_name` (cache read
+   at `map_ids.py:4689`), add a predicate
+   `_is_reusable_complex_cache_row(row) -> bool` that treats a cached row as a
+   **miss** when it is wrapper-shaped (`is_generated_complex_wrapper`) *and* fails
+   the same integrity bar the gates enforce (no `generated: True`, or no species
+   context, or no component external identity). A rejected read drops into the
+   existing re-resolution branch and `cache.set`/`save` self-heals the stored row.
+
+**Rejected alternative:** loosening `is_generated_complex_wrapper`'s legacy
+`chosen_rule`/`order_step` fallback (option "c"). It would make a genuinely broken
+wrapper **pass the gate silently** into PWML (turning a loud abort into a bad
+export) and would break `tests/test_entity_identity_contracts.py:22-27`. The
+classifier is correct; the *data* is bad.
+
+**Eye-test (new problems?):** None found. The predicate rejects only rows the
+gates would already fail on, so it converts a downstream abort into an upstream
+self-heal; legitimately-resolved wrappers (e.g. `NdmA complex` with a mapped,
+UniProt-bearing `NdmA`) keep `generated: True` + real species + identity → judged
+reusable → unchanged. No enzyme is ever silently dropped (re-resolution routes
+through the existing `map_ids.py:4798-4831` guard, which logs its skips). RAG-off
+path untouched (this is DB/cache mapping). Add one regression test: a
+`_MemoryCache` seeded with a legacy malformed row asserts re-resolution rather than
+a failing wrapper. Existing wrapper/cache tests (`test_map_ids.py:669/1038/1115`,
+`test_entity_identity_contracts.py`) stay green.
+
+**Files:** `map_ids.py` (new predicate + 2-line guard), `data/id_mapping_cache.json`
+(purge), `tests/test_map_ids.py` (new test). No gate/classifier changes.
+
+---
+
+### 6.B RAG auto-triage unreachable · ⚠️ APPROVED **ONLY WITH AMENDMENT** (naive fix fails the eye-test)
+
+**Design intent (good):** keep the UI toggle as an explicit "force RAG on"
+override, and *also* let the scope/gap auto-triage decide when the toggle is off,
+by removing only the `and rag_incomplete_flag` clause from the orchestrator gate
+(`streamlit_app.py:3024` → `if rag_config()["enabled"]:`), keeping the
+`rag_config()["enabled"]` guard so the RAG-off path stays byte-identical. Handle
+the `RAG_ENABLED=False` default in the **environment** (`.env`), not by flipping
+the code default (default-off is the regression firewall).
+
+**🔴 Eye-test FAILURE (found during clash-check — the design agent's own trace
+missed this):** With the gate opened, **every** enabled run with the toggle off
+calls `should_run_rag(user_flag=False)`, which runs `_gap_signals` →
+`retrieve.detect_gaps`. The gate already passes `reports={"qa_graph":
+generate_qa_report(...)}` (`streamlit_app.py:3030`), and `detect_gaps`
+(`retrieve.py:342-357`) turns **every** `flags.missing_compartments` entry into a
+`missing_compartment` gap — and `missing_compartment` **and** `orphan_metabolite`
+are in the auto-trigger set `_INCOMPLETE_GAP_KINDS` (`triage.py:52-58`). Those two
+signals are present in most *healthy* pathways: the current queuosine
+`tmp/qa_report.json` lists ~20 entities with "no subcellular location recorded."
+So the naive gate-open would auto-fire RAG on nearly every pathway that has any
+uncompartmentalized entity — effectively turning RAG on for everyone. **Rejected
+as written.**
+
+**Required amendment (makes it pass):** couple the gate-open with a **narrowing of
+the auto-trigger signal set** so only low-noise signals can auto-fire RAG:
+- Keep `scope_clarity_score < 0.5` (only genuinely ambiguous reviews score ≤0.2;
+  clear papers score ≥0.7 — low false-positive rate).
+- Restrict `_INCOMPLETE_GAP_KINDS` for **auto-trigger** to strong structural
+  incompleteness only — `dangling_reaction`, `unmapped_enzyme`, `missing_precursor`
+  — and **exclude `missing_compartment` and `orphan_metabolite`** (or require a
+  minimum count / multiple distinct kinds). The excluded signals remain useful for
+  *gap retrieval once RAG is already running*; they just must not be the thing that
+  *starts* RAG unattended.
+
+With the amendment, trace: (a) toggle on → `user_flag` short-circuit → runs, as
+today; (b) toggle off + genuinely ambiguous review (score 0.2) → auto-fires
+correctly; (c) toggle off + normal complete pathway with only missing compartments
+→ **does not** fire (the amendment's whole point); (d) transient Stage-0 failure →
+no `scope_clarity_score` present (E keeps it absent) → no trigger. No double-fire
+(toggle + auto fold into one `should_run_rag` call whose first line is the
+`user_flag` short-circuit).
+
+**Files:** `streamlit_app.py` (gate line 3024 + toggle help text — its "OFF =
+nothing changes" wording becomes false and must be rewritten to "OFF = auto-decide
+from scope/gap"), `triage.py` (`_INCOMPLETE_GAP_KINDS` used for auto-trigger).
+**Product decision needed:** if the team wants a hard per-run OFF, do **not** open
+the gate — instead delete/relabel the dead auto-branch (option iii). The amendment
+above assumes the team wants auto-triage to work.
+
+---
+
+### 6.C Related papers structurally un-selectable · ✅ APPROVED FOR IMPLEMENTATION
+
+**Approach:**
+1. **Thread seed scope into candidate preprocessing (C1).** Give
+   `select._candidate_context(candidate, *, user_task_context=None)` the kwarg and
+   forward it to `preprocess`. In `select()`, derive it once from the seed —
+   `seed_focus = seed_context.get("selected_example") or
+   seed_context.get("pathway_name")` — and pass it per candidate. A review abstract
+   about the seed pathway then reaches Case B (matched example) and gets
+   `_REVIEW_PENALTY_MATCH = 0.25` (rank-below) instead of
+   `_REVIEW_PENALTY_NO_MATCH = 1.0` (force-drop below the 0.0 floor).
+2. **Sparse-seed penalty gate (C2).** In `score_candidate`, compute
+   `seed_has_signal = total_terms > 0 or bool(seed_org)`; when the review
+   assessment would apply the 1.0 no-match penalty **and** the seed has no signal,
+   downgrade it to 0.25 (rank-below, not drop). Gate the *penalty*, not
+   `_MIN_SCORE` — lowering the floor would also admit zero-signal *primary* papers.
+
+**Interaction note (C3, do not change):** `acquire.search_candidates` still
+short-circuits to `[]` when the seed has no queryable terms
+(`acquire.py:727-732`). The select fixes only bite once acquisition returns
+candidates, i.e. when the seed carries at least an organism or named example. A
+truly term-less seed correctly no-ops rather than fetching noise — document this,
+don't "fix" it.
+
+**Eye-test (new problems?):** No irrelevant-paper leakage in the common case: when
+the seed *has* signal (the norm), the full 1.0 penalty is preserved, so off-topic
+reviews still drop. The downgrade only applies when the seed is too sparse to
+*prove* a review off-topic — relaxing exactly the case the penalty can't justify.
+No extra LLM calls (`_candidate_context` already calls `preprocess` once per
+candidate; only an argument is added). Tests: `_fake_preprocess(text, **_)`
+absorbs the new kwarg; `_SEED` always has signal so penalty tests stay green. Add a
+sparse-seed test asserting the downgrade.
+
+**Files:** `select.py` (`_candidate_context`, `score_candidate`, `select`,
+`_review_assessment`).
+
+---
+
+### 6.D Complete the prompt-injection hardening · ✅ APPROVED FOR IMPLEMENTATION
+
+**Broader surface than the audit stated (found while designing):** the raw
+`<<<`/`>>>` document fence is fed untrusted text at **four live sites**, not one —
+`preprocessor.preprocess()`, `pipeline._build_extraction_prompt` /
+`_build_inference_prompt`, and `audit_json_llm._build_llm_prompt` (whose
+`references` is the external RAG retrieval payload). `_format_user_task_context` is
+**duplicated** in `preprocessor.py` and `pipeline.py` (hand-synced to avoid a
+circular import). `completeness_audit._build_user_prompt` uses a *different*,
+weaker markdown-header scheme.
+
+**Approach:**
+1. Add a `_format_pathway_scope` helper mirroring `_format_user_task_context`, and
+   neutralize the `</pathway_scope>` close-tag at its only emit site
+   (`pipeline.py`, inside `_build_extraction_prompt`).
+2. Add `_escape_fence(text)` that neutralizes **only the exact 3-char
+   sequences** `>>>`/`<<<` (mirroring the existing `<\/tag>` style) and apply it to
+   every untrusted body at the four fence sites (including the RAG `references`).
+3. **Kill the duplication:** introduce a leaf module `t2pw/…/prompt_safety.py`
+   (no project imports → no circular dependency) exposing
+   `neutralize_close_tag` / `format_scoped_block` / `escape_fence`, and route all
+   three call sites through it. Fallback if minimal churn is preferred: duplicate
+   the helpers and document the sync burden as the code already does.
+4. **`completeness_audit`:** either fence `source_text` with the same scheme or
+   explicitly log it as a known residual gap — do not leave it silently
+   inconsistent.
+
+**Eye-test (new problems?):** Byte-identical-when-no-injection is preserved —
+`_escape_fence` is a no-op on any string lacking the triple delimiter, so a normal
+paper (the `test_preprocessor.py` fixtures use delimiter-free bodies) yields an
+unchanged prompt. Restricting to the exact 3-char sequences leaves single `<`/`>`
+(inequalities, `->` arrows, FASTA `>` headers, charge states) untouched → no
+corruption of scientific notation. Before landing, grep RAG/audit fixtures for
+literal `<<<`/`>>>` in payloads (unlikely in JSON) so `references`-escaping doesn't
+shift an assertion. New unit tests needed for the `<pathway_scope>` escape and the
+fence escaper (no existing coverage there).
+
+**Sequencing with B/C/E:** land **together**; D's escapers must wrap the
+seed-derived `user_task_context` that C newly threads into candidate `preprocess`.
+D stays additive (new helpers, not a rewrite of `_format_user_task_context`), so
+B/C/E's new *call sites* and D's *helpers* merge cleanly.
+
+**Files:** `preprocessor.py`, `pipeline.py`, `audit_json_llm.py`,
+`completeness_audit.py`, new `prompt_safety.py`, `tests/test_preprocessor.py`.
+
+---
+
+### 6.E `_EMPTY_CONTEXT` scope fields · ✅ APPROVED FOR IMPLEMENTATION (minimal scope)
+
+**Approach (deliberately minimal):** add **only** `document_type: ""` and
+`scope_status: ""` to `_EMPTY_CONTEXT` (`preprocessor.py:11-20`). Both are
+**truthiness-guarded** in `format_context_header` (`if document_type:` /
+`if scope_status:`, verified at `preprocessor.py:289,293`), so empty defaults never
+emit a header line → single-paper extraction prompt stays byte-identical.
+
+**Explicitly do NOT add** `scope_clarity_score` or `selected_example`:
+`format_context_header` guards `scope_clarity_score` by *membership + not-None*
+(lines 271,281,295) and `selected_example` by *membership* (line 297), so adding
+either to `_EMPTY_CONTEXT` would emit a spurious header line for every
+previously-headerless context — a single-paper regression (verified against the
+code).
+
+**Design call (important):** this fix intentionally does **not** make a *failed*
+Stage-0 run auto-trigger RAG. Defaulting `scope_clarity_score` low would fire RAG
+on every transient LLM hiccup (and buy nothing — an empty context makes
+`build_query` return `""`, so acquisition short-circuits to zero anyway). Current
+triage behavior (`_as_float(None) → None → no signal`) is correct and must be
+preserved. E is therefore a robustness/observability fix, not a triage change; it
+composes safely with the B amendment.
+
+**Eye-test (new problems?):** None — two truthiness-guarded empty strings only.
+Audit `test_preprocessor.py` for any exact `_EMPTY_CONTEXT` shape/length assertion
+and update if present.
+
+**Files:** `preprocessor.py` (shared with D — different hunk), possibly
+`tests/test_preprocessor.py`.
+
+---
+
+### 6.F Recommended implementation sequence
+
+1. **A** — independent, unblocks the current failing export; ship first, alone.
+2. **B (amended) + E together** — the gap-set narrowing and the "no low-score
+   default" discipline are jointly load-bearing; do not land the gate-open without
+   the gap-set narrowing.
+3. **C** — after/with B so auto-triage actually reaches selection; independent
+   files.
+4. **D** — with or immediately after B/C/E so its escapers cover every untrusted
+   value the RAG cluster newly routes into a prompt.
+
+Each step should land with `RAG_ENABLED=false` verified byte-identical to `main`
+and the existing suite green before the next.
+
+---
+
 ## Appendix — verification method
 
 - Branch selected by most-recent commit date across all remotes
@@ -357,3 +603,14 @@ Ordered by impact on getting a clean PWML out with RAG on:
   from the tree.
 - Changelog claims in §3 were confirmed against `src/t2pw/app/streamlit_app.py`,
   `src/t2pw/pipeline/pipeline.py`, and `src/t2pw/rag/synthesize.py`.
+- §6 fix outlines were produced by three read-only design agents (Issue A; the
+  B/C/E cluster; Issue D) and then clash-checked. Load-bearing claims were
+  re-verified against `rag-payload-gate-guardrails` source: the Issue B eye-test
+  failure was confirmed by reading `triage._INCOMPLETE_GAP_KINDS` and
+  `retrieve.detect_gaps` (which emits `missing_compartment` from
+  `qa_report.flags.missing_compartments`, ~20 populated in the current run), and
+  the Issue E header-guard behavior was confirmed in
+  `preprocessor.format_context_header` (truthiness vs. membership guards).
+- These design agents ran while the working tree was on this audit branch (based
+  on pre-RAG `main`), so they read the RAG-branch code via `git show
+  rag-payload-gate-guardrails` — line references in §6 are on that branch.
