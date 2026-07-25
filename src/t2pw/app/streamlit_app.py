@@ -2891,11 +2891,15 @@ with st.form("pwml_pipeline"):
             "Multi-paper RAG (novel pathway from multiple papers)",
             value=True,
             help=(
-                "ON (default): fetches and selects related papers, retrieves "
-                "gap-targeted evidence, and synthesizes one connected, "
-                "provenance-tagged pathway. "
-                "OFF: runs exactly the standard single-paper pipeline — no papers "
-                "are fetched and nothing about the run changes (pre-RAG behavior)."
+                "ON (default): always run multi-paper RAG — fetches and selects "
+                "related papers, retrieves gap-targeted evidence, and synthesizes "
+                "one connected, provenance-tagged pathway. "
+                "OFF: auto-decide from the scope/gap guardrails — RAG still runs "
+                "when the seed pathway is ambiguous (low scope clarity) or "
+                "structurally incomplete (dangling reactions / unmapped enzymes / "
+                "missing precursors), otherwise it falls through to the standard "
+                "single-paper pipeline. "
+                "Set RAG_ENABLED=false to disable multi-paper RAG entirely."
             ),
         )
     else:
@@ -3176,17 +3180,20 @@ if submit:
         )
 
     # ── RAG orchestration (seam S5) — WIRING ONLY; identical path when off ───
-    # Guarded on BOTH the deploy switch (RAG_ENABLED) and the per-run UI toggle
-    # (rag_incomplete_flag). With either off, nothing here runs and
-    # user_task_context / the flow stay exactly as today — the standard
-    # single-paper pipeline, byte-for-byte. Only when the user turns the toggle
-    # on does maybe_run_rag run the whole R1–R5 chain and return its outputs; the
-    # app then folds the retrieved evidence through the existing S1
+    # Guarded on the deploy switch (RAG_ENABLED) ONLY. With RAG_ENABLED off,
+    # nothing here runs and user_task_context / the flow stay exactly as today —
+    # the standard single-paper pipeline, byte-for-byte. With RAG_ENABLED on, the
+    # decision of WHETHER to run the chain is delegated to t2pw.rag triage inside
+    # maybe_run_rag (the separation invariant): the UI toggle is passed through as
+    # user_flag, so an ON toggle force-runs RAG while an OFF toggle lets
+    # should_run_rag auto-decide from the scope/gap guardrails. Only when triage
+    # says run does maybe_run_rag run the whole R1–R5 chain and return its
+    # outputs; the app then folds the retrieved evidence through the existing S1
     # (user_task_context) and S2 (the audit's retrieval_context, via
     # session_state) params, and hands the synthesized Payload to the
     # post-pipeline path (S3) below.
     rag_result = None
-    if rag_config()["enabled"] and rag_incomplete_flag:
+    if rag_config()["enabled"]:
         _rag_seed_graph = build_draft_graph(stage_one_in_scope)
         rag_result = maybe_run_rag(
             pathway_context=pathway_context,

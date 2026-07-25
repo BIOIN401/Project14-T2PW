@@ -173,6 +173,17 @@ _SEED = {
     "gap_terms": ["7-methylxanthine"],
 }
 
+# A novel/ambiguous seed: Stage 0 could name no pathway, compounds, proteins,
+# gaps OR organism -> total_terms == 0 and seed_org == "". Such a seed carries
+# no signal to prove a candidate off-topic (C2).
+_SPARSE_SEED = {
+    "pathway_name": "",
+    "likely_organism": "",
+    "key_compounds": [],
+    "key_proteins": [],
+    "gap_terms": [],
+}
+
 
 def _paper(pid: str, marker: str, *, title: str = "", organism: str = "") -> CandidatePaper:
     return CandidatePaper(
@@ -356,3 +367,70 @@ def test_select_survives_a_failing_preprocess(monkeypatch: pytest.MonkeyPatch) -
     result = select(candidates, _SEED, max_papers=8)  # must not raise
     assert "PMC1" in result.scores and "PMCBOOM" in result.scores
     assert any(e.paper_id == "PMC1" and e.kept for e in result.selection_report)
+
+
+# ---------------------------------------------------------------------------
+# Issue C — related papers must be selectable (C1 scope threading, C2 sparse
+# seed penalty downgrade).
+# ---------------------------------------------------------------------------
+def test_select_threads_seed_scope_into_candidate_preprocess(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # C1: select() must thread the seed's scope (selected_example, else
+    # pathway_name) into each candidate's preprocess. A review about the seed
+    # pathway then reaches the matched-example case (Case B, 0.25 penalty) and
+    # survives the floor, instead of collapsing to a blank-scope no-match review
+    # (Case C, 1.0 penalty) and being force-dropped.
+    seen_ctx: List[Any] = []
+
+    def _scope_aware(text: str, *, user_task_context: Any = None, **_: Any) -> Dict[str, Any]:
+        if "REVIEW_SCOPED" in text:
+            seen_ctx.append(user_task_context)
+            focus = str(user_task_context or "").casefold()
+            # With the seed's focus threaded in, the review resolves to a
+            # seed-matching example; without it, it is a blank-scope no-match.
+            if "caffeine" in focus:
+                return dict(_PREPROCESS_TABLE["REVIEW_MATCH"])
+            return dict(_PREPROCESS_TABLE["REVIEW_NO_MATCH"])
+        return _fake_preprocess(text)
+
+    monkeypatch.setattr(select_mod, "preprocess", _scope_aware)
+    candidates = [
+        _paper("PMC_PRIMARY", "CAFFEINE_PRIMARY"),
+        _paper("PMC_REVIEW", "REVIEW_SCOPED"),
+    ]
+    result = select(candidates, _SEED, max_papers=8)
+
+    # The seed's pathway_name was threaded into the candidate preprocess call.
+    assert any("caffeine" in str(c or "").casefold() for c in seen_ctx)
+
+    kept_ids = [p.id for p in result.selected]
+    assert "PMC_REVIEW" in kept_ids  # example-scoped, kept (not force-dropped)
+    review_score = result.scores["PMC_REVIEW"]
+    assert review_score.review_penalty == pytest.approx(
+        select_mod._REVIEW_PENALTY_MATCH
+    )
+    assert review_score.score >= select_mod._MIN_SCORE
+
+
+def test_sparse_seed_downgrades_no_match_review_and_keeps_it() -> None:
+    # C2: a sparse seed (blank scope AND blank organism -> total_terms == 0,
+    # seed_org == "") cannot prove a review off-topic, so the force-drop no-match
+    # penalty (1.0) is downgraded to the rank-below penalty (0.25); the review
+    # then survives the floor instead of being force-dropped.
+    score = score_candidate(_paper("PMC_REVIEW", "REVIEW_NO_MATCH"), _SPARSE_SEED)
+    assert score.document_type == "multi_example_review"
+    assert score.review_penalty == pytest.approx(select_mod._REVIEW_PENALTY_MATCH)
+    assert score.score >= select_mod._MIN_SCORE
+
+    # And at the select level the sparse-seed review is kept, not dropped.
+    result = select([_paper("PMC_REVIEW", "REVIEW_NO_MATCH")], _SPARSE_SEED, max_papers=8)
+    assert "PMC_REVIEW" in [p.id for p in result.selected]
+
+
+def test_signal_bearing_seed_keeps_full_no_match_penalty() -> None:
+    # Guard the C2 gate: when the seed HAS signal (the norm), a no-match review
+    # keeps the full 1.0 penalty and is still force-dropped below the floor.
+    score = score_candidate(_paper("PMC_REVIEW", "REVIEW_NO_MATCH"), _SEED)
+    assert score.review_penalty == pytest.approx(select_mod._REVIEW_PENALTY_NO_MATCH)
+    assert score.score < select_mod._MIN_SCORE

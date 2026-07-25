@@ -257,18 +257,28 @@ def _candidate_text(candidate: CandidatePaper) -> str:
     return text[:_MAX_PREPROCESS_CHARS]
 
 
-def _candidate_context(candidate: CandidatePaper) -> Dict[str, Any]:
+def _candidate_context(
+    candidate: CandidatePaper,
+    *,
+    user_task_context: Optional[str] = None,
+) -> Dict[str, Any]:
     """Run the reused preprocessor on the candidate; blank text -> empty context.
 
     Short-circuiting empty text avoids a needless LLM call and keeps a
     text-less candidate deterministic.
+
+    ``user_task_context`` threads the seed's scope (its chosen example or
+    pathway name) into the per-candidate ``preprocess`` call so a review
+    abstract about the seed pathway can reach the matched-example case (Case B)
+    rather than deterministically collapsing to a blank-scope multi-example
+    review (Case C) and eating the force-drop no-match penalty.
     """
     text = _candidate_text(candidate)
     if not text:
         ctx: Dict[str, Any] = {}
     else:
         try:
-            ctx = _safe_dict(preprocess(text))
+            ctx = _safe_dict(preprocess(text, user_task_context=user_task_context))
         except Exception:  # noqa: BLE001 - one flaky preprocess (rate limit, timeout)
             # must not sink the whole selection; degrade this candidate to an
             # organism-only context rather than aborting the entire RAG run.
@@ -344,6 +354,7 @@ def score_candidate(
     seed_context: Dict[str, Any],
     *,
     candidate_context: Optional[Dict[str, Any]] = None,
+    user_task_context: Optional[str] = None,
 ) -> SelectionScore:
     """Score one candidate against the seed context -> :class:`SelectionScore`.
 
@@ -352,12 +363,14 @@ def score_candidate(
     ``multi_example_review`` with no seed-matching example. Pass
     ``candidate_context`` to reuse an already-computed ``preprocess`` result
     (``select`` does this so it preprocesses each candidate exactly once); when
-    omitted the reused preprocessor is run here.
+    omitted the reused preprocessor is run here. ``user_task_context`` (the
+    seed's scope) is forwarded to that standalone ``preprocess`` call so it is
+    only consulted when ``candidate_context`` is not supplied.
     """
     cand_ctx = (
         _safe_dict(candidate_context)
         if candidate_context is not None
-        else _candidate_context(candidate)
+        else _candidate_context(candidate, user_task_context=user_task_context)
     )
 
     seed = _seed_terms(seed_context)
@@ -381,6 +394,14 @@ def score_candidate(
 
     review = _review_assessment(cand_ctx, seed, seed_org)
     penalty = float(review["penalty"])
+    # Sparse seed (novel/ambiguous pathway with blank scope AND no organism)
+    # cannot *prove* a review off-topic — there are no seed terms to fail to
+    # match — so downgrade the force-drop no-match penalty to the rank-below
+    # penalty. When the seed HAS signal (the norm), the full 1.0 penalty stands
+    # and genuinely off-topic reviews still drop.
+    seed_has_signal = total_terms > 0 or bool(seed_org)
+    if penalty == _REVIEW_PENALTY_NO_MATCH and not seed_has_signal:
+        penalty = _REVIEW_PENALTY_MATCH
 
     base = (
         _W_ORGANISM * organism_match
@@ -456,13 +477,25 @@ def select(
         else int(rag_config()["select_max_papers"])
     )
 
+    # The seed's scope (chosen example, else pathway name) is threaded into each
+    # candidate's preprocess so a review about the seed pathway reaches the
+    # matched-example case instead of collapsing to a blank-scope Case C.
+    seed_focus = str(
+        seed_context.get("selected_example")
+        or seed_context.get("pathway_name")
+        or ""
+    ).strip() or None
+
     # 1) Score every candidate (preprocess each exactly once).
     scored: List[tuple] = []
     scores: Dict[str, SelectionScore] = {}
     for idx, candidate in enumerate(candidates):
-        cand_ctx = _candidate_context(candidate)
+        cand_ctx = _candidate_context(candidate, user_task_context=seed_focus)
         score = score_candidate(
-            candidate, seed_context, candidate_context=cand_ctx
+            candidate,
+            seed_context,
+            candidate_context=cand_ctx,
+            user_task_context=seed_focus,
         )
         scores[candidate.id] = score
         # idx is the stable tie-breaker's last resort (preserves input order for

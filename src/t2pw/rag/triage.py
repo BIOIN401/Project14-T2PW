@@ -36,17 +36,44 @@ __all__ = ["TriageDecision", "should_run_rag", "LOW_SCOPE_CLARITY"]
 # papers is warranted.
 LOW_SCOPE_CLARITY = 0.5
 
-# Gap kinds (WP4 classification) that mark an *incomplete* pathway graph and so
-# justify auto-triggering RAG. These mirror the categories named in the brief:
-# dangling reactions, orphan metabolites, unmapped enzymes (plus the two other
-# incompleteness signals WP4 also emits).
+# Gap kinds (WP4 classification) that AUTO-TRIGGER RAG when the UI toggle is OFF
+# and should_run_rag is left to decide from graph signals alone. These are the
+# *strong* structural-incompleteness signals only: a reaction with no partner
+# (dangling_reaction), an enzyme that never resolved (unmapped_enzyme), or a
+# missing upstream feeder (missing_precursor). ``missing_compartment`` /
+# ``orphan_metabolite`` are excluded — they occur in most healthy pathways.
 _INCOMPLETE_GAP_KINDS = {
     "dangling_reaction",
-    "orphan_metabolite",
     "unmapped_enzyme",
     "missing_precursor",
-    "missing_compartment",
 }
+
+# Gap SOURCES trustworthy enough to AUTO-START RAG unattended. This is the
+# load-bearing filter, not the kind set above.
+#
+# The orchestrator runs triage at the R0 seam — BEFORE Stage-6 id mapping — and
+# feeds it a ``qa_graph`` computed on the raw Stage-1 payload (streamlit_app.py:
+# maybe_run_rag call site). On that pre-mapping payload EVERY structural gap kind
+# is ubiquitous, so the kind set alone cannot tell an incomplete pathway from a
+# healthy one:
+#   * ``unmapped_enzyme`` — derived from ``flags.missing_ids``: no entity carries
+#     mapped_ids yet (mapping is Stage 6), so it fires for *every* protein.
+#   * ``missing_precursor`` — from ``flags.empty_reactions``: shape-fragile.
+#   * ``dangling_reaction`` / ``orphan_metabolite`` — from connectivity: *every*
+#     pathway has an entry substrate and a terminal product (open ends), which are
+#     exactly what gap RETRIEVAL later searches to extend the pathway. Universal
+#     by design, not a sign of incompleteness.
+# So a gap is only allowed to START RAG when it comes from a POST-resolution
+# report — the Stage-3 ``gate`` errors or the ``mapping`` report — where
+# "unmapped" means an entity that genuinely failed to resolve, not one that simply
+# has not been mapped yet. The pre-mapping ``qa_graph`` / payload-connectivity
+# gaps still drive gap RETRIEVAL once RAG is running; they just must not be the
+# thing that starts it. Because the current orchestrator supplies only a
+# pre-mapping ``qa_graph``, the effective auto-trigger today is
+# ``scope_clarity_score`` (an ambiguous/novel seed) — the one reliable signal at
+# this seam — plus the explicit user flag; a reliable gap-based auto-start becomes
+# live the moment a gate/mapping report is wired into the reports mapping.
+_AUTO_TRIGGER_GAP_SOURCES = {"gate", "mapping"}
 
 
 @dataclass
@@ -104,7 +131,11 @@ def _gap_signals(reports: Dict[str, Any]) -> List[str]:
     counts: Dict[str, int] = {}
     for gap in gaps:
         kind = getattr(gap, "kind", "")
-        if kind in _INCOMPLETE_GAP_KINDS:
+        source = getattr(gap, "source", "")
+        # Both filters are required: a *strong* kind AND a *reliable* (post-
+        # resolution) source. Pre-mapping qa_graph / payload-connectivity gaps are
+        # ubiquitous and must not auto-start RAG — see _AUTO_TRIGGER_GAP_SOURCES.
+        if kind in _INCOMPLETE_GAP_KINDS and source in _AUTO_TRIGGER_GAP_SOURCES:
             counts[kind] = counts.get(kind, 0) + 1
 
     return [f"{kind} x{counts[kind]}" for kind in sorted(counts)]
@@ -124,11 +155,17 @@ def should_run_rag(
     optionally, the seed ``payload`` — inspected via the WP4 gap detector.
 
     An explicit flag always triggers RAG. Otherwise RAG auto-triggers when the
-    Stage-0 scope clarity is below :data:`LOW_SCOPE_CLARITY`, or when any
-    incomplete-graph gap (dangling reaction, orphan metabolite, unmapped enzyme,
-    …) is present in ``reports``. A clear, complete pathway returns ``run=False``
-    and RAG never runs — the orchestrator falls through to today's single-paper
-    flow, untouched.
+    Stage-0 scope clarity is below :data:`LOW_SCOPE_CLARITY` (an ambiguous/novel
+    seed), or when a *strong* structural-incompleteness gap
+    (:data:`_INCOMPLETE_GAP_KINDS`) is reported from a *reliable, post-resolution*
+    source (:data:`_AUTO_TRIGGER_GAP_SOURCES` — the Stage-3 ``gate`` or the
+    ``mapping`` report). Gaps derived from a pre-mapping ``qa_graph`` / payload
+    connectivity are intentionally NOT auto-triggers: they are ubiquitous on the
+    unmapped Stage-1 payload the orchestrator supplies (every enzyme is unmapped,
+    every pathway has open ends) and would fire on essentially every pathway.
+    Scope clarity is therefore the effective auto-trigger at the current R0 seam.
+    A clear, complete pathway returns ``run=False`` and RAG never runs — the
+    orchestrator falls through to today's single-paper flow, untouched.
     """
     if user_flag:
         return TriageDecision(

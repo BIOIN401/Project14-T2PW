@@ -5,6 +5,172 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## RAG contract-compliance fixes (2026-07-25, branch `rag-contract-fixes`)
+
+Implements the approved fixes from `docs/contract_compliance_audit_2026-07-25.md`
+for the regressions the RAG subsystem introduced against the PWML pipeline
+contracts. Functional blockers **A** (wrapper regression), **B** (guardrails never
+auto-run), and **C** (papers rejected) were implemented. Issue **E** was
+implemented then **reverted** — see below. The prompt-injection hardening (issue
+**D**) was **deliberately deferred** — it does not affect PWML correctness or RAG
+function, is the most invasive (core + curation files), and none of these fixes
+open a new injection surface (issue C routes user text through the
+already-neutralizing `_format_user_task_context`).
+
+An adversarial multi-lens review of the diff **caught a real defect the audit's own
+§6.B eye-test missed**: narrowing the auto-trigger *gap kinds* was insufficient,
+because the orchestrator feeds triage a `qa_graph` built on the **pre-mapping**
+Stage-1 payload, where `unmapped_enzyme` (every enzyme is unmapped before Stage 6)
+and the connectivity gaps (every pathway has open ends) are ubiquitous — so RAG
+still auto-fired on essentially every pathway. The corrective fix (below, in B)
+filters the auto-trigger to *reliable, post-resolution* gap sources; the effective
+auto-trigger at the R0 seam is now `scope_clarity_score` plus the explicit flag.
+
+No gate/contract was weakened; the separation invariant holds (no core stage
+imports `t2pw.rag`); the `RAG_ENABLED` code default stays `False` (regression
+firewall) and `RAG_ENABLED=false` behavior is byte-for-byte preserved (verified:
+full suite green with `RAG_ENABLED=false`). Baseline before these fixes: 614 tests
+passing; after: **626 passing** (+12 regression tests, incl. the pre-mapping
+auto-trigger regression test).
+
+### A. Protein-complex wrapper regression — stale `enzyme_complexes` cache
+
+**Error.** With RAG-supplied enzymes, `validate_post_remap`
+(`stage_contracts.py:226-273`) and the pre-export PWML gate (`pwml/ir.py:2246-2336`)
+again raised `generated_wrapper_component_protein_unresolved` /
+`generated_wrapper_component_missing_species` /
+`generated_wrapper_component_missing_external_identity` — the "protein complex
+wrapper bug is abck" recurrence (audit §2.A / §6.A). No source change reintroduced
+it.
+
+**Why.** `_resolve_complex_name` (`map_ids.py`) reused a cached `enzyme_complexes`
+row verbatim on a hit, bypassing the DB re-resolution path and its guards.
+`data/id_mapping_cache.json` held 19 legacy rows with top-level
+`chosen_rule: "novel_enzyme_single_component_complex"`, `status: "unmapped"`, and
+NO `generated` flag (they predate the flag). `is_generated_complex_wrapper`
+correctly flags these as generated wrappers via its legacy `chosen_rule` fallback,
+and `_merge_complex_resolution_into_row` copies `generated` only when present — so
+every run re-flagged them as wrappers whose unmapped members failed the
+wrapper-integrity gates.
+
+**Fix (the data is bad, not the classifier).** (1) Purged all 19 stale
+`enzyme_complexes` rows from `data/id_mapping_cache.json` (regenerable derived data;
+other namespaces preserved byte-for-byte). (2) Added a durable read-side guard
+`_is_reusable_complex_cache_row(row)` used at the cache read: a non-wrapper
+(real DB-resolved) row is always reused; a generated-wrapper-shaped row is reused
+only if it carries `generated: True`, has species context
+(`protein_species_context`), and every component carries the exact UniProt/DrugBank
+identity the gates require (`has_protein_external_identity` — matching the gate, not
+gene-only; this was tightened from `_component_mapped_ids` after the adversarial
+review flagged the gene-only divergence). Any other wrapper-shaped row is treated
+as a cache miss and re-resolved, and the existing `cache.set(...)` self-heals the
+stored entry — converting a downstream gate abort into an upstream self-heal. The
+predicate is deliberately **conservative** (reuse only provably-good rows;
+re-resolve everything else): because it checks the cache row's own component rather
+than the declared payload protein the gates resolve to, it can only ever be
+*stricter* than the gates, never looser — so it never lets a gate-failing wrapper be
+reused, and re-resolution is idempotent/self-healing. Files:
+`src/t2pw/mapping/map_ids.py`, `data/id_mapping_cache.json`,
+`tests/test_map_ids.py` (+6 tests).
+
+### B. RAG scope/gap guardrails were unreachable dead code
+
+**Error.** With RAG enabled, the scope/gap auto-triage in `should_run_rag` could
+never decide anything: the orchestrator only entered the RAG block when the UI
+toggle was on (`if rag_config()["enabled"] and rag_incomplete_flag:`) and then
+passed that flag as `user_flag`, which short-circuits `should_run_rag` — so RAG ran
+iff the checkbox was on and never auto-started from the guardrails (audit §2.B /
+§6.B).
+
+**Why.** The gate double-guarded on the per-run toggle in addition to the deploy
+switch, collapsing "auto-decide" into "user said so."
+
+**Fix.** Dropped the `and rag_incomplete_flag` clause from the orchestrator gate
+(`src/t2pw/app/streamlit_app.py`) → `if rag_config()["enabled"]:`. The
+`rag_config()["enabled"]` guard is kept (RAG-off stays byte-for-byte today's
+single-paper behavior); `user_flag=bool(rag_incomplete_flag)` is kept, so an ON
+toggle still force-runs RAG while an OFF toggle lets `should_run_rag(user_flag=False)`
+auto-decide from scope/gap signals. Toggle help text + gate comment rewritten to the
+new "OFF = auto-decide" semantics.
+
+**Load-bearing amendment (paired with the gate-open).** Opening the gate means a
+toggle-OFF run calls `should_run_rag(user_flag=False)`, which must reliably tell an
+incomplete pathway from a healthy one. The first attempt narrowed the auto-trigger
+gap *kinds* to `dangling_reaction`/`unmapped_enzyme`/`missing_precursor`
+(excluding the obviously-noisy `missing_compartment`/`orphan_metabolite`). The
+adversarial review proved this insufficient: the orchestrator supplies triage a
+`qa_graph` built on the **pre-mapping** Stage-1 payload, where `unmapped_enzyme`
+(from `flags.missing_ids` — every enzyme is unmapped before Stage 6) and the
+connectivity gaps `dangling_reaction`/`orphan_metabolite` (every pathway has an
+entry substrate and terminal product = open ends) are all ubiquitous. RAG still
+auto-fired on essentially every protein-containing pathway (reproduced:
+`run=True, 'missing_precursor x3; unmapped_enzyme x17'` on a complete sample).
+
+The **actual fix** is a *source* filter, not a kind filter: `_gap_signals`
+(`src/t2pw/rag/triage.py`) now counts a gap toward the auto-trigger only when it
+comes from a reliable **post-resolution** source (`_AUTO_TRIGGER_GAP_SOURCES =
+{"gate", "mapping"}`), where "unmapped" means genuinely failed to resolve — not the
+pre-mapping `qa_graph`/`payload` sources where the same signals are universal. The
+kind narrowing is kept as a second filter. Gap *retrieval* once RAG is running is
+untouched (it uses `retrieve.detect_gaps` directly on the full gap set). The
+`scope_clarity_score < 0.5` trigger is unchanged and, since the orchestrator
+currently supplies only a pre-mapping `qa_graph`, it (plus the explicit flag) is
+the effective auto-trigger today; a reliable gap-based auto-start goes live the
+moment a gate/mapping report is wired into the reports mapping. Tests:
+`test_orphan_metabolite_report_...` / `..._missing_compartment_...` /
+`..._dangling_reaction_qa_report_...` / `..._missing_precursor_qa_report_...` all
+assert **no** auto-fire from a pre-mapping `qa_graph`;
+`test_unmapped_enzyme_mapping_report_auto_triggers` asserts a `mapping`-sourced gap
+still fires; and `test_pre_mapping_qa_report_does_not_auto_trigger` is the direct
+regression test for the reproduced defect. Files:
+`src/t2pw/app/streamlit_app.py`, `src/t2pw/rag/triage.py`,
+`tests/test_rag_triage_orchestration.py`.
+
+### E. `_EMPTY_CONTEXT` scope fields — implemented then REVERTED
+
+Issue E (audit §2.E / §6.E) proposed adding `document_type`/`scope_status` to
+`_EMPTY_CONTEXT` so a failed Stage-0 context is distinguishable from a clear one.
+It was implemented (both keys, truthiness-guarded in `format_context_header`) and
+then **reverted** after the adversarial review, for two reasons: (1) it fixes
+nothing functional — triage's low-clarity trigger reads `scope_clarity_score`, which
+§6.E deliberately does NOT add, so a failed preprocess still (correctly) does not
+auto-fire RAG with or without these keys; and (2) it was the only change with a
+byte-identity wrinkle — `completeness_audit._build_user_prompt` does
+`json.dumps(preprocessor_context)` over the whole context, so on Stage-0-failure
+paths the two new empty keys would appear in that core (non-RAG) audit prompt,
+technically breaking the "RAG-off byte-for-byte" guarantee. Reverting keeps the
+change surgical and preserves strict byte-identity. `src/t2pw/pipeline/preprocessor.py`
+is therefore unchanged on this branch.
+
+### C. Related papers were structurally un-selectable (RAG kept ~0 papers)
+
+**Error.** RAG kept almost no candidate papers (audit §2.C / §6.C), due to two
+compounding mechanisms in `src/t2pw/rag/select.py`.
+
+**Why + fix.**
+- **C1 — candidates re-preprocessed with no scope.** `_candidate_context` re-ran
+  Stage-0 `preprocess` on each candidate abstract without scoping context, so a
+  review abstract deterministically fell to Case C (`multi_example_review`, blank
+  scope), found no matching example, and ate `_REVIEW_PENALTY_NO_MATCH = 1.0` →
+  driven below the `_MIN_SCORE = 0.0` floor → dropped. Fix: added `user_task_context`
+  kwarg to `_candidate_context`/`score_candidate`, forwarded to `preprocess`;
+  `select()` derives `seed_focus` once (`selected_example` else `pathway_name`) and
+  threads it per candidate. A review about the seed pathway now reaches Case B
+  (matched example) → `_REVIEW_PENALTY_MATCH = 0.25` (rank-below) instead of a
+  force-drop.
+- **C2 — sparse seed collapsed scoring.** When the seed is novel/ambiguous (blank
+  pathway/compounds/proteins + blank organism → `total_terms == 0`, `seed_org == ""`),
+  it cannot prove a review off-topic. `score_candidate` now downgrades the 1.0
+  no-match penalty to 0.25 in exactly that case
+  (`seed_has_signal = total_terms > 0 or bool(seed_org)`), gating the penalty — not
+  `_MIN_SCORE`, so zero-signal *primary* papers still drop. When the seed has signal
+  (the norm) the full 1.0 penalty is preserved.
+  C3 (`acquire.search_candidates` short-circuits to `[]` on a term-less seed) is left
+  unchanged by design. Files: `src/t2pw/rag/select.py`, `tests/test_rag_select.py`
+  (+3 tests).
+
+---
+
 ## Known Debt — Runtime Contract Audit (2026-07-24, diagnostic; NOT a fix)
 
 A read-only sweep ran the runtime payload schema

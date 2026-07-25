@@ -20,7 +20,9 @@ from t2pw.pipeline.entity_identity import (
     PATHBANK_UNKNOWN_PROTEIN_UNIPROT,
     component_stoichiometry,
     has_protein_external_identity,
+    is_generated_complex_wrapper,
     is_pathbank_unknown_protein,
+    protein_species_context,
     route_entity_for_mapping,
 )
 
@@ -4481,6 +4483,51 @@ def _reaction_actor_name_and_type(row: Any) -> Tuple[str, str, str]:
     return "", "", role
 
 
+def _is_reusable_complex_cache_row(row: Any) -> bool:
+    """Whether a cached ``enzyme_complexes`` row can be reused verbatim.
+
+    The wrapper-integrity gates (``validate_post_remap`` in ``stage_contracts.py``
+    lines 226-273 and the ``generated_wrapper_component_*`` /
+    ``generated_complex_component_*`` checks in ``pwml/ir.py`` lines 2246-2336)
+    fire only for generated-complex wrappers, and only when a component's declared
+    protein lacks species context or a UniProt/DrugBank external identity.
+
+    This predicate is deliberately **conservative**: it reuses a cache hit only
+    when the row is provably one the gates would accept, and treats every other
+    wrapper-shaped row as a miss so the resolution path re-derives and self-heals
+    it (a safe upstream re-resolution instead of a downstream gate abort). Concretely:
+
+    * A row that is not a generated-complex wrapper is a real DB-resolved complex
+      and is always reused as-is.
+    * A generated-wrapper-shaped row is reusable only when it carries the
+      authoritative ``generated`` flag, has species context
+      (:func:`protein_species_context`), and every component carries the exact
+      UniProt/DrugBank identity the gates require
+      (:func:`has_protein_external_identity`, matching the gate — NOT gene-only).
+
+    Note this checks identity/species on the cache row's own component, whereas the
+    gates resolve each component to a declared payload protein and check it there.
+    That difference can only make the predicate *stricter* than the gates (a legacy
+    row whose bare-name component would resolve to a good declared protein is
+    re-resolved rather than reused) — never looser, so it never lets a
+    gate-failing wrapper be reused. Re-resolution is idempotent and self-healing;
+    after the one-time cache purge no such row exists anyway.
+    """
+
+    if not isinstance(row, dict):
+        return False
+    if not is_generated_complex_wrapper(row):
+        return True
+    if row.get("generated") is not True:
+        return False
+    if not protein_species_context(row):
+        return False
+    components = _safe_list(row.get("components"))
+    if not components:
+        return False
+    return all(has_protein_external_identity(component) for component in components)
+
+
 def _merge_complex_resolution_into_row(
     complex_row: Dict[str, Any],
     result: Dict[str, Any],
@@ -4696,6 +4743,8 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             return cache_key_to_name[cache_key], {}
 
         cached = cache.get("enzyme_complexes", cache_key)
+        if cached is not None and not _is_reusable_complex_cache_row(cached):
+            cached = None  # stale/legacy malformed wrapper row -> re-resolve & self-heal
         if cached is None:
             if db and db.available():
                 cached = db.map_enzyme_protein_to_complex({**protein_row, "name": protein_name}, species)

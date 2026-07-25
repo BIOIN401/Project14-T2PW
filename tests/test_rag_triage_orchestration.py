@@ -3,8 +3,11 @@
 Two things are proven here:
 
 1. ``t2pw.rag.triage.should_run_rag`` — explicit flag on -> run; auto-triggers
-   (low ``scope_clarity_score`` / dangling reaction / orphan metabolite /
-   unmapped enzyme) -> run with a reason; a clean, in-scope pathway -> no run.
+   on a low ``scope_clarity_score`` or a strong gap from a *reliable* (post-
+   resolution ``gate`` / ``mapping``) source -> run with a reason. Gaps derived
+   from a pre-mapping ``qa_graph`` (ubiquitous: every enzyme unmapped, every
+   pathway has open ends) do NOT auto-start RAG; a clean, in-scope pathway -> no
+   run.
 2. The orchestrator's guard: with ``RAG_ENABLED`` off, the thin app helper
    ``maybe_run_rag`` returns ``None`` (today's flow, untouched) and never enters
    the RAG chain (``acquire`` is not called); with RAG on + the flag, the chain
@@ -81,25 +84,80 @@ def test_low_scope_clarity_auto_triggers() -> None:
     assert any("scope_clarity_score" in s for s in decision.signals)
 
 
-def test_dangling_reaction_report_auto_triggers() -> None:
+def test_dangling_reaction_qa_report_does_not_auto_trigger() -> None:
+    # A dangling_reaction derived from a pre-mapping qa_graph (source "qa_graph")
+    # must NOT auto-start RAG: every pathway's entry substrate / terminal product
+    # is an "open end", so connectivity gaps are ubiquitous on the seed payload.
+    # They drive gap RETRIEVAL once RAG runs; they are not a reliable trigger.
     reports = {"qa_graph": {"dangling_nodes": [{"node": "reaction:#1"}]}}
     decision = should_run_rag({"scope_clarity_score": 0.9}, False, reports)
-    assert decision.run is True
-    assert any("dangling_reaction" in s for s in decision.signals)
+    assert decision.run is False
+    assert not any("dangling_reaction" in s for s in decision.signals)
 
 
-def test_orphan_metabolite_report_auto_triggers() -> None:
+def test_orphan_metabolite_report_does_not_auto_trigger() -> None:
+    # AMENDED SEMANTICS (audit §6.B): orphan_metabolite is a high-frequency signal
+    # (terminal/boundary metabolites emit it in most healthy pathways), so it is
+    # deliberately NOT in the auto-trigger set. With the toggle OFF (user_flag
+    # False) and a clear scope, an orphan-metabolite-only report must NOT start RAG.
     reports = {"qa_graph": {"dangling_nodes": [{"node": "compound:pyruvate"}]}}
     decision = should_run_rag({"scope_clarity_score": 0.9}, False, reports)
-    assert decision.run is True
-    assert any("orphan_metabolite" in s for s in decision.signals)
+    assert decision.run is False
+    assert not any("orphan_metabolite" in s for s in decision.signals)
 
 
-def test_unmapped_enzyme_report_auto_triggers() -> None:
+def test_missing_compartment_only_report_does_not_auto_trigger() -> None:
+    # missing_compartment is emitted (via detect_gaps) for any entity with no
+    # recorded subcellular location — common in healthy pathways — so it too is
+    # excluded from the auto-trigger set. A report carrying ONLY that signal must
+    # NOT start RAG.
+    reports = {"qa_graph": {"flags": {"missing_compartments": [{"entity": "pyruvate"}]}}}
+    decision = should_run_rag({"scope_clarity_score": 0.9}, False, reports)
+    assert decision.run is False
+    assert not any("missing_compartment" in s for s in decision.signals)
+
+
+def test_missing_precursor_qa_report_does_not_auto_trigger() -> None:
+    # missing_precursor derived from a pre-mapping qa_graph (flags.empty_reactions,
+    # source "qa_graph") is shape-fragile and must NOT auto-start RAG. Only a
+    # post-resolution gate/mapping source is trusted to auto-start.
+    reports = {"qa_graph": {"flags": {"empty_reactions": [{"reaction": "queuine synthase reaction"}]}}}
+    decision = should_run_rag({"scope_clarity_score": 0.9}, False, reports)
+    assert decision.run is False
+    assert not any("missing_precursor" in s for s in decision.signals)
+
+
+def test_unmapped_enzyme_mapping_report_auto_triggers() -> None:
+    # A genuinely-unmapped enzyme from a POST-resolution `mapping` report (source
+    # "mapping", status="unmapped" == failed to resolve) IS a reliable auto-trigger.
+    # This is the reliable-source counterpart to the pre-mapping qa_graph case below.
     reports = {"mapping": {"unmapped": [{"name": "NdmA", "type": "protein", "status": "unmapped"}]}}
     decision = should_run_rag({"scope_clarity_score": 0.9}, False, reports)
     assert decision.run is True
     assert any("unmapped_enzyme" in s for s in decision.signals)
+
+
+def test_pre_mapping_qa_report_does_not_auto_trigger() -> None:
+    # REGRESSION (adversarial review 2026-07-25): the orchestrator feeds triage a
+    # qa_graph computed on the PRE-mapping Stage-1 payload, where NO entity has
+    # mapped_ids yet -> flags.missing_ids lists every protein -> detect_gaps emits
+    # unmapped_enzyme for all of them (and missing_precursor for empty reactions).
+    # Before the source filter this auto-fired the whole R1-R5 chain on essentially
+    # every protein-containing pathway with the toggle OFF. A clear-scope pathway
+    # whose only "gaps" come from this pre-mapping qa_graph must NOT auto-start RAG.
+    reports = {
+        "qa_graph": {
+            "flags": {
+                "missing_ids": [
+                    {"entity": f"Enzyme{i}", "type": "protein"} for i in range(17)
+                ],
+                "empty_reactions": [{"reaction": "rxn 1"}, {"reaction": "rxn 2"}],
+            }
+        }
+    }
+    decision = should_run_rag({"scope_clarity_score": 1.0}, False, reports)
+    assert decision.run is False, f"pre-mapping qa_graph must not auto-fire: {decision.reason}"
+    assert decision.signals == []
 
 
 def test_clean_complete_pathway_does_not_run() -> None:

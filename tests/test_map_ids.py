@@ -17,6 +17,7 @@ from t2pw.mapping.map_ids import (  # noqa: E402
     _europepmc_full_text,
     _extract_aliases_from_literature_text,
     _extract_uniprot_candidates,
+    _is_reusable_complex_cache_row,
     _map_protein_with_strategy,
     _protein_alias_entries,
     _reconcile_components_against_local_proteins,
@@ -1175,3 +1176,128 @@ def test_reaction_enzyme_rewrite_does_not_generate_wrapper_without_component_ide
     assert report["summary"]["reaction_enzyme_complexes_skipped_invalid_component"] == 1
     assert report["actions"][0]["type"] == "reaction_enzyme_complex_wrapper_skipped_invalid_component"
     assert report["actions"][0]["missing"] == ["uniprot_or_drugbank"]
+
+
+def _legacy_malformed_wrapper_cache_row() -> Dict[str, Any]:
+    """A legacy ``enzyme_complexes`` cache row predating the ``generated`` flag.
+
+    Mirrors the 19 stale rows purged from ``data/id_mapping_cache.json``: a
+    top-level ``chosen_rule: novel_enzyme_single_component_complex`` (so
+    ``is_generated_complex_wrapper`` flags it via the legacy fallback), NO
+    ``generated`` flag, no species context, and a component with no external id.
+    """
+    return {
+        "status": "unmapped",
+        "reason": "novel_complex",
+        "provider": "PathBankDB",
+        "source": "db",
+        "confidence": 0.0,
+        "chosen_rule": "novel_enzyme_single_component_complex",
+        "candidates": [],
+        "name": "NdmA complex",
+        "species_id": None,
+        "components": [{"name": "NdmA", "stoichiometry": 1}],
+        "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_enzyme_single_component_complex",
+        },
+    }
+
+
+def test_legacy_malformed_wrapper_cache_row_is_not_reusable() -> None:
+    row = _legacy_malformed_wrapper_cache_row()
+    # Wrapper-shaped (legacy chosen_rule fallback) but missing the authoritative
+    # generated flag, species context, and component identity -> not reusable.
+    assert _is_reusable_complex_cache_row(row) is False
+
+
+def test_wrapper_cache_row_without_component_identity_is_not_reusable() -> None:
+    row = _legacy_malformed_wrapper_cache_row()
+    row["generated"] = True
+    row["species_id"] = 541
+    # Has the flag + species, but the component still carries no external identity.
+    assert _is_reusable_complex_cache_row(row) is False
+
+
+def test_wrapper_cache_row_without_species_is_not_reusable() -> None:
+    row = _legacy_malformed_wrapper_cache_row()
+    row["generated"] = True
+    row["components"] = [{"name": "NdmA", "mapped_ids": {"uniprot": "H9N289"}, "stoichiometry": 1}]
+    # Has the flag + component identity, but no species context.
+    assert _is_reusable_complex_cache_row(row) is False
+
+
+def test_well_formed_generated_wrapper_cache_row_is_reusable() -> None:
+    row = {
+        "generated": True,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "chosen_rule": "novel_enzyme_single_component_complex",
+        "name": "NdmA complex",
+        "species": "Pseudomonas putida",
+        "species_id": 541,
+        "components": [{"name": "NdmA", "mapped_ids": {"uniprot": "H9N289"}, "stoichiometry": 1}],
+    }
+    assert _is_reusable_complex_cache_row(row) is True
+
+
+def test_db_resolved_complex_cache_row_is_reused_as_is() -> None:
+    # A real DB-resolved complex (not a generated wrapper) is always reusable,
+    # even without the generated flag / component mapped_ids on the cache row.
+    row = {
+        "status": "mapped",
+        "chosen_rule": "pathbank_protein_complex_exact",
+        "pathbank_protein_complex_id": 3607,
+        "name": "pyruvate dehydrogenase complex",
+        "species": "Homo sapiens",
+        "components": [{"name": "pyruvate dehydrogenase E1", "stoichiometry": 1}],
+    }
+    assert _is_reusable_complex_cache_row(row) is True
+
+
+def test_resolve_complex_name_treats_stale_wrapper_cache_row_as_miss_and_self_heals() -> None:
+    # A valid local protein (uniprot + species) passes the pre-resolution skip
+    # guard so _resolve_complex_name is reached; a stale malformed wrapper row is
+    # pre-seeded under the exact cache key it will look up.
+    mapped = {
+        "entities": {
+            "proteins": [
+                {
+                    "name": "NdmA",
+                    "species": "Pseudomonas putida",
+                    "mapped_ids": {"uniprot": "A0A000"},
+                }
+            ],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {"name": "caffeine demethylation", "enzymes": [{"protein": "NdmA"}]},
+            ]
+        },
+    }
+
+    cache = _MemoryCache()
+    cache_key = "ndma::::pseudomonas putida"
+    cache.set("enzyme_complexes", cache_key, _legacy_malformed_wrapper_cache_row())
+
+    report = _rewrite_reaction_protein_enzymes_to_complexes(
+        mapped,
+        db=None,
+        cache=cache,  # type: ignore[arg-type]
+        global_organism="Pseudomonas putida",
+    )
+
+    complexes = mapped["entities"]["protein_complexes"]
+    # Re-resolution ran instead of reusing the stale row: the emitted wrapper is
+    # healthy (generated flag + real component identity), not the malformed cached one.
+    assert [row["name"] for row in complexes] == ["NdmA complex"]
+    assert complexes[0]["generated"] is True
+    assert complexes[0]["components"][0]["mapped_ids"]["uniprot"] == "A0A000"
+    assert report["summary"]["reaction_enzyme_complexes_novel"] == 1
+    # The stale row (no generated flag, component with no identity) was overwritten
+    # by the re-resolution: cache.set only runs on the miss path, so a verbatim reuse
+    # could never have added the generated flag or the component's UniProt id.
+    healed = cache.get("enzyme_complexes", cache_key)
+    assert healed.get("generated") is True
+    assert healed["components"][0]["mapped_ids"]["uniprot"] == "A0A000"
