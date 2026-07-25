@@ -1,360 +1,297 @@
 {
   "summary": {
-    "total_species": 40,
-    "total_reactions": 17,
+    "total_species": 24,
+    "total_reactions": 1,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "5'-deoxyadenosine",
+        "entity": "menaquinone",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "7-aminomethyl-7-deazaguanine (preQ 1)",
+        "entity": "heme",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "7-cyano-7-deazaguanine (preQ 0)",
+        "entity": "demethylmenaquinone",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "G34-tRNA",
+        "entity": "MK-4",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "guanine at position 34 of target tRNAs",
+        "entity": "MK-3",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "preQ 0",
+        "entity": "MK-9",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "preQ 1",
+        "entity": "MK-6",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "preQ1",
+        "entity": "MenA",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Q",
+        "entity": "MenB",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Q nucleoside",
+        "entity": "MenE",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Q34-tRNA",
+        "entity": "MenG",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "queuine",
+        "entity": "lpmenA1",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "queuine (q)",
+        "entity": "lpmenG1",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "queuosine (Q)",
+        "entity": "lpmenG2",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "SAM",
+        "entity": "lbmenB",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "GTP",
+        "entity": "lbmenG",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "target tRNAs",
+        "entity": "lbmenA",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "tRNAs",
+        "entity": "lpmenA2",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "bacterial TGT",
+        "entity": "lpmenA3",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "bTGT",
+        "entity": "lbmenE",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Chlamydia trachomatis bTGT",
+        "entity": "llmenA",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "eTGT",
+        "entity": "llmenB",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "GCHI",
+        "entity": "llmenE",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "QTRT1/QTRT2 complex",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueA",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueC",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueD",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueE",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueF",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueG",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueG or QueH",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueH",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueK",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueK (CD1682)",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueL",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "QueL (CD1684)",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "queuine lyase (QueL)",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "TGT (CD2802)",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "tRNA guanine-34 transglycosylase",
-        "reason": "no subcellular location recorded"
-      },
-      {
-        "entity": "tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)",
+        "entity": "llmenG",
         "reason": "no subcellular location recorded"
       }
     ],
     "missing_modifiers": [],
-    "possible_complexes": [
+    "possible_complexes": [],
+    "transport_like_reactions": [],
+    "orphan_nodes": [
       {
-        "entity": "QTRT1/QTRT2 complex",
-        "reason": "name suggests a complex or subunit"
-      }
-    ],
-    "transport_like_reactions": [
-      {
-        "reaction": "q -> Q",
-        "reason": "same species appear as both input and output"
+        "entity": "heme",
+        "degree": 0
       },
       {
-        "reaction": "exchange of guanine at position 34 of target tRNAs with q",
-        "reason": "same species appear as both input and output"
+        "entity": "MK-4",
+        "degree": 0
+      },
+      {
+        "entity": "MK-3",
+        "degree": 0
+      },
+      {
+        "entity": "MK-9",
+        "degree": 0
+      },
+      {
+        "entity": "MK-6",
+        "degree": 0
+      },
+      {
+        "entity": "MenA",
+        "degree": 0
+      },
+      {
+        "entity": "MenB",
+        "degree": 0
+      },
+      {
+        "entity": "MenE",
+        "degree": 0
+      },
+      {
+        "entity": "lpmenA1",
+        "degree": 0
+      },
+      {
+        "entity": "lpmenG1",
+        "degree": 0
+      },
+      {
+        "entity": "lpmenG2",
+        "degree": 0
+      },
+      {
+        "entity": "lbmenB",
+        "degree": 0
+      },
+      {
+        "entity": "lbmenG",
+        "degree": 0
+      },
+      {
+        "entity": "lbmenA",
+        "degree": 0
+      },
+      {
+        "entity": "lpmenA2",
+        "degree": 0
+      },
+      {
+        "entity": "lpmenA3",
+        "degree": 0
+      },
+      {
+        "entity": "lbmenE",
+        "degree": 0
+      },
+      {
+        "entity": "llmenA",
+        "degree": 0
+      },
+      {
+        "entity": "llmenB",
+        "degree": 0
+      },
+      {
+        "entity": "llmenE",
+        "degree": 0
+      },
+      {
+        "entity": "llmenG",
+        "degree": 0
       }
     ],
-    "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "5'-deoxyadenosine",
+        "entity": "menaquinone",
         "type": "compound"
       },
       {
-        "entity": "7-aminomethyl-7-deazaguanine (preQ 1)",
+        "entity": "heme",
         "type": "compound"
       },
       {
-        "entity": "7-cyano-7-deazaguanine (preQ 0)",
+        "entity": "demethylmenaquinone",
         "type": "compound"
       },
       {
-        "entity": "G34-tRNA",
+        "entity": "MK-4",
         "type": "compound"
       },
       {
-        "entity": "guanine at position 34 of target tRNAs",
+        "entity": "MK-3",
         "type": "compound"
       },
       {
-        "entity": "preQ 0",
+        "entity": "MK-9",
         "type": "compound"
       },
       {
-        "entity": "preQ 1",
+        "entity": "MK-6",
         "type": "compound"
       },
       {
-        "entity": "preQ1",
-        "type": "compound"
-      },
-      {
-        "entity": "Q",
-        "type": "compound"
-      },
-      {
-        "entity": "Q nucleoside",
-        "type": "compound"
-      },
-      {
-        "entity": "Q34-tRNA",
-        "type": "compound"
-      },
-      {
-        "entity": "queuine",
-        "type": "compound"
-      },
-      {
-        "entity": "queuine (q)",
-        "type": "compound"
-      },
-      {
-        "entity": "queuosine (Q)",
-        "type": "compound"
-      },
-      {
-        "entity": "SAM",
-        "type": "compound"
-      },
-      {
-        "entity": "GTP",
-        "type": "compound"
-      },
-      {
-        "entity": "target tRNAs",
-        "type": "compound"
-      },
-      {
-        "entity": "tRNAs",
-        "type": "compound"
-      },
-      {
-        "entity": "bacterial TGT",
+        "entity": "MenA",
         "type": "protein"
       },
       {
-        "entity": "bTGT",
+        "entity": "MenB",
         "type": "protein"
       },
       {
-        "entity": "Chlamydia trachomatis bTGT",
+        "entity": "MenE",
         "type": "protein"
       },
       {
-        "entity": "eTGT",
+        "entity": "MenG",
         "type": "protein"
       },
       {
-        "entity": "GCHI",
+        "entity": "lpmenA1",
         "type": "protein"
       },
       {
-        "entity": "QTRT1/QTRT2 complex",
+        "entity": "lpmenG1",
         "type": "protein"
       },
       {
-        "entity": "QueA",
+        "entity": "lpmenG2",
         "type": "protein"
       },
       {
-        "entity": "QueC",
+        "entity": "lbmenB",
         "type": "protein"
       },
       {
-        "entity": "QueD",
+        "entity": "lbmenG",
         "type": "protein"
       },
       {
-        "entity": "QueE",
+        "entity": "lbmenA",
         "type": "protein"
       },
       {
-        "entity": "QueF",
+        "entity": "lpmenA2",
         "type": "protein"
       },
       {
-        "entity": "QueG",
+        "entity": "lpmenA3",
         "type": "protein"
       },
       {
-        "entity": "QueG or QueH",
+        "entity": "lbmenE",
         "type": "protein"
       },
       {
-        "entity": "QueH",
+        "entity": "llmenA",
         "type": "protein"
       },
       {
-        "entity": "QueK",
+        "entity": "llmenB",
         "type": "protein"
       },
       {
-        "entity": "QueK (CD1682)",
+        "entity": "llmenE",
         "type": "protein"
       },
       {
-        "entity": "QueL",
-        "type": "protein"
-      },
-      {
-        "entity": "QueL (CD1684)",
-        "type": "protein"
-      },
-      {
-        "entity": "queuine lyase (QueL)",
-        "type": "protein"
-      },
-      {
-        "entity": "TGT (CD2802)",
-        "type": "protein"
-      },
-      {
-        "entity": "tRNA guanine-34 transglycosylase",
-        "type": "protein"
-      },
-      {
-        "entity": "tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT)",
+        "entity": "llmenG",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [
-      {
-        "entity_a": "preQ 1",
-        "entity_b": "preQ1",
-        "reason": "normalized label collision"
-      }
-    ],
+    "duplicate_species": [],
     "inconsistent_class": []
   }
 }

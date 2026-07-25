@@ -371,6 +371,7 @@ def _new_report() -> Dict[str, Any]:
             "n_aliases_rewritten": 0,
             "n_entities_deduped": 0,
             "n_single_protein_complexes_removed": 0,
+            "complex_named_proteins_relocated": 0,
             "unresolved_complex_components_dropped": 0,
             "component_only_proteins_removed": 0,
             "pruned_disconnected_proteins": [],
@@ -4120,6 +4121,198 @@ def run_strict_post_normalization_gates(
     return details
 
 
+def relocate_complex_named_proteins(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Relocate a source protein whose own name already ends in ' complex'.
+
+    A RAG-assembled pathway can feed an ENZYME actor whose source name already
+    ends in ' complex' (e.g. 'QTRT1/QTRT2 complex', a slash-joined heterodimeric
+    subunit complex). The single-protein wrapper generator then produces a
+    DOUBLED 'QTRT1/QTRT2 complex complex' wrapper while leaving the complex-named
+    source sitting in ``entities.proteins`` — which the Stage 3 gate rejects
+    ("Generated protein complex wrapper ... must be listed under
+    protein_complexes, not proteins."). The prior guards only stopped GENERATED
+    wrappers from leaking back into ``proteins``; none of them fired for a bare
+    inbound source name ending in "complex". This pass is the authoritative
+    safety net: it moves the complex-named row under ``protein_complexes``,
+    renames the surviving protein to its subunit form, collapses any
+    mapping-doubled wrapper, and rewrites every reference. It repairs both
+    freshly-fed and already-cached doubled names.
+    """
+    rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("complex_named_proteins_relocated", 0)
+    rep.setdefault("actions", [])
+
+    _, proteins, complexes = _entity_lists(payload)
+
+    identity_fields = (
+        "uniprot",
+        "mapped_ids",
+        "pathbank_protein_id",
+        "species",
+        "organism",
+        "species_ref",
+        "mapping_meta",
+    )
+    external_fields = ("uniprot", "mapped_ids", "pathbank_protein_id")
+
+    for protein_row in list(proteins):
+        if not isinstance(protein_row, dict):
+            continue
+        complex_name = _canonical(str(protein_row.get("name", "")))
+        if not complex_name or not complex_name.casefold().endswith(" complex"):
+            continue
+        if _is_biochemical_colon_name(complex_name):
+            continue
+        subunit_name = _canonical(complex_name[: -len(" complex")])
+        if not subunit_name or _normalize(subunit_name) == _normalize(complex_name):
+            continue
+        doubled_name = f"{complex_name} complex"
+
+        # 1. Resolve the target protein_complex row.
+        target = _find_entity_row(complexes, complex_name)
+        if target is None:
+            doubled = _find_entity_row(complexes, doubled_name)
+            if doubled is not None:
+                # Collapse the mapping-doubled wrapper in place.
+                doubled["name"] = complex_name
+                target = doubled
+            else:
+                target = {
+                    "name": complex_name,
+                    "class": "protein_complex",
+                    "generated": True,
+                    "generation_reason": "complex_named_source_entity_wrapper",
+                    "confidence": 0.8,
+                    "provenance": "inferred",
+                    "components": [],
+                }
+                complexes.append(target)
+        if not protein_species_context(target):
+            species = protein_species_context(protein_row)
+            if species:
+                target["species"] = species
+
+        # 2. Rename the protein to its subunit form (merge into an existing row).
+        existing_sub = _find_entity_row(proteins, subunit_name)
+        if existing_sub is not None and existing_sub is not protein_row:
+            for key in identity_fields:
+                if key in protein_row and key not in existing_sub:
+                    existing_sub[key] = deepcopy(protein_row[key])
+            _remove_entity(proteins, complex_name)
+            sub_row = existing_sub
+        else:
+            protein_row["name"] = subunit_name
+            sub_row = protein_row
+
+        # 3. One component referencing the subunit, carrying external identity.
+        prior_component: Optional[Dict[str, Any]] = None
+        for existing_component in _safe_list(target.get("components")):
+            if isinstance(existing_component, dict):
+                prior_component = existing_component
+                break
+        component: Dict[str, Any] = {"name": subunit_name, "stoichiometry": 1}
+        for source in (sub_row, prior_component):
+            if not isinstance(source, dict):
+                continue
+            for key in external_fields:
+                if key not in component and source.get(key) not in (None, "", {}, []):
+                    component[key] = deepcopy(source[key])
+        target["components"] = [component]
+
+        # 4. Rewrite every reference: doubled_name -> complex_name, and mark any
+        #    actor that now resolves to complex_name as a protein_complex.
+        complex_norm = _normalize(complex_name)
+        doubled_norm = _normalize(doubled_name)
+
+        def _rewrite_actor(row: Any) -> None:
+            if not isinstance(row, dict):
+                return
+            for field in [
+                "entity",
+                "protein",
+                "protein_name",
+                "protein_complex",
+                "enzyme",
+                "modifier",
+                "name",
+            ]:
+                value = row.get(field)
+                if not isinstance(value, str):
+                    continue
+                if _normalize(value) == doubled_norm:
+                    row[field] = complex_name
+                if _normalize(str(row.get(field, ""))) == complex_norm:
+                    row["entity_type"] = "protein_complex"
+
+        reactions, transports = _process_lists(payload)
+        for reaction in reactions:
+            if not isinstance(reaction, dict):
+                continue
+            for key in ("enzymes", "modifiers"):
+                for actor in _safe_list(reaction.get(key)):
+                    _rewrite_actor(actor)
+        for transport in transports:
+            if not isinstance(transport, dict):
+                continue
+            for actor in _safe_list(transport.get("transporters")):
+                _rewrite_actor(actor)
+        processes = _safe_dict(payload.get("processes"))
+        for interaction in _safe_list(processes.get("interactions")):
+            if not isinstance(interaction, dict):
+                continue
+            for field in ("entity_1", "entity_2"):
+                if (
+                    isinstance(interaction.get(field), str)
+                    and _normalize(interaction[field]) == doubled_norm
+                ):
+                    interaction[field] = complex_name
+        element_locations = _safe_dict(payload.get("element_locations"))
+        for loc in _safe_list(element_locations.get("protein_locations")):
+            if (
+                isinstance(loc, dict)
+                and isinstance(loc.get("protein"), str)
+                and _normalize(loc["protein"]) == doubled_norm
+            ):
+                loc["protein"] = complex_name
+        for other in complexes:
+            if not isinstance(other, dict) or other is target:
+                continue
+            comps = other.get("components")
+            if not isinstance(comps, list):
+                continue
+            for i, comp in enumerate(comps):
+                if isinstance(comp, dict):
+                    for field in ("name", "protein", "entity", "protein_name"):
+                        if (
+                            isinstance(comp.get(field), str)
+                            and _normalize(comp[field]) == doubled_norm
+                        ):
+                            comp[field] = complex_name
+                elif isinstance(comp, str) and _normalize(comp) == doubled_norm:
+                    comps[i] = complex_name
+
+        summary["complex_named_proteins_relocated"] = (
+            int(summary.get("complex_named_proteins_relocated", 0)) + 1
+        )
+        rep["actions"].append(
+            {
+                "type": "complex_named_protein_relocated",
+                "from": complex_name,
+                "protein": subunit_name,
+                "complex": complex_name,
+            }
+        )
+
+    _dedupe_named_rows(proteins)
+    _dedupe_named_rows(complexes)
+    return payload
+
+
 def normalize_process_payload(
     payload: Dict[str, Any],
     *,
@@ -4161,6 +4354,8 @@ def normalize_process_payload(
     _checkpoint("canonicalize_same_as_aliases")
     normalize_process_actor_schema(data, report=report)
     _checkpoint("normalize_process_actor_schema")
+    relocate_complex_named_proteins(data, report=report)
+    _checkpoint("relocate_complex_named_proteins")
     drop_unresolved_complex_component_proteins(data, report=report)
     _checkpoint("drop_unresolved_complex_component_proteins")
     dedupe_processes(data, report=report)

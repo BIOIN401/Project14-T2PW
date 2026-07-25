@@ -147,17 +147,30 @@ def test_streamlit_suppresses_transient_warning_for_ambiguous_reviews() -> None:
     source = app_path.read_text(encoding="utf-8")
     tree = ast.parse(source)
 
+    # The transient-failure phrase may live nested under a fallback branch (e.g.
+    # "seed the scope from the user's input, else warn"), so assert the INVARIANT
+    # directly: at least one `if` enclosing the warning must guard on BOTH an
+    # unusable context and a non-ambiguous review, which makes it unreachable for
+    # a deterministic Case C ambiguous review regardless of nesting depth.
+    phrase = "transient LLM failure"
     guards = [
         node
         for node in ast.walk(tree)
         if isinstance(node, ast.If)
-        and "This is usually a transient LLM failure" in ast.get_source_segment(source, node)
+        and phrase in (ast.get_source_segment(source, node) or "")
     ]
     assert guards, "transient-failure warning not found"
-    innermost = min(guards, key=lambda node: len(ast.get_source_segment(source, node) or ""))
-    guard_test = ast.get_source_segment(source, innermost.test)
-    assert "is_ambiguous_multi_example_review_context" in guard_test
-    assert "_has_usable_context" in guard_test
+    enclosing = [
+        node
+        for node in guards
+        if "is_ambiguous_multi_example_review_context"
+        in (ast.get_source_segment(source, node.test) or "")
+        and "_has_usable_context" in (ast.get_source_segment(source, node.test) or "")
+    ]
+    assert enclosing, (
+        "transient-failure warning is not enclosed by the "
+        "_has_usable_context / is_ambiguous_multi_example_review_context guard"
+    )
 
 
 # ---------------------------------------------------------------------------

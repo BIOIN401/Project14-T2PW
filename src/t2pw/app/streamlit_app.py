@@ -1,6 +1,7 @@
 import json
 import os
 import hashlib
+import re
 import sys
 import time
 import shutil
@@ -144,6 +145,47 @@ def _count_reactions(payload: Any) -> int:
     return len(reactions) if isinstance(reactions, list) else 0
 
 
+def _post_extraction_error_keys(payload: Any) -> set[tuple[str, str]]:
+    """Enforce-mode post-extraction schema error keys for ``payload``.
+
+    Runs ``validate_runtime_payload_contract(payload, boundary="post_extraction",
+    mode="enforce")`` and, on failure, returns the set of ``(code,
+    normalized_pointer)`` identities of the raised errors. Array indices in the
+    JSON pointer are collapsed to ``/*`` (``re.sub(r"/\\d+", "/*", pointer)``) so
+    that a row shifting position between the seed and the merged payload does not
+    read as a brand-new error. An empty set means the payload passes the gate.
+    """
+    try:
+        validate_runtime_payload_contract(
+            payload, boundary="post_extraction", mode="enforce"
+        )
+    except StageContractError as failure:
+        keys: set[tuple[str, str]] = set()
+        for issue in failure.errors:
+            if not isinstance(issue, dict):
+                continue
+            code = str(issue.get("code") or "")
+            pointer = str(issue.get("pointer") or issue.get("path") or "")
+            keys.add((code, re.sub(r"/\d+", "/*", pointer)))
+        return keys
+    return set()
+
+
+def _post_extraction_new_error_keys(
+    seed_payload: Any, merged_payload: Any
+) -> set[tuple[str, str]]:
+    """Schema-error keys the merge INTRODUCES relative to the seed.
+
+    Empty means the merged payload adds no post-extraction runtime-schema
+    violation that the seed did not already carry, so the merge is safe to adopt
+    even though the wider pipeline runs this schema in report (non-enforcing)
+    mode. Non-empty means the merge introduced a genuinely new violation.
+    """
+    return _post_extraction_error_keys(merged_payload) - _post_extraction_error_keys(
+        seed_payload
+    )
+
+
 # Bounded head of the document used when retrying a failed Stage-0 pass. The
 # pathway name / organism / key entities live in the title, abstract and intro,
 # and ``t2pw.rag.select`` already caps this same ``preprocess`` call at 6000
@@ -169,6 +211,47 @@ def _has_usable_context(ctx: Any) -> bool:
         if isinstance(value, list) and any(str(v or "").strip() for v in value):
             return True
     return False
+
+
+def _seed_context_from_user_scope(
+    ctx: Any, user_scope: Optional[str]
+) -> Optional[Dict[str, Any]]:
+    """Derive a usable Stage-0 context from an explicit user scope string.
+
+    Stage 0 (the preprocessor LLM) fails CLOSED to an empty context, which
+    silently disables RAG (``build_query`` returns "", so zero papers are ever
+    fetched) and leaves extraction unguided. But the pipeline is not actually
+    blind in that case: the user routinely types the scope into the extraction
+    focus box (e.g. ``"menaquinone biosynthesis in Lactococcus lactis"``). This
+    fallback parses that into a ``pathway_name`` and — from a trailing
+    ``" in <organism>"`` — a ``likely_organism``, so a flaky preprocessor call
+    can no longer nuke a scope the user already provided.
+
+    Returns an augmented COPY of ``ctx`` (all original keys preserved) that
+    ``_has_usable_context`` accepts, or ``None`` when there is no usable scope to
+    seed from. Heuristic and transparent: the caller surfaces exactly what
+    pathway/organism was inferred so a mis-parse is visible, not silent.
+    """
+    scope = str(user_scope or "").strip()
+    if not scope:
+        return None
+    head, sep, tail = scope.rpartition(" in ")
+    # Treat the trailing "in <X>" as the organism only when it is short (organism
+    # names are 1–3 words); otherwise keep the whole scope as the pathway name so
+    # a phrase like "... in vitro reconstitution" is not mistaken for an organism.
+    if sep and head.strip() and 1 <= len(tail.split()) <= 3:
+        pathway_name = head.strip()
+        organism_name = tail.strip()
+    else:
+        pathway_name = scope
+        organism_name = ""
+    seeded = dict(ctx) if isinstance(ctx, dict) else {}
+    seeded["pathway_name"] = pathway_name
+    if organism_name and not str(seeded.get("likely_organism") or "").strip():
+        seeded["likely_organism"] = organism_name
+    if not _has_usable_context(seeded):
+        return None
+    return seeded
 
 
 def maybe_run_rag(
@@ -201,6 +284,15 @@ def maybe_run_rag(
     if not decision.run:
         return None
 
+    # Live progress: the RAG chain (acquire -> select -> ingest -> retrieve ->
+    # synthesize) can run for minutes with no UI output, so the app looks frozen
+    # even though it is working. A single st.status container narrates each phase
+    # and is marked complete/error on the way out. Best-effort UI only — it never
+    # changes control flow, honoring the "RAG must never break the core run" rule.
+    status = st.status(
+        "Multi-paper RAG: searching literature for candidate papers…",
+        expanded=True,
+    )
     try:
         from t2pw.rag import (
             acquire,
@@ -248,23 +340,39 @@ def maybe_run_rag(
                     "narrow — check the organism and pathway name."
                 )
             st.warning(f"RAG acquisition fetched 0 candidate papers: {_why}")
+        status.write(f"Fetched {len(candidates)} candidate paper(s).")
+        status.update(label="Multi-paper RAG: selecting relevant papers…")
         selection = select.select(candidates, pathway_context)
         full_text_papers = 0
         for paper in getattr(selection, "selected", []) or []:
             paper.full_text = acquire.fetch_full_text(paper)
             if str(getattr(paper, "full_text", "") or "").strip():
                 full_text_papers += 1
+        status.write(
+            f"Selected {len(getattr(selection, 'selected', []) or [])} paper(s); "
+            f"{full_text_papers} with full text."
+        )
+        status.update(label="Multi-paper RAG: embedding & indexing passages…")
         embedder = ingest.Embedder(config=rag_config())
         store = ingest.get_vector_store(embed_fn=embedder.embed)
         ingest_report = ingest.ingest(selection, store=store, embedder=embedder)
+        status.write(
+            f"Indexed {int(getattr(ingest_report, 'chunks', 0) or 0)} passage(s)."
+        )
 
         # R4 gap-retrieve: detect gaps from read-only reports, retrieve per gap.
         seed_context_text = format_context_header(pathway_context)
+        status.update(label="Multi-paper RAG: detecting connectivity gaps…")
         gaps = retrieve.detect_gaps(seed_payload, reports)
-        bundles = [
-            retrieve.retrieve_evidence(gap, store, seed_context=seed_context_text)
-            for gap in gaps
-        ]
+        status.write(f"Detected {len(gaps)} connectivity gap(s) to fill.")
+        bundles = []
+        for _gi, gap in enumerate(gaps, start=1):
+            status.update(
+                label=f"Multi-paper RAG: retrieving evidence for gap {_gi}/{len(gaps)}…"
+            )
+            bundles.append(
+                retrieve.retrieve_evidence(gap, store, seed_context=seed_context_text)
+            )
         evidence_context = retrieve.format_retrieval_context(bundles)
 
         # R5 synthesize -> standard Payload (S3); validate provenance (WP6).
@@ -291,11 +399,33 @@ def maybe_run_rag(
         # Prose→reaction extraction: recover reactions stated in paper prose (not
         # just arrow equations). Opt-in via RAG_EXTRACT_REACTIONS; fails closed so
         # it can only add reactions, never break synthesis.
-        prose_extractor = (
+        _base_prose_extractor = (
             extract.make_prose_extractor()
             if rag_config()["extract_reactions"]
             else None
         )
+        # Prose extraction is the slow phase: one LLM chat call per evidence
+        # passage, run sequentially inside synthesis. Wrap it so each call ticks
+        # the status label — this is the step that previously left the UI blank.
+        if _base_prose_extractor is not None:
+            _prose_progress = {"n": 0}
+
+            def prose_extractor(
+                text,
+                _base=_base_prose_extractor,
+                _status=status,
+                _counter=_prose_progress,
+            ):
+                _counter["n"] += 1
+                _status.update(
+                    label=(
+                        "Multi-paper RAG: extracting reactions from evidence "
+                        f"(passage {_counter['n']})…"
+                    )
+                )
+                return _base(text)
+        else:
+            prose_extractor = None
         # Synonym-canonical merge: collapse cross-paper reaction duplicates that
         # differ only by a compound/enzyme SYNONYM, reusing the project's EXISTING
         # offline id-mapping cache. GROUPING-ONLY (drives merge keys, never rewrites
@@ -305,6 +435,7 @@ def maybe_run_rag(
         # break synthesis. Enabled unconditionally for real runs (mirrors the
         # opt-in ``prose_extractor`` seam; no config.py flag is added).
         synonym_resolver = synonyms.build_offline_synonym_resolver()
+        status.update(label="Multi-paper RAG: synthesizing one connected pathway…")
         synthesis = synthesize.synthesize_with_report(
             seed_payload,
             bundles,
@@ -346,7 +477,22 @@ def maybe_run_rag(
             "cross_paper_stitches": len(getattr(synthesis, "stitched", []) or []),
             "unresolved_gaps": len(getattr(synthesis, "unresolved_gaps", []) or []),
         }
+        status.update(
+            label=(
+                "Multi-paper RAG complete: "
+                f"{diagnostics['synthesized_reactions']} reaction(s) synthesized "
+                f"from {diagnostics['papers_selected']} paper(s)."
+            ),
+            state="complete",
+        )
     except Exception as exc:  # noqa: BLE001 - RAG must never break the core run
+        try:
+            status.update(
+                label=f"Multi-paper RAG could not complete (continuing without it): {exc}",
+                state="error",
+            )
+        except Exception:  # noqa: BLE001 - status is best-effort UI only
+            pass
         return RagOrchestrationResult(
             decision=decision,
             evidence_context="",
@@ -2929,14 +3075,33 @@ if submit:
         if not _has_usable_context(pathway_context) and not is_ambiguous_multi_example_review_context(
             pathway_context
         ):
-            st.warning(
-                f"Stage 0 failed: {describe_preprocess_status(pathway_context)}\n\n"
-                "It returned no usable context — no pathway name, "
-                "organism, compounds or proteins. Extraction will be unguided, and "
-                "multi-paper RAG cannot build a literature query, so no papers will be "
-                "fetched. This is usually a transient LLM failure — re-running often "
-                "fixes it."
-            )
+            # Stage 0 came back empty. Before disabling RAG, fall back to the scope
+            # the user typed in the extraction-focus box — a flaky preprocessor call
+            # should never nuke a scope we already have. Show exactly what was
+            # inferred so a mis-parse is visible rather than silent.
+            seeded_context = _seed_context_from_user_scope(pathway_context, user_task_context)
+            if seeded_context is not None:
+                pathway_context = seeded_context
+                _seed_org = str(seeded_context.get("likely_organism") or "").strip()
+                st.info(
+                    "Stage 0 returned no usable context, so the pipeline is falling "
+                    "back to the scope you provided — pathway "
+                    f"\"{seeded_context.get('pathway_name', '')}\""
+                    + (f", organism \"{_seed_org}\"" if _seed_org else "")
+                    + ". Extraction and multi-paper RAG will use it. Re-run if you'd "
+                    "rather the preprocessor try to read the scope from the paper again."
+                )
+            else:
+                st.warning(
+                    f"Stage 0 failed: {describe_preprocess_status(pathway_context)}\n\n"
+                    "It returned no usable context — no pathway name, "
+                    "organism, compounds or proteins, and no scope was provided in the "
+                    "extraction-focus box to fall back to. Extraction will be unguided, "
+                    "and multi-paper RAG cannot build a literature query, so no papers "
+                    "will be fetched. Re-run (usually a transient LLM failure), or type "
+                    "the pathway/organism into the focus box so the pipeline can proceed "
+                    "without the preprocessor."
+                )
         elif preprocess_was_recovered(pathway_context):
             # Not an error: the context is real. But it came from a reply that
             # was cut off mid-JSON, so fields the model never wrote are absent.
@@ -3072,38 +3237,75 @@ if submit:
         qa_hints = stage_two.get("qa_hints", {}) if isinstance(stage_two, dict) else {}
         final_payload = merge_additions(stage_one_in_scope, stage_two if isinstance(stage_two, dict) else {})
 
-    # S3 — hand R5's synthesized, provenance-tagged Payload to the post-pipeline
-    # path. A no-op with RAG off (rag_result is None): final_payload is untouched.
+    # S3 — inject R5's synthesized reactions/entities INTO the seed payload rather
+    # than REPLACING it. A no-op with RAG off (rag_result is None): final_payload
+    # is untouched.
     #
-    # Synthesis REPLACES the merged payload rather than adding to it, so it skips
-    # the hardening merge_additions applies on its way out. Run that same cleanup
-    # here — folding modifiers into enzymes, deduping actors by name and dropping
-    # reactions with an empty or unresolvable side — so no unhardened row reaches
-    # the required-field gate.
-    #
-    # Then the count guard: synthesis merges the seed extraction with retrieved
-    # evidence, so it must never emit FEWER reactions than the seed already had.
-    # If it does (e.g. no reachable embeddings endpoint / no papers fetched => zero
-    # evidence, zero synthesized reactions), adopting it would silently wipe the
-    # real pathway — so keep the single-paper extraction and surface why. Counting
-    # after the cleanup means the comparison weighs usable reactions.
+    # RAG's ``to_payload`` emits a thin, reaction-only payload MISSING the rich
+    # Stage-1 shape the post-pipeline assumes (no element_locations, no per-reaction
+    # compartment, no per-entity mapping_meta, evidence as a LIST, participants as
+    # dicts). Replacing the seed with it crashed the downstream audit/DB-mapping
+    # with ``'NoneType' object is not subscriptable``. Instead, conform the RAG
+    # payload to a Stage-2 additions envelope and MERGE it into the seed with the
+    # SAME machinery Stage 2 uses (merge_additions) — so the payload entering the
+    # post-pipeline keeps the seed's rich Stage-1 shape (compartments defaulted by
+    # the existing default_compartment="cell" path) with RAG reactions slotted in.
     if rag_result is not None and rag_result.synthesized and rag_result.payload:
-        # Pass the lock manifest so a locked Stage-1 reaction that synthesis
-        # mangled is quarantined for inspection rather than deleted outright.
-        rag_payload, rag_removed_reactions = apply_post_merge_cleanup(
-            deepcopy(rag_result.payload),
+        from t2pw.rag.conform import conform_rag_additions_for_merge
+
+        seed_reaction_count = _count_reactions(final_payload)
+        rag_envelope = conform_rag_additions_for_merge(rag_result.payload)
+        merged = merge_additions(final_payload, rag_envelope)
+        # Preserve the locked-reaction quarantine the old replace-path performed:
+        # merge_additions runs apply_post_merge_cleanup WITHOUT the manifest, so
+        # run the manifest-aware cleanup on the merged result — a locked Stage-1
+        # reaction mangled by synthesis is quarantined for inspection (and the
+        # quarantine file written) rather than silently dropped.
+        merged, rag_removed_reactions = apply_post_merge_cleanup(
+            merged,
             locked_manifest=load_locked_reaction_manifest(
                 PROJECT_ROOT / "tmp" / "locked_reaction_manifest.json"
             ),
             quarantine_output_path=PROJECT_ROOT / "tmp" / "quarantined_rag_reactions.json",
         )
-        if _count_reactions(rag_payload) >= max(1, _count_reactions(final_payload)):
-            final_payload = rag_payload
-            if rag_removed_reactions:
-                st.info(
-                    f"Dropped {len(rag_removed_reactions)} unusable RAG reaction(s) "
-                    f"before export: {', '.join(rag_removed_reactions)}"
+        added_reactions = _count_reactions(merged) - seed_reaction_count
+        if added_reactions > 0:
+            # Differential schema gate at the RAG boundary. The wider pipeline runs
+            # this runtime schema in REPORT mode, so the single-paper seed can
+            # legitimately carry shapes the strict enforce-mode schema flags (e.g.
+            # Stage-2 inference interactions). Holding the merged payload to a
+            # stricter bar than the seed it merges into false-positives on those
+            # pre-existing shapes. Instead, reject only when the merge INTRODUCES a
+            # NEW violation not already present in the seed. Snapshot the seed's
+            # error keys BEFORE reassigning final_payload = merged.
+            new_error_keys = _post_extraction_new_error_keys(final_payload, merged)
+            if new_error_keys:
+                # The merge added a genuinely new schema violation — surface it and
+                # keep the single-paper extraction rather than pass it downstream.
+                try:
+                    validate_runtime_payload_contract(
+                        merged, boundary="post_extraction", mode="enforce"
+                    )
+                except StageContractError as failure:
+                    st.error(
+                        "Multi-paper RAG merge produced a payload that failed the "
+                        "post-extraction runtime schema; keeping the single-paper "
+                        "extraction rather than passing a malformed payload downstream."
+                    )
+                    st.json(failure.report)
+            else:
+                final_payload = merged
+                merge_message = (
+                    f"Merged {added_reactions} RAG reaction(s) into the single-paper "
+                    "extraction."
                 )
+                if rag_removed_reactions:
+                    merge_message += (
+                        f" {len(rag_removed_reactions)} synthesized reaction(s) were "
+                        f"dropped/quarantined as unusable: "
+                        f"{', '.join(rag_removed_reactions)}."
+                    )
+                st.info(merge_message)
         else:
             st.warning(
                 "Multi-paper RAG produced no additional usable reactions (no evidence "

@@ -14,10 +14,15 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from t2pw.sbml.json_to_sbml import _dedupe_entity_rows, build_sbml, sbml_species_id  # noqa: E402
-from t2pw.mapping.map_ids import route_entity_for_mapping  # noqa: E402
+from t2pw.mapping.map_ids import _wrapper_complex_name, route_entity_for_mapping  # noqa: E402
 from t2pw.pipeline.qa_graph import build_graph, connected_components  # noqa: E402
+from t2pw.pipeline.entity_identity import (  # noqa: E402
+    protein_external_identity,
+    protein_species_context,
+)
 from t2pw.pipeline.process_normalizer import (  # noqa: E402
     GateValidationError,
+    _component_name_from_row,
     apply_biochemical_aliases,
     attach_enzymes_from_reaction_evidence,
     attach_transporters_from_evidence,
@@ -2003,3 +2008,112 @@ def test_pathway_metadata_blob_is_quarantined_by_normalizer() -> None:
         assert ", Cell," not in name, name
     # ...but the legitimate compound is preserved.
     assert "theobromine" in compound_names
+
+
+def test_relocate_complex_named_protein_repairs_gate() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {
+                    "name": "QTRT1/QTRT2 complex",
+                    "species": "Clostridioides difficile NAP08",
+                    "mapped_ids": {"uniprot": "Q9BXR0"},
+                },
+            ],
+            "protein_complexes": [
+                {
+                    "name": "QTRT1/QTRT2 complex complex",
+                    "generated": True,
+                    "generation_reason": "single_protein_pathwhiz_wrapper",
+                    "species": "Clostridioides difficile NAP08",
+                    "components": [
+                        {"name": "QTRT1/QTRT2 complex", "stoichiometry": 1, "uniprot": "Q9BXR0"},
+                    ],
+                },
+            ],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "r1",
+                    "enzymes": [
+                        {"entity": "QTRT1/QTRT2 complex complex", "entity_type": "protein_complex"}
+                    ],
+                    "inputs": [{"entity": "preQ1"}],
+                    "outputs": [{"entity": "Q"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    data, report = normalize_process_payload(payload)
+
+    assert report["gate"]["ok"] is True
+    proteins = [row["name"] for row in data["entities"]["proteins"]]
+    complexes = [row["name"] for row in data["entities"]["protein_complexes"]]
+    assert proteins == ["QTRT1/QTRT2"]
+    assert complexes == ["QTRT1/QTRT2 complex"]
+
+    enzyme = data["processes"]["reactions"][0]["enzymes"][0]
+    assert enzyme["entity"] == "QTRT1/QTRT2 complex"
+    assert enzyme.get("entity_type") == "protein_complex"
+
+    components = data["entities"]["protein_complexes"][0]["components"]
+    assert len(components) == 1
+    assert components[0]["name"] == "QTRT1/QTRT2"
+    assert protein_external_identity(components[0]) == "Q9BXR0"
+
+    # Surviving protein retains external identity and species.
+    surviving = data["entities"]["proteins"][0]
+    assert protein_external_identity(surviving) == "Q9BXR0"
+    assert protein_species_context(surviving)
+
+
+def test_relocate_complex_named_protein_without_existing_wrapper() -> None:
+    payload = {
+        "entities": {
+            "proteins": [
+                {
+                    "name": "FooBar complex",
+                    "species": "E. coli",
+                    "mapped_ids": {"uniprot": "P00001"},
+                },
+            ],
+            "protein_complexes": [],
+        },
+        "processes": {
+            "reactions": [
+                {
+                    "name": "r1",
+                    "enzymes": [{"entity": "FooBar complex", "entity_type": "protein"}],
+                    "inputs": [{"entity": "a"}],
+                    "outputs": [{"entity": "b"}],
+                }
+            ],
+            "transports": [],
+            "interactions": [],
+        },
+    }
+
+    data, report = normalize_process_payload(payload)
+
+    assert report["gate"]["ok"] is True
+    complexes = [row["name"] for row in data["entities"]["protein_complexes"]]
+    assert "FooBar complex" in complexes
+    complex_row = next(
+        row for row in data["entities"]["protein_complexes"] if row["name"] == "FooBar complex"
+    )
+    component_names = [_component_name_from_row(comp) for comp in complex_row["components"]]
+    assert component_names == ["FooBar"]
+
+    protein_names = [row["name"] for row in data["entities"]["proteins"]]
+    assert protein_names, "expected the subunit protein to survive"
+    for name in protein_names:
+        assert not name.casefold().endswith(" complex"), name
+
+
+def test_wrapper_complex_name_avoids_doubling() -> None:
+    assert _wrapper_complex_name("X") == "X complex"
+    assert _wrapper_complex_name("QTRT1/QTRT2 complex") == "QTRT1/QTRT2 complex"

@@ -1830,9 +1830,14 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
             continue
         entry: Dict[str, Any] = {"entity_1": e1, "entity_2": e2}
         name = (item.get("name") or "").strip()
-        if name:
-            entry["name"] = name
         relationship = (item.get("relationship") or "").strip()
+        if not name:
+            # Synthesize a deterministic name so the interaction satisfies the
+            # runtime schema (InteractionModel inherits a required ``name``)
+            # rather than flowing through nameless. Built from the endpoint
+            # entities and, when present, the relationship verb.
+            name = f"{e1} {relationship} {e2}" if relationship else f"{e1} - {e2}"
+        entry["name"] = name
         if relationship:
             entry["relationship"] = relationship
         biological_state = (item.get("biological_state") or "").strip()

@@ -38,6 +38,15 @@ def _normalize_name(value: str) -> str:
     return re.sub(r"[^a-z0-9 ]+", "", lowered)
 
 
+def _wrapper_complex_name(protein_name: str) -> str:
+    """Name a single-protein PathWhiz wrapper without doubling ' complex' when
+    the source protein name already ends in it (e.g. 'QTRT1/QTRT2 complex')."""
+    base = str(protein_name or "").strip()
+    if base.casefold().endswith(" complex"):
+        return base
+    return f"{base} complex"
+
+
 def _canonical_name(value: str) -> str:
     text = (value or "").strip()
     if not text:
@@ -2438,7 +2447,7 @@ class PathBankDbResolver:
                 "confidence": 0.0,
                 "chosen_rule": "novel_enzyme_single_component_complex",
                 "candidates": [],
-                "name": f"{protein_name} complex",
+                "name": _wrapper_complex_name(protein_name),
                 "generated": True,
                 "generation_reason": "single_protein_pathwhiz_wrapper",
                 "species_id": species_id,
@@ -4702,7 +4711,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
                         "confidence": 0.0,
                         "chosen_rule": "novel_enzyme_single_component_complex",
                         "candidates": [],
-                        "name": f"{protein_name} complex",
+                        "name": _wrapper_complex_name(protein_name),
                         "generated": True,
                         "generation_reason": "single_protein_pathwhiz_wrapper",
                         "species_id": species_id,
@@ -4730,7 +4739,7 @@ def _rewrite_reaction_protein_enzymes_to_complexes(
             if candidates and isinstance(candidates[0], dict):
                 complex_name = _canonical_name(str(candidates[0].get("name") or ""))
         if not complex_name:
-            complex_name = f"{protein_name} complex"
+            complex_name = _wrapper_complex_name(protein_name)
 
         norm = _normalize_name(complex_name)
         complex_row = complexes_by_norm.get(norm)

@@ -1,109 +1,13 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: QueK-catalyzed queuosine hydrolysis
-  Reactants: queuosine (Q) [unknown]
-  Products:  queuine (q) [unknown]
-  Modifier:  QueK (CD1682) [unknown] (role=catalyst, confidence=1.0)
+REACTION 1: MenG reaction
+  Reactants: demethylmenaquinone [unknown]
+  Products:  menaquinone [unknown]
+  Modifier:  MenG [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
-
-REACTION 2: QueL-catalyzed queuine lyase reaction
-  Reactants: queuine (q) [unknown], SAM [unknown]
-  Products:  preQ1 [unknown], 5'-deoxyadenosine [unknown]
-  Modifier:  QueL (CD1684) [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 3: TGT-catalyzed preQ1 insertion into tRNA
-  Reactants: preQ1 [unknown], G34-tRNA [unknown]
-  Products:  Q34-tRNA [unknown]
-  Modifier:  TGT (CD2802) [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 4: preQ1 -> Q
-  Reactants: preQ1 [unknown]
-  Products:  Q [unknown]
-  Modifier:  MISSING
-  QA flags:  none
-
-REACTION 5: q -> Q
-  Reactants: Q [unknown]
-  Products:  Q [unknown]
-  Modifier:  MISSING
-  QA flags:  transport_like — same species appear as both input and output
-
-REACTION 6: queuine -> preQ 1
-  Reactants: queuine [unknown]
-  Products:  preQ 1 [unknown]
-  Modifier:  MISSING
-  QA flags:  none
-
-REACTION 7: GTP to 7-cyano-7-deazaguanine (preQ 0) synthesis
-  Reactants: GTP [unknown]
-  Products:  7-cyano-7-deazaguanine (preQ 0) [unknown]
-  Modifier:  GCHI [unknown] (role=catalyst, confidence=1.0), QueD [unknown] (role=catalyst, confidence=1.0), QueE [unknown] (role=catalyst, confidence=1.0), QueC [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 8: preQ 0 reduction to 7-aminomethyl-7-deazaguanine (preQ 1)
-  Reactants: preQ 0 [unknown]
-  Products:  7-aminomethyl-7-deazaguanine (preQ 1) [unknown]
-  Modifier:  QueF [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 9: insertion of preQ 1 into tRNAs
-  Reactants: preQ 1 [unknown]
-  Products:  tRNAs [unknown]
-  Modifier:  tRNA guanine-34 transglycosylase [unknown] (role=catalyst, confidence=1.0), bacterial TGT [unknown] (role=catalyst, confidence=1.0), bTGT [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 10: conversion of preQ 1 to Q
-  Reactants: preQ 1 [unknown]
-  Products:  Q [unknown]
-  Modifier:  QueA [unknown] (role=catalyst, confidence=1.0), QueG [unknown] (role=catalyst, confidence=1.0), QueH [unknown] (role=catalyst, confidence=1.0), QueG or QueH [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 11: incorporation of queuine (q) into target tRNAs
-  Reactants: queuine (q) [unknown]
-  Products:  target tRNAs [unknown]
-  Modifier:  eTGT [unknown] (role=catalyst, confidence=1.0), QTRT1/QTRT2 complex [unknown] (role=catalyst, confidence=1.0) [possible_complex]
-  QA flags:  none
-
-REACTION 12: insertion of q into tRNAs in Chlamydia trachomatis
-  Reactants: Q [unknown]
-  Products:  tRNAs [unknown]
-  Modifier:  Chlamydia trachomatis bTGT [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 13: regeneration of preQ 1 from q
-  Reactants: Q [unknown]
-  Products:  preQ 1 [unknown]
-  Modifier:  QueL [unknown] (role=catalyst, confidence=1.0), queuine lyase (QueL) [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 14: hydrolysis of the Q nucleoside
-  Reactants: Q nucleoside [unknown]
-  Products:  Q [unknown]
-  Modifier:  QueK [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 15: synthesis of preQ 1 precursor base
-  Reactants: GTP [unknown]
-  Products:  7-aminomethyl-7-deazaguanine (preQ 1) [unknown]
-  Modifier:  QueD [unknown] (role=catalyst, confidence=1.0), QueE [unknown] (role=catalyst, confidence=1.0), QueC [unknown] (role=catalyst, confidence=1.0), QueF [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 16: exchange of guanine at position 34 of target tRNAs with preQ 1
-  Reactants: preQ 1 [unknown], guanine at position 34 of target tRNAs [unknown]
-  Products:  7-aminomethyl-7-deazaguanine (preQ 1) [unknown]
-  Modifier:  tRNA-guanine (34) transglycosylase (bacterial TGT, bTGT) [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 17: exchange of guanine at position 34 of target tRNAs with q
-  Reactants: Q [unknown], guanine at position 34 of target tRNAs [unknown]
-  Products:  Q [unknown]
-  Modifier:  bTGT [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  transport_like — same species appear as both input and output
 
 LOCKED REACTION FILTER
-3 locked reactions found
-3 exported
+1 locked reaction found
+1 exported
 0 quarantined reactions due to unresolved compound reference

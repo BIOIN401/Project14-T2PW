@@ -5,7 +5,339 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Known Debt — Runtime Contract Audit (2026-07-24, diagnostic; NOT a fix)
+
+A read-only sweep ran the runtime payload schema
+(`validate_payload_shape` / `validate_runtime_payload_contract`,
+`src/t2pw/pipeline/payload_models.py`) in **enforce** mode against every real
+on-disk payload artifact under `tmp/`, at every applicable boundary. Purpose:
+surface the pipeline's latent contract violations all at once instead of
+discovering them one production crash at a time. The wider pipeline runs this
+schema in `report` mode (`RUNTIME_SCHEMA_MODE = "report"`,
+`stage_contracts.py`), so these shapes are silently tolerated today.
+
+**Headline:** the schema is in good shape. Modern artifacts validate clean at
+enforce level for post_extraction (`stage1_raw_extraction.json`), post_mapping
+(`stage2.mapped.json`) and post_normalization; all 13 RAG-generated
+protein-complex wrappers in `final.mapped.json` pass the generated-wrapper
+contract. **5 distinct violation classes** were found — **2 live, 3 stale**
+(only in an older 2026-06-11 run; current producers appear to emit the correct
+shape) — plus 1 in-progress class already fixed elsewhere this session.
+
+**LIVE (worth a small, deliberate follow-up — not firefighting):**
+
+1. **`reactions[].evidence` is a `List[Dict]`, not `str`.** 9 rows in the RAG
+   multi-paper `tmp/final.mapped.json`. Producer: `src/t2pw/rag/synthesize.py`
+   (reaction `evidence` built as a list of `{text,...}` provenance snippets).
+   Boundary-independent (pydantic `PayloadModel`), so it nominally fires at all
+   7 boundaries. **Fix direction: loosen schema** — structured multi-paper
+   evidence is intentional and load-bearing; widen `evidence` on `ReactionModel`
+   (and peer evidence-bearing models) to `str | List[Dict[str, Any]] | None`
+   rather than flatten away source pointers. *Caveat: `final.mapped.json` is
+   timestamped before this session's conform/merge fix (which coerces evidence
+   list→string at the S3 boundary), so this may be a STALE artifact rather than
+   a live leak — confirm against a fresh multi-paper run before acting.*
+
+2. **Auto-injected `subcellular_locations` row has no `mapping_meta`.** Present
+   in the newest `final.audited.json` / `final.json`. Producer:
+   `src/t2pw/pipeline/process_normalizer.py::ensure_autostates` (~line 2650:
+   `subcellular_locations.append({"name": auto_location_name})`). The mapping
+   contract requires every named entity to declare how it was resolved.
+   **Fix direction: tighten producer** — attach a synthetic `mapping_meta` with
+   `resolution.status = "auto_default"` so the injected default compartment is
+   self-describing.
+
+**STALE (older 2026-06-11 run only; current producer looks correct — want a
+regression test, not a code change):**
+
+3. `actor_schema_not_canonical` on `reactions[].enzymes[*]` (30 rows) — raw
+   `protein`/`protein_complex` actor keys not canonicalized to
+   `entity`/`entity_type`. Modern enzymes carry the canonical shape; canonicalizer
+   is `process_normalizer.py::normalize_process_actor_schema`.
+4. `actor_schema_not_canonical` on `transports[].transporters[*]` (2 rows) — same
+   root cause as #3.
+5. `mapping_resolution_required` on `species[*].mapping_meta.resolution` (1 row) —
+   older path wrote `mapping_meta.species_resolution` instead of `resolution`.
+   Modern species validate clean.
+
+**IN-PROGRESS:** `interactions[].name` missing — fixed this session (see the
+differential-gate entry below). Not reproducible from current artifacts (no
+on-disk payload has an unnamed interaction), so it remains latent w.r.t. these
+fixtures.
+
+**Coverage caveats — do NOT read this as full coverage:** only ~3 pipeline runs
+on disk, all single-pathway; **no dedicated `post_remap` / `post_enrichment`
+artifacts** (approximated via `final.json`); this sweep covers only the runtime
+schema, **not** the stricter hand-written contracts in `stage_contracts.py`
+(`validate_post_remap`, `validate_pre_export` PWML contract); and rare row types
+(`nucleic_acids`, `element_collections`, `bounds`, `reaction_coupled_transports`,
+`sub_pathways`, `tissues`, `cell_types`, all `visualizations`) were empty in every
+artifact, so their row-level contracts are effectively untested. Full inventory:
+`scratchpad/contract_debt_inventory.md`.
+
+---
+
 ## Fixed
+
+---
+
+### FIXED — Stage 0 empty context silently disabled multi-paper RAG; now falls back to the user's scope
+
+**Files changed:** `.env`, `src/t2pw/app/streamlit_app.py`,
+`tests/test_stage0_scope_fallback.py` (new), `tests/test_preprocessor.py`,
+`docs/change_log.md`
+
+**Error / symptom:** On repeated runs the preprocessor (Stage 0) returned a valid
+but empty context (status `ok`, no `pathway_name` / `likely_organism` / compounds
+/ proteins). That silently gutted multi-paper RAG — `t2pw.rag.acquire.build_query`
+returns `""` for an empty context, so 0 candidate papers were fetched ("RAG
+complete: 1 reaction from 0 papers") — and left extraction unguided. Extraction
+and inference (on `deepseek/deepseek-v4-flash`) were unaffected on the same runs.
+
+**Why it appeared:** Two independent causes.
+
+1. *Weak Stage-0 model.* `OPENROUTER_PREPROCESSOR_MODEL` was
+   `google/gemma-4-26b-a4b-it`, a smaller model than the extraction/inference
+   model. Forced to emit a JSON-object summary of a dense 14-page paper it kept
+   returning the empty template. Not quota (extraction shared the account and
+   worked) and not length (the existing retry on a 20k-char head also failed) —
+   the model itself was the weak link. Switched
+   `OPENROUTER_PREPROCESSOR_MODEL` to `deepseek/deepseek-v4-flash` (the working
+   extraction model).
+
+2. *No fallback for a scope the user already provided.* Stage 0 was the SOLE
+   source of the pathway scope, with no fallback — even though the user routinely
+   types it into the extraction-focus box (e.g. "menaquinone biosynthesis in
+   Lactococcus lactis"). A single flaky preprocessor call could therefore nuke a
+   scope the pipeline already had in hand.
+
+**How the fix is consistent with the pipeline design:** New helper
+`_seed_context_from_user_scope(ctx, user_scope)` in `streamlit_app.py`. When
+Stage 0 returns no usable context AND the run is not a deterministic Case C
+ambiguous review, it derives a `pathway_name` (and, from a trailing
+`" in <organism>"` of ≤3 words, a `likely_organism`) from the user's focus-box
+text and augments the context so `_has_usable_context` passes and RAG can build a
+query. It returns an augmented COPY (all original keys preserved) or `None` when
+there is no scope to seed from — in which case the original "Stage 0 failed"
+warning still shows (reworded to point at the focus-box workaround). The seeded
+scope is surfaced verbatim via `st.info` so a heuristic mis-parse is visible, not
+silent. A long "in <phrase>" tail (e.g. "in vitro reconstitution …") is kept as
+the pathway name rather than mistaken for an organism, so it can't zero out the
+literature query.
+
+**Tests:** `tests/test_stage0_scope_fallback.py` (5) covers scope-with-organism,
+scope-without-organism, the long-tail guard, blank/None scope → `None`, and
+"don't overwrite an existing organism." `tests/test_preprocessor.py`'s
+transient-warning guard test was updated to assert the INVARIANT (the warning is
+enclosed by the `_has_usable_context` + `is_ambiguous_multi_example_review_context`
+guard) rather than a now-nested exact phrase — same protection, robust to the
+fallback branch.
+
+---
+
+### FIXED — S3 RAG-merge schema gate false-positived on the seed's own tolerated shapes (nameless Stage-2 interactions)
+
+**Files changed:** `src/t2pw/app/streamlit_app.py`,
+`src/t2pw/pipeline/pipeline.py`, `tests/test_rag_differential_gate.py` (new),
+`docs/change_log.md`
+
+**Error / symptom:** A valid multi-paper RAG merge was rejected at seam S3 with a
+"RAG-merge schema failure" `st.error`, keeping the single-paper extraction, even
+though the merge itself was clean. The offending rows were
+`processes.interactions` entries with no `name` field — which did NOT come from
+RAG.
+
+**Why it appeared:** The S3 gate was the ONLY caller running the post-extraction
+runtime schema in `enforce` mode; the rest of the pipeline runs it in `report`
+mode (`RUNTIME_SCHEMA_MODE = "report"` in `stage_contracts.py`). `InteractionModel`
+(`payload_models.py`) inherits a REQUIRED `name` from `NamedRecordModel`, but
+`clean_inference_output` → `_clean_processes` (`pipeline.py`) only attached a
+`name` to an interaction when one was already present, so Stage-2 inference
+emitted nameless interactions that flowed through single-paper runs untouched.
+The seed therefore legitimately carried a shape the strict schema flags, and the
+enforce-mode gate held the merged payload to a stricter bar than the seed it
+merged into — a false positive on a pre-existing shape, not a RAG defect.
+
+**How the fix is consistent with the pipeline design:** Two contained changes.
+
+1. *Differential gate* (`streamlit_app.py`). Two module-level helpers,
+   `_post_extraction_error_keys(payload)` and
+   `_post_extraction_new_error_keys(seed, merged)`, run the same
+   `validate_runtime_payload_contract(..., boundary="post_extraction",
+   mode="enforce")` inside a `try/except StageContractError` and return the set of
+   `(code, normalized_pointer)` error identities — array indices in the JSON
+   pointer collapsed to `/*` (`re.sub(r"/\d+", "/*", pointer)`) so a row shifting
+   position between the seed and the merge does not read as a new error. The gate
+   snapshots the seed's error keys BEFORE reassigning `final_payload = merged` and
+   rejects only when the merge INTRODUCES a NEW violation
+   (`new_keys = merged_keys - seed_keys`). If `new_keys` is empty the merge is
+   adopted with the existing `st.info`; if non-empty the existing `st.error` +
+   `st.json(failure.report)` reject path runs and the single-paper extraction is
+   kept. All prior messaging/flow is preserved.
+
+2. *Root cause* (`pipeline.py`). In the `_clean_processes` interaction loop, an
+   interaction with usable `entity_1`/`entity_2` endpoints but no `name` now gets
+   a DETERMINISTIC synthesized name — `f"{e1} {relationship} {e2}"` when a
+   relationship is present, else `f"{e1} - {e2}"` — so the payload is genuinely
+   schema-clean at its source rather than merely tolerated. Interactions that
+   already have a name are untouched; no interaction is dropped.
+
+**Tests:** `tests/test_rag_differential_gate.py` proves (a) a merge whose only
+violation also exists in the seed is adopted (empty new-key set), (b) a merge
+with a brand-new violation is rejected, and (c) `clean_inference_output`
+synthesizes the deterministic name (with and without a relationship) while
+preserving an existing name. No existing test asserted nameless interactions, so
+none needed weakening.
+
+---
+
+### FIXED — Multi-paper RAG: synthesized payload merged into the seed instead of replacing it (fixes post-pipeline 'NoneType' crash)
+
+**Files changed:** `src/t2pw/app/streamlit_app.py`, `src/t2pw/rag/conform.py` (new),
+`tests/test_rag_conform_merge.py` (new), `docs/change_log.md`
+
+**Error / symptom:** With multi-paper RAG on, the run crashed in the
+post-pipeline audit / DB-mapping path with `'NoneType' object is not
+subscriptable`. Single-paper runs were unaffected.
+
+**Why it appeared:** At seam S3 the RAG-synthesized payload REPLACED the rich
+single-paper (Stage-1) payload wholesale. RAG's `to_payload`
+(`src/t2pw/rag/synthesize.py`) emits a *thin, reaction-only* payload that is
+MISSING the shape the downstream assumes: no `element_locations`, no per-reaction
+`compartment` / `biological_state`, no per-entity species / `mapping_meta`, no
+`protein_complexes`, `evidence` typed as a LIST instead of a string, and
+participants sometimes `{"name", "stoichiometry"}` dicts. A single-paper payload
+carries all of this, so the audit / mapping / IR path read fields RAG never
+emitted and dereferenced `None`.
+
+**How the fix is consistent with the pipeline design:** Instead of REPLACING the
+seed, the seam now INJECTS RAG's new reactions / entities INTO the seed with the
+SAME additive machinery Stage 2 uses — `merge_additions`
+(`src/t2pw/pipeline/pipeline.py`). A new import-light helper,
+`conform_rag_additions_for_merge` (`src/t2pw/rag/conform.py`), first conforms the
+synthesized payload into an `{"additions": {...}}` envelope, coercing each row to
+the core shape: `evidence` list → string (on reactions AND enzyme actors, matching
+`ReactionModel.evidence: str` / `ActorModel.evidence: str`), reaction participants
+→ plain name strings (the core representation the whole pipeline uses —
+`clean_inference_output`, `draft_graph`, and `_reaction_io_key` all treat
+participants as strings; stoichiometry is not carried on reaction participants
+anywhere, so no new shape is invented), and the carried-forward scaffolding
+buckets (species / subcellular_locations / cell_types / tissues) excluded so they
+are not double-added. `element_locations` and per-reaction `compartment` are
+deliberately NOT emitted — they are left for the existing `default_compartment="cell"`
+/ compartment-backfill path to populate on the merged, seed-shaped payload,
+exactly as for a single-paper run.
+
+After the merge, the manifest-aware `apply_post_merge_cleanup` runs on the merged
+result (with the locked-reaction manifest and quarantine output path) so a locked
+Stage-1 reaction that synthesis mangled is quarantined — and the quarantine file
+written — rather than silently dropped, preserving the behavior of the old
+replace-path. The old "wipe protection" count guard is replaced by MERGE
+semantics: if the merge added ≥ 1 new reaction the merged payload is adopted (with
+an `st.info` of how many were merged / dropped-or-quarantined); if it added zero
+new reactions the seed is kept unchanged with the existing "no additional usable
+reactions" `st.warning`. Finally a schema gate at the RAG boundary
+(`validate_runtime_payload_contract(..., boundary="post_extraction", mode="enforce")`)
+validates the merged payload; a failure surfaces a clear "RAG-merge schema
+failure" `st.error` and keeps the single-paper extraction rather than passing a
+malformed payload downstream — it does not hard-crash the app.
+
+---
+
+### FIXED — Streamlit: multi-paper RAG phase ran with no UI feedback, so the app looked frozen
+
+**Files changed:** `src/t2pw/app/streamlit_app.py`, `docs/change_log.md`
+
+**Error / symptom:** After Stage 1 extraction the app appeared to "just stop" —
+a blank screen with no output — and never reached the "Running Stage 2
+inference…" spinner. LM Studio kept logging embedding requests, so the process
+was clearly alive, and the run eventually completed ("working randomly"). The
+symptom was purely missing progress: the app was not frozen, it was working.
+
+**Why it appeared:** `maybe_run_rag` runs the entire RAG chain
+(acquire → select → ingest → retrieve → **synthesize**) synchronously with zero
+`st` output between Stage 1 and the Stage 2 spinner. With
+`RAG_EXTRACT_REACTIONS` on, the synthesize step performs prose-reaction
+extraction — one sequential LLM chat call per retrieved evidence passage
+(`retrieve_top_k=8` × one gap per unlinked metabolite) — while LM Studio also
+has to swap in the chat model. That is minutes of real work behind a blank UI.
+No timeouts are configured, so nothing fails fast either. This is not a
+Streamlit bug and is unrelated to the Stage 3/Stage 6 normalization fix above
+(that code runs *after* Stage 2, which was never reached).
+
+**How the fix is consistent with the pipeline design:** Added a single
+`st.status` container inside `maybe_run_rag` that narrates each phase (papers
+fetched / selected / passages indexed / gaps detected / per-gap retrieval / and
+a per-passage counter for the slow prose-extraction step) and is marked
+`complete`/`error` on exit. The prose extractor is wrapped so each call ticks the
+status label — the exact step that previously left the screen blank. It is
+best-effort UI only: it adds no control flow and cannot raise into the run,
+preserving the "RAG must never break the core run" contract. A follow-up option
+(not taken here) is to add generous per-call timeouts on the RAG network/LLM
+calls so a genuinely stuck call aborts to Stage 2 instead of blocking.
+
+---
+
+### FIXED — Stage 3 gate: source enzyme whose name already ends in ' complex' left as a bare protein (QTRT1/QTRT2 complex)
+
+**Files changed:** `src/t2pw/pipeline/process_normalizer.py`,
+`src/t2pw/mapping/map_ids.py`, `tests/test_process_normalizer.py`,
+`docs/change_log.md`
+
+**Error / symptom:** The strict Stage 3 gate
+`run_strict_post_normalization_gates` aborted normalization with
+`/entities/proteins/N -> Generated protein complex wrapper 'QTRT1/QTRT2 complex'
+must be listed under protein_complexes, not proteins.` The offending row was an
+ENZYME actor for the queuosine biosynthesis pathway whose *source* name already
+ended in " complex" (a heterodimeric, slash-joined subunit complex), so it sat in
+`entities.proteins` and tripped the gate's `endswith(" complex")` guard.
+
+**Why it appeared:** This is a NEW member of the previously-fixed wrapper-leak bug
+class, surfaced by RAG-assembled multi-paper pathways introducing enzyme actor
+names that already end in "complex" and/or contain slash-joined subunits — inputs
+the pre-RAG fixtures never exercised. Two independent defects combined:
+
+1. In `map_ids.py`, the single-protein PathWhiz wrapper generator built the
+   wrapper name as `f"{protein_name} complex"` at three sites. When
+   `protein_name` already ended in " complex", this produced a DOUBLED
+   `QTRT1/QTRT2 complex complex` wrapper and left the original complex-named
+   entity behind in `entities.proteins`.
+2. In `process_normalizer.py`, every existing repair guard only prevented a
+   GENERATED wrapper (already in `protein_complexes`) from leaking back into
+   `proteins`; each checks `_find_entity_row(complexes, actor_name)`. None fired
+   for a bare inbound source protein like `QTRT1/QTRT2 complex`, because that name
+   is not itself in `complexes` (only the doubled `QTRT1/QTRT2 complex complex`
+   is). The inbound-source-name case was a genuine gap.
+
+**How the fix is consistent with the pipeline design:** Two contained changes,
+matching the existing defense-in-depth layering (root-cause guard at the source,
+authoritative normalizer safety net downstream):
+
+- *Root-cause guard (`map_ids.py`).* A new module-level helper
+  `_wrapper_complex_name(protein_name)` names the wrapper without doubling
+  " complex" when the source name already ends in it; it replaces the three
+  `f"{protein_name} complex"` constructions. This stops NEW doubled wrappers from
+  being produced or cached. No other mapping logic changes.
+- *Normalizer fallback pass (`process_normalizer.py`).* A new pass
+  `relocate_complex_named_proteins`, wired in after
+  `normalize_process_actor_schema` and before
+  `drop_unresolved_complex_component_proteins`, repairs both freshly-fed and
+  already-cached doubled names. For each protein whose canonical name ends in
+  " complex" (and is not a biochemical colon name) it: resolves or creates the
+  target `protein_complex` (collapsing any mapping-doubled `... complex complex`
+  wrapper in place), renames the surviving protein to its subunit form while
+  preserving external identity (UniProt/DrugBank) and species, sets the complex's
+  single component to reference that subunit carrying the external identity, and
+  rewrites every actor / interaction / transport / protein-location / component
+  reference norm-based (`doubled_name` -> `complex_name`), marking any actor that
+  now resolves to the complex with `entity_type: "protein_complex"`. It reuses the
+  existing helpers (`_entity_lists`, `_find_entity_row`, `_remove_entity`,
+  `_dedupe_named_rows`, `_normalize`, `_is_biochemical_colon_name`,
+  `protein_species_context`) and the `report["summary"]` /
+  `report["actions"]` bookkeeping conventions, adding a
+  `complex_named_proteins_relocated` counter. The normalizer pass is the
+  authoritative net (it also repairs legacy cached doubles); the mapping guard
+  simply stops producing new ones.
 
 ---
 
