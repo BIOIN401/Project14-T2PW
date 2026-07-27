@@ -288,3 +288,96 @@ def test_review_source_is_labelled_and_flags_attach_to_their_element():
     enzyme = next(e for e in report.entities if e["pointer"].endswith("/enzymes/0"))
     assert any("review" in c["kind"] for c in enzyme["sources"])
     assert any(f["code"] == "reaction_enzyme_unresolved" for f in enzyme["flags"])
+
+
+# ---------------------------------------------------------------------------
+# The readable .txt report -- the format an actual reviewer opens.
+# ---------------------------------------------------------------------------
+def _readable(**kwargs) -> str:
+    payload = _payload(
+        reactions=[_sourced_reaction(), _unsourced_reaction()],
+        proteins=[{"name": "MenG", "rag_provenance": _prov("PMC1", chunk_id="a" * 32)}],
+    )
+    return build_citation_report(
+        payload, rag_result=_scored("primary_research"), **kwargs
+    ).to_text()
+
+
+def test_text_report_numbers_every_reaction_with_substrates_and_products():
+    text = _readable()
+
+    assert "REACTION 1 of 2" in text
+    assert "REACTION 2 of 2" in text
+    assert "  IN " in text and "  OUT " in text
+    assert "menaquinone demethylation" in text
+    assert "demethylmenaquinone" in text
+    # Stoichiometry is preserved in the participant list.
+    assert "2 SAM" in text
+
+
+def test_text_report_gives_each_reaction_its_own_evidence_block():
+    text = _readable()
+    first = text.split("REACTION 2 of 2")[0]
+
+    assert "EVIDENCE" in first
+    assert "MenG converts menaquinone." in first
+    assert "section: results" in first
+
+
+def test_text_report_shows_the_catalyst_with_its_own_tier():
+    text = _readable(identity_source={
+        "entities": {"proteins": [{"name": "MenG", "mapped_ids": {"uniprot": "P0A6C0"}}]}
+    })
+
+    assert "ENZYME  MenG" in text
+    assert "uniprot: P0A6C0" in text
+
+
+def test_text_report_makes_an_unsourced_reaction_impossible_to_miss():
+    text = _readable()
+
+    assert UNSOURCED_MARKER in text
+    assert "WHAT TO CHECK FIRST" in text
+    assert "mystery step" in text.split("WHAT TO CHECK FIRST")[1]
+
+
+def test_text_report_never_fabricates_a_page_number():
+    text = _readable()
+
+    for pattern in _PAGE_PATTERNS:
+        assert not pattern.search(text), f"fabricated page citation: {pattern.pattern}"
+
+
+def test_text_report_does_not_list_a_quotation_as_a_paper():
+    """A verbatim quote in source_refs must never be numbered like a citation."""
+
+    reaction = _sourced_reaction()
+    reaction["source_refs"] = ["PMC1", "MenG converts menaquinone to demethylmenaquinone."]
+    text = build_citation_report(
+        _payload(reactions=[reaction]), rag_result=_scored("primary_research")
+    ).to_text()
+
+    body = text.split("EVIDENCE")[1].split("=" * 80)[0]
+    assert "NOT additional papers" in body
+    # The quotation must not appear as a numbered source entry.
+    assert "[2] MenG converts menaquinone to demethylmenaquinone" not in body
+
+
+def test_text_report_does_not_repeat_catalysts_in_the_entity_appendix():
+    text = _readable()
+    appendix = text.split("ENTITIES BY TIER")[1]
+
+    assert "Catalysts are listed with their reaction" in appendix
+    # MenG is tiered twice -- once as a declared protein, once as the enzyme
+    # actor of its reaction. The actor is rendered under the reaction, so the
+    # appendix must list the protein exactly once rather than showing a
+    # duplicate the reviewer would read as two different entities.
+    assert appendix.count("  - MenG") == 1
+
+
+def test_text_report_states_the_limitations():
+    text = _readable()
+
+    assert "KNOWN LIMITATIONS" in text
+    assert "page numbers" in text.lower()
+    assert "review" in text.lower()

@@ -1128,27 +1128,47 @@ def _render_research_citation_report(
         "reference lists are discarded at ingest."
     )
 
+    readable = report.to_text()
+    st.download_button(
+        "⬇  Download the readable report (TXT) — start here",
+        data=readable,
+        file_name="research_pathway_report.txt",
+        mime="text/plain",
+        key="research_report_txt",
+        type="primary",
+    )
+    st.caption(
+        "Plain text, top to bottom: every reaction numbered with its substrates, "
+        "products, catalyst and its own evidence block, then what to check first."
+    )
+    with st.expander("Preview the readable report", expanded=False):
+        st.text(readable)
+
+    st.caption("Other formats:")
     col_json, col_md, col_csv = st.columns(3)
     col_json.download_button(
-        "Download pathway + citations (JSON)",
+        "Pathway + citations (JSON)",
         data=report.to_json(),
         file_name="research_pathway_citations.json",
         mime="application/json",
         key="research_report_json",
+        help="Machine-readable, stable key order.",
     )
     col_md.download_button(
-        "Download review report (Markdown)",
+        "Review report (Markdown)",
         data=report.to_markdown(),
         file_name="research_pathway_review.md",
         mime="text/markdown",
         key="research_report_md",
+        help="Same content, rendered.",
     )
     col_csv.download_button(
-        "Download element table (CSV)",
+        "Element table (CSV)",
         data=report.to_csv(),
         file_name="research_pathway_elements.csv",
         mime="text/csv",
         key="research_report_csv",
+        help="One row per element, for spreadsheet triage.",
     )
 
 

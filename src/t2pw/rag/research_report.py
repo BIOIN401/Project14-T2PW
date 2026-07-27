@@ -33,6 +33,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+import textwrap
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
@@ -138,9 +139,20 @@ def _participant(entry: Any) -> str:
     return f"{stoich} {name}".strip() if stoich and stoich not in {"1", "1.0"} else name
 
 
+def _participants(row: Dict[str, Any], side: str) -> List[str]:
+    """The substrate or product names of a reaction, as a list.
+
+    Kept as a list rather than re-split from the rendered equation: compound
+    names legitimately contain ``+`` (``Ca2+``, ``NAD+``), so splitting the
+    equation string back apart would silently invent extra participants.
+    """
+
+    return [p for p in (_participant(i) for i in _as_list(row.get(side))) if p]
+
+
 def _equation(row: Dict[str, Any]) -> str:
-    inputs = [p for p in (_participant(i) for i in _as_list(row.get("inputs"))) if p]
-    outputs = [p for p in (_participant(o) for o in _as_list(row.get("outputs"))) if p]
+    inputs = _participants(row, "inputs")
+    outputs = _participants(row, "outputs")
     return f"{' + '.join(inputs) or '(no substrates)'} -> {' + '.join(outputs) or '(no products)'}"
 
 
@@ -268,6 +280,17 @@ class ResearchReport:
     def to_markdown(self) -> str:
         return "\n".join(_markdown_blocks(self))
 
+    def to_text(self) -> str:
+        """A plain-text report meant to be read top to bottom by a human.
+
+        Numbered steps with substrates, products and catalyst, each followed by
+        its own evidence block. This is the format for a reviewer who is not
+        going to open JSON — the other three serializations are for machines,
+        spreadsheets, and rendering respectively.
+        """
+
+        return "\n".join(_text_blocks(self))
+
     def to_csv(self) -> str:
         """One header row plus exactly one row per tiered element."""
 
@@ -342,6 +365,8 @@ def build_citation_report(
             "kind": assignment.kind,
             "name": assignment.name,
             "equation": _equation(row) if assignment.kind == "reaction" else "",
+            "inputs": _participants(row, "inputs") if assignment.kind == "reaction" else [],
+            "outputs": _participants(row, "outputs") if assignment.kind == "reaction" else [],
             "tier": assignment.tier,
             "tier_label": assignment.label,
             "marker": TIER_MARKERS.get(assignment.tier, ""),
@@ -375,7 +400,7 @@ def build_citation_report(
     }
 
     return ResearchReport(
-        pathway=_pathway_name(payload_dict),
+        pathway=_pathway_name(payload_dict, sorted(all_sources.values(), key=lambda c: c["source_id"])),
         mode=report.mode,
         summary=summary,
         lines=[element["line"] for element in reactions],
@@ -388,10 +413,26 @@ def build_citation_report(
     )
 
 
-def _pathway_name(payload: Dict[str, Any]) -> str:
-    for candidate in (_as_dict(payload.get("pathway")).get("name"), payload.get("name"), payload.get("pathway_name")):
+def _pathway_name(payload: Dict[str, Any], sources: Sequence[Dict[str, Any]] = ()) -> str:
+    """The pathway's display name, falling back to the seed paper's title.
+
+    ``metadata.pathway_name`` is where the pipeline actually stores it; the
+    other keys are older shapes. When none is set, the seed paper's title is a
+    far better heading than "(unnamed)" -- it is what the user uploaded.
+    """
+
+    for candidate in (
+        _as_dict(payload.get("metadata")).get("pathway_name"),
+        _as_dict(payload.get("pathway")).get("name"),
+        payload.get("name"),
+        payload.get("pathway_name"),
+    ):
         if _text(candidate):
             return _text(candidate)
+    for source in sources:
+        source = _as_dict(source)
+        if str(source.get("source_id")) == "seed_paper" and _text(source.get("title")):
+            return _text(source.get("title"))
     return "(unnamed research pathway)"
 
 
@@ -422,6 +463,345 @@ def _source_bullets(element: Dict[str, Any], indent: str = "  ") -> List[str]:
     if not lines:
         lines.append(f"{indent}- {UNSOURCED_MARKER} no supporting passage of any kind")
     return lines
+
+
+WIDTH = 80
+_RULE = "=" * WIDTH
+_THIN = "-" * WIDTH
+
+#: What each tier means, in a reviewer's words rather than the pipeline's.
+_TIER_GUIDE: Tuple[Tuple[str, str], ...] = (
+    (TIER_A, "an external database ID was found (UniProt / DrugBank / PathBank)"),
+    (TIER_B, "no ID, but two independent sources state it, each with its own quote"),
+    (TIER_C, "only ONE source states this. Read the quote and decide."),
+    (TIER_D, "NOTHING backs this. Check these first."),
+)
+
+
+def _wrap(text: str, indent: str, width: int = WIDTH) -> List[str]:
+    """Wrap a paragraph to ``width``, prefixing every line with ``indent``."""
+
+    body = " ".join(str(text or "").split())
+    if not body:
+        return []
+    return textwrap.wrap(
+        body, width=width, initial_indent=indent, subsequent_indent=indent
+    ) or [indent + body]
+
+
+def _enzymes_by_reaction(entities: Sequence[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+    """Group tiered enzyme actors under their parent reaction pointer.
+
+    Enzyme actors are tiered as their own elements (pointer
+    ``/processes/reactions/3/enzymes/0``) because their grounding is independent
+    of the reaction's. For a readable report they belong next to the step they
+    catalyse, so they are folded back here.
+    """
+
+    grouped: Dict[str, List[Dict[str, Any]]] = {}
+    for element in entities:
+        pointer = str(element.get("pointer") or "")
+        marker = "/enzymes/"
+        if marker in pointer:
+            grouped.setdefault(pointer.split(marker)[0], []).append(element)
+    return grouped
+
+
+def _tier_tag(element: Dict[str, Any]) -> str:
+    """``Tier C - single-source`` plus the identifier when there is one."""
+
+    tier = str(element.get("tier") or "?")
+    tag = f"Tier {tier} - {element.get('tier_label') or ''}".rstrip(" -")
+    identifier = str(element.get("identifier") or "")
+    if identifier:
+        source = str(element.get("identifier_source") or "id")
+        tag = f"{tag} [{source}: {identifier}]"
+    return tag
+
+
+def _evidence_lines(element: Dict[str, Any]) -> List[str]:
+    """The per-element evidence block: who says so, where, and in what words."""
+
+    out: List[str] = []
+    sources = [_as_dict(s) for s in _as_list(element.get("sources"))]
+    if not sources:
+        out.append("    (none — nothing in the evidence store supports this)")
+        return out
+
+    # A pointer that is neither a retrieved paper nor the seed sentinel is a
+    # verbatim quotation that Stage 1 wrote into source_refs. Numbering it
+    # alongside real papers reads as a citation to a paper that does not exist,
+    # so it is reported separately and never counted.
+    def _identified(source: Dict[str, Any]) -> bool:
+        return bool(source.get("retrieved")) or str(source.get("source_id")) == "seed_paper"
+
+    papers = [s for s in sources if _identified(s)]
+    quotations = [s for s in sources if not _identified(s)]
+
+    if not papers:
+        out.append("    (no identifiable source — see the note below)")
+
+    for idx, source in enumerate(papers, start=1):
+        title = str(source.get("title") or "(untitled source)")
+        source_id = str(source.get("source_id") or "?")
+        seed = source_id == "seed_paper"
+        label = "seed paper" if seed else source_id
+        heading = _wrap(f"{title}  ({label})", "        ")
+        if heading:
+            heading[0] = f"    [{idx}] " + heading[0].lstrip()
+        out.extend(heading)
+
+        section = str(source.get("section") or "")
+        detail = "section: not recorded" if not section or "unknown" in section else f"section: {section}"
+        score = source.get("retrieval_score")
+        if score is not None:
+            detail += f"   ·   best retrieval score for this source: {score}"
+        out.append(f"        {detail}")
+
+        if source.get("is_review"):
+            out.append(
+                "        NOTE: this source is a review — it may be restating the seed"
+            )
+            out.append("              rather than reporting an independent finding.")
+
+        quote = str(source.get("quote") or "")
+        if quote:
+            wrapped = _wrap(quote, "         ", WIDTH - 1)
+            if wrapped:
+                wrapped[0] = '        "' + wrapped[0].lstrip()
+                wrapped[-1] = wrapped[-1] + '"'
+            out.extend(wrapped)
+        elif seed:
+            out.append(
+                "        (no quoted passage: the seed paper is not chunked into the"
+            )
+            out.append("         evidence store, so only the reaction claim is recorded)")
+        else:
+            out.append("        (no quoted passage recorded for this source)")
+
+        uri = str(source.get("uri") or "")
+        if uri:
+            out.append(f"        {uri}")
+        out.append("")
+
+    if quotations:
+        out.append(
+            f"    Also recorded: {len(quotations)} quoted passage(s) carried as free text"
+        )
+        out.append("    rather than a paper id. These are NOT additional papers and were")
+        out.append("    not counted toward corroboration:")
+        for source in quotations[:3]:
+            snippet = " ".join(str(source.get("source_id") or "").split())
+            out.extend(_wrap(f'"{snippet[:160]}"', "        "))
+        if len(quotations) > 3:
+            out.append(f"        ... and {len(quotations) - 3} more")
+        out.append("")
+    return out
+
+
+def _reaction_block(
+    element: Dict[str, Any],
+    number: int,
+    total: int,
+    enzymes: Sequence[Dict[str, Any]],
+) -> List[str]:
+    """One reaction, rendered the way a biologist reads a pathway step."""
+
+    out: List[str] = [_THIN, f"REACTION {number} of {total}   ·   {_tier_tag(element)}"]
+    marker = str(element.get("marker") or "")
+    if marker:
+        out.append(f"    {marker}")
+    out.append(_THIN)
+    out.append(f"  {element.get('name') or '(unnamed reaction)'}")
+    out.append("")
+
+    inputs = [str(v) for v in _as_list(element.get("inputs"))]
+    outputs = [str(v) for v in _as_list(element.get("outputs"))]
+    if not inputs and not outputs and element.get("equation"):
+        # Older reports carry only the rendered equation. Show each side whole
+        # rather than splitting on " + " -- compound names contain it (Ca2+,
+        # NAD+), so splitting would invent participants that were never there.
+        halves = str(element["equation"]).split(" -> ", 1)
+        inputs = [halves[0]] if halves[0] else []
+        outputs = [halves[1]] if len(halves) > 1 and halves[1] else []
+    inputs = inputs or ["(no substrates recorded)"]
+    outputs = outputs or ["(no products recorded)"]
+    for label, values in (("IN ", inputs), ("OUT", outputs)):
+        for pos, value in enumerate(values):
+            lead = f"  {label}   " if pos == 0 else "      + "
+            out.extend(_wrap(value, lead, WIDTH) or [lead + value])
+        out.append("")
+
+    if enzymes:
+        for enzyme in enzymes:
+            out.append(f"  ENZYME  {enzyme.get('name') or '(unnamed)'}")
+            out.append(f"          {_tier_tag(enzyme)}")
+    else:
+        out.append("  ENZYME  (none recorded)")
+    out.append("")
+
+    out.append("  WHY THIS TIER")
+    out.extend(_wrap(element.get("reason"), "    "))
+    for note in _as_list(element.get("notes")):
+        wrapped = _wrap(str(note), "      ")
+        if wrapped:
+            # Hanging indent: the bullet only on the first line.
+            wrapped[0] = "    - " + wrapped[0].lstrip()
+            out.extend(wrapped)
+    out.append("")
+
+    flags = _as_list(element.get("flags"))
+    if flags:
+        out.append("  ** REVIEW FLAGS ON THIS REACTION **")
+        for flag in flags:
+            flag = _as_dict(flag)
+            out.append(f"    - [{flag.get('code','')}] {flag.get('message','')}")
+        out.append("")
+
+    out.append("  EVIDENCE")
+    out.extend(_evidence_lines(element))
+    return out
+
+
+def _text_blocks(report: "ResearchReport") -> List[str]:
+    """The whole plain-text report, in reading order."""
+
+    summary = _as_dict(report.summary)
+    counts = _as_dict(summary.get("tier_counts"))
+    reactions = list(report.reactions)
+    entities = list(report.entities)
+    by_reaction = _enzymes_by_reaction(entities)
+
+    out: List[str] = [_RULE]
+    out.extend(_wrap((report.pathway or "candidate pathway").upper(), ""))
+    out.append(f"Candidate pathway · export mode: {report.mode} · NOT an importable PWML file")
+    out.append(_RULE)
+    out.append("")
+
+    out.append("HOW TO READ THIS")
+    for tier, meaning in _TIER_GUIDE:
+        out.append(f"  Tier {tier}  {TIER_LABELS.get(tier, '')}")
+        out.extend(_wrap(meaning, "          "))
+    out.append("")
+    out.append("  Every claim below is traced to a source. Nothing here is invented:")
+    out.append("  if a source or a page is missing, it says so rather than guessing.")
+    out.append("")
+
+    out.append("AT A GLANCE")
+    out.append(f"  Reactions            {summary.get('reaction_count', len(reactions))}")
+    out.append(f"  Entities             {summary.get('entity_count', len(entities))}")
+    out.append(f"  Distinct sources     {summary.get('distinct_sources_cited', 0)}")
+    out.append(
+        "  Tiers                "
+        + "   ".join(f"{t}={counts.get(t, 0)}" for t, _ in _TIER_GUIDE)
+    )
+    needs = int(summary.get("review_required_count", 0) or 0)
+    out.append(f"  NEEDS REVIEW         {needs} element(s) are Tier C or D")
+    unsourced = int(summary.get("unsourced_count", 0) or 0)
+    if unsourced:
+        out.append(f"  UNSOURCED            {unsourced} element(s) have no provenance at all")
+    out.append(f"  Review flags         {summary.get('review_flag_count', 0)}")
+    out.append(f"  Format rules skipped {summary.get('skipped_format_rule_count', 0)}")
+    out.append("")
+
+    out.append(_RULE)
+    out.append("THE PATHWAY, STEP BY STEP")
+    out.append(_RULE)
+    out.append("")
+    if reactions:
+        for number, element in enumerate(reactions, start=1):
+            out.extend(
+                _reaction_block(
+                    element, number, len(reactions), by_reaction.get(element["pointer"], [])
+                )
+            )
+            out.append("")
+    else:
+        out.append("  (no reactions in this pathway)")
+        out.append("")
+
+    out.append(_RULE)
+    out.append("WHAT TO CHECK FIRST")
+    out.append(_RULE)
+    out.append("")
+    ranked = [e for e in (*reactions, *entities) if e.get("tier") in {TIER_D, TIER_C}]
+    ranked.sort(key=lambda e: (e.get("tier") != TIER_D, str(e.get("name") or "")))
+    if ranked:
+        for element in ranked:
+            kind = "reaction" if element.get("kind") == "reaction" else "entity  "
+            out.append(f"  [Tier {element.get('tier')}] {kind}  {element.get('name')}")
+            out.extend(_wrap(element.get("reason"), "              "))
+    else:
+        out.append("  Nothing is single-source or unsourced. Every element has")
+        out.append("  either a database identifier or two independent sources.")
+    out.append("")
+
+    out.append(_RULE)
+    out.append("ENTITIES BY TIER")
+    out.append(_RULE)
+    out.append("")
+    out.append("Catalysts are listed with their reaction above and not repeated here.")
+    out.append("")
+    # Enzyme actors are tiered as their own elements but were already rendered
+    # under the step they catalyse; listing them again reads as a duplicate.
+    standalone = [e for e in entities if "/enzymes/" not in str(e.get("pointer") or "")]
+    for tier, _ in _TIER_GUIDE:
+        members = [e for e in standalone if e.get("tier") == tier]
+        out.append(f"Tier {tier} — {TIER_LABELS.get(tier, '')}   ({len(members)})")
+        if not members:
+            out.append("  (none)")
+        for element in members:
+            identifier = str(element.get("identifier") or "")
+            suffix = f"   [{element.get('identifier_source')}: {identifier}]" if identifier else ""
+            out.append(f"  - {element.get('name')}{suffix}")
+        out.append("")
+
+    out.append(_RULE)
+    out.append("SOURCES CITED")
+    out.append(_RULE)
+    out.append("")
+    for source in report.sources:
+        source = _as_dict(source)
+        source_id = str(source.get("source_id") or "?")
+        label = "seed paper (uploaded)" if source_id == "seed_paper" else source_id
+        out.append(f"  {label}")
+        out.extend(_wrap(str(source.get("title") or "(untitled)"), "    "))
+        if source.get("is_review"):
+            out.append("    type: REVIEW — may restate the seed rather than corroborate it")
+        if source.get("uri"):
+            out.append(f"    {source.get('uri')}")
+        out.append("")
+
+    if report.review_flags or report.format_gaps:
+        out.append(_RULE)
+        out.append("WHAT THE PIPELINE DID NOT ENFORCE")
+        out.append(_RULE)
+        out.append("")
+        if report.review_flags:
+            out.append(f"Biology / provenance flags ({len(report.review_flags)})")
+            out.append("  These would have STOPPED a strict run. They did not stop this one.")
+            for flag in report.review_flags:
+                flag = _as_dict(flag)
+                out.append(f"  - [{flag.get('code','')}] {flag.get('pointer','')}")
+                out.extend(_wrap(flag.get("message"), "      "))
+            out.append("")
+        if report.format_gaps:
+            out.append(f"PathWhiz format rules skipped ({len(report.format_gaps)})")
+            out.append("  Importer requirements only — they say nothing about the biology.")
+            for gap in report.format_gaps:
+                gap = _as_dict(gap)
+                out.append(f"  - [{gap.get('code','')}] {gap.get('pointer','')}")
+            out.append("")
+
+    out.append(_RULE)
+    out.append("KNOWN LIMITATIONS — READ BEFORE CITING THIS")
+    out.append(_RULE)
+    out.append("")
+    for number, limitation in enumerate(report.limitations, start=1):
+        out.append(f"  {number}.")
+        out.extend(_wrap(limitation, "     "))
+        out.append("")
+    return out
 
 
 def _element_section(heading: str, elements: Sequence[Dict[str, Any]], empty: str) -> List[str]:
