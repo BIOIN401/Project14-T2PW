@@ -4291,6 +4291,7 @@ if st.session_state.get("pipeline_ready"):
                 st.success("Grounding dictionary loaded.")
             except Exception as _ge:
                 st.error(f"Grounding load failed: {_ge}")
+                st.exception(_ge)  # full traceback (file:line) so the cause isn't a mystery
         _pwml_grounding_dict = st.session_state.get("pwml_grounding_dict")
 
     if st.button("Run audit and DB mapping", key="pwml_generate_btn"):
@@ -4389,6 +4390,7 @@ if st.session_state.get("pipeline_ready"):
                 )
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
+                st.exception(exc)  # full traceback (file:line) so the cause isn't a mystery
 
     _refinement_mapping_cache_path = _safe_dict(post_artifacts).get("mapping_cache_path")
     if not _refinement_mapping_cache_path:
@@ -4691,6 +4693,7 @@ if st.session_state.get("pipeline_ready"):
                 )
             except Exception as exc:
                 st.error(f"Legacy SBML export failed: {exc}")
+                st.exception(exc)  # full traceback (file:line) so the cause isn't a mystery
         if not isinstance(post_artifacts, dict):
             post_artifacts = {}
         if post_artifacts.get("sbml_xml_bytes"):
