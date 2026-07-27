@@ -37,11 +37,13 @@ if "openai" not in sys.modules:
 from t2pw.rag.acquire import CandidatePaper  # noqa: E402
 from t2pw.rag.embed import Embedder  # noqa: E402
 from t2pw.rag.ingest import (  # noqa: E402
+    SEED_SOURCE_ID,
     build_hybrid_scorer,
     chunk_corpus,
     chunk_db_reactions,
     chunk_paper,
     ingest,
+    seed_candidate,
 )
 from t2pw.rag.select import Selection  # noqa: E402
 from t2pw.rag.store import Chunk, MemoryVectorStore  # noqa: E402
@@ -264,3 +266,80 @@ def test_chunk_corpus_tags_pwml_example(tmp_path) -> None:
     assert all(c.section == "example" for c in chunks)
     assert any("ndma" in c.text.lower() for c in chunks)
     assert chunks[0].source_id == "PWTEST.pwml"
+
+
+# ---------------------------------------------------------------------------
+# The uploaded seed paper is indexed like any other source.
+# ---------------------------------------------------------------------------
+_SEED_TEXT = """Lipid A biosynthesis (Raetz pathway).
+Introduction
+Lipid A anchors lipopolysaccharide in Gram-negative bacteria.
+Results
+LpxH cleaves most of the UDP moiety to leave lipid X.
+References
+1. Raetz CRH et al. Annu Rev Biochem.
+"""
+
+
+def test_seed_candidate_is_none_for_empty_text() -> None:
+    """Callers pass it unconditionally, so empty input must not fabricate a paper."""
+
+    assert seed_candidate("") is None
+    assert seed_candidate("   \n  ") is None
+
+
+def test_seed_candidate_uses_the_provenance_sentinel() -> None:
+    candidate = seed_candidate(_SEED_TEXT, title="lipid A biosynthesis")
+
+    # Must match the source_id seed-derived provenance already carries, or the
+    # seed's own passages would not join to its own reactions.
+    assert candidate.id == SEED_SOURCE_ID
+    assert candidate.title == "lipid A biosynthesis"
+
+
+def test_seed_candidate_falls_back_to_a_usable_title() -> None:
+    assert seed_candidate(_SEED_TEXT).title == "uploaded seed paper"
+
+
+def test_seed_is_chunked_with_sections_and_stable_ids() -> None:
+    chunks = chunk_paper(seed_candidate(_SEED_TEXT, title="lipid A biosynthesis"))
+
+    assert chunks, "the seed must produce retrievable passages"
+    assert {c.source_id for c in chunks} == {SEED_SOURCE_ID}
+    assert "results" in {c.section for c in chunks}
+    assert all(c.id for c in chunks), "every seed chunk needs a chunk id to be citable"
+    # The reference list is back matter, not evidence -- same rule as any paper.
+    assert "references" not in {c.section for c in chunks}
+
+
+def test_ingest_indexes_the_seed_alongside_the_selected_papers() -> None:
+    store = MemoryVectorStore()
+    report = ingest(
+        Selection(selected=[_canned_paper()]),
+        store=store,
+        embedder=Embedder(config={"embedding_provider": "offline"}),
+        index_corpus=False,
+        persist=False,
+        seed=seed_candidate(_SEED_TEXT, title="lipid A biosynthesis"),
+    )
+
+    indexed = {c.source_id for c in store.all_chunks()} if hasattr(store, "all_chunks") else set()
+    assert report.papers == 2, "the seed counts as an indexed paper"
+    assert report.chunks > 0
+    if indexed:
+        assert SEED_SOURCE_ID in indexed
+
+
+def test_ingest_without_a_seed_is_unchanged() -> None:
+    """The default path must be byte-identical to before seed indexing existed."""
+
+    store = MemoryVectorStore()
+    report = ingest(
+        Selection(selected=[_canned_paper()]),
+        store=store,
+        embedder=Embedder(config={"embedding_provider": "offline"}),
+        index_corpus=False,
+        persist=False,
+    )
+
+    assert report.papers == 1

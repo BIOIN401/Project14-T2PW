@@ -50,6 +50,7 @@ from t2pw.pipeline.entity_identity import (
     protein_external_identity,
 )
 from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, coerce_mode, is_research
+from t2pw.rag.provenance import SEED_SOURCE_ID
 from t2pw.rag.synthesize import canonical_name
 
 TIER_A = "A"
@@ -315,9 +316,17 @@ def _tier_from_sources(sources: List[Dict[str, Any]]) -> Tuple[str, str, int, bo
             notes,
         )
 
-    notes.append(
-        "every pointer on this element is an unresolvable quotation rather than a paper id"
-    )
+    # Distinguish the seed sentinel from a genuine quote-as-source_id: the seed
+    # IS a resolvable document, it simply has no indexed passage to cite. Saying
+    # "unresolvable quotation" about it reads as though the source were bogus.
+    if any(str(s.get("source_id")) == SEED_SOURCE_ID for s in sources):
+        notes.append(
+            "stated in the uploaded seed paper; no retrieved paper corroborates it"
+        )
+    else:
+        notes.append(
+            "every pointer on this element is an unresolvable quotation rather than a paper id"
+        )
     return TIER_C, "stated in a single source", distinct, review_only, notes
 
 

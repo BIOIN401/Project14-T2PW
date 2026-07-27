@@ -82,6 +82,13 @@ RagAdditiveMetadata = TypedDict(
 # core ``PayloadCommonRecord.provenance`` string field.
 RAG_ADDITIVE_KEYS = ("rag_provenance", "evidence", "source_papers", "rag_confidence")
 
+#: The ``source_id`` carried by every seed-derived provenance pointer, and by the
+#: seed's own chunks once it is indexed. It lives here -- in the dependency-free
+#: provenance vocabulary -- because ``ingest`` (which stamps it onto chunks) and
+#: ``tiers`` (which must tell the seed apart from a quote-as-source_id) both need
+#: it, and neither should have to import the other's module to get a string.
+SEED_SOURCE_ID = "seed_paper"
+
 
 # ---------------------------------------------------------------------------
 # WP6 — Provenance validation & stripping.

@@ -271,6 +271,7 @@ def maybe_run_rag(
     user_flag: bool,
     seed_payload: Dict[str, Any],
     reports: Optional[Dict[str, Any]] = None,
+    seed_text: str = "",
 ) -> Optional[RagOrchestrationResult]:
     """Run R0–R5 and return their outputs, or ``None`` for today's flow.
 
@@ -366,7 +367,20 @@ def maybe_run_rag(
         status.update(label="Multi-paper RAG: embedding & indexing passages…")
         embedder = ingest.Embedder(config=rag_config())
         store = ingest.get_vector_store(embed_fn=embedder.embed)
-        ingest_report = ingest.ingest(selection, store=store, embedder=embedder)
+        # Index the uploaded seed alongside the retrieved papers, so seed-derived
+        # claims get a real section and a quotable passage instead of citing
+        # "the seed paper" with nothing to show, and can corroborate like any
+        # other identified source.
+        ingest_report = ingest.ingest(
+            selection,
+            store=store,
+            embedder=embedder,
+            seed=ingest.seed_candidate(
+                seed_text,
+                title=str(_safe_dict(pathway_context).get("pathway_name") or ""),
+                organism=str(_safe_dict(pathway_context).get("likely_organism") or ""),
+            ),
+        )
         status.write(
             f"Indexed {int(getattr(ingest_report, 'chunks', 0) or 0)} passage(s)."
         )
@@ -3521,6 +3535,7 @@ if submit:
             user_flag=bool(rag_incomplete_flag),
             seed_payload=stage_one_in_scope,
             reports={"qa_graph": generate_qa_report(_rag_seed_graph, stage_one_in_scope)},
+            seed_text=text,
         )
         if rag_result is not None:
             st.session_state["rag_result"] = rag_result

@@ -57,6 +57,7 @@ from t2pw.config import rag_config
 from t2pw.paths import PROJECT_ROOT
 from t2pw.rag.acquire import CandidatePaper
 from t2pw.rag.embed import Embedder
+from t2pw.rag.provenance import SEED_SOURCE_ID
 from t2pw.rag.store import Chunk, Retrieved, VectorStore, get_vector_store
 
 # Wrap (never edit) the existing lexical layer. ``_score_entry`` / ``_tokenize``
@@ -261,6 +262,35 @@ def _figure_captions(full_text: str) -> List[str]:
 # ---------------------------------------------------------------------------
 # Public chunkers.
 # ---------------------------------------------------------------------------
+def seed_candidate(
+    text: str,
+    *,
+    title: str = "",
+    organism: str = "",
+) -> Optional[CandidatePaper]:
+    """Present the uploaded seed paper as a ``CandidatePaper`` so it can be chunked.
+
+    The seed is the one document guaranteed to be about the pathway, yet it was
+    the only one never indexed: :func:`ingest` chunked ``selection.selected``
+    only. That left every seed-derived claim citable as "the seed paper" with no
+    section and no quotable passage, and unable to corroborate anything, because
+    corroboration is counted over *identified* sources and the seed had no chunk.
+
+    Returns ``None`` for empty text so callers can pass it unconditionally.
+    """
+
+    body = str(text or "").strip()
+    if not body:
+        return None
+    return CandidatePaper(
+        id=SEED_SOURCE_ID,
+        source="seed",
+        title=str(title or "").strip() or "uploaded seed paper",
+        organism=str(organism or "").strip(),
+        full_text=body,
+    )
+
+
 def chunk_paper(
     candidate: CandidatePaper,
     *,
@@ -517,6 +547,7 @@ def ingest(
     index_corpus: bool = True,
     db_records: Optional[Sequence[Dict[str, Any]]] = None,
     persist: bool = True,
+    seed: Optional[CandidatePaper] = None,
 ) -> IngestReport:
     """Chunk -> embed -> upsert -> persist the selected papers (+ corpus + records).
 
@@ -536,6 +567,11 @@ def ingest(
         store = get_vector_store(embed_fn=embedder.embed)
 
     papers = list(getattr(selection, "selected", None) or [])
+    # The seed is indexed alongside the retrieved papers (see seed_candidate) so
+    # its passages are retrievable and quotable like any other source. It is
+    # counted separately from ``papers`` because it was not acquired or selected.
+    if seed is not None and str(getattr(seed, "id", "") or ""):
+        papers = [seed, *papers]
     chunks: List[Chunk] = []
     for paper in papers:
         chunks.extend(chunk_paper(paper))
