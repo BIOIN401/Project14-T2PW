@@ -50,6 +50,7 @@ from t2pw.pipeline.process_normalizer import (
 )
 from t2pw.pipeline.stage_contracts import (
     StageContractError,
+    run_stage_contract,
     validate_post_audit,
     validate_post_extraction,
     validate_post_mapping,
@@ -57,6 +58,16 @@ from t2pw.pipeline.stage_contracts import (
     validate_post_remap,
     validate_pre_export,
     validate_runtime_payload_contract,
+)
+from t2pw.pipeline.export_mode import (  # noqa: E402  (follows the sys.path shim above)
+    DEFAULT_EXPORT_MODE,
+    PATHWHIZ,
+    RESEARCH,
+    ExportMode,
+    coerce_mode,
+    format_gaps,
+    is_research,
+    review_flags,
 )
 from t2pw.pipeline.pipeline import (
     PipelineFailure,
@@ -922,6 +933,217 @@ def _render_stage_contract_failure(
     )
 
 
+def _research_flag_rows(issues: Any) -> List[Dict[str, Any]]:
+    """Flatten downgraded contract issues into a table the reviewer can scan."""
+
+    rows: List[Dict[str, Any]] = []
+    for issue in _safe_list(issues):
+        if not isinstance(issue, dict):
+            continue
+        rows.append(
+            {
+                "code": str(issue.get("code") or ""),
+                "where": str(issue.get("pointer") or issue.get("path") or ""),
+                "stage": str(issue.get("stage") or ""),
+                "detail": str(issue.get("message") or issue.get("reason") or ""),
+            }
+        )
+    return rows
+
+
+def _render_research_mode_panels(artifacts: Any) -> None:
+    """Show what research mode relaxed, prominently enough that it is not missed.
+
+    Research mode is fail-open, which is only safe if it is never fail-silent.
+    This renders three things in descending order of how much they should worry
+    the reviewer: biology/provenance problems that would have aborted a strict
+    run, content that strict mode would have deleted, and the PathWhiz format
+    rules that were skipped on purpose.
+    """
+
+    pa = _safe_dict(artifacts)
+    if not is_research(pa.get("export_mode")):
+        return
+
+    flags = _safe_list(pa.get("research_review_flags"))
+    skipped = _safe_list(pa.get("research_skipped_format_rules"))
+    preserved = _safe_list(pa.get("research_normalization_actions"))
+
+    st.subheader("Review flags — research mode")
+    if flags:
+        st.error(
+            f"**{len(flags)} biology/provenance issue(s) need review.** "
+            "In strict mode each of these would have stopped the run. The pathway "
+            "below was still produced — treat it as a candidate, not a result."
+        )
+    else:
+        st.success(
+            "No biology or provenance check failed. Format rules were still "
+            "relaxed, so this is a research artifact, not an importable PWML file."
+        )
+    st.write(
+        {
+            "biology_provenance_flags": len(flags),
+            "format_rules_skipped": len(skipped),
+            "content_preserved_that_strict_would_delete": len(preserved),
+        }
+    )
+
+    if flags:
+        with st.expander(f"Biology / provenance flags ({len(flags)})", expanded=True):
+            st.table(_research_flag_rows(flags))
+
+    if preserved:
+        with st.expander(
+            f"Content kept that strict mode would have deleted ({len(preserved)})",
+            expanded=False,
+        ):
+            st.caption(
+                "Strict mode deletes these to satisfy the PathWhiz importer or to "
+                "pre-empt a gate. Research mode keeps them so you can judge them."
+            )
+            st.table(
+                [
+                    {
+                        "what": str(action.get("type", "")).replace("research_mode_", ""),
+                        "name": str(action.get("name") or action.get("from") or ""),
+                        "where": str(action.get("json_pointer") or ""),
+                        "why strict drops it": str(action.get("reason") or ""),
+                    }
+                    for action in preserved
+                    if isinstance(action, dict)
+                ]
+            )
+
+    if skipped:
+        with st.expander(f"PathWhiz format rules skipped ({len(skipped)})", expanded=False):
+            st.caption(
+                "These are importer requirements only — a missing external DB id, "
+                "a generated protein_complex wrapper rule. Skipping them says "
+                "nothing about whether the biology is right."
+            )
+            st.table(_research_flag_rows(skipped))
+
+    st.download_button(
+        "Download review flags (JSON)",
+        data=_json_dump(
+            {
+                "export_mode": pa.get("export_mode"),
+                "biology_provenance_flags": flags,
+                "format_rules_skipped": skipped,
+                "content_preserved": preserved,
+            }
+        ),
+        file_name="research_mode_review_flags.json",
+        mime="application/json",
+        key="research_mode_review_flags_download",
+    )
+
+    _render_research_citation_report(pa, flags, skipped)
+
+
+def _render_research_citation_report(
+    pa: Dict[str, Any],
+    flags: List[Any],
+    skipped: List[Any],
+) -> None:
+    """Render the tiered citation report and its downloadable exports.
+
+    Reads the **pre-merge** synthesized payload (``rag_result.payload``): the
+    merged payload has had ``rag_provenance`` / ``source_papers`` /
+    ``source_refs`` stripped from every reaction by ``pipeline._clean_processes``,
+    so tiering the merged one would report Tier D for everything.
+
+    Imported here rather than at module scope because this is seam S5 — the
+    orchestrator is the only place allowed to reach into ``t2pw.rag``, and only
+    when RAG actually produced something.
+    """
+
+    rag_result = st.session_state.get("rag_result")
+    synthesized = getattr(rag_result, "payload", None)
+    if not isinstance(synthesized, dict) or not synthesized:
+        st.info(
+            "No multi-paper synthesis in this run, so there is nothing to cite. "
+            "Enable RAG to get a tiered citation report."
+        )
+        return
+
+    try:
+        from t2pw.rag.research_report import build_citation_report
+
+        report = build_citation_report(
+            synthesized,
+            review_flags=flags,
+            format_gaps=skipped,
+            rag_result=rag_result,
+        )
+    except Exception as exc:  # noqa: BLE001 — the report must never break the run
+        st.warning(f"Citation report unavailable: {exc}")
+        return
+
+    st.subheader("Citation report — evidence tiers")
+    counts = _safe_dict(_safe_dict(report.summary).get("tiers")) or _safe_dict(report.tiers)
+    st.write(report.summary)
+    if int(counts.get("D", 0) or 0):
+        st.error(
+            f"{counts['D']} element(s) are **UNSOURCED** — no provenance of any kind. "
+            "These are the first thing to check."
+        )
+
+    with st.expander("Per-reaction citations", expanded=True):
+        if report.lines:
+            for line in report.lines:
+                st.text(line)
+        else:
+            st.caption("No reactions carried provenance.")
+
+    with st.expander("Per-entity tiers and supporting passages", expanded=False):
+        if report.entities:
+            st.table(
+                [
+                    {
+                        "entity": row.get("name", ""),
+                        "tier": row.get("tier", ""),
+                        "label": row.get("label", ""),
+                        "sources": row.get("sources_text", "") or row.get("citation", ""),
+                    }
+                    for row in report.entities
+                ]
+            )
+        else:
+            st.caption("No entities to tier.")
+
+    st.caption(
+        "Page numbers are not available in this pipeline and are never invented — "
+        "citations give section plus the verbatim passage. A review that cites the "
+        "seed paper cannot be told apart from an independent corroboration, because "
+        "reference lists are discarded at ingest."
+    )
+
+    col_json, col_md, col_csv = st.columns(3)
+    col_json.download_button(
+        "Download pathway + citations (JSON)",
+        data=report.to_json(),
+        file_name="research_pathway_citations.json",
+        mime="application/json",
+        key="research_report_json",
+    )
+    col_md.download_button(
+        "Download review report (Markdown)",
+        data=report.to_markdown(),
+        file_name="research_pathway_review.md",
+        mime="text/markdown",
+        key="research_report_md",
+    )
+    col_csv.download_button(
+        "Download element table (CSV)",
+        data=report.to_csv(),
+        file_name="research_pathway_elements.csv",
+        mime="text/csv",
+        key="research_report_csv",
+    )
+
+
 def _write_reaction_preservation_report(stage: str, payload: Any) -> Optional[Dict[str, Any]]:
     try:
         return write_reaction_preservation_report_if_manifest(
@@ -1624,7 +1846,24 @@ def run_post_pipeline_sbml_artifacts(
     reaction_summary: Optional[str] = None,
     use_stoich_agent: bool = False,
     rag_evidence_context: str = "",
+    export_mode: ExportMode = DEFAULT_EXPORT_MODE,
 ) -> Dict[str, Any]:
+    # ``export_mode`` selects the gate policy for this whole run. "pathwhiz" is
+    # the default and behaves exactly as before. "research" runs every check but
+    # downgrades FORMAT rules to skipped and BIOLOGY/PROVENANCE failures to
+    # non-blocking review flags, and keeps content the strict passes delete.
+    research_mode = is_research(export_mode)
+    research_flags: List[Dict[str, Any]] = []
+    research_skipped: List[Dict[str, Any]] = []
+
+    def _contract(validator: Any, *args: Any, **kwargs: Any) -> Dict[str, Any]:
+        """Run a stage contract under the active export mode and collect flags."""
+        report = run_stage_contract(validator, *args, mode=export_mode, **kwargs)
+        if research_mode and isinstance(report, dict):
+            research_flags.extend(review_flags(report))
+            research_skipped.extend(format_gaps(report))
+        return report
+
     project_root = PROJECT_ROOT
     cache_path = Path(mapping_cache_path)
     if not cache_path.is_absolute():
@@ -1667,7 +1906,7 @@ def run_post_pipeline_sbml_artifacts(
         stoich_audit_log_path = tmp / "stoich_audit_log.json"
 
         pre_mapping_input = deepcopy(final_payload)
-        post_extraction_contract_report = validate_post_extraction(pre_mapping_input)
+        post_extraction_contract_report = _contract(validate_post_extraction, pre_mapping_input)
         stage2_result = map_payload(
             deepcopy(pre_mapping_input),
             cache_path=cache_path,
@@ -1676,6 +1915,7 @@ def run_post_pipeline_sbml_artifacts(
             use_cache=True,
             allow_complex_wrapper_creation=False,
             allow_structural_cleanup=False,
+            mode=export_mode,
         )
         if not isinstance(stage2_result, dict):
             raise ValueError("Stage 2 mapping returned a malformed result: expected an object.")
@@ -1687,7 +1927,7 @@ def run_post_pipeline_sbml_artifacts(
             )
         stage2_payload = stage2_payload_value
         stage2_mapping_report = stage2_report_value
-        stage2_contract_report = validate_post_mapping(stage2_payload)
+        stage2_contract_report = _contract(validate_post_mapping, stage2_payload)
         stage2_runtime_schema_report = _safe_dict(
             stage2_contract_report.get("runtime_schema_report")
         )
@@ -1802,10 +2042,12 @@ def run_post_pipeline_sbml_artifacts(
             normalized_input, normalization_report = normalize_process_payload(
                 stage2_payload,
                 on_checkpoint=_write_normalization_checkpoint,
+                mode=export_mode,
             )
             normalization_completed = True
             gate_details = _safe_dict(normalization_report.get("gate"))
-            post_normalization_contract_report = validate_post_normalization(
+            post_normalization_contract_report = _contract(
+                validate_post_normalization,
                 normalized_input,
                 gate_details,
             )
@@ -2214,7 +2456,7 @@ def run_post_pipeline_sbml_artifacts(
                     fresh_gate_report = {"ok": True, **fresh_gate_details}
                 except GateValidationError as exc:
                     fresh_gate_report = {"ok": False, **_safe_dict(exc.details)}
-                validate_post_normalization(settled_payload, fresh_gate_report)
+                _contract(validate_post_normalization, settled_payload, fresh_gate_report)
                 current_stage3_gate_errors = _safe_list(fresh_gate_report.get("errors"))
             top_errors = [
                 str(_safe_dict(item).get("reason", "")).strip()
@@ -2338,7 +2580,7 @@ def run_post_pipeline_sbml_artifacts(
             stop_reason = "max_rounds_reached"
 
         audited_json.write_text(current_input.read_text(encoding="utf-8"), encoding="utf-8")
-        post_audit_contract_report = validate_post_audit(_read_json(audited_json))
+        post_audit_contract_report = _contract(validate_post_audit, _read_json(audited_json))
         loop_duration = round(time.time() - audit_started_at, 3)
         try:
             preservation_after_audit = _write_reaction_preservation_report(
@@ -2393,8 +2635,14 @@ def run_post_pipeline_sbml_artifacts(
             id_source=id_source,
             db_config=db_config,
             use_cache=False,
-            allow_complex_wrapper_creation=True,
-            allow_structural_cleanup=True,
+            # The synthetic protein_complex wrapper exists only because the
+            # PathWhiz importer refuses a bare protein as a reaction enzyme.
+            # Research mode does not import, so the wrapping is dropped entirely
+            # and enzymes stay plain protein actors. The structural cleanup that
+            # exists to keep those wrappers valid goes with it.
+            allow_complex_wrapper_creation=not research_mode,
+            allow_structural_cleanup=not research_mode,
+            mode=export_mode,
         )
         if not isinstance(mapping_result, dict):
             raise ValueError("Stage 6 mapping returned a malformed result: expected an object.")
@@ -2406,7 +2654,7 @@ def run_post_pipeline_sbml_artifacts(
             )
         mapped_payload = mapped_payload_value
         mapping_report = mapping_report_value
-        post_remap_contract_report = validate_post_remap(mapped_payload)
+        post_remap_contract_report = _contract(validate_post_remap, mapped_payload)
         mapped_json.write_text(json.dumps(mapped_payload, indent=2, ensure_ascii=False), encoding="utf-8")
         mapping_report_path.write_text(json.dumps(mapping_report, indent=2, ensure_ascii=False), encoding="utf-8")
         stoich_audit_log: list = []
@@ -2495,6 +2743,17 @@ def run_post_pipeline_sbml_artifacts(
             "gate_failed": False,
             "normalization_gate_failed": bool(gate_fail_report),
             "gate_fail_report": gate_fail_report,
+            "export_mode": coerce_mode(export_mode),
+            # Everything research mode downgraded, so the UI can show it loudly.
+            # Empty in strict mode, where these findings aborted the run instead.
+            "research_review_flags": research_flags,
+            "research_skipped_format_rules": research_skipped,
+            "research_normalization_actions": [
+                action
+                for action in _safe_list(normalization_report.get("actions"))
+                if isinstance(action, dict)
+                and str(action.get("type", "")).startswith("research_mode_")
+            ],
             "pre_mapping_input": pre_mapping_input,
             "extraction_inference_payload": pre_mapping_input,
             "post_extraction_contract_report": post_extraction_contract_report,
@@ -2790,6 +3049,40 @@ def run_pwml_export(
                 "output_path": "", "qa": {}, "grounding_report": {},
                 "reaction_preservation_before_final_export": before_export_report}
 
+
+# ── Export mode (OUTSIDE form — governs the whole run AND the later PWML
+# export section, so it must be readable from both) ────────────────────────
+EXPORT_MODE_LABELS = {
+    "Strict PWML": PATHWHIZ,
+    "Research (relaxed)": RESEARCH,
+}
+_export_mode_label = st.radio(
+    "Export mode",
+    list(EXPORT_MODE_LABELS),
+    horizontal=True,
+    key="export_mode_radio",
+    help=(
+        "Strict PWML (default): every check blocks, exactly as before — this is "
+        "the mode to use for anything destined for PathBank. "
+        "Research (relaxed): PathWhiz *formatting* rules are skipped (no required "
+        "external DB identity, no protein_complex wrapper around enzymes, ':' in a "
+        "name is fine), and every biology/provenance check still runs but only "
+        "FLAGS instead of aborting. Research mode always produces a candidate "
+        "pathway with a citation report; it does not produce an importable PWML file."
+    ),
+)
+# .get with a strict default: under a mocked//headless streamlit the widget
+# returns a sentinel rather than a label, and an unrecognised value must always
+# degrade to the safe mode rather than silently relaxing every gate.
+export_mode: ExportMode = EXPORT_MODE_LABELS.get(_export_mode_label, PATHWHIZ)
+st.session_state["export_mode"] = export_mode
+if is_research(export_mode):
+    st.warning(
+        "**Research mode — relaxed.** PathWhiz formatting rules are skipped and "
+        "biology/provenance problems are reported as review flags instead of "
+        "stopping the run. The output is a *candidate* pathway for human review, "
+        "not an importable PWML file. Read the Review flags panel before trusting it."
+    )
 
 # ── Input mode (OUTSIDE form — triggers immediate re-render on click) ──────
 input_mode = st.radio(
@@ -4335,8 +4628,10 @@ if st.session_state.get("pipeline_ready"):
                             if rag_config()["enabled"]
                             else ""
                         ),  # S2 — "" when RAG off, keeping today's path
+                        export_mode=coerce_mode(st.session_state.get("export_mode")),
                     )
                 st.session_state["post_pipeline_artifacts"] = artifacts
+                _render_research_mode_panels(artifacts)
                 _pa = _safe_dict(artifacts)
                 if _pa.get("post_audit_qa_report"):
                     st.session_state["qa_report"] = _pa["post_audit_qa_report"]

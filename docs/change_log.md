@@ -5,6 +5,98 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Research mode — relaxed export policy for novel pathways (2026-07-27, branch `research-mode`)
+
+Adds a second export policy so RAG-synthesized *novel* pathways can be generated
+and reviewed without fighting the PathWhiz importer. Strict PWML stays the
+default and is unchanged. Full categorization in
+[`docs/research_mode.md`](research_mode.md) (277 checks: 85 SKIP, 86 FLAG,
+106 UNCHANGED).
+
+**Error.** A genuinely novel enzyme from a recent paper has no UniProt
+accession, is not wrapped in a synthetic `protein_complex`, and may carry a `:`
+in its name. Today every one of those is fatal, and they are fatal at the same
+severity as "this reaction has no inputs or outputs" — so a pathway that is
+*biologically* fine cannot be looked at, while the checks that actually matter
+are indistinguishable from formatting noise.
+
+**Why.** The pipeline has exactly one audience today: the PathWhiz Rails
+importer. Rules that exist only to satisfy it (required external DB identity,
+the enzyme→`protein_complex` wrapper and its component rules, `+`/`:`
+name-format rules, the pre-export required-field contract) are enforced with the
+same `raise` as biology and provenance rules. There was no way to ask for "the
+biology checks, but do not stop".
+
+**Fix.** An explicit, user-selected export policy — not a RAG-derived one.
+
+- **`src/t2pw/pipeline/export_mode.py`** (new) holds `ExportMode`, the FORMAT
+  code set, the structural-guard set, and `relax_report`. `coerce_mode` resolves
+  anything unrecognised to `"pathwhiz"`, so a typo degrades to strict rather
+  than silently relaxing every gate. Unknown issue codes classify as *review*,
+  not *skip* — necessary because `payload_models.py` emits its own copies of
+  `species_required` / `generated_wrapper_missing_components` /
+  `actor_schema_not_canonical`, so codes are not globally unique.
+- **`stage_contracts.py`**: no validator body was parameterized. The new
+  `run_stage_contract(validator, *args, mode=...)` calls the validator unchanged
+  and re-severities the *report*. Strict mode is a plain passthrough, which is
+  why strict behaviour is byte-for-byte identical by construction.
+- **`process_normalizer.py`**: the mode rides on the shared `report` dict, which
+  is already threaded through every pass and nested closure, so no pass gained a
+  keyword. Research mode stops three **uncaught `ValueError`s** in composite
+  materialization from killing the run, converts the **hidden**
+  `assert actor_contract.get("ok") is True` into a recorded flag, skips
+  `drop_process_orphan_proteins` / `prune_disconnected_proteins`, and makes
+  `_record_non_protein_catalyst_drop` the single decision point for all five
+  non-protein-catalyst drop sites. Every preserved row is recorded under a
+  `research_mode_` action prefix.
+- **`map_ids.py` / `entity_identity.py`**: `mode=` makes only *name handling*
+  lenient (`lenient_names` stops reading `:` as complex syntax). Dropping the
+  wrapper needed **no new mapping code** — `allow_complex_wrapper_creation`
+  already existed with a skip branch; the orchestrator flips it at Stage 6.
+- **`t2pw/rag/tiers.py`** (new) assigns evidence tiers A–D off-payload.
+  Tier A excludes the two sites that stamp a *fake* grounded identity: the
+  PathBank Unknown sentinel (`mapped_ids.uniprot == "Unknown"`,
+  `map_ids.py:4218`) and `best_effort_fallback` (`map_ids.py:3822`). Distinct-
+  paper counting is on `source_id`, and a review can never alone satisfy Tier B.
+  The UniProt retry is read-only, opt-in, and never writes into mapping — so it
+  cannot cause a wrong-organism accession to be stamped `mapped`.
+
+**Deliberately not done.** Research mode emits **no PWML XML**, so
+`pwml/ir.py`, `writer.py`, `validate.py` and `qa.py` are untouched — this also
+retires the mis-serialization risk of writing a compound's id into a
+`<protein-id>` element. RAG synthesis keeps validating its own output strictly.
+No page numbers are fabricated: none exist in the RAG path and none are
+derivable for acquired papers, so citations use `title (source_id) — section`
+plus the verbatim passage.
+
+**No biology or provenance check was weakened.** They all still run; they stop
+aborting and become per-item review flags. Research mode is fail-open but never
+fail-silent — every skipped FORMAT rule and every flagged violation keeps its
+issue code and JSON pointer and is surfaced in the Review-flags panel.
+
+**Separation invariant holds**:
+`grep -rn "t2pw.rag" src/t2pw/pipeline src/t2pw/mapping src/t2pw/curation src/t2pw/pwml`
+still returns nothing. Three core stage files gained a research-mode branch; it
+keys on the export policy, never on RAG state, and is recorded as a sanctioned
+exception in `docs/rag/03_separation_invariant.md`.
+
+**Default-off byte identity**: with the policy at its `"pathwhiz"` default no
+code path changes. Baseline before: **626 passing**; after: **707 passing**
+(+81 research-mode tests), with every pre-existing test unmodified except
+`tests/test_streamlit_stage2_orchestration.py`, whose AST-lifted namespace and
+`normalize_process_payload` stub needed the new argument (the stub now asserts
+the default run is strict). `ruff check src tests` reports the same 49
+pre-existing findings as before the change — no new lint.
+
+New tests: `test_research_mode_contracts.py` (format-vs-biology per mode,
+structural guards, strict passthrough, `:` name leniency),
+`test_research_mode_normalizer.py` (the three uncaught raises, the hidden
+assert, the destructive passes), `test_research_mode_orchestration.py` (AST
+guards that no `validate_post_*` call bypasses the mode wrapper and that Stage 6
+drops wrapping only in research mode), `test_research_mode_tiers.py` (incl. the
+Unknown-sentinel and best-effort Tier A regressions), and
+`test_research_mode_report.py`.
+
 ## RAG contract-compliance fixes (2026-07-25, branch `rag-contract-fixes`)
 
 Implements the approved fixes from `docs/contract_compliance_audit_2026-07-25.md`

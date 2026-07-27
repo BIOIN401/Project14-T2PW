@@ -4,6 +4,7 @@ import ast
 import hashlib
 import json
 import shutil
+import sys
 import time
 from copy import deepcopy
 from pathlib import Path
@@ -15,6 +16,23 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_PATH = ROOT / "src" / "t2pw" / "app" / "streamlit_app.py"
+
+SRC = ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
+
+# The lifted orchestrator now takes an export-mode policy. These are injected
+# for real (not stubbed) so this suite keeps proving that the default, strict
+# path calls each contract exactly as it always did.
+from t2pw.pipeline.export_mode import (  # noqa: E402
+    DEFAULT_EXPORT_MODE,
+    PATHWHIZ,
+    coerce_mode,
+    format_gaps,
+    is_research,
+    review_flags,
+)
+from t2pw.pipeline.stage_contracts import run_stage_contract  # noqa: E402
 
 
 def _source_tree() -> ast.Module:
@@ -177,7 +195,10 @@ def _orchestration_harness(
         payload: dict[str, Any],
         *,
         on_checkpoint: Any,
+        mode: Any = DEFAULT_EXPORT_MODE,
     ) -> tuple[dict[str, Any], dict[str, Any]]:
+        # The default run must stay strict; research mode is opt-in only.
+        assert mode == PATHWHIZ, f"expected strict normalization, got {mode!r}"
         calls.append(("normalize", payload))
         normalized = deepcopy(payload)
         normalized["stage_marker"] = "stage3"
@@ -365,6 +386,13 @@ def _orchestration_harness(
         "build_render_artifacts": lambda *_args, **_kwargs: {},
         "strip_unmapped": lambda *_args, **_kwargs: (b"", {}),
         "GateValidationError": RuntimeError,
+        "DEFAULT_EXPORT_MODE": DEFAULT_EXPORT_MODE,
+        "PATHWHIZ": PATHWHIZ,
+        "run_stage_contract": run_stage_contract,
+        "coerce_mode": coerce_mode,
+        "is_research": is_research,
+        "review_flags": review_flags,
+        "format_gaps": format_gaps,
     }
     function = _load_function("run_post_pipeline_sbml_artifacts", namespace)
     observations = {

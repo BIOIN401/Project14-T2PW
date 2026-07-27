@@ -14,6 +14,12 @@ from t2pw.pipeline.entity_identity import (
     protein_species_context,
     route_entity_for_mapping,
 )
+from t2pw.pipeline.export_mode import (
+    DEFAULT_EXPORT_MODE,
+    RESEARCH,
+    ExportMode,
+    is_research,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -332,6 +338,49 @@ def _process_lists(payload: Dict[str, Any]) -> Tuple[List[Dict[str, Any]], List[
     if not isinstance(processes.get("transports"), list):
         processes["transports"] = []
     return _safe_list(processes["reactions"]), _safe_list(processes["transports"])
+
+
+def _research_mode(report: Any) -> bool:
+    """Whether this run is a relaxed research-mode run.
+
+    The export mode rides on the shared ``report`` dict rather than on a keyword
+    of every pass. ``report`` is already threaded through all of them *and*
+    through their nested helpers, so reading it here avoids adding the same
+    argument to a dozen signatures and re-plumbing every closure -- and it keeps
+    the standalone validators callable exactly as they are today.
+
+    A missing key means strict, so every existing caller (and ``_new_report``,
+    which deliberately does not set it) behaves byte-for-byte as before.
+    """
+
+    return is_research(report.get("export_mode") if isinstance(report, dict) else None)
+
+
+def _note_research_relaxation(
+    report: Any,
+    *,
+    action: str,
+    pointer: str = "",
+    **detail: Any,
+) -> None:
+    """Record content that strict mode would have deleted or rejected.
+
+    Research mode is fail-open but never fail-silent: every preserved row and
+    every skipped rewrite lands in ``report["actions"]`` under a
+    ``research_mode_`` prefix so the review panel can show exactly what strict
+    mode would have thrown away.
+    """
+
+    if not isinstance(report, dict):
+        return
+    entry: Dict[str, Any] = {"type": f"research_mode_{action}", "export_mode": RESEARCH}
+    if pointer:
+        entry["json_pointer"] = pointer
+    entry.update(detail)
+    report.setdefault("actions", []).append(entry)
+    summary = report.get("summary")
+    if isinstance(summary, dict):
+        summary["research_mode_relaxations"] = int(summary.get("research_mode_relaxations") or 0) + 1
 
 
 def _new_report() -> Dict[str, Any]:
@@ -939,6 +988,31 @@ def _rewrite_token(
         )
         return [complex_name]
 
+    if _research_mode(report):
+        # A compound+compound composite has no PathWhiz ``protein_complex``
+        # representation, but that is a limit of the importer's data model, not
+        # a reason to lose the reaction this token appears in. Keep both halves
+        # as their own entities, exactly as the no-evidence branch above does,
+        # and let the process reference them side by side.
+        kept: List[str] = []
+        for part in parts:
+            c_part = _canonical(part)
+            if not c_part:
+                continue
+            if _is_protein_like(c_part, payload):
+                _ensure_protein(c_part, payload, report)
+            else:
+                _ensure_compound(c_part, payload, report)
+            kept.append(c_part)
+        _note_research_relaxation(
+            report,
+            action="composite_kept_unmaterialized",
+            pointer=pointer,
+            reason="no protein-like left component; strict mode aborts here",
+            **{"from": text, "to": kept},
+        )
+        return kept or [text]
+
     raise ValueError(
         f"Composite token '{text}' at {pointer} has no protein-like left component; "
         "compound+compound composite materialization is not supported."
@@ -1136,6 +1210,18 @@ def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, 
             parts = _split_composite(name)
             if len(parts) >= 2:
                 if not _is_protein_like(parts[0], payload):
+                    if _research_mode(rep):
+                        # Keep the complex row as the paper stated it rather than
+                        # killing the run over a name PathWhiz cannot model.
+                        _note_research_relaxation(
+                            rep,
+                            action="composite_complex_kept",
+                            pointer="/entities/protein_complexes",
+                            name=name,
+                            left_token=parts[0],
+                            reason="non protein-like left token; strict mode aborts here",
+                        )
+                        continue
                     raise ValueError(
                         f"Composite complex '{name}' has non protein-like left token '{parts[0]}'; unsupported."
                     )
@@ -1180,6 +1266,20 @@ def normalize_composites(payload: Dict[str, Any], *, report: Optional[Dict[str, 
                 rep["rewrite_map"][_normalize(name)] = canonical
                 rep["summary"]["entities_moved_out_of_compounds"] += 1
                 rep["summary"]["composites_rewritten"] += 1
+                continue
+            if _research_mode(rep):
+                # Strict mode aborts the whole run here. Research mode keeps the
+                # compound exactly as extracted -- a "A+B" name is a formatting
+                # problem for the importer, not evidence that the paper is wrong.
+                _note_research_relaxation(
+                    rep,
+                    action="composite_compound_kept",
+                    pointer="/entities/compounds",
+                    name=name,
+                    left_token=parts[0] if parts else "",
+                    reason="no protein-like left component; strict mode aborts here",
+                )
+                kept_compounds.append(row)
                 continue
             raise ValueError(
                 f"Composite entity '{name}' in /entities/compounds has no protein-like left component; unsupported."
@@ -2348,7 +2448,30 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 return "compound", compound_by_norm[norm]
         return None
 
-    def _record_non_protein_catalyst_drop(pointer: str, name: str, entity_type: str, role: str, source_field: str) -> None:
+    def _record_non_protein_catalyst_drop(
+        pointer: str, name: str, entity_type: str, role: str, source_field: str
+    ) -> bool:
+        """Record a non-protein catalyst; return True when it must be dropped.
+
+        PathWhiz can only carry a protein or protein_complex as a reaction
+        enzyme, so strict mode deletes cofactors and metal ions that a paper
+        asserted as catalytic. That is a limit of the importer, not a biological
+        judgement, so research mode keeps the actor and flags it instead. This
+        is the single decision point for all five drop sites below.
+        """
+
+        if _research_mode(rep):
+            _note_research_relaxation(
+                rep,
+                action="non_protein_catalyst_kept",
+                pointer=pointer,
+                name=name,
+                entity_type=entity_type,
+                role=role or "catalyst",
+                source_field=source_field,
+                reason="non-protein catalyst; strict mode drops it for the importer",
+            )
+            return False
         summary["non_protein_catalysts_dropped"] += 1
         summary["modifier_refs_dropped"] += 1
         rep["actions"].append(
@@ -2361,6 +2484,7 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 "source_field": source_field,
             }
         )
+        return True
 
     def _rewrite_actor_rows(rows: List[Any], pointer_prefix: str, *, drop_unknown: bool = True) -> List[Dict[str, Any]]:
         kept: List[Dict[str, Any]] = []
@@ -2387,11 +2511,29 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 explicit_entity_type in dropped_enzyme_entity_types
                 and (pointer_prefix.endswith("/enzymes") or role in enzyme_export_roles)
             ):
-                _record_non_protein_catalyst_drop(pointer, raw_name, explicit_entity_type, role, source_field)
+                if _record_non_protein_catalyst_drop(
+                    pointer, raw_name, explicit_entity_type, role, source_field
+                ):
+                    continue
+                kept.append(row)
                 continue
 
             resolved = _resolve_actor_name(raw_name)
             if resolved is None:
+                if drop_unknown and _research_mode(rep):
+                    # An actor whose name did not normalize to a declared entity
+                    # is exactly the ungrounded catalyst a reviewer must see.
+                    # Dropping it destroys the provenance link; keep and flag.
+                    _note_research_relaxation(
+                        rep,
+                        action="unknown_actor_kept",
+                        pointer=pointer,
+                        name=raw_name,
+                        source_field=source_field,
+                        reason="actor resolves to no declared entity; strict mode drops it",
+                    )
+                    kept.append(row)
+                    continue
                 if drop_unknown:
                     summary["modifier_refs_dropped"] += 1
                     rep["actions"].append(
@@ -2467,14 +2609,14 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             entity_type = _canonical(str(updated_mod.get("entity_type", ""))).casefold()
             role = _canonical(str(updated_mod.get("role", "catalyst"))).casefold() or "catalyst"
             if entity_type in dropped_enzyme_entity_types and role in enzyme_export_roles:
-                _record_non_protein_catalyst_drop(
+                if _record_non_protein_catalyst_drop(
                     f"/processes/reactions/{ridx}/modifiers/{midx}",
                     _canonical(str(updated_mod.get("entity", ""))),
                     entity_type,
                     role,
                     "entity",
-                )
-                continue
+                ):
+                    continue
             if updated_mod.get("entity"):
                 new_modifiers.append(updated_mod)
         reaction["modifiers"] = new_modifiers
@@ -2516,14 +2658,14 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
             entity_type = _canonical(str(updated_enz.get("entity_type", ""))).casefold()
             role = _canonical(str(updated_enz.get("role", "catalyst"))).casefold() or "catalyst"
             if entity_type in dropped_enzyme_entity_types and role in enzyme_export_roles:
-                _record_non_protein_catalyst_drop(
+                if _record_non_protein_catalyst_drop(
                     f"/processes/reactions/{ridx}/enzymes/{eidx}",
                     _canonical(str(updated_enz.get("entity", ""))),
                     entity_type,
                     role,
                     "entity",
-                )
-                continue
+                ):
+                    continue
             if updated_enz.get("entity"):
                 new_enzymes.append(updated_enz)
         reaction["enzymes"] = new_enzymes
@@ -2553,14 +2695,14 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 if not ename or _normalize(ename) in existing_modifier_norms:
                     continue
                 if etype not in allowed_enzyme_entity_types:
-                    _record_non_protein_catalyst_drop(
+                    if _record_non_protein_catalyst_drop(
                         f"/processes/reactions/{ridx}/enzymes",
                         ename,
                         etype,
                         str(enz.get("role") or "catalyst"),
                         "entity",
-                    )
-                    continue
+                    ):
+                        continue
                 reaction["modifiers"].append({
                     "entity": ename,
                     "entity_type": etype,
@@ -2586,15 +2728,19 @@ def normalize_process_actor_schema(payload: Dict[str, Any], *, report: Optional[
                 continue
             entity_type = _canonical(str(mod.get("entity_type", "protein"))).casefold() or "protein"
             if entity_type not in allowed_enzyme_entity_types:
-                if entity_type in dropped_enzyme_entity_types:
-                    _record_non_protein_catalyst_drop(
-                        f"/processes/reactions/{ridx}/modifiers",
-                        entity,
-                        entity_type,
-                        role,
-                        "entity",
-                    )
-                continue
+                if entity_type not in dropped_enzyme_entity_types:
+                    continue
+                if _record_non_protein_catalyst_drop(
+                    f"/processes/reactions/{ridx}/modifiers",
+                    entity,
+                    entity_type,
+                    role,
+                    "entity",
+                ):
+                    continue
+                # Research mode: the catalyst stays in the enzymes view with its
+                # real entity_type, so the reviewer sees what the paper actually
+                # claimed rather than a silently shortened list.
             key = (entity_type, _normalize(entity))
             if key in seen_enzyme_norms:
                 continue
@@ -4317,9 +4463,23 @@ def normalize_process_payload(
     payload: Dict[str, Any],
     *,
     on_checkpoint: Optional[Callable[[str, Dict[str, Any], Dict[str, Any]], None]] = None,
+    mode: ExportMode = DEFAULT_EXPORT_MODE,
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """Run the Stage-3 normalization passes.
+
+    ``mode`` selects the export policy. ``"pathwhiz"`` (the default) is today's
+    behaviour, unchanged. ``"research"`` keeps content that strict mode deletes
+    to satisfy the PathWhiz importer -- disconnected proteins, process-orphan
+    proteins, non-protein catalysts -- and records each preserved row in
+    ``report["actions"]`` so nothing is dropped silently. The mode is published
+    on the report because every pass and nested helper already receives it.
+    """
+
     data = deepcopy(payload)
     report = _new_report()
+    # Only stamped for research runs, so a strict report dict stays byte-identical.
+    if is_research(mode):
+        report["export_mode"] = RESEARCH
 
     def _checkpoint(name: str) -> None:
         if on_checkpoint is not None:
@@ -4363,10 +4523,22 @@ def normalize_process_payload(
     # Reaction classification must run before orphan cleanup. Otherwise a protein
     # attached only to a rejected/quarantined reaction remains long enough to fail
     # the final identity/connectivity gate even though it is no longer exportable.
-    drop_process_orphan_proteins(data, report=report)
-    _checkpoint("drop_process_orphan_proteins")
-    prune_disconnected_proteins(data, report=report)
-    _checkpoint("prune_disconnected_proteins")
+    # Both passes exist to pre-empt the degree-0 identity/connectivity gate by
+    # deleting the offending proteins. In research mode the gate only flags, so
+    # deleting is pure content loss: a not-yet-wired protein from a novel paper
+    # is exactly what the reviewer needs to see. Keep it and say so.
+    if is_research(mode):
+        _note_research_relaxation(
+            report,
+            action="destructive_cleanup_skipped",
+            passes=["drop_process_orphan_proteins", "prune_disconnected_proteins"],
+            reason="disconnected/orphan proteins are preserved for review instead of deleted",
+        )
+    else:
+        drop_process_orphan_proteins(data, report=report)
+        _checkpoint("drop_process_orphan_proteins")
+        prune_disconnected_proteins(data, report=report)
+        _checkpoint("prune_disconnected_proteins")
     try:
         gate_details = run_strict_post_normalization_gates(
             data,
@@ -4391,5 +4563,18 @@ def normalize_process_payload(
     from t2pw.pipeline.stage_contracts import validate_post_normalization
 
     actor_contract = validate_post_normalization(data, {"ok": True, "errors": []})
-    assert actor_contract.get("ok") is True, actor_contract.get("errors")
+    if is_research(mode):
+        # ``validate_post_normalization`` never raises, so in strict mode this
+        # assert is what actually turns a canonical-actor-row finding into an
+        # abort. Research mode records the same finding and continues.
+        if actor_contract.get("ok") is not True:
+            _note_research_relaxation(
+                report,
+                action="actor_contract_flagged",
+                reason="canonical actor-row contract failed; strict mode aborts here",
+                errors=_safe_list(actor_contract.get("errors")),
+            )
+            report["actor_contract"] = actor_contract
+    else:
+        assert actor_contract.get("ok") is True, actor_contract.get("errors")
     return data, report

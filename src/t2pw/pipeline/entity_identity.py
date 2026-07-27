@@ -203,8 +203,19 @@ def route_entity_for_mapping(
     entity_type_hint: str,
     *,
     protein_like_names: Optional[Set[str]] = None,
+    lenient_names: bool = False,
 ) -> Dict[str, str]:
-    """Classify an entity for compound, protein, or complex ID mapping."""
+    """Classify an entity for compound, protein, or complex ID mapping.
+
+    ``lenient_names`` is the research-mode switch. Normally a ``:`` in a name is
+    read as PathWhiz complex syntax (``receptor:kinase``), which is right for
+    curated input but wrong for a novel pathway, where a colon is just a
+    character in a biological name. With ``lenient_names=True`` an unhinted name
+    is never re-routed to the complex mapper on the strength of a colon alone --
+    it keeps whatever route its own wording implies. Explicit type hints still
+    win, and the biochemical-colon rules (``18:1-CoA``) are unaffected because
+    they already route away from complex.
+    """
 
     name = _canonical(entity_name)
     hint = _canonical(entity_type_hint).lower()
@@ -214,7 +225,7 @@ def route_entity_for_mapping(
         return {"route": "complex", "reason": "complex_entity"}
     if hint in {"protein", "enzyme", "modifier"}:
         return {"route": "protein", "reason": "type_hint"}
-    if ":" in name and _is_explicit_complex_colon_name(name, protein_like_set):
+    if not lenient_names and ":" in name and _is_explicit_complex_colon_name(name, protein_like_set):
         return {"route": "complex", "reason": "complex_entity"}
     if norm in protein_like_set:
         return {"route": "protein", "reason": "known_protein_like"}

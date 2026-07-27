@@ -25,6 +25,7 @@ from t2pw.pipeline.entity_identity import (
     protein_species_context,
     route_entity_for_mapping,
 )
+from t2pw.pipeline.export_mode import DEFAULT_EXPORT_MODE, ExportMode, is_research
 
 
 def _safe_list(value: Any) -> List[Any]:
@@ -5960,9 +5961,21 @@ def map_payload(
     invalidate_cache_keys: Any = None,
     allow_complex_wrapper_creation: bool = True,
     allow_structural_cleanup: bool = True,
+    mode: ExportMode = DEFAULT_EXPORT_MODE,
 ) -> Dict[str, Any]:
+    """Resolve every entity in ``payload`` against PathBank/UniProt/ChEBI.
+
+    ``mode`` selects the export policy. ``"research"`` only makes *name handling*
+    lenient: a ``:`` in an unhinted entity name stops being read as PathWhiz
+    complex syntax, so a novel biological name survives as itself instead of
+    being re-routed to the complex mapper. It does not relax any gate and does
+    not change which identifiers are accepted -- wrapper creation stays under
+    the separate ``allow_complex_wrapper_creation`` flag the caller already owns.
+    """
+
     if not isinstance(payload, dict):
         raise ValueError("Input JSON must be an object.")
+    lenient_names = is_research(mode)
     initial_generated_wrapper_names = {
         _normalize_name(str(row.get("name") or ""))
         for row in _safe_list(_safe_dict(payload.get("entities")).get("protein_complexes"))
@@ -6441,7 +6454,12 @@ def map_payload(
             )
             continue
 
-        route = route_entity_for_mapping(name, "compound", protein_like_names=protein_like_names)
+        route = route_entity_for_mapping(
+            name,
+            "compound",
+            protein_like_names=protein_like_names,
+            lenient_names=lenient_names,
+        )
         result: Dict[str, Any]
         provider = "none"
         source = "none"
@@ -6650,6 +6668,7 @@ def run_mapping(
     invalidate_cache_keys: Any = None,
     allow_complex_wrapper_creation: bool = True,
     allow_structural_cleanup: bool = True,
+    mode: ExportMode = DEFAULT_EXPORT_MODE,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -6663,6 +6682,7 @@ def run_mapping(
         invalidate_cache_keys=invalidate_cache_keys,
         allow_complex_wrapper_creation=allow_complex_wrapper_creation,
         allow_structural_cleanup=allow_structural_cleanup,
+        mode=mode,
     )
     mapped = _safe_dict(result.get("payload"))
     report = _safe_dict(result.get("report"))

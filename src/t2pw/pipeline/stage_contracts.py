@@ -8,6 +8,12 @@ from t2pw.pipeline.entity_identity import (
     protein_external_identity,
     protein_species_context,
 )
+from t2pw.pipeline.export_mode import (
+    DEFAULT_EXPORT_MODE,
+    ExportMode,
+    is_research,
+    relax_report,
+)
 from t2pw.pipeline.payload_models import (
     RuntimeSchemaBoundary,
     RuntimeSchemaMode,
@@ -309,6 +315,41 @@ def validate_pre_export(payload: Any, *, strict_db: bool = True) -> Report:
 
     report["summary"] = _summary(report)
     return report
+
+
+def run_stage_contract(
+    validator: Any,
+    *args: Any,
+    mode: ExportMode = DEFAULT_EXPORT_MODE,
+    **kwargs: Any,
+) -> Report:
+    """Run one of the validators above under an export mode.
+
+    In ``pathwhiz`` mode this is a plain call -- the validator body is not
+    parameterized at all, which is what makes strict behaviour byte-for-byte
+    identical rather than merely intended to be.
+
+    In ``research`` mode the same validator runs unchanged and its findings are
+    re-severitied afterwards by :func:`t2pw.pipeline.export_mode.relax_report`:
+    FORMAT rules are skipped, BIOLOGY/PROVENANCE findings become non-blocking
+    review flags, and the run continues. Structural guards still abort -- there
+    is no candidate pathway to review when the payload is not a payload -- so a
+    ``StageContractError`` carrying only those is re-raised with the relaxed
+    report attached.
+    """
+
+    if not is_research(mode):
+        return validator(*args, **kwargs)
+
+    try:
+        report = validator(*args, **kwargs)
+    except StageContractError as exc:
+        relaxed = relax_report(exc.report, stage=exc.stage)
+        if relaxed.get("errors"):
+            raise StageContractError(exc.stage, str(exc), relaxed) from exc
+        return relaxed
+
+    return relax_report(report, stage=str(_safe_dict(report).get("stage") or ""))
 
 
 def _new_report(stage: str, contract_type: str, *, effect_on_failure: str) -> Report:

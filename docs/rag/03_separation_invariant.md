@@ -127,4 +127,18 @@ claim has a named, bounded exception rather than silent drift):
   *primary* fix for that bug lives inside `t2pw.rag` (`synthesize.py`); this core edit
   is a redundant second line of defense, not the mechanism RAG relies on.
 
+- **2026-07-27 — research-mode export policy branch.** Adding "Research mode"
+  (see [`docs/research_mode.md`](../research_mode.md)) put a mode branch inside
+  three core stage files: `stage_contracts.py` (`run_stage_contract`, a wrapper —
+  no validator body was parameterized), `process_normalizer.py`
+  (`normalize_process_payload` and the passes that delete content), and
+  `map_ids.py` (`map_payload`, name leniency only). None of them imports
+  `t2pw.rag`, so verification #1 still holds. The branch keys on an **explicit,
+  user-selected export policy**, never on RAG state, so it is outside the third
+  "Don't" above ("does something different when RAG is on"): with the policy left
+  at its `"pathwhiz"` default the code path is byte-for-byte today's, verified by
+  the full suite staying green. The policy relaxes only rules that exist for the
+  PathWhiz importer; no biology or provenance check was weakened — those still
+  run and are reported, they merely stop aborting.
+
 Anything not listed here is still bound by the full invariant above.
