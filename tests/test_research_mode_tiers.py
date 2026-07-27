@@ -184,7 +184,10 @@ def test_seed_plus_distinct_retrieved_paper_is_tier_b():
     assignment = _only(report, "/processes/reactions/0/enzymes/0")
     assert assignment.tier == TIER_B
     assert assignment.identifier == ""  # corroboration never invents an accession
-    assert assignment.distinct_paper_count == 2
+    # Counts *identified* papers only. The seed pointer is not a resolvable paper
+    # id, so it does not add to the count -- it only makes the retrieved paper a
+    # corroboration rather than the single source.
+    assert assignment.distinct_paper_count == 1
     assert {s["source_id"] for s in assignment.sources} == {"seed_paper", "PMC2"}
     assert not assignment.is_review_only
     quoted = [s for s in assignment.sources if s["retrieved"]]
@@ -238,7 +241,103 @@ def test_quoted_source_ref_cannot_manufacture_corroboration():
     report = assign_tiers(_payload(compounds=[entity]))
     assignment = _only(report, "/entities/compounds/0")
     assert assignment.tier == TIER_C
-    assert assignment.distinct_paper_count == 1
+    # Zero *identified* papers: neither pointer resolves to one.
+    assert assignment.distinct_paper_count == 0
+
+
+def test_tier_a_is_reachable_only_through_the_mapped_payload():
+    """The synthesized payload cannot carry an identifier, so Tier A needs a bridge.
+
+    ``synthesize._ALLOWED_ROW_KEYS`` has no ``mapped_ids`` / ``ids`` /
+    ``mapping_meta``, so without ``identity_source`` a genuinely UniProt-mapped
+    enzyme would be reported as B/C/D and grounding would be systematically
+    understated. Provenance still comes from the pre-merge payload.
+    """
+
+    pre_merge = _payload(proteins=[{"name": "MenG"}])
+    mapped = {"entities": {"proteins": [{"name": "MenG", "mapped_ids": {"uniprot": "P0A6C2"}}]}}
+
+    without = _only(assign_tiers(pre_merge), "/entities/proteins/0")
+    assert without.tier != TIER_A and without.identifier == ""
+
+    with_bridge = _only(
+        assign_tiers(pre_merge, identity_source=mapped), "/entities/proteins/0"
+    )
+    assert with_bridge.tier == TIER_A
+    assert with_bridge.identifier == "P0A6C2"
+
+
+@pytest.mark.parametrize(
+    "poisoned",
+    [
+        pytest.param(
+            {
+                "name": "MenG",
+                "mapped_ids": {"uniprot": "Unknown"},
+                "pathbank_protein_id": 9659,
+                "mapping_meta": {"chosen_rule": "pathbank_unknown_protein_fallback"},
+            },
+            id="unknown-sentinel",
+        ),
+        pytest.param(
+            {
+                "name": "MenG",
+                "mapped_ids": {"uniprot": "Q99999"},
+                "mapping_meta": {"best_effort": True},
+            },
+            id="best-effort-guess",
+        ),
+    ],
+)
+def test_the_bridge_does_not_smuggle_a_fake_identity_into_tier_a(poisoned):
+    """Both fake-identity sites must be refused through ``identity_source`` too."""
+
+    assignment = _only(
+        assign_tiers(
+            _payload(proteins=[{"name": "MenG"}]),
+            identity_source={"entities": {"proteins": [poisoned]}},
+        ),
+        "/entities/proteins/0",
+    )
+
+    assert assignment.tier != TIER_A
+    assert assignment.identifier == ""
+    assert assignment.notes, "the reason for refusing the identity must be recorded"
+
+
+def test_one_real_paper_plus_a_quote_cannot_be_counted_as_two_papers():
+    """The C->B boundary must not be bought with a hallucinated source_id.
+
+    Stage 1 fills ``source_refs`` with verbatim quotes, so a quoted sentence
+    arrives shaped exactly like a source_id. Awarding it a free +1 was enough to
+    cross into Tier B and to print "2 distinct sources" for one paper.
+    """
+
+    chunk = "a" * 32
+    entity = {
+        "name": "menaquinone",
+        "rag_provenance": _prov("PMC1", chunk_id=chunk, section="results", title="Only paper"),
+        "evidence": [
+            {
+                "text": "MenG methylates DMK.",
+                "source_id": "PMC1",
+                "chunk_id": chunk,
+                "section": "results",
+                "score": 0.8,
+            }
+        ],
+        "source_refs": [
+            "PMC1",
+            "MenG converts demethylmenaquinone to menaquinone in L. lactis.",
+        ],
+    }
+    report = assign_tiers(
+        _payload(compounds=[entity]), rag_result=_rag_result({"PMC1": "primary_research"})
+    )
+    assignment = _only(report, "/entities/compounds/0")
+
+    assert assignment.distinct_paper_count == 1, "one paper must never count as two"
+    assert "2 distinct" not in assignment.reason
 
 
 # ---------------------------------------------------------------------------

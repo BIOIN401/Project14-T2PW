@@ -215,7 +215,15 @@ def _flag(issue: Any) -> Dict[str, str]:
 
 
 def _element_flags(pointer: str, flags: Sequence[Dict[str, str]]) -> List[Dict[str, str]]:
-    return [f for f in flags if pointer and f["pointer"].startswith(pointer)]
+    # Boundary-aware: a bare startswith makes "/processes/reactions/1" swallow
+    # every flag on "/processes/reactions/10".."/19", attributing a biology
+    # problem to an element that has none.
+    return [
+        f
+        for f in flags
+        if pointer
+        and (f["pointer"] == pointer or f["pointer"].startswith(pointer + "/"))
+    ]
 
 
 @dataclass
@@ -293,6 +301,8 @@ def build_citation_report(
     review_flags: Iterable[Any] = (),
     format_gaps: Iterable[Any] = (),
     rag_result: Any = None,
+    mode: Any = DEFAULT_EXPORT_MODE,
+    identity_source: Any = None,
 ) -> ResearchReport:
     """Render a **pre-merge** synthesized payload into a reviewable citation report.
 
@@ -303,7 +313,16 @@ def build_citation_report(
     """
 
     payload_dict = _as_dict(payload)
-    report = tier_report if tier_report is not None else assign_tiers(payload_dict, rag_result=rag_result)
+    report = (
+        tier_report
+        if tier_report is not None
+        else assign_tiers(
+            payload_dict,
+            rag_result=rag_result,
+            mode=mode,
+            identity_source=identity_source,
+        )
+    )
     scores = _score_index(payload_dict)
     titles = _title_index(rag_result)
     flags = [_flag(item) for item in review_flags]

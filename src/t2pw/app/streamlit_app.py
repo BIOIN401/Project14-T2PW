@@ -1076,13 +1076,17 @@ def _render_research_citation_report(
             review_flags=flags,
             format_gaps=skipped,
             rag_result=rag_result,
+            mode=RESEARCH,
+            # Provenance comes from the pre-merge payload above; identifiers can
+            # only come from the mapped one, whose entity rows survive the merge.
+            identity_source=pa.get("final_mapped_db") or pa.get("final_mapped"),
         )
     except Exception as exc:  # noqa: BLE001 — the report must never break the run
         st.warning(f"Citation report unavailable: {exc}")
         return
 
     st.subheader("Citation report — evidence tiers")
-    counts = _safe_dict(_safe_dict(report.summary).get("tiers")) or _safe_dict(report.tiers)
+    counts = _safe_dict(_safe_dict(report.summary).get("tier_counts"))
     st.write(report.summary)
     if int(counts.get("D", 0) or 0):
         st.error(
@@ -1104,8 +1108,12 @@ def _render_research_citation_report(
                     {
                         "entity": row.get("name", ""),
                         "tier": row.get("tier", ""),
-                        "label": row.get("label", ""),
-                        "sources": row.get("sources_text", "") or row.get("citation", ""),
+                        "label": row.get("tier_label", ""),
+                        "sources": "; ".join(
+                            str(_safe_dict(c).get("citation", ""))
+                            for c in _safe_list(row.get("sources"))
+                        )
+                        or "(none)",
                     }
                     for row in report.entities
                 ]

@@ -252,31 +252,73 @@ def _tier_from_sources(sources: List[Dict[str, Any]]) -> Tuple[str, str, int, bo
     retrieved = [s for s in sources if s["retrieved"]]
     corroborators = [s for s in retrieved if not s["is_review"]]
     quoted = [s for s in corroborators if s["quote"]]
-    # Every unverified pointer collapses to ONE bucket: quotes-as-source_ids must
-    # not be able to manufacture a distinct-paper count.
-    distinct = len({s["source_id"] for s in retrieved}) + (1 if len(retrieved) < len(sources) else 0)
+
+    # ``distinct`` counts only sources we could actually identify as a paper --
+    # a non-empty chunk_id or a scored selection candidate. Unverified pointers
+    # are NOT added to it: Stage 1 fills ``source_refs`` with verbatim quotes,
+    # so a quoted sentence arrives shaped exactly like a source_id and would
+    # otherwise buy a free +1 -- precisely the increment that crosses C into B.
+    distinct = len({s["source_id"] for s in retrieved})
+    unverified = len(sources) - len(retrieved)
     review_only = bool(retrieved) and not corroborators
 
     if not sources:
         return TIER_D, "no provenance of any kind on this element", 0, False, notes
-    if distinct < 2:
-        return TIER_C, "stated in a single source", max(distinct, 1), review_only, notes
+
     if quoted:
-        cited = ", ".join(s["title"] or s["source_id"] for s in quoted[:3])
-        reason = f"stated in {distinct} distinct sources; independently cited passage in {cited}"
-        return TIER_B, reason, distinct, False, notes
+        # Tier B needs a second *independent* statement: either a second
+        # identified paper, or the seed (which the unverified pointers stand
+        # for). One identified paper and nothing else is still single-source.
+        independent = len({s["source_id"] for s in quoted})
+        if independent >= 2 or unverified:
+            cited = ", ".join(s["title"] or s["source_id"] for s in quoted[:3])
+            if independent >= 2:
+                reason = (
+                    f"stated in {independent} identified papers, each with its own cited "
+                    f"passage: {cited}"
+                )
+            else:
+                reason = (
+                    f"stated in the seed and independently in {cited}, which carries its "
+                    "own cited passage"
+                )
+                notes.append(
+                    "the corroborating statement is one identified paper plus the seed; "
+                    "the seed pointer itself is a quotation, not a resolvable paper id"
+                )
+            return TIER_B, reason, distinct, False, notes
+        return (
+            TIER_C,
+            "one identified paper with a cited passage and no second, independent statement",
+            distinct,
+            review_only,
+            notes,
+        )
+
     if corroborators:
         notes.append("corroborating paper carries no cited passage of its own")
-        reason = "second source has no cited passage of its own, so corroboration is unverified"
-        return TIER_C, reason, distinct, review_only, notes
-    return (
-        TIER_C,
-        "only corroborator is a review (may restate the seed); a review alone cannot establish "
-        "independence and never satisfies Tier B",
-        distinct,
-        True,
-        notes,
+        return (
+            TIER_C,
+            "second source has no cited passage of its own, so corroboration is unverified",
+            distinct,
+            review_only,
+            notes,
+        )
+
+    if retrieved:
+        return (
+            TIER_C,
+            "only corroborator is a review (may restate the seed); a review alone cannot "
+            "establish independence and never satisfies Tier B",
+            distinct,
+            True,
+            notes,
+        )
+
+    notes.append(
+        "every pointer on this element is an unresolvable quotation rather than a paper id"
     )
+    return TIER_C, "stated in a single source", distinct, review_only, notes
 
 
 # ---------------------------------------------------------------------------
@@ -431,6 +473,28 @@ def _join_index(reactions: List[Any]) -> Dict[str, List[Dict[str, Any]]]:
     return index
 
 
+def _identity_index(identity_source: Any) -> Dict[str, Dict[str, Any]]:
+    """``name -> entity row`` from a *mapped* payload, for Tier A lookups.
+
+    The pre-merge synthesized payload cannot carry an identifier: every row it
+    emits is filtered through ``synthesize._ALLOWED_ROW_KEYS``, which has no
+    ``mapped_ids`` / ``ids`` / ``mapping_meta``. So identity has to come from the
+    mapped payload, whose entity rows survive ``pipeline._clean_entities``
+    unchanged. Without this bridge no element could ever reach Tier A on real
+    data and every genuinely UniProt-mapped enzyme would be under-reported.
+    """
+
+    index: Dict[str, Dict[str, Any]] = {}
+    entities = _as_dict(_as_dict(identity_source).get("entities"))
+    for bucket in TIERED_ENTITY_BUCKETS:
+        for row in _as_list(entities.get(bucket)):
+            row = _as_dict(row)
+            key = _name_key(row.get("name"))
+            if key and key not in index:
+                index[key] = row
+    return index
+
+
 def assign_tiers(
     payload: Any,
     *,
@@ -438,6 +502,7 @@ def assign_tiers(
     resolver: Optional[Resolver] = None,
     online: bool = False,
     mode: Any = DEFAULT_EXPORT_MODE,
+    identity_source: Any = None,
 ) -> TierReport:
     """Tier every entity and reaction of a **pre-merge** synthesized payload.
 
@@ -445,9 +510,14 @@ def assign_tiers(
     UniProt retry and defaults to ``False`` so unit tests and RAG-off runs never
     touch the network; ``resolver`` is the injection point (default
     :func:`default_resolver`). Every network failure is swallowed into a note.
+
+    ``identity_source`` is the *mapped* payload, consulted only for Tier A
+    identifiers (see :func:`_identity_index`). Provenance is always read from
+    ``payload``, because the merge strips the RAG carriers off every reaction.
     """
 
     payload_dict = _as_dict(payload)
+    identity_by_name = _identity_index(identity_source)
     report = TierReport(mode=coerce_mode(mode), online=bool(online))
     doc_types = _document_types(rag_result)
     reactions = _as_list(_as_dict(payload_dict.get("processes")).get("reactions"))
@@ -462,6 +532,13 @@ def assign_tiers(
 
     def _emit(pointer: str, kind: str, name: str, row: Dict[str, Any], joined: List[Dict[str, Any]], protein: bool) -> None:
         identifier, identifier_source, rejections = _usable_identity(row)
+        if not identifier and not rejections:
+            # The synthesized row can never carry an id; consult the mapped
+            # payload for this name. Rejections there (Unknown sentinel,
+            # best-effort guess) are surfaced exactly as if they were local.
+            mapped_row = identity_by_name.get(_name_key(name))
+            if mapped_row is not None:
+                identifier, identifier_source, rejections = _usable_identity(mapped_row)
         sources = _collect_sources([row, *joined], doc_types)
         evidence_tier, reason, distinct, review_only, notes = _tier_from_sources(sources)
         notes = [*rejections, *notes]

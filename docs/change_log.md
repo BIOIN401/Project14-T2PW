@@ -81,12 +81,35 @@ keys on the export policy, never on RAG state, and is recorded as a sanctioned
 exception in `docs/rag/03_separation_invariant.md`.
 
 **Default-off byte identity**: with the policy at its `"pathwhiz"` default no
-code path changes. Baseline before: **626 passing**; after: **707 passing**
-(+81 research-mode tests), with every pre-existing test unmodified except
+code path changes. Baseline before: **626 passing**; after: **711 passing**
+(+85 research-mode tests), with every pre-existing test unmodified except
 `tests/test_streamlit_stage2_orchestration.py`, whose AST-lifted namespace and
 `normalize_process_payload` stub needed the new argument (the stub now asserts
 the default run is strict). `ruff check src tests` reports the same 49
 pre-existing findings as before the change — no new lint.
+
+**Defects caught by an adversarial review of the tiering/report modules and
+fixed before commit**, all of which would have misled a reviewer:
+
+- **A quote could buy a Tier B.** `_tier_from_sources` added `+1` to the
+  distinct-paper count for the *presence* of any unverified pointer — exactly
+  the increment that crosses C into B. Since Stage 1 fills `source_refs` with
+  verbatim quotes, one real paper plus one quoted sentence was reported as "2
+  distinct sources". `distinct_paper_count` now counts only *identified* papers;
+  Tier B still requires a second independent statement, and the reason string
+  names the seed as the seed instead of inflating the count.
+- **Tier A was unreachable on real data.** The pre-merge payload provably cannot
+  carry an identifier (`synthesize._ALLOWED_ROW_KEYS` has no `mapped_ids`), so
+  every genuinely UniProt-mapped enzyme was under-reported. `assign_tiers` gained
+  `identity_source=` — the mapped payload, whose entity rows survive the merge —
+  read for identifiers only. Both fake-identity sites are still refused through it.
+- **Flags were mis-attributed by pointer prefix**: `/processes/reactions/1`
+  swallowed every flag on `/processes/reactions/10..19`.
+- **The UNSOURCED banner could never fire** (read `summary["tiers"]`, which does
+  not exist, instead of `summary["tier_counts"]`), and the per-entity table
+  rendered blank `label`/`sources` columns.
+- **A research run stamped its report `pathwhiz`**, because the mode was not
+  threaded into `build_citation_report`.
 
 New tests: `test_research_mode_contracts.py` (format-vs-biology per mode,
 structural guards, strict passthrough, `:` name leniency),
