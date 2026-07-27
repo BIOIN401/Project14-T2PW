@@ -4660,7 +4660,6 @@ if st.session_state.get("pipeline_ready"):
                         export_mode=coerce_mode(st.session_state.get("export_mode")),
                     )
                 st.session_state["post_pipeline_artifacts"] = artifacts
-                _render_research_mode_panels(artifacts)
                 _pa = _safe_dict(artifacts)
                 if _pa.get("post_audit_qa_report"):
                     st.session_state["qa_report"] = _pa["post_audit_qa_report"]
@@ -4714,6 +4713,14 @@ if st.session_state.get("pipeline_ready"):
             except Exception as exc:
                 st.error(f"Post-pipeline conversion failed: {exc}")
                 st.exception(exc)  # full traceback (file:line) so the cause isn't a mystery
+
+    # Rendered from session_state on EVERY pass, not inside the Run button's
+    # branch: st.download_button triggers a rerun, so a panel rendered only in
+    # the click pass would disappear the moment the reviewer downloaded the
+    # first file -- and getting it back would mean re-running the whole
+    # LLM/DB pipeline. Placed after the Run block so a fresh run renders the
+    # artifacts it just stored rather than the previous run's.
+    _render_research_mode_panels(st.session_state.get("post_pipeline_artifacts"))
 
     _refinement_mapping_cache_path = _safe_dict(post_artifacts).get("mapping_cache_path")
     if not _refinement_mapping_cache_path:
