@@ -33,8 +33,11 @@ from t2pw.batch.driver import (  # noqa: E402
     MODE_RESEARCH,
     MODE_STRICT,
     RESEARCH,
+    RUNTIME_SCHEMA_WARN_LIMIT,
     STRICT,
+    WARN_NO_FOCUS_BOX,
     WARN_NO_RESEARCH_REPORT,
+    WARN_RUNTIME_SCHEMA_PREFIX,
     RunOutcome,
     run_one,
 )
@@ -93,7 +96,7 @@ def real_streamlit():
 #: The widgets the driver drives, in the order and with the keys the app uses.
 #: ``st.session_state.get`` is legal *inside* an app script (it is real streamlit
 #: session state there); it is only ``AppTest.session_state`` that lacks ``.get``.
-_PREAMBLE = '''\
+_PREAMBLE_HEAD = '''\
 import streamlit as st
 from types import SimpleNamespace
 
@@ -101,15 +104,36 @@ st.radio("Export mode", ["Strict PWML", "Research (relaxed)"], key="export_mode_
 st.radio("Input mode", ["Paste text", "Upload PDF", "Text + PDF"], key="input_mode_radio")
 with st.form("pwml_pipeline"):
     st.text_area("Paste pathway description:", key="pathway_text_0")
+'''
+
+#: The extraction-focus box, reproduced with the app's exact signature: NO key.
+#: That is the whole point -- ``at.text_area(key=...)`` cannot reach it, so the
+#: driver has to find it by label. The observed value is echoed into session_state
+#: so a test can assert what the app actually received.
+_PREAMBLE_FOCUS = '''\
+    user_task_context = st.text_area(
+        "Optional extraction focus / task context",
+        height=100,
+        help="Use this to tell the model what pathway or scope you want extracted.",
+    )
+    st.session_state["observed_focus"] = user_task_context
+'''
+
+_PREAMBLE_TAIL = '''\
     submitted = st.form_submit_button("Run pipeline")
 '''
 
 
-def _write_app(tmp_path: Path, name: str, body: str) -> Path:
-    """Write a fixture app script. utf-8 always: entity names are not ASCII."""
+def _write_app(tmp_path: Path, name: str, body: str, *, focus_box: bool = True) -> Path:
+    """Write a fixture app script. utf-8 always: entity names are not ASCII.
 
+    ``focus_box=False`` reproduces an app that stopped rendering the unkeyed
+    extraction-focus text area, which the driver must survive with a warning.
+    """
+
+    preamble = _PREAMBLE_HEAD + (_PREAMBLE_FOCUS if focus_box else "") + _PREAMBLE_TAIL
     target = tmp_path / f"{name}.py"
-    target.write_text(_PREAMBLE + body, encoding="utf-8")
+    target.write_text(preamble + body, encoding="utf-8")
     return target
 
 
@@ -124,11 +148,24 @@ def _lit(value: object) -> str:
 
 
 class _Paper:
-    """A stand-in for ``t2pw.batch.fetch.BatchPaper`` (duck-typed by the driver)."""
+    """A stand-in for ``t2pw.batch.fetch.BatchPaper`` (duck-typed by the driver).
 
-    def __init__(self, paper_id: str = "PMC1", full_text: str = "Some pathway prose.") -> None:
+    ``topic`` and ``organism`` are the two fields the extraction focus is composed
+    from. ``topic == ""`` is how :class:`~t2pw.batch.fetch.BatchPaper` records a
+    *pinned* paper -- one given by id, with no search behind it.
+    """
+
+    def __init__(
+        self,
+        paper_id: str = "PMC1",
+        full_text: str = "Some pathway prose.",
+        topic: str = "",
+        organism: str = "",
+    ) -> None:
         self.paper_id = paper_id
         self.full_text = full_text
+        self.topic = topic
+        self.organism = organism
 
 
 PAPER = _Paper()
@@ -812,6 +849,373 @@ def test_unknown_mode_never_silently_relaxes_the_gates(
     outcome = run_one(PAPER, given, app_path=app, timeout=60.0, app_timeout=30.0)
 
     assert outcome.mode == expected
+
+
+# ---------------------------------------------------------------------------
+# The extraction-focus box (unkeyed in the app, so addressed by label).
+#
+# The first overnight run failed nearly every topic-fetched paper with
+# ``ambiguous_review_scope``: topic search returns reviews, and the app refuses to
+# extract from a multi-example review unless a target example is named. The app's
+# own remedy is this box, and the runner already knows the topic -- so it types it
+# in. These tests pin that wiring, because it is invisible from the outside: the
+# only proof the focus arrived is what the app script received.
+# ---------------------------------------------------------------------------
+#: Echoes the widget value the app script actually saw into an artifact the
+#: outcome carries, so the assertion is end-to-end rather than on driver internals.
+_FOCUS_ECHO = '''
+    st.session_state["stage_one"] = dict(
+        st.session_state["stage_one"], extraction_focus=user_task_context
+    )
+'''
+
+
+def _observed_focus(outcome: RunOutcome) -> str:
+    return json.loads(outcome.artifacts["stage1_payload.json"])["extraction_focus"]
+
+
+@pytest.mark.parametrize(
+    ("topic", "organism", "expected"),
+    [
+        # The shape the app's Stage-0 scope resolver reads best.
+        ("lipid A biosynthesis", "Escherichia coli", "lipid A biosynthesis in Escherichia coli"),
+        # No organism on the record: the topic alone is still a scope.
+        ("menaquinone biosynthesis", "", "menaquinone biosynthesis"),
+        # The topic already names the organism; appending it again would read as
+        # "... in Escherichia coli in Escherichia coli".
+        (
+            "lipid A biosynthesis in Escherichia coli",
+            "Escherichia coli",
+            "lipid A biosynthesis in Escherichia coli",
+        ),
+    ],
+)
+def test_the_paper_topic_is_typed_into_the_unkeyed_focus_box(
+    tmp_path: Path, topic: str, organism: str, expected: str
+) -> None:
+    app = _write_app(
+        tmp_path,
+        "focus_box",
+        _post_pipeline_body(_artifacts("pathwhiz"), extra=_FOCUS_ECHO),
+    )
+
+    outcome = _run(app, STRICT, paper=_Paper(topic=topic, organism=organism))
+
+    assert _observed_focus(outcome) == expected
+    # Naming the scope is not a warning-worthy compromise; it is the normal path.
+    assert outcome.warnings == []
+
+
+def test_a_pinned_paper_leaves_the_focus_box_empty(tmp_path: Path) -> None:
+    """A pinned paper has no topic, and inventing one would bias extraction.
+
+    ``topic == ""`` means a human named this paper by id. There is no searched-for
+    phrase that is known to be true of it, so the box stays empty rather than being
+    filled with a guess the extraction would then be steered by.
+    """
+
+    app = _write_app(
+        tmp_path,
+        "focus_pinned",
+        _post_pipeline_body(_artifacts("pathwhiz"), extra=_FOCUS_ECHO),
+    )
+
+    outcome = _run(app, STRICT, paper=_Paper(paper_id="PMC42", topic="", organism="Escherichia coli"))
+
+    assert _observed_focus(outcome) == ""
+    assert outcome.warnings == []
+
+
+def test_a_missing_focus_box_degrades_to_a_warning(tmp_path: Path) -> None:
+    """The box has no key, so it can only be found by label -- and labels move.
+
+    Losing it costs the run its *scope*, not its life: the run continues (and may
+    well still succeed on a single-example paper), but the manifest has to say the
+    focus never arrived, otherwise a night of ``ambiguous_review_scope`` failures
+    looks like an app bug again.
+    """
+
+    app = _write_app(
+        tmp_path,
+        "focus_missing",
+        _post_pipeline_body(
+            _artifacts("pathwhiz"),
+            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}}},
+        ),
+        focus_box=False,
+    )
+
+    outcome = _run(app, STRICT, paper=_Paper(topic="lipid A biosynthesis"))
+
+    assert outcome.status == "pass", outcome.detail
+    assert outcome.warnings == [WARN_NO_FOCUS_BOX]
+    assert outcome.to_dict()["warnings"] == [WARN_NO_FOCUS_BOX]
+
+
+def test_a_missing_focus_box_is_silent_when_there_was_nothing_to_type(tmp_path: Path) -> None:
+    """No topic means nothing was lost, so there is nothing to warn about."""
+
+    app = _write_app(
+        tmp_path,
+        "focus_missing_pinned",
+        _post_pipeline_body(
+            _artifacts("pathwhiz"),
+            pwml={"ok": True, "_xml": "<pathway/>", "pwml_ir": {"pathway": {}}},
+        ),
+        focus_box=False,
+    )
+
+    outcome = _run(app, STRICT, paper=_Paper(topic=""))
+
+    assert outcome.status == "pass", outcome.detail
+    assert outcome.warnings == []
+
+
+# ---------------------------------------------------------------------------
+# A nested runtime_schema_report is information, never a verdict.
+#
+# Shapes copied from the real run that this regression protects:
+# runs/2026-07-27_1623/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/
+# research/contract_reports.json -- 6 reactions, 29 entities, 0 gate errors, every
+# real contract report ok=True/errors=0, and the run was nevertheless reported
+# FAIL/contract because the nested report says ok=False/errors=1.
+# ---------------------------------------------------------------------------
+_SCHEMA_FINDING = {
+    "code": "entity_missing_mapping_meta",
+    "pointer": "/entities/subcellular_locations/1/mapping_meta",
+    "message": "Mapped entity with a name is missing mapping_meta.",
+    "expected": "object",
+}
+
+
+def _nested_schema_report(boundary: str) -> dict:
+    """``RUNTIME_SCHEMA_MODE="report"`` keeps its own ok/errors, informationally."""
+
+    return {
+        "ok": False,
+        "boundary": boundary,
+        "mode": "report",
+        "errors": [_SCHEMA_FINDING],
+        "warnings": [],
+        "summary": {"error_count": 1, "warning_count": 0},
+    }
+
+
+def _parent_contract_report(boundary: str) -> dict:
+    """The stage's actual verdict: the finding arrived here as a WARNING."""
+
+    return {
+        "stage": boundary,
+        "contract_type": "semantic",
+        "effect_on_failure": "annotate_only",
+        "runtime_schema_report": _nested_schema_report(boundary),
+        "errors": [],
+        "warnings": [_SCHEMA_FINDING],
+        "ok": True,
+        "export_mode": "research",
+        "summary": {"error_count": 0, "warning_count": 1},
+    }
+
+
+_SCHEMA_ONLY_ARTIFACTS = {
+    "post_normalization_contract_report": _parent_contract_report("post_normalization"),
+    "post_audit_contract_report": _parent_contract_report("post_audit"),
+    # A standalone top-level runtime-schema report is not blocking either.
+    "pre_export_runtime_schema_report": _nested_schema_report("pre_export"),
+}
+
+
+def test_a_nested_runtime_schema_report_never_fails_a_run(tmp_path: Path) -> None:
+    app = _write_app(
+        tmp_path,
+        "nested_schema_report",
+        _post_pipeline_body(
+            _artifacts("research", **_SCHEMA_ONLY_ARTIFACTS),
+            extra=_RAG_RESULT_STANZA,
+        ),
+    )
+
+    outcome = _run(app, RESEARCH)
+
+    # The run had succeeded. Failing it threw the research deliverable away.
+    assert outcome.status == "pass", outcome.detail
+    assert outcome.failure_kind == ""
+    assert "research_pathway_report.txt" in outcome.artifacts
+    assert "contract_errors" not in outcome.counts
+    assert "entity_missing_mapping_meta" not in outcome.issue_codes
+
+    # ...but the findings stay visible, as warnings.
+    assert outcome.counts["runtime_schema_findings"] == 3
+    warned = outcome.warnings
+    assert len(warned) == 3
+    assert all(item.startswith(WARN_RUNTIME_SCHEMA_PREFIX) for item in warned)
+    assert any("post_normalization_contract_report.runtime_schema_report" in i for i in warned)
+    assert any("pre_export_runtime_schema_report" in i for i in warned)
+    assert all("entity_missing_mapping_meta" in item for item in warned)
+    assert outcome.to_dict()["warnings"] == warned
+
+    # And every report -- nested included -- is still on disk to read.
+    written = json.loads(outcome.artifacts["contract_reports.json"])
+    assert written["post_audit_contract_report.runtime_schema_report"]["ok"] is False
+    assert written["post_audit_contract_report"]["ok"] is True
+
+
+def test_many_schema_findings_are_capped_but_counted_in_full(tmp_path: Path) -> None:
+    """One bad bucket can produce dozens; the warnings list rides the manifest."""
+
+    many = dict(_nested_schema_report("pre_export"))
+    many["errors"] = [
+        dict(_SCHEMA_FINDING, pointer=f"/entities/subcellular_locations/{i}/mapping_meta")
+        for i in range(RUNTIME_SCHEMA_WARN_LIMIT + 2)
+    ]
+
+    app = _write_app(
+        tmp_path,
+        "many_schema_findings",
+        _post_pipeline_body(
+            _artifacts("research", pre_export_runtime_schema_report=many),
+            extra=_RAG_RESULT_STANZA,
+        ),
+    )
+
+    outcome = _run(app, RESEARCH)
+
+    assert outcome.status == "pass", outcome.detail
+    # The count is exact even though the list is not.
+    assert outcome.counts["runtime_schema_findings"] == RUNTIME_SCHEMA_WARN_LIMIT + 2
+    assert len(outcome.warnings) == RUNTIME_SCHEMA_WARN_LIMIT + 1
+    assert outcome.warnings[-1].endswith("all of them are in contract_reports.json")
+    assert "and 2 more finding(s)" in outcome.warnings[-1]
+
+
+def test_a_real_contract_error_still_fails_alongside_schema_findings(tmp_path: Path) -> None:
+    """Only the top-level report's own ``errors`` decide; the nested one is noise."""
+
+    failing_parent = _parent_contract_report("post_normalization")
+    failing_parent["ok"] = False
+    failing_parent["errors"] = [
+        {
+            "code": "reaction_enzyme_unresolved",
+            "pointer": "/processes/reactions/0/enzymes/0",
+            "message": "enzyme has no external identity",
+        }
+    ]
+
+    app = _write_app(
+        tmp_path,
+        "real_contract_error",
+        _post_pipeline_body(
+            _artifacts(
+                "research",
+                post_normalization_contract_report=failing_parent,
+                post_audit_contract_report=_parent_contract_report("post_audit"),
+            )
+        ),
+    )
+
+    outcome = _run(app, RESEARCH)
+
+    assert outcome.status == "fail"
+    assert outcome.failure_kind == "contract"
+    assert outcome.issue_codes == ["reaction_enzyme_unresolved"]
+    assert outcome.counts["contract_errors"] == 1
+    assert outcome.counts["runtime_schema_findings"] == 2
+    assert any(item.startswith(WARN_RUNTIME_SCHEMA_PREFIX) for item in outcome.warnings)
+
+
+# ---------------------------------------------------------------------------
+# Structural guards are contract failures, not LLM failures.
+#
+# From the real run: PMC13278307/research was filed as failure_kind="llm" with
+# "Extraction boundary failed: Payload must include a processes object." That is a
+# StageContractError with code ``processes_required``, a STRUCTURAL_GUARD_CODES
+# member that correctly aborts in both modes -- there is genuinely no pathway to
+# review. Only the label was wrong, and it was wrong because the app prints a
+# "usually a transient LLM failure" hint right next to it.
+# ---------------------------------------------------------------------------
+_LLM_HINT = (
+    "Stage 0 failed: empty_reply - The model returned an empty reply (0 chars). "
+    "Re-run (usually a transient LLM failure), or type the pathway/organism into "
+    "the focus box so the pipeline can proceed without the preprocessor."
+)
+
+
+def test_structural_guard_wording_is_a_contract_failure_with_its_code(tmp_path: Path) -> None:
+    app = _write_app(
+        tmp_path,
+        "structural_guard",
+        f'''
+if submitted:
+    st.error("Extraction boundary failed: Payload must include a processes object.")
+    st.warning({_lit(_LLM_HINT)})
+    st.stop()
+''',
+    )
+
+    outcome = _run(app, RESEARCH)
+
+    assert outcome.status == "fail"
+    assert outcome.stage == "stage1"
+    assert outcome.failure_kind == "contract"
+    assert outcome.issue_codes == ["processes_required"]
+    assert "Payload must include a processes object" in outcome.message
+
+
+@pytest.mark.parametrize(
+    ("message", "code"),
+    [
+        ("Extraction boundary failed: Payload must be a dict.", "invalid_payload"),
+        (
+            "Extraction boundary failed: Payload must include an entities object.",
+            "entities_required",
+        ),
+        ("Extraction boundary failed: Entity rows must be objects.", "entity_not_object"),
+        ("Extraction boundary failed: Process rows must be objects.", "process_not_object"),
+    ],
+)
+def test_every_structural_guard_message_maps_to_its_code(
+    tmp_path: Path, message: str, code: str
+) -> None:
+    app = _write_app(
+        tmp_path,
+        "structural_guard_variants",
+        f'''
+if submitted:
+    st.error({_lit(message)})
+    st.stop()
+''',
+    )
+
+    outcome = _run(app, STRICT)
+
+    assert outcome.failure_kind == "contract"
+    assert outcome.issue_codes == [code]
+
+
+def test_genuine_llm_wording_is_not_reclassified_as_a_contract_failure(tmp_path: Path) -> None:
+    """The other direction: an empty reply with no structural guard is still LLM.
+
+    The hint that mislabelled PMC13278307 is present here *on its own*. Without a
+    structural-guard sentence there is no contract evidence, and blaming the
+    contract layer for a model that returned nothing would be the mirror-image bug.
+    """
+
+    app = _write_app(
+        tmp_path,
+        "genuine_llm",
+        f'''
+if submitted:
+    st.error("Extraction failed: the model returned an empty reply after 3 attempts.")
+    st.warning({_lit(_LLM_HINT)})
+    st.stop()
+''',
+    )
+
+    outcome = _run(app, RESEARCH)
+
+    assert outcome.status == "fail"
+    assert outcome.failure_kind == "llm"
+    assert outcome.issue_codes == []
 
 
 def test_dict_and_candidate_paper_shapes_are_both_accepted(tmp_path: Path) -> None:

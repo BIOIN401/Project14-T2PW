@@ -26,6 +26,26 @@ you inspect the emitted elements. That is why :func:`run_one` checks
 looks for artifacts, and why it refuses to call anything a pass that it cannot
 positively confirm.
 
+WHY the extraction-focus box is filled in
+-----------------------------------------
+Topic-based fetching returns reviews, and the app refuses to extract from a
+multi-example review unless a target example is named -- correctly, since the
+alternative is a pathway that mixes two organisms. The app's remedy is the
+"Optional extraction focus / task context" box, and the runner already knows the
+topic it searched for, so :func:`_set_extraction_focus` types it in. That widget
+has no ``key`` in the app, so it is addressed by *label*; if it cannot be found
+the run continues with a warning rather than dying.
+
+WHY a nested runtime_schema_report never fails a run
+----------------------------------------------------
+``stage_contracts.RUNTIME_SCHEMA_MODE`` is ``"report"``, which records recursive
+shape findings as *warnings* on the parent contract report while the nested
+report keeps its own ``ok=False``/``errors`` for information. So the parent
+(``ok=True``, ``errors=[]``) is the verdict. :func:`_blocking_reports` scans only
+top-level ``*_contract_report`` objects for that reason; :func:`_collect_reports`
+stays exhaustive but is used only to write the archive and to surface the
+runtime-schema findings as warnings.
+
 WHY strict mode needs a third click
 -----------------------------------
 Verified against the app: ``pwml_generate_btn`` ("Run audit and DB mapping")
@@ -49,6 +69,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from t2pw.paths import PACKAGE_ROOT
+from t2pw.pipeline.export_mode import STRUCTURAL_GUARD_CODES
 
 # ── Export-mode radio labels, exactly as the app spells them ───────────────
 STRICT = "Strict PWML"
@@ -71,6 +92,11 @@ KEY_EXPORT_MODE = "export_mode_radio"
 KEY_INPUT_MODE = "input_mode_radio"
 KEY_TEXT = "pathway_text_0"
 LABEL_RUN_PIPELINE = "Run pipeline"
+#: The extraction-focus box has **no key** in the app (it is a bare
+#: ``st.text_area("Optional extraction focus / task context", height=100, help=...)``),
+#: so it can only be addressed by label. Matched as a prefix so a trailing wording
+#: tweak or an added ``:`` does not silently drop the focus text.
+LABEL_EXTRACTION_FOCUS = "Optional extraction focus"
 KEY_POST_PIPELINE = "pwml_generate_btn"
 KEY_GENERATE_PWML = "refinement_generate_pwml"
 #: Always paste: full text arrives as a ``str``, so ``st.file_uploader`` -- which
@@ -115,6 +141,23 @@ DETAIL_LIMIT = 8000
 #: never triggered. Not a failure -- but it must be impossible to mistake for a
 #: run that produced the research deliverable.
 WARN_NO_RESEARCH_REPORT = "no research report: RAG did not trigger for this paper"
+
+#: Warning text when the app rendered no extraction-focus box but the paper had a
+#: topic to name in it. Not a failure -- but a topic-fetched review will then be
+#: refused as ``ambiguous_review_scope``, and the reason must be on the record.
+WARN_NO_FOCUS_BOX = (
+    f'the app rendered no "{LABEL_EXTRACTION_FOCUS} ..." text area, '
+    "so the extraction focus could not be set"
+)
+
+#: Prefix for one runtime-schema finding surfaced as a warning. See
+#: :func:`_runtime_schema_warnings` for why these are never blocking.
+WARN_RUNTIME_SCHEMA_PREFIX = "runtime-schema finding (informational, not blocking): "
+
+#: Runtime-schema findings are per-row, so one bad bucket can produce dozens.
+#: The warnings list rides into the manifest and RESULT.txt, so it is capped;
+#: nothing is lost because every report is written to ``contract_reports.json``.
+RUNTIME_SCHEMA_WARN_LIMIT = 10
 
 # Network markers are checked ahead of LLM markers on purpose: an LLM call that
 # cannot open a socket is a network failure, and "connection"/"uniprot"/"mysql"
@@ -181,6 +224,38 @@ _CONTRACT_MARKERS: Tuple[str, ...] = (
     "gatevalidationerror",
     "required-field gate",
     "fails the pre-export stage 3",
+    # The app renders every StageContractError raised at the extraction boundary
+    # as "Extraction boundary failed: <report>" -- a contract failure, even when
+    # the surrounding banner text happens to mention the LLM. Checked ahead of
+    # the LLM markers (see _classify) so the wording of an adjacent hint cannot
+    # relabel a structural guard as a model fault.
+    "boundary failed",
+    "payload must be a dict",
+    "payload must include",
+    "rows must be objects",
+)
+
+#: Structural-guard wording -> the ``STRUCTURAL_GUARD_CODES`` code it names.
+#:
+#: ``t2pw.pipeline.stage_contracts`` raises these with a code, but the app shows
+#: the code only inside an ``st.json(failure.report)`` block that AppTest does not
+#: expose as text -- all the driver sees is ``st.error``'s sentence. Recovering the
+#: code from the sentence is what lets the ranked fix-list group the failure with
+#: the other contract problems instead of stranding it as "no code reported".
+#:
+#: Filtered against the real frozenset at import: if a code is renamed or a guard
+#: is downgraded, its phrase drops out of the map rather than inventing a code
+#: that ``export_mode`` no longer knows.
+_STRUCTURAL_GUARD_MESSAGES: Tuple[Tuple[str, str], ...] = tuple(
+    (phrase, code)
+    for phrase, code in (
+        ("payload must be a dict", "invalid_payload"),
+        ("payload must include an entities object", "entities_required"),
+        ("payload must include a processes object", "processes_required"),
+        ("entity rows must be objects", "entity_not_object"),
+        ("process rows must be objects", "process_not_object"),
+    )
+    if code in STRUCTURAL_GUARD_CODES
 )
 _NO_REACTION_MARKERS: Tuple[str, ...] = (
     "no reactions",
@@ -190,10 +265,18 @@ _NO_REACTION_MARKERS: Tuple[str, ...] = (
     "produced no reactions",
 )
 
-#: Every key in ``post_pipeline_artifacts`` whose value is a stage contract
-#: report. Discovered by suffix rather than hard-coded so a new boundary added to
-#: the app is picked up without editing this file.
+#: Every key in ``post_pipeline_artifacts`` whose value is a stage report worth
+#: writing to disk. Discovered by suffix rather than hard-coded so a new boundary
+#: added to the app is picked up without editing this file.
 _CONTRACT_SUFFIXES: Tuple[str, ...] = ("_contract_report", "_runtime_schema_report")
+
+#: The ONLY suffix whose reports may fail a run. See :func:`_blocking_reports`.
+_BLOCKING_SUFFIX = "_contract_report"
+
+#: Key of the recursive shape report nested inside a stage contract report, and
+#: the suffix it is stored under when the app also keeps it at the top level.
+_RUNTIME_SCHEMA_KEY = "runtime_schema_report"
+_RUNTIME_SCHEMA_SUFFIX = "_runtime_schema_report"
 
 _ENTITY_COUNT_KEYS: Tuple[str, ...] = ("proteins", "compounds")
 
@@ -300,6 +383,86 @@ def _paper_id(paper: Any) -> str:
 
 def _paper_text(paper: Any) -> str:
     return _paper_field(paper, ("full_text", "text", "body", "abstract"))
+
+
+def _extraction_focus(paper: Any) -> str:
+    """The text to type into the app's extraction-focus box, or ``""``.
+
+    WHY this exists
+    ---------------
+    Topic-based fetching returns review articles ("The regulation of lipid A
+    biosynthesis"), and the app deliberately refuses to extract from a
+    multi-example review when no target example is named -- otherwise it would emit
+    a pathway mixing E. coli LpxC regulation with A. baumannii LPS regulation. The
+    app's own error says the cure: name the example in the extraction-focus box.
+    A runner that leaves the box empty converts that correct refusal into a batch
+    of ``ambiguous_review_scope`` failures, which is a runner gap, not an app bug.
+
+    WHY the topic and not something cleverer
+    ----------------------------------------
+    The topic is the phrase the paper was *searched for*, so it is the one scope
+    statement that is known to be true of this paper and was not invented here.
+    The organism is appended when the paper record has one and the topic does not
+    already say it -- "lipid A biosynthesis in Escherichia coli" is the shape the
+    app's Stage-0 scope resolver reads best.
+
+    A PINNED paper has ``topic == ""`` (there was no search). It gets an empty box:
+    naming a scope nobody asked for would bias extraction toward it, and a pinned
+    paper was chosen precisely because a human already knows what it is about.
+    """
+
+    topic = _paper_field(paper, ("topic",))
+    if not topic:
+        return ""
+    organism = _paper_field(paper, ("organism",))
+    if organism and organism.lower() not in topic.lower():
+        return f"{topic} in {organism}"
+    return topic
+
+
+def _find_by_label(elements: Any, prefix: str) -> Any:
+    """The first element in an AppTest element list whose label starts with ``prefix``.
+
+    Needed because the widget this addresses has no ``key`` in the app, so
+    ``at.text_area(key=...)`` cannot reach it. Returns ``None`` rather than raising:
+    a widget that moved is a warning, never a crash.
+    """
+
+    try:
+        iterator = iter(elements)
+    except TypeError:
+        return None
+    for element in iterator:
+        if _text(getattr(element, "label", "")).startswith(prefix):
+            return element
+    return None
+
+
+def _set_extraction_focus(at: Any, paper: Any, outcome: RunOutcome) -> str:
+    """Type the paper's scope into the unkeyed extraction-focus box.
+
+    Returns the focus text actually delivered (``""`` when there was nothing to
+    say, or when the box could not be found -- in which case a warning is
+    recorded). Never raises: losing the focus box degrades the run's *scope*, and
+    that has to show up as a warning on a real result rather than as a crash that
+    produces nothing at all.
+    """
+
+    focus = _extraction_focus(paper)
+    if not focus:
+        return ""
+    box = _find_by_label(getattr(at, "text_area", []), LABEL_EXTRACTION_FOCUS)
+    if box is None:
+        if WARN_NO_FOCUS_BOX not in outcome.warnings:
+            outcome.warnings.append(WARN_NO_FOCUS_BOX)
+        return ""
+    try:
+        box.set_value(focus)
+    except Exception:  # noqa: BLE001 -- a widget-API change must not kill the batch
+        if WARN_NO_FOCUS_BOX not in outcome.warnings:
+            outcome.warnings.append(WARN_NO_FOCUS_BOX)
+        return ""
+    return focus
 
 
 # ---------------------------------------------------------------------------
@@ -443,7 +606,17 @@ def _report_errors(report: Any) -> List[Any]:
 
 
 def _collect_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
-    """Every *stage contract* report present, keyed by its artifact key.
+    """Every stage report present, keyed by its artifact key -- for the ARCHIVE.
+
+    This is what ``contract_reports.json`` is built from, so it is deliberately
+    exhaustive: contract reports, standalone runtime-schema reports, and the
+    nested ``runtime_schema_report`` of each contract report flattened alongside
+    its parent so a human can grep one file.
+
+    It is **not** the blocking scan set -- see :func:`_blocking_reports`. Feeding
+    this dict to the pass/fail decision is exactly the bug that reported
+    PMC12444477's research run as FAIL/``entity_missing_mapping_meta`` when every
+    real contract report was ``ok=True`` with zero errors.
 
     Gate reports are deliberately excluded: they are read separately (they carry
     ``path``/``reason`` rather than ``code``/``pointer``), and counting them here
@@ -456,10 +629,84 @@ def _collect_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
             continue
         if key.endswith(_CONTRACT_SUFFIXES):
             reports[key] = value
-        nested = _safe_dict(value.get("runtime_schema_report"))
+        nested = _safe_dict(value.get(_RUNTIME_SCHEMA_KEY))
         if nested:
-            reports[f"{key}.runtime_schema_report"] = nested
+            reports[f"{key}.{_RUNTIME_SCHEMA_KEY}"] = nested
     return reports
+
+
+def _blocking_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    """Only the reports whose own ``errors`` may fail the run.
+
+    A top-level ``*_contract_report`` is the stage's verdict, and its ``errors``
+    list is the blocking one. A ``runtime_schema_report`` -- nested inside a
+    contract report or standing alone at the top level -- is **never** blocking:
+    ``stage_contracts.RUNTIME_SCHEMA_MODE`` is ``"report"``, which by design folds
+    recursive shape findings onto the parent as *warnings* while the nested report
+    keeps its own ``ok=False`` / ``errors=[...]`` for information. The parent's
+    ``ok=True, errors=[], warnings=[...]`` is therefore the authoritative verdict,
+    and reading the nested ``ok`` as a verdict inverts it.
+
+    Concretely (PMC12444477, research, 6 reactions / 29 entities / 0 gate errors)::
+
+        post_normalization_contract_report            ok=True  errors=0 warnings=1
+        post_normalization_contract_report.runtime_...  ok=False errors=1
+
+    The run had succeeded. Failing it on the nested report threw the research
+    deliverable away, which is why that shape is a regression test.
+    """
+
+    reports: Dict[str, Dict[str, Any]] = {}
+    for key, value in artifacts.items():
+        if not isinstance(value, dict) or not value:
+            continue
+        if key.endswith(_RUNTIME_SCHEMA_SUFFIX) or not key.endswith(_BLOCKING_SUFFIX):
+            continue
+        # The parent's own errors only: the nested report is dropped so it cannot
+        # be mistaken for a second, failing boundary.
+        reports[key] = {k: v for k, v in value.items() if k != _RUNTIME_SCHEMA_KEY}
+    return reports
+
+
+def _runtime_schema_warnings(reports: Dict[str, Dict[str, Any]]) -> Tuple[List[str], int]:
+    """``(warning_lines, finding_count)`` for every runtime-schema report.
+
+    These stay visible -- a recursive shape finding is real information about the
+    payload -- but as warnings, never as a reason to fail. ``reports`` is the
+    archive dict from :func:`_collect_reports`, so both the nested
+    ``<parent>.runtime_schema_report`` entries and any standalone top-level
+    ``*_runtime_schema_report`` are covered.
+    """
+
+    lines: List[str] = []
+    total = 0
+    dropped = 0
+    for name, report in sorted(reports.items()):
+        if not name.endswith(_RUNTIME_SCHEMA_SUFFIX) and not name.endswith(
+            f".{_RUNTIME_SCHEMA_KEY}"
+        ):
+            continue
+        errors = _safe_list(_safe_dict(report).get("errors"))
+        total += len(errors)
+        for issue in errors:
+            code = _issue_code(issue) or "(no code)"
+            pointer = _issue_pointer(issue) or "(no pointer)"
+            message = _text(_safe_dict(issue).get("message")) or _text(issue)
+            line = f"{WARN_RUNTIME_SCHEMA_PREFIX}[{name}] {code} @ {pointer}: {message}"
+            if line in lines:
+                # Byte-identical: the same finding on the same report, not a second
+                # one, so it is collapsed rather than counted as truncated.
+                continue
+            if len(lines) >= RUNTIME_SCHEMA_WARN_LIMIT:
+                dropped += 1
+                continue
+            lines.append(line)
+    if dropped:
+        lines.append(
+            f"{WARN_RUNTIME_SCHEMA_PREFIX}and {dropped} more finding(s); "
+            "all of them are in contract_reports.json"
+        )
+    return lines, total
 
 
 def _collect_issue_codes(reports: Dict[str, Dict[str, Any]]) -> Tuple[List[str], List[str], int]:
@@ -485,6 +732,26 @@ def _collect_issue_codes(reports: Dict[str, Dict[str, Any]]) -> Tuple[List[str],
             )
             lines.append(f"[{name}] {code or '(no code)'} @ {pointer or '(no pointer)'}: {detail}")
     return codes, lines, total
+
+
+def _structural_guard_codes(text: str) -> List[str]:
+    """The ``STRUCTURAL_GUARD_CODES`` named by free-text app output, if any.
+
+    Structural guards abort in BOTH export modes on purpose -- a payload with no
+    ``processes`` object has no pathway to review, so relaxing the check would only
+    convert a clean ``StageContractError`` into an ``AttributeError`` two stages
+    later. The refusal is correct; only the *label* was wrong. PMC13278307's
+    research run was filed as ``failure_kind="llm"`` because the app's adjacent
+    hint says "usually a transient LLM failure", while the actual error was
+    "Extraction boundary failed: Payload must include a processes object."
+    """
+
+    low = text.lower()
+    codes: List[str] = []
+    for phrase, code in _STRUCTURAL_GUARD_MESSAGES:
+        if phrase in low and code not in codes:
+            codes.append(code)
+    return codes
 
 
 def _classify(
@@ -878,6 +1145,10 @@ def _drive(
     outcome.stage = STAGE_INPUT
 
     at.text_area(key=KEY_TEXT).set_value(source_text)
+    # Both text areas live inside the ``pwml_pipeline`` form, so the focus is set in
+    # the same interaction as the pasted text and arrives with the submit click --
+    # which is what a human does, and the only way the app sees it at all.
+    _set_extraction_focus(at, paper, outcome)
     submit = next((button for button in at.button if button.label == LABEL_RUN_PIPELINE), None)
     if submit is None:
         _fail(
@@ -922,12 +1193,16 @@ def _drive(
 
     if not ready:
         outcome.stage = STAGE_STAGE1
+        # A structural guard ("Payload must include a processes object") is a
+        # StageContractError, not a model fault: it belongs in the contract bucket
+        # with its code, even though the app prints an LLM hint next to it.
+        guard_codes = _structural_guard_codes(joined)
         _fail(
             outcome,
             status=_STATUS_ERROR if exceptions else _STATUS_FAIL,
             kind=_classify(
                 text=joined,
-                issue_codes=[],
+                issue_codes=guard_codes,
                 contract_signal=False,
                 ambiguous=False,
                 no_reactions=False,
@@ -939,6 +1214,7 @@ def _drive(
                 else "extraction did not complete and the app reported no error"
             ),
             detail=joined or "(the app emitted no error, warning or exception)",
+            codes=guard_codes,
         )
         _add_common_artifacts(at, {}, outcome.artifacts)
         return
@@ -994,15 +1270,28 @@ def _drive(
     outcome.stage = STAGE_POST_PIPELINE
     joined, errors, exceptions = _collect_app_text(at)
     artifacts = _safe_dict(_ss(at, "post_pipeline_artifacts"))
-    reports = _collect_reports(artifacts)
-    codes, code_lines, error_count = _collect_issue_codes(reports)
+    # Two scans over two different sets, deliberately: the blocking verdict comes
+    # from the top-level *_contract_report objects only, while runtime-schema
+    # findings -- which RUNTIME_SCHEMA_MODE="report" records as parent warnings --
+    # stay visible as warnings and can never fail the run.
+    codes, code_lines, error_count = _collect_issue_codes(_blocking_reports(artifacts))
+    schema_warnings, schema_findings = _runtime_schema_warnings(_collect_reports(artifacts))
+    for warning in schema_warnings:
+        if warning not in outcome.warnings:
+            outcome.warnings.append(warning)
     if error_count:
         outcome.counts["contract_errors"] = error_count
+    if schema_findings:
+        outcome.counts["runtime_schema_findings"] = schema_findings
     _add_common_artifacts(at, artifacts, outcome.artifacts)
 
     if not artifacts:
         # A StageContractError is caught by the app and rendered, which leaves
-        # post_pipeline_artifacts absent -- so absence itself is the signal.
+        # post_pipeline_artifacts absent -- so absence itself is the signal. The
+        # code only exists in the sentence the app printed, so recover it.
+        for code in _structural_guard_codes(joined):
+            if code not in codes:
+                codes.append(code)
         _fail(
             outcome,
             status=_STATUS_ERROR if exceptions else _STATUS_FAIL,
@@ -1212,13 +1501,19 @@ __all__ = [
     "DEFAULT_APP_TIMEOUT",
     "DEFAULT_TIMEOUT",
     "DETAIL_LIMIT",
+    "KIND_CONTRACT",
     "KIND_CRASH",
+    "KIND_LLM",
     "KIND_TIMEOUT",
+    "LABEL_EXTRACTION_FOCUS",
     "MODE_RESEARCH",
     "MODE_STRICT",
     "RESEARCH",
+    "RUNTIME_SCHEMA_WARN_LIMIT",
     "STRICT",
+    "WARN_NO_FOCUS_BOX",
     "WARN_NO_RESEARCH_REPORT",
+    "WARN_RUNTIME_SCHEMA_PREFIX",
     "RunOutcome",
     "run_one",
 ]
