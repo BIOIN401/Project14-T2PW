@@ -1,0 +1,21 @@
+# topics.txt -- the work list for scripts/batch_run.py
+#
+# One line per topic. Blank lines and everything after a "#" are ignored.
+# Accepted shapes:
+#
+#   topic | organism | count      how many papers to take for this topic
+#   topic | organism              count defaults to 3
+#   topic                         no organism scoping
+#   PMC4412817                    a pinned paper: fetched by id, no search
+#   10.1038/nchembio.1687         a pinned DOI works too
+#
+# Only open-access papers with retrievable full text can be run; the rest are
+# recorded in the run's skipped.json with reason "no_full_text". That is normal,
+# so ask for a few more papers than you need and cap the night with --limit.
+
+lipid A biosynthesis | Escherichia coli | 3
+menaquinone biosynthesis | Bacillus subtilis | 3
+mycolic acid biosynthesis | Mycobacterium tuberculosis | 2
+
+# Uncomment to pin a specific paper you want in every run:
+# PMC4412817

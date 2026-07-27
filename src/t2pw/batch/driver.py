@@ -1,0 +1,1224 @@
+"""Run one paper through the *real* Streamlit app, headlessly, for one export mode.
+
+WHY this drives the app instead of calling the pipeline functions directly
+---------------------------------------------------------------------------
+``src/t2pw/app/streamlit_app.py`` is not a thin view over the pipeline: it *is*
+the orchestrator. Export-mode selection, the Stage-0 ambiguity refusal, the
+Stage-3 pre-export revalidation, the RAG seam (S1/S2/S5), and the pre-merge
+payload that the citation report has to be built from all live in that file and
+nowhere else. Any batch runner that re-implemented that wiring would drift from
+the app within a week, and an overnight run whose failures do not reproduce in
+the browser is worse than no overnight run at all.
+
+So this module drives the app through Streamlit's own headless harness,
+``streamlit.testing.v1.AppTest``: it clicks the same widgets a human clicks and
+reads the same ``st.session_state`` the app writes. The app is never imported
+here, never refactored, and never duplicated -- a change to the app is picked up
+automatically on the next batch run.
+
+WHY the app's failures are read rather than caught
+-------------------------------------------------
+The app reports almost every problem by calling ``st.error(...)`` followed by
+``st.stop()``, not by raising. ``st.stop()`` is a clean stop as far as AppTest is
+concerned, so a run that failed looks exactly like a run that succeeded unless
+you inspect the emitted elements. That is why :func:`run_one` checks
+``at.error`` / ``at.exception`` / ``session_state["pipeline_error"]`` *before* it
+looks for artifacts, and why it refuses to call anything a pass that it cannot
+positively confirm.
+
+WHY strict mode needs a third click
+-----------------------------------
+Verified against the app: ``pwml_generate_btn`` ("Run audit and DB mapping")
+runs audit + DB mapping and stores ``post_pipeline_artifacts``, but PWML is
+deliberately gated behind the human review step -- the app says "PWML generation
+is paused until approval" and only ``refinement_generate_pwml`` ("Generate
+PWML") calls the exporter and stores ``pwml_export_result``. A strict run that
+stops after two clicks has produced no ``.pwml`` file, so the driver clicks the
+third button too. Research mode intentionally has no PWML, so its absence there
+is not a failure and the button is never clicked.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import time
+import traceback
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+from t2pw.paths import PACKAGE_ROOT
+
+# ── Export-mode radio labels, exactly as the app spells them ───────────────
+STRICT = "Strict PWML"
+RESEARCH = "Research (relaxed)"
+
+#: Short mode tokens used in ``RunOutcome.mode``, folder names and the manifest.
+MODE_STRICT = "strict"
+MODE_RESEARCH = "research"
+
+#: The app under test. Never imported -- AppTest execs it as a script.
+DEFAULT_APP_PATH = PACKAGE_ROOT / "app" / "streamlit_app.py"
+
+#: One app *interaction* can legitimately take an hour (LLM + PathBank + RAG).
+DEFAULT_APP_TIMEOUT = 3600.0
+#: Whole-run wall-clock budget across all interactions for one paper+mode.
+DEFAULT_TIMEOUT = 7200.0
+
+# ── Widget keys / labels, all verified against the app ─────────────────────
+KEY_EXPORT_MODE = "export_mode_radio"
+KEY_INPUT_MODE = "input_mode_radio"
+KEY_TEXT = "pathway_text_0"
+LABEL_RUN_PIPELINE = "Run pipeline"
+KEY_POST_PIPELINE = "pwml_generate_btn"
+KEY_GENERATE_PWML = "refinement_generate_pwml"
+#: Always paste: full text arrives as a ``str``, so ``st.file_uploader`` -- which
+#: AppTest cannot drive with a real PDF -- is never involved.
+INPUT_MODE_PASTE = "Paste text"
+
+# ── Stage names, coarsest to furthest ──────────────────────────────────────
+STAGE_INIT = "init"
+STAGE_APP_LOAD = "app_load"
+STAGE_INPUT = "input"
+STAGE_STAGE1 = "stage1"
+STAGE_POST_PIPELINE = "post_pipeline"
+STAGE_PWML_EXPORT = "pwml_export"
+STAGE_RESEARCH_REPORT = "research_report"
+
+_STATUS_PASS = "pass"
+_STATUS_FAIL = "fail"
+_STATUS_TIMEOUT = "timeout"
+_STATUS_ERROR = "error"
+
+# ── failure_kind vocabulary ───────────────────────────────────────────────
+KIND_CONTRACT = "contract"
+KIND_LLM = "llm"
+KIND_NETWORK = "network"
+KIND_AMBIGUOUS = "ambiguous_review_scope"
+KIND_NO_REACTIONS = "no_reactions"
+KIND_CRASH = "crash"
+#: Every timeout -- whichever interaction hung, and whether the *driver* or the
+#: parent process noticed it -- reports this one kind. The parent's synthesized
+#: timeout row uses the same string, so the ranked fix-list has ONE timeout
+#: bucket instead of splitting half the hangs into "unknown".
+KIND_TIMEOUT = "timeout"
+KIND_UNKNOWN = "unknown"
+
+#: ``detail`` is carried on a single stdout line, then into ``manifest.jsonl``
+#: and ``RESULT.txt``. Full IR + gate reports run to 70-100 KB, which bloats all
+#: three for no gain: the same reports are written as separate artifact files, so
+#: the detail is a pointer, not the record.
+DETAIL_LIMIT = 8000
+
+#: Warning text for a research run that produced no citation report because RAG
+#: never triggered. Not a failure -- but it must be impossible to mistake for a
+#: run that produced the research deliverable.
+WARN_NO_RESEARCH_REPORT = "no research report: RAG did not trigger for this paper"
+
+# Network markers are checked ahead of LLM markers on purpose: an LLM call that
+# cannot open a socket is a network failure, and "connection"/"uniprot"/"mysql"
+# are far more specific signals than the generic "timed out" that both classes
+# of failure share.
+_NETWORK_MARKERS: Tuple[str, ...] = (
+    "connection",
+    "connectionerror",
+    "connect to",
+    "could not connect",
+    "refused",
+    "dns",
+    "getaddrinfo",
+    "unreachable",
+    "uniprot",
+    "europepmc",
+    "europe pmc",
+    "ncbi",
+    "eutils",
+    "mysql",
+    "pymysql",
+    "operationalerror",
+    "socket",
+    "ssl",
+    "certificate",
+    "read timed out",
+    "http error",
+    "httperror",
+    "502",
+    "503",
+    "504",
+    "bad gateway",
+    "network",
+)
+_LLM_MARKERS: Tuple[str, ...] = (
+    "llm",
+    "openai",
+    "anthropic",
+    "claude",
+    "json decode",
+    "jsondecodeerror",
+    "invalid json",
+    "malformed json",
+    "could not parse",
+    "failed to parse",
+    "unparseable",
+    "truncated",
+    "max tokens",
+    "max_tokens",
+    "context length",
+    "rate limit",
+    "prompt",
+    "completion",
+    "timed out",
+    "timeout",
+)
+_CONTRACT_MARKERS: Tuple[str, ...] = (
+    "stage boundary",
+    "stagecontracterror",
+    "contract",
+    "hard-gate",
+    "hard gate",
+    "gate validation",
+    "gatevalidationerror",
+    "required-field gate",
+    "fails the pre-export stage 3",
+)
+_NO_REACTION_MARKERS: Tuple[str, ...] = (
+    "no reactions",
+    "zero reactions",
+    "empty pathway",
+    "missing processes.reactions",
+    "produced no reactions",
+)
+
+#: Every key in ``post_pipeline_artifacts`` whose value is a stage contract
+#: report. Discovered by suffix rather than hard-coded so a new boundary added to
+#: the app is picked up without editing this file.
+_CONTRACT_SUFFIXES: Tuple[str, ...] = ("_contract_report", "_runtime_schema_report")
+
+_ENTITY_COUNT_KEYS: Tuple[str, ...] = ("proteins", "compounds")
+
+
+# ---------------------------------------------------------------------------
+# Small tolerant accessors. The app's own ``_safe_dict``/``_safe_list`` cannot be
+# reused because importing the app module is exactly what must not happen here.
+# ---------------------------------------------------------------------------
+def _safe_dict(value: Any) -> Dict[str, Any]:
+    return value if isinstance(value, dict) else {}
+
+
+def _safe_list(value: Any) -> List[Any]:
+    return list(value) if isinstance(value, (list, tuple)) else []
+
+
+def _text(value: Any) -> str:
+    return value.strip() if isinstance(value, str) else ("" if value is None else str(value))
+
+
+def _ss(at: Any, key: str, default: Any = None) -> Any:
+    """Read ``at.session_state[key]`` without ever raising.
+
+    ``AppTest.session_state`` is a ``SafeSessionState``, not a ``Mapping``:
+    ``.get(...)`` raises ``AttributeError`` and a missing key raises ``KeyError``
+    with a docs link. Both are normal here (many keys only exist after a
+    successful stage), so both degrade to ``default``.
+    """
+
+    try:
+        return at.session_state[key]
+    except Exception:  # noqa: BLE001 -- KeyError, AttributeError, or worse
+        return default
+
+
+def _element_texts(elements: Any) -> List[str]:
+    """The ``.value`` of every element in one of AppTest's element lists.
+
+    Iterated directly rather than through :func:`_safe_list`: ``at.error`` and
+    friends return an ``ElementList``, which is a ``Sequence`` but neither a
+    ``list`` nor a ``tuple``, so a type check on those two silently reports that
+    the app said nothing -- and a run that failed loudly would look clean.
+    """
+
+    out: List[str] = []
+    try:
+        iterator = iter(elements)
+    except TypeError:
+        return out
+    for element in iterator:
+        try:
+            value = element.value
+        except Exception:  # noqa: BLE001 -- element shapes vary by element type
+            value = None
+        rendered = _text(value)
+        if rendered:
+            out.append(rendered)
+    return out
+
+
+def _json_default(value: Any) -> Any:
+    """Bytes and other blobs are described, never inlined into a JSON report."""
+
+    if isinstance(value, (bytes, bytearray)):
+        return f"<{len(value)} bytes omitted>"
+    if isinstance(value, (set, frozenset)):
+        return sorted(str(item) for item in value)
+    if isinstance(value, Path):
+        return str(value)
+    return str(value)
+
+
+def _json_text(value: Any) -> str:
+    """Serialize for writing. ``ensure_ascii=False`` keeps entity names readable."""
+
+    try:
+        return json.dumps(value, indent=2, ensure_ascii=False, default=_json_default)
+    except Exception as exc:  # noqa: BLE001 -- never lose an artifact to a dump bug
+        return json.dumps({"_unserializable": True, "error": str(exc)}, indent=2)
+
+
+# ---------------------------------------------------------------------------
+# Paper adapter. ``t2pw.batch.fetch.BatchPaper`` is the expected input, but a
+# ``rag.acquire.CandidatePaper`` or a plain dict works too -- the driver only
+# ever needs an id and the full text.
+# ---------------------------------------------------------------------------
+def _paper_field(paper: Any, names: Tuple[str, ...]) -> str:
+    for name in names:
+        if isinstance(paper, dict):
+            if name in paper:
+                found = _text(paper[name])
+                if found:
+                    return found
+            continue
+        found = _text(getattr(paper, name, ""))
+        if found:
+            return found
+    return ""
+
+
+def _paper_id(paper: Any) -> str:
+    return _paper_field(paper, ("paper_id", "id", "pmcid", "pmid", "doi", "slug")) or "(unknown-paper)"
+
+
+def _paper_text(paper: Any) -> str:
+    return _paper_field(paper, ("full_text", "text", "body", "abstract"))
+
+
+# ---------------------------------------------------------------------------
+# Mode adapter.
+# ---------------------------------------------------------------------------
+def _resolve_mode(mode: Any) -> Tuple[str, str]:
+    """Return ``(short_token, radio_label)`` for anything that names a mode."""
+
+    raw = _text(mode).lower()
+    if "research" in raw or "relax" in raw:
+        return MODE_RESEARCH, RESEARCH
+    # Default is strict, deliberately: an unrecognised mode must never silently
+    # relax the gates, which is the same rule the app itself applies.
+    return MODE_STRICT, STRICT
+
+
+# ---------------------------------------------------------------------------
+# Outcome.
+# ---------------------------------------------------------------------------
+@dataclass
+class RunOutcome:
+    """Everything the batch runner needs to write one paper+mode to disk.
+
+    ``artifacts`` maps a filename to ``bytes`` or ``str`` ready to write (the
+    caller owns the folder layout and must open with ``encoding="utf-8"``).
+    ``counts`` and ``issue_codes`` are what the aggregator ranks on.
+
+    ``warnings`` is for a run that genuinely passed but did *not* produce one of
+    its deliverables. The status stays ``pass`` (the pipeline ran; RAG declining
+    to trigger is not a code defect), but the run must never be summarised as
+    clean, so the warning travels all the way into the manifest row.
+    """
+
+    paper_id: str = ""
+    mode: str = MODE_STRICT
+    status: str = _STATUS_ERROR
+    stage: str = STAGE_INIT
+    seconds: float = 0.0
+    failure_kind: str = ""
+    message: str = ""
+    detail: str = ""
+    issue_codes: List[str] = field(default_factory=list)
+    artifacts: Dict[str, Any] = field(default_factory=dict)
+    counts: Dict[str, Any] = field(default_factory=dict)
+    warnings: List[str] = field(default_factory=list)
+
+    @property
+    def passed(self) -> bool:
+        return self.status == _STATUS_PASS
+
+    def files(self) -> List[Dict[str, Any]]:
+        """``[{"name":..., "bytes": n}, ...]`` -- the manifest's ``files`` field."""
+
+        return [
+            {"name": name, "bytes": len(blob) if isinstance(blob, (bytes, bytearray, str)) else 0}
+            for name, blob in self.artifacts.items()
+        ]
+
+    def capped_detail(self) -> str:
+        """``detail`` trimmed to :data:`DETAIL_LIMIT`, saying what was dropped.
+
+        Nothing is actually lost: every report that makes ``detail`` large is
+        also written as its own artifact file, and the marker names them.
+        """
+
+        text = self.detail or ""
+        if len(text) <= DETAIL_LIMIT:
+            return text
+        dropped = len(text) - DETAIL_LIMIT
+        names = ", ".join(sorted(self.artifacts)) or "(no artifact files were written)"
+        return (
+            text[:DETAIL_LIMIT]
+            + f"\n\n... [detail truncated at {DETAIL_LIMIT} chars; {dropped} more character(s) "
+            f"dropped. The full reports are on disk in this folder: {names}]"
+        )
+
+    def to_dict(self) -> Dict[str, Any]:
+        """A JSON-Lines manifest row. Artifact *contents* are never included."""
+
+        return {
+            "paper_id": self.paper_id,
+            "mode": self.mode,
+            "status": self.status,
+            "stage": self.stage,
+            "seconds": round(float(self.seconds), 2),
+            "failure_kind": self.failure_kind,
+            "message": self.message,
+            "detail": self.capped_detail(),
+            "issue_codes": list(self.issue_codes),
+            "counts": dict(self.counts),
+            "files": self.files(),
+            "warnings": list(self.warnings),
+        }
+
+
+# ---------------------------------------------------------------------------
+# Failure classification.
+# ---------------------------------------------------------------------------
+def _slug_code(reason: str) -> str:
+    """Turn a free-text gate reason into a groupable code.
+
+    Gate errors are ``{"path", "reason"}`` with no code, and the reason embeds the
+    offending entity name (``"Forbidden complex reference detected: <token>"``).
+    Cutting at the first ``:`` and dropping digits collapses every instance of
+    one rule onto one code, which is what makes ranking by code meaningful.
+    """
+
+    head = reason.split(":", 1)[0]
+    slug = re.sub(r"[^a-z0-9]+", "_", head.lower()).strip("_")
+    slug = re.sub(r"_\d+", "", slug).strip("_")
+    return f"gate.{slug[:64]}" if slug else "gate.unspecified"
+
+
+def _issue_code(issue: Any) -> str:
+    """A contract-report or gate error's structured code."""
+
+    if isinstance(issue, str):
+        return _slug_code(issue)
+    data = _safe_dict(issue)
+    code = _text(data.get("code"))
+    if code:
+        return code
+    reason = _text(data.get("reason")) or _text(data.get("message")) or _text(data.get("detail"))
+    return _slug_code(reason) if reason else ""
+
+
+def _issue_pointer(issue: Any) -> str:
+    data = _safe_dict(issue)
+    return _text(data.get("pointer")) or _text(data.get("path"))
+
+
+def _report_errors(report: Any) -> List[Any]:
+    """The blocking issues of a contract/gate report, ``[]`` when it passed."""
+
+    data = _safe_dict(report)
+    if not data:
+        return []
+    if data.get("ok") is True and not data.get("errors"):
+        return []
+    return _safe_list(data.get("errors"))
+
+
+def _collect_reports(artifacts: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    """Every *stage contract* report present, keyed by its artifact key.
+
+    Gate reports are deliberately excluded: they are read separately (they carry
+    ``path``/``reason`` rather than ``code``/``pointer``), and counting them here
+    too would report every gate error a second time as a contract error.
+    """
+
+    reports: Dict[str, Dict[str, Any]] = {}
+    for key, value in artifacts.items():
+        if not isinstance(value, dict) or not value:
+            continue
+        if key.endswith(_CONTRACT_SUFFIXES):
+            reports[key] = value
+        nested = _safe_dict(value.get("runtime_schema_report"))
+        if nested:
+            reports[f"{key}.runtime_schema_report"] = nested
+    return reports
+
+
+def _collect_issue_codes(reports: Dict[str, Dict[str, Any]]) -> Tuple[List[str], List[str], int]:
+    """``(codes, human_lines, error_count)`` across every failing report."""
+
+    codes: List[str] = []
+    lines: List[str] = []
+    total = 0
+    for name, report in sorted(reports.items()):
+        errors = _report_errors(report)
+        if not errors:
+            continue
+        total += len(errors)
+        for issue in errors:
+            code = _issue_code(issue)
+            if code and code not in codes:
+                codes.append(code)
+            pointer = _issue_pointer(issue)
+            detail = (
+                _text(_safe_dict(issue).get("message"))
+                or _text(_safe_dict(issue).get("reason"))
+                or _text(issue)
+            )
+            lines.append(f"[{name}] {code or '(no code)'} @ {pointer or '(no pointer)'}: {detail}")
+    return codes, lines, total
+
+
+def _classify(
+    *,
+    text: str,
+    issue_codes: List[str],
+    contract_signal: bool,
+    ambiguous: bool,
+    no_reactions: bool,
+    crashed: bool,
+) -> str:
+    """Map the evidence onto one ``failure_kind``.
+
+    Order matters. Structured evidence beats wording, and wording beats the mere
+    presence of a traceback -- the app calls ``st.exception(exc)`` in its generic
+    handler, so ``at.exception`` being non-empty says nothing about *what* broke.
+    """
+
+    if ambiguous:
+        return KIND_AMBIGUOUS
+    if no_reactions:
+        return KIND_NO_REACTIONS
+    if contract_signal or issue_codes:
+        return KIND_CONTRACT
+    low = text.lower()
+    if any(marker in low for marker in _CONTRACT_MARKERS):
+        return KIND_CONTRACT
+    if any(marker in low for marker in _NO_REACTION_MARKERS):
+        return KIND_NO_REACTIONS
+    network = any(marker in low for marker in _NETWORK_MARKERS)
+    llm = any(marker in low for marker in _LLM_MARKERS)
+    if network:
+        return KIND_NETWORK
+    if llm:
+        return KIND_LLM
+    if crashed:
+        return KIND_CRASH
+    return KIND_UNKNOWN
+
+
+# ---------------------------------------------------------------------------
+# Payload counting.
+# ---------------------------------------------------------------------------
+def _payload_counts(payload: Any) -> Dict[str, int]:
+    data = _safe_dict(payload)
+    processes = _safe_dict(data.get("processes"))
+    entities = _safe_dict(data.get("entities"))
+    counts = {
+        "reactions": len(_safe_list(processes.get("reactions"))),
+        "transports": len(_safe_list(processes.get("transports"))),
+        "entities": sum(len(_safe_list(rows)) for rows in entities.values()),
+    }
+    for key in _ENTITY_COUNT_KEYS:
+        counts[key] = len(_safe_list(entities.get(key)))
+    return counts
+
+
+# ---------------------------------------------------------------------------
+# Interaction helpers.
+# ---------------------------------------------------------------------------
+def _looks_like_timeout(exc: BaseException) -> bool:
+    """AppTest signals a run timeout as ``RuntimeError('... timed out ...')``."""
+
+    return "timed out" in str(exc).lower()
+
+
+class _Budget:
+    """Wall-clock budget shared by every interaction of one paper+mode run."""
+
+    def __init__(self, total: float, per_run: float) -> None:
+        self.started = time.monotonic()
+        self.total = max(1.0, float(total))
+        self.per_run = max(1.0, float(per_run))
+
+    @property
+    def elapsed(self) -> float:
+        return time.monotonic() - self.started
+
+    @property
+    def remaining(self) -> float:
+        return self.total - self.elapsed
+
+    def slice(self) -> float:
+        """Seconds to allow the next interaction: never past the total budget."""
+
+        return max(1.0, min(self.per_run, self.remaining))
+
+
+def _collect_app_text(at: Any) -> Tuple[str, List[str], List[str]]:
+    """``(joined_text, errors, exceptions)`` -- everything the app said."""
+
+    errors = _element_texts(getattr(at, "error", []))
+    exceptions = _element_texts(getattr(at, "exception", []))
+    warnings = _element_texts(getattr(at, "warning", []))
+    joined = "\n".join([*errors, *exceptions, *warnings])
+    return joined, errors, exceptions
+
+
+def _find_pwml_result(at: Any, artifacts: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
+    """Locate the PWML export result. Verified key first, then a real fallback.
+
+    Verified: the app stores it in ``session_state["pwml_export_result"]``, and
+    the exporter's dict carries ``ok`` / ``xml_bytes`` / ``pwml_ir``. The fallback
+    scan exists because ``run_pwml_export``'s output is also folded into
+    ``post_pipeline_artifacts`` on some paths, and a future refactor of the app
+    must degrade to "found it anyway" rather than to a fabricated pass.
+    """
+
+    direct = _safe_dict(_ss(at, "pwml_export_result"))
+    if direct:
+        return "pwml_export_result", direct
+    for key, value in artifacts.items():
+        candidate = _safe_dict(value)
+        if candidate and ("xml_bytes" in candidate or "pwml_ir" in candidate):
+            return f"post_pipeline_artifacts[{key}]", candidate
+    for key, value in artifacts.items():
+        if "pwml" in key.lower() and isinstance(value, dict) and value:
+            return f"post_pipeline_artifacts[{key}]", value
+    return "", {}
+
+
+def _xml_bytes(result: Dict[str, Any]) -> bytes:
+    for key in ("xml_bytes", "pwml_bytes", "pwml_xml_bytes"):
+        blob = result.get(key)
+        if isinstance(blob, (bytes, bytearray)) and blob:
+            return bytes(blob)
+        if isinstance(blob, str) and blob.strip():
+            return blob.encode("utf-8")
+    return b""
+
+
+# ---------------------------------------------------------------------------
+# Artifact assembly.
+# ---------------------------------------------------------------------------
+def _add_common_artifacts(at: Any, artifacts: Dict[str, Any], out: Dict[str, Any]) -> None:
+    """Stage-1 and merged payloads, whenever the app got far enough to store them."""
+
+    stage_one = _ss(at, "stage_one")
+    if isinstance(stage_one, dict) and stage_one:
+        out["stage1_payload.json"] = _json_text(stage_one)
+    merged = _ss(at, "final_payload")
+    if isinstance(merged, dict) and merged:
+        out["merged_payload.json"] = _json_text(merged)
+    gate_fail = _safe_dict(artifacts.get("gate_fail_report"))
+    if gate_fail:
+        out["gate_fail_report.json"] = _json_text(gate_fail)
+    stage3 = _safe_dict(artifacts.get("final_stage3_gate_report"))
+    if stage3:
+        out["final_stage3_gate_report.json"] = _json_text(stage3)
+    # One combined file rather than a dozen near-empty ones: the aggregator wants
+    # codes (which it gets from the manifest) and a human wants one place to look.
+    contracts = _collect_reports(artifacts)
+    if contracts:
+        out["contract_reports.json"] = _json_text(contracts)
+
+
+def _add_strict_artifacts(
+    artifacts: Dict[str, Any],
+    pwml_result: Dict[str, Any],
+    out: Dict[str, Any],
+) -> None:
+    xml = _xml_bytes(pwml_result)
+    if xml:
+        out["pathway.pwml"] = xml
+    ir = pwml_result.get("pwml_ir")
+    if isinstance(ir, dict) and ir:
+        out["pwml_ir.json"] = _json_text(ir)
+    for key, name in (
+        ("pwml_ir_report", "pwml_ir_report.json"),
+        ("pwml_ir_validation", "pwml_ir_validation.json"),
+        ("validation_report", "pwml_validation_report.json"),
+        ("qa", "pwml_qa.json"),
+        ("required_gate_report", "pwml_required_field_gate_report.json"),
+    ):
+        value = pwml_result.get(key)
+        if isinstance(value, dict) and value:
+            out[name] = _json_text(value)
+    mapped = artifacts.get("final_mapped_db") or artifacts.get("final_mapped")
+    if isinstance(mapped, dict) and mapped:
+        out["final_mapped.json"] = _json_text(mapped)
+
+
+def _add_research_artifacts(
+    at: Any,
+    artifacts: Dict[str, Any],
+    out: Dict[str, Any],
+    counts: Dict[str, Any],
+) -> str:
+    """Write the research deliverables. Returns a note for ``message``.
+
+    The citation report must be built from the **pre-merge** payload
+    (``rag_result.payload``): ``pipeline._clean_processes`` strips
+    ``rag_provenance`` / ``source_papers`` / ``source_refs`` from every reaction
+    during the merge, so tiering the merged payload would report Tier D
+    (unsourced) for everything. Identifiers, conversely, only exist on the
+    *mapped* payload, so the two are passed separately -- the same split the app
+    itself makes.
+    """
+
+    flags = _safe_list(artifacts.get("research_review_flags"))
+    skipped = _safe_list(artifacts.get("research_skipped_format_rules"))
+    preserved = _safe_list(artifacts.get("research_normalization_actions"))
+    counts["review_flags"] = len(flags)
+    counts["skipped_format_rules"] = len(skipped)
+    counts["normalization_actions"] = len(preserved)
+
+    out["review_flags.json"] = _json_text(
+        {
+            "export_mode": artifacts.get("export_mode"),
+            "biology_provenance_flags": flags,
+            "format_rules_skipped": skipped,
+            "content_preserved": preserved,
+        }
+    )
+
+    rag_result = _ss(at, "rag_result")
+    synthesized = getattr(rag_result, "payload", None)
+    if not isinstance(synthesized, dict) or not synthesized:
+        # Not a failure: RAG is optional and may legitimately not have triggered.
+        return "no RAG synthesis in this run, so no citation report was produced"
+
+    from t2pw.rag.research_report import build_citation_report
+
+    report = build_citation_report(
+        synthesized,
+        review_flags=flags,
+        format_gaps=skipped,
+        rag_result=rag_result,
+        mode=RESEARCH,
+        identity_source=artifacts.get("final_mapped_db") or artifacts.get("final_mapped"),
+    )
+    out["research_pathway_report.txt"] = report.to_text()
+    out["research_pathway_citations.json"] = report.to_json()
+    out["research_pathway_elements.csv"] = report.to_csv()
+
+    summary = _safe_dict(report.summary)
+    tier_counts = _safe_dict(summary.get("tier_counts"))
+    counts["tier"] = {str(tier).lower(): int(value or 0) for tier, value in tier_counts.items()}
+    counts["citations"] = int(summary.get("distinct_sources_cited", 0) or 0)
+    counts["unsourced"] = int(summary.get("unsourced_count", 0) or 0)
+    return ""
+
+
+# ---------------------------------------------------------------------------
+# The driver.
+# ---------------------------------------------------------------------------
+def run_one(
+    paper: Any,
+    mode: Any,
+    *,
+    app_path: Optional[Any] = None,
+    timeout: float = DEFAULT_TIMEOUT,
+    app_timeout: float = DEFAULT_APP_TIMEOUT,
+) -> RunOutcome:
+    """Run one paper through the real app once, in one export mode.
+
+    Never raises. Any internal problem -- a bad app path, an AppTest change, a
+    bug in this module -- becomes ``status="error"``, ``failure_kind="crash"``
+    with the traceback in ``detail``, because an overnight batch that dies on
+    paper three is worthless.
+    """
+
+    mode_token, mode_label = _resolve_mode(mode)
+    outcome = RunOutcome(paper_id=_paper_id(paper), mode=mode_token)
+    budget = _Budget(timeout, app_timeout)
+    try:
+        _drive(paper, mode_label, outcome, budget, app_path)
+    except Exception:  # noqa: BLE001 -- the whole point of this wrapper
+        outcome.status = _STATUS_ERROR
+        outcome.failure_kind = KIND_CRASH
+        outcome.message = outcome.message or "batch driver crashed before it could judge the run"
+        outcome.detail = ((outcome.detail + "\n\n") if outcome.detail else "") + traceback.format_exc()
+    outcome.seconds = round(budget.elapsed, 2)
+    return outcome
+
+
+def _fail(
+    outcome: RunOutcome,
+    *,
+    status: str,
+    kind: str,
+    message: str,
+    detail: str = "",
+    codes: Optional[List[str]] = None,
+) -> None:
+    outcome.status = status
+    outcome.failure_kind = kind
+    outcome.message = message
+    if detail:
+        outcome.detail = detail
+    if codes:
+        for code in codes:
+            if code not in outcome.issue_codes:
+                outcome.issue_codes.append(code)
+
+
+def _run_app(at: Any, budget: _Budget) -> Tuple[bool, str]:
+    """One ``at.run()``. Returns ``(timed_out, detail)`` -- other errors raise."""
+
+    if budget.remaining <= 0:
+        return True, f"whole-run budget of {budget.total:.0f}s was already spent"
+    try:
+        at.run(timeout=budget.slice())
+    except Exception as exc:  # noqa: BLE001
+        if _looks_like_timeout(exc):
+            return True, f"{exc}"
+        raise
+    return False, ""
+
+
+def _drive(
+    paper: Any,
+    mode_label: str,
+    outcome: RunOutcome,
+    budget: _Budget,
+    app_path: Optional[Any],
+) -> None:
+    """The interaction script. Mutates ``outcome`` and returns on any verdict."""
+
+    from streamlit.testing.v1 import AppTest
+
+    target = Path(app_path) if app_path else DEFAULT_APP_PATH
+    if not target.is_file():
+        _fail(
+            outcome,
+            status=_STATUS_ERROR,
+            kind=KIND_CRASH,
+            message=f"app script not found: {target}",
+        )
+        return
+
+    source_text = _paper_text(paper)
+    if not source_text:
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=KIND_NO_REACTIONS,
+            message="paper has no full text, so there was nothing to extract",
+        )
+        return
+
+    at = AppTest.from_file(str(target), default_timeout=budget.per_run)
+
+    # ── 1. Load the app ────────────────────────────────────────────────────
+    timed_out, detail = _run_app(at, budget)
+    if timed_out:
+        _fail(
+            outcome,
+            status=_STATUS_TIMEOUT,
+            kind=KIND_TIMEOUT,
+            message="the app did not finish its first render",
+            detail=detail,
+        )
+        return
+    outcome.stage = STAGE_APP_LOAD
+    joined, _errors, exceptions = _collect_app_text(at)
+    if exceptions:
+        _fail(
+            outcome,
+            status=_STATUS_ERROR,
+            kind=_classify(
+                text=joined,
+                issue_codes=[],
+                contract_signal=False,
+                ambiguous=False,
+                no_reactions=False,
+                crashed=True,
+            ),
+            message="the app raised while loading, before any input was given",
+            detail=joined,
+        )
+        return
+
+    # ── 2. Choose the mode, paste the text, submit ─────────────────────────
+    # Two runs, not one: the export-mode and input-mode radios sit *outside* the
+    # form precisely because the app re-renders on them, and letting that render
+    # happen is what a human does. The text area only exists while input mode is
+    # "Paste text", so it is set after that render, not before.
+    at.radio(key=KEY_EXPORT_MODE).set_value(mode_label)
+    at.radio(key=KEY_INPUT_MODE).set_value(INPUT_MODE_PASTE)
+    timed_out, detail = _run_app(at, budget)
+    if timed_out:
+        _fail(
+            outcome,
+            status=_STATUS_TIMEOUT,
+            kind=KIND_TIMEOUT,
+            message="the app hung while switching to the requested export/input mode",
+            detail=detail,
+        )
+        return
+    outcome.stage = STAGE_INPUT
+
+    at.text_area(key=KEY_TEXT).set_value(source_text)
+    submit = next((button for button in at.button if button.label == LABEL_RUN_PIPELINE), None)
+    if submit is None:
+        _fail(
+            outcome,
+            status=_STATUS_ERROR,
+            kind=KIND_CRASH,
+            message=f'the app rendered no "{LABEL_RUN_PIPELINE}" button; its contract changed',
+            detail="buttons seen: " + ", ".join(repr(b.label) for b in at.button),
+        )
+        return
+    submit.click()
+    timed_out, detail = _run_app(at, budget)
+    if timed_out:
+        _fail(
+            outcome,
+            status=_STATUS_TIMEOUT,
+            kind=KIND_TIMEOUT,
+            message="extraction did not finish inside the time budget",
+            detail=detail,
+        )
+        return
+
+    # ── 3. Judge stage 1 BEFORE looking for artifacts ─────────────────────
+    # The app reports failure with st.error(...) + st.stop(), which AppTest sees
+    # as a clean run. Only the emitted elements and pipeline_error say otherwise.
+    joined, errors, exceptions = _collect_app_text(at)
+    pipeline_error = _safe_dict(_ss(at, "pipeline_error"))
+    ready = bool(_ss(at, "pipeline_ready", False))
+
+    if _text(pipeline_error.get("status")) == KIND_AMBIGUOUS:
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=KIND_AMBIGUOUS,
+            message=_text(pipeline_error.get("message"))
+            or "multi-example review with no selected example; extraction was refused",
+            detail="\n".join(part for part in (_json_text(pipeline_error), joined) if part),
+            codes=[KIND_AMBIGUOUS],
+        )
+        outcome.stage = STAGE_STAGE1
+        return
+
+    if not ready:
+        outcome.stage = STAGE_STAGE1
+        _fail(
+            outcome,
+            status=_STATUS_ERROR if exceptions else _STATUS_FAIL,
+            kind=_classify(
+                text=joined,
+                issue_codes=[],
+                contract_signal=False,
+                ambiguous=False,
+                no_reactions=False,
+                crashed=bool(exceptions),
+            ),
+            message=(
+                errors[0].splitlines()[0]
+                if errors
+                else "extraction did not complete and the app reported no error"
+            ),
+            detail=joined or "(the app emitted no error, warning or exception)",
+        )
+        _add_common_artifacts(at, {}, outcome.artifacts)
+        return
+
+    outcome.stage = STAGE_STAGE1
+    merged_counts = _payload_counts(_ss(at, "final_payload"))
+    outcome.counts.update(merged_counts)
+    if not merged_counts["reactions"] and not merged_counts["transports"]:
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=KIND_NO_REACTIONS,
+            message="the pipeline produced a pathway with no reactions and no transports",
+            detail=joined or "(no app error; the payload is simply empty)",
+        )
+        _add_common_artifacts(at, {}, outcome.artifacts)
+        return
+
+    # ── 4. Audit + DB mapping ─────────────────────────────────────────────
+    try:
+        post_button = at.button(key=KEY_POST_PIPELINE)
+    except Exception as exc:  # noqa: BLE001 -- KeyError when the app never rendered it
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=_classify(
+                text=joined,
+                issue_codes=[],
+                contract_signal=False,
+                ambiguous=False,
+                no_reactions=False,
+                crashed=bool(exceptions),
+            ),
+            message=f'the app never rendered the "{KEY_POST_PIPELINE}" button ({exc})',
+            detail=joined,
+        )
+        _add_common_artifacts(at, {}, outcome.artifacts)
+        return
+
+    post_button.click()
+    timed_out, detail = _run_app(at, budget)
+    if timed_out:
+        _fail(
+            outcome,
+            status=_STATUS_TIMEOUT,
+            kind=KIND_TIMEOUT,
+            message="audit and DB mapping did not finish inside the time budget",
+            detail=detail,
+        )
+        _add_common_artifacts(at, {}, outcome.artifacts)
+        return
+
+    outcome.stage = STAGE_POST_PIPELINE
+    joined, errors, exceptions = _collect_app_text(at)
+    artifacts = _safe_dict(_ss(at, "post_pipeline_artifacts"))
+    reports = _collect_reports(artifacts)
+    codes, code_lines, error_count = _collect_issue_codes(reports)
+    if error_count:
+        outcome.counts["contract_errors"] = error_count
+    _add_common_artifacts(at, artifacts, outcome.artifacts)
+
+    if not artifacts:
+        # A StageContractError is caught by the app and rendered, which leaves
+        # post_pipeline_artifacts absent -- so absence itself is the signal.
+        _fail(
+            outcome,
+            status=_STATUS_ERROR if exceptions else _STATUS_FAIL,
+            kind=_classify(
+                text=joined,
+                issue_codes=codes,
+                contract_signal=False,
+                ambiguous=False,
+                no_reactions=False,
+                crashed=bool(exceptions),
+            ),
+            message=(
+                errors[0].splitlines()[0]
+                if errors
+                else "audit and DB mapping stored no artifacts and reported no error"
+            ),
+            detail="\n".join(part for part in (joined, *code_lines) if part),
+            codes=codes,
+        )
+        return
+
+    mapped_counts = _payload_counts(artifacts.get("final_mapped_db") or artifacts.get("final_mapped"))
+    outcome.counts.update({key: value for key, value in mapped_counts.items() if value})
+
+    gate_fail = _safe_dict(artifacts.get("gate_fail_report"))
+    stage3_gate = _safe_dict(artifacts.get("final_stage3_gate_report"))
+    gate_failed = bool(
+        artifacts.get("gate_failed")
+        or artifacts.get("normalization_gate_failed")
+        or gate_fail
+        or (stage3_gate and stage3_gate.get("ok") is False)
+    )
+    gate_errors = [*_safe_list(gate_fail.get("errors")), *_safe_list(stage3_gate.get("errors"))]
+    for issue in gate_errors:
+        code = _issue_code(issue)
+        if code and code not in codes:
+            codes.append(code)
+    outcome.counts["gate_errors"] = len(gate_errors)
+
+    if gate_failed or error_count:
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=_classify(
+                text=joined,
+                issue_codes=codes,
+                contract_signal=True,
+                ambiguous=False,
+                no_reactions=False,
+                crashed=bool(exceptions),
+            ),
+            message=(
+                "post-pipeline validation failed: "
+                f"{len(gate_errors) + error_count} blocking issue(s) at "
+                f"{_text(gate_fail.get('stage')) or _text(stage3_gate.get('stage')) or 'a stage boundary'}"
+            ),
+            detail="\n".join(part for part in (joined, *code_lines) if part)
+            or _json_text({"gate_fail_report": gate_fail, "final_stage3_gate_report": stage3_gate}),
+            codes=codes,
+        )
+        return
+
+    # ── 5. Mode-specific deliverable ──────────────────────────────────────
+    if outcome.mode == MODE_RESEARCH:
+        outcome.stage = STAGE_RESEARCH_REPORT
+        try:
+            note = _add_research_artifacts(at, artifacts, outcome.artifacts, outcome.counts)
+        except Exception:  # noqa: BLE001 -- a report bug must not be called a pass
+            _fail(
+                outcome,
+                status=_STATUS_ERROR,
+                kind=KIND_CRASH,
+                message="research report generation failed after a clean pipeline run",
+                detail=traceback.format_exc(),
+                codes=codes,
+            )
+            return
+        if "research_pathway_report.txt" not in outcome.artifacts and not note:
+            _fail(
+                outcome,
+                status=_STATUS_FAIL,
+                kind=KIND_UNKNOWN,
+                message="no research report was produced and no reason was given",
+                detail=joined,
+                codes=codes,
+            )
+            return
+        outcome.status = _STATUS_PASS
+        outcome.failure_kind = ""
+        outcome.message = "research run completed" + (f"; {note}" if note else " with a citation report")
+        outcome.detail = joined
+        outcome.issue_codes = codes
+        if "research_pathway_report.txt" not in outcome.artifacts:
+            # The pipeline ran, so this is a pass -- but there is no research
+            # deliverable in the folder (no report, no citations, no tiers), and
+            # a night of these must never be summarised as ALL GREEN.
+            if WARN_NO_RESEARCH_REPORT not in outcome.warnings:
+                outcome.warnings.append(WARN_NO_RESEARCH_REPORT)
+        return
+
+    # Strict: PWML is gated behind the review step, so the third click is
+    # required. Without it there is no .pwml file and nothing to confirm.
+    outcome.stage = STAGE_PWML_EXPORT
+    try:
+        pwml_button = at.button(key=KEY_GENERATE_PWML)
+    except Exception as exc:  # noqa: BLE001
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=_classify(
+                text=joined,
+                issue_codes=codes,
+                contract_signal=False,
+                ambiguous=False,
+                no_reactions=False,
+                crashed=bool(exceptions),
+            ),
+            message=(
+                f'the app never rendered the "{KEY_GENERATE_PWML}" button ({exc}), '
+                "so the review step that unlocks PWML export was not reached"
+            ),
+            detail=joined,
+            codes=codes,
+        )
+        return
+
+    pwml_button.click()
+    timed_out, detail = _run_app(at, budget)
+    if timed_out:
+        _fail(
+            outcome,
+            status=_STATUS_TIMEOUT,
+            kind=KIND_TIMEOUT,
+            message="PWML export did not finish inside the time budget",
+            detail=detail,
+            codes=codes,
+        )
+        return
+
+    joined, errors, exceptions = _collect_app_text(at)
+    artifacts = _safe_dict(_ss(at, "post_pipeline_artifacts")) or artifacts
+    source_key, pwml_result = _find_pwml_result(at, artifacts)
+    _add_strict_artifacts(artifacts, pwml_result, outcome.artifacts)
+
+    pwml_codes = list(codes)
+    for report_key in ("required_gate_report", "stage3_contract_report", "pwml_contract_report"):
+        for issue in _report_errors(pwml_result.get(report_key)):
+            code = _issue_code(issue)
+            if code and code not in pwml_codes:
+                pwml_codes.append(code)
+
+    if not pwml_result:
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=_classify(
+                text=joined,
+                issue_codes=pwml_codes,
+                contract_signal=False,
+                ambiguous=False,
+                no_reactions=False,
+                crashed=bool(exceptions),
+            ),
+            message="no PWML export result was stored, so a strict pass cannot be confirmed",
+            detail=joined or "(the app emitted no error)",
+            codes=pwml_codes,
+        )
+        return
+
+    xml = _xml_bytes(pwml_result)
+    if not pwml_result.get("ok") or not xml:
+        _fail(
+            outcome,
+            status=_STATUS_FAIL,
+            kind=_classify(
+                text="\n".join([joined, _text(pwml_result.get("error"))]),
+                issue_codes=pwml_codes,
+                contract_signal=bool(pwml_codes),
+                ambiguous=False,
+                no_reactions=False,
+                crashed=bool(exceptions),
+            ),
+            message="PWML export failed: "
+            + (_text(pwml_result.get("error")) or "no XML was produced and no error was reported"),
+            detail="\n".join(
+                part
+                for part in (joined, f"pwml result read from {source_key}", _json_text(pwml_result))
+                if part
+            ),
+            codes=pwml_codes,
+        )
+        return
+
+    outcome.counts["pwml_bytes"] = len(xml)
+    pwml_counts = _safe_dict(pwml_result.get("counts"))
+    if pwml_counts:
+        outcome.counts["pwml"] = {str(k): v for k, v in pwml_counts.items()}
+    outcome.status = _STATUS_PASS
+    outcome.failure_kind = ""
+    outcome.message = f"strict run completed; pathway.pwml is {len(xml)} bytes"
+    outcome.detail = joined
+    outcome.issue_codes = pwml_codes
+
+
+__all__ = [
+    "DEFAULT_APP_PATH",
+    "DEFAULT_APP_TIMEOUT",
+    "DEFAULT_TIMEOUT",
+    "DETAIL_LIMIT",
+    "KIND_CRASH",
+    "KIND_TIMEOUT",
+    "MODE_RESEARCH",
+    "MODE_STRICT",
+    "RESEARCH",
+    "STRICT",
+    "WARN_NO_RESEARCH_REPORT",
+    "RunOutcome",
+    "run_one",
+]

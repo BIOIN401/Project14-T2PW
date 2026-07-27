@@ -5,6 +5,123 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Unattended overnight batch runner (2026-07-27, branch `research-mode`)
+
+Adds an unattended runner that fetches N papers from the literature and pushes
+every one through the pipeline **twice** — `Strict PWML` and `Research (relaxed)`
+— writing every artifact, a per-pair `RESULT.txt`, a `SUMMARY.txt` and a ranked
+`failures_by_code.txt` into `runs/TIMESTAMP/`. New code:
+`src/t2pw/batch/{fetch,driver,runner,report}.py`, CLI `scripts/batch_run.py`,
+launcher `run_overnight.bat`, work list `topics.txt`. Full operator
+documentation in [`docs/batch_runner.md`](batch_runner.md).
+
+**Error.** Research mode was shipped but had never been run over a corpus, so
+nobody knew which papers it breaks on or why. Doing that by hand is ten papers ×
+two modes × three clicks each, spread over hours of LLM and PathBank latency —
+which means it does not get done, and the two things worth knowing stay unknown:
+which strict failures are just PathWhiz FORMAT rules (expected wear) and which
+are real bugs.
+
+**Why.** The pair of outcomes is the diagnostic, and only running *both* modes on
+the *same* paper produces it. strict FAIL + research PASS is a FORMAT rule to
+catalogue; strict FAIL + research FAIL is a real bug upstream of export; and
+**any** research failure is a code defect, because research mode is fail-open by
+construction and has no legitimate way to fail on real data. `report.py` encodes
+exactly that as its triage classes and prints research defects first and loudest.
+
+**Fix — it drives the real app; nothing was duplicated or refactored.**
+`streamlit_app.py` is **unmodified**. It is not a thin view over the pipeline —
+export-mode selection, the Stage-0 ambiguity refusal, the Stage-3 pre-export
+revalidation, the RAG seam (S1/S2/S5) and the pre-merge payload the citation
+report must be built from live in that file and nowhere else. A runner that
+re-implemented that wiring would drift within a week, and an overnight run whose
+failures do not reproduce in the browser is worse than no overnight run. So
+`driver.py` drives the app through Streamlit's own headless harness,
+`streamlit.testing.v1.AppTest`: it sets the same widgets a human sets and reads
+the same `st.session_state` the app writes. The app is never imported, never
+refactored, never copied — a change to it is picked up on the next batch run.
+Paper acquisition is likewise not new code: `fetch.py` is a thin driver over
+Stage R1 (`t2pw.rag.acquire`), so there is no second fetcher, no new HTTP code
+and no new dependency.
+
+Two structural decisions carry the design. Every paper+mode runs in a **child
+process** (`scripts/batch_run.py --single ...`) because a thread cannot be killed
+and `signal.SIGALRM` does not exist on Windows, so a hung LLM request or wedged
+MySQL socket is unkillable in-process; the child is put in its own process group
+and killed with `taskkill /F /T`. And the loop is **strictly sequential**, because
+`data/id_mapping_cache.json`, `data/enrichment_cache.json` and `data/rag_index`
+are shared mutable state with read-modify-write access and no locking; the two
+JSON caches are snapshotted to `cache_snapshot/` so a bad night is revertible.
+
+**An adversarial review found 11 defects before the runner was ever used for
+real.** Ten were fixed and re-verified by execution; the eleventh (the AppTest
+timeout) was still broken on re-check and has now been patched as far as it can
+be. The three severe ones:
+
+- **A completed paper was silently discarded and then marked done, so it was
+  never retried.** The child prints its manifest row as one `ensure_ascii=False`
+  JSON line, and the child's stdout is *always* a pipe — whose encoding is the
+  ANSI codepage (cp1252 here), not UTF-8. One Greek beta in an entity name
+  (`β-hydroxymyristoyl` is the canonical lipid A intermediate) raised
+  `UnicodeEncodeError` **after** the artifacts and `RESULT.txt` were already on
+  disk. The parent saw no result line, synthesized a crash row — and because a row
+  now existed, `completed_pairs()` counted the pair as finished, so the passing
+  run was lost for good. The encoding is now pinned in three independent places:
+  `emit_outcome` writes explicit UTF-8 *bytes* to `sys.stdout.buffer` (falling
+  back to `ensure_ascii=True` JSON, which no codec can refuse, if there is no
+  buffer), `force_utf8_stdio()` runs first in `main()` before anything can print,
+  and `child_env()` sets `PYTHONUTF8` / `PYTHONIOENCODING` while the parent
+  decodes the pipes as UTF-8.
+- **An unguarded `print` in `Logger` killed the whole night before paper one.**
+  Setup logs each fetched paper's *title* — arbitrary journal text with Greek
+  letters and em dashes. Printing it to a cp1252 console, or worse to a redirected
+  log file or Task Scheduler's captured stream, raises `UnicodeEncodeError`; and
+  `UnicodeEncodeError` is a `ValueError`, so the `except OSError` that guarded the
+  file write did not catch it. The batch died during planning with zero papers
+  run. `Logger.__call__` now cannot raise at all (verbatim → `_ascii_safe` →
+  silent), and `plan.json` is written *before* any title is logged, so even a
+  catastrophic log failure leaves a resumable run directory instead of an orphan
+  that `find_resumable` refuses and every subsequent launch replaces with another
+  empty one.
+- **`AppTest.run(timeout=...)` is inoperative as a bound.** It requests a stop and
+  then joins the script thread **unbounded**, raising the timeout only after the
+  blocking call returns on its own — a report, not an interruption. Measured:
+  `at.run(timeout=2.0)` against a 12-second block **raised the timeout but
+  returned after 12.1 s**. So a wedged LLM or DB socket is bounded *only* by the
+  parent's process-tree kill at `--timeout` (default 3600 s), plus the whole-night
+  `--deadline` (default 10 h) that stops the loop before it is still running at
+  lunchtime. This cannot be fully fixed from here, so it is documented rather than
+  papered over: on the kill path the child dies **before** it can write its
+  artifacts, so a killed pair genuinely produces nothing. The child is given the
+  parent's timeout minus a 120 s grace precisely so a *nearly*-finished pair can
+  land its files, and if it printed its row before the stopwatch expired the
+  parent uses the child's own row instead of a fabricated failure.
+
+The remaining eight were one family: **a bad night that looked clean.** A
+swallowed `OSError` filed a missing `01_source_text.txt` as "the extractor found
+nothing" — an infrastructure fault reported as a biology defect. `_relocate_files`
+rebuilt each `files` entry and dropped its `error` key, so a run whose deliverable
+never reached the disk was reported as a pass. The parent overwrote the child's
+richer `RESULT.txt` with a reconstruction that had already lost that error.
+`_element_texts` type-checked for `list`/`tuple` against AppTest's `ElementList`,
+so a run that failed *loudly* read as one that said nothing. `find_resumable`
+reached back past the newest run directory and had no age limit, so one stale
+paper was re-run every night forever while nothing new was fetched. A manifest
+whose last line lost its newline fused two rows on append, making the pair
+invisible to resume and re-mangling it on every retry. And a research run that
+produced no report, no citations and no tiers was summarised as `ALL GREEN` —
+now a warning that travels into the manifest, prints as
+`PASS (no research deliverable)`, and downgrades the night to
+`PASSED WITH WARNINGS`.
+
+**Tests.** Baseline before: **725 passing**; after: **872 passing** (+147 batch
+tests across `tests/test_batch_{fetch,driver,report,run}.py`). No pre-existing
+test was modified, and no file under `src/` outside the new `src/t2pw/batch/`
+package was touched. `ruff check src tests scripts` reports the same **49**
+pre-existing findings as before the change — no new lint.
+
+---
+
 ## Research mode — relaxed export policy for novel pathways (2026-07-27, branch `research-mode`)
 
 Adds a second export policy so RAG-synthesized *novel* pathways can be generated
