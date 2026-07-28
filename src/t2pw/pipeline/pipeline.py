@@ -8,6 +8,11 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from t2pw.llm.client import chat
 from t2pw.paths import PROMPTS_DIR, TMP_DIR
+from t2pw.pipeline.enzyme_cues import (
+    MAX_INJECTOR_EVIDENCE_CHARS,
+    collapse_whitespace,
+    cue_near_name,
+)
 from t2pw.pipeline.preprocessor import format_context_header, is_ambiguous_multi_example_review_context
 from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, generate_qa_report, get_entities
 from t2pw.pipeline.draft_graph import DraftGraph, build_draft_graph
@@ -1635,6 +1640,24 @@ def _evidence_text(value: Any) -> str:
 
 
 def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
+    """Rebuild reaction enzyme / transport transporter rows from a key whitelist.
+
+    ``provenance`` and ``confidence`` are part of that whitelist because dropping
+    them made every shipped actor untraceable. In run 2026-07-28_0919 the enzyme
+    rows of all four merged payloads have exactly one key set --
+    ``('evidence', 'protein')`` for 421 of 430 rows and
+    ``('evidence', 'protein_complex')`` for the other 9 -- so a reader cannot
+    tell a Stage-1 extraction from a name-heuristic guess, and 177 of the 204
+    rows in the PMC12444477 strict payload were in fact guesses.
+    ``rag/tiers.py`` calls this out in its module docstring: it has to tier the
+    *pre-merge* payload precisely because this function strips the carriers.
+
+    ``entity_type`` is deliberately still dropped. Re-emitting it would make the
+    PWML gate read a declared type off an actor row, and a row that declares
+    ``protein`` before the ``map_ids`` protein -> complex rewrite has run turns
+    today's ``reaction_enzyme_must_be_protein_complex`` warning path into a hard
+    error. That carry-through waits until the rewrite is verified.
+    """
     cleaned: List[Dict[str, Any]] = []
     seen_names: set = set()
     allowed_entity_types = {"protein", "protein_complex"}
@@ -1670,6 +1693,18 @@ def _clean_enzymes(enzymes: Any) -> List[Dict[str, Any]]:
         evidence = _evidence_text(item.get("evidence")).strip()
         if evidence:
             entry["evidence"] = evidence
+        # Provenance is a short label ("extracted", "inferred", "rag"); confidence
+        # is a number. Both are copied verbatim when present so the origin of the
+        # row survives into the exported payload. Downstream consumers read these
+        # rows by name/evidence key (``pwml/ir.py`` builds its enzyme members from
+        # the resolved entity, and ``validate_required_pwml_contract`` never reads
+        # an actor row's extra keys), so widening the whitelist is additive.
+        provenance = item.get("provenance")
+        if isinstance(provenance, str) and provenance.strip():
+            entry["provenance"] = provenance.strip()
+        confidence = item.get("confidence")
+        if isinstance(confidence, (int, float)) and not isinstance(confidence, bool):
+            entry["confidence"] = confidence
         inference = item.get("inference")
         if inference and not _is_empty_value(inference):
             entry["inference"] = inference
@@ -2084,9 +2119,21 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     """
     Post-processing pass: for every protein and protein_complex in entities, check
     whether the name appears in a reaction name/evidence or a transport name/evidence.
-    - Reactions: inject as a catalyst modifier if missing.
+    - Reactions: inject as a catalyst modifier if missing, but only when the name
+      sits inside a catalysis-cue window and is the *only* actor that qualifies.
     - Transports: inject as a transporter entry (protein_complex field) if missing.
     Catches cases where Stage-1 and Stage-2 omit these links.
+
+    The reaction branch used to accept a bare substring hit anywhere in the row's
+    evidence and attach *every* actor that matched. Run 2026-07-28_0919 measured
+    what that costs on PMC12444477 ("The regulation of lipid A biosynthesis"):
+    Stage 1 extracted 9 reactions carrying exactly 1 enzyme each, and the strict
+    export shipped 27 reactions and 204 enzyme rows, of which 177 have evidence
+    of exactly 119 or 120 characters -- the fingerprint of the
+    ``revidence_text[:120]`` slice this function used to write (the 119-vs-120
+    split is a ``.strip()`` trimming a trailing space downstream). Replaying the
+    old predicate over that payload's own entity list reproduces all 204
+    attachments; the research payload of the same paper reproduces all 146.
     """
     def _sl(x: Any) -> list:
         return x if isinstance(x, list) else []
@@ -2108,19 +2155,55 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
     transports = _sl(processes.get("transports", []))
 
     def _row_evidence(row: Dict[str, Any]) -> str:
-        """Only the core's one-sentence evidence field feeds this heuristic.
+        """Only a short, core-sized evidence sentence feeds this heuristic.
 
-        A RAG-synthesized row stores a *list* of retrieved passages under the same
-        key — often most of a paper. Substring-matching every protein name against
-        that corpus would attach every enzyme to every reaction, so a non-string
-        evidence field contributes nothing here.
+        Two shapes have to be refused, and the ``isinstance`` test alone only
+        catches the one that no longer arrives:
+
+        * a *list* of retrieved passages, which is how RAG stores evidence; and
+        * that same list already flattened into one enormous **string** by
+          ``rag/conform.py``, which runs before this pass. That is the shape
+          that actually reaches here, so the type check was a no-op against the
+          only case that mattered.
+
+        Hence the size bound. Reaction #14 of the PMC12444477 strict payload in
+        run 2026-07-28_0919 carries 139,576 characters of evidence -- one
+        4,812-character passage repeated 29 times -- and nearly every declared
+        protein name occurs somewhere inside it.
         """
         value = row.get("evidence")
-        return value if isinstance(value, str) else ""
+        if not isinstance(value, str) or len(value) > MAX_INJECTOR_EVIDENCE_CHARS:
+            return ""
+        return value
+
+    def _attached_actor_names(row: Dict[str, Any]) -> set:
+        """Names already credited on this row, under every key-shape in use.
+
+        Scanning only ``modifiers`` (the old behaviour) missed the common case:
+        Stage 1 writes its extracted catalyst into ``enzymes``, not
+        ``modifiers``, so all nine lipid A seed reactions in run 2026-07-28_0919
+        had their correct enzyme re-injected here as a duplicate modifier with
+        a truncated evidence string. ``_clean_enzymes`` then deduped by name and
+        kept whichever copy came first, which is how a Stage-1 row with real
+        provenance could end up represented by a 120-character slice.
+
+        Rows use ``entity`` (typed modifier refs) or the legacy
+        ``protein``/``protein_complex`` keys interchangeably, so read all three.
+        """
+        names: set = set()
+        for bucket in ("modifiers", "enzymes"):
+            for item in _sl(row.get(bucket, [])):
+                if not isinstance(item, dict):
+                    continue
+                for key in ("entity", "protein", "protein_complex"):
+                    value = (item.get(key) or "").strip().lower()
+                    if value:
+                        names.add(value)
+        return names
 
     # Resolve each row's name/evidence once; re-deriving it per actor is quadratic.
     reaction_rows = [
-        (reaction, (reaction.get("name") or "").lower(), _row_evidence(reaction))
+        (reaction, (reaction.get("name") or ""), _row_evidence(reaction))
         for reaction in reactions
         if isinstance(reaction, dict)
     ]
@@ -2130,31 +2213,77 @@ def _inject_name_based_modifiers(merged: Dict[str, Any]) -> None:
         if isinstance(transport, dict)
     ]
 
+    # --- Reactions: inject at most one missing catalyst modifier per reaction ---
+    #
+    # Iterating reactions on the outside (actors on the inside) is what makes the
+    # exactly-one-actor test below expressible at all. That test is not optional
+    # polish: without it this pass would remain strictly more permissive than its
+    # sibling ``process_normalizer.attach_enzymes_from_reaction_evidence``, which
+    # has always refused to guess when a row's text names more than one candidate.
+    for reaction, rname, revidence_text in reaction_rows:
+        haystack = collapse_whitespace(f"{rname} {revidence_text}")
+        if not haystack:
+            continue
+        attached = _attached_actor_names(reaction)
+        qualified: List[tuple] = []
+        seen_actors: set = set()
+        for pname, entity_type in actors:
+            pname_lower = pname.lower()
+            # Entity lists really do repeat a name: the PMC12444477 strict
+            # merged payload declares LpxA, LpxB, LpxC, LpxD, LpxH, LpxK, LpxL,
+            # LpxM and WaaA twice each in ``entities.proteins``. The old loop
+            # absorbed that silently -- the second copy saw the first one it had
+            # just injected and skipped -- but under a hard exactly-one gate a
+            # duplicate declaration would instead cancel the injection outright,
+            # so collapse them here. Complexes are listed first, so a complex
+            # wins a tie against an identically named protein.
+            if pname_lower in seen_actors:
+                continue
+            seen_actors.add(pname_lower)
+            if pname_lower in attached:
+                continue
+            snippet = cue_near_name(haystack, pname)
+            if snippet:
+                qualified.append((pname, entity_type, snippet))
+        # Two actor names where one contains the other are not two independent
+        # catalyst claims about the sentence -- "Hexokinase" cannot help matching
+        # wherever "Hexokinase complex" does. The real payloads carry such pairs
+        # ("PlsB" / "PlsB glycerol-3-phosphate acyltransferase" and "Pgp
+        # phosphatase" / "Pgp phosphatases" are both in the PMC12444477 strict
+        # entity list), and left uncollapsed each pair would trip the
+        # exactly-one test and silently disable the heuristic. Keeping the longer
+        # name is what the actor ordering above has always claimed to do -- it
+        # lists complexes first so they "take priority over subunits with
+        # overlapping names" -- except that ordering alone never enforced it.
+        qualified = [
+            candidate
+            for candidate in qualified
+            if not any(
+                other[0].lower() != candidate[0].lower()
+                and candidate[0].lower() in other[0].lower()
+                for other in qualified
+            )
+        ]
+        if len(qualified) != 1:
+            continue
+        pname, entity_type, snippet = qualified[0]
+        reaction.setdefault("modifiers", [])
+        reaction["modifiers"].append({
+            "entity": pname,
+            "entity_type": entity_type,
+            "role": "catalyst",
+            # The matched cue window, never a blind prefix of the row's
+            # evidence. A reviewer opening this row now sees the clause that
+            # justified the attachment instead of the first 120 characters of
+            # whatever text happened to be attached to the reaction.
+            "evidence": snippet,
+            "confidence": 0.9,
+            "provenance": "inferred",
+            "source_refs": [snippet],
+        })
+
     for pname, entity_type in actors:
         pname_lower = pname.lower()
-
-        # --- Reactions: inject missing catalyst modifiers ---
-        for reaction, rname, revidence_text in reaction_rows:
-            revidence = revidence_text.lower()
-            if pname_lower not in rname and pname_lower not in revidence:
-                continue
-            existing_modifiers = _sl(reaction.get("modifiers", []))
-            already_present = any(
-                isinstance(m, dict) and (m.get("entity") or "").strip().lower() == pname_lower
-                for m in existing_modifiers
-            )
-            if already_present:
-                continue
-            reaction.setdefault("modifiers", [])
-            reaction["modifiers"].append({
-                "entity": pname,
-                "entity_type": entity_type,
-                "role": "catalyst",
-                "evidence": revidence_text[:120],
-                "confidence": 0.9,
-                "provenance": "inferred",
-                "source_refs": [revidence_text[:120]],
-            })
 
         # --- Transports: inject missing transporter protein_complex entries ---
         for transport, tname, tevidence_text in transport_rows:

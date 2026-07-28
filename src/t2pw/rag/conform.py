@@ -55,6 +55,17 @@ def _evidence_to_str(value: Any) -> str:
     Mirrors :func:`t2pw.pipeline.pipeline._evidence_text`: a string is returned
     as-is, a ``{"text": ...}`` record yields its text, and a list of records /
     strings is joined into one human-readable string.
+
+    The join deduplicates. This is a belt-and-braces boundary guard: the amplifying
+    append was fixed at its origin in :func:`t2pw.rag.synthesize._merge_into`, but
+    this function is the LAST point at which a repeated passage is still a list of
+    separable parts — one line later it is a single opaque string that no downstream
+    stage can split apart again. Run 2026-07-28_0919 is what that costs when it gets
+    through: PMC12444477 (strict) exported a reaction whose evidence string was
+    139,576 characters holding one 4,812-character passage 29 times, and a 4.70 MB
+    merged payload of which 4.6 MB was duplicated evidence text. Guarding here also
+    covers evidence lists that reach the seam from a producer other than
+    ``_merge_into``.
     """
     if isinstance(value, str):
         return value.strip()
@@ -68,7 +79,14 @@ def _evidence_to_str(value: Any) -> str:
                 parts.append(item.strip())
             elif isinstance(item, dict) and isinstance(item.get("text"), str) and item["text"].strip():
                 parts.append(item["text"].strip())
-        return " ".join(parts)
+        # ``dict.fromkeys`` is safe HERE and only here: ``parts`` is a List[str] —
+        # every dict record was already unwrapped to its ``.text`` on the line above,
+        # so nothing unhashable reaches it. (The same trick is NOT usable inside
+        # ``t2pw.rag.synthesize``, where the elements are still dicts and carry a
+        # per-retrieval ``score`` that differs for the same chunk; that side keys on
+        # the explicit ``(chunk_id, text)`` pair instead.) It preserves first-seen
+        # order, so the leading passage of the evidence list still leads the string.
+        return " ".join(dict.fromkeys(parts))
     return ""
 
 

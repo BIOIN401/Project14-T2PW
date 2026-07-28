@@ -5,6 +5,228 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Four defects that let a wrong pathway pass every gate (2026-07-28, branch `research-mode`)
+
+The first corpus run to actually reach export, `runs/2026-07-28_0919`, put two
+papers through strict mode. **Both PASSED with `gate_errors: 0`** and wrote
+importable PWML. Both pathways are substantially wrong. Nothing in the stack
+noticed, because every gate we own measures structural validity and none of them
+measures whether the biology is true.
+
+**Error.** On PMC12444477 (*The regulation of lipid A biosynthesis*, E. coli),
+Stage 1 extracted **9 reactions with exactly one enzyme each** — the correct Raetz
+pathway. The delivered payload had **27 reactions and 204 enzyme rows**, of which
+**177 carry evidence of exactly 119 or 120 characters**. Reaction #14's evidence
+is **139,576 characters: one 4,812-character passage repeated 29 times**. WaaA,
+the Kdo transferase, is credited with `CDP-DAG + G3P -> PG`; a complex headed by
+FtsH, the LpxC protease, is credited with cardiolipin and phosphatidylserine
+synthesis. On PMC13278307 (the mcr colistin review) the run shipped UniProt
+**P08235 — the human mineralocorticoid receptor — as an enzyme on 10 of 14
+reactions**, P03023 (LacI) for the `pmrHFIJKLM` operon, and mapped the protein
+PhoP to **NAD+**, all with resolution status `matched`. The same paper's research
+leg **failed with 30 gate errors while every contract report said `ok=true`**.
+
+**Why.** These are four independent mechanisms that compose. Evidence gets
+amplified into a blob; a substring matcher reads that blob and manufactures
+enzymes; the mapper answers every query with its best guess and calls it a match;
+and the batch driver fails research runs on a report research mode does not treat
+as authoritative. Each is small. Together they turn nine honest reactions into a
+certified-passing artifact that is mostly false.
+
+### A. A substring matcher manufactured 177 of 204 enzyme attachments
+
+`_inject_name_based_modifiers` (`src/t2pw/pipeline/pipeline.py`) tests every
+declared protein name against a reaction's evidence text. Its guard,
+`_row_evidence`, checked only `isinstance(value, str)` — and its own docstring
+claimed to defend against *list*-shaped evidence, a shape that no longer reaches
+it because `rag/conform.py` flattens the list to a string upstream. So the guard
+was a no-op against the only shape that mattered, and a 139,576-character blob
+sailed through it containing nearly every protein name in the corpus. The
+`[:120]` slices that produced the 119/120-character signature are the injector
+storing a truncated prefix of that blob as the modifier's evidence; the 119-vs-120
+split is a `.strip()` removing a trailing space.
+
+**Fix.** A size bound, `MAX_INJECTOR_EVIDENCE_CHARS = 400`, now lives in the new
+leaf module `src/t2pw/pipeline/enzyme_cues.py` together with the catalysis-cue
+machinery, which was previously two private names inside the 4,500-line
+`process_normalizer.py`. The threshold is not arbitrary: measured reaction
+evidence lengths in the research payload are `[22..102]` for ten reactions and
+then `4636, 5113, 5113, 37946, ... 418122` — a **45× empty gap around 400**, with
+real model-emitted evidence below it and RAG blob above. Attachment now also
+requires the actor to sit inside a catalysis cue window **and be the only actor
+that qualifies**, matching the pre-existing `len(matches) != 1: continue` rule in
+`process_normalizer.py`; the matched cue snippet is stored as evidence instead of
+a truncated prefix. `attach_enzymes_from_reaction_evidence` got the same length
+guard as a `continue`, never a truncation. `_attached_actor_names` now scans
+`enzymes` as well as `modifiers` — the old check missed that Stage 1 writes its
+catalyst to `enzymes`, so all nine correct seed enzymes were being re-injected as
+duplicate modifiers carrying truncated evidence. `_clean_enzymes` now carries
+`provenance` and `confidence` through, which is why every enzyme row in every
+previous run had the key set `('evidence', 'protein')` and was untraceable.
+
+`pwml/qa.py:69-72` already documents that an enzyme-less reaction is expected and
+not an error, so `reactions_no_enzyme` rising above zero is the correct outcome,
+not a regression.
+
+**A test was hiding this.** `test_merge_additions_still_applies_the_name_heuristic`
+was **vacuous**: its fixture already gave reaction 0 an `enzymes` entry and the
+test cleared only `modifiers`, so it passed with the injector deleted outright.
+The fixture now clears `enzymes` too, so the test actually exercises what it
+claims to pin.
+
+### B. The same passage was stored 29 times because one carrier was not deduped
+
+`_reactions_from_bundle` (`src/t2pw/rag/synthesize.py`) runs once per gap bundle,
+and each reaction it builds carries the whole chunk text. A chunk that is top-k
+for N gaps therefore yields N identical rows — **the repeat count is the bundle
+count**. `_merge_into` then folds them with `target.evidence.extend(...)` while
+*unioning* provenance six lines above. `_attach_provenance` shows the same
+asymmetry: papers go through `_dedupe_papers`, source refs through
+`_dedupe_strs`, and evidence through nothing.
+
+**Fix.** Evidence and `source_papers` are now deduped where they are merged, and
+a `_dedupe_evidence` helper sits beside its two siblings. The key is explicitly
+`(chunk_id, text)`: `dict.fromkeys` and `set()` are both unusable here because the
+records are dicts, and dict equality would fail anyway since `_evidence_from_hit`
+stores a per-retrieval `score` that differs between gaps for the same chunk.
+`conform.py::_evidence_to_str` deduplicates at the flatten boundary as well, where
+the elements *are* strings and order-preserving `dict.fromkeys` is safe.
+`target.scores` is deliberately left accumulating — those are per-retrieval and
+genuinely additive. The proposed "cap at N distinct passages" was rejected: it
+would discard real provenance on a genuinely multi-source row.
+
+Reaction evidence (2,716,278 chars) plus enzyme-row evidence (1,888,665 chars)
+was 4.6 MB of the 4.70 MB payload.
+
+### C. The mapper answered every query and called it a match
+
+Wrong identifiers shipped with `resolution.status = "matched"`:
+
+| entity | shipped | what it actually is |
+|---|---|---|
+| `PhoP` (a protein, routed through the compound mapper) | KEGG C00003, CAS 53-84-9, CHEBI:15846 | NAD+ |
+| `pmrHFIJKLM` | UniProt P03023 | LacI, lactose operon repressor |
+| `mcr genes` | UniProt P08235 | human mineralocorticoid receptor |
+
+`pmrHFIJKLM` reached LacI by degrading through its query ladder to the literature
+alias `operon` — `queries_tried` literally contains
+`(protein_name:"operon" OR gene:"operon")`. Any name ending in "operon" was
+exposed. For `mcr genes`, `mapping_meta.resolved_name` said *"Type IV
+methyl-directed restriction enzyme EcoKMcrA"* while the shipped accession was
+P08235, so the audit trail did not describe what shipped.
+
+**Fix.** A name-plausibility gate in `src/t2pw/mapping/map_ids.py` rejects a match
+whose resolved name shares no meaningful token with the query and routes it to the
+**existing** `novel` status rather than inventing a new state — `novel` already
+worked and was simply never used for a bad match. Token comparison is
+case-insensitive, strips punctuation, and ignores generic biology words
+(`protein`, `enzyme`, `gene`, `operon`, `complex`, `subunit`, `transferase`, …).
+Bare generic aliases are no longer issued as standalone queries.
+`tests/test_map_ids_name_gate.py` pins the five cases using the **real** UniProt
+and PathBank responses from this run as fixtures: `MCR-1` →
+*Phosphatidylethanolamine transferase Mcr-1* must keep passing, while `mcr genes`
+→ *Mineralocorticoid receptor*, `pmrHFIJKLM` → *Lactose operon repressor* (both
+name forms) and `PhoP` → *NAD* must all fail.
+
+### D. Research mode was failed by a gate leg that does not know about modes
+
+Research mode is fail-open by construction. In the failing run **every contract
+report said `ok=true`, `still_blocking=0`, `research_blocked=[]`** — the relaxation
+worked exactly as designed. The run was failed anyway by `batch/driver.py`, which
+reads `gate_fail_report` and `final_stage3_gate_report` straight out of the
+artifacts dict with **no mode check**, and does so *before* the
+`if outcome.mode == MODE_RESEARCH` branch. This is the same class as the
+nested-`runtime_schema_report` misread fixed on 2026-07-27 — whose own docstring
+names this very paper — re-landed at a different seam.
+
+Worse, research mode **manufactured 4 of its own 30 errors**:
+`process_normalizer.py` deliberately skips `drop_process_orphan_proteins` and
+`prune_disconnected_proteins` in research mode on the stated ground that "the gate
+only flags", and then calls `run_strict_post_normalization_gates(...,
+enforce_all_proteins_connected=True)` unconditionally — so the gate raised on
+exactly the orphans the relaxation had chosen to keep.
+`run_strict_post_normalization_gates` takes no mode parameter and none of its call
+sites passed one, leaving it structurally incapable of relaxing.
+
+**Fix.** Gate errors in research mode are recorded and surfaced through the review
+flag and warning channels without failing the run; strict behaviour is unchanged.
+The self-inflicted case is closed by making the enforcement argument follow the
+same condition as the skip. `tests/test_batch_research_gate_fail_open.py` pins
+that a research run with non-empty gate errors and `ok=true` contract reports does
+not fail.
+
+**Verified.** Full suite green: **929 passed**.
+
+---
+
+## Known Debt — found in `runs/2026-07-28_0919`, NOT fixed
+
+Recorded so none of it is rediscovered as new. None of the below is addressed by
+the four fixes above.
+
+- **A pathway can contain none of the pathway it declares.** PMC13278307 ran with
+  the focus box set to "lipid A biosynthesis in Escherichia coli" and produced
+  **zero** lipid A backbone reactions — no LpxA/C/D/H/B/K, no WaaA, no LpxL/M —
+  yet passed with `gate_errors: 0`. Nothing checks that the delivered pathway is
+  the one that was asked for.
+- **Scope creep by cross-paper import.** Reactions 10–26 of the lipid A payload
+  are phospholipid biosynthesis, a different pathway; `rag_provenance` shows 35
+  entities from PMC12898747 and 2 from PMC11046580. Note that reaction-signature
+  deduplication was tested against the real data and **does not** fix this: 27/27
+  signatures are distinct, still 27/27 with the enzyme component removed, 26 with
+  a tight normalizer. These are imports, not name variants. Also note
+  `rag_provenance` is stripped from reactions by `_clean_processes`, so per-reaction
+  source is currently unrecoverable from the merged payload — that must be
+  preserved before any gap-relevance filter can be evaluated.
+- **Entity-type confusion in both directions.** Operons and gene clusters
+  (`arnBCADTEF`, `mcr genes`, `pmrCAB operon`, `pmrHFIJKLM`) are typed as proteins
+  and wrapped into PWML protein complexes, while a protein (`PhoP`) and a DNA
+  operon (`pmrHFIJKLM operon`) are typed as compounds. No type gate catches it.
+- **Chemically impossible and reversed reactions ship.** A DNA operon and a protein
+  each appear as reaction *substrates*; `Phosphoethanolamine -> lipid A` and
+  `4-amino-4-deoxy-L-arabinose + PEtN -> lipid A` run backwards. `src/t2pw/stoich/`
+  exists; nothing calls it on the strict path. A mass/atom balance check would
+  catch this class.
+- **Entity removal has no referential cascade.** `apply_audit_patch.py`
+  `_is_core_semantics_path` scopes to `/processes/*` only, so a `/entities/...`
+  removal needs only confidence ≥ 0.95 and gets no check that a reaction still
+  references it. Reactions cannot be deleted; the entities they point at can. This
+  is the mechanism behind the 24 dangling-reference errors, and behind the earlier
+  `unknown entity: phthalylsulfacetamide (PSA)` Stage-3 gate failure.
+- **`focused_repair.run_focused_repair_passes` has no caller anywhere in `src/`.**
+  Its first pass is precisely the "reaction input with no matching declared entity"
+  repair the above needs. Wire it in or delete it.
+- **Stage 0 Case-C clobber.** For a multi-example review over
+  `_PREPROCESS_RETRY_CHARS`, the short-text retry fires on a *correct* Case C
+  result (which deliberately blanks the fields `_has_usable_context` tests) and
+  unconditionally overwrites it. Losing `document_type` disarms the ambiguity
+  guard, so a review that should be refused can instead run unguided.
+- **No retry on empty-but-successful LLM completions.** `llm/client.py` returns an
+  HTTP-200 reply with empty `content` as a success and never inspects
+  `finish_reason`; retries fire only on raised exceptions. Two legs of this run
+  died in 55–137s on `Payload must include a processes object`, one of them a paper
+  that had extracted successfully the previous day.
+- **`clean_stage_one` turns emptiness into a structural violation.** It writes the
+  `processes` key only `if processes:`, so an extraction that finds no complete
+  reaction omits the key and trips the `processes_required` structural guard —
+  converting an honest "no reactions found" into an abort research mode cannot
+  fail open on.
+- **The batch runner has no preflight check.** Invoked under an interpreter
+  lacking `streamlit`, it fetched full text for 28 papers and then burned all 56
+  legs in 67 seconds recording the same missing import 56 times.
+- **Enrichment is serial over four external services.** `enrich_entities.py` makes
+  per-entity HTTPS calls to UniProt, EBI ChEBI, KEGG and HMDB (an HTML scrape);
+  ~22 of one leg's 50 minutes went there. It is embarrassingly parallel.
+- **Cross-checking against prior entries in this file was not completed.** Several
+  existing entries — "Tighten default reaction scope and wire the out-of-scope
+  reaction filter" (2026-07-14), "RAG scope/gap guardrails were unreachable dead
+  code" (2026-07-25), "RAG under-merged cross-paper synonym duplicates"
+  (2026-07-23) — may cover the scope-creep and duplication debt above. If a filter
+  described there is no longer firing, that debt is a **regression** and should be
+  rewritten as one. This check is outstanding.
+
+---
+
 ## Unattended overnight batch runner (2026-07-27, branch `research-mode`)
 
 Adds an unattended runner that fetches N papers from the literature and pushes

@@ -46,6 +46,19 @@ top-level ``*_contract_report`` objects for that reason; :func:`_collect_reports
 stays exhaustive but is used only to write the archive and to surface the
 runtime-schema findings as warnings.
 
+WHY a strict Stage-3 gate error never fails a RESEARCH run
+----------------------------------------------------------
+The Stage-3 hard gate encodes what the PathWhiz *importer* accepts. Research mode
+produces no PWML -- it produces a citation report for a human -- so those rules
+are FORMAT findings there, and the project's rule for FORMAT findings in research
+mode is "review flag, never failure" (``batch/report.py`` ranks a strict-PASS +
+research-FAIL pair as a RESEARCH-MODE DEFECT to fix first). The gate leg of
+:func:`_drive` was mode-blind and ran *before* the research branch, so
+PMC12444477's research run in 2026-07-28_0919 was filed FAIL with 30 gate errors
+while every contract report it produced said ``ok=true``, ``still_blocking=0``,
+``research_blocked=[]``. Same class as the nested-``runtime_schema_report`` misread
+below, same paper, different seam. See :func:`_research_gate_flags`.
+
 WHY strict mode needs a third click
 -----------------------------------
 Verified against the app: ``pwml_generate_btn`` ("Run audit and DB mapping")
@@ -158,6 +171,25 @@ WARN_RUNTIME_SCHEMA_PREFIX = "runtime-schema finding (informational, not blockin
 #: The warnings list rides into the manifest and RESULT.txt, so it is capped;
 #: nothing is lost because every report is written to ``contract_reports.json``.
 RUNTIME_SCHEMA_WARN_LIMIT = 10
+
+#: Prefix for one strict Stage-3 gate error surfaced as a warning on a RESEARCH
+#: run. See :func:`_research_gate_flags` for why these are recorded but never
+#: blocking in that mode.
+WARN_RESEARCH_GATE_PREFIX = "strict gate error (research mode: review flag, not blocking): "
+
+#: Same cap and same reasoning as :data:`RUNTIME_SCHEMA_WARN_LIMIT`: PMC12444477's
+#: research run produced 30 gate errors, and 30 lines of warning text in every
+#: manifest row and RESULT.txt buries the one line a human needs. Every error is
+#: written in full to ``gate_fail_report.json`` / ``final_stage3_gate_report.json``
+#: and to the ``strict_gate_errors_not_blocking`` block of ``review_flags.json``.
+RESEARCH_GATE_WARN_LIMIT = 10
+
+#: Research-mode review-flag key for the strict gate errors that did not fail the
+#: run. Deliberately NOT ``biology_provenance_flags``: those come from
+#: ``export_mode.review_flags`` and mean "the biology is unverified", while these
+#: mean "a PathWhiz-importer rule was not satisfied, which research mode does not
+#: require". Mixing the two would make the biology flag count unreadable.
+RESEARCH_GATE_FLAG_KEY = "strict_gate_errors_not_blocking"
 
 # Network markers are checked ahead of LLM markers on purpose: an LLM call that
 # cannot open a socket is a network failure, and "connection"/"uniprot"/"mysql"
@@ -709,6 +741,82 @@ def _runtime_schema_warnings(reports: Dict[str, Dict[str, Any]]) -> Tuple[List[s
     return lines, total
 
 
+def _research_gate_flags(gate_errors: List[Any]) -> Tuple[List[Dict[str, str]], List[str]]:
+    """``(review_flags, warning_lines)`` for a RESEARCH run's strict gate errors.
+
+    WHY a research run is not failed by these
+    -----------------------------------------
+    The Stage-3 hard gate (``process_normalizer.run_strict_post_normalization_gates``)
+    encodes what the *PathWhiz importer* will accept: every protein connected,
+    no forbidden complex tokens, every actor present in the registry. Research
+    mode does not produce PWML at all -- it produces a citation report for a human
+    reviewer -- so a rule about importer acceptance is, in that mode, a FORMAT
+    finding. The project's own doctrine (``batch/report.py``: "research mode must
+    never fail") is that FORMAT problems in research mode become review flags.
+
+    THE RUN THIS EXISTS FOR (2026-07-28_0919, PMC12444477 "The regulation of
+    lipid A biosynthesis", research mode): every contract report said
+    ``ok=true`` / ``still_blocking=0`` / ``research_blocked=[]``, and the run was
+    still filed FAIL with 30 gate errors, because the gate leg of :func:`_drive`
+    read ``gate_fail_report`` / ``final_stage3_gate_report`` straight out of the
+    artifacts dict and failed on them *before* the ``mode == MODE_RESEARCH``
+    branch ever ran. Four of those 30 errors were self-inflicted: research mode
+    skips ``drop_process_orphan_proteins`` / ``prune_disconnected_proteins`` and
+    then used to judge the survivors with ``enforce_all_proteins_connected=True``
+    (fixed in ``process_normalizer.normalize_process_payload``). The other 26 were
+    real findings about a payload nobody was going to import.
+
+    This is the same class of defect as the nested ``runtime_schema_report``
+    misread documented on :func:`_collect_reports` -- a non-authoritative signal
+    used as the verdict -- re-landed at a different seam, and on the same paper.
+
+    Gate errors carry ``path``/``reason`` and no ``code``, so the flag rows are
+    normalized to the ``code``/``pointer``/``message`` shape the rest of the
+    research channel uses (``rag.research_report._flag`` reads either spelling).
+    Warning lines are capped at :data:`RESEARCH_GATE_WARN_LIMIT`; the flag list
+    is never capped, because ``review_flags.json`` is the record.
+    """
+
+    flags: List[Dict[str, str]] = []
+    lines: List[str] = []
+    dropped = 0
+    for issue in gate_errors:
+        data = _safe_dict(issue)
+        code = _issue_code(issue) or "(no code)"
+        pointer = _issue_pointer(issue) or "(no pointer)"
+        message = (
+            _text(data.get("reason"))
+            or _text(data.get("message"))
+            or _text(data.get("detail"))
+            or _text(issue)
+        )
+        flags.append(
+            {
+                "code": code,
+                "pointer": pointer,
+                "message": message,
+                "research_category": "format",
+                "source": "strict_post_normalization_gate",
+            }
+        )
+        line = f"{WARN_RESEARCH_GATE_PREFIX}{code} @ {pointer}: {message}"
+        if line in lines:
+            # Byte-identical: the same rule on the same pointer, so it is collapsed
+            # rather than counted as truncated. One forbidden-complex rule can be
+            # reported by both gate reports at once.
+            continue
+        if len(lines) >= RESEARCH_GATE_WARN_LIMIT:
+            dropped += 1
+            continue
+        lines.append(line)
+    if dropped:
+        lines.append(
+            f"{WARN_RESEARCH_GATE_PREFIX}and {dropped} more gate error(s); "
+            "all of them are in review_flags.json and the gate report files"
+        )
+    return flags, lines
+
+
 def _collect_issue_codes(reports: Dict[str, Dict[str, Any]]) -> Tuple[List[str], List[str], int]:
     """``(codes, human_lines, error_count)`` across every failing report."""
 
@@ -939,6 +1047,8 @@ def _add_research_artifacts(
     artifacts: Dict[str, Any],
     out: Dict[str, Any],
     counts: Dict[str, Any],
+    *,
+    gate_flags: Optional[List[Dict[str, str]]] = None,
 ) -> str:
     """Write the research deliverables. Returns a note for ``message``.
 
@@ -949,14 +1059,28 @@ def _add_research_artifacts(
     (unsourced) for everything. Identifiers, conversely, only exist on the
     *mapped* payload, so the two are passed separately -- the same split the app
     itself makes.
+
+    ``gate_flags`` is the strict Stage-3 gate's errors, normalized by
+    :func:`_research_gate_flags`, for a run that did not fail on them. They are
+    written under their own key rather than merged into
+    ``biology_provenance_flags`` (which means "the biology is unverified") or
+    ``format_rules_skipped`` (which is the app's own relaxation ledger from
+    ``export_mode.format_gaps``) -- PMC12444477's research run would otherwise
+    have reported 30 extra "biology" flags for what are importer-shape rules.
+    They are also deliberately kept out of ``build_citation_report``: the report's
+    "PathWhiz format rules skipped (N)" header counts the app's relaxations, and
+    adding 30 gate rows to it would misstate what the app actually relaxed.
     """
 
     flags = _safe_list(artifacts.get("research_review_flags"))
     skipped = _safe_list(artifacts.get("research_skipped_format_rules"))
     preserved = _safe_list(artifacts.get("research_normalization_actions"))
+    gate_rows = list(gate_flags or [])
     counts["review_flags"] = len(flags)
     counts["skipped_format_rules"] = len(skipped)
     counts["normalization_actions"] = len(preserved)
+    if gate_rows:
+        counts["gate_review_flags"] = len(gate_rows)
 
     out["review_flags.json"] = _json_text(
         {
@@ -964,6 +1088,7 @@ def _add_research_artifacts(
             "biology_provenance_flags": flags,
             "format_rules_skipped": skipped,
             "content_preserved": preserved,
+            RESEARCH_GATE_FLAG_KEY: gate_rows,
         }
     )
 
@@ -1331,7 +1456,43 @@ def _drive(
             codes.append(code)
     outcome.counts["gate_errors"] = len(gate_errors)
 
-    if gate_failed or error_count:
+    # This leg used to be mode-blind: it read the two gate reports out of the
+    # artifacts dict and failed the run on them with no mode check, and it runs
+    # BEFORE the "if outcome.mode == MODE_RESEARCH" branch below, so a research
+    # run could never reach its own fail-open policy. PMC12444477's research run
+    # in 2026-07-28_0919 was filed FAIL/30 gate errors that way while every
+    # contract report it produced said ok=true, still_blocking=0,
+    # research_blocked=[]. See :func:`_research_gate_flags` for the doctrine and
+    # for which four of those 30 errors research mode had manufactured itself.
+    #
+    # Research mode therefore records the gate errors three ways -- counts, capped
+    # warnings, and the review_flags.json flag channel -- and does not fail.
+    # Strict mode is untouched: `blocking_gate` is exactly the old `gate_failed`
+    # there, and the contract-error leg (`error_count`) is unchanged in BOTH modes
+    # because a *_contract_report that still carries errors after
+    # export_mode.relax_report has already had its research relaxation applied.
+    research_mode = outcome.mode == MODE_RESEARCH
+    research_gate_flags: List[Dict[str, str]] = []
+    if research_mode and (gate_failed or gate_errors):
+        research_gate_flags, gate_warnings = _research_gate_flags(gate_errors)
+        outcome.counts["gate_errors_not_blocking"] = len(gate_errors)
+        for warning in gate_warnings:
+            if warning not in outcome.warnings:
+                outcome.warnings.append(warning)
+        if gate_failed and not gate_errors:
+            # A gate report that says "failed" but lists no errors still has to be
+            # visible, or the only trace of it would be a file nobody opens.
+            warning = (
+                f"{WARN_RESEARCH_GATE_PREFIX}the Stage-3 gate reported failure at "
+                f"{_text(gate_fail.get('stage')) or _text(stage3_gate.get('stage')) or 'a stage boundary'} "
+                "with no itemised errors"
+            )
+            if warning not in outcome.warnings:
+                outcome.warnings.append(warning)
+
+    blocking_gate = gate_failed and not research_mode
+    blocking_gate_errors = 0 if research_mode else len(gate_errors)
+    if blocking_gate or error_count:
         _fail(
             outcome,
             status=_STATUS_FAIL,
@@ -1345,7 +1506,7 @@ def _drive(
             ),
             message=(
                 "post-pipeline validation failed: "
-                f"{len(gate_errors) + error_count} blocking issue(s) at "
+                f"{blocking_gate_errors + error_count} blocking issue(s) at "
                 f"{_text(gate_fail.get('stage')) or _text(stage3_gate.get('stage')) or 'a stage boundary'}"
             ),
             detail="\n".join(part for part in (joined, *code_lines) if part)
@@ -1358,7 +1519,13 @@ def _drive(
     if outcome.mode == MODE_RESEARCH:
         outcome.stage = STAGE_RESEARCH_REPORT
         try:
-            note = _add_research_artifacts(at, artifacts, outcome.artifacts, outcome.counts)
+            note = _add_research_artifacts(
+                at,
+                artifacts,
+                outcome.artifacts,
+                outcome.counts,
+                gate_flags=research_gate_flags,
+            )
         except Exception:  # noqa: BLE001 -- a report bug must not be called a pass
             _fail(
                 outcome,
@@ -1509,10 +1676,13 @@ __all__ = [
     "MODE_RESEARCH",
     "MODE_STRICT",
     "RESEARCH",
+    "RESEARCH_GATE_FLAG_KEY",
+    "RESEARCH_GATE_WARN_LIMIT",
     "RUNTIME_SCHEMA_WARN_LIMIT",
     "STRICT",
     "WARN_NO_FOCUS_BOX",
     "WARN_NO_RESEARCH_REPORT",
+    "WARN_RESEARCH_GATE_PREFIX",
     "WARN_RUNTIME_SCHEMA_PREFIX",
     "RunOutcome",
     "run_one",

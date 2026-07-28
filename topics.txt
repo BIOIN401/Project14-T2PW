@@ -12,10 +12,40 @@
 # Only open-access papers with retrievable full text can be run; the rest are
 # recorded in the run's skipped.json with reason "no_full_text". That is normal,
 # so ask for a few more papers than you need and cap the night with --limit.
+#
+# NOTE: --limit is a CAP, not a target. The counts below are the real ceiling --
+# raising --limit without raising these changes nothing. Observed yield is
+# roughly half: the 2026-07-27 runs asked for 8 and ran 4, then asked for 8
+# (--limit 30) and ran 6.
 
-lipid A biosynthesis | Escherichia coli | 3
-menaquinone biosynthesis | Bacillus subtilis | 3
-mycolic acid biosynthesis | Mycobacterium tuberculosis | 2
+# ---------------------------------------------------------------------------
+# Known-productive: both of these returned usable full text on 2026-07-27.
+# ---------------------------------------------------------------------------
+lipid A biosynthesis | Escherichia coli | 6
+menaquinone biosynthesis | Bacillus subtilis | 5
+
+# ---------------------------------------------------------------------------
+# Coverage gaps. Every paper run so far was bacterial and cytoplasmic, so the
+# transport path and the subcellular-compartment path have never been exercised
+# at all -- transports=0 in all eight runs of 2026-07-27_1623. These three are
+# chosen to force those code paths, not because the biology is more interesting.
+#
+#   heme          -- genuinely spans mitochondrion <-> cytosol, so it forces
+#                    subcellular_locations AND inter-compartment transport
+#   enterobactin  -- biosynthesis plus export and re-import; transport-heavy
+#   cholesterol   -- ER-localised, long linear pathway, heavily reviewed OA
+# ---------------------------------------------------------------------------
+heme biosynthesis | Homo sapiens | 6
+enterobactin biosynthesis | Escherichia coli | 5
+cholesterol biosynthesis | Homo sapiens | 6
+
+# ---------------------------------------------------------------------------
+# Dropped 2026-07-27: mycolic acid biosynthesis | Mycobacterium tuberculosis
+# Zero yield twice (0/6 on the second run, every candidate no_full_text). The
+# query pulls inhibitor-design and phytochemistry papers rather than pathway
+# papers -- that literature is dominated by drug discovery. Needs a different
+# topic string, not a bigger count, so it is out until someone reworks it.
+# ---------------------------------------------------------------------------
 
 # Uncomment to pin a specific paper you want in every run:
 # PMC4412817

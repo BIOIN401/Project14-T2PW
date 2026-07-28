@@ -355,20 +355,98 @@ def test_name_injection_ignores_rag_evidence_corpus() -> None:
 
 
 def test_merge_additions_still_applies_the_name_heuristic() -> None:
-    """Factoring the hardening out must not cost ``merge_additions`` its heuristic."""
+    """Factoring the hardening out must not cost ``merge_additions`` its heuristic.
+
+    This test used to be vacuous. ``_exportable_payload`` already gives reaction 0
+    an ``enzymes`` entry for "Hexokinase complex", and the test cleared only
+    ``modifiers`` — so the assertion passed with the injector deleted outright and
+    never pinned the heuristic at all. It now clears ``enzymes`` as well, which is
+    the only way ``_inject_name_based_modifiers`` is the thing under test.
+
+    The evidence sentence carries an explicit catalysis cue because the injector
+    no longer accepts a bare name hit: after run 2026-07-28_0919, where a bare
+    substring test turned 9 Stage-1 enzymes into 204 shipped enzyme rows on
+    PMC12444477, an actor must sit inside a cue window and be the only actor that
+    does.
+    """
     base = _exportable_payload()
     base["processes"]["reactions"][0]["modifiers"] = []
+    base["processes"]["reactions"][0]["enzymes"] = []
     base["processes"]["reactions"][0]["evidence"] = (
-        "Glucose is phosphorylated by Hexokinase complex in the cytosol."
+        "Glucose is phosphorylated in the cytosol; the reaction is catalyzed by "
+        "Hexokinase complex."
     )
 
     merged = merge_additions(base, {})
 
+    enzymes = merged["processes"]["reactions"][0].get("enzymes", [])
     actors = {
         str(row.get("protein_complex") or row.get("protein") or row.get("entity") or "")
-        for row in merged["processes"]["reactions"][0].get("enzymes", [])
+        for row in enzymes
     }
     assert "Hexokinase complex" in actors
+
+    # The stored evidence must be the matched cue window, not a blind
+    # ``evidence[:120]`` prefix — that slice is the 119/120-character signature
+    # 177 of the 204 manufactured rows in the 2026-07-28_0919 strict payload had.
+    injected = next(
+        row
+        for row in enzymes
+        if str(row.get("protein_complex") or row.get("protein") or row.get("entity") or "")
+        == "Hexokinase complex"
+    )
+    assert "catalyzed by Hexokinase complex" in injected["evidence"]
+    assert injected["provenance"] == "inferred"
+
+
+def test_name_heuristic_refuses_a_reaction_naming_two_candidate_actors() -> None:
+    """Ambiguity is not a licence to guess.
+
+    The pre-fix injector attached *every* protein whose name appeared anywhere in
+    a reaction's evidence. On the PMC13278307 colistin review that shipped an
+    enzyme onto reactions the paper never links to one. The injector now mirrors
+    ``process_normalizer.attach_enzymes_from_reaction_evidence`` and attaches
+    nothing when the cue window names more than one distinct actor.
+    """
+    base = _exportable_payload()
+    base["entities"]["proteins"].append(
+        {"name": "Glucokinase", "species": "Homo sapiens"}
+    )
+    reaction = base["processes"]["reactions"][0]
+    reaction["modifiers"] = []
+    reaction["enzymes"] = []
+    reaction["evidence"] = (
+        "The reaction is catalyzed by Hexokinase complex, though Glucokinase "
+        "shows the same enzymatic activity."
+    )
+
+    _inject_name_based_modifiers(base)
+
+    assert base["processes"]["reactions"][0].get("modifiers", []) == []
+
+
+def test_name_heuristic_ignores_an_oversized_evidence_blob() -> None:
+    """A flattened RAG corpus is refused on size, not just on type.
+
+    ``rag/conform.py`` flattens a RAG row's evidence list into one string before
+    this pass runs, so the old ``isinstance(value, str)`` guard let the whole
+    corpus through. Reaction #14 of the PMC12444477 strict payload in run
+    2026-07-28_0919 carried 139,576 characters that way.
+    """
+    base = _exportable_payload()
+    reaction = base["processes"]["reactions"][0]
+    reaction["modifiers"] = []
+    reaction["enzymes"] = []
+    reaction["name"] = "step"
+    filler = "Unrelated background prose about membranes. " * 400
+    reaction["evidence"] = (
+        filler + "The reaction is catalyzed by Hexokinase complex. " + filler
+    )
+    assert len(reaction["evidence"]) > 400
+
+    _inject_name_based_modifiers(base)
+
+    assert base["processes"]["reactions"][0].get("modifiers", []) == []
 
 
 # --------------------------------------------------------------------------

@@ -460,6 +460,133 @@ def _jaccard(a: str, b: str) -> float:
     return len(sa & sb) / len(sa | sb)
 
 
+# ── Name-plausibility vocabulary ─────────────────────────────────────────────
+# Run 2026-07-28_0919, paper PMC13278307 ("An Overview of Mobile Colistin
+# Resistance (mcr) Genes", strict) PASSED every gate with 0 errors while shipping
+# three identifiers whose resolution status was "matched" and whose molecule is
+# not remotely the entity it was attached to:
+#
+#   'PhoP'       (a DNA-binding response regulator protein, routed through the
+#                 compound mapper) -> KEGG C00003 / CHEBI:15846 / CAS 53-84-9 /
+#                 PathBank compound 721 -- i.e. NAD+.
+#   'pmrHFIJKLM' (an LPS-modification operon) -> UniProt P03023 "Lactose operon
+#                 repressor" (LacI). Its queries_tried array literally contains
+#                 '(protein_name:"operon" OR gene:"operon")': the query ladder
+#                 degraded to the bare literature alias 'operon'.
+#   'mcr genes'  (mobile colistin resistance genes, attached as the enzyme of 10
+#                 of that paper's 14 reactions) -> UniProt P08235, the HUMAN
+#                 mineralocorticoid receptor.
+#
+# Every one of those three has a property the correct matches in the same file do
+# not: the name of the thing we shipped shares no meaningful word with the name
+# of the entity we were asked to resolve. The good matches all do share one --
+# 'MCR-1' -> "Phosphatidylethanolamine transferase Mcr-1" shares 'mcr1'/'mcr',
+# 'pmrD' -> "Signal transduction protein PmrD" shares 'pmrd', 'LPS' -> "LPS with
+# O-antigen" shares 'lps'. 'PhoP' -> "NAD" shares nothing at all.
+#
+# The two vocabularies below define what "meaningful" excludes. A token on either
+# list is carried by so many unrelated biological names that sharing it is no
+# evidence whatsoever: "pmrHFIJKLM operon" and "Lactose operon repressor" share
+# 'operon' and are still completely different molecules.
+_NAME_GATE_STOPWORDS = frozenset(
+    {
+        "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in", "into",
+        "is", "it", "its", "of", "on", "or", "per", "that", "the", "these", "this",
+        "those", "to", "via", "was", "were", "with", "within",
+    }
+)
+
+# Generic biology words. Ordinary nouns of the domain: they classify a molecule
+# instead of naming it. 'transferase' is on this list because run 2026-07-28_0919
+# matched the entity "PEtN transferase" to UniProt P79281 and "PEtN transferases"
+# to Q9UBM1 -- two different accessions, neither of which is the EptA the audit
+# trail claimed -- on the strength of the shared word 'transferase' alone.
+# Specific enzyme classes ('acyltransferase', 'cytidylyltransferase', 'kinase',
+# 'reductase', ...) are deliberately NOT here: they are narrow enough to be real
+# evidence, and dropping them would reject good matches such as
+# "PlsB glycerol-3-phosphate acyltransferase" -> "Glycerol-3-phosphate
+# acyltransferase".
+_NAME_GATE_GENERIC_TOKENS = frozenset(
+    {
+        "activity", "associated", "chain", "chains", "cluster", "complex", "complexes",
+        "component", "components", "conserved", "containing", "domain", "domains",
+        "enzyme", "enzymes", "family", "gene", "genes", "group", "homolog", "homologue",
+        "hypothetical", "isoform", "isoforms", "like", "operon", "operons", "partial",
+        "pathway", "precursor", "predicted", "probable", "protein", "proteins",
+        "putative", "region", "related", "subunit", "subunits", "system", "transferase",
+        "transferases", "type", "uncharacterised", "uncharacterized", "unknown",
+    }
+)
+
+
+def _name_gate_tokens(value: str) -> Set[str]:
+    """Meaningful tokens of a name, for the name-plausibility gate.
+
+    Both tokenisations are unioned on purpose. ``_punct_token_set`` splits on
+    punctuation ('MCR-1' -> {'mcr', '1'}) while ``_token_set`` deletes it
+    ('MCR-1' -> {'mcr1'}); UniProt writes the same protein both ways
+    ("Phosphatidylethanolamine transferase Mcr-1" tokenises to both 'mcr' and
+    'mcr1'), so accepting either spelling is what keeps the genuinely correct
+    MCR-1 -> A0A0R6L508 match of run 2026-07-28_0919 alive.
+
+    Pure numbers and single characters are dropped: they are what is left of
+    'MCR-1' after the symbol, and letting '1' count as a shared token would make
+    "MCR-1" plausible against every "...-1" protein in UniProt.
+    """
+    text = _canonical_name(value)
+    if not text:
+        return set()
+    tokens = _punct_token_set(text) | _token_set(text)
+    out: Set[str] = set()
+    for token in tokens:
+        if len(token) < 2 or token.isdigit():
+            continue
+        if token in _NAME_GATE_STOPWORDS or token in _NAME_GATE_GENERIC_TOKENS:
+            continue
+        out.add(token)
+    return out
+
+
+def _is_generic_query_name(value: str) -> bool:
+    """True when a name consists entirely of stopwords/generic biology words.
+
+    Such a string must never be issued as a standalone identifier query. In run
+    2026-07-28_0919 the entity 'pmrHFIJKLM' picked up the literature alias
+    'operon' and the ladder issued '(protein_name:"operon" OR gene:"operon")',
+    which returns every operon regulator in E. coli; the top hit was the lactose
+    operon repressor and it shipped as the identity of an LPS-modification operon.
+    """
+    text = _canonical_name(value)
+    if not text:
+        return False
+    return not _name_gate_tokens(text)
+
+
+def _names_share_meaningful_token(left: str, right: str) -> bool:
+    return bool(_name_gate_tokens(left) & _name_gate_tokens(right))
+
+
+def _name_match_is_plausible(query_name: str, resolved_name: str) -> bool:
+    """Could ``resolved_name`` plausibly be the thing called ``query_name``?
+
+    The rule is deliberately weak -- one shared meaningful token is enough -- so
+    that it only fires on matches that have no lexical support of any kind. It
+    returns True whenever either side has no meaningful token to compare, because
+    absence of evidence must never be read as evidence of a wrong match.
+
+    Verified against the real payloads of run 2026-07-28_0919:
+      ('MCR-1', 'Phosphatidylethanolamine transferase Mcr-1')  -> True  ('mcr1')
+      ('mcr genes', 'Mineralocorticoid receptor')              -> False
+      ('pmrHFIJKLM', 'Lactose operon repressor')               -> False
+      ('PhoP', 'NAD')                                          -> False
+    """
+    query_tokens = _name_gate_tokens(query_name)
+    resolved_tokens = _name_gate_tokens(resolved_name)
+    if not query_tokens or not resolved_tokens:
+        return True
+    return bool(query_tokens & resolved_tokens)
+
+
 def _split_synonyms(value: str, *, max_items: int = 64) -> List[str]:
     if not isinstance(value, str) or not value.strip():
         return []
@@ -3589,8 +3716,15 @@ def map_protein_uniprot(
     seen_aliases: set = set()
     deduped_aliases: List[Dict[str, str]] = []
     for entry in alias_entries:
-        norm = _normalize_name(str(entry.get("alias") or ""))
+        alias_text = str(entry.get("alias") or "")
+        norm = _normalize_name(alias_text)
         if not norm or norm in seen_aliases:
+            continue
+        # A row/name-derived alias that is only generic biology words ('operon',
+        # 'protein', 'complex') identifies nothing -- see the pmrHFIJKLM ->
+        # P03023 (LacI) failure of run 2026-07-28_0919 -- so it is dropped before
+        # it can enter the ladder or the audit trail.
+        if _is_generic_query_name(alias_text):
             continue
         seen_aliases.add(norm)
         deduped_aliases.append(entry)
@@ -3605,6 +3739,17 @@ def map_protein_uniprot(
         *,
         broad: bool = False,
     ) -> None:
+        # Generic-alias degradation guard. Run 2026-07-28_0919 resolved the entity
+        # 'pmrHFIJKLM' by walking its ladder down to the literature alias 'operon'
+        # and issuing '(protein_name:"operon" OR gene:"operon")'; UniProt answered
+        # with every operon regulator in E. coli K12 (LacI, AcrR, ChbR, AraC ...),
+        # all scored an identical 0.4167, and the arbitrary winner -- the lactose
+        # operon repressor P03023 -- shipped as the identity of an LPS-modification
+        # operon. A query term made only of stopwords and generic biology words
+        # ('operon', 'gene', 'protein', 'complex', 'enzyme', 'transferase', ...)
+        # cannot identify anything, so it is never issued at all.
+        if _is_generic_query_name(query_name):
+            return
         if broad:
             query = f'"{query_name}"'
             if used_organism and organism:
@@ -3696,6 +3841,10 @@ def map_protein_uniprot(
             if not alias:
                 continue
             source = _canonical_name(str(entry.get("source") or "literature_alias")) or "literature_alias"
+            # 'operon' is exactly the alias EuropePMC handed back for pmrHFIJKLM in
+            # run 2026-07-28_0919; a bare generic word is never a usable synonym.
+            if _is_generic_query_name(alias):
+                continue
             norm = _normalize_name(alias)
             if not norm or norm in seen_aliases:
                 continue
@@ -3754,6 +3903,11 @@ def map_protein_uniprot(
             if not alias:
                 continue
             source = _canonical_name(str(entry.get("source") or "ai_synonym")) or "ai_synonym"
+            # Same guard as the literature tier: the LLM synonym list is free text
+            # and a suggestion like 'operon' or 'transferase' would restart the
+            # degradation that produced pmrHFIJKLM -> LacI in run 2026-07-28_0919.
+            if _is_generic_query_name(alias):
+                continue
             norm = _normalize_name(alias)
             if not norm or norm in seen_aliases:
                 continue
@@ -4206,6 +4360,476 @@ def _collect_protein_like_names(payload: Dict[str, Any]) -> Set[str]:
     return {value for value in out if value}
 
 
+_NAME_GATE_ORDER_STEP = "name_plausibility_gate"
+_NAME_GATE_ISSUE = "implausible_name_match"
+
+# Alias sources that cannot corroborate a match, because they *are* the guess.
+# These are exactly the four ``source`` values _ai_protein_synonym_lookup can
+# emit; that tier only runs after both UniProt and EuropePMC found nothing, and
+# in run 2026-07-28_0919 it answered the query 'mcr genes' with the aliases
+# 'methyl-coenzyme M reductase', 'mcrA', 'mcrB', 'mcrC', 'mcrD' -- an entirely
+# different gene family. Each of those aliases then matched a real E. coli entry
+# by gene symbol, so "the alias equals a gene name of the entry" is true and
+# means nothing: it only proves the LLM invented a name that exists. Aliases that
+# come from the entity's own name (parenthetical gene symbols, row fields) or
+# from a literature co-mention ("ObiH (ObaG)") are genuine outside evidence and
+# are still allowed to rescue a match.
+_NAME_GATE_UNCORROBORATED_ALIAS_SOURCES = frozenset(
+    {"gene_name", "synonym", "alternate_abbreviation", "ai_synonym"}
+)
+
+
+def _candidate_display_names(candidate: Any) -> List[str]:
+    """Every name a resolver candidate offers for the molecule it identifies.
+
+    ``short_name`` and the BioCyc mnemonic are included because PathBank keeps the
+    community abbreviation there and nowhere else. Run 2026-07-28_0919 matched the
+    entity 'UDP-GlcNAc' to PathBank compound 196 whose display name is "Uridine
+    diphosphate-N-acetylglucosamine" -- they share no word -- but the same row
+    carries short_name "UDP-GN" and biocyc "UDP-N-ACETYL-D-GLUCOSAMINE", both of
+    which share 'udp'. Likewise 'Kdo' -> compound 57926 "3-deoxy-D-manno-2-
+    octulosonate" is only recognisable through its biocyc id "KDO". Both of those
+    are correct matches and the gate must not reject them.
+    """
+    row = _safe_dict(candidate)
+    out: List[str] = []
+    for key in ("protein_name", "name", "short_name", "resolved_name"):
+        value = str(row.get(key) or "").strip()
+        if value:
+            out.append(value)
+    biocyc = str(_safe_dict(row.get("mapped_ids")).get("biocyc") or "").strip()
+    if biocyc:
+        out.append(biocyc)
+    return out
+
+
+def _candidate_symbol_names(candidate: Any) -> List[str]:
+    """Gene symbols a candidate carries (UniProt gene names, PathBank gene_name)."""
+    row = _safe_dict(candidate)
+    out: List[str] = []
+
+    def add(value: Any) -> None:
+        if isinstance(value, str) and value.strip():
+            out.append(value.strip())
+        elif isinstance(value, list):
+            for item in value:
+                add(item)
+
+    for key in ("gene_name", "gene", "gene_names", "genes"):
+        add(row.get(key))
+    return out
+
+
+def _candidate_matches_shipped_ids(candidate: Any, mapped_ids: Dict[str, Any], kind: str) -> bool:
+    row = _safe_dict(candidate)
+    ids = _safe_dict(mapped_ids)
+    if kind == "protein":
+        shipped = str(ids.get("uniprot") or "").strip().casefold()
+        accession = str(row.get("accession") or row.get("uniprot") or "").strip().casefold()
+        if shipped and accession:
+            return shipped == accession
+        shipped_pid = str(ids.get("pathbank_protein_id") or "").strip()
+        candidate_pid = str(row.get("pathbank_protein_id") or "").strip()
+        return bool(shipped_pid and candidate_pid and shipped_pid == candidate_pid)
+    candidate_ids = _safe_dict(row.get("mapped_ids"))
+    for key, value in ids.items():
+        text = str(value or "").strip().casefold()
+        other = str(candidate_ids.get(key) or "").strip().casefold()
+        if text and other and text == other:
+            return True
+    shipped_cid = str(ids.get("pathbank_compound_id") or "").strip()
+    candidate_cid = str(row.get("pathbank_compound_id") or "").strip()
+    return bool(shipped_cid and candidate_cid and shipped_cid == candidate_cid)
+
+
+def _candidate_for_shipped_ids(
+    candidates: List[Any],
+    mapped_ids: Dict[str, Any],
+    kind: str,
+) -> Optional[Dict[str, Any]]:
+    """The candidate row that describes the identifier we are actually shipping.
+
+    This is the whole point of the honesty half of the fix. In run 2026-07-28_0919
+    the entity 'mcr genes' shipped UniProt P08235 while its mapping_meta reported
+    resolved_name "Type IV methyl-directed restriction enzyme EcoKMcrA", which is
+    P24200 -- a different protein. The audit trail described a match that was not
+    the one in mapped_ids, so nobody reading the report could see that a human
+    mineralocorticoid receptor had been attached to 10 E. coli reactions. Judging
+    (and reporting) the candidate that carries the shipped accession removes that
+    blind spot.
+    """
+    for candidate in _safe_list(candidates):
+        if isinstance(candidate, dict) and _candidate_matches_shipped_ids(candidate, mapped_ids, kind):
+            return candidate
+    return None
+
+
+def _is_pathbank_protein_identity(candidate: Any, source: str) -> bool:
+    """True when the shipped protein identity is a curated PathBank protein row.
+
+    Those rows are exempt from rejection, and the exemption is not a hedge -- it
+    is what the data says. Replaying the gate over run 2026-07-28_0919 rejected
+    exactly three PathBank-sourced protein matches and all three were correct:
+
+        'LpxL'             -> P0ACV0 "Lipid A biosynthesis lauroyl acyltransferase"
+        'LpxM'             -> P24205 "Lipid A biosynthesis (KDO)2-(lauroyl)-lipid
+                              IVA acyltransferase"
+        'Pgp phosphatases' -> P18200 "Phosphatidylglycerophosphatase A"
+
+    PathBank names a protein by what it does, and its gene_name column often holds
+    the older symbol (P0ACV0 is stored as 'htrB', P24205 as 'msbB', P18200 as
+    'pgpA'), so a gene-symbol entity name shares no word with either field even
+    though the identity is right. The eight UniProt-sourced rejections in the same
+    replay were all genuinely wrong, which is where the gate earns its keep.
+
+    The exemption cannot launder a bad accession either: PathBankDbResolver.
+    map_protein_by_ids filters by species, so the human P08235 that 'mcr genes'
+    shipped could never come back as an E. coli PathBank protein row.
+    """
+    row = _safe_dict(candidate)
+    if _to_positive_int(row.get("pathbank_protein_id")):
+        return True
+    return not row and str(source or "").strip().casefold() == "db"
+
+
+def _name_gate_verdict(
+    entity_name: str,
+    *,
+    candidates: List[Any],
+    mapped_ids: Dict[str, Any],
+    kind: str,
+    organism: str = "",
+    fallback_name: str = "",
+    source: str = "",
+) -> Dict[str, Any]:
+    """Decide whether ``mapped_ids`` may be shipped as the identity of ``entity_name``.
+
+    Verdicts are ``keep`` / ``reject`` / ``skip``. ``skip`` means "no evidence to
+    judge on" (unmapped result, no candidate name anywhere) and always keeps the
+    match: a gate that rejects on missing evidence is worse than the defect it is
+    meant to fix.
+
+    Two rescues exist for matches that are lexically unrecognisable yet genuinely
+    correct, both taken from real payloads:
+
+    * exact symbol identity -- 'YejM' resolves to UniProt "Inner membrane protein
+      PbgA" (the protein was renamed); the entity name is exactly one of the
+      entry's gene symbols, which is proof of identity even though the display
+      names have nothing in common.
+    * corroborated alias -- 'ObaG' resolves to "Threonine aldolase" via the
+      literature alias 'ObiH', and 'ObiH' is exactly a gene symbol of that entry
+      in the same organism (tests/test_map_ids.py::
+      test_uniprot_mapping_uses_literature_alias_for_obag). The alias must not be
+      generic and the organism must agree, which is what stops the same rescue
+      from re-admitting 'mcr genes' -> P08235: its alias 'mcr' does equal the
+      human gene symbol MCR, but P08235's organism is Homo sapiens while the
+      entity's organism is Escherichia coli.
+    """
+    gate: Dict[str, Any] = {
+        "verdict": "skip",
+        "reason": "no_mapped_ids",
+        "entity_name": str(entity_name or ""),
+        "kind": kind,
+        "resolved_name": "",
+        "identity": "",
+    }
+    ids = {key: value for key, value in _safe_dict(mapped_ids).items() if str(value or "").strip()}
+    if not ids:
+        return gate
+
+    query_tokens = _name_gate_tokens(entity_name)
+    if not query_tokens:
+        gate["reason"] = "entity_name_has_no_meaningful_tokens"
+        return gate
+
+    candidate = _candidate_for_shipped_ids(candidates, ids, kind)
+    if kind == "protein" and _is_pathbank_protein_identity(candidate, source):
+        gate["reason"] = "pathbank_protein_row"
+        return gate
+
+    names: List[str] = []
+    if candidate is not None:
+        names.extend(_candidate_display_names(candidate))
+    else:
+        # No candidate row describes the shipped identifier, so the caller's own
+        # resolved_name is the only description we have of what we are shipping.
+        resolved = str(fallback_name or "").strip()
+        if resolved:
+            names.append(resolved)
+    names = [value for value in names if value.strip()]
+    if not names:
+        gate["reason"] = "no_resolved_name"
+        return gate
+
+    accession = str(ids.get("uniprot") or "").strip()
+    if kind == "protein" and accession:
+        gate["identity"] = f"uniprot:{accession}"
+    else:
+        gate["identity"] = ", ".join(f"{key}:{value}" for key, value in sorted(ids.items()))
+    gate["resolved_name"] = names[0]
+    gate["compared_names"] = names[:6]
+
+    for value in names:
+        if _names_share_meaningful_token(entity_name, value):
+            gate["verdict"] = "keep"
+            gate["reason"] = "shared_meaningful_token"
+            return gate
+
+    symbols = _candidate_symbol_names(candidate) if candidate is not None else []
+    normalized_entity = _normalize_name(entity_name)
+    for symbol in symbols:
+        if normalized_entity and normalized_entity == _normalize_name(symbol):
+            gate["verdict"] = "keep"
+            gate["reason"] = "exact_symbol_identity"
+            gate["matched_symbol"] = symbol
+            return gate
+
+    alias = str(_safe_dict(candidate).get("matched_alias") or "").strip()
+    alias_source = str(_safe_dict(candidate).get("alias_source") or "").strip().casefold()
+    if (
+        alias
+        and not _is_generic_query_name(alias)
+        and alias_source not in _NAME_GATE_UNCORROBORATED_ALIAS_SOURCES
+    ):
+        organism_agrees = True
+        candidate_organism = str(_safe_dict(candidate).get("organism") or "").strip()
+        if organism and candidate_organism:
+            organism_agrees = _uniprot_organism_matches(_safe_dict(candidate), organism)
+        alias_norm = _normalize_name(alias)
+        corroborated = any(alias_norm == _normalize_name(value) for value in list(symbols) + names)
+        if organism_agrees and corroborated:
+            gate["verdict"] = "keep"
+            gate["reason"] = "alias_corroborated_by_identity"
+            gate["matched_alias"] = alias
+            return gate
+
+    gate["verdict"] = "reject"
+    gate["reason"] = "no_shared_meaningful_token"
+    return gate
+
+
+def _novel_result_from_name_gate(result: Dict[str, Any], *, kind: str, gate: Dict[str, Any]) -> Dict[str, Any]:
+    """Turn a name-gate rejection into the resolver's existing ``novel`` shape.
+
+    Deliberately reuses the exact reason/chosen_rule/resolution triple that
+    PathBankDbResolver.map_compound_row and map_protein_by_name_species already
+    emit for "the databases have never heard of this", because that path is
+    already wired end to end: in the same run, 'phosphorylated PhoP' and
+    'pmrHFIJKLM operon' resolved as novel compounds and exported cleanly. No new
+    resolution state is invented.
+
+    ``candidates`` is emptied on purpose. Both _promote_cached_uniprot_result and
+    the ambiguous-first-candidate branch of map_payload mine that list to promote
+    an accession back to "mapped"; leaving the rejected candidate there would let
+    the identifier we just refused walk straight back in on the next pass. The
+    rows are preserved under ``rejected_candidates`` instead, which nothing
+    promotes but map_payload still reads when it has to decide whether an
+    identifier an earlier pass already wrote onto the entity row must be pulled
+    back out.
+    """
+    novel: Dict[str, Any] = {
+        "status": "unmapped",
+        "reason": "novel_protein" if kind == "protein" else "novel_compound",
+        "provider": str(result.get("provider") or ("UniProt" if kind == "protein" else "PathBankDB")),
+        "source": str(result.get("source") or ""),
+        "confidence": 0.0,
+        "chosen_rule": "novel_protein" if kind == "protein" else "novel_compound",
+        "candidates": [],
+        "name_gate": gate,
+        "rejected_mapped_ids": _safe_dict(result.get("mapped_ids")),
+        "rejected_chosen_rule": str(result.get("chosen_rule") or ""),
+        "rejected_candidates": [
+            candidate for candidate in _safe_list(result.get("candidates")) if isinstance(candidate, dict)
+        ][:8],
+    }
+    for key in ("query", "queries_tried", "literature_aliases"):
+        if result.get(key):
+            novel[key] = result.get(key)
+    return _with_resolution(novel, "novel", issue=_NAME_GATE_ISSUE, order_step=_NAME_GATE_ORDER_STEP)
+
+
+def _apply_name_plausibility_gate(
+    result: Dict[str, Any],
+    entity_name: str,
+    *,
+    kind: str,
+    organism: str = "",
+) -> Dict[str, Any]:
+    """Name-plausibility gate for one resolver result.
+
+    Run 2026-07-28_0919 shipped PhoP as NAD+, pmrHFIJKLM as the lactose operon
+    repressor and 'mcr genes' as the human mineralocorticoid receptor, all with
+    resolution status "matched" and 0 gate errors. Nothing downstream can catch
+    that: every gate we own checks that an identifier is *present* and *well
+    formed*, never that it names the same molecule. This is the check that does.
+    """
+    if not isinstance(result, dict) or result.get("status") != "mapped":
+        return result
+    gate = _name_gate_verdict(
+        entity_name,
+        candidates=_safe_list(result.get("candidates")),
+        mapped_ids=_safe_dict(result.get("mapped_ids")),
+        kind=kind,
+        organism=organism,
+        fallback_name=str(result.get("resolved_name") or ""),
+        source=str(result.get("source") or ""),
+    )
+    if gate.get("verdict") != "reject":
+        if gate.get("verdict") == "keep":
+            result.setdefault("name_gate", gate)
+        return result
+    return _novel_result_from_name_gate(result, kind=kind, gate=gate)
+
+
+def _strip_rejected_identifiers(
+    row: Dict[str, Any],
+    rejected_ids: Dict[str, Any],
+    *,
+    kind: str,
+) -> Dict[str, str]:
+    """Remove from an entity row exactly the identifiers the name gate refused.
+
+    Necessary because map_payload runs more than once over the same payload with
+    gap resolution in between: in run 2026-07-28_0919 the compound row for 'PhoP'
+    reached the second mapping pass already carrying KEGG C00003 and PathBank
+    compound 721 (NAD+) written by the first pass, and _merge_mapped_ids keeps the
+    value that is already on the row. Returning "novel" from the resolver on the
+    second pass is therefore not enough on its own -- the wrong identifiers have
+    to be taken back off the row, or the payload ships them anyway.
+
+    Only values that are identical to the rejected identity are removed, so an
+    identifier that came from anywhere else survives untouched.
+    """
+    removed: Dict[str, str] = {}
+    ids = _safe_dict(row.get("mapped_ids"))
+    for key, value in list(ids.items()):
+        rejected = str(_safe_dict(rejected_ids).get(key) or "").strip()
+        if rejected and rejected.casefold() == str(value or "").strip().casefold():
+            removed[key] = str(value)
+            ids.pop(key, None)
+    row["mapped_ids"] = ids
+    scalar_key = "pathbank_protein_id" if kind == "protein" else "pathbank_compound_id"
+    rejected_scalar = str(_safe_dict(rejected_ids).get(scalar_key) or "").strip()
+    if rejected_scalar and str(row.get(scalar_key) or "").strip() == rejected_scalar:
+        removed[scalar_key] = str(row.get(scalar_key))
+        row.pop(scalar_key, None)
+    return removed
+
+
+def _enforce_shipped_identity_names(
+    row: Dict[str, Any],
+    result: Dict[str, Any],
+    *,
+    kind: str,
+    entity_name: str,
+    organism: str = "",
+) -> Dict[str, Any]:
+    """Make the entity row's identity and its audit trail agree, then gate it.
+
+    Two separate defects of run 2026-07-28_0919 meet here:
+
+    1. Divergent audit trail. The protein 'mcr genes' shipped mapped_ids
+       {"uniprot": "P08235"} with mapping_meta.resolved_name "Type IV
+       methyl-directed restriction enzyme EcoKMcrA" -- the name of P24200. The
+       first mapping pass wrote P08235 onto the row (via the Phase-2 UniProt
+       fallback), the second pass chose P24200, and _merge_mapped_ids kept the
+       older value while the metadata recorded the newer one. resolved_name is
+       therefore re-derived here from whichever candidate actually carries the
+       shipped accession, and the divergence is recorded rather than hidden.
+    2. Confidently wrong identity. Once resolved_name describes the shipped
+       accession, the name gate is applied to *that* -- so 'mcr genes' is judged
+       against "Mineralocorticoid receptor" (Homo sapiens), which is what it is
+       really shipping, instead of against the E. coli restriction enzyme it only
+       claimed to ship.
+    """
+    report: Dict[str, Any] = {"rejected": False, "removed_ids": {}, "gate": {}, "conflict": {}}
+    meta = row.get("mapping_meta")
+    if not isinstance(meta, dict):
+        meta = {}
+        row["mapping_meta"] = meta
+    shipped = {
+        key: value
+        for key, value in _safe_dict(row.get("mapped_ids")).items()
+        if str(value or "").strip()
+    }
+    if not shipped:
+        return report
+
+    # A result the resolver already rejected keeps its candidate rows under
+    # ``rejected_candidates`` so the shipped identifier can still be named here.
+    pool = _safe_list(result.get("candidates")) or _safe_list(result.get("rejected_candidates"))
+    candidate = _candidate_for_shipped_ids(pool, shipped, kind)
+
+    if candidate is not None:
+        shipped_names = [value for value in _candidate_display_names(candidate) if value.strip()]
+        chosen_ids = _safe_dict(result.get("mapped_ids")) or _safe_dict(result.get("rejected_mapped_ids"))
+        id_key = "uniprot" if kind == "protein" else "pathbank_compound_id"
+        chosen_id = str(chosen_ids.get(id_key) or "").strip()
+        shipped_id = str(shipped.get(id_key) or "").strip()
+        if shipped_names:
+            previous = str(meta.get("resolved_name") or "").strip()
+            meta["resolved_name"] = shipped_names[0]
+            if previous and _normalize_name(previous) != _normalize_name(shipped_names[0]):
+                report["conflict"] = {
+                    "shipped_id": shipped_id,
+                    "shipped_name": shipped_names[0],
+                    "previous_resolved_name": previous,
+                    "resolver_chosen_id": chosen_id,
+                }
+                meta["resolved_name_conflict"] = report["conflict"]
+        if chosen_id and shipped_id and chosen_id.casefold() != shipped_id.casefold():
+            meta["mapped_id_conflict"] = {
+                "shipped": shipped_id,
+                "resolver_chosen": chosen_id,
+                "note": "entity row already carried an identifier from an earlier mapping pass",
+            }
+
+    gate = _name_gate_verdict(
+        entity_name,
+        candidates=pool,
+        mapped_ids=shipped,
+        kind=kind,
+        organism=organism,
+        fallback_name=str(meta.get("resolved_name") or result.get("resolved_name") or ""),
+        source=str(result.get("source") or meta.get("source") or ""),
+    )
+    report["gate"] = gate
+    if gate.get("verdict") != "reject":
+        return report
+
+    rejected_ids = dict(shipped)
+    if candidate is not None:
+        rejected_ids.update(
+            {
+                key: value
+                for key, value in _safe_dict(candidate.get("mapped_ids")).items()
+                if str(value or "").strip()
+            }
+        )
+    removed = _strip_rejected_identifiers(row, rejected_ids, kind=kind)
+    report["rejected"] = True
+    report["removed_ids"] = removed
+    meta["name_gate"] = gate
+    meta["rejected_mapped_ids"] = removed
+    meta["chosen_rule"] = "novel_protein" if kind == "protein" else "novel_compound"
+    meta["confidence"] = 0.0
+    # A fresh dict: mapping_meta["resolution"] is the very object the resolver
+    # result carries (and that object may live in the mapping cache), so it must
+    # be replaced rather than mutated.
+    meta["resolution"] = {
+        "status": "novel",
+        "issue": _NAME_GATE_ISSUE,
+        "order_step": _NAME_GATE_ORDER_STEP,
+    }
+    # Candidates are moved aside for the same reason they are dropped from the
+    # resolver result: _promote_uniprot_result_from_row_metadata promotes
+    # mapping_meta.candidates back to a match on the next pass.
+    if _safe_list(meta.get("candidates")):
+        meta["rejected_candidates"] = _safe_list(meta.get("candidates"))[:8]
+    meta["candidates"] = []
+    return report
+
+
 def _map_protein_with_strategy(
     *,
     id_source: str,
@@ -4285,7 +4909,10 @@ def _map_protein_with_strategy(
             cache.set("proteins", db_key, db_result)
         db_resolution = _safe_dict(db_result.get("resolution")).get("status")
         if db_result.get("status") == "mapped" or id_source == "db" or db_resolution == "ambiguous":
-            return db_result
+            # The gate is applied to the cache's *return value*, never to what is
+            # stored, so the raw resolver answer stays inspectable in the cache
+            # file and the verdict is recomputed on every read.
+            return _apply_name_plausibility_gate(db_result, name, kind="protein", organism=organism)
 
     if id_source in {"api", "hybrid"}:
         api_result = cache.get("proteins", api_key)
@@ -4321,7 +4948,7 @@ def _map_protein_with_strategy(
             if api_result.get("status") == "mapped":
                 _with_resolution(api_result, "matched", order_step="api_uniprot")
                 cache.set("proteins", api_key, api_result)
-        return api_result
+        return _apply_name_plausibility_gate(api_result, name, kind="protein", organism=organism)
 
     return _with_resolution(
         {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []},
@@ -4373,7 +5000,14 @@ def _map_compound_with_strategy(
             cache.set("compounds", db_key, db_result)
         db_resolution = _safe_dict(db_result.get("resolution")).get("status")
         if db_result.get("status") == "mapped" or id_source == "db" or db_resolution in {"ambiguous", "novel"}:
-            return db_result
+            # This is the seam that catches PhoP -> NAD. The compound row reached
+            # map_payload already carrying KEGG C00003 (Stage 3 promoted an
+            # unnamed HMDB scrape hit for the query "PhoP"), so the DB honestly
+            # resolved that identifier to PathBank compound 721 "NAD" with
+            # chosen_rule direct_id_match:kegg and confidence 1.0. The identifier
+            # lookup is correct; the identity is not, and only a name check can
+            # tell the difference.
+            return _apply_name_plausibility_gate(db_result, name, kind="compound")
 
     if id_source in {"api", "hybrid"}:
         api_result = cache.get("compounds", api_key)
@@ -4392,7 +5026,7 @@ def _map_compound_with_strategy(
             else:
                 _with_resolution(api_result, "unresolved", issue=str(api_result.get("reason") or "api_unmapped"), order_step="api_external_id")
             cache.set("compounds", api_key, api_result)
-        return api_result
+        return _apply_name_plausibility_gate(api_result, name, kind="compound")
 
     return _with_resolution(
         {"status": "unmapped", "reason": "invalid_id_source", "provider": "none", "source": "none", "candidates": []},
@@ -6030,6 +6664,10 @@ def map_payload(
     protein_complexes_gap_issues = 0
     low_confidence_mappings = 0
     best_effort_mappings = 0
+    # Entities whose identifier was refused because the thing it names has nothing
+    # to do with the entity name (PhoP -> NAD, pmrHFIJKLM -> LacI, 'mcr genes' ->
+    # human mineralocorticoid receptor, all shipped by run 2026-07-28_0919).
+    name_gate_rejections = 0
 
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
@@ -6094,18 +6732,28 @@ def map_payload(
                 protein["mapping_meta"][meta_key] = result.get(meta_key)
 
         if result.get("status") == "mapped":
-            proteins_mapped += 1
-            if source == "db":
-                proteins_mapped_by_db += 1
-            else:
-                proteins_mapped_by_api += 1
             protein["mapped_ids"] = _merge_mapped_ids(_safe_dict(protein.get("mapped_ids")), _safe_dict(result.get("mapped_ids")))
             # Stamp PathWhiz internal protein ID directly on entity for json_to_sbml
             if result.get("pathbank_protein_id"):
                 protein["pathbank_protein_id"] = int(result["pathbank_protein_id"])
                 protein["mapping_meta"]["pathbank_protein_id"] = int(result["pathbank_protein_id"])
-            status = "mapped"
-            reason = ""
+            identity_report = _enforce_shipped_identity_names(
+                protein, result, kind="protein", entity_name=name, organism=organism
+            )
+            if identity_report.get("rejected"):
+                # Judged on the accession that is actually on the row after the
+                # merge, not on the one the resolver happened to pick this pass.
+                name_gate_rejections += 1
+                status = "unmapped"
+                reason = _NAME_GATE_ISSUE
+            else:
+                proteins_mapped += 1
+                if source == "db":
+                    proteins_mapped_by_db += 1
+                else:
+                    proteins_mapped_by_api += 1
+                status = "mapped"
+                reason = ""
         elif (
             str(result.get("reason", "")) == "ambiguous"
             or _safe_dict(result.get("resolution")).get("status") == "ambiguous"
@@ -6141,6 +6789,17 @@ def map_payload(
             reason = str(result.get("reason", "unknown"))
             if reason == "ambiguous" or _safe_dict(result.get("resolution")).get("status") == "ambiguous":
                 protein_ambiguous += 1
+            # The resolver may have refused this pass while an *earlier* pass had
+            # already written an identifier onto the row (map_payload runs twice
+            # with gap resolution in between). 'mcr genes' shipped P08235 that way
+            # in run 2026-07-28_0919, so the row's own identifiers are re-checked
+            # here and pulled back out when they name something else entirely.
+            identity_report = _enforce_shipped_identity_names(
+                protein, result, kind="protein", entity_name=name, organism=organism
+            )
+            if identity_report.get("rejected"):
+                name_gate_rejections += 1
+                reason = _NAME_GATE_ISSUE
 
         result_confidence = float(result.get("confidence", 0.0) or 0.0)
         is_best_effort = bool(result.get("best_effort"))
@@ -6149,6 +6808,7 @@ def map_payload(
         if status == "mapped" and is_best_effort:
             best_effort_mappings += 1
 
+        protein_meta_resolution = _safe_dict(protein["mapping_meta"].get("resolution"))
         logs.append(
             {
                 "entity_type": "protein",
@@ -6158,14 +6818,18 @@ def map_payload(
                 "reason": reason,
                 "location": ", ".join(protein_locations.get(name, [])),
                 "organism": organism,
-                "candidate_count": len(_safe_list(result.get("candidates"))),
+                "candidate_count": len(_safe_list(protein["mapping_meta"].get("candidates"))),
                 "source": source,
                 "provider": provider,
                 "confidence": result_confidence,
                 "chosen_rule": str(protein["mapping_meta"].get("chosen_rule") or ""),
                 "best_effort": is_best_effort,
-                "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
-                "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
+                # Read from the row, not from the resolver result: the name gate
+                # can downgrade a "matched" result to novel after the fact, and a
+                # log that still said "matched" would be the same dishonest audit
+                # trail this fix exists to remove.
+                "resolution_status": protein_meta_resolution.get("status", ""),
+                "resolution_issue": protein_meta_resolution.get("issue", ""),
             }
         )
 
@@ -6275,6 +6939,14 @@ def map_payload(
                 continue
             try:
                 _api_result = map_protein_uniprot(client, _p_name, _p_org)
+                # Same gate as the main protein loop. This fallback is where run
+                # 2026-07-28_0919 first wrote UniProt P08235 (human
+                # mineralocorticoid receptor) onto the E. coli entity 'mcr genes';
+                # it calls map_protein_uniprot with no row aliases, so its ladder
+                # degrades faster than the main one and it needs the check most.
+                _api_result = _apply_name_plausibility_gate(
+                    _api_result, _p_name, kind="protein", organism=_p_org
+                )
                 if _api_result.get("status") == "mapped":
                     _api_ids = _safe_dict(_api_result.get("mapped_ids"))
                     if _api_ids:
@@ -6509,20 +7181,37 @@ def map_payload(
         compound["mapping_meta"]["confidence"] = float(result.get("confidence", 0.0))
         compound["mapping_meta"]["resolution"] = _safe_dict(result.get("resolution"))
 
+        gate_kind = "protein" if route["route"] == "protein" else "compound"
         if result.get("status") == "mapped":
-            if route["route"] == "compound":
-                compounds_mapped += 1
-                if source == "db":
-                    compounds_mapped_by_db += 1
-                else:
-                    compounds_mapped_by_api += 1
             compound["mapped_ids"] = _merge_mapped_ids(_safe_dict(compound.get("mapped_ids")), _safe_dict(result.get("mapped_ids")))
             # Stamp PathWhiz internal compound ID directly on entity for json_to_sbml
             if result.get("pathbank_compound_id"):
                 compound["pathbank_compound_id"] = int(result["pathbank_compound_id"])
                 compound["mapping_meta"]["pathbank_compound_id"] = int(result["pathbank_compound_id"])
-            status = "mapped"
-            reason = ""
+            identity_report = _enforce_shipped_identity_names(
+                compound,
+                result,
+                kind=gate_kind,
+                entity_name=name,
+                organism=global_organism if route["route"] == "protein" else "",
+            )
+            if identity_report.get("rejected"):
+                # 'PhoP' lands here: a protein name routed through the compound
+                # mapper, resolved to PathBank compound 721 "NAD" via KEGG C00003
+                # with confidence 1.0 in run 2026-07-28_0919. The routing defect is
+                # not fixed here, but its result no longer ships.
+                name_gate_rejections += 1
+                status = "unmapped"
+                reason = _NAME_GATE_ISSUE
+            else:
+                if route["route"] == "compound":
+                    compounds_mapped += 1
+                    if source == "db":
+                        compounds_mapped_by_db += 1
+                    else:
+                        compounds_mapped_by_api += 1
+                status = "mapped"
+                reason = ""
         else:
             status = "unmapped"
             reason = str(result.get("reason", "unknown"))
@@ -6530,6 +7219,16 @@ def map_payload(
                 reason == "ambiguous" or _safe_dict(result.get("resolution")).get("status") == "ambiguous"
             ):
                 compound_ambiguous += 1
+            identity_report = _enforce_shipped_identity_names(
+                compound,
+                result,
+                kind=gate_kind,
+                entity_name=name,
+                organism=global_organism if route["route"] == "protein" else "",
+            )
+            if identity_report.get("rejected"):
+                name_gate_rejections += 1
+                reason = _NAME_GATE_ISSUE
 
         result_confidence = float(result.get("confidence", 0.0) or 0.0)
         is_best_effort = bool(result.get("best_effort"))
@@ -6538,6 +7237,7 @@ def map_payload(
         if status == "mapped" and is_best_effort:
             best_effort_mappings += 1
 
+        compound_meta_resolution = _safe_dict(compound["mapping_meta"].get("resolution"))
         logs.append(
             {
                 "entity_type": "compound",
@@ -6548,14 +7248,16 @@ def map_payload(
                 "route": route["route"],
                 "route_reason": route["reason"],
                 "location": ", ".join(compound_locations.get(name, [])),
-                "candidate_count": len(_safe_list(result.get("candidates"))),
+                "candidate_count": len(_safe_list(compound["mapping_meta"].get("candidates"))),
                 "source": source,
                 "provider": provider,
                 "confidence": result_confidence,
-                "chosen_rule": str(result.get("chosen_rule") or ""),
+                "chosen_rule": str(compound["mapping_meta"].get("chosen_rule") or ""),
                 "best_effort": is_best_effort,
-                "resolution_status": _safe_dict(result.get("resolution")).get("status", ""),
-                "resolution_issue": _safe_dict(result.get("resolution")).get("issue", ""),
+                # See the protein log above: the row, not the resolver result, is
+                # the honest record of what shipped.
+                "resolution_status": compound_meta_resolution.get("status", ""),
+                "resolution_issue": compound_meta_resolution.get("issue", ""),
             }
         )
 
@@ -6632,6 +7334,7 @@ def map_payload(
         "species_novel": int(species_report.get("novel", 0)),
         "low_confidence_mappings": low_confidence_mappings,
         "best_effort_mappings": best_effort_mappings,
+        "name_gate_rejections": name_gate_rejections,
         "entities_mapped": sum(1 for row in logs if row.get("status") == "mapped"),
         "entities_ambiguous": len(ambiguous_log_rows),
         "entities_unmapped": sum(

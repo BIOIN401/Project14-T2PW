@@ -820,7 +820,42 @@ def _paper_from_provenance(prov: Dict[str, Any]) -> Dict[str, Any]:
 # Merge / reconcile / resolve conflicts.
 # ---------------------------------------------------------------------------
 def _merge_into(target: _Reaction, other: _Reaction) -> None:
-    """Fold ``other`` (same signature) into ``target``, unioning provenance."""
+    """Fold ``other`` (same signature) into ``target``, unioning provenance.
+
+    ``evidence`` and ``source_papers`` are UNIONED here, exactly like ``provenance``
+    — they used to be blindly ``extend``-ed, and that asymmetry is the origin of the
+    evidence amplification seen in run 2026-07-28_0919.
+
+    Why the amplification happens: :func:`_reactions_from_bundle` is called once PER
+    GAP BUNDLE, and every reaction it builds carries ``evidence=[record]`` holding
+    the WHOLE chunk text. A chunk that is top-k for N different gaps therefore
+    produces N identical ``_Reaction`` objects, all of which land on the same
+    signature and fold in here. The repeat count IS the gap-bundle count. In that
+    run, PMC12444477 "The regulation of lipid A biosynthesis" (strict) shipped a
+    reaction (#14) whose evidence was 139,576 characters: ONE 4,812-character
+    passage repeated 29 times, once per gap. Payload-wide, reaction evidence came to
+    2,716,278 chars and enzyme-row evidence to 1,888,665 chars — 4.6 MB of a 4.70 MB
+    merged payload — and 177 of the 204 enzyme rows carried evidence of exactly 119
+    or 120 characters, i.e. the same short passage restated over and over.
+
+    The dedup key is the explicit ``(chunk_id, text)`` identity pair (see
+    :func:`_dedupe_evidence`), NOT ``set``/``dict.fromkeys`` and NOT whole-record
+    equality. Both alternatives are broken here: the records are dicts, so they are
+    unhashable and cannot enter a set at all; and whole-record equality would MISS
+    the duplicates anyway, because :func:`_evidence_from_hit` stores
+    ``"score": float(hit.score)`` and that score differs per gap for the very same
+    chunk. Two records naming the same chunk with the same text are the same passage
+    regardless of what any one retrieval scored it.
+
+    ``scores`` is deliberately left as a plain ``extend``: a score is a per-retrieval
+    observation and :meth:`_Reaction.weight` SUMS them to rank conflicting variants
+    in :func:`_resolve_reactions`. Collapsing repeated scores would silently re-rank
+    conflict resolution — a different behavior change than the one this fix makes.
+
+    No cap on the number of distinct passages is applied. That idea was reviewed and
+    rejected: a row genuinely supported by several papers must keep every distinct
+    passage it rests on. Only exact repeats are removed.
+    """
     seen = {
         (p.get("source_id"), p.get("chunk_id")) for p in target.provenance
     }
@@ -829,8 +864,8 @@ def _merge_into(target: _Reaction, other: _Reaction) -> None:
         if key not in seen:
             target.provenance.append(prov)
             seen.add(key)
-    target.evidence.extend(other.evidence)
-    target.source_papers.extend(other.source_papers)
+    target.evidence = _dedupe_evidence(target.evidence + other.evidence)
+    target.source_papers = _dedupe_papers(target.source_papers + other.source_papers)
     target.scores.extend(other.scores)
     for enzyme in other.enzymes:
         if enzyme not in target.enzymes:
@@ -1064,7 +1099,14 @@ def _attach_provenance(
     primary = provenance[0]
     row["rag_provenance"] = dict(primary)
     if evidence:
-        row["evidence"] = [dict(e) for e in evidence]
+        # Deduped for the same reason ``source_papers`` and ``source_refs`` are on
+        # the next four lines. This assignment was the one member of the group with
+        # no dedupe helper, and it is reached once per reaction row AND once per
+        # enzyme actor on that reaction (:func:`_enzyme_actor` passes the reaction's
+        # own evidence list), so a repeated passage was billed once per row and again
+        # per catalyst. That is how run 2026-07-28_0919 turned 9 extracted reactions
+        # into 204 enzyme rows carrying 1,888,665 characters of evidence.
+        row["evidence"] = [dict(e) for e in _dedupe_evidence(evidence)]
     papers = _dedupe_papers(_paper_from_provenance(p) for p in provenance)
     if papers:
         row["source_papers"] = papers
@@ -1098,6 +1140,41 @@ def _dedupe_papers(papers: Any) -> List[Dict[str, Any]]:
         if sid and sid not in seen:
             seen.add(sid)
             out.append(paper)
+    return out
+
+
+def _dedupe_evidence(records: Any) -> List[Dict[str, Any]]:
+    """Collapse repeats of the same passage, keyed on ``(chunk_id, text)``.
+
+    The evidence sibling of :func:`_dedupe_papers` / :func:`_dedupe_strs`. It exists
+    because those two were applied to ``source_papers`` and ``source_refs`` while the
+    ``evidence`` assignment right beside them had no dedupe at all — the asymmetry
+    that let run 2026-07-28_0919 ship a 4.70 MB payload of which 4.6 MB was the same
+    handful of passages restated (one reaction carried a single 4,812-char passage 29
+    times, once per gap bundle; 177 of 204 enzyme rows carried the same 119/120-char
+    passage).
+
+    Keyed on the identity pair rather than on the record: ``_evidence_from_hit``
+    writes a per-retrieval ``score``, so the SAME chunk retrieved for two different
+    gaps yields two records that are unequal as dicts but are one passage. Dicts are
+    also unhashable, so ``set``/``dict.fromkeys`` is not available here anyway.
+
+    Unlike :func:`_dedupe_papers`, which drops a paper with no ``source_id`` (an
+    unciteable pointer is worthless), a record with neither a ``chunk_id`` nor a
+    ``text`` is KEPT verbatim: evidence lists carried over from a seed row
+    (:func:`_seed_row_evidence`) may hold records this module did not build, and
+    collapsing every identity-less record into one would lose real data to save
+    nothing. First-seen order is preserved so the leading passage stays leading.
+    """
+    out: List[Dict[str, Any]] = []
+    seen: set = set()
+    for record in records:
+        key = (_text(record.get("chunk_id")), _text(record.get("text")))
+        if key == ("", ""):
+            out.append(record)
+        elif key not in seen:
+            seen.add(key)
+            out.append(record)
     return out
 
 

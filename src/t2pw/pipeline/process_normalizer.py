@@ -14,6 +14,11 @@ from t2pw.pipeline.entity_identity import (
     protein_species_context,
     route_entity_for_mapping,
 )
+from t2pw.pipeline.enzyme_cues import (
+    ENZYME_EVIDENCE_CUE_RE,
+    MAX_INJECTOR_EVIDENCE_CHARS,
+    cue_near_name,
+)
 from t2pw.pipeline.export_mode import (
     DEFAULT_EXPORT_MODE,
     RESEARCH,
@@ -3064,24 +3069,14 @@ def attach_transporters_from_evidence(payload: Dict[str, Any], *, report: Option
     return payload
 
 
-_ENZYME_EVIDENCE_CUE_RE = re.compile(
-    r"(catalyz|catalys|catalytic|enzyme|enzymatic|mediated|dependent|activity|activat|promot|facilitat)",
-    flags=re.IGNORECASE,
-)
-
-
-def _cue_near_name(text: str, name: str, *, window: int = 80) -> Optional[str]:
-    evidence = _canonical(text)
-    actor_name = _canonical(name)
-    if not evidence or not actor_name:
-        return None
-    for match in re.finditer(re.escape(actor_name), evidence, flags=re.IGNORECASE):
-        start = max(0, match.start() - window)
-        end = min(len(evidence), match.end() + window)
-        snippet = evidence[start:end].strip()
-        if _ENZYME_EVIDENCE_CUE_RE.search(snippet):
-            return snippet
-    return None
+# The cue regex and the window scanner moved to ``t2pw.pipeline.enzyme_cues``
+# so that ``pipeline._inject_name_based_modifiers`` -- the Stage-2 pass that
+# manufactured 204 enzyme rows from 9 Stage-1 enzymes for PMC12444477 in run
+# 2026-07-28_0919 -- can apply the identical predicate instead of a bare
+# substring test. The old private names are kept as aliases so nothing in this
+# 4,500-line module has to be re-read to follow the move.
+_ENZYME_EVIDENCE_CUE_RE = ENZYME_EVIDENCE_CUE_RE
+_cue_near_name = cue_near_name
 
 
 def attach_enzymes_from_reaction_evidence(
@@ -3162,6 +3157,26 @@ def attach_enzymes_from_reaction_evidence(
                 for value in (reaction.get("name", ""), reaction.get("evidence", ""))
             )
         )
+        # Refuse to mine a retrieved corpus. ``rag/conform.py`` flattens a RAG
+        # row's evidence list into one string, so ``reaction["evidence"]`` on an
+        # adopted payload can be six figures of text -- 139,576 characters on
+        # reaction #14 of the PMC12444477 strict payload in run 2026-07-28_0919,
+        # one 4,812-character passage repeated 29 times. Skip the row entirely
+        # rather than truncate: a truncation would silently change which actor
+        # the exactly-one-match test below sees, and "the first 400 characters
+        # named exactly one protein" is not evidence of catalysis.
+        #
+        # Do not read this as the fix. The ``len(matches) != 1`` test eight lines
+        # down already fails closed on a corpus, because a corpus names many
+        # actors -- replaying this function over the four merged payloads of run
+        # 2026-07-28_0919 with their actors cleared, the guard changes **zero**
+        # rows (1 attachment either way). It is here so the bound is stated at
+        # both name-based attachers instead of being an accident of multi-actor
+        # text, and so a blob that happens to name exactly one protein cannot
+        # slip through. The pass that actually manufactured enzymes is
+        # ``pipeline._inject_name_based_modifiers``, which had no such test.
+        if len(evidence_text) > MAX_INJECTOR_EVIDENCE_CHARS:
+            continue
         matches: List[Tuple[str, str, str]] = []
         for entity_type, actor_name in sorted(actor_candidates, key=lambda item: len(item[1]), reverse=True):
             actor_norm = _normalize(actor_name)
@@ -4473,6 +4488,13 @@ def normalize_process_payload(
     proteins, non-protein catalysts -- and records each preserved row in
     ``report["actions"]`` so nothing is dropped silently. The mode is published
     on the report because every pass and nested helper already receives it.
+
+    A relaxation is only coherent if the gate that follows it relaxes too: the
+    post-normalization gate below is therefore called with
+    ``enforce_all_proteins_connected=not is_research(mode)``, because it used to
+    be handed an unconditional ``True`` and then raised on the very orphans this
+    mode had just chosen to keep (4 of PMC12444477's 30 research-mode gate errors
+    in run 2026-07-28_0919 existed for no other reason).
     """
 
     data = deepcopy(payload)
@@ -4534,6 +4556,16 @@ def normalize_process_payload(
             passes=["drop_process_orphan_proteins", "prune_disconnected_proteins"],
             reason="disconnected/orphan proteins are preserved for review instead of deleted",
         )
+        _note_research_relaxation(
+            report,
+            action="connectivity_gate_not_enforced",
+            gate="run_strict_post_normalization_gates.enforce_all_proteins_connected",
+            reason=(
+                "the degree-0 protein rule is the rule the two skipped passes exist to "
+                "satisfy; enforcing it here would fail the run on exactly the rows this "
+                "mode chose to keep"
+            ),
+        )
     else:
         drop_process_orphan_proteins(data, report=report)
         _checkpoint("drop_process_orphan_proteins")
@@ -4543,7 +4575,32 @@ def normalize_process_payload(
         gate_details = run_strict_post_normalization_gates(
             data,
             report=report,
-            enforce_all_proteins_connected=True,
+            # WHY this is no longer an unconditional True. The two passes above are
+            # skipped in research mode precisely so that a not-yet-wired protein from
+            # a novel paper survives to the reviewer; passing True here then judged
+            # those survivors by the strict rule and raised GateValidationError on
+            # them. PMC12444477's research run in 2026-07-28_0919 carried 30 gate
+            # errors, and 4 of them ("Protein has degree 0 after normalization") were
+            # manufactured by this contradiction alone -- the mode relaxed, then
+            # failed itself for having relaxed.
+            #
+            # This is the smaller of the two available fixes. The alternative, adding
+            # a ``mode`` parameter to run_strict_post_normalization_gates, would touch
+            # a function with five call sites (streamlit_app.py:2494 and :2892 pass
+            # True, interactive_curator.py:538 passes False, streamlit_app.py:4691
+            # passes nothing) and would have to define mode semantics for each of
+            # them. The flag already IS the knob for this exact rule, so making it
+            # follow the same condition as the skip keeps the decision in the one
+            # place that made the decision. Strict mode still passes True.
+            #
+            # NOT covered by this flag, and deliberately left alone: the "Located
+            # protein is isolated in connectivity graph" check (:4243-4252) is
+            # unconditional and can still fire for a preserved orphan that has an
+            # element_locations row. Gating it on this flag would change
+            # interactive_curator, which passes False today and still wants that
+            # error. In research mode such an error is now recorded as a review flag
+            # by batch/driver.py instead of failing the run.
+            enforce_all_proteins_connected=not is_research(mode),
         )
         report["gate"] = {"ok": True, **gate_details}
     except GateValidationError as exc:
