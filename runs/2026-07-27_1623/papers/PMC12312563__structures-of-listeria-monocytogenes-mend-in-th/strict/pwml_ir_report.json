@@ -1,0 +1,195 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'DHNA' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/8",
+      "entity_type": "compound",
+      "raw_name": "DHNA",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'DHNA-CoA' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/9",
+      "entity_type": "compound",
+      "raw_name": "DHNA-CoA",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    }
+  ],
+  "warnings": [
+    {
+      "code": "component_inferred_from_biological_state",
+      "message": "Added missing subcellular_locations component 'Cytoplasm' from biological_state context.",
+      "pointer": "/biological_states/2",
+      "component_type": "subcellular_locations",
+      "name": "Cytoplasm"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [
+      {
+        "raw_name": "α-ketoglutarate",
+        "status": "legacy_id_unverified",
+        "db_id": 134,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "isochorismate",
+        "status": "legacy_id_unverified",
+        "db_id": 40741,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "SEPHCHC",
+        "status": "legacy_id_unverified",
+        "db_id": 40742,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "thiamine diphosphate",
+        "status": "legacy_id_unverified",
+        "db_id": 1060,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "1,4-dihydroxy-2-naphthoic acid",
+        "status": "legacy_id_unverified",
+        "db_id": 40747,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "Mg2+",
+        "status": "legacy_id_unverified",
+        "db_id": 423,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "intermediate I",
+        "status": "legacy_id_unverified",
+        "db_id": 41270,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "intermediate II",
+        "status": "legacy_id_unverified",
+        "db_id": 43200,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "DHNA",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "DHNA-CoA",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      }
+    ],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [
+      {
+        "entity_type": "compound",
+        "raw_name": "DHNA",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "DHNA-CoA",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      }
+    ],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 2,
+    "biological_states": 3,
+    "compounds": 10,
+    "proteins": 3,
+    "reactions": 7,
+    "transports": 0,
+    "locations": 15,
+    "edges": 26,
+    "process_visualizations": 7
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": [],
+    "compounds": [
+      {
+        "from": "α-ketoglutarate",
+        "to": "Oxoglutaric acid",
+        "matched_on": "hmdb",
+        "db_id": 134,
+        "source": "pathwhiz_id_db.json"
+      },
+      {
+        "from": "Mg2+",
+        "to": "Magnesium",
+        "matched_on": "hmdb",
+        "db_id": 423,
+        "source": "pathwhiz_id_db.json"
+      }
+    ]
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "entities": 16,
+      "biological_states": 3,
+      "processes": 8,
+      "process_members": 26,
+      "locations": 15,
+      "edges": 26,
+      "process_visualizations": 7
+    }
+  }
+}

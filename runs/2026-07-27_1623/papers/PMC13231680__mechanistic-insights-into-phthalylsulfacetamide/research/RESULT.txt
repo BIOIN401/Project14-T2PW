@@ -1,0 +1,38 @@
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal activity in NDM-1-positive Escherichia coli.
+slug       : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+mode       : research
+status     : fail
+stage      : post_pipeline
+wall time  : 1051.5s (17m31s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 2 blocking issue(s) at a stage boundary
+issue codes  : entity_missing_mapping_meta
+
+DETAIL / TRACEBACK
+----------------------------------------
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+2 QA issues need review.
+[post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+COUNTS
+----------------------------------------
+  compounds = 5
+  contract_errors = 2
+  entities = 10
+  gate_errors = 0
+  proteins = 2
+  reactions = 2
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (7202 B)
+  - merged_payload.json  (185765 B)
+  - stage1_payload.json  (1447 B)

@@ -1,0 +1,38 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : The regulation of lipid A biosynthesis.
+slug       : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+mode       : research
+status     : fail
+stage      : post_pipeline
+wall time  : 1534.1s (25m34s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 2 blocking issue(s) at a stage boundary
+issue codes  : entity_missing_mapping_meta
+
+DETAIL / TRACEBACK
+----------------------------------------
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+11 QA issues need review.
+[post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+COUNTS
+----------------------------------------
+  compounds = 15
+  contract_errors = 2
+  entities = 29
+  gate_errors = 0
+  proteins = 10
+  reactions = 6
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (7202 B)
+  - merged_payload.json  (15792 B)
+  - stage1_payload.json  (10822 B)

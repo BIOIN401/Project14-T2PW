@@ -1,0 +1,95 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Listeria monocytogenes"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "2-oxoglutarate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "thiamine diphosphate",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "1,4-dihydroxy-2-naphthoic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Mg2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Listeria monocytogenes cellular state",
+      "species": "Listeria monocytogenes",
+      "evidence": "Source organism Listeria monocytogenes (strain 10403s)"
+    }
+  ],
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "2-oxoglutarate",
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "SEPHCHC synthase reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "The ThDP-dependent enzyme SEPHCHC synthase (MenD) catalyses the first irreversible step"
+          }
+        ],
+        "biological_state": "Listeria monocytogenes cellular state",
+        "evidence": "The ThDP-dependent enzyme SEPHCHC synthase (MenD) catalyses the first irreversible step"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "1,4-dihydroxy-2-naphthoic acid",
+        "entity_2": "MenD",
+        "name": "DHNA inhibits MenD",
+        "relationship": "inhibits",
+        "biological_state": "Listeria monocytogenes cellular state",
+        "evidence": "weak inhibition of enzyme activity in the presence of 1,4-dihydroxy-2-naphthoic acid"
+      }
+    ]
+  }
+}

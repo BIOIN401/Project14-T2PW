@@ -1,0 +1,44 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12312563
+title      : Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.
+slug       : PMC12312563__structures-of-listeria-monocytogenes-mend-in-th
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1041.0s (17m21s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/13/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 3
+  compounds = 14
+  entities = 20
+  gate_errors = 0
+  normalization_actions = 1
+  proteins = 3
+  reactions = 10
+  review_flags = 0
+  runtime_schema_findings = 4
+  skipped_format_rules = 0
+  tier = {'a': 3, 'b': 13, 'c': 14, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (8603 B)
+  - merged_payload.json  (416602 B)
+  - research_pathway_citations.json  (448413 B)
+  - research_pathway_elements.csv  (176856 B)
+  - research_pathway_report.txt  (65180 B)
+  - review_flags.json  (425 B)
+  - stage1_payload.json  (5324 B)

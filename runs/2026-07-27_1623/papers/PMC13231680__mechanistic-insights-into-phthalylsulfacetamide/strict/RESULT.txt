@@ -1,0 +1,38 @@
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal activity in NDM-1-positive Escherichia coli.
+slug       : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 921.3s (15m21s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 3 blocking issue(s) at a stage boundary
+issue codes  : entity_missing_mapping_meta, gate.registry_validation_failed
+
+DETAIL / TRACEBACK
+----------------------------------------
+Mapped pathway still fails the pre-export Stage 3 revalidation. Refinement review was not opened.
+[post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+COUNTS
+----------------------------------------
+  compounds = 5
+  contract_errors = 2
+  entities = 9
+  gate_errors = 1
+  proteins = 1
+  reactions = 3
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (6112 B)
+  - final_stage3_gate_report.json  (2313 B)
+  - merged_payload.json  (118442 B)
+  - stage1_payload.json  (1194 B)

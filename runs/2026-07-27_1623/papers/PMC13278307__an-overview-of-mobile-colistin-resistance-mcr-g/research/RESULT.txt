@@ -1,0 +1,27 @@
+RESULT: FAIL
+========================================
+paper      : PMC13278307
+title      : An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+slug       : PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g
+mode       : research
+status     : fail
+stage      : stage1
+wall time  : 167.3s (2m47s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : llm
+message      : Extraction boundary failed: Payload must include a processes object.
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Extraction boundary failed: Payload must include a processes object.
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+Stage 0 failed: empty_reply - The model returned an empty reply (0 chars).
+
+It returned no usable context — no pathway name, organism, compounds or proteins, and no scope was provided in the extraction-focus box to fall back to. Extraction will be unguided, and multi-paper RAG cannot build a literature query, so no papers will be fetched. Re-run (usually a transient LLM failure), or type the pathway/organism into the focus box so the pipeline can proceed without the preprocessor.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

@@ -1,0 +1,569 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "cytoplasm",
+        "canonical_id": "GO:0005737",
+        "evidence": "catalyzed in the cytoplasm"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "UDP-GlcNAc",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "R-3-hydroxymyristoyl-ACP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ACP",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UDP-2,3-diacylglucosamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "tetra-acylated disaccharide intermediate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipid IVA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Kdo",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Kdo-lipid IVA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Kdo-lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "laurate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "myristate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LPS",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipopolysaccharide",
+        "class": "compound",
+        "evidence": "bacterial lipopolysaccharides",
+        "confidence": 0.9,
+        "provenance": "inferred",
+        "source_refs": [
+          "bacterial lipopolysaccharides"
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "name": "LpxA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LpxD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LpxK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "WaaA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LpxL",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LpxM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "FtsH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "YejM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LapB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "FtsH/YciM complex",
+        "components": [
+          "FtsH",
+          "LapB"
+        ],
+        "evidence": "FtsH/YciM complex",
+        "confidence": 0.95,
+        "provenance": "inferred",
+        "source_refs": [
+          "YejM controls LpxC levels by regulating protease activity of the FtsH/YciM complex"
+        ]
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "cytoplasmic state",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "catalyzed in the cytoplasm"
+    },
+    {
+      "name": "E. coli state",
+      "species": "Escherichia coli",
+      "evidence": "E. coli"
+    },
+    {
+      "name": "periplasmic leaflet of IM",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane periplasmic leaflet",
+      "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM by the flippase MsbA"
+    },
+    {
+      "name": "inner membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane",
+      "evidence": "FtsH is a hexameric, ATP-dependent, and membrane-embedded protease"
+    },
+    {
+      "name": "outer membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "outer membrane (OM) with GPLs on the inner leaflet and an outer leaflet largely composed of lipopolysaccharide (LPS)"
+    },
+    {
+      "name": "inner membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane",
+      "evidence": "YejM inner membrane protein"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "UDP-GlcNAc",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxA acylates UDP-GlcNAc"
+      },
+      {
+        "compound": "R-3-hydroxymyristoyl-ACP",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxA uses R-3-hydroxymyristoyl-ACP"
+      },
+      {
+        "compound": "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxA product"
+      },
+      {
+        "compound": "ACP",
+        "biological_state": "cytoplasmic state",
+        "evidence": "released by LpxA"
+      },
+      {
+        "compound": "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxC product"
+      },
+      {
+        "compound": "UDP-2,3-diacylglucosamine",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxD product"
+      },
+      {
+        "compound": "tetra-acylated disaccharide intermediate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxB product"
+      },
+      {
+        "compound": "lipid IVA",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxK product"
+      },
+      {
+        "compound": "Kdo",
+        "biological_state": "cytoplasmic state",
+        "evidence": "added by WaaA"
+      },
+      {
+        "compound": "Kdo-lipid IVA",
+        "biological_state": "cytoplasmic state",
+        "evidence": "WaaA product"
+      },
+      {
+        "compound": "Kdo-lipid A",
+        "biological_state": "cytoplasmic state",
+        "evidence": "final product"
+      },
+      {
+        "compound": "laurate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxL incorporates laurate"
+      },
+      {
+        "compound": "myristate",
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxM incorporates myristate"
+      },
+      {
+        "compound": "Kdo-lipid A",
+        "biological_state": "periplasmic leaflet of IM",
+        "evidence": "core-lipid A is flipped from the cytoplasmic leaflet to the periplasmic leaflet of the IM"
+      },
+      {
+        "compound": "lipid A",
+        "biological_state": "outer membrane state",
+        "evidence": "Lipid A is an acylated glucosamine-based disaccharide that anchors LPS in the lipid bilayer"
+      },
+      {
+        "compound": "LPS",
+        "biological_state": "outer membrane state",
+        "evidence": "outer leaflet largely composed of lipopolysaccharide (LPS)"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "LpxA",
+        "biological_state": "cytoplasmic state",
+        "evidence": "first enzyme in the pathway"
+      },
+      {
+        "protein": "LpxC",
+        "biological_state": "cytoplasmic state",
+        "evidence": "committed enzyme"
+      },
+      {
+        "protein": "LpxD",
+        "biological_state": "cytoplasmic state",
+        "evidence": "adds acyl group"
+      },
+      {
+        "protein": "LpxK",
+        "biological_state": "cytoplasmic state",
+        "evidence": "phosphorylates intermediate"
+      },
+      {
+        "protein": "WaaA",
+        "biological_state": "cytoplasmic state",
+        "evidence": "adds Kdo residues"
+      },
+      {
+        "protein": "LpxL",
+        "biological_state": "cytoplasmic state",
+        "evidence": "acylates Kdo-lipid IVA"
+      },
+      {
+        "protein": "LpxM",
+        "biological_state": "cytoplasmic state",
+        "evidence": "acylates Kdo-lipid IVA"
+      },
+      {
+        "protein": "FtsH",
+        "biological_state": "inner membrane state",
+        "evidence": "FtsH is a hexameric, ATP-dependent, and membrane-embedded protease"
+      },
+      {
+        "protein": "LapB",
+        "biological_state": "inner membrane state",
+        "evidence": "LapB (lipopolysaccharide assembly protein B; formerly called YciM) in cell envelope integrity"
+      },
+      {
+        "protein": "YejM",
+        "biological_state": "inner membrane state",
+        "evidence": "YejM is composed of a transmembrane domain connected to a globular periplasmic domain"
+      },
+      {
+        "protein": "FtsH/YciM complex",
+        "biological_state": "inner membrane state",
+        "evidence": "FtsH is a membrane-bound, ATP-dependent protease"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "UDP-GlcNAc",
+          "R-3-hydroxymyristoyl-ACP"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc",
+          "ACP"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "LpxA reaction",
+        "enzymes": [
+          {
+            "protein": "LpxA",
+            "evidence": "LpxA catalyzes the acylation of UDP-GlcNAc"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxA catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived β-hydroxyacyl-ACP molecules"
+      },
+      {
+        "inputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-GlcNAc"
+        ],
+        "outputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "LpxC reaction",
+        "enzymes": [
+          {
+            "protein": "LpxC",
+            "evidence": "LpxC deacetylates the LpxA product"
+          },
+          {
+            "protein": "FtsH",
+            "evidence": "FtsH was able to directly degrade LpxC"
+          },
+          {
+            "protein": "LapB",
+            "evidence": "LapB binding is sufficient to reduce Ec LpxC activity by approximately 80% in vitro"
+          },
+          {
+            "protein": "YejM",
+            "evidence": "YejM sequesters LapB, preventing FtsH-mediated proteolysis of Ec LpxC"
+          },
+          {
+            "protein_complex": "FtsH/YciM complex",
+            "evidence": "FtsH-mediated proteolysis of LpxC"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "LpxC is a deacetylase that removes the acetyl group from the GlcNAc moiety"
+      },
+      {
+        "inputs": [
+          "UDP-3-O-(R-3-hydroxymyristoyl)-glucosamine",
+          "R-3-hydroxymyristoyl-ACP"
+        ],
+        "outputs": [
+          "UDP-2,3-diacylglucosamine",
+          "ACP"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "LpxD reaction",
+        "enzymes": [
+          {
+            "protein": "LpxD",
+            "evidence": "LpxD adds the next acyl group"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "the addition of the next acyl group by LpxD"
+      },
+      {
+        "inputs": [
+          "tetra-acylated disaccharide intermediate"
+        ],
+        "outputs": [
+          "lipid IVA"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "LpxK reaction",
+        "enzymes": [
+          {
+            "protein": "LpxK",
+            "evidence": "LpxK phosphorylates the intermediate"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "which is phosphorylated by LpxK to produce lipid IVA"
+      },
+      {
+        "inputs": [
+          "lipid IVA",
+          "Kdo"
+        ],
+        "outputs": [
+          "Kdo-lipid IVA"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "WaaA reaction",
+        "enzymes": [
+          {
+            "protein": "WaaA",
+            "evidence": "WaaA adds Kdo residues"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "WaaA adds a number of Kdo residues... resulting in Kdo-lipid IVA"
+      },
+      {
+        "inputs": [
+          "Kdo-lipid IVA",
+          "laurate"
+        ],
+        "outputs": [
+          "Kdo-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "LpxL reaction",
+        "enzymes": [
+          {
+            "protein": "LpxL",
+            "evidence": "LpxL acylates Kdo-lipid IVA"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "Kdo-lipid IVA which is sequentially acylated by LpxL"
+      },
+      {
+        "inputs": [
+          "Kdo-lipid A",
+          "myristate"
+        ],
+        "outputs": [
+          "Kdo-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_006",
+        "name": "LpxM reaction",
+        "enzymes": [
+          {
+            "protein": "LpxM",
+            "evidence": "LpxM acylates Kdo-lipid IVA"
+          }
+        ],
+        "biological_state": "cytoplasmic state",
+        "evidence": "and LpxM to finally form Kdo-lipid A"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "LPS",
+        "entity_2": "lipopolysaccharide",
+        "name": "LPS SAME_AS lipopolysaccharide",
+        "relationship": "SAME_AS",
+        "evidence": "bacterial lipopolysaccharides"
+      },
+      {
+        "entity_1": "FtsH",
+        "entity_2": "LpxC",
+        "name": "FtsH inhibits LpxC",
+        "relationship": "inhibits",
+        "evidence": "FtsH was able to directly degrade LpxC"
+      },
+      {
+        "entity_1": "LapB",
+        "entity_2": "LpxC",
+        "name": "LapB inhibits LpxC",
+        "relationship": "inhibits",
+        "evidence": "LapB binding is sufficient to reduce Ec LpxC activity by approximately 80% in vitro"
+      },
+      {
+        "entity_1": "YejM",
+        "entity_2": "LapB",
+        "name": "YejM inhibits LapB",
+        "relationship": "inhibits",
+        "evidence": "YejM sequesters LapB, preventing FtsH-mediated proteolysis of Ec LpxC"
+      },
+      {
+        "entity_1": "LapB",
+        "entity_2": "FtsH",
+        "name": "LapB binds FtsH",
+        "relationship": "binds",
+        "evidence": "LapB was shown to interact directly with both FtsH and Ec LpxC"
+      }
+    ]
+  },
+  "quarantined_locked_reactions": [],
+  "locked_reaction_filter_report": {
+    "locked_reactions_found": 7,
+    "exported_locked_reactions": 7,
+    "quarantined_locked_reactions": 0
+  }
+}

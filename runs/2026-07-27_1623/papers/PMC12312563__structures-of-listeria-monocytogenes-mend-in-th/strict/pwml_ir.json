@@ -1,0 +1,2171 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Listeria monocytogenes",
+      "pathwhiz_id": 676,
+      "taxonomy_id": "1639",
+      "classification": "Prokaryote"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    },
+    {
+      "key": "scl_2",
+      "name": "Cytoplasm"
+    }
+  ],
+  "cell_types": [],
+  "tissues": [],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "Listeria monocytogenes cellular state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_2",
+      "name": "__auto_state__",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_3",
+      "name": "AutoState_listeria_monocytogenescytoplasm",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_2",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "Oxoglutaric acid",
+        "pathwhiz_id": 134,
+        "pathbank_compound_id": 134,
+        "mapped_ids": {
+          "hmdb": "HMDB0000208",
+          "kegg": "C00026",
+          "chebi": "30915",
+          "pubchem": "51",
+          "cas": "328-50-7",
+          "biocyc": "2-KETOGLUTARATE",
+          "chemspider": "50",
+          "drugbank": "DB02926",
+          "pathbank_compound_id": "134"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "α-ketoglutarate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 134,
+              "name": "Oxoglutaric acid",
+              "short_name": "AKG",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000208",
+                "kegg": "C00026",
+                "chebi": "CHEBI:30915",
+                "pubchem": "51",
+                "cas": "328-50-7",
+                "biocyc": "2-KETOGLUTARATE",
+                "chemspider": "50",
+                "drugbank": "DB02926",
+                "pathbank_compound_id": "134"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 134
+        },
+        "raw_name": "α-ketoglutarate",
+        "db_status": "matched_offline_name_index",
+        "db_id": 134,
+        "db_row": {
+          "id": 134,
+          "name": "Oxoglutaric acid"
+        },
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper",
+          "PMC12312563"
+        ],
+        "hmdb_id": "HMDB0000208",
+        "kegg_id": "C00026",
+        "chebi_id": "30915",
+        "pubchem_cid": "51"
+      },
+      {
+        "key": "cmp_2",
+        "name": "isochorismate",
+        "pathwhiz_id": 40741,
+        "pathbank_compound_id": 40741,
+        "mapped_ids": {
+          "kegg": "C00885",
+          "chebi": "29780",
+          "pathbank_compound_id": "40741"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "isochorismate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40741,
+              "name": "isochorismate",
+              "short_name": "isochor",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C00885",
+                "chebi": "CHEBI:29780"
+              }
+            },
+            {
+              "pathbank_compound_id": 104648,
+              "name": "Isochorismate",
+              "short_name": "Isochor",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C00885",
+                "chebi": "CHEBI:17582",
+                "pubchem": "4141"
+              }
+            }
+          ],
+          "chosen_rule": "direct_id_match:kegg",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "provider": "ChEBI/KEGG/HMDB",
+          "pathbank_compound_id": 40741
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40741,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper",
+          "PMC12312563"
+        ],
+        "kegg_id": "C00885",
+        "chebi_id": "29780"
+      },
+      {
+        "key": "cmp_3",
+        "name": "SEPHCHC",
+        "pathwhiz_id": 40742,
+        "pathbank_compound_id": 40742,
+        "mapped_ids": {
+          "kegg": "C16519",
+          "chebi": "50271",
+          "pubchem": "51090848",
+          "pathbank_compound_id": "40742"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "SEPHCHC"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40742,
+              "name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate",
+              "short_name": "sehcc",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C16519",
+                "chebi": "CHEBI:50271",
+                "pubchem": "51090848"
+              }
+            }
+          ],
+          "chosen_rule": "direct_id_match:kegg",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "provider": "ChEBI/KEGG/HMDB",
+          "pathbank_compound_id": 40742
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40742,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper",
+          "PMC12312563"
+        ],
+        "kegg_id": "C16519",
+        "chebi_id": "50271",
+        "pubchem_cid": "51090848"
+      },
+      {
+        "key": "cmp_4",
+        "name": "thiamine diphosphate",
+        "pathwhiz_id": 1060,
+        "pathbank_compound_id": 1060,
+        "mapped_ids": {
+          "hmdb": "HMDB0001372",
+          "kegg": "C00068",
+          "chebi": "9532",
+          "pubchem": "1132",
+          "cas": "154-87-0",
+          "biocyc": "2-(alpha-lactyl)-thpp",
+          "chemspider": "1100",
+          "pathbank_compound_id": "1060"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "thiamine diphosphate"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 1060,
+              "name": "Thiamine pyrophosphate",
+              "short_name": "ThiamPP",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0001372",
+                "kegg": "C00068",
+                "chebi": "CHEBI:9532",
+                "pubchem": "1132",
+                "cas": "154-87-0",
+                "biocyc": "2-(alpha-lactyl)-thpp",
+                "chemspider": "1100",
+                "pathbank_compound_id": "1060"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 1060
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 1060,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "cofactor",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0001372",
+        "kegg_id": "C00068",
+        "chebi_id": "9532",
+        "pubchem_cid": "1132"
+      },
+      {
+        "key": "cmp_5",
+        "name": "1,4-dihydroxy-2-naphthoic acid",
+        "pathwhiz_id": 40747,
+        "pathbank_compound_id": 40747,
+        "mapped_ids": {
+          "kegg": "C03657",
+          "chebi": "11173",
+          "pathbank_compound_id": "40747"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "1,4-dihydroxy-2-naphthoic acid"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 40747,
+              "name": "1,4-dihydroxy-2-naphthoate",
+              "short_name": "14D2N",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C03657",
+                "chebi": "CHEBI:11173"
+              }
+            }
+          ],
+          "chosen_rule": "direct_id_match:kegg",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "provider": "CompoundAPI",
+          "pathbank_compound_id": 40747
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 40747,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "kegg_id": "C03657",
+        "chebi_id": "11173",
+        "synonyms": [
+          "DHNA"
+        ]
+      },
+      {
+        "key": "cmp_6",
+        "name": "Magnesium",
+        "pathwhiz_id": 423,
+        "pathbank_compound_id": 423,
+        "mapped_ids": {
+          "kegg": "C00305",
+          "hmdb": "HMDB0000547",
+          "chebi": "18420",
+          "pubchem": "888",
+          "cas": "22537-22-0",
+          "biocyc": "13-HYDROXY-MAGNESIUM-PROTOPORP",
+          "chemspider": "865",
+          "drugbank": "DB01378",
+          "pathbank_compound_id": "423"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "Mg2+"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 423,
+              "name": "Magnesium",
+              "short_name": "Mg2+",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000547",
+                "kegg": "C00305",
+                "chebi": "CHEBI:18420",
+                "pubchem": "888",
+                "cas": "22537-22-0",
+                "biocyc": "13-HYDROXY-MAGNESIUM-PROTOPORP",
+                "chemspider": "865",
+                "drugbank": "DB01378"
+              }
+            },
+            {
+              "pathbank_compound_id": 108845,
+              "name": "Mg2+",
+              "short_name": "",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "kegg": "C00305"
+              }
+            }
+          ],
+          "chosen_rule": "direct_id_match:kegg",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "provider": "ChEBI/KEGG/HMDB",
+          "pathbank_compound_id": 423
+        },
+        "raw_name": "Mg2+",
+        "db_status": "matched_offline_name_index",
+        "db_id": 423,
+        "db_row": {
+          "id": 423,
+          "name": "Magnesium"
+        },
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0000547",
+        "kegg_id": "C00305",
+        "chebi_id": "18420",
+        "pubchem_cid": "888"
+      },
+      {
+        "key": "cmp_7",
+        "name": "intermediate I",
+        "pathwhiz_id": 41270,
+        "pathbank_compound_id": 41270,
+        "mapped_ids": {
+          "kegg": "C22686"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "intermediate I"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 41270,
+              "name": "N-Acetylmuramoyl-L-alanyl-D-glutamyl-meso-2,6-diaminopimelyl-D-alanyl-D-alanine-diphosphoundecaprenol",
+              "short_name": "N-Acety",
+              "score": 0.7167,
+              "mapped_ids": {
+                "pubchem": "25200588"
+              }
+            },
+            {
+              "pathbank_compound_id": 43200,
+              "name": "N-Acetylmuramoyl-L-alanyl-D-glutamyl-L-lysyl-D-alanyl-D-alanine-diphosphoundecaprenyl-N-acetylglucosamine",
+              "short_name": "NALADG",
+              "score": 0.4875,
+              "mapped_ids": {
+                "pubchem": "25203452"
+              }
+            },
+            {
+              "pathbank_compound_id": 41243,
+              "name": "Undecaprenyl-diphospho-N-acetylmuramoyl-L-alanyl-D-glutamyl-meso-2,6-diaminopimeloyl-D-alanyl-D-alanine",
+              "short_name": "UDNALAD",
+              "score": 0.46,
+              "mapped_ids": {
+                "kegg": "C04582",
+                "chebi": "CHEBI:61387",
+                "pubchem": "25245499"
+              }
+            },
+            {
+              "pathbank_compound_id": 42922,
+              "name": "ditrans,octacis-undecaprenyldiphospho-N-acetyl-(N-acetylglucosaminyl)muramoyl-L-alanyl-γ-D-glutamyl-meso-2,6-diaminopimeloyl-D-alanyl-D-alanine",
+              "short_name": "ditrans",
+              "score": 0.4417,
+              "mapped_ids": {
+                "chebi": "CHEBI:61388",
+                "pubchem": "52940208"
+              }
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.7167,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous",
+            "order_step": "high_confidence_fuzzy"
+          },
+          "provider": "CompoundAPI"
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 41270,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "inferred",
+        "source_refs": [
+          "decarboxylation of 2-oxoglutarate produces intermediate I"
+        ],
+        "evidence": "decarboxylation of 2-oxoglutarate produces intermediate I",
+        "kegg_id": "C22686",
+        "synonyms": [
+          "intermediate I"
+        ]
+      },
+      {
+        "key": "cmp_8",
+        "name": "intermediate II",
+        "pathwhiz_id": 43200,
+        "pathbank_compound_id": 43200,
+        "mapping_meta": {
+          "query": {
+            "name": "intermediate II"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 43200,
+              "name": "N-Acetylmuramoyl-L-alanyl-D-glutamyl-L-lysyl-D-alanyl-D-alanine-diphosphoundecaprenyl-N-acetylglucosamine",
+              "short_name": "NALADG",
+              "score": 0.7167,
+              "mapped_ids": {
+                "pubchem": "25203452"
+              }
+            },
+            {
+              "pathbank_compound_id": 42922,
+              "name": "ditrans,octacis-undecaprenyldiphospho-N-acetyl-(N-acetylglucosaminyl)muramoyl-L-alanyl-γ-D-glutamyl-meso-2,6-diaminopimeloyl-D-alanyl-D-alanine",
+              "short_name": "ditrans",
+              "score": 0.57,
+              "mapped_ids": {
+                "chebi": "CHEBI:61388",
+                "pubchem": "52940208"
+              }
+            }
+          ],
+          "chosen_rule": "",
+          "confidence": 0.7167,
+          "resolution": {
+            "status": "ambiguous",
+            "issue": "ambiguous",
+            "order_step": "high_confidence_fuzzy"
+          }
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 43200,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "inferred",
+        "source_refs": [
+          "addition of isochorismate generating intermediate II"
+        ],
+        "evidence": "addition of isochorismate generating intermediate II",
+        "synonyms": [
+          "intermediate II"
+        ]
+      },
+      {
+        "key": "cmp_9",
+        "name": "DHNA",
+        "mapping_meta": {
+          "query": {
+            "name": "DHNA"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "DHNA",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "DHNA",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC8091085",
+          "10.1101/2020.12.21.423900"
+        ],
+        "synonyms": [
+          "DHNA"
+        ]
+      },
+      {
+        "key": "cmp_10",
+        "name": "DHNA-CoA",
+        "mapping_meta": {
+          "query": {
+            "name": "DHNA-CoA"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "DHNA-CoA",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "DHNA-CoA",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC8091085",
+          "10.1101/2020.12.21.423900"
+        ],
+        "synonyms": [
+          "DHNA-CoA"
+        ]
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "MenD",
+        "mapped_ids": {
+          "uniprot": "Q71YZ2"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Listeria monocytogenes",
+            "pathbank_species_id": 676,
+            "species_id": 676,
+            "taxonomy_id": "1639",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "MenD",
+            "organism": "Listeria monocytogenes"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "Q71YZ2",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Listeria monocytogenes serotype 4b (strain F2365)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "Q8Y6K9",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Listeria monocytogenes serovar 1/2a (strain ATCC BAA-679 / EGD-e)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A0H3GD77",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Listeria monocytogenes serotype 1/2a (strain 10403S)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "P17109",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "P23970",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Bacillus subtilis (strain 168)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A9GFL5",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Sorangium cellulosum (strain So ce56)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "B5R2Z0",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Salmonella enteritidis PT4 (strain P125109)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "B5RCD4",
+              "protein_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+              "gene_names": [
+                "menD"
+              ],
+              "organism": "Salmonella gallinarum (strain 287/91 / NCTC 13346)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "MenD",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.85,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate synthase",
+          "queries_tried": [
+            "(protein_name:\"MenD\" OR gene:\"MenD\") AND organism_name:\"Listeria monocytogenes\"",
+            "(protein_name:\"MenD\" OR gene:\"MenD\")"
+          ],
+          "best_effort": true
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper",
+          "PMC12312563"
+        ],
+        "species": "Listeria monocytogenes",
+        "taxonomy_id": "1639",
+        "species_ref": {
+          "name": "Listeria monocytogenes",
+          "pathbank_species_id": 676,
+          "species_id": 676,
+          "taxonomy_id": "1639",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Listeria monocytogenes",
+        "species_id": 676,
+        "pathbank_species_id": 676,
+        "synonyms": [
+          "MenD"
+        ]
+      },
+      {
+        "key": "prot_2",
+        "name": "LMRG_02730",
+        "mapped_ids": {
+          "uniprot": "A0A0H3GEM5"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Listeria monocytogenes",
+            "pathbank_species_id": 676,
+            "species_id": 676,
+            "taxonomy_id": "1639",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "LMRG_02730",
+            "organism": "Listeria monocytogenes"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "A0A0H3GEM5",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Listeria monocytogenes serotype 1/2a (strain 10403S)",
+              "reviewed": true,
+              "score": 0.3,
+              "matched_query": "LMRG_02730",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.3,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+          "queries_tried": [
+            "(protein_name:\"LMRG_02730\" OR gene:\"LMRG_02730\") AND organism_name:\"Listeria monocytogenes\"",
+            "(protein_name:\"LMRG 02730\" OR gene:\"LMRG 02730\") AND organism_name:\"Listeria monocytogenes\"",
+            "(protein_name:\"LMRG_02730\" OR gene:\"LMRG_02730\")",
+            "(protein_name:\"LMRG 02730\" OR gene:\"LMRG 02730\")"
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "PMC8091085",
+          "10.1101/2020.12.21.423900"
+        ],
+        "species": "Listeria monocytogenes",
+        "taxonomy_id": "1639",
+        "species_ref": {
+          "name": "Listeria monocytogenes",
+          "pathbank_species_id": 676,
+          "species_id": 676,
+          "taxonomy_id": "1639",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Listeria monocytogenes",
+        "species_id": 676,
+        "pathbank_species_id": 676,
+        "synonyms": [
+          "LMRG_02730"
+        ]
+      },
+      {
+        "key": "prot_3",
+        "name": "MenI",
+        "mapped_ids": {
+          "uniprot": "A0A0H3GEM5"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Listeria monocytogenes",
+            "pathbank_species_id": 676,
+            "species_id": 676,
+            "taxonomy_id": "1639",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "MenI",
+            "organism": "Listeria monocytogenes"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "A0A0H3GEM5",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Listeria monocytogenes serotype 1/2a (strain 10403S)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "P77781",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI",
+                "ydiI"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "W1DG34",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Klebsiella pneumoniae IS43",
+              "reviewed": false,
+              "score": 0.51,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "Q66A17",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Yersinia pseudotuberculosis serotype I (strain IP32953)",
+              "reviewed": false,
+              "score": 0.51,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A3N4BEK2",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Yersinia pestis",
+              "reviewed": false,
+              "score": 0.51,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "Q6D631",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Pectobacterium atrosepticum (strain SCRI 1043 / ATCC BAA-672)",
+              "reviewed": false,
+              "score": 0.51,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "Q7N3T8",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Photorhabdus laumondii subsp. laumondii (strain DSM 15139 / CIP 105565 / TT01)",
+              "reviewed": false,
+              "score": 0.51,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A384KTI9",
+              "protein_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+              "gene_names": [
+                "menI"
+              ],
+              "organism": "Shigella flexneri",
+              "reviewed": false,
+              "score": 0.51,
+              "matched_query": "MenI",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 0.85,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "alias_source": "primary_name",
+          "resolved_name": "1,4-dihydroxy-2-naphthoyl-CoA hydrolase",
+          "queries_tried": [
+            "(protein_name:\"MenI\" OR gene:\"MenI\") AND organism_name:\"Listeria monocytogenes\"",
+            "(protein_name:\"MenI\" OR gene:\"MenI\")"
+          ]
+        },
+        "source_refs": [
+          "PMC8091085",
+          "10.1101/2020.12.21.423900"
+        ],
+        "species": "Listeria monocytogenes",
+        "taxonomy_id": "1639",
+        "species_ref": {
+          "name": "Listeria monocytogenes",
+          "pathbank_species_id": 676,
+          "species_id": 676,
+          "taxonomy_id": "1639",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Listeria monocytogenes",
+        "species_id": 676,
+        "pathbank_species_id": 676,
+        "synonyms": [
+          "MenI"
+        ]
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [
+      {
+        "key": "pc_1",
+        "name": "MenD complex",
+        "mapping_meta": {
+          "species_id": 676,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "MenD complex",
+            "organism": "Listeria monocytogenes"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "MenD",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Listeria monocytogenes",
+        "species_id": 676,
+        "components": [
+          {
+            "protein_key": "prot_1",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_2",
+        "name": "LMRG_02730 complex",
+        "mapping_meta": {
+          "species_id": 676,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "LMRG_02730 complex",
+            "organism": "Listeria monocytogenes"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "LMRG_02730",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Listeria monocytogenes",
+        "species_id": 676,
+        "components": [
+          {
+            "protein_key": "prot_3",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_3",
+        "name": "MenI complex",
+        "mapping_meta": {
+          "species_id": 676,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "MenI complex",
+            "organism": "Listeria monocytogenes"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "LMRG_02730",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Listeria monocytogenes",
+        "species_id": 676,
+        "components": [
+          {
+            "protein_key": "prot_3",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    ],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "SEPHCHC synthase reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_1_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_1_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_2",
+        "type": "reaction",
+        "name": "decarboxylation of 2-oxoglutarate",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_2_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_2_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_7",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_2_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_3",
+        "type": "reaction",
+        "name": "addition of isochorismate to intermediate I",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_3_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_7",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_3_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_3_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_3_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_4",
+        "type": "reaction",
+        "name": "formation of intermediate II",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_4_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_7",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_4_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_4_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_8",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_4_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_5",
+        "type": "reaction",
+        "name": "breakdown of intermediate II to SEPHCHC",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_5_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_8",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_5_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_5_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_6",
+        "type": "reaction",
+        "name": "SEPHCHC synthase reaction",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_6_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_6_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_6_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_3",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_6_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_7",
+        "type": "reaction",
+        "name": "DHNA-CoA thioesterase activity",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_7_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_10",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_7_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_5",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_7_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_7_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [],
+    "interactions": [
+      {
+        "key": "int_1",
+        "type": "interaction",
+        "name": "DHNA inhibits MenD",
+        "interaction_type": "inhibits",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_5"
+        },
+        "right": {
+          "entity_type": "protein",
+          "entity_key": "prot_1"
+        }
+      }
+    ],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 412,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_1",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_7",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_1",
+      "x": 2160,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_6",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_10",
+      "biological_state_key": "bs_1",
+      "x": 1140,
+      "y": 699,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_7",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_1",
+      "x": 1620,
+      "y": 699,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_2",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 549,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_3",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 549,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_8",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_9",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_6",
+      "biological_state_key": "bs_1",
+      "x": 440,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 181,
+      "hidden": false
+    },
+    {
+      "key": "pl_1",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_1",
+      "biological_state_key": "bs_3",
+      "x": 640,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_2",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_2",
+      "biological_state_key": "bs_1",
+      "x": 840,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_3",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_3",
+      "biological_state_key": "bs_3",
+      "x": 1040,
+      "y": 1050,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [
+    {
+      "key": "pcv_1",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_1",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_2",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 549,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_2",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_3",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 1360,
+      "y": 549,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_3",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    }
+  ],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 466,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_2",
+      "biological_state_key": "bs_2",
+      "x": 0,
+      "y": 466,
+      "width": 3200,
+      "height": 466,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_3",
+      "biological_state_key": "bs_3",
+      "x": 0,
+      "y": 933,
+      "width": 3200,
+      "height": 466,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 442 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M220 537 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_3",
+      "path": "M380 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_4",
+      "path": "M380 369 L380 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_5",
+      "path": "M220 442 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_6",
+      "path": "M920 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_7",
+      "path": "M380 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_8",
+      "path": "M1240 489 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_9",
+      "path": "M220 537 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_10",
+      "path": "M1460 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_11",
+      "path": "M380 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_12",
+      "path": "M1240 489 L2000 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_13",
+      "path": "M220 537 L2000 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_14",
+      "path": "M2000 489 L2160 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_15",
+      "path": "M380 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_16",
+      "path": "M2320 489 L380 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_17",
+      "path": "M380 729 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_18",
+      "path": "M380 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_19",
+      "path": "M220 442 L920 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_20",
+      "path": "M220 537 L920 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_21",
+      "path": "M920 729 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_22",
+      "path": "M380 369 L920 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_23",
+      "path": "M1300 729 L1460 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_24",
+      "path": "M1460 729 L1620 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_25",
+      "path": "M1460 609 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_26",
+      "path": "M1460 609 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_3"
+        },
+        {
+          "process_member_key": "rxn_1_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_4"
+        }
+      ]
+    },
+    {
+      "key": "rv_2",
+      "type": "reaction_visualization",
+      "process_key": "rxn_2",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_2_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_5"
+        },
+        {
+          "process_member_key": "rxn_2_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_6"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_7"
+        }
+      ]
+    },
+    {
+      "key": "rv_3",
+      "type": "reaction_visualization",
+      "process_key": "rxn_3",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_3_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_8"
+        },
+        {
+          "process_member_key": "rxn_3_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_9"
+        },
+        {
+          "process_member_key": "rxn_3_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_10"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_11"
+        }
+      ]
+    },
+    {
+      "key": "rv_4",
+      "type": "reaction_visualization",
+      "process_key": "rxn_4",
+      "biological_state_key": "bs_1",
+      "x": 2000,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_4_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_12"
+        },
+        {
+          "process_member_key": "rxn_4_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_13"
+        },
+        {
+          "process_member_key": "rxn_4_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_14"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_15"
+        }
+      ]
+    },
+    {
+      "key": "rv_5",
+      "type": "reaction_visualization",
+      "process_key": "rxn_5",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_5_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_16"
+        },
+        {
+          "process_member_key": "rxn_5_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_17"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_18"
+        }
+      ]
+    },
+    {
+      "key": "rv_6",
+      "type": "reaction_visualization",
+      "process_key": "rxn_6",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_6_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_19"
+        },
+        {
+          "process_member_key": "rxn_6_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_20"
+        },
+        {
+          "process_member_key": "rxn_6_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_21"
+        },
+        {
+          "process_member_key": "rxn_6_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_22"
+        }
+      ]
+    },
+    {
+      "key": "rv_7",
+      "type": "reaction_visualization",
+      "process_key": "rxn_7",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_7_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_6",
+          "edge_key": "edge_23"
+        },
+        {
+          "process_member_key": "rxn_7_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_7",
+          "edge_key": "edge_24"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_25"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_26"
+        }
+      ]
+    }
+  ]
+}

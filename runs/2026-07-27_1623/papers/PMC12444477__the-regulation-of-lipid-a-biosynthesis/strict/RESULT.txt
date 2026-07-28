@@ -1,0 +1,73 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : The regulation of lipid A biosynthesis.
+slug       : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+mode       : strict
+status     : fail
+stage      : stage1
+wall time  : 159.6s (2m39s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : ambiguous_review_scope
+message      : multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.
+issue codes  : ambiguous_review_scope
+
+DETAIL / TRACEBACK
+----------------------------------------
+{
+  "status": "ambiguous_review_scope",
+  "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+  "candidate_examples": [
+    {
+      "name": "Escherichia coli LpxC regulation",
+      "organism": "Escherichia coli",
+      "key_compounds": [
+        "LPS",
+        "lipid A",
+        "Kdo-lipid A",
+        "UDP-GlcNAc",
+        "β-hydroxyacyl-ACP"
+      ],
+      "key_proteins": [
+        "LpxC",
+        "FtsH",
+        "LapB",
+        "YejM",
+        "FabZ"
+      ],
+      "main_subprocesses": [
+        "LpxC proteolysis by FtsH",
+        "LapB-mediated adaptor function",
+        "YejM regulation of LpxC degradation"
+      ],
+      "evidence": "LpxC in E. coli (EcLpxC) has emerged as a critical point of regulation... FtsH was identified shortly thereafter as a protease that targets LpxC."
+    },
+    {
+      "name": "Acinetobacter baumannii LPS regulation",
+      "organism": "Acinetobacter baumannii",
+      "key_compounds": [
+        "LPS",
+        "lipid A"
+      ],
+      "key_proteins": [
+        "LpxH",
+        "LpxK",
+        "LpxA",
+        "LpxC"
+      ],
+      "main_subprocesses": [
+        "Depletion of LpxH and LpxK leads to growth defects",
+        "Suppression by inhibition of LpxA or LpxC"
+      ],
+      "evidence": "depletion of the later-stage enzymes LpxH and LpxK resulted in growth defects that could be suppressed by inhibition of LpxA or LpxC in Acinetobacter baumannii"
+    }
+  ]
+}
+Ambiguous review scope: this looks like a multi-example review, but no target example was selected. Name the example you want in the "Optional extraction focus / task context" box above (one of the candidate example names below works), then re-run. Re-running without naming a target will produce this same result.
+Review paper detected with multiple examples but no target example specified. candidate_examples populated; downstream stages should select one.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

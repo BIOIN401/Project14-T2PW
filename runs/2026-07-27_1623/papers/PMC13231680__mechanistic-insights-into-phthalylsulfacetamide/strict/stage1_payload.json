@@ -1,0 +1,56 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "phthalylsulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "meropenem",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Zn2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "NDM-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "NDM-1-positive Escherichia coli",
+      "species": "Escherichia coli",
+      "evidence": "NDM-1-positive E. coli"
+    }
+  ],
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "NDM-1",
+        "name": "PSA inhibits NDM-1",
+        "relationship": "inhibits",
+        "biological_state": "NDM-1-positive Escherichia coli",
+        "evidence": "PSA dose-dependently inhibited NDM-1"
+      }
+    ]
+  }
+}

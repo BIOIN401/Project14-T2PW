@@ -1,0 +1,1034 @@
+================================================================================
+MENAQUINONE BIOSYNTHESIS (MEND STEP)
+Candidate pathway · export mode: research · NOT an importable PWML file
+================================================================================
+
+HOW TO READ THIS
+  Tier A  DB-grounded
+          an external database ID was found (UniProt / DrugBank / PathBank)
+  Tier B  corroborated by a second paper (no identifier)
+          no ID, but two independent sources state it, each with its own quote
+  Tier C  single-source (review)
+          only ONE source states this. Read the quote and decide.
+  Tier D  UNSOURCED (review)
+          NOTHING backs this. Check these first.
+
+  Every claim below is traced to a source. Nothing here is invented:
+  if a source or a page is missing, it says so rather than guessing.
+
+AT A GLANCE
+  Reactions            9
+  Entities             21
+  Distinct sources     3
+  Tiers                A=3   B=13   C=14   D=0
+  NEEDS REVIEW         14 element(s) are Tier C or D
+  Review flags         0
+  Format rules skipped 0
+
+================================================================================
+THE PATHWAY, STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+REACTION 1 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  MenD-catalyzed decarboxylation of 2-oxoglutarate to intermediate I
+
+  IN    α-ketoglutarate
+
+  OUT   intermediate I
+
+  ENZYME  MenD
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] menaquinone biosynthesis (MenD step) (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.9629
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 2 of 9   ·   Tier B - corroborated by a second paper (no identifier)
+--------------------------------------------------------------------------------
+  MenD-catalyzed addition of isochorismate to intermediate I forming intermediate II
+
+  IN    intermediate I
+      + isochorismate
+
+  OUT   intermediate II
+
+  ENZYME  MenD
+          Tier B - corroborated by a second paper (no identifier)
+
+  WHY THIS TIER
+    stated in 2 identified papers, each with its own cited passage: Structures
+    of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured
+    intermediate I-bound forms., menaquinone biosynthesis (MenD step)
+
+  EVIDENCE
+    [1] Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+        captured intermediate I-bound forms. (PMC12312563)
+        section: discussion   ·   best retrieval score for this source: 0.9629
+        "Gln119, Asn434 and Ile436 (Fig. 3 ▸ a ). The conserved residue Glu56
+         is likely to be involved in tautomerization of the aminopyrimidine
+         ring during catalysis, and Ile436 is likely to be responsible for the
+         bent ThDP conformation important for ThDP activation and catalysis,
+         while Gln119 has speculative roles in many steps, including product
+         release (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Stanborough et al. , 2023 ▸ ; Priyadarshi, Kim et al. , 2009 ▸ ;
+         Priyadarshi, Saleem et al. , 2009 ▸ ). The reaction cycle for ThDP-
+         dependent decarboxylase enzymes such as MenD is through a series of
+         ThDP-linked intermediates; a transient pre-decarboxylation
+         intermediate forms after the C2 atom of the thiazolium ring of the
+         ThDP ylide reacts with of the first (α-ketoacid) substrate (for MenD
+         this is 2-oxoglutarate). The metastable intermediate I subsequently
+         forms after decarboxylation, and is traditionally considered to be in
+         resonance between an enamine and a carbanion (centred on C2α) form
+         (Fig. 1 ▸ ). It has been observed for Eco MenD and Mtb MenD that
+         intermediate I appears to preferentially adopt the tetrahedral form
+         (Jirgis et al. , 2016 ▸ ; Song et al. , 2016 ▸ ). For Ec oMenD this
+         strained tetrahedral form may be reversibly protonated by the
+         aminoprymidine N4′ proton, which is near C2α (C2α to N4′ distance of
+         3.0 Å in intermediate I-captured Eco MenD; Song et al. , 2016 ▸ ).
+         Intermediate I then goes on to react via C2α with the second substrate
+         isochorismate to form intermediate II (Fig. 1 ▸ ). Proton transfer
+         from the aminopyrimidine ring of the ThDP assists with the subsequent
+         breakdown of intermediate II to release product. In Mtb MenD, where
+         this second intermediate was also captured, there is a noted movement
+         of C2α-OH towards the aminopyrimidine N4′ (from 4.5 Å in intermediate
+         I to 2.3 Å in intermediate II), which is proposed to facilitate
+         product release only when the appropriate second intermediate has
+         formed (Jirgis et al. , 2016 ▸ ). The intermediate I-bound Lmo MenD
+         structure has clearly defined intermediate I electron density (Fig. 3
+         ▸ c ), supporting a tetrahedral conformation at C2α, similar to that
+         observed for intermediate I-bound Mtb MenD and Eco MenD, and
+         supporting the general idea that MenD enzymes favour the carbanion or
+         transiently protonated form of intermediate I (Jirgis et al. , 2016 ▸
+         ; Qin et al. , 2018 ▸ ; Song et al. , 2016 ▸ ). To further support the
+         similarity of the intermediate I conformation between species, in Lmo
+         MenD C2α is 3.21 Å from N4′, a similar distance to that observed in
+         intermediate I-bound Eco MenD. C2α-OH is 4.41 Å from the
+         aminopyrimidine N4′, similar to the distance observed in intermediate
+         I-bound Mtb MenD, suggesting that in Lmo MenD, like the other MenDs,
+         the captured form of intermediate I is primed for addition of the next
+         substrate, rather than in a position to support premature product
+         release. Analysis of intermediate I binding reveals that the shared
+         parts of ThDP and intermediate I bind very similarly to the active
+         site (Figs. 3 ▸ a , 3 ▸ b and 3 ▸ d ), with the intermediate
+         I-specific 2-oxoglutarate-derived terminal carboxylate group making
+         additional interactions with the active-site residues Ser408, Arg412
+         and Arg431 (Fig. 3 ▸ b ). Equivalents to Arg412 and Arg431 in other
+         MenDs were identified to play a crucial role in orienting intermediate
+         I for catalysis (Qin et al. , 2018 ▸ ; Dawson et al. , 2010 ▸ ). In
+         Lmo MenD, the side chain of Asn434 sits 3.6 Å from the intermediate I
+         terminal carboxylate, mirroring the configuration of the Bsu MenD and
+         Sau MenD active sites. In Eco MenD and Mtb MenD, a spatially
+         equivalent intermediate I-interacting asparagine originates from the
+         PYR domain, next to the conserved glutamine, with Bsu MenD, Sau MenD
+         and Lmo MenD containing a proline ( Lmo MenD Pro118) at this position
+         (Figs. 3 ▸ a and 3 ▸ b ; Dawson et al. , 2010 ▸ ; Jirgis et al. , 2016
+         ▸ ). Despite the closing of the active site observed in our Lmo MenD
+         ThDP and intermediate I structures, there appears to be a tunnel to
+         the surface from the active site (with the terminal carboxylate tail
+         of intermediate I visible; Supplementary Fig. S10). This tunnel is
+         lined with residues inferred by homology to interact with
+         isochorismate/the isochorismate portion of intermediate II (for
+         example Ser34, Arg35, Arg108, Gln119 and Arg301), suggesting that even
+         in this closed form the enzyme can support access of substrate two.
+         3.5. Allosteric site and DHNA inhibition To explore whether Lmo MenD
+         enzyme activity is sensitive to inhibition by DHNA, activity assays
+         were performed with and without this downstream metabolite
+         (Supplementary Fig. S2"
+        https://doi.org/10.1107/s2053230x25006181
+
+    [2] menaquinone biosynthesis (MenD step) (seed paper)
+        section: discussion   ·   best retrieval score for this source: 0.9629
+        "Gln119, Asn434 and Ile436 (Fig. 3 ▸ a ). The conserved residue Glu56
+         is likely to be involved in tautomerization of the aminopyrimidine
+         ring during catalysis, and Ile436 is likely to be responsible for the
+         bent ThDP conformation important for ThDP activation and catalysis,
+         while Gln119 has speculative roles in many steps, including product
+         release (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Stanborough et al. , 2023 ▸ ; Priyadarshi, Kim et al. , 2009 ▸ ;
+         Priyadarshi, Saleem et al. , 2009 ▸ ). The reaction cycle for ThDP-
+         dependent decarboxylase enzymes such as MenD is through a series of
+         ThDP-linked intermediates; a transient pre-decarboxylation
+         intermediate forms after the C2 atom of the thiazolium ring of the
+         ThDP ylide reacts with of the first (α-ketoacid) substrate (for MenD
+         this is 2-oxoglutarate). The metastable intermediate I subsequently
+         forms after decarboxylation, and is traditionally considered to be in
+         resonance between an enamine and a carbanion (centred on C2α) form
+         (Fig. 1 ▸ ). It has been observed for Eco MenD and Mtb MenD that
+         intermediate I appears to preferentially adopt the tetrahedral form
+         (Jirgis et al. , 2016 ▸ ; Song et al. , 2016 ▸ ). For Ec oMenD this
+         strained tetrahedral form may be reversibly protonated by the
+         aminoprymidine N4′ proton, which is near C2α (C2α to N4′ distance of
+         3.0 Å in intermediate I-captured Eco MenD; Song et al. , 2016 ▸ ).
+         Intermediate I then goes on to react via C2α with the second substrate
+         isochorismate to form intermediate II (Fig. 1 ▸ ). Proton transfer
+         from the aminopyrimidine ring of the ThDP assists with the subsequent
+         breakdown of intermediate II to release product. In Mtb MenD, where
+         this second intermediate was also captured, there is a noted movement
+         of C2α-OH towards the aminopyrimidine N4′ (from 4.5 Å in intermediate
+         I to 2.3 Å in intermediate II), which is proposed to facilitate
+         product release only when the appropriate second intermediate has
+         formed (Jirgis et al. , 2016 ▸ ). The intermediate I-bound Lmo MenD
+         structure has clearly defined intermediate I electron density (Fig. 3
+         ▸ c ), supporting a tetrahedral conformation at C2α, similar to that
+         observed for intermediate I-bound Mtb MenD and Eco MenD, and
+         supporting the general idea that MenD enzymes favour the carbanion or
+         transiently protonated form of intermediate I (Jirgis et al. , 2016 ▸
+         ; Qin et al. , 2018 ▸ ; Song et al. , 2016 ▸ ). To further support the
+         similarity of the intermediate I conformation between species, in Lmo
+         MenD C2α is 3.21 Å from N4′, a similar distance to that observed in
+         intermediate I-bound Eco MenD. C2α-OH is 4.41 Å from the
+         aminopyrimidine N4′, similar to the distance observed in intermediate
+         I-bound Mtb MenD, suggesting that in Lmo MenD, like the other MenDs,
+         the captured form of intermediate I is primed for addition of the next
+         substrate, rather than in a position to support premature product
+         release. Analysis of intermediate I binding reveals that the shared
+         parts of ThDP and intermediate I bind very similarly to the active
+         site (Figs. 3 ▸ a , 3 ▸ b and 3 ▸ d ), with the intermediate
+         I-specific 2-oxoglutarate-derived terminal carboxylate group making
+         additional interactions with the active-site residues Ser408, Arg412
+         and Arg431 (Fig. 3 ▸ b ). Equivalents to Arg412 and Arg431 in other
+         MenDs were identified to play a crucial role in orienting intermediate
+         I for catalysis (Qin et al. , 2018 ▸ ; Dawson et al. , 2010 ▸ ). In
+         Lmo MenD, the side chain of Asn434 sits 3.6 Å from the intermediate I
+         terminal carboxylate, mirroring the configuration of the Bsu MenD and
+         Sau MenD active sites. In Eco MenD and Mtb MenD, a spatially
+         equivalent intermediate I-interacting asparagine originates from the
+         PYR domain, next to the conserved glutamine, with Bsu MenD, Sau MenD
+         and Lmo MenD containing a proline ( Lmo MenD Pro118) at this position
+         (Figs. 3 ▸ a and 3 ▸ b ; Dawson et al. , 2010 ▸ ; Jirgis et al. , 2016
+         ▸ ). Despite the closing of the active site observed in our Lmo MenD
+         ThDP and intermediate I structures, there appears to be a tunnel to
+         the surface from the active site (with the terminal carboxylate tail
+         of intermediate I visible; Supplementary Fig. S10). This tunnel is
+         lined with residues inferred by homology to interact with
+         isochorismate/the isochorismate portion of intermediate II (for
+         example Ser34, Arg35, Arg108, Gln119 and Arg301), suggesting that even
+         in this closed form the enzyme can support access of substrate two.
+         3.5. Allosteric site and DHNA inhibition To explore whether Lmo MenD
+         enzyme activity is sensitive to inhibition by DHNA, activity assays
+         were performed with and without this downstream metabolite
+         (Supplementary Fig. S2"
+
+
+--------------------------------------------------------------------------------
+REACTION 3 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  MenD-catalyzed breakdown of intermediate II to SEPHCHC
+
+  IN    intermediate II
+
+  OUT   SEPHCHC
+
+  ENZYME  MenD
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] menaquinone biosynthesis (MenD step) (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.9629
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 4 of 9   ·   Tier B - corroborated by a second paper (no identifier)
+--------------------------------------------------------------------------------
+  α-ketoglutarate -> SEPHCHC
+
+  IN    α-ketoglutarate
+      + isochorismate
+
+  OUT   SEPHCHC
+
+  ENZYME  MenD
+          Tier B - corroborated by a second paper (no identifier)
+
+  WHY THIS TIER
+    stated in 2 identified papers, each with its own cited passage: Structures
+    of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured
+    intermediate I-bound forms., menaquinone biosynthesis (MenD step)
+
+  EVIDENCE
+    [1] Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+        captured intermediate I-bound forms. (PMC12312563)
+        section: introduction   ·   best retrieval score for this source: 0.9629
+        "Introduction Menaquinones, a family of related redox-active molecules,
+         play vital functions in electron transport and energy generation in
+         mycobacteria, Gram-positive and some anaerobically respiring Gram-
+         negative bacteria (Nowicka & Kruk, 2010 ▸ ; Boersch et al. , 2018 ▸ ;
+         Kurosu & Begari, 2010 ▸ ). These molecules have been implicated in
+         other roles, such as in redox-state monitoring, influencing membrane
+         fluidity, biofilm formation and virulence (Johnston & Bulloch, 2020 ▸
+         ; Flegler et al. , 2021 ▸ ; Mashruwala et al. , 2017 ▸ ; Honaker et
+         al. , 2010 ▸ ; Upadhyay et al. , 2015 ▸ ). These roles, combined with
+         the absence of menaquinone-biosynthesis pathways in humans, have made
+         the bacterial menaquinone-biosynthesis enzymes of interest as
+         potential drug targets (Boersch et al. , 2018 ▸ ). An important player
+         in menaquinone production is the thiamine diphosphate (ThDP)-dependent
+         decarboxylase MenD
+         [2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate
+         (SEPHCHC) synthase] (Johnston & Bulloch, 2020 ▸ ). MenD catalyses the
+         first irreversible step of the classical menaquinone-biosynthesis
+         pathway (Supplementary Fig. S1) via two covalent ThDP intermediates;
+         decarboxylation of 2-oxoglutarate produces intermediate I, with
+         subsequent addition of isochorismate generating intermediate II and
+         breakdown to release SEPHCHC (Fig. 1 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Frank et al. , 2007 ▸ ; Dawson et al. , 2008 ▸ ). Like other members
+         of the ThDP-dependent decarboxylase superfamily, MenD enzymes have a
+         common fold consisting of the catalytic aminopyrimidine-binding (PYR)
+         and pyrophosphate-binding (PP) domains, separated by the more
+         divergent transhydro­genase III (TH3) domain (Vogel & Pleiss, 2014 ▸ ;
+         Duggleby, 2006 ▸ ). All MenD structures reported to date have a
+         tetrameric ‘dimer-of-dimers’ arrangement, and oligomerization appears
+         to be catalytically important, with active-site formation involving
+         the PYR and PP domains from two different monomers in each dimer
+         (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ; Vogel &
+         Pleiss, 2014 ▸ ; Duggleby, 2006 ▸ ). The function of the TH3 domain in
+         MenD is poorly understood. In Mycobacterium tuberculosis MenD ( Mtb
+         MenD), 1,4-dihydroxy-2-naphthoic acid (DHNA), the last cytosolic
+         metabolite of the pathway, can bind to the TH3 domain and inhibit
+         activity (Bashiri et al. , 2020 ▸ ). Further, DHNA inhibition, albeit
+         less potent and without crystallographic capturing, has been reported
+         for Staphylococcus aureus and Bacillus subtilis MenD ( Sau MenD and
+         Bsu MenD; Stanborough et al. , 2023 ▸ ; Huang et al. , 2024 ▸ ).
+         However, due to low sequence conservation, particularly for the
+         putative allosteric sites, it remains unclear how widespread feedback
+         inhibition is amongst homologs (Stanborough et al. , 2023 ▸ ; Bashiri
+         et al. , 2020 ▸ ). Here, we report two structures of MenD from the
+         Gram-positive pathogen Listeria monocytogenes ( Lmo MenD); one with
+         ThDP bound and a second with intermediate I bound, as well as their
+         oligomeric states in solution and functional characterization. An
+         existing apo Lmo MenD structure in the PDB (PDB entry 3lq1 ; New York
+         Structural Genomics Research Consortium, unpublished work) is
+         incomplete, showing regions of disorder around the active site and
+         C-terminus. The liganded structures from this study are more complete,
+         revealing that several of the previously disordered regions contribute
+         to ligand interactions and/or closing of the active site.
+         Interestingly, in L. monocytogenes , DHNA is known to fulfil
+         respiration-independent functions in virulence and pathogenic survival
+         (Chen et al. , 2019 ▸ ; Smith et al. , 2021 ▸ ), but the effect of
+         DHNA on Lmo MenD enzyme activity had not been explored. This study has
+         enabled us to demonstrate that while DHNA has some ability to inhibit
+         the activity of Lmo MenD, this inhibition is modest. 2."
+        https://doi.org/10.1107/s2053230x25006181
+
+    [2] menaquinone biosynthesis (MenD step) (seed paper)
+        section: introduction   ·   best retrieval score for this source: 0.9629
+        "Introduction Menaquinones, a family of related redox-active molecules,
+         play vital functions in electron transport and energy generation in
+         mycobacteria, Gram-positive and some anaerobically respiring Gram-
+         negative bacteria (Nowicka & Kruk, 2010 ▸ ; Boersch et al. , 2018 ▸ ;
+         Kurosu & Begari, 2010 ▸ ). These molecules have been implicated in
+         other roles, such as in redox-state monitoring, influencing membrane
+         fluidity, biofilm formation and virulence (Johnston & Bulloch, 2020 ▸
+         ; Flegler et al. , 2021 ▸ ; Mashruwala et al. , 2017 ▸ ; Honaker et
+         al. , 2010 ▸ ; Upadhyay et al. , 2015 ▸ ). These roles, combined with
+         the absence of menaquinone-biosynthesis pathways in humans, have made
+         the bacterial menaquinone-biosynthesis enzymes of interest as
+         potential drug targets (Boersch et al. , 2018 ▸ ). An important player
+         in menaquinone production is the thiamine diphosphate (ThDP)-dependent
+         decarboxylase MenD
+         [2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate
+         (SEPHCHC) synthase] (Johnston & Bulloch, 2020 ▸ ). MenD catalyses the
+         first irreversible step of the classical menaquinone-biosynthesis
+         pathway (Supplementary Fig. S1) via two covalent ThDP intermediates;
+         decarboxylation of 2-oxoglutarate produces intermediate I, with
+         subsequent addition of isochorismate generating intermediate II and
+         breakdown to release SEPHCHC (Fig. 1 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Frank et al. , 2007 ▸ ; Dawson et al. , 2008 ▸ ). Like other members
+         of the ThDP-dependent decarboxylase superfamily, MenD enzymes have a
+         common fold consisting of the catalytic aminopyrimidine-binding (PYR)
+         and pyrophosphate-binding (PP) domains, separated by the more
+         divergent transhydro­genase III (TH3) domain (Vogel & Pleiss, 2014 ▸ ;
+         Duggleby, 2006 ▸ ). All MenD structures reported to date have a
+         tetrameric ‘dimer-of-dimers’ arrangement, and oligomerization appears
+         to be catalytically important, with active-site formation involving
+         the PYR and PP domains from two different monomers in each dimer
+         (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ; Vogel &
+         Pleiss, 2014 ▸ ; Duggleby, 2006 ▸ ). The function of the TH3 domain in
+         MenD is poorly understood. In Mycobacterium tuberculosis MenD ( Mtb
+         MenD), 1,4-dihydroxy-2-naphthoic acid (DHNA), the last cytosolic
+         metabolite of the pathway, can bind to the TH3 domain and inhibit
+         activity (Bashiri et al. , 2020 ▸ ). Further, DHNA inhibition, albeit
+         less potent and without crystallographic capturing, has been reported
+         for Staphylococcus aureus and Bacillus subtilis MenD ( Sau MenD and
+         Bsu MenD; Stanborough et al. , 2023 ▸ ; Huang et al. , 2024 ▸ ).
+         However, due to low sequence conservation, particularly for the
+         putative allosteric sites, it remains unclear how widespread feedback
+         inhibition is amongst homologs (Stanborough et al. , 2023 ▸ ; Bashiri
+         et al. , 2020 ▸ ). Here, we report two structures of MenD from the
+         Gram-positive pathogen Listeria monocytogenes ( Lmo MenD); one with
+         ThDP bound and a second with intermediate I bound, as well as their
+         oligomeric states in solution and functional characterization. An
+         existing apo Lmo MenD structure in the PDB (PDB entry 3lq1 ; New York
+         Structural Genomics Research Consortium, unpublished work) is
+         incomplete, showing regions of disorder around the active site and
+         C-terminus. The liganded structures from this study are more complete,
+         revealing that several of the previously disordered regions contribute
+         to ligand interactions and/or closing of the active site.
+         Interestingly, in L. monocytogenes , DHNA is known to fulfil
+         respiration-independent functions in virulence and pathogenic survival
+         (Chen et al. , 2019 ▸ ; Smith et al. , 2021 ▸ ), but the effect of
+         DHNA on Lmo MenD enzyme activity had not been explored. This study has
+         enabled us to demonstrate that while DHNA has some ability to inhibit
+         the activity of Lmo MenD, this inhibition is modest. 2."
+
+
+--------------------------------------------------------------------------------
+REACTION 5 of 9   ·   Tier B - corroborated by a second paper (no identifier)
+--------------------------------------------------------------------------------
+  ThDP ylide -> pre-decarboxylation intermediate
+
+  IN    ThDP ylide
+      + α-ketoglutarate
+
+  OUT   pre-decarboxylation intermediate
+
+  ENZYME  MenD
+          Tier B - corroborated by a second paper (no identifier)
+
+  WHY THIS TIER
+    stated in 2 identified papers, each with its own cited passage: Structures
+    of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured
+    intermediate I-bound forms., menaquinone biosynthesis (MenD step)
+
+  EVIDENCE
+    [1] Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+        captured intermediate I-bound forms. (PMC12312563)
+        section: discussion   ·   best retrieval score for this source: 0.9629
+        "Gln119, Asn434 and Ile436 (Fig. 3 ▸ a ). The conserved residue Glu56
+         is likely to be involved in tautomerization of the aminopyrimidine
+         ring during catalysis, and Ile436 is likely to be responsible for the
+         bent ThDP conformation important for ThDP activation and catalysis,
+         while Gln119 has speculative roles in many steps, including product
+         release (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Stanborough et al. , 2023 ▸ ; Priyadarshi, Kim et al. , 2009 ▸ ;
+         Priyadarshi, Saleem et al. , 2009 ▸ ). The reaction cycle for ThDP-
+         dependent decarboxylase enzymes such as MenD is through a series of
+         ThDP-linked intermediates; a transient pre-decarboxylation
+         intermediate forms after the C2 atom of the thiazolium ring of the
+         ThDP ylide reacts with of the first (α-ketoacid) substrate (for MenD
+         this is 2-oxoglutarate). The metastable intermediate I subsequently
+         forms after decarboxylation, and is traditionally considered to be in
+         resonance between an enamine and a carbanion (centred on C2α) form
+         (Fig. 1 ▸ ). It has been observed for Eco MenD and Mtb MenD that
+         intermediate I appears to preferentially adopt the tetrahedral form
+         (Jirgis et al. , 2016 ▸ ; Song et al. , 2016 ▸ ). For Ec oMenD this
+         strained tetrahedral form may be reversibly protonated by the
+         aminoprymidine N4′ proton, which is near C2α (C2α to N4′ distance of
+         3.0 Å in intermediate I-captured Eco MenD; Song et al. , 2016 ▸ ).
+         Intermediate I then goes on to react via C2α with the second substrate
+         isochorismate to form intermediate II (Fig. 1 ▸ ). Proton transfer
+         from the aminopyrimidine ring of the ThDP assists with the subsequent
+         breakdown of intermediate II to release product. In Mtb MenD, where
+         this second intermediate was also captured, there is a noted movement
+         of C2α-OH towards the aminopyrimidine N4′ (from 4.5 Å in intermediate
+         I to 2.3 Å in intermediate II), which is proposed to facilitate
+         product release only when the appropriate second intermediate has
+         formed (Jirgis et al. , 2016 ▸ ). The intermediate I-bound Lmo MenD
+         structure has clearly defined intermediate I electron density (Fig. 3
+         ▸ c ), supporting a tetrahedral conformation at C2α, similar to that
+         observed for intermediate I-bound Mtb MenD and Eco MenD, and
+         supporting the general idea that MenD enzymes favour the carbanion or
+         transiently protonated form of intermediate I (Jirgis et al. , 2016 ▸
+         ; Qin et al. , 2018 ▸ ; Song et al. , 2016 ▸ ). To further support the
+         similarity of the intermediate I conformation between species, in Lmo
+         MenD C2α is 3.21 Å from N4′, a similar distance to that observed in
+         intermediate I-bound Eco MenD. C2α-OH is 4.41 Å from the
+         aminopyrimidine N4′, similar to the distance observed in intermediate
+         I-bound Mtb MenD, suggesting that in Lmo MenD, like the other MenDs,
+         the captured form of intermediate I is primed for addition of the next
+         substrate, rather than in a position to support premature product
+         release. Analysis of intermediate I binding reveals that the shared
+         parts of ThDP and intermediate I bind very similarly to the active
+         site (Figs. 3 ▸ a , 3 ▸ b and 3 ▸ d ), with the intermediate
+         I-specific 2-oxoglutarate-derived terminal carboxylate group making
+         additional interactions with the active-site residues Ser408, Arg412
+         and Arg431 (Fig. 3 ▸ b ). Equivalents to Arg412 and Arg431 in other
+         MenDs were identified to play a crucial role in orienting intermediate
+         I for catalysis (Qin et al. , 2018 ▸ ; Dawson et al. , 2010 ▸ ). In
+         Lmo MenD, the side chain of Asn434 sits 3.6 Å from the intermediate I
+         terminal carboxylate, mirroring the configuration of the Bsu MenD and
+         Sau MenD active sites. In Eco MenD and Mtb MenD, a spatially
+         equivalent intermediate I-interacting asparagine originates from the
+         PYR domain, next to the conserved glutamine, with Bsu MenD, Sau MenD
+         and Lmo MenD containing a proline ( Lmo MenD Pro118) at this position
+         (Figs. 3 ▸ a and 3 ▸ b ; Dawson et al. , 2010 ▸ ; Jirgis et al. , 2016
+         ▸ ). Despite the closing of the active site observed in our Lmo MenD
+         ThDP and intermediate I structures, there appears to be a tunnel to
+         the surface from the active site (with the terminal carboxylate tail
+         of intermediate I visible; Supplementary Fig. S10). This tunnel is
+         lined with residues inferred by homology to interact with
+         isochorismate/the isochorismate portion of intermediate II (for
+         example Ser34, Arg35, Arg108, Gln119 and Arg301), suggesting that even
+         in this closed form the enzyme can support access of substrate two.
+         3.5. Allosteric site and DHNA inhibition To explore whether Lmo MenD
+         enzyme activity is sensitive to inhibition by DHNA, activity assays
+         were performed with and without this downstream metabolite
+         (Supplementary Fig. S2"
+        https://doi.org/10.1107/s2053230x25006181
+
+    [2] menaquinone biosynthesis (MenD step) (seed paper)
+        section: discussion   ·   best retrieval score for this source: 0.9629
+        "Gln119, Asn434 and Ile436 (Fig. 3 ▸ a ). The conserved residue Glu56
+         is likely to be involved in tautomerization of the aminopyrimidine
+         ring during catalysis, and Ile436 is likely to be responsible for the
+         bent ThDP conformation important for ThDP activation and catalysis,
+         while Gln119 has speculative roles in many steps, including product
+         release (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Stanborough et al. , 2023 ▸ ; Priyadarshi, Kim et al. , 2009 ▸ ;
+         Priyadarshi, Saleem et al. , 2009 ▸ ). The reaction cycle for ThDP-
+         dependent decarboxylase enzymes such as MenD is through a series of
+         ThDP-linked intermediates; a transient pre-decarboxylation
+         intermediate forms after the C2 atom of the thiazolium ring of the
+         ThDP ylide reacts with of the first (α-ketoacid) substrate (for MenD
+         this is 2-oxoglutarate). The metastable intermediate I subsequently
+         forms after decarboxylation, and is traditionally considered to be in
+         resonance between an enamine and a carbanion (centred on C2α) form
+         (Fig. 1 ▸ ). It has been observed for Eco MenD and Mtb MenD that
+         intermediate I appears to preferentially adopt the tetrahedral form
+         (Jirgis et al. , 2016 ▸ ; Song et al. , 2016 ▸ ). For Ec oMenD this
+         strained tetrahedral form may be reversibly protonated by the
+         aminoprymidine N4′ proton, which is near C2α (C2α to N4′ distance of
+         3.0 Å in intermediate I-captured Eco MenD; Song et al. , 2016 ▸ ).
+         Intermediate I then goes on to react via C2α with the second substrate
+         isochorismate to form intermediate II (Fig. 1 ▸ ). Proton transfer
+         from the aminopyrimidine ring of the ThDP assists with the subsequent
+         breakdown of intermediate II to release product. In Mtb MenD, where
+         this second intermediate was also captured, there is a noted movement
+         of C2α-OH towards the aminopyrimidine N4′ (from 4.5 Å in intermediate
+         I to 2.3 Å in intermediate II), which is proposed to facilitate
+         product release only when the appropriate second intermediate has
+         formed (Jirgis et al. , 2016 ▸ ). The intermediate I-bound Lmo MenD
+         structure has clearly defined intermediate I electron density (Fig. 3
+         ▸ c ), supporting a tetrahedral conformation at C2α, similar to that
+         observed for intermediate I-bound Mtb MenD and Eco MenD, and
+         supporting the general idea that MenD enzymes favour the carbanion or
+         transiently protonated form of intermediate I (Jirgis et al. , 2016 ▸
+         ; Qin et al. , 2018 ▸ ; Song et al. , 2016 ▸ ). To further support the
+         similarity of the intermediate I conformation between species, in Lmo
+         MenD C2α is 3.21 Å from N4′, a similar distance to that observed in
+         intermediate I-bound Eco MenD. C2α-OH is 4.41 Å from the
+         aminopyrimidine N4′, similar to the distance observed in intermediate
+         I-bound Mtb MenD, suggesting that in Lmo MenD, like the other MenDs,
+         the captured form of intermediate I is primed for addition of the next
+         substrate, rather than in a position to support premature product
+         release. Analysis of intermediate I binding reveals that the shared
+         parts of ThDP and intermediate I bind very similarly to the active
+         site (Figs. 3 ▸ a , 3 ▸ b and 3 ▸ d ), with the intermediate
+         I-specific 2-oxoglutarate-derived terminal carboxylate group making
+         additional interactions with the active-site residues Ser408, Arg412
+         and Arg431 (Fig. 3 ▸ b ). Equivalents to Arg412 and Arg431 in other
+         MenDs were identified to play a crucial role in orienting intermediate
+         I for catalysis (Qin et al. , 2018 ▸ ; Dawson et al. , 2010 ▸ ). In
+         Lmo MenD, the side chain of Asn434 sits 3.6 Å from the intermediate I
+         terminal carboxylate, mirroring the configuration of the Bsu MenD and
+         Sau MenD active sites. In Eco MenD and Mtb MenD, a spatially
+         equivalent intermediate I-interacting asparagine originates from the
+         PYR domain, next to the conserved glutamine, with Bsu MenD, Sau MenD
+         and Lmo MenD containing a proline ( Lmo MenD Pro118) at this position
+         (Figs. 3 ▸ a and 3 ▸ b ; Dawson et al. , 2010 ▸ ; Jirgis et al. , 2016
+         ▸ ). Despite the closing of the active site observed in our Lmo MenD
+         ThDP and intermediate I structures, there appears to be a tunnel to
+         the surface from the active site (with the terminal carboxylate tail
+         of intermediate I visible; Supplementary Fig. S10). This tunnel is
+         lined with residues inferred by homology to interact with
+         isochorismate/the isochorismate portion of intermediate II (for
+         example Ser34, Arg35, Arg108, Gln119 and Arg301), suggesting that even
+         in this closed form the enzyme can support access of substrate two.
+         3.5. Allosteric site and DHNA inhibition To explore whether Lmo MenD
+         enzyme activity is sensitive to inhibition by DHNA, activity assays
+         were performed with and without this downstream metabolite
+         (Supplementary Fig. S2"
+
+
+--------------------------------------------------------------------------------
+REACTION 6 of 9   ·   Tier B - corroborated by a second paper (no identifier)
+--------------------------------------------------------------------------------
+  decarboxylation of pre-decarboxylation intermediate to form intermediate I
+
+  IN    pre-decarboxylation intermediate
+
+  OUT   intermediate I
+
+  ENZYME  MenD
+          Tier B - corroborated by a second paper (no identifier)
+
+  WHY THIS TIER
+    stated in 2 identified papers, each with its own cited passage: Structures
+    of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured
+    intermediate I-bound forms., menaquinone biosynthesis (MenD step)
+
+  EVIDENCE
+    [1] Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+        captured intermediate I-bound forms. (PMC12312563)
+        section: discussion   ·   best retrieval score for this source: 0.9629
+        "Gln119, Asn434 and Ile436 (Fig. 3 ▸ a ). The conserved residue Glu56
+         is likely to be involved in tautomerization of the aminopyrimidine
+         ring during catalysis, and Ile436 is likely to be responsible for the
+         bent ThDP conformation important for ThDP activation and catalysis,
+         while Gln119 has speculative roles in many steps, including product
+         release (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Stanborough et al. , 2023 ▸ ; Priyadarshi, Kim et al. , 2009 ▸ ;
+         Priyadarshi, Saleem et al. , 2009 ▸ ). The reaction cycle for ThDP-
+         dependent decarboxylase enzymes such as MenD is through a series of
+         ThDP-linked intermediates; a transient pre-decarboxylation
+         intermediate forms after the C2 atom of the thiazolium ring of the
+         ThDP ylide reacts with of the first (α-ketoacid) substrate (for MenD
+         this is 2-oxoglutarate). The metastable intermediate I subsequently
+         forms after decarboxylation, and is traditionally considered to be in
+         resonance between an enamine and a carbanion (centred on C2α) form
+         (Fig. 1 ▸ ). It has been observed for Eco MenD and Mtb MenD that
+         intermediate I appears to preferentially adopt the tetrahedral form
+         (Jirgis et al. , 2016 ▸ ; Song et al. , 2016 ▸ ). For Ec oMenD this
+         strained tetrahedral form may be reversibly protonated by the
+         aminoprymidine N4′ proton, which is near C2α (C2α to N4′ distance of
+         3.0 Å in intermediate I-captured Eco MenD; Song et al. , 2016 ▸ ).
+         Intermediate I then goes on to react via C2α with the second substrate
+         isochorismate to form intermediate II (Fig. 1 ▸ ). Proton transfer
+         from the aminopyrimidine ring of the ThDP assists with the subsequent
+         breakdown of intermediate II to release product. In Mtb MenD, where
+         this second intermediate was also captured, there is a noted movement
+         of C2α-OH towards the aminopyrimidine N4′ (from 4.5 Å in intermediate
+         I to 2.3 Å in intermediate II), which is proposed to facilitate
+         product release only when the appropriate second intermediate has
+         formed (Jirgis et al. , 2016 ▸ ). The intermediate I-bound Lmo MenD
+         structure has clearly defined intermediate I electron density (Fig. 3
+         ▸ c ), supporting a tetrahedral conformation at C2α, similar to that
+         observed for intermediate I-bound Mtb MenD and Eco MenD, and
+         supporting the general idea that MenD enzymes favour the carbanion or
+         transiently protonated form of intermediate I (Jirgis et al. , 2016 ▸
+         ; Qin et al. , 2018 ▸ ; Song et al. , 2016 ▸ ). To further support the
+         similarity of the intermediate I conformation between species, in Lmo
+         MenD C2α is 3.21 Å from N4′, a similar distance to that observed in
+         intermediate I-bound Eco MenD. C2α-OH is 4.41 Å from the
+         aminopyrimidine N4′, similar to the distance observed in intermediate
+         I-bound Mtb MenD, suggesting that in Lmo MenD, like the other MenDs,
+         the captured form of intermediate I is primed for addition of the next
+         substrate, rather than in a position to support premature product
+         release. Analysis of intermediate I binding reveals that the shared
+         parts of ThDP and intermediate I bind very similarly to the active
+         site (Figs. 3 ▸ a , 3 ▸ b and 3 ▸ d ), with the intermediate
+         I-specific 2-oxoglutarate-derived terminal carboxylate group making
+         additional interactions with the active-site residues Ser408, Arg412
+         and Arg431 (Fig. 3 ▸ b ). Equivalents to Arg412 and Arg431 in other
+         MenDs were identified to play a crucial role in orienting intermediate
+         I for catalysis (Qin et al. , 2018 ▸ ; Dawson et al. , 2010 ▸ ). In
+         Lmo MenD, the side chain of Asn434 sits 3.6 Å from the intermediate I
+         terminal carboxylate, mirroring the configuration of the Bsu MenD and
+         Sau MenD active sites. In Eco MenD and Mtb MenD, a spatially
+         equivalent intermediate I-interacting asparagine originates from the
+         PYR domain, next to the conserved glutamine, with Bsu MenD, Sau MenD
+         and Lmo MenD containing a proline ( Lmo MenD Pro118) at this position
+         (Figs. 3 ▸ a and 3 ▸ b ; Dawson et al. , 2010 ▸ ; Jirgis et al. , 2016
+         ▸ ). Despite the closing of the active site observed in our Lmo MenD
+         ThDP and intermediate I structures, there appears to be a tunnel to
+         the surface from the active site (with the terminal carboxylate tail
+         of intermediate I visible; Supplementary Fig. S10). This tunnel is
+         lined with residues inferred by homology to interact with
+         isochorismate/the isochorismate portion of intermediate II (for
+         example Ser34, Arg35, Arg108, Gln119 and Arg301), suggesting that even
+         in this closed form the enzyme can support access of substrate two.
+         3.5. Allosteric site and DHNA inhibition To explore whether Lmo MenD
+         enzyme activity is sensitive to inhibition by DHNA, activity assays
+         were performed with and without this downstream metabolite
+         (Supplementary Fig. S2"
+        https://doi.org/10.1107/s2053230x25006181
+
+    [2] menaquinone biosynthesis (MenD step) (seed paper)
+        section: discussion   ·   best retrieval score for this source: 0.9629
+        "Gln119, Asn434 and Ile436 (Fig. 3 ▸ a ). The conserved residue Glu56
+         is likely to be involved in tautomerization of the aminopyrimidine
+         ring during catalysis, and Ile436 is likely to be responsible for the
+         bent ThDP conformation important for ThDP activation and catalysis,
+         while Gln119 has speculative roles in many steps, including product
+         release (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Stanborough et al. , 2023 ▸ ; Priyadarshi, Kim et al. , 2009 ▸ ;
+         Priyadarshi, Saleem et al. , 2009 ▸ ). The reaction cycle for ThDP-
+         dependent decarboxylase enzymes such as MenD is through a series of
+         ThDP-linked intermediates; a transient pre-decarboxylation
+         intermediate forms after the C2 atom of the thiazolium ring of the
+         ThDP ylide reacts with of the first (α-ketoacid) substrate (for MenD
+         this is 2-oxoglutarate). The metastable intermediate I subsequently
+         forms after decarboxylation, and is traditionally considered to be in
+         resonance between an enamine and a carbanion (centred on C2α) form
+         (Fig. 1 ▸ ). It has been observed for Eco MenD and Mtb MenD that
+         intermediate I appears to preferentially adopt the tetrahedral form
+         (Jirgis et al. , 2016 ▸ ; Song et al. , 2016 ▸ ). For Ec oMenD this
+         strained tetrahedral form may be reversibly protonated by the
+         aminoprymidine N4′ proton, which is near C2α (C2α to N4′ distance of
+         3.0 Å in intermediate I-captured Eco MenD; Song et al. , 2016 ▸ ).
+         Intermediate I then goes on to react via C2α with the second substrate
+         isochorismate to form intermediate II (Fig. 1 ▸ ). Proton transfer
+         from the aminopyrimidine ring of the ThDP assists with the subsequent
+         breakdown of intermediate II to release product. In Mtb MenD, where
+         this second intermediate was also captured, there is a noted movement
+         of C2α-OH towards the aminopyrimidine N4′ (from 4.5 Å in intermediate
+         I to 2.3 Å in intermediate II), which is proposed to facilitate
+         product release only when the appropriate second intermediate has
+         formed (Jirgis et al. , 2016 ▸ ). The intermediate I-bound Lmo MenD
+         structure has clearly defined intermediate I electron density (Fig. 3
+         ▸ c ), supporting a tetrahedral conformation at C2α, similar to that
+         observed for intermediate I-bound Mtb MenD and Eco MenD, and
+         supporting the general idea that MenD enzymes favour the carbanion or
+         transiently protonated form of intermediate I (Jirgis et al. , 2016 ▸
+         ; Qin et al. , 2018 ▸ ; Song et al. , 2016 ▸ ). To further support the
+         similarity of the intermediate I conformation between species, in Lmo
+         MenD C2α is 3.21 Å from N4′, a similar distance to that observed in
+         intermediate I-bound Eco MenD. C2α-OH is 4.41 Å from the
+         aminopyrimidine N4′, similar to the distance observed in intermediate
+         I-bound Mtb MenD, suggesting that in Lmo MenD, like the other MenDs,
+         the captured form of intermediate I is primed for addition of the next
+         substrate, rather than in a position to support premature product
+         release. Analysis of intermediate I binding reveals that the shared
+         parts of ThDP and intermediate I bind very similarly to the active
+         site (Figs. 3 ▸ a , 3 ▸ b and 3 ▸ d ), with the intermediate
+         I-specific 2-oxoglutarate-derived terminal carboxylate group making
+         additional interactions with the active-site residues Ser408, Arg412
+         and Arg431 (Fig. 3 ▸ b ). Equivalents to Arg412 and Arg431 in other
+         MenDs were identified to play a crucial role in orienting intermediate
+         I for catalysis (Qin et al. , 2018 ▸ ; Dawson et al. , 2010 ▸ ). In
+         Lmo MenD, the side chain of Asn434 sits 3.6 Å from the intermediate I
+         terminal carboxylate, mirroring the configuration of the Bsu MenD and
+         Sau MenD active sites. In Eco MenD and Mtb MenD, a spatially
+         equivalent intermediate I-interacting asparagine originates from the
+         PYR domain, next to the conserved glutamine, with Bsu MenD, Sau MenD
+         and Lmo MenD containing a proline ( Lmo MenD Pro118) at this position
+         (Figs. 3 ▸ a and 3 ▸ b ; Dawson et al. , 2010 ▸ ; Jirgis et al. , 2016
+         ▸ ). Despite the closing of the active site observed in our Lmo MenD
+         ThDP and intermediate I structures, there appears to be a tunnel to
+         the surface from the active site (with the terminal carboxylate tail
+         of intermediate I visible; Supplementary Fig. S10). This tunnel is
+         lined with residues inferred by homology to interact with
+         isochorismate/the isochorismate portion of intermediate II (for
+         example Ser34, Arg35, Arg108, Gln119 and Arg301), suggesting that even
+         in this closed form the enzyme can support access of substrate two.
+         3.5. Allosteric site and DHNA inhibition To explore whether Lmo MenD
+         enzyme activity is sensitive to inhibition by DHNA, activity assays
+         were performed with and without this downstream metabolite
+         (Supplementary Fig. S2"
+
+
+--------------------------------------------------------------------------------
+REACTION 7 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  protonation of intermediate I
+
+  IN    intermediate I
+
+  OUT   protonated intermediate I
+
+  ENZYME  (none recorded)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] menaquinone biosynthesis (MenD step) (seed paper)
+        section: discussion   ·   best retrieval score for this source: 0.9629
+        "Gln119, Asn434 and Ile436 (Fig. 3 ▸ a ). The conserved residue Glu56
+         is likely to be involved in tautomerization of the aminopyrimidine
+         ring during catalysis, and Ile436 is likely to be responsible for the
+         bent ThDP conformation important for ThDP activation and catalysis,
+         while Gln119 has speculative roles in many steps, including product
+         release (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Stanborough et al. , 2023 ▸ ; Priyadarshi, Kim et al. , 2009 ▸ ;
+         Priyadarshi, Saleem et al. , 2009 ▸ ). The reaction cycle for ThDP-
+         dependent decarboxylase enzymes such as MenD is through a series of
+         ThDP-linked intermediates; a transient pre-decarboxylation
+         intermediate forms after the C2 atom of the thiazolium ring of the
+         ThDP ylide reacts with of the first (α-ketoacid) substrate (for MenD
+         this is 2-oxoglutarate). The metastable intermediate I subsequently
+         forms after decarboxylation, and is traditionally considered to be in
+         resonance between an enamine and a carbanion (centred on C2α) form
+         (Fig. 1 ▸ ). It has been observed for Eco MenD and Mtb MenD that
+         intermediate I appears to preferentially adopt the tetrahedral form
+         (Jirgis et al. , 2016 ▸ ; Song et al. , 2016 ▸ ). For Ec oMenD this
+         strained tetrahedral form may be reversibly protonated by the
+         aminoprymidine N4′ proton, which is near C2α (C2α to N4′ distance of
+         3.0 Å in intermediate I-captured Eco MenD; Song et al. , 2016 ▸ ).
+         Intermediate I then goes on to react via C2α with the second substrate
+         isochorismate to form intermediate II (Fig. 1 ▸ ). Proton transfer
+         from the aminopyrimidine ring of the ThDP assists with the subsequent
+         breakdown of intermediate II to release product. In Mtb MenD, where
+         this second intermediate was also captured, there is a noted movement
+         of C2α-OH towards the aminopyrimidine N4′ (from 4.5 Å in intermediate
+         I to 2.3 Å in intermediate II), which is proposed to facilitate
+         product release only when the appropriate second intermediate has
+         formed (Jirgis et al. , 2016 ▸ ). The intermediate I-bound Lmo MenD
+         structure has clearly defined intermediate I electron density (Fig. 3
+         ▸ c ), supporting a tetrahedral conformation at C2α, similar to that
+         observed for intermediate I-bound Mtb MenD and Eco MenD, and
+         supporting the general idea that MenD enzymes favour the carbanion or
+         transiently protonated form of intermediate I (Jirgis et al. , 2016 ▸
+         ; Qin et al. , 2018 ▸ ; Song et al. , 2016 ▸ ). To further support the
+         similarity of the intermediate I conformation between species, in Lmo
+         MenD C2α is 3.21 Å from N4′, a similar distance to that observed in
+         intermediate I-bound Eco MenD. C2α-OH is 4.41 Å from the
+         aminopyrimidine N4′, similar to the distance observed in intermediate
+         I-bound Mtb MenD, suggesting that in Lmo MenD, like the other MenDs,
+         the captured form of intermediate I is primed for addition of the next
+         substrate, rather than in a position to support premature product
+         release. Analysis of intermediate I binding reveals that the shared
+         parts of ThDP and intermediate I bind very similarly to the active
+         site (Figs. 3 ▸ a , 3 ▸ b and 3 ▸ d ), with the intermediate
+         I-specific 2-oxoglutarate-derived terminal carboxylate group making
+         additional interactions with the active-site residues Ser408, Arg412
+         and Arg431 (Fig. 3 ▸ b ). Equivalents to Arg412 and Arg431 in other
+         MenDs were identified to play a crucial role in orienting intermediate
+         I for catalysis (Qin et al. , 2018 ▸ ; Dawson et al. , 2010 ▸ ). In
+         Lmo MenD, the side chain of Asn434 sits 3.6 Å from the intermediate I
+         terminal carboxylate, mirroring the configuration of the Bsu MenD and
+         Sau MenD active sites. In Eco MenD and Mtb MenD, a spatially
+         equivalent intermediate I-interacting asparagine originates from the
+         PYR domain, next to the conserved glutamine, with Bsu MenD, Sau MenD
+         and Lmo MenD containing a proline ( Lmo MenD Pro118) at this position
+         (Figs. 3 ▸ a and 3 ▸ b ; Dawson et al. , 2010 ▸ ; Jirgis et al. , 2016
+         ▸ ). Despite the closing of the active site observed in our Lmo MenD
+         ThDP and intermediate I structures, there appears to be a tunnel to
+         the surface from the active site (with the terminal carboxylate tail
+         of intermediate I visible; Supplementary Fig. S10). This tunnel is
+         lined with residues inferred by homology to interact with
+         isochorismate/the isochorismate portion of intermediate II (for
+         example Ser34, Arg35, Arg108, Gln119 and Arg301), suggesting that even
+         in this closed form the enzyme can support access of substrate two.
+         3.5. Allosteric site and DHNA inhibition To explore whether Lmo MenD
+         enzyme activity is sensitive to inhibition by DHNA, activity assays
+         were performed with and without this downstream metabolite
+         (Supplementary Fig. S2"
+
+
+--------------------------------------------------------------------------------
+REACTION 8 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  o -succinylbenzoyl-CoA synthetase acetylation
+
+  IN    Bs MenE
+
+  OUT   acetylated Bs MenE
+
+  ENZYME  Bs AcuA acetyltransferase
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Sirtuin-dependent reversible lysine acetylation of the
+        &lt;i&gt;o&lt;/i&gt;-succinylbenzoyl-coenzyme A synthetase of
+        &lt;i&gt;Bacillus subtilis&lt;/i&gt;. (PMC11619455)
+        section: introduction   ·   best retrieval score for this source: 0.6785
+        "(isochorismate synthase, EC 5.4.4.2), MenD (2-ketoglutarate
+         decarboxylase, SEPHCHC synthase, EC 2.2.1.9), MenH (SHCHC synthase, EC
+         4.2.99.20), MenC (OSB synthase, EC 4.2.1.113), MenE (OSB-CoA ligase,
+         EC 6.2.1.26), MenB (DHNA-CoA synthase, EC 4.1.3.36), MenI (DHNA-CoA
+         hydrolase, EC:3.1.2.28), MenA (DHNA:heptaprenyltransferase), and MenG
+         (MK methyltransferase, EC 2.1.1.163). Multistep biochemical pathway
+         involves conversion of various substrates through enzymatic reactions,
+         such as MenF, MenD, MenC, MenH, MenB, and MenE. It depicts
+         intermediary structures and processes like decarboxylation, CoA
+         addition, and methylation. Here, we show that the o -succinylbenzoyl-
+         CoA synthetase activity of Bs MenE is reversibly acetylated by the
+         type IV GCN-5-related Bs AcuA acetyltransferase (GNAT, IPR024035) and
+         the Bs SrtN deacylase enzymes of this bacterium. Our data raise the
+         possibility that under some as-yet-undefined conditions, B. subtilis
+         uses RLA to modulate the activity of Bs MenE, and thus MK production.
+         This regulation may be a novel means for controlling the magnitude of
+         the proton motive force (PMF) in this and possibly other prokaryotes."
+        https://doi.org/10.1128/spectrum.02011-24
+
+
+--------------------------------------------------------------------------------
+REACTION 9 of 9   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  deacetylation of Bs MenE
+
+  IN    acetylated Bs MenE
+
+  OUT   Bs MenE
+
+  ENZYME  Bs SrtN deacylase
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Sirtuin-dependent reversible lysine acetylation of the
+        &lt;i&gt;o&lt;/i&gt;-succinylbenzoyl-coenzyme A synthetase of
+        &lt;i&gt;Bacillus subtilis&lt;/i&gt;. (PMC11619455)
+        section: introduction   ·   best retrieval score for this source: 0.6785
+        "(isochorismate synthase, EC 5.4.4.2), MenD (2-ketoglutarate
+         decarboxylase, SEPHCHC synthase, EC 2.2.1.9), MenH (SHCHC synthase, EC
+         4.2.99.20), MenC (OSB synthase, EC 4.2.1.113), MenE (OSB-CoA ligase,
+         EC 6.2.1.26), MenB (DHNA-CoA synthase, EC 4.1.3.36), MenI (DHNA-CoA
+         hydrolase, EC:3.1.2.28), MenA (DHNA:heptaprenyltransferase), and MenG
+         (MK methyltransferase, EC 2.1.1.163). Multistep biochemical pathway
+         involves conversion of various substrates through enzymatic reactions,
+         such as MenF, MenD, MenC, MenH, MenB, and MenE. It depicts
+         intermediary structures and processes like decarboxylation, CoA
+         addition, and methylation. Here, we show that the o -succinylbenzoyl-
+         CoA synthetase activity of Bs MenE is reversibly acetylated by the
+         type IV GCN-5-related Bs AcuA acetyltransferase (GNAT, IPR024035) and
+         the Bs SrtN deacylase enzymes of this bacterium. Our data raise the
+         possibility that under some as-yet-undefined conditions, B. subtilis
+         uses RLA to modulate the activity of Bs MenE, and thus MK production.
+         This regulation may be a novel means for controlling the magnitude of
+         the proton motive force (PMF) in this and possibly other prokaryotes."
+        https://doi.org/10.1128/spectrum.02011-24
+
+
+================================================================================
+WHAT TO CHECK FIRST
+================================================================================
+
+  [Tier C] entity    Bs AcuA acetyltransferase
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    Bs AcuA acetyltransferase
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    Bs MenE
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Bs SrtN deacylase
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    Bs SrtN deacylase
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    MenD
+              stated in a single source; identity rejected: best_effort guess
+              (top candidate accepted unconditionally); identity rejected:
+              mapping rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    MenD
+              stated in a single source; identity rejected: best_effort guess
+              (top candidate accepted unconditionally); identity rejected:
+              mapping rule best_effort_fallback is a guess, not a match
+  [Tier C] reaction  MenD-catalyzed breakdown of intermediate II to SEPHCHC
+              stated in a single source
+  [Tier C] reaction  MenD-catalyzed decarboxylation of 2-oxoglutarate to intermediate I
+              stated in a single source
+  [Tier C] entity    acetylated Bs MenE
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  deacetylation of Bs MenE
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  o -succinylbenzoyl-CoA synthetase acetylation
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    protonated intermediate I
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  protonation of intermediate I
+              one identified paper with a cited passage and no second,
+              independent statement
+
+================================================================================
+ENTITIES BY TIER
+================================================================================
+
+Catalysts are listed with their reaction above and not repeated here.
+
+Tier A — DB-grounded   (3)
+  - isochorismate   [pathbank_compound_id: 40741]
+  - SEPHCHC   [pathbank_compound_id: 40742]
+  - α-ketoglutarate   [drugbank: DB02926]
+
+Tier B — corroborated by a second paper (no identifier)   (5)
+  - intermediate I
+  - intermediate II
+  - pre-decarboxylation intermediate
+  - ThDP ylide
+  - MenD
+
+Tier C — single-source (review)   (5)
+  - acetylated Bs MenE
+  - Bs MenE
+  - protonated intermediate I
+  - Bs AcuA acetyltransferase
+  - Bs SrtN deacylase
+
+Tier D — UNSOURCED (review)   (0)
+  (none)
+
+================================================================================
+SOURCES CITED
+================================================================================
+
+  PMC11619455
+    Sirtuin-dependent reversible lysine acetylation of the
+    &lt;i&gt;o&lt;/i&gt;-succinylbenzoyl-coenzyme A synthetase of
+    &lt;i&gt;Bacillus subtilis&lt;/i&gt;.
+    https://doi.org/10.1128/spectrum.02011-24
+
+  PMC12312563
+    Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+    captured intermediate I-bound forms.
+    https://doi.org/10.1107/s2053230x25006181
+
+  seed paper (uploaded)
+    menaquinone biosynthesis (MenD step)
+
+================================================================================
+KNOWN LIMITATIONS — READ BEFORE CITING THIS
+================================================================================
+
+  1.
+     A review that CITES the seed paper cannot be distinguished from an
+     independent corroboration. Reference sections are discarded at ingest and
+     CandidatePaper carries no DOI, so there is no citation graph to check. When
+     a review corroborates a step, treat it as 'possibly the same claim
+     restated', never as a second independent finding.
+
+  2.
+     No page numbers exist in this pipeline. Chunk positions are hashed away at
+     ingest, so every citation below gives the section plus the verbatim quoted
+     passage and nothing more. Any page reference you need must be looked up in
+     the source paper by hand.
+
+  3.
+     rag_confidence is an internal heuristic (the top retrieval score, or 0.5 +
+     0.1 per provenance pointer when no score exists). It is NOT a probability
+     and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval
+     score'.
+
+  4.
+     A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is
+     corroborated but still has no external identifier, and a Tier A identifier
+     was accepted only when it was a genuine match (best-effort guesses and the
+     PathBank Unknown sentinel are refused).
+
+  5.
+     Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no
+     PWML. This report is a review artifact, not an import-ready pathway.

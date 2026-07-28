@@ -1,0 +1,45 @@
+[16:23:19] STARTING a new run 2026-07-27_1623 (no incomplete run to continue)
+[16:23:19]   resume check     : no previous run directories, so this is a fresh run
+[16:23:19]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[16:23:19] fetching papers (topics=C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\topics.txt, limit=4) ...
+[16:23:22]   + PMC12444477__the-regulation-of-lipid-a-biosynthesis  (82306 chars)  The regulation of lipid A biosynthesis.
+[16:23:22]   + PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g  (50377 chars)  An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+[16:23:22]   + PMC13231680__mechanistic-insights-into-phthalylsulfacetamide  (61997 chars)  Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal activity in NDM-1-positive Escherichia coli.
+[16:23:22]   + PMC12312563__structures-of-listeria-monocytogenes-mend-in-th  (47406 chars)  Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.
+[16:23:22] planned 4 paper(s) x 2 mode(s) = 8 run(s); 3 candidate(s) skipped (see skipped.json)
+[16:23:22] running 8 paper+mode pair(s) sequentially
+[16:23:22] whole-night deadline : 10.0h from now
+[16:23:22] [1/8] PMC12444477__the-regulation-of-lipid-a-biosynthesis / strict -> starting (timeout 3600s)
+[16:26:02] [1/8] PMC12444477__the-regulation-of-lipid-a-biosynthesis / strict -> FAIL (ambiguous_review_scope) in 159.6s (2m39s)
+[16:26:02]     1/4 done | strict 0 pass 1 fail | research 0 pass
+[16:26:02] [2/8] PMC12444477__the-regulation-of-lipid-a-biosynthesis / research -> starting (timeout 3600s)
+[16:51:36] [2/8] PMC12444477__the-regulation-of-lipid-a-biosynthesis / research -> FAIL (contract) in 1534.1s (25m34s)
+[16:51:36]     1/4 done | strict 0 pass 1 fail | research 0 pass 1 fail | 1 RESEARCH DEFECT
+[16:51:36] [3/8] PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g / strict -> starting (timeout 3600s)
+[16:52:48] [3/8] PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g / strict -> FAIL (ambiguous_review_scope) in 71.6s
+[16:52:48]     2/4 done | strict 0 pass 2 fail | research 0 pass 1 fail | 1 RESEARCH DEFECT
+[16:52:48] [4/8] PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g / research -> starting (timeout 3600s)
+[16:55:36] [4/8] PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g / research -> FAIL (llm) in 167.3s (2m47s)
+[16:55:36]     2/4 done | strict 0 pass 2 fail | research 0 pass 2 fail | 2 RESEARCH DEFECT
+[16:55:36] [5/8] PMC13231680__mechanistic-insights-into-phthalylsulfacetamide / strict -> starting (timeout 3600s)
+[17:10:58] [5/8] PMC13231680__mechanistic-insights-into-phthalylsulfacetamide / strict -> FAIL (contract) in 921.3s (15m21s)
+[17:10:58]     3/4 done | strict 0 pass 3 fail | research 0 pass 2 fail | 2 RESEARCH DEFECT
+[17:10:58] [6/8] PMC13231680__mechanistic-insights-into-phthalylsulfacetamide / research -> starting (timeout 3600s)
+[17:28:30] [6/8] PMC13231680__mechanistic-insights-into-phthalylsulfacetamide / research -> FAIL (contract) in 1051.5s (17m31s)
+[17:28:30]     3/4 done | strict 0 pass 3 fail | research 0 pass 3 fail | 3 RESEARCH DEFECT
+[17:28:30] [7/8] PMC12312563__structures-of-listeria-monocytogenes-mend-in-th / strict -> starting (timeout 3600s)
+[17:44:46] [7/8] PMC12312563__structures-of-listeria-monocytogenes-mend-in-th / strict -> PASS WITH WARNINGS in 975.1s (16m15s)
+[17:44:46]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:44:46]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[17:44:46]     4/4 done | strict 1 pass 3 fail | research 0 pass 3 fail | 1 NO DELIVERABLE | 3 RESEARCH DEFECT
+[17:44:46] [8/8] PMC12312563__structures-of-listeria-monocytogenes-mend-in-th / research -> starting (timeout 3600s)
+[18:02:07] [8/8] PMC12312563__structures-of-listeria-monocytogenes-mend-in-th / research -> PASS WITH WARNINGS in 1041.0s (17m21s)
+[18:02:07]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:02:07]     ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/13/mapping_meta/resolution: Mapping metadata must include a resolution object.
+[18:02:07]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:02:07]     ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.
+[18:02:07]     4/4 done | strict 1 pass 3 fail | research 1 pass 3 fail | 2 NO DELIVERABLE | 3 RESEARCH DEFECT
+[18:02:07] run directory : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs\2026-07-27_1623
+[18:02:07] summary       : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs\2026-07-27_1623\SUMMARY.txt
+[18:02:07] fix-list      : C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\runs\2026-07-27_1623\failures_by_code.txt
+[18:02:07] FAILURES: 6 of 8 paper+mode run(s) did not pass

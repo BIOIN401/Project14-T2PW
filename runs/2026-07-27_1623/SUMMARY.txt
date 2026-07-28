@@ -1,0 +1,281 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-07-27T16:23:22
+finished : 2026-07-27T18:02:07
+papers attempted : 4
+strict PWML      : 1 pass / 3 fail
+research relaxed : 1 pass / 3 fail
+timeouts         : 0
+skipped          : 0
+pass, no deliv.  : 2  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 8 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+!! RESEARCH-MODE DEFECT !!
+Research mode is fail-open by design: it relaxes FORMAT rules and records review flags instead of
+stopping. Therefore ANY research failure is a code defect, not a data problem. Fix these before
+anything else.
+papers affected: 3
+
+  PMC12444477 -- The regulation of lipid A biosynthesis.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=post_pipeline after 1534.1s (25m34s)
+    failure_kind: contract
+      message: post-pipeline validation failed: 2 blocking issue(s) at a stage boundary
+      codes: entity_missing_mapping_meta
+
+  PMC13278307 -- An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 167.3s (2m47s)
+    failure_kind: llm
+      message: Extraction boundary failed: Payload must include a processes object.
+
+  PMC13231680 -- Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem
+  bactericidal activity in NDM-1-positive Escherichia coli.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=post_pipeline after 1051.5s (17m31s)
+    failure_kind: contract
+      message: post-pipeline validation failed: 2 blocking issue(s) at a stage boundary
+      codes: entity_missing_mapping_meta
+
+----------------------------------------------------------------------------------------------------
+
+!! PASSED BUT PRODUCED NO DELIVERABLE !!
+These runs did not fail -- the pipeline ran to completion -- but the folder has no deliverable in
+it. This is NOT a clean night. Check whether the missing output was expected before treating it as
+green.
+runs affected: 2
+
+  PMC12312563 [strict] -- Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+  captured intermediate I-bound forms.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+  PMC12312563 [research] -- Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+  captured intermediate I-bound forms.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/compounds/13/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            3  (strict FAIL + research FAIL -- real bug, also a research defect)
+    PMC12444477, PMC13278307, PMC13231680
+format-blocked    0  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+incomplete        0  (a mode is missing, skipped or unrecognised)
+ok                1  (strict PASS + research PASS)
+    PMC12312563
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] The regulation of lipid A biosynthesis. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12444477
+    slug   : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+    uri    : https://doi.org/10.1016/j.jbc.2025.110556
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=159.6s (2m39s)
+        failure_kind : ambiguous_review_scope
+        message      : multi_example_review detected with no selected_example. Extraction skipped to
+                       prevent mixed-pathway output.
+        issue_codes  : ambiguous_review_scope
+        files        : none recorded
+
+    research : FAIL | stage=post_pipeline | time=1534.1s (25m34s)
+        failure_kind : contract
+        message      : post-pipeline validation failed: 2 blocking issue(s) at a stage boundary
+        issue_codes  : entity_missing_mapping_meta
+        counts       : reactions=6 entities=29 proteins=10 compounds=15 contract_errors=2
+                       gate_errors=0 transports=0
+        files        : 3
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/contract_reports.j
+              son (7.0 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/merged_payload.jso
+              n (15.4 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/stage1_payload.jso
+              n (10.6 kB)
+
+----------------------------------------------------------------------------------------------------
+[2] An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC13278307
+    slug   : PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g
+    uri    : https://doi.org/10.7759/cureus.109203
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=71.6s
+        failure_kind : ambiguous_review_scope
+        message      : multi_example_review detected with no selected_example. Extraction skipped to
+                       prevent mixed-pathway output.
+        issue_codes  : ambiguous_review_scope
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=167.3s (2m47s)
+        failure_kind : llm
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[3] Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal
+activity in NDM-1-positive Escherichia coli. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13231680
+    slug   : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+    uri    : https://doi.org/10.1186/s12866-026-05073-w
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=921.3s (15m21s)
+        failure_kind : contract
+        message      : post-pipeline validation failed: 3 blocking issue(s) at a stage boundary
+        issue_codes  : entity_missing_mapping_meta, gate.registry_validation_failed
+        counts       : reactions=3 entities=9 proteins=1 compounds=5 contract_errors=2 gate_errors=1
+                       transports=0
+        files        : 4
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/contract_re
+              ports.json (6.0 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/final_stage
+              3_gate_report.json (2.3 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/merged_payl
+              oad.json (115.7 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/stage1_payl
+              oad.json (1.2 kB)
+
+    research : FAIL | stage=post_pipeline | time=1051.5s (17m31s)
+        failure_kind : contract
+        message      : post-pipeline validation failed: 2 blocking issue(s) at a stage boundary
+        issue_codes  : entity_missing_mapping_meta
+        counts       : reactions=2 entities=10 proteins=2 compounds=5 contract_errors=2
+                       gate_errors=0 transports=0
+        files        : 3
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research/contract_
+              reports.json (7.0 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research/merged_pa
+              yload.json (181.4 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research/stage1_pa
+              yload.json (1.4 kB)
+
+----------------------------------------------------------------------------------------------------
+[4] Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate
+I-bound forms. -> ok
+    id     : PMC12312563
+    slug   : PMC12312563__structures-of-listeria-monocytogenes-mend-in-th
+    uri    : https://doi.org/10.1107/s2053230x25006181
+    topic  : menaquinone biosynthesis
+
+    strict   : PASS (no research deliverable) | stage=pwml_export | time=975.1s (16m15s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=7 entities=18 proteins=3 compounds=10 gate_errors=0
+                       pwml.compounds=10 pwml.edges=26 pwml.proteins=3 pwml.reactions=7
+                       pwml_bytes=70640 runtime_schema_findings=2 transports=0
+        files        : 11
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/contract_re
+              ports.json (6.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/final_mappe
+              d.json (545.2 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/merged_payl
+              oad.json (333.7 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/pathway.pwm
+              l (69.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/pwml_ir.jso
+              n (59.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/pwml_ir_rep
+              ort.json (5.1 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/pwml_ir_val
+              idation.json (234 B)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/pwml_qa.jso
+              n (574 B)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/pwml_requir
+              ed_field_gate_report.json (6.3 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/pwml_valida
+              tion_report.json (19.1 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/stage1_payl
+              oad.json (2.3 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=1041.0s (17m21s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/compounds/13/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        counts       : reactions=10 entities=20 proteins=3 compounds=14 tier.a=3 tier.b=13 tier.c=14
+                       tier.d=0 review_flags=0 skipped_format_rules=0 normalization_actions=1
+                       citations=3 gate_errors=0 runtime_schema_findings=4 transports=0 unsourced=0
+        files        : 7
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/contract_
+              reports.json (8.4 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/merged_pa
+              yload.json (406.8 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/research_
+              pathway_citations.json (437.9 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/research_
+              pathway_elements.csv (172.7 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/research_
+              pathway_report.txt (63.7 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/review_fl
+              ags.json (425 B)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/stage1_pa
+              yload.json (5.2 kB)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     - PMC12444477: post_pipeline -- entity_missing_mapping_meta
+     - PMC13278307: stage1 -- no codes
+     - PMC13231680: post_pipeline -- entity_missing_mapping_meta
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     - PMC12444477: ambiguous_review_scope
+     - PMC13278307: ambiguous_review_scope
+     - PMC13231680: contract
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     (none)
+
+====================================================================================================

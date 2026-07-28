@@ -1,0 +1,42 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12312563
+title      : Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.
+slug       : PMC12312563__structures-of-listeria-monocytogenes-mend-in-th
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 975.1s (16m15s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.pwml is 70640 bytes
+
+COUNTS
+----------------------------------------
+  compounds = 10
+  entities = 18
+  gate_errors = 0
+  proteins = 3
+  pwml = {'compounds': 10, 'proteins': 3, 'reactions': 7, 'edges': 26}
+  pwml_bytes = 70640
+  reactions = 7
+  runtime_schema_findings = 2
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (6112 B)
+  - final_mapped.json  (558296 B)
+  - merged_payload.json  (341698 B)
+  - pathway.pwml  (70640 B)
+  - pwml_ir.json  (60413 B)
+  - pwml_ir_report.json  (5264 B)
+  - pwml_ir_validation.json  (234 B)
+  - pwml_qa.json  (574 B)
+  - pwml_required_field_gate_report.json  (6490 B)
+  - pwml_validation_report.json  (19586 B)
+  - stage1_payload.json  (2390 B)
