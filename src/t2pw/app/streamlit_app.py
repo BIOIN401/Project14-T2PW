@@ -265,6 +265,119 @@ def _seed_context_from_user_scope(
     return seeded
 
 
+def _stage0_context_rank(ctx: Any) -> int:
+    """Order two Stage-0 draws so a retry can only ever move the context UPWARD.
+
+    Higher is both more informative and more fail-safe:
+
+    * ``2`` — a well-formed **Case C**: ``document_type == "multi_example_review"``
+      with a blank ``selected_example``. This is the Stage-0 prompt's own refusal
+      verdict, and it is the strongest state precisely because it is the only one
+      that stops the run. It outranks a usable context on purpose: if one draw
+      says "this document is a multi-example review and I could not pick a
+      target" and another says "the pathway is X", the safe reading is the
+      refusal — extracting X from a review that describes six unrelated examples
+      is how a mixed-pathway payload gets built. A second draw must never be able
+      to disarm the refusal gate.
+    * ``1`` — a usable context: ``_has_usable_context`` accepts it, so extraction
+      is guided and ``t2pw.rag.acquire.build_query`` can form a non-empty query.
+    * ``0`` — neither: Stage 0 failed closed (swallowed LLM error, unparseable
+      reply) and left every field blank.
+
+    Note that Case C and rank 0 look IDENTICAL to ``_has_usable_context``: the
+    Stage-0 prompt mandates that Case C leave pathway_name / likely_organism /
+    key_compounds / key_proteins / gap_terms blank, so the only thing separating a
+    deliberate refusal from a crashed call is ``document_type``. That is exactly
+    what the 2026-07-28 clobber destroyed (see ``_run_stage_zero_with_retry``).
+    """
+    if is_ambiguous_multi_example_review_context(ctx):
+        return 2
+    if _has_usable_context(ctx):
+        return 1
+    return 0
+
+
+def _run_stage_zero_with_retry(
+    text: str,
+    *,
+    temperature: float,
+    user_task_context: Optional[str],
+) -> Dict[str, Any]:
+    """Run Stage 0, retrying once on a bounded head only when that can help.
+
+    Two separate defects lived in the inline version of this block, and both were
+    load-bearing in run ``runs/2026-07-28_0919``.
+
+    1. *The retry fired on a correct refusal.* Stage 0 fails CLOSED to an empty
+       context (a swallowed LLM error or an unparseable reply are both logged, not
+       raised), and an empty context silently disables RAG — ``build_query()``
+       returns "" so zero papers can ever be fetched. Hence the retry on a bounded
+       head of the document: the pathway name / organism / key entities live in
+       the title, abstract and intro, and the smaller payload also dodges
+       transient failures. But the retry's trigger was ``not
+       _has_usable_context(...)``, and the prompt's Case C — a multi-example
+       review with no target selected — MANDATES those same fields be blank. A
+       CORRECT Case C was therefore indistinguishable from a FAILED Stage 0 and
+       fired the retry every time. With ``_PREPROCESS_RETRY_CHARS`` at 20,000 the
+       length condition is met by essentially every topic-fetched review (the
+       PMC13278307 leg below is 50,377 chars per that run's plan.json), so this
+       was not a rare path.
+
+    2. *The retry's result was adopted unconditionally.* ``pathway_context =
+       preprocess(head)`` overwrote the first draw whatever came back. When the
+       first draw was a Case C and the second was blank, the overwrite dropped
+       ``document_type``, which is the one field
+       ``is_ambiguous_multi_example_review_context`` requires. That disarms the
+       refusal gate further down and lets the run proceed to an unguided
+       extraction over a multi-example review. Because the extraction-focus box is
+       now filled in by the batch driver, such a run no longer aborts loudly — it
+       reports PASS. Leg PMC13278307/strict of ``runs/2026-07-28_0919`` is exactly
+       that shape: the paper is the review "An Overview of Mobile Colistin
+       Resistance (mcr) Genes in Gram-Negative Bacilli", the focus box said
+       ``lipid A biosynthesis``, and the leg came back **pass** in 2098.21s with
+       14 reactions and 0 gate errors — every one of them an mcr / PEtN / L-Ara4N
+       lipid A MODIFICATION step, and not one reaction of the lipid A
+       biosynthesis pathway it was asked for.
+
+    The fix is the two rules below: skip the retry entirely for a deliberate Case
+    C (it is deterministic — re-running never helps, only the user naming a target
+    does), and, whenever a retry does run, keep its result in a LOCAL and adopt it
+    only when ``_stage0_context_rank`` says it is strictly better. A second draw
+    can now still rescue a genuinely failed Stage 0, but it can no longer degrade
+    the context it was meant to improve.
+    """
+    first_context = preprocess(
+        text, temperature=temperature, user_task_context=user_task_context
+    )
+    if _has_usable_context(first_context):
+        # Nothing to rescue: extraction is guided and RAG can build a query.
+        return first_context
+    if is_ambiguous_multi_example_review_context(first_context):
+        # Defect 1: a deliberate Case C has blank pathway fields BY DESIGN. The
+        # caller's refusal gate needs the document_type this draw carries, so
+        # return it untouched rather than spending a second LLM call that can only
+        # return the same verdict or something weaker.
+        return first_context
+    if len(text) <= _PREPROCESS_RETRY_CHARS:
+        # The retry re-reads a bounded head; on a document already shorter than
+        # that head it would re-send identical input for an identical answer.
+        return first_context
+
+    retry_context = preprocess(
+        text[:_PREPROCESS_RETRY_CHARS],
+        temperature=temperature,
+        user_task_context=user_task_context,
+    )
+    # Defect 2: adopt only on a strict improvement. ``first_context`` is known to
+    # be rank 0 here, so this admits both a usable retry and a retry that is
+    # itself a well-formed Case C (the head of a review is often enough for Stage
+    # 0 to recognise the review it could not classify from the full text), while
+    # rejecting a second blank draw.
+    if _stage0_context_rank(retry_context) > _stage0_context_rank(first_context):
+        return retry_context
+    return first_context
+
+
 def maybe_run_rag(
     *,
     pathway_context: Dict[str, Any],
@@ -3392,21 +3505,15 @@ if submit:
 
     # Preprocessing: lightweight context summary to guide extraction and inference
     with st.spinner("Running preprocessor..."):
-        pathway_context = preprocess(
+        # Stage 0 plus its at-most-one bounded-head retry. The retry's guards
+        # (skip a deliberate Case C; adopt the second draw only on a strict
+        # improvement) live inside the helper because the inline version ran the
+        # retry BEFORE the Case-C test below and let it overwrite the context
+        # unconditionally — see _run_stage_zero_with_retry for the run that
+        # exposed it.
+        pathway_context = _run_stage_zero_with_retry(
             text, temperature=temperature, user_task_context=user_task_context
         )
-        # Stage 0 fails CLOSED to an empty context (a swallowed LLM error or an
-        # unparseable reply are both logged, not raised). An empty context
-        # silently disables RAG: build_query() then returns "", so zero papers
-        # can ever be fetched. Retry once on a bounded head of the document —
-        # the pathway name / organism / key entities live in the title, abstract
-        # and intro, and the smaller payload also dodges transient failures.
-        if not _has_usable_context(pathway_context) and len(text) > _PREPROCESS_RETRY_CHARS:
-            pathway_context = preprocess(
-                text[:_PREPROCESS_RETRY_CHARS],
-                temperature=temperature,
-                user_task_context=user_task_context,
-            )
         # A deliberate Case C ambiguous multi-example review also has blank
         # pathway fields, but that is the prompt's guardrail, not a flaky call:
         # it is deterministic and re-running never helps. The branch below
@@ -3597,7 +3704,41 @@ if submit:
         from t2pw.rag.conform import conform_rag_additions_for_merge
 
         seed_reaction_count = _count_reactions(final_payload)
-        rag_envelope = conform_rag_additions_for_merge(rag_result.payload)
+        # The second argument is the MERGE BASE, and it must be `final_payload` --
+        # the very object handed to merge_additions on the next line -- because
+        # without it the guard inside conform has nothing to compare against and the
+        # whole fix is inert.
+        #
+        # WHY the guard exists. merge_additions dedupes entity rows with
+        # _extend_unique, whose signature is json.dumps(row, sort_keys=True). RAG
+        # synthesis rebuilds an entity row for every participant of every reaction it
+        # resolved, and it resolves the SEED's reactions too (the seed paper is itself
+        # indexed, so its own claims can corroborate), so the base's
+        # {"name": "LpxA", "class": "protein", "confidence": 1.0, ...} and RAG's
+        # {"name": "LpxA", "rag_provenance": {"source_id": "seed_paper", ...}, ...}
+        # are two different signatures for one protein and BOTH survive the merge.
+        # Measured on runs/2026-07-28_0919 PMC12444477/strict/merged_payload.json:
+        # entities.proteins 31 rows for 22 distinct normalized names (all nine seed
+        # enzymes doubled), entities.compounds 56 rows for 43. Byte-identical names,
+        # so the 2026-07-23 synonym resolver -- which collapses SYNONYMS -- correctly
+        # never touched them.
+        #
+        # WHY `final_payload` and not `stage_one_in_scope`. The base is Stage 1 PLUS
+        # Stage 2 whenever inference ran. In that same run 'lipid IV_A precursor',
+        # 'Kdo-lipid A precursor' and 'tetra-acylated disaccharide intermediate' are
+        # Stage-1 reaction participants that Stage 1 never registered and Stage 2 did;
+        # comparing against the Stage-1 seed alone would let those three back in.
+        # Passing the object we are about to merge into makes "already registered"
+        # mean exactly what merge_additions is about to see.
+        #
+        # Cost to the research deliverable: none. build_citation_report reads the
+        # PRE-MERGE rag_result.payload (research_report.py:332), which conform never
+        # mutates, so the dropped rows' source_refs / rag_provenance are still there
+        # for the citation report to quote -- only the duplicate ROW in the merged
+        # payload goes away. Reconstructed over all 8 delivered merged_payload.json
+        # under runs/ that have a RAG side: 279 entity rows -> 220, zero reactions
+        # lost, zero new process_normalizer.validate_registry_references errors.
+        rag_envelope = conform_rag_additions_for_merge(rag_result.payload, final_payload)
         merged = merge_additions(final_payload, rag_envelope)
         # Preserve the locked-reaction quarantine the old replace-path performed:
         # merge_additions runs apply_post_merge_cleanup WITHOUT the manifest, so

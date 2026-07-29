@@ -5,6 +5,923 @@ fix stay consistent with the intended pipeline design.
 
 ---
 
+## Pre-run readiness: the scope filter proved live end to end, and the night's arithmetic (2026-07-28, branch `research-mode`)
+
+Written in the last hour before the overnight corpus run, and deliberately narrow. **No new
+production fix landed with this entry.** It does three things: it re-proves, by execution, the
+out-of-scope regression that the entry below closed — at the coordinates the code has *now*,
+which are not the ones that entry cites; it states plainly the half of that problem the fix does
+**not** touch; and it records what a read-only readiness audit found about whether the night is
+worth starting at all. The verdict on the night is **go, with a `--limit` and two manual steps**
+(§C, §D). The one thing that would have wasted the night silently — a corpus that cannot fit in
+it — is arithmetic, not a bug, and is written down here so nobody rediscovers it at 3 a.m.
+
+### A. The out-of-scope reaction filter: a regression from 2026-07-14, closed, re-verified, and still only half the problem
+
+**Error.** The 2026-07-14 entry *Tighten default reaction scope and wire the out-of-scope
+reaction filter* (this file) shipped `filter_out_of_scope_reactions` (`pipeline.py:247`), wired
+between Stage 1 and Stage 2 (`streamlit_app.py:3617`), and it **never removed a reaction in its
+life**. Measured over everything this project has ever delivered: **21 payload files under
+`runs/` — 9 `stage1_payload.json`, 9 `merged_payload.json`, 3 `final_mapped.json`, 178 reactions
+in total — and `scope_membership` present on exactly zero of them.** Including the reference run:
+`PMC12444477/strict` carries 9 Stage-1 and 27 merged reactions, none of them labelled.
+
+**Why.** `_clean_processes` (`pipeline.py:1929`) rebuilds every reaction from a key allowlist that
+did not name `scope_membership`, and both Stage-1 branches hand the orchestrator `clean_stage_one`
+output (`pipeline.py:2273`, `:2312` / `:2321`, `:2327`). The label was erased between the model
+writing it and the filter reading it, and the old `rxn.get("scope_membership", "core")` then
+reported `core` for the entire corpus. This is the same failure shape as the two fixes in the
+entry below — a guard that is green in its own tests and inert in production because the stage
+*before* it removes the thing it reads — and it is the oldest instance of it we have found.
+
+**Fix** (landed with the entry below; its §A carries the design rationale, this is the
+verification). `_carry_scope_membership` (`pipeline.py:1850`, body at `:1923-1925`) carries a
+non-empty string label through the rebuild, called from the reaction branch of `_clean_processes`
+at `:1982`. The filter's comparison (`pipeline.py:315`) is now
+`isinstance(scope, str) and scope.strip().casefold() == "out_of_scope"`, which is what
+`reaction_lock_manifest._scope_membership` (`:59-66`) does at `:186` and `:228`.
+
+**Measured today, by execution**, on one raw Stage-1-shaped payload of six reactions labelled
+`core` / `out_of_scope` / `OUT_OF_SCOPE` / `"  out_of_scope  "` / absent / `17`, run through the
+real `clean_stage_one` before the filter sees it:
+
+| path | labels the filter sees | it removes |
+| --- | --- | --- |
+| raw payload, no cleaning | all six as the model wrote them | `glucose phosphorylation`, `shouty`, `padded` |
+| `clean_stage_one` with the carrier neutralised (i.e. the pre-fix allowlist) | `<ABSENT>` ×6; key union `('evidence', 'inputs', 'name', 'outputs')` | **nothing** |
+| `clean_stage_one` as it ships now | `core`, `out_of_scope`, `OUT_OF_SCOPE`, `out_of_scope`, `<ABSENT>`, `<ABSENT>`; key union gains `scope_membership` | `glucose phosphorylation`, `shouty`, `padded` |
+
+The unlabelled row and the `17` row survive all three passes: absent, empty and non-string mean
+**keep**, deliberately (the entry below argues why; the short version is that a missing label is
+evidence nobody classified the reaction, not evidence it is off-pathway). The label is stored
+verbatim and case-folded only by the readers, so `OUT_OF_SCOPE` is removed by the filter *and*
+refused a lock by the manifest instead of one of each.
+
+**Effect on everything already on disk: exactly none**, and that is the honest headline. All 21
+delivered payload files, all 178 reactions, zero labelled, zero removed by the now-live filter.
+The change is **forward-only** — it can bite only on Stage-1 output produced after it landed,
+where the model actually writes the label — so no delivered artifact changes and no previously
+passing paper becomes a failing one.
+
+**What it does not cover, plainly: cross-paper RAG imports, which remain open and need design.**
+The filter runs once, between Stage 1 and Stage 2. Everything RAG imports arrives later, at the
+S3 merge, and is therefore invisible to it. Measured on the reference run: `merged_payload.json`
+holds 27 reactions and only **9** of them carry a `locked_reaction_id`, which is exactly the 9
+reactions of its `stage1_payload.json` (all 9 were locked). The other 18 rows were not in the
+payload the filter saw. Worse, a RAG row could not carry a verdict even if the filter ran
+again: `rag/synthesize.py:1133` asserts `set(row) <= _ALLOWED_ROW_KEYS`, and that frozenset
+(`:1136-1138`) is `{name, inputs, outputs, enzymes, entity, entity_type, role, source_refs}` plus
+`RAG_ADDITIVE_KEYS`, with no scope field in it. So reactions 10–26 of the lipid A payload —
+phospholipid biosynthesis, a different pathway — are untouched by this fix and stay in the debt
+list below. **Seed-paper Stage-1 reactions only.** Anyone reading "the out-of-scope filter works
+now" as "off-pathway reactions no longer ship" would be wrong twice over: unlabelled off-pathway
+reactions still ship by design, and imported ones are never offered to the filter at all.
+
+**Tests.** `tests/test_scope_membership_filter_end_to_end.py` (7 tests) is the first coverage that
+puts **real `clean_stage_one` output** through the filter rather than a hand-built payload that
+already carries the label — the trap that let this survive from 2026-07-14 to today:
+`test_filter_removes_a_labelled_reaction_from_real_clean_stage_one_output`,
+`test_label_survives_the_chunked_merge_path_too`,
+`test_an_unlabelled_reaction_is_kept_because_absent_is_not_out_of_scope`,
+`test_a_non_string_label_is_dropped_and_the_reaction_is_kept`,
+`test_filter_and_lock_manifest_agree_on_case_and_whitespace_variants`,
+`test_out_of_scope_reactions_no_longer_ship_unlocked`,
+`test_unlabelled_rows_gain_no_key_and_other_process_buckets_are_untouched`. Re-run today together
+with the two files that previously claimed to cover this area
+(`tests/test_pipeline_cleanup.py`, `tests/test_streamlit_stage2_orchestration.py`): **26 passed in
+1.20s**. The round that landed the fix measured the suite at **1067 → 1074**; it collects **1089**
+as this is written, because other work landed in parallel today, so 1089 is not this fix's number
+and is recorded only so the next reader knows which baseline they are looking at.
+
+### B. Where the entry below had already drifted from the code
+
+The entry immediately below was saved at 20:27, `pipeline.py` was last edited at 20:24 and
+`rag/synthesize.py` at 20:05, and several of its citations describe a revision that no longer
+exists. Corrected in place rather than left to rot, since a changelog nobody can navigate by is
+the thing this file exists to prevent:
+
+- `_clean_processes` `:1926` → **`:1929`**; the carrier call `:1979` → **`:1982`**;
+  `clean_stage_one` call sites `:2270`, `:2309`/`:2318`, `:2324` → **`:2273`, `:2312`/`:2321`,
+  `:2327`**; `write_stage1_lock_artifacts` `:2269`/`:2315` → **`:2272`/`:2318`**. Three lines of
+  drift, in the one paragraph a reader would use to check the claim.
+- `reaction_lock_manifest._scope_membership` is read at `:186` **and `:228`** (the debt round said
+  `:229`), and the manifest writes the model's own spelling at `:257`.
+- `_ALLOWED_ROW_KEYS` is asserted at `rag/synthesize.py:1133` and defined at **`:1136-1138`**. The
+  debt entry below says `:1122-1125` and a working note from the same round said `:1212-1215`;
+  both were true of different revisions of that file today. Corrected wherever it is cited.
+- **The two corpus counts are both right and were measuring different sets.** 18 files / 130
+  reactions is the Stage-1-plus-merged set; 21 files / 178 reactions is that set plus the three
+  `final_mapped.json`. Zero reactions carry `scope_membership` under either reading. Both are now
+  spelled out where they appear so they stop looking like a contradiction.
+
+Nothing in the substance of that entry was wrong. Every behavioural claim of its §A re-verified
+by execution here; its §B merge measurements (the 279 → 220 entity-row table) were **not** re-run
+this pass and are recorded on that round's authority, not on this one's.
+
+### C. The night does not fit in a night — plan for `--limit`, not for a finished corpus
+
+Measured from `runs/2026-07-28_0919/manifest.jsonl` plus the one leg missing from it (§D), six legs
+actually executed between 09:19:08 and 11:49:05:
+
+| leg | seconds | outcome |
+| --- | --- | --- |
+| PMC12444477 strict | 2988.18 | pass |
+| PMC12444477 research | 2777.82 | fail (contract, post-pipeline) |
+| PMC13278307 strict | 2098.21 | pass |
+| PMC13231680 research | 936.70 | pass — not in the manifest, see §D |
+| PMC13278307 research | 137.14 | fail at the Stage-1 boundary |
+| PMC13231680 strict | 54.70 | fail at the Stage-1 boundary |
+
+The four legs that ran the whole pipeline mean **2200.2s**; the three big ones mean **2621.4s**;
+all six mean **1498.8s**. Those six sum to 8992.75s inside an elapsed 8997s, so **~4 seconds of
+that 2.5-hour run was not model time** — there is nothing to tune outside the LLM calls.
+
+Against a 10-hour budget that is **13.7 legs** at the big-leg rate, **16.4** at the
+full-pipeline rate, and **24** if the night is lucky enough to include cheap failures. The
+now-concurrent enrichment (`enrich_entities.py`: 139.7s serial → 29.1s concurrent, 4.81×, 110.7s
+saved on one leg) moves those to 14.3 / 17.2 / 25.9 — a **4–7% cut of a 37–50 minute leg**, and it
+was measured with all 68 lookups cold, so against the warm cache it will be less. That fix is
+worth having on its own axis; it is not the night's bottleneck and must not be sold as throughput.
+
+`topics.txt` asks for 6+5+6+5+6 = **28 papers × 2 modes = 56 legs**, and a resume of
+`2026-07-28_0919` owes **51** (the run's own last log line says so). One night therefore covers
+roughly **a quarter to a half of the ceiling**. The honest figure is softer than that ratio makes
+it sound, because `topics.txt` records its own observed full-text yield as "roughly half" — so the
+realistic corpus is nearer 14 papers / 28 legs, i.e. **two nights, not four**. Either way it is
+not one night. Recommendation: cap the night with `--limit` rather than letting the deadline
+truncate the work mid-corpus. `--limit 7` (7 papers = 14 legs) sits exactly on the measured
+capacity — it fits inside 10h at the full-pipeline mean of 2200.2s (16.4 legs) and overruns it by
+about a leg at the big-leg mean of 2621.4s (13.7), which is the right side to err on, since the
+deadline truncates cleanly and a truncated plan resumes.
+
+Two deadline facts that decide when to walk away from the keyboard: the budget is checked **before
+each leg** (`runner.py:2037-2042`), and the per-leg `--timeout` is an hour, so a leg starting at
+9h59m runs to 10h59m — **budget 11 hours of wall clock for a 10-hour night**. And `started_clock`
+is set on entry to `_run_batch` (`runner.py:1960`), so the deadline is **per launch, not per run**:
+every relaunch of a resumed run gets a fresh 10 hours.
+
+### D. A leg that finished, passed, and is not in the manifest
+
+`runs/2026-07-28_0919/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research/`
+holds a complete artifact set written at 11:49 — `RESULT.txt` reading `RESULT: PASS (with
+warnings)`, `stage=research_report`, 936.7s, 2 citations, plus `merged_payload.json`,
+`research_pathway_report.txt`, `research_pathway_citations.json`,
+`research_pathway_elements.csv`, `review_flags.json`. `batch.log` shows that leg starting at
+11:33:27 and the parent taking Ctrl+C at 11:49:05 — the same minute the artifacts were written.
+The child ran to completion and wrote everything it owes; the parent died before
+`append_manifest` (`runner.py:2096`) recorded it, i.e. somewhere in the window that opens when the
+child exits and closes at that write, with `parse_child_output` (`runner.py:2066`) in between.
+Consequences, all live right now:
+
+- a resume re-runs that leg and pays its ~937s again, overwriting good artifacts;
+- `SUMMARY.txt` says `papers attempted : 3` and `manifest rows : 5`, when six legs ran and
+  **three** of them passed. Every count derived from the manifest understates the run by one
+  pass — and specifically by that run's only research-mode pass, so `research relaxed : 0 pass
+  / 2 fail` in the summary is wrong in the one direction that matters when triaging research
+  mode as a defect class.
+
+Not fixed — the window is inherent to "run child, then record", and closing it properly means
+writing a provisional row before the child starts and reconciling after, which touches the
+child→parent protocol the whole night depends on. Recorded in the debt list. The operator-side
+workaround for tonight is to accept the re-run, or copy that row into `manifest.jsonl` by hand.
+
+### E. The preflight, re-run
+
+`runner.run_preflight()` returns **0 in 1.39s** under `.venv\Scripts\python.exe` with no problems
+and no warnings, including the `t2pw.llm.client` entry added to `CHILD_IMPORTS` in the entry below
+(`runner.py:1274-1279`) — so the key is present and well-formed, and the three import-time
+`RuntimeError`s in `client.py` (`:38`, `:40`, `:63`) are all cleared before the night starts. Two
+limits worth stating precisely rather than trusting: the probe proves the module *imports*, which
+covers the key's presence and shape but not that `openrouter.ai` answers, that the key is unexpired
+and funded, or that the account can serve the model; and the model id itself is resolved lazily, so
+a missing `OPENROUTER_MODEL` raises at `client.py:261` on the **first call of the night**, not in
+the preflight. It is set (`google/gemma-4-26b-a4b-it`), so that is a limit of the check, not a
+finding against tonight.
+
+---
+
+## Pre-run close-out: two half-landed fixes wired, one blind spot in the preflight (2026-07-28, branch `research-mode`)
+
+Written while preparing the next overnight corpus run. The entry below it closed the
+debt round; this one closes what that round left in the state where the code was right
+and **nothing called it that way**. Two of the Known Debt bullets further down described
+defects that no longer exist and have been rewritten.
+
+The theme is worth naming, because it happened twice in one day and once before that on
+2026-07-14: a guard that takes an optional argument, or reads a field that something
+upstream strips, is *green in its own tests and inert in production*. Neither of the two
+fixes below could have been caught by a unit test of the module it lives in — one needed
+the caller, the other needed the stage that runs before it.
+
+### A. The out-of-scope reaction filter can fire, for the first time since 2026-07-14
+
+**Error.** `filter_out_of_scope_reactions` (`pipeline.py:247`) is wired and is called
+between Stage 1 and Stage 2 (`streamlit_app.py:3617`). It had never removed a reaction.
+
+**Why.** `pwml_system.txt` (`:6`, `:15-16`) requires the model to label every reaction
+`core | anaplerotic | cataplerotic | auxiliary | out_of_scope` and promises out-of-scope
+ones "are removed from the payload before downstream stages run". Both Stage-1 branches
+hand the orchestrator `clean_stage_one` output (`pipeline.py:2273`, `:2312`/`:2321`,
+`:2327`), and `_clean_processes` (`:1929`) rebuilds every reaction from a key allowlist
+that never named `scope_membership`. The label was erased before the filter could read
+it, and the old `rxn.get("scope_membership", "core")` then reported `core` for
+everything. The 2026-07-14 fix was wired on the wrong side of the allowlist and has been
+inert since the day it landed.
+
+The erased label was not only a dead filter. `write_stage1_lock_artifacts` runs on the
+**raw** payload (`pipeline.py:2272` / `:2318`), *before* `clean_stage_one`, so
+`reaction_lock_manifest` (`:186`, `:228`) does see the label: it refuses to list an
+out-of-scope reaction and refuses to stamp it with a `locked_reaction_id`. Out-of-scope
+reactions therefore shipped in the payload as **unlocked** ones — kept by the payload,
+disowned by the lock manifest.
+
+**Fix.** `_carry_scope_membership` (`pipeline.py:1850`), called from the reaction branch
+of `_clean_processes` (`:1982`), carries a non-empty string label through the rebuild,
+stripped and **verbatim** — never case-folded, because the manifest records the model's
+own spelling in its own `scope_membership` field (`reaction_lock_manifest.py:257`) and
+the two artifacts must not disagree about what the model said. Case-insensitivity moved
+into the readers instead: `filter_out_of_scope_reactions` now tests
+`isinstance(scope, str) and scope.strip().casefold() == "out_of_scope"`, matching
+`reaction_lock_manifest._scope_membership` (`:59-66`). Without that, `"OUT_OF_SCOPE"`
+would be refused a lock by the manifest and kept by the filter — the same
+payload/manifest split, in a different spelling. Reactions only: transports,
+reaction-coupled transports and interactions are not labelled by the prompt and the
+filter never reads them. The key is appended last, so an unlabelled reaction keeps its
+key order byte-for-byte.
+
+**An absent label means KEEP**, and that is a decision, not an oversight. A missing
+label is evidence that nobody classified the reaction, not evidence that it is
+off-pathway, and three real sources produce unlabelled reactions: every payload written
+before this fix; any model that ignores the instruction; and every reaction added
+*after* this call runs — Stage-2 additions and RAG imports come from prompts and
+adapters that cannot emit the field at all (`rag/synthesize.py`'s `_ALLOWED_ROW_KEYS`).
+Keeping makes the failure mode "an out-of-scope reaction survives", which every
+downstream gate still inspects, instead of "an in-scope reaction vanishes", which
+nothing downstream can detect.
+
+**The corpus before/after the debt item demanded cannot be produced retroactively.**
+Measured over every delivered Stage-1 and merged artifact under `runs/` — 18 files,
+130 reactions, or 21 files and 178 reactions if the three `final_mapped.json` are counted
+too — `scope_membership` is present on **zero** of them, so the filter would
+remove nothing from any of them and the record of what the model actually labelled was
+destroyed by the defect before anything was written. The check the debt item asked for
+is therefore only obtainable from a run made *after* this fix. See the debt list for
+why that run will not record it either.
+
+### B. The RAG merge no longer re-imports the seed paper's own entities
+
+**Error.** `runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/merged_payload.json`
+delivers `entities.proteins` with 31 rows for 22 distinct normalized names — all nine
+seed enzymes doubled — and `entities.compounds` with 56 rows for 43.
+
+**Why.** RAG synthesis rebuilds an entity row for every participant of every reaction it
+resolved, and it resolves the **seed's** reactions too (the seed paper is itself indexed,
+so its own claims can corroborate). `merge_additions` dedupes with `_extend_unique`
+(`pipeline.py:2584`), whose signature is `json.dumps(row, sort_keys=True)`, so
+`{"name": "LpxA", "class": "protein", "confidence": 1.0, ...}` and
+`{"name": "LpxA", "rag_provenance": {"source_id": "seed_paper"}, ...}` are two different
+signatures for one protein and both survive. The names are byte-identical, which is
+exactly why the 2026-07-23 synonym resolver — which collapses *synonyms* — correctly
+never touched them.
+
+**Fix, part 1 (the guard).** `conform_rag_additions_for_merge` (`rag/conform.py:200`)
+takes the payload the envelope is about to be merged into and drops any entity row whose
+name that base already registers. Identity is the registry gate's own
+(`process_normalizer._normalize` / `_entity_name_norms`, imported rather than
+re-implemented) over exactly the buckets `validate_registry_references` unions, so
+"already registered" means what the gate means by it. The set grows as rows are
+accepted, so one pass also dedupes the envelope against itself. Deliberately **not** in
+synthesis: `synthesize_with_report` returns a standalone payload whose entity buckets
+must cover its own reactions and whose seed rows carry the citations the pre-merge
+report reads — suppressing them there strands references and deletes the corroboration
+the seed is indexed to provide (`tests/test_rag_synthesize.py` pins both).
+
+**Fix, part 2 (the wiring), which is the half that makes it real.** The guard landed
+with `streamlit_app.py` still calling `conform_rag_additions_for_merge(rag_result.payload)`
+— one argument, `seed_payload` defaulting to `None`, which is exactly the pre-fix
+behaviour. Every unit test passed the base explicitly, so the whole suite was green over
+a production path that had not changed at all. The call site now passes `final_payload`
+(`streamlit_app.py:3741`) — Stage 1 **plus Stage 2**, the very object handed to
+`merge_additions` on the next line, not the Stage-1 seed synthesis was given. That
+distinction is load-bearing: `lipid IV_A precursor`, `Kdo-lipid A precursor` and
+`tetra-acylated disaccharide intermediate` are Stage-1 reaction participants that Stage 1
+never registered and Stage 2 did, invisible to synthesis and duplicated all the same.
+`tests/test_rag_seed_entity_reimport.py::test_the_orchestrator_passes_the_merge_base_to_conform`
+now pins the call site by AST, asserting the name given to `conform` is the same name
+given to `merge_additions` as its base.
+
+**Measured**, by splitting each delivered `merged_payload.json` back into base (rows with
+no `rag_provenance`) and RAG side and re-running `conform` → `merge_additions` both ways,
+after first asserting the old call shape reproduces the delivered file row-for-row:
+
+| payload | rows before | rows after |
+| --- | --- | --- |
+| PMC12444477 strict | 88 (proteins 31, compounds 56, complexes 1) | 66 (22 / 43 / 1) |
+| PMC12444477 research | 89 | 68 |
+| PMC13278307 strict | 35 | 31 |
+| PMC12312563 research / strict | 22 / 17 | 17 / 14 |
+| PMC13231680 research / strict / research | 8 / 9 / 11 | 7 / 8 / 9 |
+| **all 8 payloads with a RAG side** | **279** | **220** |
+
+Zero duplicate normalized names remain, no reaction is lost on any payload (10, 7, 3, 4,
+24, 27, 4, 14 before and after), and `validate_registry_references` returns the identical
+error set on all eight — the fix introduces no "unknown entity" error anywhere.
+
+**A coordinate note, because two different counts of the same file are in circulation.**
+The reference payload's compounds are "41 distinct" under an alnum-only lowercase
+normalizer and **43** under `process_normalizer._normalize`, which is the one this guard
+uses. The two extra pairs `_normalize` keeps apart are `lipid IV A` / `lipid IV_A` and
+`sn -glycerol 3-phosphate` / `sn-glycerol 3-phosphate` — spacing and underscore variants
+of the same species. They stay as two rows each. That is deliberate: this guard
+under-merges rather than over-merges, and collapsing spelling variants is the synonym
+resolver's job, not its.
+
+### C. The preflight was blind to the LLM backend
+
+**Error.** `check_preflight` returns ok on an interpreter with no usable
+`OPENROUTER_API_KEY`, and the night then dies 56 times after the fetch — the exact shape
+the preflight was built to stop.
+
+**Why.** `CHILD_IMPORTS` was derived from `driver.py`'s deferred imports, and
+`t2pw.llm.client` is not one of them. Verified by execution: importing all four listed
+modules in a fresh interpreter leaves `t2pw.llm.client` absent from `sys.modules`. It is
+also the module in this codebase that raises at **import** time — `client.py:38` (no
+key), `:41` (a key not starting with `sk-or-`), `:63` (`LLM_PROVIDER` neither `local`
+nor `openrouter`) — while every stage of every leg calls `chat()`.
+
+**Fix.** One entry added to `CHILD_IMPORTS` (`runner.py`). The probe catches
+`BaseException`, so a `RuntimeError` at import is reported to the operator exactly like
+a missing module, and importing the client does no network I/O — it constructs an
+`OpenAI` object and stops. Cost: the probe goes from 0.72s to **1.26s**, once per night.
+`tests/test_batch_preflight.py::test_the_llm_backend_is_probed_even_though_nothing_else_reaches_it`
+asserts it by name rather than by coverage, so a refactor that incidentally imports the
+client cannot delete the operator's reason for trusting the check.
+
+**What a green preflight still does not promise:** an `openrouter.ai` that is reachable,
+a key that is not expired or revoked, credit that is not exhausted, or a model id the
+account can serve. All four need a live one-token call, which is slower and not free and
+belongs behind its own flag, not inside a 1.26s import probe.
+
+### D. Resume semantics documented, not changed
+
+`completed_pairs` (`runner.py:404`) builds its done-set from any manifest row and never
+looks at `status`, so a **failed** leg is as done as a passing one and a resume will not
+revisit it. `runs/2026-07-28_0919` ended with five rows, three of them `fail`; relaunching
+it starts at leg 6 with 51 pending and never touches those three again. This matters
+right now, because §E of the entry below (the empty-completion retry) was written for two
+of those exact legs and a resume will not exercise it on them.
+
+Deliberately left as it is. The alternative — retry anything that failed — makes a
+deterministically failing paper (a clinical case report with no pathway in it) cost the
+night its full timeout on every relaunch. `docs/batch_runner.md` §8 now says so
+explicitly, with the two ways to force a retry: `--fresh`, or delete the failed rows from
+`manifest.jsonl`.
+
+---
+
+## Clearing the debt from `runs/2026-07-28_0919` (2026-07-28, branch `research-mode`)
+
+The entry below this one closed four defects and then listed **twelve** items of known
+debt found in the same run. This round closes six of those twelve outright — the
+referential cascade on entity removal, the Stage-0 Case-C clobber, empty-but-successful
+LLM completions, the missing batch preflight, serial enrichment, and the cross-check
+that entry left explicitly outstanding. It closes half of two more: entity-type
+confusion in one of its two directions, and per-reaction provenance, which is the
+precondition for any work on scope creep. And it refutes the premise of a third:
+`src/t2pw/stoich/` was nominated to catch reversed reactions and structurally cannot.
+
+The cross-check produced the worst news here. **The out-of-scope reaction filter
+shipped on 2026-07-14 is wired, is called, and cannot fire.** It has been inert since
+the day it landed. That was written up as a regression in the debt section below, which
+has been rewritten so that nothing fixed in this entry is still listed as open and
+nothing found this round is missing from it. (It was closed later the same day — see §A
+of the pre-run close-out entry above — so the debt bullet is gone and what replaced it
+is the fact that a live filter's removals are not recorded anywhere.)
+
+One coordinate note that applies throughout: `streamlit_app.py` grew 133 lines near the
+top this round (§A), so orchestrator line numbers quoted in earlier entries and in the
+cross-check sit about 107 lines lower now — the Stage-1 call is at `:3590`, the
+out-of-scope filter at `:3617`, the RAG gate at `:3638`. Numbers below are current.
+
+### A. Stage 0's retry could overwrite a correct refusal — and did
+
+**Error.** PMC13278307 (*An Overview of Mobile Colistin Resistance (mcr) Genes*) ran
+strict with the extraction-focus box set to "lipid A biosynthesis in Escherichia coli"
+and came back **PASS in 2098.21s with 14 reactions and 0 gate errors** — every one of
+them an mcr / PEtN / L-Ara4N lipid A *modification* step, and not one reaction of the
+lipid A biosynthesis pathway it was asked for.
+
+**Why.** Two defects in the same six-line block, both load-bearing. First, the retry
+fired on a *correct* refusal: Stage 0 fails closed to an empty context, so
+`streamlit_app.py` retried on a bounded head whenever `not _has_usable_context(...)` —
+but the Stage-0 prompt's Case C (a multi-example review with no target selected)
+**mandates** those same fields be blank, so a correct Case C is indistinguishable from
+a failed Stage 0 by that test. With `_PREPROCESS_RETRY_CHARS` at 20,000
+(`streamlit_app.py:204`) and this paper's source text at 50,377 chars, the retry fired
+every time. Second, `pathway_context = preprocess(head)` adopted the second draw
+unconditionally. When the first draw was a Case C and the second was blank, the
+overwrite dropped `document_type` — the one field
+`is_ambiguous_multi_example_review_context` requires (`preprocessor.py:317-328`) —
+which disarms the refusal gate and lets an unguided extraction run over a review
+describing six unrelated examples. Because the batch driver fills the focus box, such a
+run no longer aborts loudly; it reports PASS.
+
+**Fix.** The block moved into `_run_stage_zero_with_retry` (`streamlit_app.py:300`)
+with an explicit ordering, `_stage0_context_rank` (`:268`): rank **2** is a well-formed
+Case C, rank **1** a usable context, rank **0** neither. Case C outranks a usable
+context on purpose — if one draw says "multi-example review, no target" and another
+names a pathway, the safe reading is the refusal, and a second draw must never be able
+to disarm a refusal gate. A deliberate Case C now skips the retry entirely (it is
+deterministic; only the user naming a target helps), text at or below the retry bound
+skips it too, and a retry that does run is kept in a local and adopted **only on a
+strict rank improvement**. A genuinely failed Stage 0 can still be rescued; it can no
+longer be degraded.
+
+**On the `_EMPTY_CONTEXT` revert.** The 2026-07-25 entry (§E, this file) implemented
+and then **reverted** adding `document_type`/`scope_status` to `_EMPTY_CONTEXT`. That
+revert does not condemn this fix and the two do not collide: `document_type` only ever
+arrives from a parsed model reply (`{**_EMPTY_CONTEXT, **result}`,
+`preprocessor.py:139`), while every failure path returns `dict(_EMPTY_CONTEXT)`
+(`preprocessor.py:165`, `:187`) carrying no `document_type` at all. Those are precisely
+the draws that must rank 0, so the reverted shape supplies exactly the discrimination
+the rank function needs. Adding the key back would give a crashed Stage 0 an *empty*
+`document_type`, which the ambiguity predicate still rejects — it tests for the literal
+value `multi_example_review`. Nothing here asks for the revert to be undone.
+
+**Not re-measured.** No batch leg was re-run — that costs an LLM night — so the effect
+is pinned by `tests/test_stage0_case_c_retry_clobber.py` (8 tests), not by a repeat of
+PMC13278307.
+
+### B. A type gate: a row's bucket now has to agree with what its name says
+
+**Error.** The same PMC13278307 strict leg passed with `ok=true`, 0 errors, 37 warnings
+and a 200,266-byte PWML while shipping **six entity rows whose declared type
+contradicts their own names**: `pmrHFIJKLM operon` (an LPS-modification DNA operon) in
+`entities.compounds`, and `arnBCADTEF operon`, `pmrCAB operon`, `mcr genes`,
+`arnBCADTEF`, `pmrHFIJKLM` in `entities.proteins`. After mapping those protein rows
+carry `mapped_ids.uniprot` **P30843** (×3), **P03023** (*Lactose operon repressor*) and
+**P08235** (the human mineralocorticoid receptor) — accessions obtained by asking
+UniProt about DNA.
+
+**Why.** The origin is one line of RAG synthesis, `rag/synthesize.py:1054`
+(`is_protein = key in enzyme_names`): the bucket is chosen by **grammatical role** —
+appeared in some reaction's `enzymes[]` means protein, appeared anywhere else means
+compound — and no type judgement is made anywhere. That is why the same DNA landed in
+two different buckets of one payload. Nothing downstream noticed because no validator
+we own has ever asked what *kind* of thing a name denotes: `validate_post_mapping`
+checks that `mapping_meta`/`resolution`/`status` exist, and
+`run_strict_post_normalization_gates` checks that a protein has a species and an
+accession — all satisfied by a DNA operon filed as a compound. The one report that
+mentions these rows, `strict/pwml_ir_report.json`, has the failure inverted: it flags
+`pmrHFIJKLM operon` with `compound_db_resolution_failed`, complaining about the row
+that harmlessly failed to resolve while saying nothing about the rows that resolved
+confidently to the wrong molecule. The bucket is not a label: it selects the database
+(`map_ids._DIRECTLY_MAPPED_ENTITY_BUCKETS`) and the PWML section a row is exported in.
+
+**Fix.** `enforce_entity_type_consistency` (`process_normalizer.py:4746`), called at
+`:5018` between `relocate_complex_named_proteins` and the strict gates — after the
+passes that decide what the final actor rows and complex components are, and before the
+passes that judge a row by the bucket it is sitting in. Two rules
+(`nucleic_acid_name_verdict`, `:739`): an explicit **terminal** nucleic-acid noun
+(`NUCLEIC_ACID_TAIL_RE`, `:228`, anchored at the end so *Lactose operon repressor* —
+the very entry this run mis-shipped — stays a protein), and bacterial gene-cluster
+shorthand (`GENE_CLUSTER_SYMBOL_RE`, `:242`, `^[a-z]{3}[A-Z]{4,}$` with a
+`pro/pre/apo/iso/sub/cis` denylist so `proBDNF` is not read as a cluster), which is
+**advisory only** and never relocates. Both regexes were replayed over every entity row
+of every payload artifact under `runs/` — 12 payload files, 209 distinct names, 275
+compound rows — and match exactly those six names and nothing else. A relocated row is
+stripped of the identifiers the wrong database produced (`_BUCKET_IDENTITY_FIELDS`);
+that is 92e1192's identifier-falsification class applied at the relocation instead of
+at the resolver. A row referenced as an enzyme, modifier or transporter, or as a
+protein_complex component, is **flagged and left in place** — moving it would
+manufacture `Unknown protein/modifier reference` out of a correction — and stamped with
+`entity_type_gate` so the mapper, the reviewer and the report all see the disagreement.
+`validate_registry_references` now also unions `entities.nucleic_acids`: the bucket has
+always been a first-class payload member and `pwml/ir.py:1394` has always listed
+`nucleic_acid` as a legal `reaction_member`, but the registry validator never knew it
+existed, so relocating `pmrHFIJKLM operon` — a reaction *input* of this paper — would
+otherwise have produced `/processes/reactions/3/inputs/0 unknown entity`.
+
+**Measured**, by replaying the gate today over that leg's own artifacts.
+`merged_payload.json`, the shape the `streamlit_app.py:2197` normalization sees: **1 relocated**
+(`pmrHFIJKLM operon`, out of compounds, taking its `element_locations` row with it) and
+**5 flagged** in place. `final_mapped.json`, the post-mapping shape the writer's second
+normalization sees (`pwml/writer.py:2650`): **3 relocated** (`pmrHFIJKLM operon`,
+`arnBCADTEF operon`, `pmrCAB operon`), **stripping `mapped_ids.uniprot` P30843 from the
+latter two**, and 3 flagged (`mcr genes`, pinned as an actor; `arnBCADTEF` and
+`pmrHFIJKLM`, advisory-only). The function's docstring says "five of the run's six rows
+are pinned"; that is true of the pre-mapping pass only — post-mapping the complex
+wrappers absorb the actor references and two more rows become movable.
+
+**Half of the class is deliberately not fixed.** The mirror direction — `PhoP` and
+`phosphorylated PhoP`, a DNA-binding response regulator, filed as *compounds* — is left
+alone. Moving a compound into `proteins` at this point manufactures two new hard gate
+errors per row (missing species/organism, missing UniProt or DrugBank identifier),
+because Stage 2 mapping already ran at `streamlit_app.py:2065` and stamped identity
+only on rows that were proteins then; turning a PASS into a FAIL is not a fix. The
+falsified identifier is already stopped by 92e1192's name-plausibility gate (`PhoP` →
+NAD, CHEBI:15846 / KEGG C00003 / CAS 53-84-9). The correct home for that half is the
+pre-mapping seam, which this pass cannot reach.
+
+### C. Deleting an entity could strand every reaction that names it
+
+**Error.** Two shapes, both reproducible from artifacts on disk.
+`runs/2026-07-27_1623` PMC13231680/strict recorded
+`"/processes/reactions/2/inputs/0 unknown entity: phthalylsulfacetamide (PSA)"` while
+that same leg's `merged_payload.json` still carries five near-duplicate compound rows
+(`phthalylsulfacetamide` twice, `phthalylsulfacetamide (PSA)`, `PSA`, `sulfacetamide`):
+normalization passed the registry gate with all five present, then a curation step
+deleted the redundant parenthetical row as duplicate cleanup and left the reaction
+input, which spells the name *with* the parenthetical, pointing at nothing. At scale,
+`runs/2026-07-28_0919` PMC12444477/research: **24 of its 25 gate errors** are
+`unknown_protein_modifier_reference` — e.g. `/processes/reactions/8/enzymes/7` →
+`"acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"` —
+after burning 2778s.
+
+**Why.** `_is_core_semantics_path` scopes only to `/processes/*`, so the
+`_is_safe_core_remove` guard in `_should_accept` never looks at `/entities/...`. A
+remove of `/entities/compounds/N` needed nothing beyond confidence ≥ 0.95, and
+`audit_json_llm.py`'s prompt actively solicits exactly that — its patch policy lists
+"duplicate cleanup" under *High confidence (≥0.95)*. The asymmetry was total: a
+reaction cannot be deleted unless it is a provable no-op at ≥ 0.97, while the entities
+that reaction points at could be deleted freely, with a bare remove and no cascade.
+
+**Fix.** A referential-integrity guard in `apply_patch_with_policy`
+(`apply_audit_patch.py:1011`), running **after** each op against the live before/after
+pair rather than inside `_should_accept`, which is handed the stale pre-batch
+`source_payload` — after the first entity removal every later index has shifted by one,
+so a pre-application check would inspect the wrong row. Diffing registry coverage also
+makes the guard shape-agnostic: one predicate catches a whole-row remove, a whole-bucket
+remove, a `/name` remove and a shortening `replace`. It **refuses rather than
+cascades**: rewriting the surviving references is a second guess stacked on the model's
+first, and the PSA case is three spellings whose merge target is a judgement call about
+whether the parenthetical is an alias or part of the name. The refusal lands verbatim
+in `rejected_patch_log.json` behind the greppable
+`REFERENTIAL_INTEGRITY_REASON_PREFIX` (`:853`), naming at most 5 orphaned references
+before summarising, so the next audit round can propose the synonym-add repair the
+prompt itself calls the lowest-risk fix. The guard borrows `process_normalizer`'s own
+`_entity_name_norms` / `_normalize` rather than re-deriving identity, so it cannot
+disagree with the Stage-3 gate that would later reject the payload — declared synonyms
+count on both sides. A whole-batch look-ahead (`_pending_entity_name_norms`, `:995`)
+keeps the two-op cofactor relocation the prompt asks for ("remove from `proteins`, add
+to `compounds`") working, since the remove is only safe in light of an add that has not
+run yet. **True duplicate cleanup is untouched**: the surviving row supplies the same
+normalized name, the coverage diff comes back empty, and the guard returns after one
+set difference without ever walking the processes block.
+
+### D. A delivered reaction was not attributable to the paper it came from
+
+**Error.** In PMC12444477/strict `merged_payload.json` the key union across all **27**
+delivered reactions is exactly `('biological_state', 'enzymes', 'evidence', 'inputs',
+'locked_reaction_id', 'name', 'outputs')` plus two repair keys on 3 of them — **zero
+reactions carry `rag_provenance`**. In the same file **41 of 56 compounds and 18 of 31
+proteins do** (35 pointing at PMC12898747, 2 at PMC11046580). The payload therefore
+proves cross-paper import happened while making it impossible to attribute a single
+delivered *reaction* to the paper it came from.
+
+**Why.** `_clean_processes` rebuilds every process row from a key whitelist that named
+no RAG carrier; `_clean_entities` copies an entity row key-for-key. Same payload, two
+policies.
+
+**Fix.** `_carry_rag_provenance` (`pipeline.py:1747`) copies the three **namespaced**
+carriers `_RAG_ROW_CARRIER_KEYS` (`:1744`) — `rag_provenance`, `source_papers`,
+`rag_confidence` — onto reactions, transports, reaction-coupled transports and
+interactions. `evidence` is excluded because the cleaners flatten it to a string on
+purpose and re-emitting the record list would hand back the shape that seam exists to
+remove. `source_refs` is excluded because it is a *core* key that two pieces of
+locked-reaction machinery read as an evidence fallback
+(`reaction_preservation_validator._evidence_text:120`,
+`reaction_lock_manifest._evidence_quote:74`), so introducing it on reaction rows could
+move a locked reaction's preservation status — a separate change needing its own
+before/after. The copy is appended last, so a non-RAG row's key order is byte-for-byte
+what it was and a row with no carrier gains no key; reaction merge and dedup fingerprint
+on inputs+outputs only, so reaction identity, ordering and count are untouched.
+
+This is a **precondition, not a cure**. It does not remove one imported reaction. It
+makes "how much of this pathway came from another paper?" answerable at all, which is
+what any gap-relevance filter has to be evaluated against.
+
+### E. An HTTP 200 with no text was returned as an answer
+
+**Error.** Two legs of the reference run died on `"Payload must include a processes
+object"` — PMC13278307/research after **137s**, PMC13231680/strict after **55s**. The
+latter is the paper that extracted 3 reactions successfully the previous day, and whose
+research leg in this very run passed with 4 reactions in 936.7s off the same source
+text.
+
+**Why.** Every retry loop in `llm/client.py` fired only on a **raised** exception. An
+HTTP 200 whose `message.content` was `""` or `None` was handed back as a success by
+`return (resp.choices[0].message.content or "").strip()`, and `finish_reason` was never
+read anywhere in the file. The one layer that can see "the provider answered 200 and
+sent nothing" was the one layer that called it an answer.
+
+**Fix.** `_completion_is_empty` (`client.py:193`) and `_finish_reason` (`:165`), folded
+into the **existing** loop, backoff and `LLM_MAX_RETRIES` budget rather than growing a
+second retry mechanism. On budget exhaustion `chat()` returns `""` and
+`chat_with_tools` returns the raw response — the pre-change contract, because the
+preprocessor already turns `""` into status `empty_reply` and a new exception type would
+change every call site at once. The tool-calling direction is the dangerous one and is
+handled explicitly: `tools_were_sent = bool(include_tools and tools)` is captured from
+the same expression that decided what went on the wire, so a `tool_calls`-only reply
+with `content=None` — the normal shape of a function-calling turn — is never counted
+empty and never re-issued.
+
+**Claim downgraded on review.** An earlier draft of this fix's own comment asserted
+each of those two deaths was caused by a *single* empty Stage-0 reply. Review checked
+that against the artifacts and it does not hold, so `client.py` now carries the
+correction rather than a plausible story attached to a real fix. Neither leg wrote any
+artifact (`files: []` in both manifest rows; only `RESULT.txt` on disk), so **nothing in
+that run records an empty completion** — the diagnosis was inferred from the shape of
+the failure. And the run executed commit 12bc11b (`batch.log` 09:19:08 → 11:49:05;
+92e1192 landed at 14:06:43), where Stage 0 was *already* drawn twice for any text over
+20,000 chars — both legs' source texts are 50,377 and 61,997 chars — so the
+single-reply story needs two consecutive empty completions, not one. What survives
+unchanged is the hole itself, which is visible in the code independent of any leg: an
+empty 200 was returned as a success, cost a caller a full retry round or a degraded
+result, and was invisible to every counter and log line in the module. `finish_reason`
+is now surfaced precisely because a provider hiccup (retry is right) and a
+`content_filter` stop (retrying the identical prompt burns wall clock and cannot help)
+were indistinguishable in the 2026-07-28 postmortem.
+
+### F. A preflight, because one missing import burned a whole night
+
+**Error.** `runs/2026-07-27_2135`, still on disk and still looking like a night that
+ran: the parent started at 21:35:06, fetched full text for **28 papers by 21:35:49
+(43s)**, then recorded **all 56 paper+mode legs as failures between 21:35:49 and
+21:36:13 — 24 seconds for work that takes ten hours**. Every one of the 56 manifest
+rows carries the identical `ModuleNotFoundError: No module named 'streamlit'` from
+`from streamlit.testing.v1 import AppTest`, filed as `failure_kind=crash`. `SUMMARY.txt`
+reported `strict 0 pass 28 fail | research 0 pass 28 fail` and opened its triage matrix
+with `!! RESEARCH-MODE DEFECT !! papers affected: 28` — 28 pipeline defects that do not
+exist — and the run left a `plan.json`, 28 paper folders, a cache snapshot and a 56-row
+manifest behind it.
+
+**Why.** `driver.py` **defers** the two imports that matter — `t2pw.rag.research_report`
+(`driver.py:1101`) and `streamlit.testing.v1` (`driver.py:1199`) — so the parent's own
+`import t2pw.batch.driver` proves nothing about either. The usual Windows cause is that
+`.py` is associated with `C:\WINDOWS\py.exe`, which ignores an active virtualenv, so
+`scripts\batch_run.py` and `.venv\Scripts\python.exe scripts\batch_run.py` are two
+different interpreters and only one of them has the dependencies.
+
+**Fix.** A preflight in `batch/runner.py` that proves the **child's** environment in the
+parent, before anything is planned or fetched. `CHILD_IMPORTS` (`:1233`) names the four
+modules a child needs *with the reason it needs each*, and a test AST-parses `driver.py`
+and fails if any non-stdlib deferred import is missing from that list, so a future
+"move the import into the function" refactor cannot silently reopen the hole.
+`probe_imports` spawns **one** fresh child (`[sys.executable, "-c", ...]` under
+`child_env()`) which reports sentinel-prefixed JSON back. A subprocess, not an
+in-process `importlib` call: the parent's `sys.modules` is only a proxy for a child's
+and it lies both ways — four test modules in this repo install a `MagicMock` as
+`sys.modules["streamlit"]` (they must; importing `streamlit_app` executes a Streamlit
+script) and pytest imports every test module during collection. The first, in-process
+version of this check broke three pre-existing tests in `tests/test_batch_run.py` and
+reported streamlit missing on a box running streamlit 1.58.0. The subprocess is also
+strictly stronger: it catches a broken `PYTHONHOME`, a raising `sitecustomize`, an
+interpreter that cannot start, and a module that `sys.exit()`s at import.
+`EXIT_PREFLIGHT = 3` (`:1211`) because 2 was already double-booked twice over —
+argparse exits 2 on any usage error, and `run_overnight.bat` uses 2 for a missing
+virtualenv. The message is ASCII-only, 78 columns, names the module, why a child needs
+it, the interpreter in use, the project venv, and a cure that is a **command**,
+branching three ways (wrong interpreter / already in the venv / no venv at all). An
+interpreter outside the project `.venv` warns but never blocks — a conda env or a
+container is legitimate — and the warning is suppressed on the failure path, where
+claiming the imports succeeded above a `PREFLIGHT FAILED` block would be false.
+`scripts/batch_run.py` calls it on the parent path only, after `--status` and `--single`
+return and immediately above `run_batch`, whose first acts are `mkdir(out_dir)`,
+`new_run_dir()` and that 43-second fetch. `--status` stays pollable at exit 0; the child
+never re-probes, because the parent already vouched and a disagreement would break the
+one-row-per-pair contract.
+
+**Two review findings, both fixed.** The probe's answer is now written as its **own
+whole line** and located by scanning lines for the sentinel — the convention
+`parse_child_output` (`runner.py:1049`) has always used — instead of
+`stdout.split(sentinel, 1)[1]` plus `json.loads` of the remainder, which any stray byte
+of child output would have turned into a refusal of a **healthy** night; a
+seen-but-unparseable sentinel is now a distinct message from "the probe never started".
+And `run_overnight.bat` gained its own branch for exit 3 ("STOPPED BEFORE STARTING …
+NO run folder was created"), because the generic branch's "read `SUMMARY.txt` in the
+newest `runs\` folder" would have pointed the morning operator at the **previous**
+night's summary — the exact "a refused night looks like a night that happened"
+confusion the preflight exists to prevent, arriving on the one surface a double-click
+user reads. Exit codes 0/1/2/3 are now documented in `scripts/batch_run.py`'s module
+docstring, in its `--help` epilog, and in `docs/batch_runner.md` §2d.
+
+**Measured.** The same fault is now detected in **0.72s** cold, including interpreter
+startup (review independently measured 0.67–0.69s steady state, 1.44s on a cold first
+run), before anything is fetched or created: exit 3, one message, and **zero bytes
+written** — no run directory, no `plan.json`, no manifest, not even an empty `--out`
+folder, asserted by a test that spawns the real CLI with a stub `streamlit` package on
+the child's `PYTHONPATH` raising the recorded `ModuleNotFoundError`. Cost on a healthy
+night: one 0.72s subprocess against a ten-hour run.
+
+### G. Enrichment made 68 external calls one at a time
+
+**Error.** Roughly **22 of PMC12444477/strict's 49m48s** went to this module.
+Reconstructed from cache mtimes and the LM Studio log: the leg ran 09:19:08 → 10:08:57,
+RAG finished its last embedding at ~09:27:48, `id_mapping_cache.json` was written at
+09:44:44 and the audit candidates at 09:45:13, and **from 09:45 until 10:07:37 the only
+file the process wrote was `enrichment_cache.json`**.
+
+**Why.** That leg's `final_mapped.json` carries 44 compounds and 22 proteins, reducing
+to **68 distinct upstream lookups** — 21 UniProt, 17 ChEBI, 17 KEGG, 13 HMDB. (The
+56/31 counts quoted elsewhere are `merged_payload.json`, before mapping dedupes;
+enrichment only ever sees 44/22.) Nothing orders those 68 against each other: each is
+an independent read of a different public database and the merge that consumes them is
+a pure function of the fetched blobs. It was serial only because nobody had made it
+otherwise.
+
+**Fix.** `enrich_payload` now runs in three phases: **plan** (serial, no network,
+returns the de-duplicated first-encounter-ordered list of cache *misses*), **prefetch**
+(one bounded `ThreadPoolExecutor` per service — uniprot 4, chebi 3, hmdb 2, kegg 2, with
+a per-lane pacing floor), and **merge** (the original serial loops, unchanged, taking
+each blob out of the phase-2 dict instead of calling the network; a key missing from
+that dict falls through to the original inline fetch, so a planner/merge divergence can
+cost a request but never change a result). Four invariants make the output identical:
+the cache is read and written **only** from the main thread in phase 3 and in the same
+order, so `cache_hits`, `api_calls` and `calls.*` are unchanged; `report["entities"]` is
+appended to only in phase 3; both phases go through the same two key-construction
+helpers; and each worker thread gets its own `HttpClient`/`requests.Session` via
+`_ClientPool`, since `requests.Session` is not documented thread-safe and sharing one
+is the classic route to interleaved-response corruption. `max_workers=1` restores the
+literal pre-change behaviour. `EnrichmentCache.save` now writes a sibling temp named
+with pid **and** thread ident and `os.replace`s it with 3 retries; the previous
+`write_text` truncated the real 25.9 MB file and then streamed into it, so a crash or a
+Ctrl-C left a half-written document that `except Exception: pass` in `__init__`
+silently reads as "no cache at all".
+
+**Measured**, replaying that exact leg's `final_mapped.json` offline with the fetchers
+stubbed at latencies probed against the real URLs: **serial 139.7s → concurrent 29.1s,
+4.81×, 110.7s saved on one leg**, `api_calls=68` and `cache_hits=9` in both, and the
+enriched payload, the enrichment report and the written cache file **byte-identical**
+between `max_workers=1` and the default. Review reproduced this independently on the
+real payload (139.7 / 29.1 / 4.80× / 110.7s, identical 47-row report ordering, 11
+distinct worker threads = 4+3+2+2) and confirmed no stray `data/*.tmp-*` files survive.
+
+**Two honest limits.** The `RLock` added to the cache accessors is **not load-bearing
+today** — nothing mutates the cache off the main thread — and its own docstring says
+so; it exists so the first caller who fills the cache from a worker thread fails loudly
+rather than losing entries to a non-atomic `setdefault`-then-assign. And the ceiling is
+ChEBI, which is *dead*: `getCompleteEntity` returned **HTTP 500 in 0.99s** on probe, all
+230 cached ChEBI entries carry status `error`/`request_failed`, and 197 of 201 cached
+HMDB entries are HTTP 403 because hmdb.ca refuses the `Project14-T2PW-IDMapper/1.0`
+User-Agent. At ~4.8s per dead ChEBI id (3 attempts plus backoff) and three workers, 17
+ids take ~29s — i.e. **the whole concurrent runtime is failed ChEBI calls**. This change
+made a fast path to failure faster; fixing the endpoints is worth more than widening
+any lane, and is now recorded as debt.
+
+### H. The cross-check the last entry left outstanding, completed
+
+That entry's final debt bullet asked whether three earlier entries already cover the
+scope-creep and duplication debt, and said the check was outstanding. It is done, and
+it changes the classification of two items.
+
+**A regression, still open: the out-of-scope reaction filter (2026-07-14, this file).**
+Both halves of that fix are still present — `src/t2pw/llm/prompts/pwml_system.txt:15-16` still
+carries the strict core-only rule, `streamlit_app.py:3617` still calls
+`filter_out_of_scope_reactions` between Stage 1 (`:3590`) and Stage 2, and the AST test
+at `tests/test_streamlit_stage2_orchestration.py:807-844` still passes. **The filter
+cannot remove anything.** The orchestrator receives Stage-1 output from
+`run_stage_one_with_chunking`, which returns `clean_stage_one(...)` on both branches
+(`pipeline.py:2060`, `:2069`, `:2114`), and `_clean_processes` (`pipeline.py:1738-1789`)
+rebuilds every reaction from a key allowlist that **does not include
+`scope_membership`**; the filter then reads `rxn.get("scope_membership", "core")`
+(`pipeline.py:271`) and defaults every reaction to core. Proved by execution — raw
+labels `['core', 'out_of_scope']` → filter removes `['off-pathway step']`; after
+`clean_stage_one` both labels are `<ABSENT>` and the filter removes nothing — and
+confirmed on real data: all 9 Stage-1 reactions and all 27 merged reactions of
+PMC12444477 carry no `scope_membership` key at all. `git log -S 'entry["scope_membership"]'`
+returns nothing, so the key was never in the allowlist: the 2026-07-14 fix was wired on
+the wrong side of it and **has been inert since the day it landed**. It also creates an
+asymmetry that entry's "Pipeline consistency" paragraph assumed impossible:
+`reaction_lock_manifest._scope_membership` (`:59-60`, `:186`) reads the **raw**
+pre-clean output (`write_stage1_lock_artifacts` runs at `pipeline.py:2058-2059`, before
+`clean_stage_one` at `:2060`), so the manifest correctly refuses to lock an out-of-scope
+reaction while the payload keeps it — out-of-scope reactions ship as **unlocked**
+reactions. The tests missed it the same way 92e1192 §A's did: the two unit tests
+(`tests/test_pipeline_cleanup.py:230-284`) hand the filter a hand-built payload that
+already carries the label, and the AST test pins call ordering only. **This round did
+not fix it.** §D opened that same allowlist for the RAG carriers, so adding
+`scope_membership` is a one-line change — but it would put the label in front of the
+filter for the first time ever, and every reaction the filter then removes is a reaction
+that used to ship. That needs its own before/after over the corpus, not a rider on a
+provenance fix; it is now the top item in the debt list with the measurement spelled out.
+
+**Correct but on a different axis: the RAG scope/gap guardrails (2026-07-25).** That fix
+is intact and reachable — `and rag_incomplete_flag` is gone (`streamlit_app.py:3638`
+reads `if rag_config()["enabled"]:`), `_AUTO_TRIGGER_GAP_SOURCES = {"gate", "mapping"}`
+is live at `rag/triage.py:76` and applied at `:138`, and its own prediction still holds:
+`streamlit_app.py:3644` supplies `reports={"qa_graph": ...}` only, so `scope_clarity_score`
+plus the explicit flag remain the effective auto-trigger. But that guardrail decides
+**whether RAG starts**, not **what it imports**. The observed import enters at the S3
+merge, downstream of the only filter call, and a RAG row cannot carry a scope label even
+in principle: `_ALLOWED_ROW_KEYS` (`rag/synthesize.py:1136-1138`, asserted at `:1133`) is
+`{name, inputs, outputs, enzymes, entity, entity_type, role, source_refs}` plus
+`RAG_ADDITIVE_KEYS`, and `rag/conform.py` is a pure shape adapter with no relevance or
+scope test. Re-running the existing filter after the merge would still keep all 17
+imported reactions.
+
+**Correct, but not the duplication we are seeing: the RAG synonym merge (2026-07-23).**
+That fix is present and wired (`rag/synonyms.py`, `build_offline_synonym_resolver()`
+called at `streamlit_app.py:462`, threaded in at `:469`, consumed at
+`synthesize.py:1319` and `:1321`). It cannot explain the observed duplicates because
+they are **not synonyms — they are byte-identical names**. Measured on PMC12444477/strict
+`merged_payload.json`: 31 protein rows for 22 distinct normalized names, with **all nine
+seed enzymes doubled** (lpxa, lpxc, lpxd, lpxh, lpxb, lpxk, waaa, lpxl, lpxm); 56
+compound rows for 41 distinct names, 14 duplicated (lipidiva ×3, udpglcnac ×2, ump ×2,
+kdo ×2, kdolipida ×2). Diffing the pairs shows the second copy is **the seed's own
+entity re-imported through the RAG merge**, tagged `rag_provenance.source_id =
+"seed_paper"`. `merge_additions` (`pipeline.py:1064-1071`) dedupes with `_extend_unique`
+(`pipeline.py:2458-2472`), whose signature is `json.dumps(item, sort_keys=True)`, and the
+RAG copy carries a different key set, so the signatures differ and the row is appended;
+`_clean_entities` (`pipeline.py:1540-1553`) dedupes by normalized name but only *within*
+one incoming list, never across base + additions. That is new debt, recorded below.
+
+**Already regressed once before, and re-fixed by 92e1192: enzyme fabrication by
+substring matching (2026-07-22, this file, `:1217-1222`).** That entry excluded
+`_inject_name_based_modifiers` from the shared cleanup because running it over RAG
+evidence attached every enzyme to every reaction (99 spurious
+`reaction_enzyme_must_be_protein_complex` errors) and stated it "now reads string
+evidence only". The guard survived; the shape did not. `rag/conform.py` later began
+flattening the evidence list to a string upstream, so the `isinstance(value, str)` test
+was defending against a shape that no longer arrived, and the same defect returned as
+92e1192 §A. Recorded here so the next round knows this guard has failed once already and
+that a shape-based guard needs a test that feeds it the shape production actually
+produces.
+
+### I. `src/t2pw/stoich/` will not be wired, and here is the evidence
+
+The debt list claimed "a mass/atom balance check would catch this class" and pointed at
+`src/t2pw/stoich/`. A feasibility study read the package, traced every caller and ran
+its classifier offline against the real payloads. **Recommendation: leave it. Do not
+wire it.** A reasoned decision not to build something belongs in this file, so:
+
+**It is not a stoichiometry checker.** Four files, 851 lines (`templates.py` 81,
+`classifier.py` 156, `agent.py` 612): 11 hand-written keyword templates naming cofactors,
+a `classify_reaction` that substring-matches the reaction name, tiebreaks on a 10-name
+cofactor set and otherwise falls back to an LLM, and a per-reaction OpenAI tool loop.
+There is **no mass, atom or charge balance and no coefficient inference anywhere in
+it**: `chebi_verify` returns `{found, chebi_id, canonical_name}` and deliberately not a
+formula, `kegg_reaction_get` parses only the EQUATION line, `_parse_kegg_equation_side`
+(`agent.py:108-120`) explicitly **strips** stoichiometric coefficients, and the single
+mutator `apply_stoich_fix` (`agent.py:196-248`) only **appends** named compounds. It is
+a cofactor-completion agent.
+
+**It has never run.** Exactly one caller, `streamlit_app.py:2816-2820`, guarded by
+`use_stoich_agent`, whose only source is the checkbox at `:4021` with `value=False`.
+`driver.py` never sets `session_state["post_use_stoich_agent"]`, `grep -rn stoich
+src/t2pw/batch/` returns nothing, and no `*stoich*` artifact exists anywhere under
+`runs/`. Zero tests import it — 851 lines with no test coverage. Last touched by commit
+e3f2c95 on 2026-05-28, before RAG, before the gates, before 92e1192. Three dead one-line
+shims survive at `src/stoich_agent.py`, `src/stoich_classifier.py`,
+`src/stoich_templates.py`.
+
+**Run against the real data it would make things worse.** With the LLM stubbed, **38 of
+41 reactions (92.7%)** across the two completed strict legs fall through both
+deterministic passes to the LLM — and all four named defects are in that 38. Of the 3
+that do get a deterministic class, **2 are wrong and backwards**: "dephosphorylation of
+PGP to produce PG" classifies as `kinase_phosphorylation` at HIGH confidence (so no LLM
+check) and demands +ATP/−ADP on a **phosphatase**, because "phosphorylat"
+(`templates.py:4`) is a substring of "dephosphorylation"; and "Acetyl-CoA → malonyl-CoA"
+classifies as `coa_transfer` and demands free CoA as a substrate of a **carboxylase**.
+The same collisions hit ordinary names: "enoyl-CoA dehydration" and "3-hydroxyacyl-ACP
+dehydratase reaction" both classify as **hydration** and demand H₂O as an *input* —
+direction inverted on the FAS-II / β-oxidation step present in essentially every lipid
+paper this pipeline processes — and "succinate dehydrogenase" classifies as
+`nad_linked_dehydrogenase` when it is the textbook FAD-linked one.
+
+**And it cannot catch the class it was nominated for.** A balance check is
+**direction-symmetric** — A→B is unbalanced exactly when B→A is — so no mass or atom
+balance can ever detect the reversed `Phosphoethanolamine → lipid A`. The package has no
+swap, replace, delete or rename operation either, and "phospholipid" is a compound
+*class* with no formula, so nothing an appender can add repairs it. Cost if wired: of
+the 41 reactions, **30 (73%) must be skipped unevaluated** because at least one
+participant carries no formula-capable id; of the 11 nominally evaluable, 3 contain a
+demonstrably wrong molecule read from the row's own `mapping_meta` (PG →
+"Uridine diphosphate glucose", CL → "Chloride ion", PE → "Phytocassane E") and 6 contain
+a class term (lipid A, phospholipid, LPS, modified lipid A) with no single formula —
+leaving **2 of 41 (4.9%)** balanceable on identities that are both resolvable and
+correct. Practical yield in the reference run is **zero**: all 14 ChEBI
+`getCompleteEntity` lookups for these compounds returned HTTP 500
+(`cache_snapshot/enrichment_cache.json`, `retrieved_at` 2026-07-22). Deleting the
+package is a separate call nobody made this round; it stays where it is, unwired, and
+the debt bullet that nominated it is rewritten below.
+
+**Verified.** Full suite green: **1067 passed** in 201.5s (baseline at 92e1192: **929**).
+Seven new files carry 106 test functions — `tests/test_batch_preflight.py` (35),
+`tests/test_enrich_entities_concurrency.py` (17),
+`tests/test_apply_audit_patch_referential_integrity.py` (15),
+`tests/test_entity_type_gate.py` (13),
+`tests/test_llm_client_empty_completion_retry.py` (11),
+`tests/test_stage0_case_c_retry_clobber.py` (8),
+`tests/test_pipeline_reaction_rag_provenance.py` (7) — and the balance of the +138 is
+parametrised cases plus tests added to existing files. **No pre-existing test was
+rewritten to match changed behaviour.** The one time this round broke pre-existing tests
+— three CLI tests in `tests/test_batch_run.py`, under a first, in-process version of the
+preflight import check — the check was redesigned into a subprocess probe rather than
+the tests being relaxed.
+
+---
+
 ## Four defects that let a wrong pathway pass every gate (2026-07-28, branch `research-mode`)
 
 The first corpus run to actually reach export, `runs/2026-07-28_0919`, put two
@@ -159,71 +1076,162 @@ not fail.
 
 ---
 
-## Known Debt — found in `runs/2026-07-28_0919`, NOT fixed
+## Known Debt — found in `runs/2026-07-28_0919` (rewritten 2026-07-28 after the readiness pass)
 
-Recorded so none of it is rediscovered as new. None of the below is addressed by
-the four fixes above.
+Recorded so none of it is rediscovered as new. Six of the original twelve bullets were
+closed by the debt round above and have been **removed** from this list — referential
+cascade on entity removal, Stage-0 Case-C clobber, empty LLM completions, the batch
+preflight, serial enrichment, and the outstanding cross-check. Two more were closed by
+the pre-run close-out (the inert out-of-scope filter and the duplicate seed entities) and
+are gone from here too; what that round could **not** settle is written below as its own
+bullet, and the readiness pass at the top of this file re-verified the filter closure by
+execution, closed nothing further, and **added three items** — the corpus that does not
+fit a night, the finished leg the manifest lost, and what a green preflight still does
+not prove. The rest are kept and amended where a fix changed their shape.
 
+- **A newly-live filter can now silently delete reactions, and the night will not
+  record it.** The out-of-scope filter fires as of the close-out entry above. Its
+  removals are announced with `st.info` (`streamlit_app.py:3619`) and nothing else: the
+  batch driver collects `at.error` / `at.exception` / `at.warning`
+  (`driver.py:949-956`) and never `at.info`, and the parent keeps a child's stderr only
+  on a timeout or a crash (`runner.py:2075`, `:2080` — the `_timeout_row` / `_crash_row`
+  paths, re-verified), so a **passing** leg's log is discarded entirely.
+  `tmp/reaction_lock_report.json` does carry the matching
+  `out_of_scope_excluded_count`, but it lives at the project root, is overwritten by
+  every leg, and is not among the artifacts copied into a run directory. Nor can the
+  question be answered retroactively: all 130 reactions across the 18 delivered Stage-1
+  and merged artifacts under `runs/` (178 across 21 files counting `final_mapped.json`)
+  carry no `scope_membership` at all, because the defect stripped it before anything was
+  written. **Two corrections to the shape of this item**, both from the readiness pass.
+  First, it is cheaper than "a per-leg artifact": the app already stores the removal list
+  in session state as `out_of_scope_removed_reactions` (`streamlit_app.py:3820`), and
+  grepping `out_of_scope` across `src/t2pw/batch/driver.py` returns **nothing** — so it is
+  one read in `_add_common_artifacts` (`driver.py:997`), not a change to the child→parent
+  protocol.
+  Second, the per-paper before/after is already recoverable from the artifacts the next
+  run writes anyway: `stage1_payload.json` is the **pre**-filter payload
+  (`streamlit_app.py:3819` stores the variable the filter did not consume, and
+  `driver.py:1002` writes it) while `merged_payload.json` comes from the post-filter
+  `final_payload`, so per paper the removals are the rows whose `scope_membership`
+  case-folds to `out_of_scope` in the first and are absent from the second. Worth
+  checking on the first two or three papers of the run rather than trusting the batch.
+- **The corpus does not fit in one night, and nothing in the runner says so.**
+  Measured over the six legs of `2026-07-28_0919` (§C of the readiness entry): the four
+  full-pipeline legs mean **2200.2s**, the three big ones **2621.4s**, so a 10-hour
+  budget buys **13.7–16.4 legs** (**24** only if cheap failures pad the count).
+  `topics.txt` asks for 28 papers × 2 modes = **56 legs**, and its own note records
+  observed full-text yield as roughly half, so the realistic corpus is ~28 legs — still
+  about **two nights**. The runner enforces the deadline but never projects it: it does
+  not compare `pending_pairs` × observed mean against the budget at startup, so an
+  operator gets no warning that two thirds of the plan will be truncated. Until it does,
+  cap the work with `--limit` (~7 papers) and budget **11h of wall clock for a 10h
+  night**, because the deadline is checked *before* a leg (`runner.py:2037-2042`) and the
+  per-leg timeout is an hour.
+- **A finished, passing leg can be lost between the child exiting and the manifest
+  write.** Live example on disk right now:
+  `runs/2026-07-28_0919/papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/research/`
+  holds a full artifact set and a `RESULT.txt` reading `PASS (with warnings)` at 936.7s,
+  and there is **no manifest row for it** — the parent took Ctrl+C at 11:49:05 in the
+  window between `parse_child_output` (`runner.py:2066`) and `append_manifest`
+  (`runner.py:2096`). Consequences: `completed_pairs` does not know the leg happened, so
+  a resume pays its ~937s again and overwrites good artifacts; and every count derived
+  from the manifest understates the run (`SUMMARY.txt` says 3 papers attempted / 5
+  manifest rows for 6 legs and 3 passes). Closing it properly means writing a
+  provisional row before the child starts and reconciling after — a change to the
+  child→parent protocol, hence deferred, hence written down.
+- **A green preflight still does not prove the night can talk to a model.**
+  `run_preflight()` passes in **1.39s** and now imports `t2pw.llm.client`
+  (`runner.py:1274-1279`), which clears the three import-time faults (`client.py:38`,
+  `:40`, `:63`). It cannot see an unreachable `openrouter.ai`, an expired or unfunded
+  key, or a model the account may not serve — all of which need a live one-token call —
+  and the model id is resolved lazily, so a missing `OPENROUTER_MODEL` would raise at
+  `client.py:261` on the first call of the night rather than in the check. It is
+  currently set (`google/gemma-4-26b-a4b-it`), so this is a limit of the instrument, not
+  a live fault.
 - **A pathway can contain none of the pathway it declares.** PMC13278307 ran with
   the focus box set to "lipid A biosynthesis in Escherichia coli" and produced
   **zero** lipid A backbone reactions — no LpxA/C/D/H/B/K, no WaaA, no LpxL/M —
-  yet passed with `gate_errors: 0`. Nothing checks that the delivered pathway is
-  the one that was asked for.
+  yet passed with `gate_errors: 0`. One *contributing* mechanism is now closed (the
+  Stage-0 Case-C clobber, §A above, which let that review run unguided), but the
+  gap itself is untouched: **nothing checks that the delivered pathway is the one
+  that was asked for.** The focus box, the Stage-0 `pathway_name` and the delivered
+  reaction set are never compared.
 - **Scope creep by cross-paper import.** Reactions 10–26 of the lipid A payload
   are phospholipid biosynthesis, a different pathway; `rag_provenance` shows 35
-  entities from PMC12898747 and 2 from PMC11046580. Note that reaction-signature
-  deduplication was tested against the real data and **does not** fix this: 27/27
-  signatures are distinct, still 27/27 with the enzyme component removed, 26 with
-  a tight normalizer. These are imports, not name variants. Also note
-  `rag_provenance` is stripped from reactions by `_clean_processes`, so per-reaction
-  source is currently unrecoverable from the merged payload — that must be
-  preserved before any gap-relevance filter can be evaluated.
-- **Entity-type confusion in both directions.** Operons and gene clusters
-  (`arnBCADTEF`, `mcr genes`, `pmrCAB operon`, `pmrHFIJKLM`) are typed as proteins
-  and wrapped into PWML protein complexes, while a protein (`PhoP`) and a DNA
-  operon (`pmrHFIJKLM operon`) are typed as compounds. No type gate catches it.
-- **Chemically impossible and reversed reactions ship.** A DNA operon and a protein
-  each appear as reaction *substrates*; `Phosphoethanolamine -> lipid A` and
-  `4-amino-4-deoxy-L-arabinose + PEtN -> lipid A` run backwards. `src/t2pw/stoich/`
-  exists; nothing calls it on the strict path. A mass/atom balance check would
-  catch this class.
-- **Entity removal has no referential cascade.** `apply_audit_patch.py`
-  `_is_core_semantics_path` scopes to `/processes/*` only, so a `/entities/...`
-  removal needs only confidence ≥ 0.95 and gets no check that a reaction still
-  references it. Reactions cannot be deleted; the entities they point at can. This
-  is the mechanism behind the 24 dangling-reference errors, and behind the earlier
-  `unknown entity: phthalylsulfacetamide (PSA)` Stage-3 gate failure.
+  entities from PMC12898747 and 2 from PMC11046580. Per-reaction source is now
+  recoverable (§D above preserves `rag_provenance` on process rows), so this is at
+  last *measurable* — but no filter acts on it. Two constraints for whoever builds
+  one: reaction-signature deduplication was tested against the real data and does
+  **not** fix it (27/27 signatures distinct, still 27/27 with the enzyme component
+  removed, 26 with a tight normalizer — these are imports, not name variants); and a
+  RAG row cannot carry a scope verdict today at all, because `_ALLOWED_ROW_KEYS`
+  (`rag/synthesize.py:1136-1138`, asserted at `:1133`) admits only
+  `{name, inputs, outputs, enzymes, entity, entity_type, role, source_refs}` plus
+  `RAG_ADDITIVE_KEYS` and `rag/conform.py` is a pure shape adapter with no relevance
+  test. The import enters at the S3 merge, which is *downstream* of the only
+  `filter_out_of_scope_reactions` call. The filter itself is no longer inert — the
+  close-out entry above made it able to fire — and that changes **nothing** here: it
+  still runs before Stage 2, so these reactions have not been created yet when it looks,
+  and a RAG row could not carry a label for it to read anyway. The size of the gap is
+  measurable directly: `PMC12444477/strict/merged_payload.json` delivers **27 reactions
+  of which only 9 carry a `locked_reaction_id`**, i.e. two thirds of the delivered
+  pathway entered downstream of every scope decision the pipeline makes. This is the
+  largest open correctness item in the list and it needs a design, not a one-line
+  allowlist change.
+- **Entity-type confusion — the compound-side half is still open.** The DNA-named
+  rows are handled (§B above relocates or flags them), but the mirror direction is
+  not: `PhoP` and `phosphorylated PhoP`, a DNA-binding response regulator, remain in
+  `entities.compounds`. It cannot be fixed at the normalizer — moving a compound into
+  `proteins` after Stage 2 mapping manufactures two new hard gate errors per row
+  (missing species/organism, missing UniProt/DrugBank) — so it belongs at the
+  pre-mapping seam. Also note the gene-cluster shape rule
+  (`GENE_CLUSTER_SYMBOL_RE`) is deliberately **advisory**: `arnBCADTEF` and
+  `pmrHFIJKLM` are flagged and stay in `entities.proteins`.
+- **Spelling variants of one species still ship as two entity rows.** What is left of
+  the duplicate-entity bullet after the close-out entry closed the re-import half. The
+  guard added there uses `process_normalizer._normalize` — the registry gate's own,
+  deliberately lexical — so `lipid IV A` / `lipid IV_A` and `sn -glycerol 3-phosphate` /
+  `sn-glycerol 3-phosphate` are two rows each in PMC12444477/strict, and the compound
+  bucket lands at 43 rows rather than the 41 an alnum-only normalizer would give. This
+  is the synonym resolver's job, not the merge guard's, and under-merging is the safe
+  direction: `_normalize` preserves `+` and `:`, so `NAD+` never collapses into `NAD`.
+- **Reaction duplication by prose restatement** — known and deliberately deferred by
+  the 2026-07-23 entry (`:1113-1117`): unmapped placeholders "share no ID, so they
+  correctly do not merge". Real in the same payload: rxn 12 "Phosphatidic acid (PA) →
+  CDP-DAG" vs rxn 18 "PA to CDP-DAG conversion"; rxn 14 "CDP-DAG → PG" vs rxns 19, 20,
+  21, 23 and 24. Left to a prose-extraction quality gate that does not exist yet.
+- **Chemically impossible and reversed reactions ship — and stoichiometry is not the
+  instrument.** A DNA operon and a protein each appear as reaction *substrates*;
+  `Phosphoethanolamine -> lipid A` and `4-amino-4-deoxy-L-arabinose + PEtN -> lipid A`
+  run backwards. The previous version of this bullet proposed `src/t2pw/stoich/`; §I
+  above shows why that is wrong — the package implements no balance of any kind, a
+  balance check is direction-symmetric and so can never detect a reversal, and only
+  **2 of the run's 41 reactions (4.9%)** carry identities both resolvable and correct
+  enough to balance. What this class actually needs is a *directionality* check
+  (thermodynamic or reference-pathway based) plus the entity-type gate's substrate
+  side, neither of which exists.
 - **`focused_repair.run_focused_repair_passes` has no caller anywhere in `src/`.**
-  Its first pass is precisely the "reaction input with no matching declared entity"
-  repair the above needs. Wire it in or delete it.
-- **Stage 0 Case-C clobber.** For a multi-example review over
-  `_PREPROCESS_RETRY_CHARS`, the short-text retry fires on a *correct* Case C
-  result (which deliberately blanks the fields `_has_usable_context` tests) and
-  unconditionally overwrites it. Losing `document_type` disarms the ambiguity
-  guard, so a review that should be refused can instead run unguided.
-- **No retry on empty-but-successful LLM completions.** `llm/client.py` returns an
-  HTTP-200 reply with empty `content` as a success and never inspects
-  `finish_reason`; retries fire only on raised exceptions. Two legs of this run
-  died in 55–137s on `Payload must include a processes object`, one of them a paper
-  that had extracted successfully the previous day.
-- **`clean_stage_one` turns emptiness into a structural violation.** It writes the
-  `processes` key only `if processes:`, so an extraction that finds no complete
-  reaction omits the key and trips the `processes_required` structural guard —
-  converting an honest "no reactions found" into an abort research mode cannot
-  fail open on.
-- **The batch runner has no preflight check.** Invoked under an interpreter
-  lacking `streamlit`, it fetched full text for 28 papers and then burned all 56
-  legs in 67 seconds recording the same missing import 56 times.
-- **Enrichment is serial over four external services.** `enrich_entities.py` makes
-  per-entity HTTPS calls to UniProt, EBI ChEBI, KEGG and HMDB (an HTML scrape);
-  ~22 of one leg's 50 minutes went there. It is embarrassingly parallel.
-- **Cross-checking against prior entries in this file was not completed.** Several
-  existing entries — "Tighten default reaction scope and wire the out-of-scope
-  reaction filter" (2026-07-14), "RAG scope/gap guardrails were unreachable dead
-  code" (2026-07-25), "RAG under-merged cross-paper synonym duplicates"
-  (2026-07-23) — may cover the scope-creep and duplication debt above. If a filter
-  described there is no longer firing, that debt is a **regression** and should be
-  rewritten as one. This check is outstanding.
+  Re-verified 2026-07-28: only its definition (`focused_repair.py:911`) and
+  `tests/test_focused_repair.py` reference it. Its first pass is precisely the
+  "reaction input with no matching declared entity" repair the referential-integrity
+  guard (§C above) now *refuses* patches over. Wire it in or delete it.
+- **The referential-integrity guard refuses; it does not repair.** §C above blocks a
+  removal that would strand a reference, which leaves the near-duplicate rows
+  (`phthalylsulfacetamide` ×2, `phthalylsulfacetamide (PSA)`, `PSA`, `sulfacetamide`)
+  in the payload and defers the real repair — a synonym add, or the focused-repair pass
+  above — to a later audit round that nothing currently forces to happen.
+- **`clean_stage_one` turns emptiness into a structural violation.** Still true
+  (`pipeline.py:2034`): it writes the `processes` key only `if processes:`, so an
+  extraction that finds no complete reaction omits the key and trips the
+  `processes_required` structural guard — converting an honest "no reactions found"
+  into an abort research mode cannot fail open on.
+- **Two of the four enrichment services are dead, and we now fail faster.** ChEBI
+  `getCompleteEntity` returns HTTP 500 (probed 2026-07-28; all 230 cached ChEBI
+  entries carry status `error`/`request_failed`), and hmdb.ca returns HTTP 403 to the
+  `Project14-T2PW-IDMapper/1.0` User-Agent (197 of 201 cached HMDB entries). At ~4.8s
+  per dead ChEBI id, those failures *are* the 29s the now-concurrent enrichment takes.
+  Fixing the endpoints (or the User-Agent) is worth more than any further concurrency,
+  and until then the compound half of enrichment contributes nothing.
 
 ---
 

@@ -191,6 +191,117 @@ BYPRODUCT_TOKEN_DENYLIST = {
 BIOCHEMICAL_COLON_RE = re.compile(r"(?<![A-Za-z0-9])\d+\s*:\s*\d+(?![A-Za-z0-9])")
 
 
+# ── Entity-type gate vocabulary — names that denote NUCLEIC ACID ─────────────
+# Run 2026-07-28_0919, paper PMC13278307 ("An Overview of Mobile Colistin
+# Resistance (mcr) Genes", strict) PASSED every gate -- ok=true, 0 errors, 37
+# warnings, a 200,266-byte PWML -- while shipping six rows whose declared entity
+# type contradicts what their own name says they are:
+#
+#   entities.compounds : 'pmrHFIJKLM operon'   (an LPS-modification DNA operon)
+#   entities.proteins  : 'arnBCADTEF operon', 'pmrCAB operon', 'mcr genes',
+#                        'arnBCADTEF', 'pmrHFIJKLM'                (all DNA)
+#
+# Nothing in the tree noticed, because no validator we own has ever asked what
+# KIND of thing a name denotes. validate_post_mapping checks that mapping_meta /
+# resolution / status EXIST; run_strict_post_normalization_gates checks that a
+# protein has species and an accession and that every actor reference resolves.
+# All of those are satisfied by a DNA operon filed as a compound. The one report
+# that mentions these rows -- strict/pwml_ir_report.json -- has the failure mode
+# inverted: it flags 'pmrHFIJKLM operon' with compound_db_resolution_failed, i.e.
+# it complains about the row that harmlessly FAILED to resolve, and says nothing
+# about the rows that resolved confidently to the wrong molecule.
+#
+# The bucket is not a cosmetic label. It selects the database
+# (map_ids._DIRECTLY_MAPPED_ENTITY_BUCKETS), which is why a DNA operon was
+# queried against PathBank compound tables at all, and it selects the PWML
+# section the row is exported in (pwml/ir.py ENTITY_BUCKETS).
+#
+# Both regexes below were measured, not guessed: replayed over every entity row
+# of every payload artifact under runs/ (12 payload files, 209 distinct names,
+# 275 compound rows) they match exactly the six names above and nothing else.
+#
+# Trailing gene/operon/locus noun. Anchored at the END on purpose: an operon
+# name followed by a role noun is a PROTEIN, not DNA -- 'Lactose operon
+# repressor' (UniProt P03023) is the very entry that run 2026-07-28_0919
+# mis-shipped as the identity of pmrHFIJKLM, and it must not be caught here.
+# The optional ')' lets 'colistin resistance (mcr) genes' match.
+NUCLEIC_ACID_TAIL_RE = re.compile(
+    r"(?:^|[\s\-/(])(?:gene\s+clusters?|operons?|genes?|locus|loci)\s*\)?\s*$",
+    flags=re.IGNORECASE,
+)
+
+# Bacterial gene-cluster shorthand: a three-letter lowercase root followed by one
+# uppercase letter per gene in the cluster -- 'arnBCADTEF' is arnB/arnC/arnA/
+# arnD/arnT/arnE/arnF, 'pmrHFIJKLM' is seven pmr genes. Four uppercase letters is
+# the floor because three-letter tails collide with ordinary protein shorthand
+# ('proNGF'), and the lowercase roots below are excluded for the same reason:
+# 'pro'/'pre'/'apo' are biochemical prefixes, not gene roots, so 'proBDNF' must
+# not be read as a gene cluster. This rule is ADVISORY ONLY (see
+# enforce_entity_type_consistency) precisely because it is a shape heuristic
+# rather than an explicit noun.
+GENE_CLUSTER_SYMBOL_RE = re.compile(r"^[a-z]{3}[A-Z]{4,}$")
+GENE_CLUSTER_PREFIX_DENYLIST = frozenset({"pro", "pre", "apo", "iso", "sub", "cis"})
+
+# Identifier fields each mapping loop writes, per bucket. When a row leaves its
+# bucket because its name denotes DNA, every identifier it is carrying was
+# produced by querying the wrong database and must not ride along into
+# entities.nucleic_acids -- that is the identifier-falsification class 92e1192
+# fixed at the resolver, applied here at the relocation. This is not
+# hypothetical: in run 2026-07-28_0919 the protein row 'arnBCADTEF operon'
+# carried UniProt P30843 and 'pmrHFIJKLM' carried P03023 ("Lactose operon
+# repressor"), both obtained by asking UniProt about DNA. ``pathwhiz_id`` is on
+# every list because the PathWhiz id space is per entity type (pwml/ir.py reads
+# it as the fallback db id for each bucket in turn), so a compound's pathwhiz_id
+# means something else entirely once the row is a nucleic acid.
+_BUCKET_IDENTITY_FIELDS: Dict[str, Tuple[Tuple[str, ...], Tuple[str, ...]]] = {
+    # bucket -> (row-level fields, mapped_ids keys)
+    "compounds": (
+        (
+            "pathbank_compound_id",
+            "pw_compound_id",
+            "pathwhiz_id",
+            "hmdb_id",
+            "kegg_id",
+            "chebi_id",
+            "pubchem_cid",
+            "drugbank_id",
+        ),
+        (
+            "pathbank_compound_id",
+            "hmdb",
+            "kegg",
+            "chebi",
+            "pubchem",
+            "drugbank",
+            "biocyc",
+            "chemspider",
+            "pwc_id",
+        ),
+    ),
+    "proteins": (
+        (
+            "pathbank_protein_id",
+            "pw_protein_id",
+            "pathwhiz_id",
+            "uniprot",
+            "uniprot_id",
+            "drugbank",
+            "drugbank_id",
+        ),
+        ("pathbank_protein_id", "uniprot", "drugbank"),
+    ),
+    "protein_complexes": (
+        (
+            "pathbank_complex_id",
+            "pathbank_protein_complex_id",
+            "pw_complex_id",
+            "pathwhiz_id",
+        ),
+        ("pathbank_complex_id", "pathbank_protein_complex_id"),
+    ),
+}
+
+
 class GateValidationError(ValueError):
     def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message)
@@ -426,6 +537,8 @@ def _new_report() -> Dict[str, Any]:
             "n_entities_deduped": 0,
             "n_single_protein_complexes_removed": 0,
             "complex_named_proteins_relocated": 0,
+            "nucleic_acid_named_entities_relocated": 0,
+            "entity_type_mismatches_flagged": 0,
             "unresolved_complex_components_dropped": 0,
             "component_only_proteins_removed": 0,
             "pruned_disconnected_proteins": [],
@@ -621,6 +734,84 @@ def _is_protein_like(name: str, payload: Dict[str, Any]) -> bool:
     except Exception:  # noqa: BLE001
         pass
     return bool(PROTEIN_LIKE_RE.search(name))
+
+
+def nucleic_acid_name_verdict(name: str) -> str:
+    """Name-shape verdict: does this name denote DNA/RNA rather than a molecule?
+
+    Returns the id of the rule that fired, or "" when the name says nothing about
+    entity type. Two rules, in decreasing strength:
+
+      "gene_or_operon_noun"  -- the name ENDS in an explicit nucleic-acid noun
+                                ('pmrHFIJKLM operon', 'mcr genes', 'pmrCAB
+                                operon'). An operon is DNA by definition; there
+                                is no reading of 'X operon' under which the
+                                thing named is a metabolite or a polypeptide.
+      "gene_cluster_symbol"  -- bacterial gene-cluster shorthand
+                                ('arnBCADTEF', 'pmrHFIJKLM'). A shape heuristic,
+                                so callers treat it as advisory.
+
+    Deliberately conservative in three places, each because of a name that is
+    really in the corpus:
+
+    * The noun must be terminal. 'Lactose operon repressor' is a protein -- and
+      is the exact UniProt entry (P03023) that run 2026-07-28_0919 attached to
+      pmrHFIJKLM -- so a role noun after 'operon' has to defeat the rule.
+    * A biochemical colon name is never DNA. '18:1' style lipid shorthand shares
+      no structure with this vocabulary but reuses the same helper elsewhere in
+      this module, and matching it here would be nonsense.
+    * A generated complex wrapper is never DNA. map_ids._wrapper_complex_name
+      turned 'mcr genes' into 'mcr genes complex' in the same run; the wrapper is
+      a (wrong) protein complex, and the terminal-noun anchor already excludes it
+      because 'complex' is the last word. Stated here so the anchor is not
+      "simplified" away later.
+    """
+
+    text = _canonical(name)
+    if not text or _is_biochemical_colon_name(text):
+        return ""
+    if NUCLEIC_ACID_TAIL_RE.search(text):
+        return "gene_or_operon_noun"
+    if GENE_CLUSTER_SYMBOL_RE.match(text) and text[:3].casefold() not in GENE_CLUSTER_PREFIX_DENYLIST:
+        return "gene_cluster_symbol"
+    return ""
+
+
+def _catalyst_reference_norms(payload: Dict[str, Any]) -> Set[str]:
+    """Normalized names used anywhere as an enzyme, modifier, or transporter.
+
+    These are the actor slots that ``run_strict_post_normalization_gates`` checks
+    against ``protein_registry_norms`` (compounds are not in that registry), so a
+    name in any of them cannot be relocated out of proteins/protein_complexes
+    without manufacturing a hard gate error of the form "Unknown protein/modifier
+    reference: <name>".
+    """
+
+    processes = _safe_dict(payload.get("processes"))
+    norms: Set[str] = set()
+    for reaction in _safe_list(processes.get("reactions")):
+        if not isinstance(reaction, dict):
+            continue
+        for key in ("enzymes", "modifiers"):
+            for actor in _safe_list(reaction.get(key)):
+                norm = _normalize(_actor_name_from_row(actor))
+                if norm:
+                    norms.add(norm)
+    for transport in _safe_list(processes.get("transports")):
+        if not isinstance(transport, dict):
+            continue
+        for actor in _safe_list(transport.get("transporters")):
+            norm = _normalize(_actor_name_from_row(actor))
+            if norm:
+                norms.add(norm)
+    for rct in _safe_list(processes.get("reaction_coupled_transports")):
+        if not isinstance(rct, dict):
+            continue
+        for actor in _safe_list(rct.get("enzymes")):
+            norm = _normalize(_actor_name_from_row(actor))
+            if norm:
+                norms.add(norm)
+    return norms
 
 
 def _scaffold_norms(payload: Dict[str, Any]) -> Set[str]:
@@ -3780,7 +3971,25 @@ def validate_no_composites(payload: Dict[str, Any]) -> None:
 
 def validate_registry_references(payload: Dict[str, Any]) -> None:
     compounds, proteins, complexes = _entity_lists(payload)
-    registry = _entity_name_norms(compounds) | _entity_name_norms(proteins) | _entity_name_norms(complexes)
+    # ``nucleic_acids`` belongs in the registry and never was. The bucket is a
+    # first-class member of the payload schema (payload_models.NucleicAcidModel),
+    # the PWML IR lists ``nucleic_acid`` as a legal ``reaction_member``
+    # (pwml/ir.py:1394), and writer.py emits reaction_nucleic_acid_visualizations
+    # -- so a reaction has always been allowed to consume or produce a nucleic
+    # acid, while this validator, which decides whether such a reference is
+    # "unknown", only ever looked at compounds/proteins/protein_complexes. The
+    # gap was invisible while nothing put anything in the bucket; it became a
+    # hard failure the moment enforce_entity_type_consistency started relocating
+    # 'pmrHFIJKLM operon' out of entities.compounds, because that operon is a
+    # reaction input of PMC13278307 in run 2026-07-28_0919 and would have been
+    # reported as "/processes/reactions/3/inputs/0 unknown entity".
+    nucleic_acids = _safe_list(_safe_dict(payload.get("entities")).get("nucleic_acids"))
+    registry = (
+        _entity_name_norms(compounds)
+        | _entity_name_norms(proteins)
+        | _entity_name_norms(complexes)
+        | _entity_name_norms(nucleic_acids)
+    )
     processes = _safe_dict(payload.get("processes"))
     errors: List[str] = []
 
@@ -4474,6 +4683,264 @@ def relocate_complex_named_proteins(
     return payload
 
 
+def _relocate_entity_locations(
+    payload: Dict[str, Any],
+    name: str,
+    *,
+    to_list_key: str,
+    to_field: str,
+) -> int:
+    """Move every element_locations row for ``name`` into another location list.
+
+    A relocated entity that leaves its ``compound_locations`` row behind is worse
+    than one that was never relocated: pwml/ir.py builds locations from the
+    location list, and a nucleic acid whose only location row lives under
+    ``compound_locations`` would be exported as a compound location pointing at
+    an entity that no longer exists in ``entities.compounds``. ensure_autostates
+    runs long before this pass and had already written a ``compound_locations``
+    row for 'pmrHFIJKLM operon' in run 2026-07-28_0919, so this is not a
+    hypothetical.
+    """
+
+    element_locations = payload.get("element_locations")
+    if not isinstance(element_locations, dict):
+        return 0
+    norm = _normalize(name)
+    if not norm:
+        return 0
+    source_fields = {
+        "compound_locations": "compound",
+        "protein_locations": "protein",
+        "protein_complex_locations": "protein_complex",
+        "nucleic_acid_locations": "nucleic_acid",
+        "element_collection_locations": "element_collection",
+    }
+    moved = 0
+    for list_key, field in source_fields.items():
+        if list_key == to_list_key:
+            continue
+        rows = element_locations.get(list_key)
+        if not isinstance(rows, list):
+            continue
+        keep: List[Any] = []
+        for row in rows:
+            if isinstance(row, dict) and _normalize(str(row.get(field, ""))) == norm:
+                moved_row = deepcopy(row)
+                moved_row.pop(field, None)
+                moved_row[to_field] = _canonical(name)
+                target = element_locations.setdefault(to_list_key, [])
+                if isinstance(target, list):
+                    target.append(moved_row)
+                moved += 1
+                continue
+            keep.append(row)
+        if len(keep) != len(rows):
+            element_locations[list_key] = keep
+    if moved:
+        element_locations[to_list_key] = _dedupe_location_rows(
+            _safe_list(element_locations.get(to_list_key)), key_name=to_field
+        )
+    return moved
+
+
+def enforce_entity_type_consistency(
+    payload: Dict[str, Any],
+    *,
+    report: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Entity-TYPE gate: does the bucket a row sits in agree with what it names?
+
+    THE DEFECT. Run 2026-07-28_0919, PMC13278307 ("An Overview of Mobile Colistin
+    Resistance (mcr) Genes"), strict leg: PASS, 2098s, 14 reactions, 0 gate
+    errors, 200,266-byte PWML -- and six of its 35 entity rows are DNA filed as
+    molecules. 'pmrHFIJKLM operon', an LPS-modification operon, sat in
+    ``entities.compounds`` and was therefore queried against PathBank compound
+    tables; 'arnBCADTEF operon', 'pmrCAB operon', 'mcr genes', 'arnBCADTEF' and
+    'pmrHFIJKLM' sat in ``entities.proteins`` and were queried against UniProt,
+    which answered 'pmrHFIJKLM' with P03023 "Lactose operon repressor" and
+    'mcr genes' with P08235, the human mineralocorticoid receptor.
+
+    The origin is one line of RAG synthesis (rag/synthesize.py:1054,
+    ``is_protein = key in enzyme_names``): the bucket is chosen by GRAMMATICAL
+    ROLE -- appeared in some reaction's ``enzymes[]`` means protein, appeared
+    anywhere else means compound -- and no type judgement is made anywhere. That
+    is why the same DNA landed in two different buckets in one payload:
+    'pmrHFIJKLM' (an enzymes[] slot) under proteins, 'pmrHFIJKLM operon' (a
+    reaction input) under compounds.
+
+    WHY THE GATE IS HERE AND NOT AT THE ORIGIN. This pass is a type gate over the
+    assembled payload rather than a patch to the RAG bucketer, so it also covers
+    the audit patcher, the gap resolver and Stage 1 -- every producer that can
+    write an entity row -- and it runs at the last point where a bucket change
+    still reaches the database: streamlit_app.py normalizes at :2197 and does the
+    authoritative map_payload at :2787, so a row moved here is looked up in the
+    right database (or, for nucleic acids, in none: map_ids
+    ._DIRECTLY_MAPPED_ENTITY_BUCKETS excludes the bucket and stamps
+    ``not_applicable`` instead).
+
+    WHAT IT DOES, AND THE TWO THINGS IT DELIBERATELY DOES NOT DO.
+
+    1. RELOCATE, but only on the explicit-noun rule and only for a row nothing
+       has pinned. 'X operon' / 'X genes' is unambiguously DNA, so such a row is
+       moved into ``entities.nucleic_acids`` -- a bucket the exporter has always
+       supported (pwml/ir.py:1394 lists ``nucleic_acid`` as a legal
+       ``reaction_member``, and writer.py emits
+       ``reaction_nucleic_acid_visualizations``) but that the Stage-3 registry
+       validator did not know existed until this change.
+
+    2. FLAG, never move, when the row is pinned. A name used as an enzyme,
+       modifier or transporter, or as a component of a protein_complex, cannot
+       leave proteins/protein_complexes: those slots are checked against
+       ``protein_registry_norms``, so moving the row would manufacture a hard
+       gate error ("Unknown protein/modifier reference: mcr genes") out of a
+       correction. It is also the *defensible* reading -- "the pmrHFIJKLM operon
+       catalyses lipid A modification" is a claim about the operon's protein
+       products, so ``proteins`` is the closer of the two available answers. Five
+       of the run's six rows are pinned this way; the row is stamped with
+       ``entity_type_gate`` so the mapper, the reviewer and the report can all
+       see the disagreement instead of the run silently claiming a protein.
+
+    3. NOT relocated: the mirror-image defect in the same payload, 'PhoP' (a
+       DNA-binding response regulator) and 'phosphorylated PhoP' filed as
+       compounds. Moving a compound into ``proteins`` at this point in the
+       pipeline manufactures two NEW hard gate errors per row -- "Protein 'PhoP'
+       is missing species/organism" and "... is missing a UniProt or DrugBank
+       identifier" -- because Stage 2 mapping already ran at streamlit_app.py
+       :2065 and stamped identity only on rows that were proteins then. Turning
+       that PASS into a FAIL is not a fix. The identifier itself is already
+       stopped: 92e1192's name-plausibility gate rejects PhoP -> NAD
+       (CHEBI:15846 / KEGG C00003 / CAS 53-84-9). The correct home for that half
+       of the class is the pre-mapping seam, which this pass cannot reach.
+
+    Never raises, never deletes, and never fails a run: worst case it stamps
+    metadata and increments two counters.
+    """
+
+    rep = report if isinstance(report, dict) else _new_report()
+    summary = _safe_dict(rep.setdefault("summary", {}))
+    summary.setdefault("nucleic_acid_named_entities_relocated", 0)
+    summary.setdefault("entity_type_mismatches_flagged", 0)
+    rep.setdefault("actions", [])
+
+    entities = _safe_dict(payload.setdefault("entities", {}))
+    compounds, proteins, complexes = _entity_lists(payload)
+
+    # Names that cannot leave the protein registry without breaking a gate.
+    pinned_norms = _catalyst_reference_norms(payload)
+    for complex_row in complexes:
+        if not isinstance(complex_row, dict):
+            continue
+        for component in _safe_list(complex_row.get("components")):
+            component_norm = _normalize(_component_name_from_row(component))
+            if component_norm:
+                pinned_norms.add(component_norm)
+
+    source_buckets = (
+        ("compounds", compounds),
+        ("proteins", proteins),
+        ("protein_complexes", complexes),
+    )
+
+    for bucket_name, rows in source_buckets:
+        for row in list(rows):
+            if not isinstance(row, dict):
+                continue
+            name = _canonical(str(row.get("name", "")))
+            if not name:
+                continue
+            rule = nucleic_acid_name_verdict(name)
+            if not rule:
+                continue
+
+            prior = _safe_dict(row.get("entity_type_gate"))
+            pinned = _normalize(name) in pinned_norms
+            relocatable = rule == "gene_or_operon_noun" and not pinned
+
+            if not relocatable:
+                # Idempotent: normalize_process_payload runs a second time inside
+                # pwml/writer.py:2650 on the already-normalized payload, and a
+                # duplicated action entry would double every count in the report.
+                if prior.get("rule") == rule and prior.get("action") == "kept_in_place":
+                    continue
+                # Both facts are recorded, not just the binding one: a reviewer
+                # reading 'mcr genes' in entities.proteins needs to know both
+                # that its name says DNA and that the reason it is still a
+                # protein is the actor registry, not a weak rule.
+                row["entity_type_gate"] = {
+                    "declared_bucket": bucket_name,
+                    "name_denotes": "nucleic_acid",
+                    "rule": rule,
+                    "action": "kept_in_place",
+                    "pinned_by_actor_reference": pinned,
+                    "reason": (
+                        "referenced as an enzyme/modifier/transporter or as a protein_complex "
+                        "component; relocating would break the actor registry"
+                        if pinned
+                        else "gene-cluster shape is advisory only, not an explicit nucleic-acid noun"
+                    ),
+                }
+                summary["entity_type_mismatches_flagged"] = (
+                    int(summary.get("entity_type_mismatches_flagged", 0)) + 1
+                )
+                rep["actions"].append(
+                    {
+                        "type": "entity_type_mismatch_flagged",
+                        "name": name,
+                        "declared_bucket": bucket_name,
+                        "name_denotes": "nucleic_acid",
+                        "rule": rule,
+                    }
+                )
+                continue
+
+            _remove_entity(rows, name)
+            stripped: List[str] = []
+            row_fields, mapped_id_keys = _BUCKET_IDENTITY_FIELDS.get(bucket_name, ((), ()))
+            mapped_ids = row.get("mapped_ids")
+            for field in row_fields:
+                if row.pop(field, None) not in (None, "", {}, []):
+                    stripped.append(field)
+            if isinstance(mapped_ids, dict):
+                for field in mapped_id_keys:
+                    if mapped_ids.pop(field, None) not in (None, "", {}, []):
+                        stripped.append(f"mapped_ids.{field}")
+            row["class"] = "nucleic_acid"
+            row["entity_type_gate"] = {
+                "declared_bucket": bucket_name,
+                "name_denotes": "nucleic_acid",
+                "rule": rule,
+                "action": "relocated_to_nucleic_acids",
+                "stripped_identifier_fields": stripped,
+            }
+            nucleic_acids = entities.setdefault("nucleic_acids", [])
+            if not isinstance(nucleic_acids, list):
+                nucleic_acids = []
+                entities["nucleic_acids"] = nucleic_acids
+            nucleic_acids.append(row)
+            _dedupe_named_rows(nucleic_acids)
+            locations_moved = _relocate_entity_locations(
+                payload,
+                name,
+                to_list_key="nucleic_acid_locations",
+                to_field="nucleic_acid",
+            )
+            summary["nucleic_acid_named_entities_relocated"] = (
+                int(summary.get("nucleic_acid_named_entities_relocated", 0)) + 1
+            )
+            rep["actions"].append(
+                {
+                    "type": "entity_relocated_to_nucleic_acids",
+                    "name": name,
+                    "from_bucket": bucket_name,
+                    "rule": rule,
+                    "stripped_identifier_fields": stripped,
+                    "element_locations_moved": locations_moved,
+                }
+            )
+
+    return payload
+
+
 def normalize_process_payload(
     payload: Dict[str, Any],
     *,
@@ -4538,6 +5005,18 @@ def normalize_process_payload(
     _checkpoint("normalize_process_actor_schema")
     relocate_complex_named_proteins(data, report=report)
     _checkpoint("relocate_complex_named_proteins")
+    # Placed here, in the bucket-relocation neighbourhood, for two reasons that
+    # are both about ordering rather than taste. It must run AFTER
+    # normalize_process_actor_schema and relocate_complex_named_proteins, because
+    # those are the passes that decide what the final actor rows and complex
+    # components are and the type gate reads exactly those to decide what it is
+    # allowed to move. It must run BEFORE run_strict_post_normalization_gates and
+    # before the orphan/disconnected cleanups, because those judge rows by the
+    # bucket they are sitting in -- in run 2026-07-28_0919 the strict gate
+    # certified 'pmrHFIJKLM operon' as a compound and 'mcr genes' as a protein
+    # with 0 errors, which is the outcome this pass exists to stop.
+    enforce_entity_type_consistency(data, report=report)
+    _checkpoint("enforce_entity_type_consistency")
     drop_unresolved_complex_component_proteins(data, report=report)
     _checkpoint("drop_unresolved_complex_component_proteins")
     dedupe_processes(data, report=report)

@@ -9,6 +9,23 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 from t2pw.pipeline.reaction_lock_manifest import MANIFEST_FILENAME
 
+# The referential-integrity guard below MUST agree, name for name, with the Stage 3
+# gate that later rejects the payload, so it borrows that gate's own private
+# helpers instead of re-deriving entity identity locally. See the long comment
+# above _registry_coverage() for why re-deriving it would be a bug in itself.
+# process_normalizer pulls in nothing but stdlib plus three pure pipeline modules
+# (entity_identity, enzyme_cues, export_mode), so this import adds no optional
+# dependency and cannot cycle back into t2pw.curation. That matters here: the
+# 2026-07-28 07:xx batch burned all 56 legs in 67 seconds on a single
+# ModuleNotFoundError raised at import time, and this module must never become the
+# next such tripwire.
+from t2pw.pipeline.process_normalizer import (  # noqa: PLC2701 - deliberate reuse, see below
+    _actor_name_from_row as _registry_actor_name,
+    _canonical as _registry_canonical,
+    _entity_name_norms as _registry_name_norms,
+    _normalize as _registry_normalize,
+)
+
 
 DEFAULT_CONNECTIVITY_CONFIDENCE_THRESHOLD = 0.98
 DEFAULT_MAJOR_TOPOLOGY_CONFIDENCE_THRESHOLD = 0.98
@@ -768,6 +785,268 @@ def _apply_single_op(working: Dict[str, Any], op: Dict[str, Any]) -> None:
                 pass
 
 
+# ---------------------------------------------------------------------------
+# Referential integrity on entity removal.
+#
+# WHY THIS EXISTS -- two failures, both reproducible from artifacts on disk:
+#
+#   1. runs/2026-07-27_1623/papers/PMC13231680__mechanistic-insights-into-
+#      phthalylsulfacetamide/strict/final_stage3_gate_report.json records
+#          "/processes/reactions/2/inputs/0 unknown entity: phthalylsulfacetamide (PSA)"
+#      while that same leg's merged_payload.json still carries five near-duplicate
+#      compound rows: "phthalylsulfacetamide" (twice), "phthalylsulfacetamide (PSA)",
+#      "PSA" and "sulfacetamide". Normalization output passed the registry gate
+#      with all five present -- a curation step then deleted the redundant
+#      "phthalylsulfacetamide (PSA)" row as duplicate cleanup and left
+#      reactions[2].inputs[0], which still spells the name WITH the parenthetical,
+#      pointing at nothing.
+#   2. runs/2026-07-28_0919 PMC12444477/research failed the same shape at scale:
+#      24 of the 25 errors in final_stage3_gate_report.json are
+#      unknown_protein_modifier_reference, e.g.
+#          /processes/reactions/8/enzymes/7  ->  "acetyl-CoA carboxylase enzyme
+#          complex (comprising AccA, B, C, and D components)"
+#      That leg burned 2778s before failing.
+#
+# WHY THE HOLE WAS THERE: _is_core_semantics_path() scopes only to
+# "/processes/reactions/", "/processes/transports/" and
+# "/processes/reaction_coupled_transports/", so the _is_safe_core_remove() guard in
+# _should_accept() never looks at "/entities/...". A remove of /entities/compounds/N
+# therefore needed nothing beyond confidence >= 0.95 (_threshold_for_op), and
+# audit_json_llm.py's prompt actively solicits exactly that: its patch policy lists
+# "duplicate cleanup" under "High confidence (>=0.95)". The net effect was an
+# asymmetry -- _is_safe_core_remove refuses to delete a REACTION unless it is a
+# provable no-op at >= 0.97, but the entities that reaction points at could be
+# deleted freely, and _apply_single_op does a bare remove with no cascade.
+#
+# WHY THIS RUNS AFTER APPLICATION AND NOT INSIDE _should_accept(): _should_accept
+# is handed `source_payload`, not the live `working` copy (see the call site in
+# apply_patch_with_policy). For a multi-op patch that payload is stale -- after the
+# first "remove /entities/compounds/3" every later index has shifted by one, so a
+# pre-application check would inspect the wrong row and refuse (or clear) the wrong
+# entity. Diffing the payload immediately before and after the op is the only way
+# to know what the op actually cost, and it makes the guard shape-agnostic: it
+# catches a whole-row remove, a whole-bucket remove, a "remove /entities/compounds/3/name"
+# and a shortening "replace /entities/compounds" with one predicate instead of four.
+#
+# WHY REFUSE RATHER THAN CASCADE: rewriting the surviving references is a second
+# guess stacked on the model's first, and the PSA case shows how bad that guess
+# gets -- "phthalylsulfacetamide (PSA)", "phthalylsulfacetamide" and "PSA" are three
+# spellings whose merge target is a judgement call about whether the parenthetical
+# is an alias or part of the name. A refusal leaves the payload exactly as the gate
+# last accepted it and lands verbatim in rejected_patch_log.json, so the next audit
+# round can propose the synonym-add repair that audit_json_llm.py's own prompt
+# already calls "the lowest-risk fix". The one cascade that IS provably safe needs
+# no code: when the deleted row is a true duplicate, some surviving row still
+# supplies the same normalized name, the coverage diff below comes back empty and
+# the removal is accepted untouched. Duplicate cleanup keeps working; only the
+# deletions that would strand a reference are refused.
+# ---------------------------------------------------------------------------
+
+# Exactly the buckets process_normalizer.validate_registry_references unions into
+# its registry (compounds | proteins | protein_complexes). Widening this set would
+# make the guard disagree with the gate in the permissive direction; narrowing it
+# would make it over-block.
+_REGISTRY_ENTITY_BUCKETS = ("compounds", "proteins", "protein_complexes")
+
+# Stable, greppable prefix for the rejection reason, so batch tooling can count
+# these the way it already counts the "attempted_to_*" lock reasons.
+REFERENTIAL_INTEGRITY_REASON_PREFIX = "referential_integrity"
+
+# How many orphaned references to name in the rejection reason before summarising.
+# PMC12444477/research produced 24 of them from two entities; a reason string
+# carrying all 24 is unreadable in a report and useless in a log line.
+_MAX_ORPHANED_REFERENCES_IN_REASON = 5
+
+
+def _is_entities_subtree_path(tokens: Sequence[str]) -> bool:
+    return bool(tokens) and tokens[0] == "entities"
+
+
+def _registry_coverage(payload: Dict[str, Any]) -> set[str]:
+    """Every normalized name a process reference can currently resolve against.
+
+    Uses process_normalizer._entity_name_norms so names AND declared synonyms both
+    count, matching validate_registry_references exactly: a reaction that says
+    "NAD" resolves against a compound named "NAD+" that lists "NAD" in synonyms
+    (tests/test_process_normalizer.py::test_validate_registry_references_recognizes
+    _declared_synonyms), and dropping that compound must therefore be refused even
+    though no row is *named* "NAD".
+
+    Deliberately does NOT call process_normalizer._entity_lists(): that helper does
+    payload.setdefault("entities", {}) and back-fills the three bucket lists, i.e.
+    it mutates. This function runs against the live `working` payload on every
+    entity op, so it has to be strictly read-only or it would silently graft empty
+    entity lists onto payloads that legitimately have none.
+    """
+    entities = _safe_dict(payload.get("entities"))
+    norms: set[str] = set()
+    for bucket in _REGISTRY_ENTITY_BUCKETS:
+        norms |= _registry_name_norms(_safe_list(entities.get(bucket)))
+    return norms
+
+
+def _referenced_entity_norms(payload: Dict[str, Any]) -> Dict[str, str]:
+    """Map normalized referenced name -> a human-readable "'name' at /pointer".
+
+    This mirrors the traversal in process_normalizer.validate_registry_references
+    site for site -- reaction inputs/outputs/enzymes/modifiers, transport
+    cargo(_complex)/transporters, interaction entity_1/entity_2 -- including its
+    quirks: it reads only processes.reactions (never a top-level payload["reactions"],
+    unlike this module's _iter_reactions), it skips non-dict actor rows, and it
+    prefers cargo_complex over cargo when the former is a non-blank string. Any
+    site added here that the gate does not check would over-block a removal the
+    gate would have been happy with; any site dropped would let the original bug
+    back in through that door.
+    """
+    processes = _safe_dict(payload.get("processes"))
+    found: Dict[str, str] = {}
+
+    def record(name: Any, pointer: str) -> None:
+        if not isinstance(name, str) or not _registry_canonical(name):
+            return
+        norm = _registry_normalize(name)
+        if norm:
+            found.setdefault(norm, f"{name!r} at {pointer}")
+
+    for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
+        if not isinstance(reaction, dict):
+            continue
+        for side in ("inputs", "outputs"):
+            for tidx, token in enumerate(_safe_list(reaction.get(side))):
+                record(token, f"/processes/reactions/{ridx}/{side}/{tidx}")
+        for actor_key in ("enzymes", "modifiers"):
+            for eidx, actor in enumerate(_safe_list(reaction.get(actor_key))):
+                if isinstance(actor, dict):
+                    record(_registry_actor_name(actor), f"/processes/reactions/{ridx}/{actor_key}/{eidx}")
+
+    for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
+        if not isinstance(transport, dict):
+            continue
+        cargo_complex = transport.get("cargo_complex")
+        cargo = (
+            cargo_complex
+            if isinstance(cargo_complex, str) and _registry_canonical(cargo_complex)
+            else transport.get("cargo")
+        )
+        record(cargo, f"/processes/transports/{tidx}/cargo")
+        for tridx, transporter in enumerate(_safe_list(transport.get("transporters"))):
+            if isinstance(transporter, dict):
+                record(_registry_actor_name(transporter), f"/processes/transports/{tidx}/transporters/{tridx}")
+
+    for iidx, interaction in enumerate(_safe_list(processes.get("interactions"))):
+        if not isinstance(interaction, dict):
+            continue
+        left = interaction.get("left") or interaction.get("entity_1") or interaction.get("source")
+        right = interaction.get("right") or interaction.get("entity_2") or interaction.get("target")
+        record(left, f"/processes/interactions/{iidx}/entity_1")
+        record(right, f"/processes/interactions/{iidx}/entity_2")
+
+    return found
+
+
+def _entity_names_introduced_by_op(op: Dict[str, Any]) -> set[str]:
+    """Registry names an add/replace op under /entities would put back.
+
+    Needed so the guard does not break the entity-type repair audit_json_llm.py's
+    prompt explicitly asks for: "A small-molecule cofactor (PLP, ... NAD+, ...)
+    listed under entities.proteins[] is a type error. Propose removing it from
+    proteins[] and adding it to entities.compounds[]." That arrives as a two-op
+    patch, and if the remove is evaluated in isolation it strands every reaction
+    that names the cofactor as a modifier -- the guard would refuse a repair the
+    pipeline wants. Ops that cannot clear their own confidence bar are excluded,
+    because a compensating add that _should_accept will reject is not compensation.
+    """
+    action = str(op.get("op", "")).lower()
+    if action not in {"add", "replace"}:
+        return set()
+    try:
+        tokens = _decode_pointer(str(op.get("path", "")))
+    except Exception:  # noqa: BLE001
+        return set()
+    if not _is_entities_subtree_path(tokens):
+        return set()
+    if _float_or_default(op.get("confidence"), 0.0) < _threshold_for_op(op):
+        return set()
+
+    value = op.get("value")
+    norms: set[str] = set()
+    if isinstance(value, dict):
+        # A whole entity row: {"name": ..., "synonyms": [...]}.
+        norms |= _registry_name_norms([value])
+    elif isinstance(value, list):
+        # Either a whole bucket of rows, or a replaced synonyms array of strings.
+        norms |= _registry_name_norms(value)
+        for item in value:
+            if isinstance(item, str):
+                norm = _registry_normalize(item)
+                if norm:
+                    norms.add(norm)
+    elif isinstance(value, str):
+        # A scalar leaf. Only /name and /synonyms/<i> carry registry weight; a
+        # /class or /evidence string must not be mistaken for restored coverage.
+        leaf_fields = {"name", "synonyms"}
+        if tokens[-1] in leaf_fields or (len(tokens) >= 2 and tokens[-2] in leaf_fields):
+            norm = _registry_normalize(value)
+            if norm:
+                norms.add(norm)
+    return norms
+
+
+def _pending_entity_name_norms(patch_ops: Sequence[Any]) -> List[set[str]]:
+    """For each op index, the registry names introduced by ops STRICTLY AFTER it.
+
+    Ops earlier in the batch need no look-ahead: their names are already present in
+    the post-application payload the coverage diff measures.
+    """
+    per_op = [
+        _entity_names_introduced_by_op(_normalize_patch_op(op)) if isinstance(op, dict) else set()
+        for op in patch_ops
+    ]
+    later: List[set[str]] = [set() for _ in range(len(per_op) + 1)]
+    for idx in range(len(per_op) - 1, -1, -1):
+        later[idx] = per_op[idx] | later[idx + 1]
+    return [later[idx + 1] for idx in range(len(per_op))]
+
+
+def _referential_integrity_rejection(
+    before_payload: Dict[str, Any],
+    after_payload: Dict[str, Any],
+    op: Dict[str, Any],
+    pending_entity_names: set[str],
+) -> Optional[str]:
+    """Refuse an /entities op that would leave a process reference unresolvable.
+
+    Returns a rejection reason, or None when the op is safe. The fast path is the
+    common one: any op that does not shrink registry coverage (every add, every
+    mapped_ids or class edit, and every true duplicate cleanup) returns after one
+    set difference without ever walking the processes block.
+    """
+    try:
+        tokens = _decode_pointer(str(op.get("path", "")))
+    except Exception:  # noqa: BLE001
+        return None
+    if not _is_entities_subtree_path(tokens):
+        return None
+
+    lost = _registry_coverage(before_payload) - _registry_coverage(after_payload)
+    lost -= pending_entity_names
+    if not lost:
+        return None
+
+    referenced = _referenced_entity_norms(after_payload)
+    orphaned = sorted(referenced[norm] for norm in lost if norm in referenced)
+    if not orphaned:
+        return None
+
+    shown = "; ".join(orphaned[:_MAX_ORPHANED_REFERENCES_IN_REASON])
+    if len(orphaned) > _MAX_ORPHANED_REFERENCES_IN_REASON:
+        shown += f"; and {len(orphaned) - _MAX_ORPHANED_REFERENCES_IN_REASON} more"
+    return (
+        f"{REFERENTIAL_INTEGRITY_REASON_PREFIX}: {str(op.get('op', '')).lower()} on "
+        f"{str(op.get('path', ''))} would orphan {len(orphaned)} process reference(s): {shown}."
+    )
+
+
 def _should_accept(
     op: Dict[str, Any],
     source_payload: Dict[str, Any],
@@ -800,6 +1079,12 @@ def _should_accept(
     if action == "remove" and _is_core_semantics_path(path):
         if not _is_safe_core_remove(op, source_payload):
             return False, "Remove on core process semantics is blocked unless target is provable no-op."
+    # Removals under /entities are intentionally NOT judged here. _is_core_semantics_path
+    # covers only /processes/*, and widening it would still leave this function blind:
+    # `source_payload` is the pre-batch payload, so after any earlier entity removal the
+    # indices in `path` no longer address the rows this function would inspect. The
+    # referential-integrity guard runs in apply_patch_with_policy against the live
+    # before/after pair instead -- see _referential_integrity_rejection.
     return True, "accepted"
 
 
@@ -821,6 +1106,11 @@ def apply_patch_with_policy(
     applied_log_records: List[Dict[str, Any]] = []
     rejected_log_records: List[Dict[str, Any]] = []
     lock_context = _build_lock_context(locked_manifest)
+    # Look-ahead for the referential-integrity guard. Computed once for the whole
+    # batch because the cofactor-relocation repair audit_json_llm.py prompts for
+    # arrives as "remove /entities/proteins/N" followed by "add /entities/compounds/-",
+    # and the remove is only safe in light of the add that has not run yet.
+    pending_entity_names = _pending_entity_name_norms(patch_ops)
 
     for idx, raw_op in enumerate(patch_ops):
         if not isinstance(raw_op, dict):
@@ -865,6 +1155,19 @@ def apply_patch_with_policy(
                     rejected.append(record)
                     rejected_log_records.append(_patch_log_record(stage, op, reason, locked_reaction_id))
                     continue
+            # Runs after the lock validators so the specific "attempted_to_*" lock
+            # reasons keep their precedence in reports that already grep for them;
+            # this guard is the backstop for the far larger set of entity removals
+            # no lock manifest covers (PMC12444477/research had no manifest entry
+            # for either of the two entities behind its 24 dangling references).
+            integrity_rejection = _referential_integrity_rejection(
+                working, next_working, op, pending_entity_names[idx]
+            )
+            if integrity_rejection is not None:
+                record["reason"] = integrity_rejection
+                rejected.append(record)
+                rejected_log_records.append(_patch_log_record(stage, op, integrity_rejection))
+                continue
             working = next_working
             accepted.append(record)
             touched_lock_id = _locked_id_for_reaction(op.get("value"), lock_context) if lock_context is not None else ""

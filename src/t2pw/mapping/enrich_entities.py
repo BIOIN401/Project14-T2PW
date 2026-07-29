@@ -1,13 +1,125 @@
+"""Stage 7 enrichment: best-effort external metadata for mapped proteins and compounds.
+
+Every mapped protein is looked up in UniProt and every mapped compound in up to
+three of ChEBI / HMDB / KEGG. Results are memoized in ``data/enrichment_cache.json``
+(25.9 MB, 366 protein entries and 742 compound entries as of 2026-07-28) so a
+re-run of the same paper -- or a different paper sharing a metabolite -- costs no
+network at all.
+
+WHY THIS MODULE IS THREADED (2026-07-28)
+----------------------------------------
+Until 2026-07-28 those lookups ran on the main thread, strictly one after another.
+Reconstructing the timeline of run ``runs/2026-07-28_0919``, leg ``PMC12444477``
+(strict), from cache mtimes and the LM Studio log: the leg took 49m48s of wall
+clock (09:19:08 -> 10:08:57); RAG finished its last embedding at ~09:27:48;
+``id_mapping_cache.json`` was written at 09:44:44 and the audit candidates at
+09:45:13; and from 09:45 until 10:07:37 the only file the process wrote was
+``enrichment_cache.json``. That is roughly 22 of the leg's 50 minutes attributable
+to this module.
+
+That leg's ``final_mapped.json`` carries 44 compounds and 22 proteins, which reduce
+to 68 *distinct* upstream lookups: 21 UniProt accessions, 17 ChEBI ids, 17 KEGG ids
+and 13 HMDB ids. (The frequently quoted "56 compounds / 31 proteins" is the count in
+``merged_payload.json``, i.e. before mapping dedupes; enrichment only ever sees the
+44/22 in ``final_mapped.json``.) Nothing orders those 68 lookups against each other:
+each is an independent read of a different public database and the merge that
+consumes them is a pure function of the fetched blobs. The work is embarrassingly
+parallel; it was serial only because nobody had made it otherwise.
+
+Measured single-request latency on 2026-07-28 against the exact URLs this module
+uses (one probe each, from the dev box):
+
+    ChEBI    https://www.ebi.ac.uk/webservices/chebi/2.0/test/getCompleteEntity
+             -> HTTP 500 in 0.99s. ``HttpClient`` treats 5xx as retryable, so every
+                ChEBI id burns 3 attempts plus 0.6s + 1.2s of backoff ~= 4.8s and
+                yields nothing. All 230 cached ChEBI entries have status "error"
+                with ``request_failed`` -- see the note in ``_fetch_chebi_enrichment``.
+    KEGG     https://rest.kegg.jp/get/cpd:C00002        -> HTTP 200 in 1.79s
+    UniProt  https://rest.uniprot.org/uniprotkb/P19367.json -> HTTP 200 in 1.10s
+    HMDB     https://hmdb.ca/metabolites/HMDB0000538    -> HTTP 403 in 0.35s
+                (197 of the 201 cached HMDB entries are HTTP 403; hmdb.ca refuses
+                the ``Project14-T2PW-IDMapper/1.0`` User-Agent.)
+
+HOW THE CONCURRENCY IS STRUCTURED
+---------------------------------
+``enrich_payload`` now runs in three phases instead of one:
+
+  1. PLAN (serial, no network). ``_plan_enrichment_fetches`` walks the same
+     protein/compound rows with the same predicates the merge pass uses and returns
+     the de-duplicated, first-encounter-ordered list of cache *misses*.
+  2. PREFETCH (concurrent). ``_prefetch_enrichment_sources`` runs those misses
+     through one bounded ``ThreadPoolExecutor`` per service (see ``_SERVICE_LANES``)
+     and returns a plain dict keyed by ``(cache section, cache key)``.
+  3. MERGE (serial, unchanged). The original two loops run exactly as before, except
+     that on a cache miss they take the already-fetched blob out of the phase-2 dict
+     instead of calling the network. If a key is somehow absent from that dict they
+     fall through to the original inline fetch, so a planner/merge divergence can
+     only ever cost a request -- never change a result.
+
+Four invariants make the concurrent output byte-identical to the serial output:
+
+  * The cache is read and written ONLY from the main thread, in phase 3, in the same
+    order as before. Worker threads never touch ``EnrichmentCache``. This is what
+    keeps ``summary.cache_hits``, ``summary.api_calls`` and ``calls.*`` identical:
+    the *first* row using a key still counts as an API call and later rows using the
+    same key still count as cache hits, because the ``cache.set`` that makes them
+    hits still happens at exactly the same point in the same serial walk.
+  * ``report["entities"]`` is appended to only in phase 3, so its order is unchanged.
+  * Cache-key construction (``uniprot:<ACC>``, ``chebi:<CHEBI:n>``, ``hmdb:<HMDBn>``,
+    ``kegg:<Cn>``) is untouched; phase 1 and phase 3 both go through
+    ``_protein_uniprot_accession`` and ``_compound_candidate_ids``, so the two
+    cannot drift apart. This was originally only an intention -- review on
+    2026-07-28 found phase 3 re-deriving both predicates inline -- so
+    ``test_the_merge_pass_really_calls_the_shared_predicates`` now stubs the two
+    helpers to refuse everything and asserts phase 3 fetches nothing, which fails
+    the moment either loop grows its own copy again. The drift that matters is
+    OVER-planning, because it is the silent one: phase 2 would issue real requests
+    that ``summary.api_calls`` (incremented only in phase 3) never counts, so the
+    enrichment report would understate the traffic actually sent upstream.
+  * Each worker thread gets its own ``HttpClient``/``requests.Session`` via
+    ``_ClientPool``. ``requests.Session`` is not documented thread-safe and sharing
+    one across a pool is the classic way to get interleaved-response corruption.
+
+``max_workers=1`` restores the literal pre-2026-07-28 behaviour (phases 1 and 2 are
+skipped entirely and every fetch happens inline in phase 3). ``tests/test_enrich_entities_concurrency.py``
+pins the two paths to identical output.
+
+MEASURED EFFECT
+---------------
+Replaying that exact leg's ``final_mapped.json`` offline -- same 44 compounds and 22
+proteins, same 68 distinct lookups, fetchers stubbed to sleep for the latencies
+measured above -- gives:
+
+    serial (max_workers=1) : 139.7s   api_calls=68  {uniprot:21, chebi:17, hmdb:13, kegg:17}
+    concurrent (default)   :  29.1s   api_calls=68  {uniprot:21, chebi:17, hmdb:13, kegg:17}
+    -> 4.81x, 110.7s saved on one leg
+
+and the enriched payload, the enrichment report and the written cache file compare
+byte-for-byte equal between the two runs (no timestamp scrubbing needed, because the
+counts, the ordering and the provenance are all produced by the serial phase 3).
+``cache_hits`` is 9 in both. The ceiling is ChEBI: at ~4.8s per dead id and three
+workers, 17 ids take ~29s and nothing else in the module takes that long, so fixing
+the ChEBI endpoint would be worth more than widening any lane.
+
+The lane objects are built fresh per ``enrich_payload`` call rather than being module
+singletons, so the pacing floor applies within one paper's ~68 lookups. That is the
+unit of work the pipeline actually issues (``streamlit_app`` calls ``run_enrichment``
+once per leg), and per-call state keeps the tests free of the cross-test sleep
+accumulation a global pacer would cause.
+"""
+
 from __future__ import annotations
 
 import argparse
 import json
 import os
 import re
+import threading
 import time
+from concurrent.futures import Future, ThreadPoolExecutor
 from copy import deepcopy
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, NamedTuple, Optional, Tuple
 from xml.etree import ElementTree
 
 from t2pw.mapping.map_ids import HttpClient
@@ -94,8 +206,32 @@ def _first_list_item(values: Any) -> str:
 
 
 class EnrichmentCache:
+    """The on-disk memo of every external lookup this module has ever made.
+
+    ``data/enrichment_cache.json`` was 25.9 MB on 2026-07-28 and is shared by every
+    run: the overnight batch runner even snapshots it per run
+    (``batch/runner.py:SNAPSHOT_FILES``). Losing or truncating it does not lose
+    scientific data, but it does cost every subsequent paper a full round of
+    UniProt/ChEBI/KEGG/HMDB traffic, which is precisely the traffic this module was
+    made concurrent to avoid. Two pieces of hardening therefore live here, both
+    added alongside the 2026-07-28 concurrency work:
+
+    * ``_lock`` guards the mutating accessors. Under the shipped design phase 2
+      (prefetch) never touches the cache -- all ``get``/``set`` happen on the main
+      thread in phase 3 -- so the lock is not load-bearing today. It exists because
+      ``set`` is a ``setdefault``-then-assign pair that is *not* atomic under the
+      GIL, so the first future caller who does decide to fill the cache from a
+      worker thread would otherwise lose entries silently rather than loudly.
+    * ``save`` writes to a sibling temp file and ``os.replace``s it into position.
+      The previous ``write_text`` truncated the real 25.9 MB file first and then
+      streamed 25.9 MB into it; a crash, a Ctrl-C, or two legs of a batch finishing
+      at once left a half-written JSON document that the ``except Exception: pass``
+      in ``__init__`` silently swallows as "no cache at all".
+    """
+
     def __init__(self, path: Path) -> None:
         self.path = path
+        self._lock = threading.RLock()
         self.data: Dict[str, Dict[str, Any]] = {
             "proteins": {},
             "compounds": {},
@@ -110,16 +246,50 @@ class EnrichmentCache:
                 pass
 
     def get(self, section: str, key: str) -> Optional[Dict[str, Any]]:
-        item = _safe_dict(self.data.get(section)).get(key)
+        with self._lock:
+            item = _safe_dict(self.data.get(section)).get(key)
         return item if isinstance(item, dict) else None
 
     def set(self, section: str, key: str, value: Dict[str, Any]) -> None:
-        self.data.setdefault(section, {})
-        self.data[section][key] = value
+        with self._lock:
+            self.data.setdefault(section, {})
+            self.data[section][key] = value
 
     def save(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(self.data, indent=2, ensure_ascii=False), encoding="utf-8")
+        with self._lock:
+            serialized = json.dumps(self.data, indent=2, ensure_ascii=False)
+        # Unique per process AND per thread: two legs of the overnight batch, or a
+        # future threaded caller, must never pick the same scratch name.
+        tmp_path = self.path.with_name(
+            f"{self.path.name}.tmp-{os.getpid()}-{threading.get_ident()}"
+        )
+        try:
+            tmp_path.write_text(serialized, encoding="utf-8")
+            # os.replace is an atomic rename on POSIX and a MoveFileEx/REPLACE_EXISTING
+            # on Windows: readers see either the whole old file or the whole new one.
+            # It can still lose to a transient share violation from an indexer or a
+            # virus scanner holding the destination open, which is why this retries a
+            # couple of times before giving up rather than falling back to a
+            # truncating write (a truncating write is the corruption we are avoiding).
+            last_exc: Optional[Exception] = None
+            for attempt in range(3):
+                try:
+                    os.replace(tmp_path, self.path)
+                    return
+                except OSError as exc:
+                    last_exc = exc
+                    if attempt < 2:
+                        time.sleep(0.2 * (attempt + 1))
+            raise RuntimeError(
+                f"Could not atomically replace enrichment cache at {self.path}: {last_exc}"
+            )
+        finally:
+            try:
+                if tmp_path.exists():
+                    tmp_path.unlink()
+            except OSError:  # noqa: PERF203 - best effort; a stray temp file is harmless
+                pass
 
 
 def _extract_go_bins(payload: Dict[str, Any]) -> Dict[str, List[str]]:
@@ -335,6 +505,22 @@ def _parse_uniprot_record(accession: str, payload: Dict[str, Any], source_url: s
 
 
 def _fetch_uniprot_enrichment(client: HttpClient, uniprot_id: str) -> Dict[str, Any]:
+    """One UniProtKB entry fetch, returning both the parsed view and the raw payload.
+
+    NOT BATCHED, DELIBERATELY (2026-07-28). UniProt does offer batch retrieval --
+    ``/uniprotkb/search?query=accession:A OR accession:B`` and the ``/stream``
+    endpoint -- and 21 accessions in one request would obviously beat 21 requests.
+    It was rejected because this function caches ``raw`` (the complete entry JSON)
+    verbatim, and that raw blob is what makes ``enrichment_cache.json`` 25.9 MB and
+    what ``_parse_uniprot_record`` reads. The search endpoint returns entries wrapped
+    in a ``results`` envelope and applies its own default field projection, so the
+    per-entry JSON is not guaranteed byte-identical to ``/uniprotkb/{acc}.json``; any
+    difference would change ``parsed``, the cached ``raw``, and
+    ``provenance.source_url``, which the 2026-07-28 throughput work was explicitly
+    not allowed to do. The bounded pool in ``_SERVICE_LANES["uniprot"]`` recovers
+    most of the wall clock with none of that exposure.
+    """
+
     accession = _canonical(uniprot_id).upper()
     url = f"https://rest.uniprot.org/uniprotkb/{accession}.json"
     try:
@@ -401,6 +587,29 @@ def _normalize_chebi_id(raw: str) -> str:
 
 
 def _fetch_chebi_enrichment(client: HttpClient, chebi_id: str) -> Dict[str, Any]:
+    """One ChEBI ``getCompleteEntity`` call, parsed into the merged-compound shape.
+
+    KNOWN BROKEN UPSTREAM, LEFT ALONE DELIBERATELY (observed 2026-07-28). A probe of
+    the exact URL below with ``chebiId=CHEBI:15422`` returned HTTP 500 in 0.99s, and
+    all 230 ChEBI entries in ``data/enrichment_cache.json`` carry
+    ``status="error"`` / ``request_failed`` -- not one is ``ok``. Because
+    ``HttpClient`` retries 5xx three times with 0.6s/1.2s backoff, each dead ChEBI id
+    costs ~4.8s and returns nothing, so ChEBI is the most expensive per-id service in
+    the module while contributing zero fields. Repointing this at the current ChEBI
+    API would change enrichment *output*, and the 2026-07-28 concurrency work was
+    scoped to throughput only, so the URL is untouched here and the breakage is
+    reported separately.
+
+    NOT BATCHED, DELIBERATELY. ChEBI does expose a list-oriented entry point
+    (``getCompleteEntityByList``), but the parser below is a flat ``root.iter()``
+    tag scrape that takes the first occurrence of each tag name in the whole
+    document. Handed a multi-entity response it would silently blend one compound's
+    InChI with another's formula -- exactly the class of correctness change this
+    change was forbidden to make -- and the recorded ``provenance.source_url`` would
+    stop identifying the single entity it describes. Concurrency at
+    ``_SERVICE_LANES["chebi"]`` gets the wall-clock win without that risk.
+    """
+
     cid = _normalize_chebi_id(chebi_id)
     if not cid:
         return {"status": "error", "error_message": "missing_chebi_id"}
@@ -580,6 +789,21 @@ def _parse_kegg_entry_text(text: str) -> Dict[str, Any]:
 
 
 def _fetch_kegg_enrichment(client: HttpClient, kegg_id: str) -> Dict[str, Any]:
+    """One KEGG COMPOUND flat-file fetch, parsed into the merged-compound shape.
+
+    NOT BATCHED, DELIBERATELY (2026-07-28). ``rest.kegg.jp/get/`` accepts up to ten
+    ``+``-joined entries per request, and KEGG's own etiquette would rather have one
+    ten-entry request than ten requests. It was still rejected: KEGG answers a batch
+    with a single ``///``-delimited blob and no per-entry status, and a batch
+    containing one unknown accession fails as a unit. Today each bad id independently
+    records ``status="not_found"`` for exactly that compound while its neighbours
+    still record ``ok``; batching would convert that into all-or-nothing, and would
+    also force ``provenance.source_url`` to name a URL covering ten unrelated
+    compounds. Of the 311 cached KEGG entries every single one is ``ok`` and the
+    measured latency is 1.79s, so KEGG is not the bottleneck anyway -- it gets the
+    smallest lane (2 in flight, ~3 request starts/second) in ``_SERVICE_LANES``.
+    """
+
     kid = _normalize_kegg_id(kegg_id)
     if not kid:
         return {"status": "error", "error_message": "missing_kegg_id"}
@@ -1289,14 +1513,376 @@ def _build_enrichment_dump(payload: Dict[str, Any]) -> Dict[str, Any]:
     return out
 
 
+# ---------------------------------------------------------------------------
+# Concurrent prefetch (2026-07-28)
+# ---------------------------------------------------------------------------
+
+
+class _ServiceLane:
+    """A per-service concurrency cap plus a floor on the gap between request starts.
+
+    Two separate knobs because they answer two separate questions. ``max_workers``
+    bounds how many sockets we hold open against one host at once; it is what stops
+    us looking like a small scraping botnet. ``min_interval_seconds`` bounds the
+    *rate* of new requests independently of how fast the host answers; without it a
+    host that starts replying in 30ms (or replying 403 in 0.35s, which is what
+    hmdb.ca does to us today) would let a two-worker lane fire dozens of requests a
+    second.
+
+    Every endpoint this module touches is a free public academic service that owes
+    us nothing. Getting Project14 rate-limited or IP-banned would cost far more than
+    a slow run costs, so where a service's published guidance is vague the number
+    here is deliberately on the timid side. ``wait_turn`` reserves the next start
+    slot under the lock and sleeps outside it, so N workers spread out rather than
+    all waking at once.
+    """
+
+    def __init__(self, service: str, max_workers: int, min_interval_seconds: float) -> None:
+        self.service = service
+        self.max_workers = max(1, int(max_workers))
+        self.min_interval_seconds = max(0.0, float(min_interval_seconds))
+        self._lock = threading.Lock()
+        self._next_start = 0.0
+
+    def wait_turn(self) -> None:
+        if self.min_interval_seconds <= 0.0:
+            return
+        with self._lock:
+            now = time.monotonic()
+            start_at = max(now, self._next_start)
+            self._next_start = start_at + self.min_interval_seconds
+        delay = start_at - now
+        if delay > 0:
+            time.sleep(delay)
+
+
+def _build_service_lanes() -> Dict[str, _ServiceLane]:
+    """Per-service budgets, justified one service at a time.
+
+    UniProt (4 in flight, >=0.15s apart, so <= ~6.7 request starts/second).
+      UniProt publishes a REST API meant for programmatic access and rate-limits it
+      per IP, answering 429 with ``Retry-After`` rather than banning; their guidance
+      to users is to avoid hammering it and to prefer the batch/stream endpoints for
+      bulk work. We are not bulk -- 21 accessions for the 2026-07-28 PMC12444477 leg
+      -- and at 1.10s measured latency four in flight finishes 21 accessions in about
+      six rounds. Four is the widest lane here because UniProt is the endpoint most
+      clearly engineered for programmatic clients and the one actually returning data
+      (356 of 366 cached protein entries are ``ok``).
+
+    ChEBI / EBI (3 in flight, >=0.25s apart, so <= 4 request starts/second).
+      EMBL-EBI's web-services etiquette asks callers to keep concurrent connections
+      to a handful and to back off on errors rather than retry hard; they do not
+      publish a precise per-IP number for this endpoint, so we stay low. It matters
+      more than usual here because the endpoint is currently answering HTTP 500 to
+      every request (see ``_fetch_chebi_enrichment``): a failing service is exactly
+      the wrong thing to point a wide pool at, and ``HttpClient`` already multiplies
+      each id into three attempts.
+
+    HMDB (2 in flight, >=0.50s apart, so <= 2 request starts/second).
+      Deliberately the most restrictive lane, and the one lane that is SLOWER THAN
+      SERIAL when measured on its own. Do the arithmetic honestly: hmdb.ca answers
+      in 0.35s, so 13 ids issued back to back cost 13 x 0.35 = ~4.55s, while this
+      lane's 0.50s pacing floor puts the 13th start at 6.0s and the answer at
+      ~6.35s. The pacer, not the network, is the bound here, and that is a choice
+      rather than an oversight -- there is no public HMDB API on this path
+      (``_fetch_hmdb_enrichment`` falls back to scraping the human-facing
+      ``hmdb.ca/metabolites/<id>`` HTML page, a small academic site with no
+      published programmatic quota, which already answers our User-Agent with HTTP
+      403 for 197 of the 201 ids in the cache), and scrapers get blocked for being
+      fast far sooner than APIs do. The ~1.8s this costs is invisible against the
+      ~29s ChEBI leg that sets the length of the whole prefetch, so the trade buys
+      politeness for nothing. The win for HMDB is that its 13 ids no longer sit
+      *behind* the other 55 lookups; HMDB itself got slightly slower, on purpose.
+
+    KEGG (2 in flight, >=0.34s apart, so <= ~3 request starts/second).
+      KEGG's REST API is free for academic use under terms that explicitly exclude
+      bulk/automated harvesting, and the commonly cited ceiling for the service is
+      around three requests per second. Two in flight paced at 0.34s sits right at
+      that ceiling and no higher. KEGG is also the healthiest service we call (311
+      of 311 cached entries ``ok``), which is a reason to protect the relationship,
+      not to lean on it.
+    """
+
+    return {
+        "uniprot": _ServiceLane("uniprot", max_workers=4, min_interval_seconds=0.15),
+        "chebi": _ServiceLane("chebi", max_workers=3, min_interval_seconds=0.25),
+        "hmdb": _ServiceLane("hmdb", max_workers=2, min_interval_seconds=0.50),
+        "kegg": _ServiceLane("kegg", max_workers=2, min_interval_seconds=0.34),
+    }
+
+
+# Fallback for a service name that somehow reaches the pool without a budget: one
+# worker, half a second apart. Strictly slower than the serial path it replaces, so
+# an unmapped service can never become an accidental flood.
+_FALLBACK_LANE_SETTINGS = (1, 0.5)
+
+
+class _ClientPool:
+    """One ``HttpClient`` -- and therefore one ``requests.Session`` -- per thread.
+
+    ``HttpClient`` wraps a ``requests.Session`` for connection reuse. ``Session`` is
+    not documented as thread-safe: its cookie jar and its urllib3 connection pool are
+    shared mutable state, and sharing one across a pool is the textbook way to get a
+    response delivered to the wrong caller. Since the whole point of the 2026-07-28
+    change is that results must be *identical*, every worker gets its own session and
+    the main thread gets its own for the serial fallback path. At the widest
+    configuration that is 4 + 3 + 2 + 2 = 11 sessions for the lifetime of one
+    ``enrich_payload`` call, all closed in its ``finally``.
+    """
+
+    def __init__(self) -> None:
+        self._local = threading.local()
+        self._lock = threading.Lock()
+        self._created: List[HttpClient] = []
+
+    def get(self) -> HttpClient:
+        client = getattr(self._local, "client", None)
+        if client is None:
+            client = HttpClient()
+            self._local.client = client
+            with self._lock:
+                self._created.append(client)
+        return client
+
+    def close(self) -> None:
+        with self._lock:
+            created = list(self._created)
+            self._created.clear()
+        for client in created:
+            try:
+                client.session.close()
+            except Exception:  # noqa: BLE001 - closing a socket must never fail a run
+                pass
+
+
+class _FetchTarget(NamedTuple):
+    """One upstream lookup the merge pass is going to need and the cache does not have."""
+
+    service: str  # "uniprot" | "chebi" | "hmdb" | "kegg"
+    section: str  # EnrichmentCache section: "proteins" | "compounds"
+    cache_key: str  # byte-for-byte the key the merge pass will look up
+    entity_id: str  # normalized accession handed to the matching _fetch_* function
+
+
+def _protein_uniprot_accession(protein: Any) -> str:
+    """The UniProt accession the merge pass will enrich this protein row with, or "".
+
+    Extracted so phase 1 (planning) and phase 3 (merge) cannot disagree about which
+    rows get fetched. The three ways a row drops out are kept in the merge pass's
+    order because it needs to distinguish them for its counters, but the *predicate*
+    lives here: no name, the PathBank Unknown-protein sentinel (fetching UniProt for
+    it is what ``test_unknown_sentinel_is_not_sent_to_uniprot_enrichment`` forbids),
+    or no mapped accession.
+    """
+
+    if not isinstance(protein, dict):
+        return ""
+    if not _canonical(protein.get("name")):
+        return ""
+    if is_pathbank_unknown_protein(protein):
+        return ""
+    return _canonical(_safe_dict(protein.get("mapped_ids")).get("uniprot")).upper()
+
+
+def _compound_candidate_ids(compound: Any) -> Dict[str, str]:
+    """The ChEBI/HMDB/KEGG ids the merge pass will try for this compound row.
+
+    Returns ``{}`` when the merge pass would skip the row entirely, so phase 1 and
+    phase 3 stay in lockstep. Normalization happens here (``CHEBI:15422``,
+    ``HMDB0000538``, ``C00002``) because the cache key is built from the normalized
+    form and a planner that normalized differently would prefetch a key nobody looks
+    up.
+    """
+
+    if not isinstance(compound, dict):
+        return {}
+    if not _canonical(compound.get("name")):
+        return {}
+    mapped_ids = _safe_dict(compound.get("mapped_ids"))
+    candidate_ids = {
+        "chebi": _normalize_chebi_id(_canonical(mapped_ids.get("chebi"))),
+        "hmdb": _normalize_hmdb_id(_canonical(mapped_ids.get("hmdb"))),
+        "kegg": _normalize_kegg_id(_canonical(mapped_ids.get("kegg"))),
+    }
+    if not any(candidate_ids.values()):
+        return {}
+    return candidate_ids
+
+
+def _plan_enrichment_fetches(
+    proteins: List[Any],
+    compounds: List[Any],
+    cache: EnrichmentCache,
+) -> List[_FetchTarget]:
+    """Phase 1: the de-duplicated list of cache misses, in first-encounter order.
+
+    De-duplication is not an optimization, it is a correctness requirement. In the
+    serial code the second protein carrying an accession the first protein already
+    fetched counts as a ``cache_hits`` increment, not an ``api_calls`` increment,
+    because the first one's ``cache.set`` landed before the second one's
+    ``cache.get``. Prefetching a key twice would still produce identical *payload*
+    output but would make two network calls where the report claims one. Emitting
+    each key once keeps the request count equal to the serial request count exactly.
+    """
+
+    targets: List[_FetchTarget] = []
+    seen: set = set()
+
+    def _add(service: str, section: str, cache_key: str, entity_id: str) -> None:
+        if cache_key in seen:
+            return
+        seen.add(cache_key)
+        if cache.get(section, cache_key) is not None:
+            return
+        targets.append(
+            _FetchTarget(service=service, section=section, cache_key=cache_key, entity_id=entity_id)
+        )
+
+    for protein in proteins:
+        uniprot_id = _protein_uniprot_accession(protein)
+        if not uniprot_id:
+            continue
+        _add("uniprot", "proteins", f"uniprot:{uniprot_id}", uniprot_id)
+
+    for compound in compounds:
+        candidate_ids = _compound_candidate_ids(compound)
+        if not candidate_ids:
+            continue
+        for source_name in ["chebi", "hmdb", "kegg"]:
+            source_id = candidate_ids.get(source_name, "")
+            if not source_id:
+                continue
+            _add(source_name, "compounds", f"{source_name}:{source_id}", source_id)
+
+    return targets
+
+
+def _dispatch_fetch(client: HttpClient, target: _FetchTarget) -> Dict[str, Any]:
+    """Call the one ``_fetch_*`` function this target names.
+
+    Written as an if/elif chain over module globals rather than a lookup table built
+    at import time so that ``unittest.mock.patch("...._fetch_uniprot_enrichment")``
+    still intercepts the call -- ``tests/test_pathbank_unknown_fallback.py`` patches
+    exactly that name and asserts it is never called, and a table captured at import
+    would hold the unpatched function object forever.
+    """
+
+    if target.service == "uniprot":
+        return _fetch_uniprot_enrichment(client, target.entity_id)
+    if target.service == "chebi":
+        return _fetch_chebi_enrichment(client, target.entity_id)
+    if target.service == "hmdb":
+        return _fetch_hmdb_enrichment(client, target.entity_id)
+    return _fetch_kegg_enrichment(client, target.entity_id)
+
+
+def _prefetch_worker(target: _FetchTarget, lane: _ServiceLane, clients: _ClientPool) -> Any:
+    lane.wait_turn()
+    return _dispatch_fetch(clients.get(), target)
+
+
+def _prefetch_enrichment_sources(
+    targets: List[_FetchTarget],
+    clients: _ClientPool,
+    *,
+    max_workers: Optional[int] = None,
+) -> Dict[Tuple[str, str], Any]:
+    """Phase 2: fetch every planned miss concurrently, one bounded pool per service.
+
+    One pool per service rather than one shared pool with a semaphore, because the
+    services have wildly different costs and a shared pool lets the slowest one
+    starve the rest. On 2026-07-28 a ChEBI id cost ~4.8s (HTTP 500 x3 attempts with
+    backoff) while an HMDB id cost 0.35s (HTTP 403, no retry); in a shared pool the
+    ChEBI failures would occupy every slot and the cheap lookups would queue behind
+    them, which is the serial behaviour we are removing.
+
+    Failures are *not* recorded. The ``_fetch_*`` functions already convert network
+    and parse errors into ``{"status": "error", ...}`` dictionaries, so an exception
+    escaping one of them is a genuine bug (``_parse_uniprot_record`` walking a shape
+    it does not expect, say). Dropping such a key from the result dict makes the
+    merge pass call the same fetcher inline, at the same entity, and raise the same
+    exception at the same point in the same order the serial code would have -- one
+    wasted request in exchange for the crash path staying observationally identical.
+    """
+
+    results: Dict[Tuple[str, str], Any] = {}
+    if not targets:
+        return results
+
+    lanes = _build_service_lanes()
+    by_service: Dict[str, List[_FetchTarget]] = {}
+    for target in targets:
+        by_service.setdefault(target.service, []).append(target)
+
+    executors: List[ThreadPoolExecutor] = []
+    futures: List[Tuple[Future, _FetchTarget]] = []
+    try:
+        for service, items in by_service.items():
+            lane = lanes.get(service)
+            if lane is None:
+                lane = _ServiceLane(service, *_FALLBACK_LANE_SETTINGS)
+            workers = min(lane.max_workers, len(items))
+            if max_workers is not None:
+                workers = min(workers, max(1, int(max_workers)))
+            executor = ThreadPoolExecutor(
+                max_workers=workers, thread_name_prefix=f"t2pw-enrich-{service}"
+            )
+            executors.append(executor)
+            for target in items:
+                futures.append((executor.submit(_prefetch_worker, target, lane, clients), target))
+
+        for future, target in futures:
+            try:
+                results[(target.section, target.cache_key)] = future.result()
+            except Exception:  # noqa: BLE001 - see docstring: merge pass re-raises this
+                continue
+    finally:
+        for executor in executors:
+            executor.shutdown(wait=True)
+
+    return results
+
+
 def enrich_payload(
     payload: Dict[str, Any],
     *,
     cache_path: Path,
+    max_workers: Optional[int] = None,
 ) -> Dict[str, Any]:
+    """Enrich every mapped protein and compound in ``payload``; never mutates the input.
+
+    ``max_workers`` is a plumbing seam, not a product knob, and defaults to ``None``
+    meaning "use the per-service budgets in ``_build_service_lanes``". Passing ``1``
+    skips the plan and prefetch phases outright and fetches inline exactly where the
+    pre-2026-07-28 code did, which is what
+    ``tests/test_enrich_entities_concurrency.py`` compares the concurrent output
+    against. Any other integer clamps every lane to at most that many workers, for an
+    operator who needs to be gentler than the defaults on a shared network.
+
+    Note for anyone looking for a switch to skip enrichment entirely: there is none.
+    ``src/t2pw/config.py`` (checked 2026-07-28) defines only ``RESOLUTION_DB_ENV``
+    and ``RAG_ENV``/``RAG_DEFAULTS``; it has no enrichment key of any kind, and the
+    only caller, ``t2pw/app/streamlit_app.py``, calls ``run_enrichment``
+    unconditionally. Whether enrichment should be skippable or deferred is a product
+    decision and is deliberately not invented here.
+    """
+
     working = deepcopy(payload)
     cache = EnrichmentCache(cache_path)
-    client = HttpClient()
+    clients = _ClientPool()
+    try:
+        return _enrich_payload_inner(working, cache, clients, max_workers=max_workers)
+    finally:
+        clients.close()
+
+
+def _enrich_payload_inner(
+    working: Dict[str, Any],
+    cache: EnrichmentCache,
+    clients: _ClientPool,
+    *,
+    max_workers: Optional[int] = None,
+) -> Dict[str, Any]:
 
     report: Dict[str, Any] = {
         "summary": {
@@ -1328,6 +1914,19 @@ def enrich_payload(
         [row for row in compounds if isinstance(row, dict) and _canonical(row.get("name"))]
     )
 
+    # Phases 1 and 2 (see the module docstring). Everything below this block is the
+    # original serial walk; the only thing it does differently is look in
+    # ``prefetched`` before reaching for the network. ``max_workers=1`` opts out
+    # entirely and leaves an empty dict, which makes every miss fall through to the
+    # inline fetch -- i.e. the literal pre-2026-07-28 code path.
+    prefetched: Dict[Tuple[str, str], Any] = {}
+    if max_workers is None or int(max_workers) > 1:
+        prefetched = _prefetch_enrichment_sources(
+            _plan_enrichment_fetches(proteins, compounds, cache),
+            clients,
+            max_workers=max_workers,
+        )
+
     for idx, protein in enumerate(proteins):
         if not isinstance(protein, dict):
             continue
@@ -1345,8 +1944,23 @@ def enrich_payload(
                 }
             )
             continue
-        mapped_ids = _safe_dict(protein.get("mapped_ids"))
-        uniprot_id = _canonical(mapped_ids.get("uniprot")).upper()
+        # Call the SHARED helper rather than re-deriving the accession inline.
+        # The two checks above stay where they are because the merge pass has to
+        # distinguish their outcomes for its counters and its report rows, and by
+        # this point both of the helper's own early returns are provably no-ops --
+        # so what it returns here is exactly the accession. Review on 2026-07-28
+        # found this line re-implemented as
+        # ``_canonical(_safe_dict(protein.get("mapped_ids")).get("uniprot")).upper()``
+        # while the module docstring claimed "phase 1 builds keys with the same
+        # helpers phase 3 does, so the two cannot drift apart". They agreed on the
+        # 2026-07-28 PMC12444477 leg (68 planned == 68 issued), but the stated
+        # safety property was not actually held by the code, and the failure mode
+        # it guards is silent in the direction that matters: an OVER-planning
+        # phase 1 issues real requests to UniProt/ChEBI/HMDB/KEGG that
+        # ``report["summary"]["api_calls"]`` -- incremented only here in phase 3 --
+        # never counts, so the enrichment report would understate the traffic we
+        # actually sent to four free academic services.
+        uniprot_id = _protein_uniprot_accession(protein)
         if not uniprot_id:
             continue
         report["summary"]["proteins_with_uniprot"] += 1
@@ -1360,7 +1974,15 @@ def enrich_payload(
         else:
             report["summary"]["api_calls"] += 1
             report["calls"]["uniprot"] += 1
-            fetched = _fetch_uniprot_enrichment(client, uniprot_id)
+            # Membership test, not truthiness: a prefetched value is whatever the
+            # fetcher returned, and a legitimately falsy return (or a test double's
+            # return) must still count as prefetched or this row would be fetched
+            # twice and any call-count assertion would double.
+            prefetch_key = ("proteins", cache_key)
+            if prefetch_key in prefetched:
+                fetched = prefetched[prefetch_key]
+            else:
+                fetched = _fetch_uniprot_enrichment(clients.get(), uniprot_id)
             cache.set("proteins", cache_key, fetched)
             enrichment_obj = _safe_dict(fetched.get("parsed")) if _canonical(fetched.get("status")).lower() == "ok" else fetched
             status = _canonical(fetched.get("status")).lower()
@@ -1401,14 +2023,17 @@ def enrich_payload(
         name = _canonical(compound.get("name"))
         if not name:
             continue
-        mapped_ids = _safe_dict(compound.get("mapped_ids"))
-        candidate_ids = {
-            "chebi": _normalize_chebi_id(_canonical(mapped_ids.get("chebi"))),
-            "hmdb": _normalize_hmdb_id(_canonical(mapped_ids.get("hmdb"))),
-            "kegg": _normalize_kegg_id(_canonical(mapped_ids.get("kegg"))),
-        }
-        if not any(candidate_ids.values()):
+        # Same correction as the protein loop above: the candidate ids come from
+        # the SHARED helper instead of being re-normalized inline, so that the
+        # normalization phase 1 uses to build a cache key and the normalization
+        # phase 3 uses to look one up are the same code, not two copies of it.
+        # ``mapped_ids`` is still read separately because ``_init_compound_
+        # enrichment`` wants the raw mapping (every id the row carries, including
+        # ones no lane fetches), not the three normalized lookup ids.
+        candidate_ids = _compound_candidate_ids(compound)
+        if not candidate_ids:
             continue
+        mapped_ids = _safe_dict(compound.get("mapped_ids"))
         report["summary"]["compounds_with_ids"] += 1
         enrichment = _init_compound_enrichment(mapped_ids)
         enrichment["is_generic_class"] = _is_generic_class_compound(name)
@@ -1425,12 +2050,15 @@ def enrich_payload(
             else:
                 report["summary"]["api_calls"] += 1
                 report["calls"][source_name] += 1
-                if source_name == "chebi":
-                    source_obj = _fetch_chebi_enrichment(client, source_id)
+                prefetch_key = ("compounds", cache_key)
+                if prefetch_key in prefetched:
+                    source_obj = prefetched[prefetch_key]
+                elif source_name == "chebi":
+                    source_obj = _fetch_chebi_enrichment(clients.get(), source_id)
                 elif source_name == "hmdb":
-                    source_obj = _fetch_hmdb_enrichment(client, source_id)
+                    source_obj = _fetch_hmdb_enrichment(clients.get(), source_id)
                 else:
-                    source_obj = _fetch_kegg_enrichment(client, source_id)
+                    source_obj = _fetch_kegg_enrichment(clients.get(), source_id)
                 cache.set("compounds", cache_key, source_obj)
             _merge_compound_source(enrichment, source_obj)
 
@@ -1481,12 +2109,16 @@ def run_enrichment(
     cache_path: Path,
     dump_path: Optional[Path] = None,
     qa_report: Optional[Dict[str, Any]] = None,
+    max_workers: Optional[int] = None,
 ) -> Dict[str, Any]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError("Mapped input JSON must be an object.")
 
-    result = enrich_payload(payload, cache_path=cache_path)
+    # max_workers is forwarded, not interpreted: see enrich_payload's docstring. The
+    # only caller in the tree (t2pw/app/streamlit_app.py) omits it and gets the
+    # per-service defaults.
+    result = enrich_payload(payload, cache_path=cache_path, max_workers=max_workers)
     enriched_payload = _safe_dict(result.get("payload"))
     report = _safe_dict(result.get("report"))
     output_path.write_text(json.dumps(enriched_payload, indent=2, ensure_ascii=False), encoding="utf-8")

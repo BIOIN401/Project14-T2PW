@@ -87,7 +87,31 @@ where it stopped.
 least one produced no deliverable (`PASSED WITH WARNINGS`).
 `1` — any failure, a reached `--deadline` with pairs still pending, a `Ctrl+C`,
 "nothing ran at all", or an unexpected error in the batch loop.
-`2` — from `run_overnight.bat` only: no virtualenv.
+`2` — a usage error (argparse exits 2 on an unknown flag or a bad value), or —
+from `run_overnight.bat` only — no virtualenv at `.venv\Scripts\python.exe`.
+`3` — **preflight failed.** The interpreter you launched cannot import what the
+child processes need (`streamlit.testing.v1` and `t2pw.rag.research_report` are
+the two that matter — `driver.py` defers both, so nothing the parent does
+touches them). Nothing was fetched, nothing ran, and **no run directory was
+created**: there is no new `SUMMARY.txt`, and the newest folder in `runs/` is
+still the previous night's. The console message names the module, the
+interpreter in use, the project venv, and the exact command to rerun with.
+
+The `3` exists because `2` is already taken twice over, and because anything
+reading `ERRORLEVEL` has to be able to tell *a paper failed* from *the
+environment is wrong*. On 2026-07-27 it could not: run `runs/2026-07-27_2135`
+was launched under an interpreter without `streamlit`, fetched 28 papers in 43s,
+then recorded all 56 paper+mode legs as `failure_kind=crash` in 24 seconds,
+every row carrying the same `ModuleNotFoundError: No module named 'streamlit'`.
+`SUMMARY.txt` opened with `!! RESEARCH-MODE DEFECT !! papers affected: 28` — 28
+pipeline defects that did not exist. The usual cause on Windows is that `.py` is
+associated with `C:\WINDOWS\py.exe`, which ignores an active virtualenv, so
+`scripts\batch_run.py` and `.venv\Scripts\python.exe scripts\batch_run.py` are
+two different interpreters and only one of them has the dependencies.
+
+`run_overnight.bat` prints its own message for `3` ("STOPPED BEFORE STARTING ...
+no run folder was created") instead of the generic "read `SUMMARY.txt` in the
+newest `runs\` folder", which would otherwise point at the previous night.
 
 ---
 
@@ -387,6 +411,19 @@ fetched again. `--fresh` forces that unconditionally.
 A resumed run **never re-fetches and never re-runs finished work**, because the
 paper text lives in the run directory (`01_source_text.txt`) — that file is also
 exactly what you paste into the browser to reproduce a failure by hand.
+
+**"Finished" includes "failed".** `completed_pairs` builds its done-set from *any*
+manifest row and never looks at `status`, so a leg that failed is as done as a leg
+that passed and a resume will not revisit it. This is deliberate — a paper that
+fails deterministically (a clinical case report with no pathway in it; a review the
+extractor cannot get a `processes` object out of) would otherwise be retried every
+single relaunch and eat the night twice — but it has a sharp edge worth knowing
+before you rely on a resume to validate a fix. `runs/2026-07-28_0919` ended with
+five manifest rows, three of them `fail`; relaunching it starts at leg 6 with 51
+pending and never touches those three again. If the point of tonight is to see
+whether a fix works on the legs that broke, a resume is the wrong instrument: use
+`--fresh`, or delete the failed rows from `manifest.jsonl` first (it is one JSON
+object per line and nothing else reads it).
 
 Two safety nets around the seams: if a crash lands after the directory is created
 but before `plan.json` is written, a minimal aborted `plan.json` is written so the

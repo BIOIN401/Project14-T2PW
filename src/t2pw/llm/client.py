@@ -103,6 +103,131 @@ def reset_token_stats() -> None:
     _token_stats["calls"] = 0
 
 
+# -----------------------------------------------------------------------------
+# Empty-but-successful completions
+#
+# WHY THIS SECTION EXISTS. Until 2026-07-28 every retry loop in this module fired
+# only on a RAISED exception (RateLimitError, APITimeoutError, APIError,
+# json.JSONDecodeError). An HTTP 200 whose message.content was "" or None was
+# handed straight back to the caller as a success by
+# `return (resp.choices[0].message.content or "").strip()`, and finish_reason was
+# never looked at anywhere in the file. So the ONE layer that can actually see
+# "the provider answered 200 and sent nothing" was also the one layer that
+# treated it as an answer, and every stage above it was left to rediscover the
+# emptiness in whatever local vocabulary it happened to have.
+#
+# WHAT THE EVIDENCE DOES AND DOES NOT SAY. The batch in runs/2026-07-28_0919 lost
+# two legs to the same abrupt message:
+#
+#   PMC13278307 / research   FAIL after  137s   "Payload must include a processes object"
+#   PMC13231680 / strict     FAIL after   55s   "Payload must include a processes object"
+#
+# An earlier draft of this comment asserted those two deaths were each caused by
+# a SINGLE empty Stage 0 reply. Review on 2026-07-28 checked that against the
+# artifacts and it does not hold, so it is corrected here rather than left as a
+# plausible story attached to a real fix:
+#
+#   * Neither leg wrote any artifact at all. Both manifest rows carry `files: []`
+#     and the only thing on disk under their run directories is RESULT.txt, so
+#     NOTHING in that run records an empty completion. The diagnosis was inferred
+#     from the shape of the failure, not read out of a log.
+#   * The run executed commit 12bc11b (batch.log: 09:19:08 -> 11:49:05 on
+#     2026-07-28; the next commit, 92e1192, landed at 14:06:43). At 12bc11b,
+#     streamlit_app.py already drew Stage 0 a SECOND time whenever
+#     len(text) > _PREPROCESS_RETRY_CHARS (20,000). The two legs' 01_source_text
+#     .txt files are 50,377 and 61,997 chars, so both were over that line and both
+#     already got a second draw. The single-empty-reply story therefore needs two
+#     consecutive empty completions, not one.
+#   * Stage 1 and Stage 2 (pipeline._run_json_stage) do NOT survive an empty reply
+#     silently either: "" fails json.loads, so an empty completion is already
+#     retried there -- but as a whole extra round-trip of the full prompt, which
+#     is where the wall clock goes on a leg that dies in 55s or 137s.
+#
+# WHAT IS STILL TRUE, AND WHY THE FIX STAYS. The hole itself is not in dispute and
+# is visible in the code, independent of any particular leg: an empty 200 was
+# returned as a success, cost a caller a full retry round or a degraded result,
+# and was invisible to every counter and every log line in this module. Fixing it
+# HERE is stage-agnostic on purpose -- it does not matter which stage draws the
+# short straw, and the layer that can distinguish "empty because the provider
+# hiccuped" from "empty because a content filter stopped it" (see _finish_reason)
+# is this one. PMC13231680 is still the reason to believe the emptiness is
+# transient rather than a property of the paper: the same paper extracted 3
+# reactions the previous day, and in this very run its research leg passed with 4
+# reactions in 936.7s while its strict leg died in 54.7s on the same source text.
+#
+# The fix deliberately does NOT introduce a second retry mechanism or a new
+# exception type: an empty completion is folded into the existing loop, backoff
+# and LLM_MAX_RETRIES budget, and once that budget is exhausted the empty string
+# is returned exactly as before. Callers already cope with it - the preprocessor
+# records status "empty_reply" and falls back to the empty context - and raising
+# here would change the contract of every call site in the pipeline.
+# -----------------------------------------------------------------------------
+def _finish_reason(resp: Any) -> str:
+    """
+    Best-effort read of ``choices[0].finish_reason``, for the log line only.
+
+    We surface it because "empty" has at least two causes that want opposite
+    responses, and the 2026-07-28 postmortem could not tell them apart because
+    nothing in this module ever recorded it:
+
+      * a provider hiccup - finish_reason "stop" (or absent) with no text.
+        Retrying is exactly right. Note that we cannot say this was the
+        PMC13231680 case: that leg wrote no artifacts (`files: []` in the
+        manifest) and this field was not recorded anywhere in the run, which is
+        the whole reason it is surfaced from now on.
+      * a moderation / refusal stop - finish_reason "content_filter". Retrying
+        the identical prompt LLM_MAX_RETRIES times cannot help and just burns
+        wall clock, so the operator needs to see this in the log to know that
+        editing the prompt, not re-running the leg, is the fix.
+
+    Never raises. A malformed or partial response object must not be able to kill
+    a call by blowing up inside a logging helper.
+    """
+    try:
+        choice = resp.choices[0]
+    except Exception:  # noqa: BLE001 - diagnostics must never mask the real result
+        return "unavailable"
+    return str(getattr(choice, "finish_reason", None) or "unknown")
+
+
+def _completion_is_empty(resp: Any, *, tools_were_sent: bool) -> bool:
+    """
+    True when a 200 response carries no payload the caller can actually use.
+
+    What counts as "payload" depends on what we asked the model for, and getting
+    this backwards in the tool-calling direction would be a far worse regression
+    than the bug being fixed here:
+
+      * tools WERE sent -> an assistant message with ``tool_calls`` and
+        ``content=None`` is the normal, correct shape of a function-calling turn;
+        it is what the whole agentic loop in chat_with_tools is built to consume.
+        Retrying such a reply would re-issue a round the model already answered
+        and could double-execute tools. So tool_calls count as payload and the
+        reply is NOT empty, however blank its content is.
+      * tools were NOT sent -> chat(), and the forced final round of
+        chat_with_tools (``_call_once(..., include_tools=False)``), both reduce
+        the reply to ``(message.content or "").strip()`` before handing it back.
+        Text is the only payload that can exist, so blank text means the caller
+        gets "" and the call bought nothing.
+
+    Whitespace-only content is treated as empty, matching both the ``.strip()``
+    the callers already apply and the preprocessor's own empty-reply test, which
+    feeds it "   \\n\\t " and expects status "empty_reply".
+
+    Never raises: a response shaped unlike anything we recognise is reported as
+    empty so it goes down the retry path rather than crashing the call.
+    """
+    try:
+        message = resp.choices[0].message
+    except Exception:  # noqa: BLE001 - unrecognisable shape -> treat as a transient
+        return True
+
+    if tools_were_sent and getattr(message, "tool_calls", None):
+        return False
+
+    return not (getattr(message, "content", None) or "").strip()
+
+
 def _resolve_model(
     *,
     model_override: Optional[str] = None,
@@ -186,12 +311,56 @@ def chat(
     spacing = float(os.getenv("LLM_CALL_SPACING", "0.35"))
 
     last_err: Exception | None = None
+    empty_attempts = 0
 
     for attempt in range(max_retries):
         try:
             resp = _client.chat.completions.create(**kwargs)
             _record_usage(resp)
             time.sleep(spacing)
+
+            # An HTTP 200 with no text is a transient, not a result. See the
+            # "Empty-but-successful completions" note above: this is the exact
+            # shape that killed PMC13278307/research (137s) and
+            # PMC13231680/strict (55s) in runs/2026-07-28_0919, and it is
+            # deliberately handled *inside* this loop so it shares the same
+            # backoff and the same LLM_MAX_RETRIES budget as every other
+            # transient rather than growing a second retry mechanism.
+            if _completion_is_empty(resp, tools_were_sent=False):
+                empty_attempts += 1
+                reason = _finish_reason(resp)
+                last_err = RuntimeError(
+                    f"empty completion from {resolved_model} (finish_reason={reason})"
+                )
+                if attempt < max_retries - 1:
+                    logger.warning(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s) on attempt %d/%d; retrying as a transient.",
+                        stage_name or "chat",
+                        resolved_model,
+                        reason,
+                        attempt + 1,
+                        max_retries,
+                    )
+                    time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                    continue
+                # Budget exhausted. Return the empty string exactly as this
+                # function did before 2026-07-28 instead of raising: the
+                # preprocessor turns "" into status "empty_reply" plus the empty
+                # context, and a new exception type here would change the
+                # contract of every call site at once.
+                logger.error(
+                    "LLM returned an empty completion for %s (model %s, "
+                    "finish_reason=%s) on %d of %d attempts; giving up and returning "
+                    "the empty string for the caller's own empty-reply handling.",
+                    stage_name or "chat",
+                    resolved_model,
+                    reason,
+                    empty_attempts,
+                    max_retries,
+                )
+                return ""
+
             return (resp.choices[0].message.content or "").strip()
 
         except AuthenticationError as e:
@@ -283,15 +452,65 @@ def chat_with_tools(
             "temperature": temperature,
             "max_tokens": max_tokens,
         }
-        if include_tools and tools:
+        # Captured rather than re-derived: it is the single fact that decides
+        # whether a content-less reply is a legitimate function-calling turn or
+        # a dead 200. `include_tools and tools` is the real condition (a caller
+        # can ask for tools and pass none), so the emptiness check must read the
+        # same expression that decided what actually went on the wire.
+        tools_were_sent = bool(include_tools and tools)
+        if tools_were_sent:
             kwargs["tools"] = tools
             kwargs["tool_choice"] = "auto"
         last_err: Optional[Exception] = None
+        empty_attempts = 0
         for attempt in range(max_retries):
             try:
                 resp = _client.chat.completions.create(**kwargs)
                 _record_usage(resp)
                 time.sleep(spacing)
+
+                # Same 2026-07-28 hole as chat(), reached from both call sites
+                # below: the tool round (include_tools=True) and the forced
+                # final round (include_tools=False). `tools_were_sent` is what
+                # keeps a valid tool_calls-only reply out of this branch -
+                # retrying one of those would re-issue a round the model has
+                # already answered.
+                if _completion_is_empty(resp, tools_were_sent=tools_were_sent):
+                    empty_attempts += 1
+                    reason = _finish_reason(resp)
+                    last_err = RuntimeError(
+                        f"empty completion from {resolved_model} (finish_reason={reason})"
+                    )
+                    if attempt < max_retries - 1:
+                        logger.warning(
+                            "LLM returned an empty completion for %s (model %s, "
+                            "finish_reason=%s, tools_sent=%s) on attempt %d/%d; "
+                            "retrying as a transient.",
+                            stage_name or "chat_with_tools",
+                            resolved_model,
+                            reason,
+                            tools_were_sent,
+                            attempt + 1,
+                            max_retries,
+                        )
+                        time.sleep(min(base_sleep * (2 ** attempt), max_sleep))
+                        continue
+                    # Budget exhausted: hand the empty response back unchanged so
+                    # the loop below still reduces it to "" the way it always
+                    # has. Raising here would break every chat_with_tools caller.
+                    logger.error(
+                        "LLM returned an empty completion for %s (model %s, "
+                        "finish_reason=%s, tools_sent=%s) on %d of %d attempts; "
+                        "giving up and returning the empty response.",
+                        stage_name or "chat_with_tools",
+                        resolved_model,
+                        reason,
+                        tools_were_sent,
+                        empty_attempts,
+                        max_retries,
+                    )
+                    return resp
+
                 return resp
             except AuthenticationError as e:
                 raise RuntimeError(f"Authentication failed (401): {e}") from e

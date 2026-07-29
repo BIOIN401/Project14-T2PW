@@ -249,6 +249,47 @@ def filter_out_of_scope_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, An
     Remove reactions whose ``scope_membership`` is ``"out_of_scope"`` from the
     payload's ``processes.reactions`` list.
 
+    Reachability
+    ------------
+    Until :func:`_carry_scope_membership` landed, this function could not remove
+    anything: ``clean_stage_one`` runs on both Stage-1 branches before the
+    orchestrator calls it (``streamlit_app.py:3617``) and ``_clean_processes``
+    rebuilt every reaction from a key whitelist that omitted ``scope_membership``,
+    so every reaction arrived unlabelled and took the default below. Proved by
+    execution and confirmed on all 9 Stage-1 / 27 delivered reactions of the
+    2026-07-28 PMC12444477 run. Read that function's docstring before changing
+    either half; they only work as a pair.
+
+    Why an ABSENT label means KEEP
+    ------------------------------
+    A missing label is not evidence that a reaction is off-pathway -- it is
+    evidence that nobody classified it. Three real sources produce unlabelled
+    reactions: (1) every payload written before the label survived cleaning -- all
+    178 reactions in the 21 delivered payload files under ``runs/`` carry no
+    ``scope_membership`` key, including all 27 of the reference run; (2) any model
+    that ignores the instruction, an older model, or a repair attempt that drops
+    the field; (3) every reaction added after this call runs -- Stage-2 additions
+    and RAG imports come from prompts and adapters that never emit the field at all
+    (``rag/synthesize.py``'s ``_ALLOWED_ROW_KEYS`` cannot even carry it), so the
+    day somebody re-runs this filter after the S3 merge, as the scope-creep debt
+    item proposes, drop-on-absent would delete every one of them. Dropping any of
+    those is deleting correct, evidenced biology on the strength of a field nobody
+    filled in -- and doing it quietly, since a removal surfaces only as a log line
+    and an ``st.info``.
+    Keeping them makes the failure mode "an out-of-scope reaction survives", which
+    is the status quo this pipeline has always shipped and which every downstream
+    gate still inspects, instead of "an in-scope reaction vanishes", which nothing
+    downstream can detect. Removal therefore requires an explicit, positive
+    ``out_of_scope`` verdict from the extractor, and nothing weaker.
+
+    The comparison is stripped and case-folded to match
+    ``reaction_lock_manifest._scope_membership`` (``:59-66``), which is applied at
+    ``:186`` and ``:229`` to the RAW payload. Both readers must agree on what
+    ``"OUT_OF_SCOPE"`` means: the manifest already refuses to lock such a reaction,
+    so a stricter test here would keep a reaction in the payload that can never be
+    granted a ``locked_reaction_id`` -- exactly the payload/manifest split this
+    change exists to close.
+
     Returns
     -------
     (filtered_payload, removed_names)
@@ -268,7 +309,10 @@ def filter_out_of_scope_reactions(payload: Dict[str, Any]) -> Tuple[Dict[str, An
         if not isinstance(rxn, dict):
             kept.append(rxn)
             continue
-        if rxn.get("scope_membership", "core") == "out_of_scope":
+        scope = rxn.get("scope_membership")
+        # Absent, empty or non-string label => keep (see "Why an ABSENT label means
+        # KEEP" above). Only an explicit out_of_scope verdict removes a reaction.
+        if isinstance(scope, str) and scope.strip().casefold() == "out_of_scope":
             removed_names.append(rxn.get("name", "<unnamed>"))
         else:
             kept.append(rxn)
@@ -1735,6 +1779,153 @@ def _clean_elements_with_states(items: Any) -> List[Dict[str, Any]]:
     return cleaned
 
 
+# The namespaced RAG carriers a process row is allowed to keep through the
+# whitelist rebuild below. This is ``t2pw.rag.provenance.RAG_ADDITIVE_KEYS`` minus
+# ``evidence`` -- see :func:`_carry_rag_provenance` for why that one is excluded.
+# Spelled out here rather than imported so this module keeps its zero-dependency
+# relationship with ``t2pw.rag`` (seam S5: the orchestrator is the only place
+# allowed to reach into the RAG package, and ``pipeline`` is not it).
+_RAG_ROW_CARRIER_KEYS = ("rag_provenance", "source_papers", "rag_confidence")
+
+
+def _carry_rag_provenance(entry: Dict[str, Any], item: Dict[str, Any]) -> None:
+    """Copy a process row's RAG source pointers onto its rebuilt clean row.
+
+    ``_clean_processes`` rebuilds every process row from a key whitelist, and
+    until now that whitelist named no RAG carrier -- so a reaction imported from
+    another paper reached export indistinguishable from one the seed paper itself
+    stated. Measured on the reference run of 2026-07-28: in
+    ``runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/merged_payload.json``
+    the key union across all 27 delivered reactions is exactly
+    ``('biological_state', 'enzymes', 'evidence', 'inputs', 'locked_reaction_id',
+    'name', 'outputs')`` plus the two repair keys (``preservation_status``,
+    ``repaired_missing_compound_entities``) that a later stage adds to 3 of them --
+    ZERO reactions carry ``rag_provenance``. In that same file 41 of 56 compounds
+    and 18 of 31 proteins DO carry it (35 pointing at source_id PMC12898747, 2 at
+    PMC11046580), because ``_clean_entities`` copies an entity row key-for-key
+    instead of rebuilding it from a whitelist.
+
+    The payload therefore proves cross-paper entities were imported while making
+    it impossible to attribute a single delivered REACTION to the paper it came
+    from. That blocks the scope-creep work outright: a gap-relevance filter on
+    imported reactions cannot be evaluated, and "how much of this pathway came
+    from another paper?" is unanswerable -- the question the same run makes urgent,
+    since PMC13278307 (strict) delivered 14 reactions and not one of them belonged
+    to the lipid A pathway named in its own focus box.
+
+    Only the three **namespaced** carriers in :data:`_RAG_ROW_CARRIER_KEYS` are
+    copied, and deliberately so:
+
+    * ``evidence`` is excluded because the process cleaners flatten it to a plain
+      string through :func:`_evidence_text` on purpose (``ReactionModel.evidence``
+      is typed ``str``, and ``rag.conform`` coerces the list shape away one step
+      earlier). Re-emitting the record list here would hand every downstream
+      consumer back the list shape that seam exists to remove.
+    * ``source_refs`` is excluded because it is a *core* key, not a RAG one, and
+      two pieces of locked-reaction machinery read it as an evidence fallback:
+      ``reaction_preservation_validator._evidence_text`` (line 120) and
+      ``reaction_lock_manifest._evidence_quote`` (line 74). Introducing it on
+      reaction rows would feed the preservation matcher new evidence tokens
+      through its 0.04-weighted ``evidence`` signal and could move a locked
+      reaction's status. Widening to ``source_refs`` is a separate change that
+      needs its own before/after measurement against the run's preservation
+      reports.
+
+    The three keys copied here are read by nothing in the core pipeline -- only
+    ``t2pw.rag.tiers``, ``t2pw.app.streamlit_app`` and ``t2pw.batch.driver`` look
+    at them -- ``payload_models._RuntimeModel`` is ``extra="allow"`` so the runtime
+    schema accepts them at every boundary, and reaction merge/dedup fingerprints on
+    inputs+outputs only (:func:`_reaction_io_key`), so reaction identity, ordering
+    and count are untouched. The value is copied by reference, exactly as
+    ``_clean_entities`` does for entity rows, so the carrier has the identical
+    shape on both sides of the payload.
+    """
+    for key in _RAG_ROW_CARRIER_KEYS:
+        value = item.get(key)
+        if _is_empty_value(value):
+            continue
+        entry[key] = value
+
+
+def _carry_scope_membership(entry: Dict[str, Any], item: Dict[str, Any]) -> None:
+    """Keep a reaction's Stage-1 scope label alive through the whitelist rebuild.
+
+    ``pwml_system.txt`` (``:6``, ``:15-16``) requires the model to label every
+    reaction ``core | anaplerotic | cataplerotic | auxiliary | out_of_scope`` and
+    promises that out-of-scope ones "are removed from the payload before downstream
+    stages run". :func:`filter_out_of_scope_reactions` implements that promise and
+    the orchestrator calls it between Stage 1 and Stage 2
+    (``streamlit_app.py:3617``). It had never removed a reaction.
+
+    Both Stage-1 branches hand the orchestrator ``clean_stage_one(...)`` output
+    (``:2270`` unchunked, ``:2309`` / ``:2318`` per chunk, ``:2324`` on the merge --
+    coordinates re-checked against the file 2026-07-28, the three quoted while this
+    docstring was being written were 3 lines short of the landed code) and
+    :func:`_clean_processes` rebuilds every
+    reaction from the key whitelist above -- which named ``scope_membership``
+    nowhere. The label was erased before the filter ever saw it, and
+    ``rxn.get("scope_membership", "core")`` then defaulted every reaction to core.
+    Measured by execution on a two-reaction Stage-1 payload: RAW labels
+    ``['core', 'out_of_scope']`` -> the filter removes
+    ``['glucose phosphorylation']``; the SAME payload through ``clean_stage_one``
+    -> labels ``['<ABSENT>', '<ABSENT>']``, cleaned reaction key union
+    ``('biological_state', 'enzymes', 'evidence', 'inputs', 'name', 'outputs')``,
+    filter removes nothing. Confirmed on real data: all 9 Stage-1 reactions and all
+    27 delivered reactions of
+    ``runs/2026-07-28_0919/papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict``
+    carry no ``scope_membership`` key at all, and ``git log -S
+    'entry["scope_membership"]'`` returns nothing -- the key was never in the
+    whitelist, so the 2026-07-14 fix ("Tighten default reaction scope and wire the
+    out-of-scope reaction filter") was wired on the wrong side of it and has been
+    inert since the day it landed.
+
+    The erased label also produced a real payload/manifest inconsistency, not just
+    a dead filter. ``write_stage1_lock_artifacts`` runs on the RAW payload at
+    ``:2269`` / ``:2315``, BEFORE ``clean_stage_one``, so ``reaction_lock_manifest``
+    (``:186``, ``:229``) *does* see the label: it refuses to list an out-of-scope
+    reaction in the manifest and refuses to stamp it with a ``locked_reaction_id``.
+    Out-of-scope reactions therefore shipped in the payload as UNLOCKED reactions --
+    kept by the payload, disowned by the lock manifest. Carrying the label closes
+    that gap: the filter now drops exactly the reactions the manifest already
+    refused to lock, so the two artifacts agree by construction.
+
+    Only a non-empty string is carried, and it is carried verbatim (stripped, never
+    case-folded), because the manifest records the model's own spelling in its own
+    ``scope_membership`` field (``reaction_lock_manifest.py:257``) and the two
+    artifacts must not disagree about what the model actually said.
+    Case-insensitivity belongs in the readers: the manifest case-folds at ``:186`` /
+    ``:229`` and :func:`filter_out_of_scope_reactions` now case-folds the same way,
+    so ``"OUT_OF_SCOPE"`` and ``"  out_of_scope  "`` are excluded from the lock
+    manifest AND removed by the filter, instead of being excluded by one and kept by
+    the other. A non-string label (a number, a list, ``None``) is dropped rather
+    than coerced, which lands it in the absent case -- kept; see
+    :func:`filter_out_of_scope_reactions` for why absent means kept.
+
+    Nothing downstream needs widening for this: ``ReactionModel.scope_membership``
+    is already declared (``payload_models.py:362``) and ``PayloadReaction`` already
+    types it (``schema.py:396``). The one reader that inspects arbitrary status-ish
+    reaction keys, ``reaction_preservation_validator._is_quarantined_record``
+    (``:218``), matches the substring ``"quarantine"``, which no value in the
+    taxonomy contains. The key is appended after the existing ones so a reaction
+    that carries no label keeps its key order byte-for-byte
+    (``test_pipeline_reaction_rag_provenance.py:287`` pins
+    ``['inputs', 'outputs', 'name', 'evidence']`` on a plain row).
+
+    SCOPE LIMIT: this reaches seed-paper reactions that Stage 1 labelled, and
+    nothing else. Cross-paper RAG imports enter at the S3 merge, DOWNSTREAM of the
+    only ``filter_out_of_scope_reactions`` call, and a RAG row cannot carry a scope
+    label even in principle -- ``_ALLOWED_ROW_KEYS`` in ``rag/synthesize.py`` is
+    ``{name, inputs, outputs, enzymes, entity, entity_type, role, source_refs}``
+    plus ``RAG_ADDITIVE_KEYS``, and ``rag/conform.py`` is a pure shape adapter with
+    no relevance test. Reactions 10-26 of the PMC12444477 payload (phospholipid
+    biosynthesis, imported from PMC12898747) are untouched by this change; that
+    needs its own design.
+    """
+    scope = item.get("scope_membership")
+    if isinstance(scope, str) and scope.strip():
+        entry["scope_membership"] = scope.strip()
+
+
 def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(processes, dict):
         return {}
@@ -1783,6 +1974,17 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         inference = item.get("inference")
         if inference and not _is_empty_value(inference):
             entry["inference"] = inference
+        # The Stage-1 scope label is what filter_out_of_scope_reactions reads, and
+        # this rebuild used to erase it -- see _carry_scope_membership for the
+        # measurement. Reactions only: transports, reaction-coupled transports and
+        # interactions are not labelled by the prompt and the filter does not look
+        # at them, so giving them the carrier would invent a field nothing writes.
+        _carry_scope_membership(entry, item)
+        # A reaction synthesized from another paper must stay attributable to it.
+        # Appended last so the existing key order of a non-RAG reaction row is
+        # byte-for-byte what it was before, and so a row with no RAG carrier gains
+        # no key at all.
+        _carry_rag_provenance(entry, item)
         reactions_out.append(entry)
 
     if reactions_out:
@@ -1817,6 +2019,15 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         inference = item.get("inference")
         if inference and not _is_empty_value(inference):
             entry["inference"] = inference
+        # Transports are rebuilt from the same kind of whitelist and so lost the
+        # carrier the same way. Synthesis emits reaction-only payloads today (see
+        # t2pw.rag.conform's module docstring), so no transport in run
+        # 2026-07-28_0919 carried a pointer to lose -- but the defect is structural,
+        # not reaction-specific, and leaving three of the four buckets stripping the
+        # key is how it grows back the moment synthesis widens. The guard below is
+        # unchanged: it still keys on cargo/transporters/elements_with_states, so a
+        # row cannot become emittable on the strength of a provenance key alone.
+        _carry_rag_provenance(entry, item)
         if any(k in entry for k in ["cargo", "transporters", "elements_with_states"]):
             transports_out.append(entry)
 
@@ -1849,6 +2060,7 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         inference = item.get("inference")
         if inference and not _is_empty_value(inference):
             entry["inference"] = inference
+        _carry_rag_provenance(entry, item)
         if any(k in entry for k in ["reaction", "transport", "elements_with_states"]):
             rct_out.append(entry)
 
@@ -1884,6 +2096,7 @@ def _clean_processes(processes: Dict[str, Any]) -> Dict[str, Any]:
         inference = item.get("inference")
         if inference and not _is_empty_value(inference):
             entry["inference"] = inference
+        _carry_rag_provenance(entry, item)
         interactions_out.append(entry)
 
     if interactions_out:

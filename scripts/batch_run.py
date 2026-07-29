@@ -13,6 +13,21 @@ Windows.
                                --out runs --timeout 2700 --deadline 8
     python scripts/batch_run.py --status
     python scripts/batch_run.py --fresh
+
+Exit codes (also in docs/batch_runner.md section 2d, and echoed by
+``run_overnight.bat`` as ERRORLEVEL):
+
+    0  every attempted pair passed -- ALL GREEN, or PASSED WITH WARNINGS
+    1  something did not pass: a failure, a reached --deadline with pairs still
+       pending, a Ctrl+C, "nothing ran at all", or an unexpected error in the
+       batch loop. A run directory exists; read its SUMMARY.txt.
+    2  a usage error (argparse), or -- from run_overnight.bat only -- no
+       virtualenv at .venv\\Scripts\\python.exe
+    3  PREFLIGHT FAILED: this interpreter cannot import what the child processes
+       need, so nothing was fetched, nothing was run and NO RUN DIRECTORY WAS
+       CREATED. There is no SUMMARY.txt to read; the console message names the
+       missing module and the interpreter to rerun with. See
+       ``runner.EXIT_PREFLIGHT`` and ``runner.check_preflight``.
 """
 
 from __future__ import annotations
@@ -40,7 +55,11 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Resuming is automatic: an incomplete runs/TIMESTAMP/ is continued and its "
-            "finished paper+mode pairs are skipped. Pass --fresh to start a new one."
+            "finished paper+mode pairs are skipped. Pass --fresh to start a new one. "
+            "Exit codes: 0 everything passed (possibly with warnings), 1 something did "
+            "not pass or the run is unfinished, 2 usage error, 3 preflight failed -- the "
+            "interpreter cannot import what the child processes need, so nothing ran and "
+            "no run directory was created."
         ),
     )
     parser.add_argument(
@@ -138,6 +157,24 @@ def main(argv: list[str] | None = None) -> int:
         # The parent parses exactly this one line off stdout.
         runner.emit_outcome(row)
         return 0 if str(row.get("status", "")).lower() == "pass" else 1
+
+    # PARENT PATH ONLY, and the last thing that happens before disk is touched.
+    #
+    # It is deliberately not run for --status (documented as always exiting 0 so
+    # a second terminal can poll it safely -- an environment check has no business
+    # blocking a read of yesterday's manifest) and not run for --single (the child
+    # is spawned only after the parent has already vouched for the environment, and
+    # a second check there would spend 0.72s per leg re-proving it while breaking
+    # the one-row-per-pair contract if it ever disagreed).
+    #
+    # Its position here, above run_batch, is the entire point: run_batch's first
+    # acts are mkdir(out_dir), new_run_dir() and a 43-second fetch, and once those
+    # have happened a failed night is indistinguishable on disk from a real one.
+    # See runs/2026-07-27_2135, which is still in runs/ looking like a night that
+    # ran 56 papers and failed all of them.
+    preflight_code = runner.run_preflight()
+    if preflight_code:
+        return preflight_code
 
     return runner.run_batch(
         topics_path=args.topics,

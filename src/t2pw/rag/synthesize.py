@@ -1017,6 +1017,20 @@ def _build_entities(
     first-seen original name (``setdefault``) — never a rewritten canonical form —
     so this only affects the ``entities`` buckets, never the reaction rows the
     locked-reaction gate matches on. ``None`` (default) = today's ``casefold`` key.
+
+    This registry is deliberately COMPLETE for the synthesized payload, including
+    the seed's own entities: ``reactions`` contains the seed's reactions
+    (``_seed_reactions`` turns every Stage-1 reaction into a ``_Reaction``), and
+    ``synthesize_with_report`` returns a standalone ``Payload`` whose entity buckets
+    have to cover its own reactions. Suppressing the seed's entities HERE — to stop
+    them being re-imported as duplicate rows by the downstream merge — is therefore
+    the wrong seam, and breaks the tested contract that a seed compound still
+    carries its provenance in the synthesized payload
+    (tests/test_rag_synthesize.py asserts
+    ``compounds["caffeine"]["source_refs"] == ["PMID:0001"]`` and that NdmA is
+    listed). The duplicate is created at the MERGE boundary, where the base is
+    known, and is removed there — see
+    :func:`t2pw.rag.conform.conform_rag_additions_for_merge`.
     """
 
     def _entity_key(name: str) -> str:

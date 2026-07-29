@@ -32,6 +32,19 @@ Two concurrent runs interleave writes and corrupt them. The wall-clock cost of
 being sequential is the price of a run whose caches are still usable in the
 morning; those two caches are also snapshotted before the first paper so a bad
 night is revertible.
+
+**4. The environment is proved once, in the parent, before anything is written.**
+Decision 1 has a cost: an environment fault that only a child can hit is
+rediscovered once per child. ``runs/2026-07-27_2135`` is what that looks like --
+28 papers fetched in 43s, then all 56 legs failed in 24s on the same
+``ModuleNotFoundError: No module named 'streamlit'``, because driver.py imports
+``streamlit.testing.v1`` inside ``_drive`` and nothing before the first child
+ever touches it. The manifest recorded 56 crashes and SUMMARY.txt reported 28
+research-mode defects that did not exist. :func:`check_preflight` now rehearses
+one child -- a real subprocess, same interpreter, same environment, 0.72s --
+before a run directory exists, and :func:`run_preflight` refuses with
+:data:`EXIT_PREFLIGHT` and writes nothing at all, so a failed preflight cannot be
+mistaken for a night that happened.
 """
 
 from __future__ import annotations
@@ -42,9 +55,10 @@ import re
 import shutil
 import subprocess
 import sys
+import textwrap
 import time
 import traceback
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
@@ -1181,6 +1195,589 @@ def child_command(script_path: Path, run_dir: Path, slug: str, mode: str, timeou
 
 
 # ---------------------------------------------------------------------------
+# Preflight: prove the child's environment BEFORE the night starts.
+# ---------------------------------------------------------------------------
+#: Exit code reserved for "this interpreter cannot run the batch at all".
+#:
+#: It needs a number of its own because every other one is spoken for and means
+#: something else entirely: ``0`` and ``1`` are the batch's own verdicts
+#: (everything passed / something did not), and ``2`` is taken twice over --
+#: argparse exits 2 on a usage error, and ``run_overnight.bat`` exits 2 when
+#: ``.venv\\Scripts\\python.exe`` does not exist. Anything reading ``ERRORLEVEL``
+#: (the .bat, Task Scheduler, a future wrapper) must be able to tell "a paper
+#: failed, go read SUMMARY.txt" from "the environment is wrong, there is no
+#: SUMMARY.txt to read". 3 means exactly the latter: nothing was fetched,
+#: nothing was run, nothing was written, and no run directory was created.
+EXIT_PREFLIGHT = 3
+
+#: Every module a *child* process has to be able to import, paired with the
+#: reason it needs it. The reason is printed beside the failure, because an
+#: operator told only "streamlit.testing.v1 is missing" still has to go read
+#: driver.py at 2am to find out whether that matters.
+#:
+#: The two entries that actually earn their keep are the DEFERRED ones.
+#: ``driver.py`` imports ``streamlit.testing.v1`` *inside* ``_drive``
+#: (driver.py:1199) and ``t2pw.rag.research_report`` *inside* the research-report
+#: builder (driver.py:1101), so the parent importing ``t2pw.batch.driver`` at the
+#: top of this module proves nothing whatsoever about either of them. That is the
+#: precise gap run ``runs/2026-07-27_2135`` fell through -- see
+#: :func:`check_preflight` for what it cost.
+#:
+#: The module-scope entries are listed anyway, even though the parent's own
+#: import of ``driver`` has already proven them and re-checking them is free.
+#: This list is meant to read as a complete statement of *what a child needs*,
+#: not as a delta against where driver.py happens to put its imports today; a
+#: delta rots silently the first time somebody moves an import into a function to
+#: shave startup time, and the whole point of this file is that the environment
+#: is checked once, in the parent, rather than rediscovered 56 times.
+#:
+#: ``t2pw.llm.client`` is the fifth entry and it is NOT a deferred driver import --
+#: it is the one module here that nothing else on this list reaches. Measured
+#: 2026-07-28: importing all four of the entries above in a fresh interpreter
+#: leaves ``t2pw.llm.client`` absent from ``sys.modules``, so before it was listed
+#: the probe said nothing whatsoever about the LLM backend. It belongs here because
+#: it raises at IMPORT time -- ``:38`` (no ``OPENROUTER_API_KEY``), ``:41`` (a key
+#: that does not start with ``sk-or-``), ``:63`` (``LLM_PROVIDER`` neither
+#: ``local`` nor ``openrouter``) -- and every stage of every leg calls ``chat()``.
+#: That is precisely the "one environment fault, 56 identical crashes after the
+#: fetch" shape this preflight exists to stop, and it is the likeliest one to
+#: appear overnight, since a ``.env`` that was edited or a key that was rotated
+#: costs nothing to get wrong. The probe catches ``BaseException``
+#: (:func:`_probe_source`), so a ``RuntimeError`` at import is reported to the
+#: operator exactly like a missing module, and importing the client does no
+#: network I/O -- it constructs an ``OpenAI`` object and stops. Cost: 0.5s.
+#:
+#: What this entry still does NOT catch, so nobody reads more into a green
+#: preflight than it says: an unreachable ``openrouter.ai``, an expired or revoked
+#: key, an exhausted credit cap, or a model id the account cannot serve. All four
+#: need a live one-token call, which is slower and not free, and belongs behind its
+#: own flag rather than inside a 1.1s import probe.
+CHILD_IMPORTS: Tuple[Tuple[str, str], ...] = (
+    (
+        "streamlit.testing.v1",
+        "the child drives the real app through AppTest -- driver._drive does "
+        "'from streamlit.testing.v1 import AppTest' and there is no fallback",
+    ),
+    (
+        "t2pw.rag.research_report",
+        "build_citation_report writes the research deliverable, and research is "
+        "half of every night",
+    ),
+    (
+        "t2pw.batch.driver",
+        "the child's entire job is driver.run_one",
+    ),
+    (
+        "t2pw.pipeline.export_mode",
+        "driver imports STRUCTURAL_GUARD_CODES from it at module scope",
+    ),
+    (
+        "t2pw.llm.client",
+        "every stage calls chat(); this module raises at IMPORT time when "
+        "OPENROUTER_API_KEY is missing or malformed, or LLM_PROVIDER is neither "
+        "'local' nor 'openrouter'",
+    ),
+)
+
+
+@dataclass
+class PreflightProblem:
+    """One reason the batch must not start, in the operator's words."""
+
+    subject: str
+    why: str
+    error: str
+    cure: str = ""
+
+
+@dataclass
+class PreflightReport:
+    """The verdict on this interpreter. ``ok`` gates the whole run."""
+
+    problems: List[PreflightProblem] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
+    interpreter: str = ""
+    venv_python: str = ""
+    #: Is the running interpreter the project's own? It decides which cure is
+    #: printed first, and the two cures are opposites: "you are running the wrong
+    #: python" versus "you are running the right python and it is missing
+    #: packages". Telling an operator who is already inside the venv to use the
+    #: venv is how a correct message gets ignored.
+    in_project_venv: bool = False
+
+    @property
+    def ok(self) -> bool:
+        return not self.problems
+
+
+def venv_python() -> Optional[Path]:
+    """The project's own interpreter, or ``None`` if the project has no venv.
+
+    ``.venv\\Scripts\\python.exe`` on Windows, ``.venv/bin/python`` elsewhere --
+    the same file ``run_overnight.bat`` insists on. ``None`` is a legitimate
+    answer (a conda env, a container, a CI image with the deps installed
+    globally) and is never treated as an error; it only removes this runner's
+    ability to *name* the cure, so the message falls back to "create one".
+    """
+
+    for candidate in (
+        PROJECT_ROOT / ".venv" / "Scripts" / "python.exe",
+        PROJECT_ROOT / ".venv" / "bin" / "python",
+    ):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+#: How long the import probe may take before it is treated as a fault of its own.
+#: Importing all five modules costs 1.26s on this machine (measured 2026-07-28,
+#: cold, including interpreter startup; it was 0.72s for four, and adding
+#: ``t2pw.llm.client`` -- which pulls ``openai`` and ``dotenv`` -- is the extra
+#: 0.5s), so a minute is 47x headroom for a loaded machine, and anything past it
+#: is a wedged import -- which would have wedged all 56 legs one at a time for the
+#: whole night.
+_PROBE_TIMEOUT = 60.0
+
+#: Prefixes the probe's answer so a ``sitecustomize`` that prints, a deprecation
+#: warning, or anything else on the probe's stdout can never be parsed as the
+#: verdict. Same reasoning as :data:`OUTCOME_SENTINEL`, same failure it prevents.
+_PROBE_SENTINEL = "@@T2PW_PROBE@@"
+
+
+def _probe_source(names: Sequence[str]) -> str:
+    """The short script the probe process runs. Prints JSON, never raises.
+
+    ``sys.path`` is seeded exactly the way ``scripts/batch_run.py`` seeds it, so
+    the probe resolves ``t2pw.*`` the same way a real child does whether or not
+    the package happens to be pip-installed into the environment.
+
+    ``BaseException`` rather than ``Exception``: a module that calls
+    ``sys.exit()`` at import time is exactly as unusable as one that is not
+    installed, and letting ``SystemExit`` through here would kill the probe before
+    it printed its answer -- reporting "the probe never answered" instead of
+    naming the module that killed it.
+
+    The answer is written as its own WHOLE LINE (newline before it as well as
+    after) rather than as a bare ``write`` of ``sentinel + json``. Review of this
+    preflight on 2026-07-28 found the original shape refusable by anything that
+    printed after the answer: the parent used ``stdout.split(sentinel, 1)[1]`` and
+    fed the whole remainder to ``json.loads``, so one ``atexit`` print, one
+    late-flushed ``sitecustomize`` message, one "Successfully installed" notice
+    from a wrapper, and the JSON became unparseable -> ``fatal`` -> a
+    ``PreflightProblem`` -> exit 3 -> a ten-hour batch refused on a machine where
+    all four imports actually succeeded. Leading newline flushes any partial line
+    an earlier writer left open; trailing newline closes ours. ``json.dumps``
+    defaults to ``ensure_ascii=True``, which escapes every control character
+    (including the newlines an ``ImportError`` message can carry) as ``\\uXXXX``,
+    so the payload is guaranteed to be exactly one line and line-scanning in the
+    parent is sound. This is the same convention :func:`emit_child_output` and
+    :func:`parse_child_output` have always used for the child protocol; the probe
+    is now held to it too.
+    """
+
+    return (
+        "import json,sys\n"
+        f"sys.path.insert(0, {str(PROJECT_ROOT / 'src')!r})\n"
+        "bad=[]\n"
+        f"for _n in {list(names)!r}:\n"
+        "    try:\n"
+        "        __import__(_n)\n"
+        "    except BaseException as _e:\n"
+        "        bad.append([_n, type(_e).__name__+': '+str(_e)])\n"
+        f"sys.stdout.write('\\n'+{_PROBE_SENTINEL!r}+json.dumps(bad)+'\\n')\n"
+    )
+
+
+def probe_imports(
+    names: Sequence[str],
+    *,
+    executable: str,
+    timeout: float = _PROBE_TIMEOUT,
+) -> Tuple[List[Tuple[str, str]], str]:
+    """Ask a FRESH child process which of ``names`` it cannot import.
+
+    Returns ``(failures, fatal)``: ``failures`` is ``[(module, error), ...]`` as
+    the probe saw them, and ``fatal`` is non-empty when the probe process itself
+    could not be started or could not answer -- which is its own kind of red
+    light, since every paper+mode leg is exactly such a process.
+
+    WHY a subprocess rather than ``importlib.import_module`` in the parent
+    ---------------------------------------------------------------------
+    The parent's ``sys.modules`` is only a *proxy* for what a child can import,
+    and the proxy lies in both directions. It lies pessimistically when something
+    has replaced an entry: four test modules in this repo install a ``MagicMock``
+    as ``sys.modules["streamlit"]`` at import time (they must -- importing
+    ``t2pw.app.streamlit_app`` executes a Streamlit script), and pytest imports
+    every test module during collection, so an in-process check run anywhere in
+    that session reports ``streamlit.testing.v1`` missing on a machine where it
+    is installed and working. It lies optimistically too: a mock, a stale
+    ``sys.modules`` entry, or a module this process imported earlier all look
+    like proof of something a fresh interpreter has never tried.
+
+    A child is literally ``[sys.executable, batch_run.py, --single, ...]`` (see
+    :func:`child_command`) run with :func:`child_env`, so the faithful experiment
+    is that same interpreter with that same environment and an empty module
+    table -- which is what this does, for 1.26s once per night. It is also
+    strictly stronger: a ``PYTHONHOME`` that breaks every child, a failing
+    ``sitecustomize``, an interpreter that cannot start at all, are all invisible
+    to an in-process import and all produce the same 56-identical-crashes night.
+    """
+
+    failures: List[Tuple[str, str]] = []
+    if not _text(executable):
+        return failures, "sys.executable is empty, so no child process can be started at all"
+    try:
+        proc = subprocess.run(  # noqa: S603 - argv is ours
+            [executable, "-c", _probe_source(names)],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=max(5.0, float(timeout)),
+            env=child_env(),
+        )
+    except subprocess.TimeoutExpired:
+        return failures, (
+            f"the probe process did not answer within {timeout:.0f}s; an import is "
+            "hanging, and it would hang every paper+mode leg the same way"
+        )
+    except Exception as exc:  # noqa: BLE001 - a missing/unrunnable interpreter
+        return failures, f"the probe process could not be started: {type(exc).__name__}: {exc}"
+
+    # Scan LINES for the sentinel, exactly the way :func:`parse_child_output`
+    # scans the child protocol, and tolerate arbitrary output on BOTH sides of the
+    # answer. The first version of this function did
+    # ``stdout.split(sentinel, 1)[1]`` and parsed everything after the marker,
+    # which meant any byte the probe's stdout received AFTER the verdict -- an
+    # ``atexit`` print, a late-flushed ``sitecustomize`` banner, a wrapper
+    # interpreter's own chatter -- turned a healthy environment into
+    # "unreadable answer", into a PreflightProblem, into exit 3, into a refused
+    # ten-hour batch. Raised in review of this change on 2026-07-28: uncommon
+    # trigger, blast radius of the entire night, and this module already had the
+    # robust convention two hundred lines up. The last well-formed sentinel line
+    # wins so that a partially written line (a probe killed mid-flush) cannot
+    # shadow a complete one.
+    parsed: Any = None
+    answered = False
+    saw_marker = False
+    for line in _text(proc.stdout).splitlines():
+        stripped = line.strip()
+        if not stripped.startswith(_PROBE_SENTINEL):
+            continue
+        saw_marker = True
+        try:
+            candidate = json.loads(stripped[len(_PROBE_SENTINEL) :].strip())
+        except Exception:  # noqa: BLE001 - a torn line: keep looking for a whole one
+            continue
+        if isinstance(candidate, list):
+            parsed = candidate
+            answered = True
+
+    if not answered:
+        if saw_marker:
+            # The marker arrived but no line carrying it was parseable JSON, which
+            # is a probe that was cut off mid-answer rather than one that never
+            # ran. Distinguished from the no-marker case so the operator is told
+            # which of the two happened.
+            return failures, (
+                f"the probe process printed an unreadable answer (exit code {proc.returncode}); "
+                "its verdict line was truncated or corrupted"
+            )
+        # The probe prints its answer unconditionally, so no answer means the
+        # interpreter died before running it (a broken install, a sitecustomize
+        # that raises, a DLL that will not load). The stderr tail is the evidence.
+        tail = (proc.stderr or "").strip()[-1500:] or "(the probe printed nothing at all)"
+        return failures, (
+            f"the probe process exited with code {proc.returncode} without answering:\n{tail}"
+        )
+
+    for item in _safe_list(parsed):
+        pair = _safe_list(item)
+        if len(pair) == 2:
+            failures.append((_text(pair[0]), _text(pair[1])))
+    return failures, ""
+
+
+def _inside(path: Any, directory: Path) -> bool:
+    """Is ``path`` under ``directory``? Case-insensitively on Windows.
+
+    ``os.path.normcase`` rather than ``==`` because ``C:\\Users\\...\\.venv`` and
+    ``c:\\users\\...\\.venv`` are the same directory on NTFS and different
+    strings, and a spurious "you are not using the venv" warning on every launch
+    is a warning nobody reads by week two.
+    """
+
+    try:
+        target = os.path.normcase(str(Path(path).resolve()))
+    except (OSError, ValueError):
+        return False
+    root = os.path.normcase(str(directory.resolve()))
+    return target == root or target.startswith(root + os.sep)
+
+
+def check_preflight(
+    *,
+    probe_fn: Optional[Callable[..., Tuple[List[Tuple[str, str]], str]]] = None,
+    executable: Optional[str] = None,
+    app_path: Optional[Any] = None,
+) -> PreflightReport:
+    """Decide, in under a second, whether a child process could do its job.
+
+    WHY this exists at all
+    ----------------------
+    ``runs/2026-07-27_2135`` is the whole argument. The parent started at
+    21:35:06, fetched 28 papers by 21:35:49 (43 seconds of PubMed traffic), and
+    then burned all 56 paper+mode legs between 21:35:49 and 21:36:13 -- 24
+    seconds for what normally takes ten hours. Every one of the 56 manifest rows
+    carries the identical detail (quoted from ``manifest.jsonl``; the line number
+    is the one recorded that night -- driver.py has since grown and the same
+    import now sits at line 1199)::
+
+        File "...\\src\\t2pw\\batch\\driver.py", line 1074, in _drive
+            from streamlit.testing.v1 import AppTest
+        ModuleNotFoundError: No module named 'streamlit'
+
+    Because that import is deferred to ``_drive``, nothing before the first child
+    ever touched it, so a one-line environment fault was rediscovered once per
+    leg and recorded 56 times as ``failure_kind=crash``. SUMMARY.txt then read
+    ``strict 0 pass 28 fail | research 0 pass 28 fail`` and the triage matrix
+    opened with ``!! RESEARCH-MODE DEFECT !! papers affected: 28`` -- 28
+    pipeline defects that do not exist, in a file whose entire purpose is to tell
+    the morning what to fix first. The run directory itself was the second cost:
+    a plan.json, 28 paper folders, a 56-row manifest and a cache snapshot, all of
+    them evidence of a night that never happened.
+
+    The root cause was never in this codebase. On Windows ``.py`` is associated
+    with ``C:\\WINDOWS\\py.exe``, which ignores an active virtualenv, so
+    ``scripts\\batch_run.py --fresh`` and
+    ``.venv\\Scripts\\python.exe scripts\\batch_run.py --fresh`` are two different
+    interpreters and only one of them has streamlit. No amount of care inside
+    driver.py can fix that; the only cure is to notice it in the parent, before
+    the first byte is fetched, and refuse.
+
+    WHY the check is a real import in a real child process
+    -----------------------------------------------------
+    ``importlib.util.find_spec`` would be cheaper, but it does not execute the
+    module, so a package that is installed and *broken* (a half-finished ``pip
+    install``, a compiled dependency built for the wrong Python) still looks fine
+    to it and the batch sails on into 56 identical ``ImportError``\\s instead. And
+    an import in *this* process would be answering a different question than the
+    one that matters -- see :func:`probe_imports` for why the parent's
+    ``sys.modules`` is a proxy that lies in both directions. So the experiment is
+    the child's own: same interpreter, same environment, empty module table,
+    0.72s once per night against 43s of fetching and a manifest full of fiction.
+
+    Every seam is injectable so the tests can simulate a missing streamlit, a
+    wrong interpreter and a missing app without owning any of them.
+    """
+
+    probe = probe_fn or probe_imports
+    exe = sys.executable if executable is None else executable
+    venv = venv_python()
+    inside = venv is not None and bool(_text(exe)) and _inside(exe, venv.parent.parent)
+    report_obj = PreflightReport(
+        interpreter=_text(exe),
+        venv_python=str(venv) if venv else "",
+        in_project_venv=inside,
+    )
+
+    requirements = PROJECT_ROOT / "requirements.txt"
+    if venv is None:
+        rerun_cure = (
+            f"There is no virtualenv in this project yet. Create one, install the\n"
+            f"    dependencies into it, and rerun with it by name:\n"
+            f"      py -m venv {PROJECT_ROOT / '.venv'}\n"
+            f"      {PROJECT_ROOT / '.venv' / 'Scripts' / 'python.exe'} -m pip install -r {requirements}"
+        )
+    elif inside:
+        # The right interpreter is already running, so "use the venv" would be
+        # noise. What is actually wrong is the venv's contents.
+        rerun_cure = (
+            f"This IS the project venv, so it is the venv that is incomplete. Install\n"
+            f"    the dependencies into it:\n"
+            f"      {venv} -m pip install -r {requirements}"
+        )
+    else:
+        rerun_cure = (
+            f"Rerun with the project interpreter, spelled out in full:\n"
+            f"      {venv} {Path('scripts') / 'batch_run.py'}\n"
+            f"    or double-click run_overnight.bat, which picks that interpreter for you.\n"
+            f"    If that one fails the same way, the venv itself is missing packages:\n"
+            f"      {venv} -m pip install -r {requirements}"
+        )
+
+    reasons = dict(CHILD_IMPORTS)
+    failures, fatal = probe([name for name, _why in CHILD_IMPORTS], executable=_text(exe))
+    for module_name, error in failures:
+        report_obj.problems.append(
+            PreflightProblem(
+                subject=module_name,
+                why=reasons.get(module_name, "a child process imports it"),
+                error=error,
+                cure=rerun_cure,
+            )
+        )
+    if fatal:
+        # The probe *is* a child process, so a probe that cannot run or cannot
+        # answer is already the failure it was sent to look for -- reported as
+        # itself rather than swallowed, or the batch would start on the strength
+        # of a question nobody managed to ask.
+        report_obj.problems.append(
+            PreflightProblem(
+                subject="the child process itself",
+                why="each paper+mode runs as a child of this interpreter, so this is a rehearsal of one",
+                error=fatal,
+                cure=rerun_cure,
+            )
+        )
+
+    # The app script is not an import, but it fails the same way: driver._drive
+    # reports "app script not found" per child, so a moved or half-checked-out
+    # tree also produces N identical crash rows after a full fetch.
+    target = Path(app_path) if app_path else driver.DEFAULT_APP_PATH
+    if not target.is_file():
+        report_obj.problems.append(
+            PreflightProblem(
+                subject=str(target),
+                why="this is the app every child drives; driver.DEFAULT_APP_PATH points at it",
+                error="file not found",
+                cure=(
+                    "The working tree is incomplete or the package moved. Check out the\n"
+                    "    full repository and rerun from its root."
+                ),
+            )
+        )
+
+    # Judgement call, deliberately NOT a failure: a custom environment (conda, a
+    # container, a global install with the dependencies present) is a legitimate
+    # way to run this, and blocking it would be a worse bug than the one being
+    # fixed. But when the project *does* ship a venv and we are not in it, saying
+    # so once costs one line and is the first thing anybody should check when a
+    # night behaves unlike the last one.
+    #
+    # Only on the clean path. On the failure path the HOW TO FIX section already
+    # says "rerun with the venv" in far more useful terms, and a warning claiming
+    # the imports succeeded would be flatly untrue sitting above a message that
+    # says they did not.
+    if report_obj.ok and venv is not None and _text(exe) and not inside:
+        report_obj.warnings.append(
+            f"running under {exe}, which is outside this project's venv ({venv}). "
+            "Every import a child needs succeeded here, so this is not an error and "
+            "the run continues -- but if the night behaves unlike the last one, this "
+            "is the first thing to check."
+        )
+
+    return report_obj
+
+
+def preflight_message(report_obj: PreflightReport) -> str:
+    """The operator-facing text for a failed preflight.
+
+    ASCII only, on purpose. This message exists to be read on a console that has
+    already proven it cannot be trusted with anything else -- a cp1252 Windows
+    console, possibly a redirected Task Scheduler stream -- and a
+    ``UnicodeEncodeError`` while explaining an environment fault would be the
+    joke telling itself. Paths are the one part that can carry arbitrary
+    characters (a user name), so the caller pushes the whole thing through
+    :func:`_ascii_safe` on failure.
+    """
+
+    lines = [
+        "=" * 78,
+        "PREFLIGHT FAILED -- nothing was fetched, nothing was run, nothing was written.",
+        "=" * 78,
+        "This interpreter cannot do what a paper+mode child process has to do, so the",
+        "batch stopped before creating a run directory. Every child would otherwise have",
+        "died with the same error, one after another, AFTER the papers had been fetched:",
+        "that is run 2026-07-27_2135, where 28 papers were fetched in 43s and all 56 legs",
+        "then failed in 24s with one identical ModuleNotFoundError, leaving a 56-row",
+        "manifest and a SUMMARY.txt reporting 28 research-mode defects that did not exist.",
+        "",
+        "WHAT IS BROKEN",
+    ]
+    for problem in report_obj.problems:
+        lines.append(f"  - {problem.subject}")
+        # The reason is a sentence, not a token, and an unwrapped one runs off the
+        # right edge of a default 80-column cmd.exe window -- where exactly the
+        # part explaining why it matters is what falls off.
+        lines += textwrap.wrap(
+            problem.why,
+            width=78,
+            initial_indent="      needed for : ",
+            subsequent_indent="                   ",
+        )
+        lines.append(f"      failed with: {problem.error}")
+    lines += [
+        "",
+        "WHICH PYTHON IS RUNNING",
+        f"  running now  : {report_obj.interpreter or '(unknown)'}",
+        f"  project venv : {report_obj.venv_python or '(none found in this project)'}",
+    ]
+
+    cures: List[str] = []
+    for problem in report_obj.problems:
+        if problem.cure and problem.cure not in cures:
+            cures.append(problem.cure)
+    if cures:
+        lines += ["", "HOW TO FIX"]
+        for cure in cures:
+            lines.append("  - " + cure)
+    if not report_obj.in_project_venv:
+        # Only when the running interpreter is NOT the project's. Said to someone
+        # who is already inside the venv it is false comfort pointing at the wrong
+        # cause, and a message with one wrong paragraph is a message that gets
+        # skimmed.
+        lines += [
+            "",
+            "On Windows a bare 'scripts\\batch_run.py' is opened by C:\\WINDOWS\\py.exe, which",
+            "ignores an active virtualenv -- that is how the wrong interpreter gets in, and",
+            "it is why the command above spells the interpreter out instead of trusting PATH.",
+        ]
+    lines.append("=" * 78)
+    return "\n".join(lines)
+
+
+def run_preflight(
+    *,
+    echo: Callable[[str], None] = print,
+    probe_fn: Optional[Callable[..., Tuple[List[Tuple[str, str]], str]]] = None,
+    executable: Optional[str] = None,
+    app_path: Optional[Any] = None,
+) -> int:
+    """Check the environment and report. ``0`` to proceed, :data:`EXIT_PREFLIGHT` to stop.
+
+    Writes NOTHING, by construction: no :class:`Logger` (a Logger with a run
+    directory would create one), no run directory, no plan.json, no manifest. A
+    failed preflight must leave a tree that looks exactly like it did before the
+    command was typed, because a run directory *is* the record that a night
+    happened, and the 2026-07-27_2135 directory -- 28 paper folders and a 56-row
+    manifest of fiction -- is still sitting in ``runs/`` today, permanently
+    indistinguishable at a glance from a night that really ran.
+
+    Warnings are printed and then ignored: they are for the operator's judgement,
+    not this function's.
+    """
+
+    def say(line: str) -> None:
+        try:
+            echo(line)
+        except Exception:  # noqa: BLE001 - UnicodeEncodeError is a ValueError, and
+            # a console that cannot encode a path must still receive the message.
+            try:
+                echo(_ascii_safe(line))
+            except Exception:  # noqa: BLE001 - dead stdout: nothing left to try
+                pass
+
+    report_obj = check_preflight(probe_fn=probe_fn, executable=executable, app_path=app_path)
+    for warning in report_obj.warnings:
+        say("WARNING: " + warning)
+    if report_obj.ok:
+        return 0
+    say(preflight_message(report_obj))
+    return EXIT_PREFLIGHT
+
+
+# ---------------------------------------------------------------------------
 # Status.
 # ---------------------------------------------------------------------------
 def print_status(out_dir: Any = None, *, echo: Callable[[str], None] = print) -> int:
@@ -1557,8 +2154,10 @@ def _run_batch(
 
 __all__ = [
     "ALL_MODES",
+    "CHILD_IMPORTS",
     "DEFAULT_DEADLINE_HOURS",
     "DEFAULT_PAPER_TIMEOUT",
+    "EXIT_PREFLIGHT",
     "REQUIRED_ARTIFACTS",
     "RESUME_MAX_AGE_HOURS",
     "FAILURES_NAME",
@@ -1573,7 +2172,10 @@ __all__ = [
     "SUMMARY_NAME",
     "ChildResult",
     "Logger",
+    "PreflightProblem",
+    "PreflightReport",
     "append_manifest",
+    "check_preflight",
     "child_command",
     "child_env",
     "completed_pairs",
@@ -1581,6 +2183,7 @@ __all__ = [
     "failed_writes",
     "find_resumable",
     "force_utf8_stdio",
+    "preflight_message",
     "required_artifacts",
     "row_warnings",
     "run_dir_touched_at",
@@ -1594,15 +2197,18 @@ __all__ = [
     "parse_child_output",
     "parse_modes",
     "pending_pairs",
+    "probe_imports",
     "plan_pairs",
     "print_status",
     "refresh_reports",
     "resolve_out_dir",
     "result_text",
     "run_batch",
+    "run_preflight",
     "run_single",
     "save_plan",
     "snapshot_caches",
+    "venv_python",
     "write_artifacts",
     "write_paper_inputs",
 ]
