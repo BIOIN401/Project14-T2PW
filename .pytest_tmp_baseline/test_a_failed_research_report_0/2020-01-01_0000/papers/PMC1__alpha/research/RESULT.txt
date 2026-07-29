@@ -1,0 +1,29 @@
+RESULT: FAIL
+========================================
+paper      : PMC1
+title      : Title 0
+slug       : PMC1__alpha
+mode       : research
+status     : fail
+stage      : research_report
+wall time  : 3.0s
+
+WARNINGS
+----------------------------------------
+  ! artifact research_pathway_report.txt could not be written: OSError: [Errno 28] No space left on device
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : crash
+message      : the pipeline succeeded but the required artifact(s) research_pathway_report.txt could not be written, so this run produced nothing on disk: OSError: [Errno 28] No space left on device
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+failed writes: OSError: [Errno 28] No space left on device
+
+FILES WRITTEN
+----------------------------------------
+  - review_flags.json  (2 B)
+  - research_pathway_report.txt
+      !! WRITE FAILED: OSError: [Errno 28] No space left on device

@@ -1,51 +1,18 @@
 """Bounded, evidence-free ``detail`` payloads for gate and stage-contract errors.
 
-Why this module exists
-----------------------
-A gate error used to be ``{"path", "reason"}`` and a stage-contract error
-``{"code", "message", "pointer"}``. Both name the offending row and describe the
-rule that rejected it, and neither carries the thing a reviewer actually needs:
-the value that was checked. That value is in scope at every ``_add_error`` call
-site and was thrown away there.
+An error names the offending row and the rule that rejected it, but not the
+value that was checked. ``detail`` carries that value, riding the error dict
+itself so the UI, ``gate_fail_report.json`` and
+``stage_contract_error_report.json`` all get it from one population site.
 
-``logger.debug`` cannot fix this. The Streamlit app's logs are not visible from
-the browser, so anything written to a logger is invisible exactly when it is
-needed. Detail therefore rides the error object itself — the same dict that
-already flows to the UI, to ``gate_fail_report.json`` and to
-``stage_contract_error_report.json``. One population site, three destinations,
-and no way for the app and the batch artifact to disagree about what happened.
+Everything is bounded *here*, at the point of capture, not at the render site:
+payload ``evidence`` fields have reached six figures of characters, and one of
+those in ``st.json`` is a hung browser tab. Bulky provenance keys
+(:data:`ELIDED_KEYS`) become a size census; every other scalar is clipped to
+:data:`MAX_VALUE_CHARS`; containers are capped in width and depth.
 
-The size constraint
--------------------
-Payload rows carry ``evidence`` / ``source_refs`` blobs holding verbatim
-passages from the source paper. One observed run reached 139,576 characters in a
-single such field. Embedding a raw row in an error would push that into
-``st.json`` and wedge the browser tab, so every value is bounded *here*, at the
-point of capture. Bounding at the render site instead would be a truncation each
-new call site could forget, and a forgotten truncation is the bug returning.
-
-Two rules make the bound trustworthy:
-
-* Bulky provenance keys (:data:`ELIDED_KEYS`) never have their content copied.
-  They become a census — ``"3 items, 139576 chars elided"`` — because the fact
-  that evidence is huge is itself diagnostic, and dropping the key outright
-  would read as "this row had no evidence". This is unconditional: small
-  evidence is still raw evidence, and a size-dependent rule would make the
-  guarantee depend on the input.
-* Every surviving scalar is clipped to :data:`MAX_VALUE_CHARS` with the elided
-  count stated inline, and containers are capped in width and depth, so no
-  single field can dominate the display.
-
-The result is a hard ceiling on a detail's serialized size that does not depend
-on how large the payload was.
-
-What to put in a detail
------------------------
-The offending row (via :func:`row_digest`), the specific value compared, and the
-comparison set that failed to contain it. :func:`closest_names` exists because
-the dominant recurring gate failure is a name that *nearly* matches the
-registry — an actor the extractor or RAG synthesis spelled differently — and
-"did you mean" turns a 20-minute grep into a glance.
+Rationale, the observed sizes, and the compatibility constraints are in
+``docs/regression_baseline_2026-07-28.md`` §4.
 """
 
 from __future__ import annotations
@@ -155,16 +122,9 @@ def _is_census(value: Any) -> bool:
 def census(value: Any) -> str:
     """A size description of ``value`` that contains none of its content.
 
-    This is what an evidence field becomes. It answers "was there evidence, and
-    how much" without reproducing a word of it.
-
-    Idempotent, which is load-bearing rather than tidiness. A detail is commonly
-    built as ``build_detail(row=row_digest(row))`` and then scrubbed again by
-    ``_add_error``, so the same evidence field is censused up to three times.
-    Without this guard each pass measures the previous census string instead of
-    the data -- ``"160000 chars elided"`` becomes ``"19 chars elided"`` becomes
-    ``"15 chars elided"`` -- and the count, the one thing the reader needs, is
-    silently replaced by a number about itself.
+    Idempotent, and that is load-bearing: a detail is censused up to three times
+    on its way to an error, and without the guard each pass would measure the
+    previous census string instead of the data. See the doc, §4.
     """
 
     if _is_census(value):
@@ -236,11 +196,9 @@ def scrub_detail(value: Any) -> Dict[str, Any]:
 def row_digest(row: Any, *, pointer: str = "") -> Dict[str, Any]:
     """A bounded, evidence-free projection of a payload row.
 
-    Deliberately a denylist (:data:`ELIDED_KEYS`) plus universal clipping rather
-    than an allowlist of interesting fields. Gate failures keep arriving as
-    *new* entity shapes — a RAG-synthesized actor with a key the extractor never
-    produced — and an allowlist drops exactly the unfamiliar field that would
-    have explained the failure.
+    A denylist plus universal clipping, not an allowlist: gate failures keep
+    arriving as new entity shapes, and an allowlist drops exactly the unfamiliar
+    field that would have explained the failure.
     """
 
     if isinstance(row, Mapping):
@@ -263,11 +221,8 @@ def closest_names(
 ) -> List[str]:
     """Registry names closest to ``name`` — the "did you mean" for a bad reference.
 
-    An unresolved actor is almost always a near-miss (case, punctuation, a
-    subunit suffix, a slash-joined complex) rather than an entity that is truly
-    absent, so the nearest declared names are the fastest route to the cause.
-    Returns ``[]`` when nothing is close enough, which is itself informative:
-    the reference is genuinely unknown, not merely misspelled.
+    An unresolved actor is usually a near-miss, not an absent entity. ``[]`` is
+    itself informative: genuinely unknown rather than merely misspelled.
     """
 
     token = str(name or "").strip()
@@ -298,13 +253,9 @@ HEADLINE_KEYS: Sequence[str] = (
 def headline(value: Any, *, limit: int = 3) -> str:
     """The one line of a detail worth showing before it is expanded.
 
-    A failure usually turns on a single field — ``did_you_mean`` for a bad
-    reference, ``found_type`` for a shape error — and burying it in a collapsed
-    blob costs the click the detail existed to save. Lives here rather than in
-    the app because the batch flag rows want the same summary, and two
-    implementations would drift into disagreeing about the same error.
-
-    Returns ``""`` when nothing headline-worthy is present.
+    Lives here rather than in the app because the batch flag rows want the same
+    summary, and two implementations would drift. ``""`` when there is nothing
+    headline-worthy.
     """
 
     if not isinstance(value, Mapping) or not value:

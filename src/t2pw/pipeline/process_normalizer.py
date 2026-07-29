@@ -4275,17 +4275,12 @@ def run_strict_post_normalization_gates(
         """Record a gate failure, optionally with the value that failed.
 
         ``path`` says where and ``reason`` says which rule; neither says what
-        the row actually held, and that is the question every gate failure
-        prompts. ``detail`` closes it. It rides the error dict into
-        ``GateValidationError.details``, and from there into the app and
-        ``gate_fail_report.json`` unchanged -- no second channel to keep in
-        sync, and nothing that only exists in a log the browser cannot show.
-
-        Bounded by :func:`scrub_detail` on the way in: rows carry ``evidence``
-        blobs that have reached six figures of characters, and ``st.json`` of
-        one of those is a hung tab. The key is omitted when empty, so errors
-        without detail keep the exact ``{"path", "reason"}`` shape that
+        the row held. ``detail`` closes that, riding into
+        ``GateValidationError.details`` and on to the app and
+        ``gate_fail_report.json`` unchanged. Bounded by ``scrub_detail``, and
+        omitted when empty so errors keep the exact ``{"path", "reason"}`` shape
         ``batch.driver`` and the audit-retry prompts already read.
+        See ``docs/regression_baseline_2026-07-28.md`` §4.
         """
 
         error: Dict[str, Any] = {"path": path, "reason": reason}

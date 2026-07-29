@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "recorded_on": "2026-07-29",
+  "source_run": "runs/2026-07-28_2122",
+  "comment": [
+    "Baseline numbers for the research-mode stabilization work. Read alongside",
+    "docs/regression_baseline_2026-07-28.md, which explains what each number means.",
+    "Nothing here is a target -- it is the state the diagnostic-detail patch was",
+    "measured against, so a later run can be compared to it instead of to memory."
+  ],
+  "batch": {
+    "run_id": "2026-07-28_2122",
+    "started": "2026-07-28T21:22:34",
+    "finished": "2026-07-29T07:36:38",
+    "papers_attempted": 16,
+    "manifest_rows": 32,
+    "timeouts": 0,
+    "skipped": 0
+  },
+  "strict_legs": {
+    "executed": 16,
+    "passed": 0,
+    "failed": 16,
+    "failed_before_post_pipeline_gates": 9,
+    "failed_at_post_pipeline_gates": 7,
+    "pre_gate_failure_stage": "stage1",
+    "pre_gate_failure_comment": [
+      "Counted per strict leg from manifest.jsonl, NOT from failures_by_code.txt.",
+      "That report counts distinct papers across both modes, so it credits",
+      "processes_required with a paper whose strict leg actually died at the gates,",
+      "and files no_reactions separately as an uncoded failure_kind."
+    ],
+    "pre_gate_failure_codes": {
+      "entities_required": 3,
+      "processes_required": 3,
+      "no_reactions": 1,
+      "ambiguous_review_scope": 2
+    },
+    "post_gate_failure_classes": [
+      "missing_external_identifier",
+      "missing_species_organism",
+      "degree_zero_protein",
+      "unknown_protein_modifier_reference",
+      "duplicate_entity_type"
+    ],
+    "post_gate_papers": [
+      "PMC12444477",
+      "PMC13231680",
+      "PMC12312563",
+      "PMC12657337",
+      "PMC12421875",
+      "PMC12180156",
+      "PMC12856317"
+    ]
+  },
+  "research_legs": {
+    "executed": 16,
+    "passed": 8,
+    "failed": 8
+  },
+  "payload_size_pmc12444477": {
+    "comment": [
+      "Same paper, two runs twelve hours apart. The 09:19 strict leg passed with a",
+      "4.7 MB merged payload; the 21:22 strict leg failed with a 306 KB one -- a",
+      "15.37x shrink. This is why fixtures here are curated by hand: one merged",
+      "payload is larger than the entire test suite's fixture budget.",
+      "Figures are os.path.getsize() on the artifacts, i.e. true filesystem bytes.",
+      "The manifest's own file sizes are decoded-character counts and read low on",
+      "any payload carrying non-ASCII -- these are UTF-8 with Greek letters in the",
+      "entity names, so the two differ by roughly 1%."
+    ],
+    "units": "bytes (filesystem, os.path.getsize)",
+    "bytes": {
+      "2026-07-28_0919": {
+        "strict": {"status": "pass", "stage1_payload": 17015, "merged_payload": 4707785},
+        "research": {"status": "fail", "stage1_payload": 16618, "merged_payload": 5765448}
+      },
+      "2026-07-28_2122": {
+        "strict": {"status": "fail", "stage1_payload": 18945, "merged_payload": 306325},
+        "research": {
+          "status": "pass",
+          "stage1_payload": 21819,
+          "merged_payload": 274820,
+          "research_pathway_citations": 1290748
+        }
+      }
+    },
+    "merged_payload_shrink_strict": 15.37
+  },
+  "test_suite": {
+    "comment": [
+      "Full offline suite on research-mode, run with an explicit --basetemp (see docs).",
+      "Recorded, not asserted: adding a test must not fail the harness."
+    ],
+    "recorded_on": "2026-07-29",
+    "tests_collected": 1126,
+    "tests_passed": 1126,
+    "tests_failed": 0,
+    "tests_before_this_harness": 1109
+  }
+}

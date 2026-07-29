@@ -1,0 +1,29 @@
+RESULT: FAIL
+========================================
+paper      : PMC1
+title      : Title 0
+slug       : PMC1__alpha
+mode       : strict
+status     : error
+stage      : unknown
+wall time  : 0.0s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : crash
+message      : the child process exited with code 1 without printing a result line, so it crashed rather than hung
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+--- child stdout (tail) ---
+not json at all
+Traceback (most recent call last)
+
+
+--- child stderr (tail) ---
+boom
+
+FILES WRITTEN
+----------------------------------------
+  (none)

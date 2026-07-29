@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "compounds": [
+      {
+        "name": "UDP-GlcNAc"
+      },
+      {
+        "name": "UDP-3-O-acyl-GlcNAc"
+      },
+      {
+        "name": "R-3-hydroxymyristoyl-ACP"
+      },
+      {
+        "name": "ACP"
+      },
+      {
+        "name": "glucose"
+      },
+      {
+        "name": "glucose-6-phosphate"
+      },
+      {
+        "name": "Kdo"
+      },
+      {
+        "name": "Kdo-lipid IVA"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "LpxA"
+      },
+      {
+        "name": "hexokinase"
+      },
+      {
+        "name": "WaaA"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "name": "LpxA acyltransfer",
+        "inputs": [
+          "UDP-GlcNAc",
+          "R-3-hydroxymyristoyl-ACP"
+        ],
+        "outputs": [
+          "UDP-3-O-acyl-GlcNAc",
+          "ACP"
+        ],
+        "enzymes": [
+          {
+            "protein": "LpxA",
+            "evidence": "LpxA catalyses the first step."
+          }
+        ],
+        "biological_state": "cytosol",
+        "evidence": "LpxA catalyses the first step of lipid A biosynthesis.",
+        "scope_membership": "core",
+        "class": "biochemical_reaction",
+        "confidence": 1.0,
+        "locked_reaction_id": "rxn_lock_001",
+        "locked": true
+      },
+      {
+        "name": "glucose phosphorylation",
+        "inputs": [
+          "glucose",
+          "ATP"
+        ],
+        "outputs": [
+          "glucose-6-phosphate",
+          "ADP"
+        ],
+        "enzymes": [
+          {
+            "protein": "hexokinase",
+            "evidence": "Hexokinase phosphorylates glucose."
+          }
+        ],
+        "evidence": "Central carbon metabolism supplies precursors.",
+        "scope_membership": "out_of_scope",
+        "class": "biochemical_reaction",
+        "confidence": 0.8
+      },
+      {
+        "name": "WaaA Kdo transfer",
+        "inputs": [
+          "lipid IVA",
+          "Kdo"
+        ],
+        "outputs": [
+          "Kdo-lipid IVA"
+        ],
+        "enzymes": [
+          {
+            "protein": "WaaA",
+            "evidence": "WaaA adds Kdo residues."
+          }
+        ],
+        "evidence": "WaaA adds a number of Kdo residues to form Kdo-lipid IVA.",
+        "scope_membership": "auxiliary",
+        "class": "biochemical_reaction",
+        "confidence": 0.9,
+        "locked_reaction_id": "rxn_lock_002",
+        "locked": true
+      }
+    ]
+  }
+}

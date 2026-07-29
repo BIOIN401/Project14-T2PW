@@ -437,15 +437,10 @@ def _add_error(
 ) -> None:
     """Record a blocking issue, optionally with the evidence that produced it.
 
-    ``detail`` carries what the ``message`` cannot: the value that was actually
-    checked, the offending row, the set it failed to match. It rides the issue
-    dict, so it reaches the app and ``stage_contract_error_report.json`` by the
-    same route the message already travels. It is bounded by
-    :func:`~t2pw.pipeline.failure_detail.scrub_detail` on the way in -- payload
-    rows carry six-figure-character evidence blobs, and an unbounded detail
-    would wedge the browser tab it is meant to inform.
-
-    Omitted entirely when empty, so issues without detail keep their old shape.
+    ``detail`` carries what the ``message`` cannot: the value actually checked,
+    the offending row, the set it failed to match. Bounded by ``scrub_detail``
+    on the way in, and omitted when empty so issues without detail keep their
+    old shape. See ``docs/regression_baseline_2026-07-28.md`` §4.
     """
 
     issue: Issue = {"code": code, "message": message}

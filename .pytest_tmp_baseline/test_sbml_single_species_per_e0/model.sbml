@@ -1,0 +1,498 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" level="3" version="1">
+  <model metaid="meta_3360bc16c40a427aacdfbf972438a364" id="PathwayModel">
+    <annotation>
+  <pathwhiz:dimensions xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:width="2400" pathwhiz:height="2400"/>
+    </annotation>
+      <listOfUnitDefinitions>
+      <unitDefinition name="Mole" id="Unit1">
+        <listOfUnits>
+          <unit scale="0" kind="mole" multiplier="1" exponent="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment name="bloodstream" constant="false" id="c_bloodstream" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="10001" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="cell" constant="false" id="c_cell" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="10002" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="follicular lumen" constant="false" id="c_follicular_lumen" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="10000" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+      <compartment name="follicular lumen" constant="false" id="c_follicular_lumen_10003" sboTerm="SBO:0000240">
+        <annotation>
+  <pathwhiz:compartment xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:compartment_id="10003" pathwhiz:compartment_type="biological_state"/>
+        </annotation>
+            </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_131d2437aa724c97af94040cb755457b" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen_10003" name="thyroid_peroxidase_complex" id="pc_585f4906_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="40000" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>Protein30003</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_131d2437aa724c97af94040cb755457b">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_e428de9ddcd74702a8cf98ce711f2724" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen_10003" name="Unknown" id="Protein30003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30003" pathwhiz:species_type="protein"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_e428de9ddcd74702a8cf98ce711f2724">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_54304bf714774c71a05bbb85c4db95f0" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen" name="thyroglobulin:iodotyrosine" id="pc_96f8e4db_c_follicular_lumen">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="40001" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>p_ba3be59b_c_follicular_lumen_10003</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_54304bf714774c71a05bbb85c4db95f0">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_acdaf0e4ca464eae9daf4012db8f7180" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen_10003" name="thyroglobulin" id="p_ba3be59b_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30002" pathwhiz:species_type="protein"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_acdaf0e4ca464eae9daf4012db8f7180">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_c33b08eb211049fd850dbfc2efb42c0e" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen_10003" name="thyroglobulin:3,5-diiodo-L-tyrosine" id="pc_a905e8e1_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="40002" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>p_ba3be59b_c_follicular_lumen_10003</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_c33b08eb211049fd850dbfc2efb42c0e">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_6aafe5289037496a89cd4c52c63ba050" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen_10003" name="thyroglobulin:liothyronine" id="pc_f9d80f99_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="40003" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>p_ba3be59b_c_follicular_lumen_10003</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_6aafe5289037496a89cd4c52c63ba050">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_6c72fcd882c74bdc852ecd1d7591dd74" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen_10003" name="thyroglobulin:thyroxine" id="pc_ef6ff9b5_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="40004" pathwhiz:species_type="protein_complex">
+            <pathwhiz:protein_associations>
+              <pathwhiz:protein_complex_proteins>
+                <pathwhiz:protein>p_ba3be59b_c_follicular_lumen_10003</pathwhiz:protein></pathwhiz:protein_complex_proteins></pathwhiz:protein_associations></pathwhiz:species>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_6c72fcd882c74bdc852ecd1d7591dd74">
+	<bqbiol:hasPart>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:hasPart>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_81214b400674480ebfa7f239f9544040" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen" name="thyroid peroxidase" id="p_bce847c0_c_follicular_lumen">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30000" pathwhiz:species_type="protein"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_81214b400674480ebfa7f239f9544040">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_0b1d0930eda04793b215564e0e469513" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000245" compartment="c_follicular_lumen" name="pendrin" id="p_465437e0_c_follicular_lumen">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="30001" pathwhiz:species_type="protein"/>
+	<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+	<rdf:Description rdf:about="#meta_0b1d0930eda04793b215564e0e469513">
+	<bqbiol:is>
+	<rdf:Bag>
+	<rdf:li rdf:resource="urn:miriam:uniprot:Unknown"/>
+	</rdf:Bag>
+	</bqbiol:is>
+	</rdf:Description>
+	</rdf:RDF>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_66b0c337476d437986a89f4a36adf1e4" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="c_follicular_lumen" name="iodide" id="m_0514eb5f_c_follicular_lumen">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20000" pathwhiz:species_type="compound"/>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_661a57d197c043f884bc6bb8b2f1d503" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="c_follicular_lumen_10003" name="hydrogen peroxide" id="m_3db0f99f_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20001" pathwhiz:species_type="compound"/>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_dabf148502194581b445e893533e7fef" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="c_follicular_lumen_10003" name="2-aminoacrylic acid" id="m_15472143_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20002" pathwhiz:species_type="compound"/>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_41b4ed5dba73411896283f3b653f5ae1" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="c_follicular_lumen_10003" name="liothyronine" id="m_c6788130_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20003" pathwhiz:species_type="compound"/>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_73c3d34a491b4c88801a039c39810ea2" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="c_follicular_lumen_10003" name="thyroxine" id="m_08c85f25_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20004" pathwhiz:species_type="compound"/>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_b08e626990b642db9e3febe963b9bc8c" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="c_follicular_lumen_10003" name="iodotyrosine" id="m_ef024526_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20005" pathwhiz:species_type="compound"/>
+	</annotation>
+            </species>
+      <species boundaryCondition="false" constant="false" substanceUnits="Unit1" metaid="meta_5905a2d1d5c64ab49f3b7cc725ae2aa8" hasOnlySubstanceUnits="true" initialAmount="1" sboTerm="SBO:0000247" compartment="c_follicular_lumen_10003" name="3,5-diiodo-L-tyrosine" id="m_1589859d_c_follicular_lumen_10003">
+        <annotation>
+  <pathwhiz:species xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:species_id="20006" pathwhiz:species_type="compound"/>
+	</annotation>
+            </species>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="c_follicular_lumen" name="thyroglobulin + iodide + hydrogen peroxide → thyroglobulin:iodotyrosine" id="Reaction50000">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50000" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="p_ba3be59b_c_follicular_lumen_10003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100000" pathwhiz:x="81.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 120 C159 120 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="m_0514eb5f_c_follicular_lumen" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_0514eb5f_c_follicular_lumen" pathwhiz:location_id="100001" pathwhiz:x="81.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 210 C159 210 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="m_3db0f99f_c_follicular_lumen_10003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_3db0f99f_c_follicular_lumen_10003" pathwhiz:location_id="100002" pathwhiz:x="81.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M159 300 C159 300 280 210 280 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="pc_96f8e4db_c_follicular_lumen" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="pc_96f8e4db_c_follicular_lumen" pathwhiz:location_id="100003" pathwhiz:x="401.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M280 210 C280 210 401 210 401 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100004" pathwhiz:x="110.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100005" pathwhiz:x="290.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="c_follicular_lumen" name="iodide + hydrogen peroxide → thyroglobulin + 3,5-diiodo-L-tyrosine" id="Reaction50001">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50001" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="m_0514eb5f_c_follicular_lumen" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_0514eb5f_c_follicular_lumen" pathwhiz:location_id="100006" pathwhiz:x="501.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 165 C579 165 700 210 700 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="m_3db0f99f_c_follicular_lumen_10003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_3db0f99f_c_follicular_lumen_10003" pathwhiz:location_id="100007" pathwhiz:x="501.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M579 255 C579 255 700 210 700 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="p_ba3be59b_c_follicular_lumen_10003" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100008" pathwhiz:x="821.0" pathwhiz:y="126.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 210 C700 210 821 165 821 165 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="m_1589859d_c_follicular_lumen_10003" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_1589859d_c_follicular_lumen_10003" pathwhiz:location_id="100009" pathwhiz:x="821.0" pathwhiz:y="216.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M700 210 C700 210 821 255 821 255 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pc_96f8e4db_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_96f8e4db_c_follicular_lumen">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100011" pathwhiz:x="170.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="m_ef024526_c_follicular_lumen_10003" pathwhiz:location_id="100012" pathwhiz:x="170.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100013" pathwhiz:x="350.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="pc_585f4906_c_follicular_lumen_10003" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_585f4906_c_follicular_lumen_10003">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30003" pathwhiz:location_id="100015" pathwhiz:x="530.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="pc_96f8e4db_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_96f8e4db_c_follicular_lumen">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100017" pathwhiz:x="710.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="m_ef024526_c_follicular_lumen_10003" pathwhiz:location_id="100018" pathwhiz:x="710.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100019" pathwhiz:x="890.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="pc_585f4906_c_follicular_lumen_10003" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_585f4906_c_follicular_lumen_10003">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="Protein30003" pathwhiz:location_id="100021" pathwhiz:x="1070.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="c_follicular_lumen_10003" name="hydrogen peroxide → thyroglobulin + liothyronine + 2-aminoacrylic acid" id="Reaction50002">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50002" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="m_3db0f99f_c_follicular_lumen_10003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_3db0f99f_c_follicular_lumen_10003" pathwhiz:location_id="100022" pathwhiz:x="921.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M999 210 C999 210 1120 210 1120 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="p_ba3be59b_c_follicular_lumen_10003" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100023" pathwhiz:x="1241.0" pathwhiz:y="81.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 210 C1120 210 1241 120 1241 120 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="m_c6788130_c_follicular_lumen_10003" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_c6788130_c_follicular_lumen_10003" pathwhiz:location_id="100024" pathwhiz:x="1241.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 210 C1120 210 1241 210 1241 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+          <speciesReference stoichiometry="1" constant="false" species="m_15472143_c_follicular_lumen_10003" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_15472143_c_follicular_lumen_10003" pathwhiz:location_id="100025" pathwhiz:x="1241.0" pathwhiz:y="261.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1120 210 C1120 210 1241 300 1241 300 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pc_a905e8e1_c_follicular_lumen_10003" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_a905e8e1_c_follicular_lumen_10003">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100027" pathwhiz:x="770.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="m_1589859d_c_follicular_lumen_10003" pathwhiz:location_id="100028" pathwhiz:x="770.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100029" pathwhiz:x="950.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="pc_a905e8e1_c_follicular_lumen_10003" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_a905e8e1_c_follicular_lumen_10003">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100031" pathwhiz:x="1130.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="m_1589859d_c_follicular_lumen_10003" pathwhiz:location_id="100032" pathwhiz:x="1130.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100033" pathwhiz:x="1310.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000176" compartment="c_follicular_lumen_10003" name="thyroglobulin → thyroglobulin:thyroxine" id="Reaction50003">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50003" pathwhiz:reaction_type="reaction"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="p_ba3be59b_c_follicular_lumen_10003" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100034" pathwhiz:x="1341.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1419 210 C1419 210 1540 210 1540 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="pc_ef6ff9b5_c_follicular_lumen_10003" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="pc_ef6ff9b5_c_follicular_lumen_10003" pathwhiz:location_id="100035" pathwhiz:x="1661.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1540 210 C1540 210 1661 210 1661 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pc_f9d80f99_c_follicular_lumen_10003" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_f9d80f99_c_follicular_lumen_10003">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100037" pathwhiz:x="1190.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="m_c6788130_c_follicular_lumen_10003" pathwhiz:location_id="100038" pathwhiz:x="1190.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100039" pathwhiz:x="1370.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="pc_f9d80f99_c_follicular_lumen_10003" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein_complex">
+                <pathwhiz:location_element pathwhiz:element_type="protein_complex_visualization" pathwhiz:element_id="pc_f9d80f99_c_follicular_lumen_10003">
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_ba3be59b_c_follicular_lumen_10003" pathwhiz:location_id="100041" pathwhiz:x="1550.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+                  <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="m_c6788130_c_follicular_lumen_10003" pathwhiz:location_id="100042" pathwhiz:x="1550.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/>
+</pathwhiz:location_element></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_bce847c0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_bce847c0_c_follicular_lumen" pathwhiz:location_id="100043" pathwhiz:x="1730.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+      <reaction fast="false" reversible="false" sboTerm="SBO:0000185" compartment="c_bloodstream" name="iodide transport: blood → luminal" id="Reaction50004">
+        <annotation>
+  <pathwhiz:reaction xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:reaction_id="50004" pathwhiz:reaction_type="transport"/>
+        </annotation>
+              <listOfReactants>
+          <speciesReference stoichiometry="1" constant="false" species="m_0514eb5f_c_follicular_lumen" sboTerm="SBO:0000015">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_0514eb5f_c_follicular_lumen" pathwhiz:location_id="100044" pathwhiz:x="1761.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1839 210 C1839 210 1960 210 1960 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;end_arrow&quot;:false,&quot;end_flat_arrow&quot;:true}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference stoichiometry="1" constant="false" species="m_0514eb5f_c_follicular_lumen" sboTerm="SBO:0000011">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="compound">
+                <pathwhiz:location_element pathwhiz:element_type="compound_location" pathwhiz:element_id="m_0514eb5f_c_follicular_lumen" pathwhiz:location_id="100045" pathwhiz:x="2081.0" pathwhiz:y="171.0" pathwhiz:visualization_template_id="3" pathwhiz:width="78.0" pathwhiz:height="78.0" pathwhiz:zindex="10" pathwhiz:hidden="false"/><pathwhiz:location_element pathwhiz:element_type="edge" pathwhiz:path="M1960 210 C1960 210 2081 210 2081 210 " pathwhiz:visualization_template_id="5" pathwhiz:options="{&quot;start_arrow&quot;:true,&quot;start_arrow_path&quot;:&quot;M 25.9 13.3 L 11 12 L 17.4 25.6&quot;,&quot;start_flat_arrow&quot;:false,&quot;start_flat_arrow_path&quot;:null}" pathwhiz:zindex="18" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </speciesReference>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="p_465437e0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_465437e0_c_follicular_lumen" pathwhiz:location_id="100046" pathwhiz:x="1790.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+          <modifierSpeciesReference species="p_465437e0_c_follicular_lumen" sboTerm="SBO:0000460">
+            <annotation>
+  <pathwhiz:location xmlns:pathwhiz="http://www.spmdb.ca/pathwhiz" pathwhiz:location_type="protein">
+                <pathwhiz:location_element pathwhiz:element_type="protein_location" pathwhiz:element_id="p_465437e0_c_follicular_lumen" pathwhiz:location_id="100047" pathwhiz:x="1970.0" pathwhiz:y="80.0" pathwhiz:visualization_template_id="6" pathwhiz:width="160.0" pathwhiz:height="80.0" pathwhiz:zindex="8" pathwhiz:hidden="false"/></pathwhiz:location>
+            </annotation>
+                    </modifierSpeciesReference>
+        </listOfModifiers>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

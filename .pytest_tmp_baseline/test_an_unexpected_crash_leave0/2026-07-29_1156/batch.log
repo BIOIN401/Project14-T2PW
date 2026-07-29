@@ -1,0 +1,20 @@
+[11:56:48] STARTING a fresh run 2026-07-29_1156 (--fresh was given)
+[11:56:48]   cache snapshot   : id_mapping_cache.json, enrichment_cache.json
+[11:56:48] UNEXPECTED ERROR in run_batch -- see the traceback below
+[11:56:48]   Traceback (most recent call last):
+[11:56:48]     File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\batch\runner.py", line 1912, in run_batch
+[11:56:48]       return _run_batch(
+[11:56:48]           state,
+[11:56:48]       ...<12 lines>...
+[11:56:48]           clock=clock,
+[11:56:48]       )
+[11:56:48]     File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\batch\runner.py", line 2003, in _run_batch
+[11:56:48]       plan = _plan_for_fresh_run(
+[11:56:48]           run_dir,
+[11:56:48]       ...<4 lines>...
+[11:56:48]           log=log,
+[11:56:48]       )
+[11:56:48]     File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\tests\test_batch_run.py", line 1014, in boom
+[11:56:48]       raise RuntimeError("something nobody predicted")
+[11:56:48]   RuntimeError: something nobody predicted
+[11:56:48] wrote a minimal plan.json so this directory is not an orphan

@@ -1065,17 +1065,11 @@ def _render_stage_contract_failure(
 def _render_issue_detail(detail: Any) -> None:
     """Render a failure ``detail`` beneath the issue it explains.
 
-    Uses a collapsed ``st.json`` rather than an ``st.expander``: every gate-error
-    list in this app is already rendered inside an expander, and Streamlit raises
-    on a nested one. ``st.json(..., expanded=False)`` gives the same
-    click-to-open behaviour with no nesting constraint, so one helper works at
-    every call site.
-
-    The detail arrives already bounded by ``t2pw.pipeline.failure_detail`` --
-    evidence censused, scalars clipped -- so this renders it wholesale without
-    re-checking sizes. That split is deliberate: if the app truncated too, the
-    batch artifacts (which never pass through here) would carry a different,
-    larger detail than the UI, and the two would disagree about what the run saw.
+    Collapsed ``st.json`` rather than ``st.expander``: these lists already run
+    inside an expander and Streamlit raises on a nested one. The detail arrives
+    already bounded by ``t2pw.pipeline.failure_detail``, so it is rendered
+    wholesale -- re-truncating here would make the UI disagree with the batch
+    artifacts. See ``docs/regression_baseline_2026-07-28.md`` §4.
     """
 
     data = _safe_dict(detail)

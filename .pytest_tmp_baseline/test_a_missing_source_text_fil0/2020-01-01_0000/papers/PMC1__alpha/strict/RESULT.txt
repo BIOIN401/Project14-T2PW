@@ -1,0 +1,25 @@
+RESULT: FAIL
+========================================
+paper      : PMC1
+title      : Title 0
+slug       : PMC1__alpha
+mode       : strict
+status     : error
+stage      : init
+wall time  : 0.0s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : crash
+message      : the paper's source text file could not be read, so the app was never started: C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\.pytest_tmp_baseline\test_a_missing_source_text_fil0\2020-01-01_0000\papers\PMC1__alpha\01_source_text.txt
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Angad\\Desktop\\SummerBIOIN\\Project14-T2PW\\.pytest_tmp_baseline\\test_a_missing_source_text_fil0\\2020-01-01_0000\\papers\\PMC1__alpha\\01_source_text.txt'
+
+This is an infrastructure fault in the run directory, not an extraction failure: the file is missing or unreadable, so nothing was ever handed to the app.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

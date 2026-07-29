@@ -1,0 +1,68 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2020-01-01T00:00:00
+finished : 2026-07-29T11:56:48
+papers attempted : 1
+strict PWML      : 0 pass / 0 fail
+research relaxed : 1 pass / 0 fail
+timeouts         : 0
+skipped          : 0
+pass, no deliv.  : 1  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 1 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+research-mode defects: NONE -- research mode held fail-open on all 1 paper(s).
+----------------------------------------------------------------------------------------------------
+
+!! PASSED BUT PRODUCED NO DELIVERABLE !!
+These runs did not fail -- the pipeline ran to completion -- but the folder has no deliverable in
+it. This is NOT a clean night. Check whether the missing output was expected before treating it as
+green.
+runs affected: 1
+
+  PMC1 [research] -- Title 0
+    - no research report: RAG did not trigger for this paper
+
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            0  (strict FAIL + research FAIL -- real bug, also a research defect)
+format-blocked    0  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+incomplete        1  (a mode is missing, skipped or unrecognised)
+    PMC1
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] Title 0 -> incomplete
+    id     : PMC1
+    slug   : PMC1__alpha
+    uri    : https://example.org/PMC1__alpha
+    topic  : lipid A biosynthesis
+
+    research : PASS (no research deliverable) | stage=pwml_export | time=12.5s
+        warning      : no research report: RAG did not trigger for this paper
+        files        : none recorded
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     (none)
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     (none)
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     (none)
+
+====================================================================================================

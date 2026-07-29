@@ -1,0 +1,446 @@
+{
+  "schema_version": 1,
+  "comment": [
+    "Eight curated payload fragments distilled from the 2026-07-28 batch runs.",
+    "Each is hand-written to the shape observed on disk, NOT copied: a single",
+    "merged payload from that night is 306 KB - 4.7 MB and carries verbatim source",
+    "passages, so copying one would put megabytes of paper text in the repo and",
+    "still not say which field mattered. 'observed_in' points at the real artifact",
+    "for anyone who needs the full context.",
+    "Consumed by tests/test_baseline_regression_2026_07_28.py."
+  ],
+  "source_runs": ["runs/2026-07-28_0919", "runs/2026-07-28_2122"],
+
+  "cases": [
+    {
+      "id": "valid_mapped_enzyme",
+      "title": "A fully mapped enzyme that must pass every identity gate",
+      "observed_in": {
+        "run": "2026-07-28_2122",
+        "paper_id": "PMC12444477",
+        "pointer": "/entities/proteins/0"
+      },
+      "why_it_matters": "The control. If this row ever starts failing, the gate broke, not the data.",
+      "row": {
+        "name": "LpxA",
+        "class": "protein",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "provenance": "extracted",
+        "confidence": 1.0,
+        "mapped_ids": {"uniprot": "P0A722", "pathbank_protein_id": 3312},
+        "mapping_meta": {
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "uniprot_exact",
+          "confidence": 1.0,
+          "resolution": {"status": "matched", "issue": "", "order_step": "uniprot_exact"}
+        }
+      },
+      "expect": {
+        "has_external_identity": true,
+        "external_identity": "P0A722",
+        "has_species_context": true,
+        "is_pathbank_unknown": false
+      }
+    },
+
+    {
+      "id": "ambiguous_protein_mapping",
+      "title": "An ambiguous protein resolved to its first UniProt-bearing candidate",
+      "observed_in": {
+        "run": "2026-07-28_2122",
+        "paper_id": "PMC12657337",
+        "pointer": "/entities/proteins/*"
+      },
+      "why_it_matters": "Ambiguity is resolved, not deferred. The row ships an identifier, and the fact that a choice was made survives only in mapping_meta - which is exactly what a reviewer needs and what no gate message says.",
+      "row": {
+        "name": "MenD",
+        "class": "protein",
+        "organism": "Escherichia coli",
+        "species": "Escherichia coli",
+        "mapped_ids": {"uniprot": "P17109", "pathbank_protein_id": 4471},
+        "mapping_meta": {
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "ambiguous_first_candidate",
+          "confidence": 0.6,
+          "resolution": {
+            "status": "matched",
+            "issue": "ambiguous_resolved_by_first",
+            "order_step": "ambiguous_first_candidate"
+          },
+          "rejected_candidates": [
+            {"uniprot": "P17109", "name": "MenD", "organism": "Escherichia coli"},
+            {"uniprot": "O34362", "name": "MenD", "organism": "Bacillus subtilis"}
+          ]
+        }
+      },
+      "expect": {
+        "has_external_identity": true,
+        "external_identity": "P17109",
+        "has_species_context": true,
+        "is_pathbank_unknown": false,
+        "resolution_status": "matched",
+        "resolution_issue": "ambiguous_resolved_by_first"
+      }
+    },
+
+    {
+      "id": "evidence_backed_unmapped_enzyme",
+      "title": "An enzyme the paper evidences but no database resolves",
+      "observed_in": {
+        "run": "2026-07-28_2122",
+        "paper_id": "PMC12657337",
+        "issue_code": "gate.protein_heppps_is_missing_a_uniprot_or_drugbank_identifier"
+      },
+      "why_it_matters": "Evidence is not identity. The row is well-sourced and still fails strict export, and the distinction between 'unsupported' and 'unmapped' is the one a reviewer must be able to make at a glance.",
+      "row": {
+        "name": "HepPPS",
+        "class": "protein",
+        "organism": "Bacillus subtilis",
+        "species": "Bacillus subtilis",
+        "provenance": "extracted",
+        "confidence": 0.9,
+        "evidence": "heptaprenyl diphosphate synthase (HepPPS) supplies the prenyl donor",
+        "source_refs": ["seed_paper"],
+        "mapping_meta": {
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "resolution": {"status": "unmapped", "issue": "no_candidate", "order_step": "uniprot_exact"}
+        }
+      },
+      "expect": {
+        "has_external_identity": false,
+        "has_species_context": true,
+        "is_pathbank_unknown": false,
+        "has_evidence": true,
+        "gate_reason": "Protein 'HepPPS' is missing a UniProt or DrugBank identifier.",
+        "detail_keys_required": ["name", "evidence", "source_refs"],
+        "detail_elided_keys": ["evidence"]
+      }
+    },
+
+    {
+      "id": "cofactor_misclassified_as_protein",
+      "title": "CoA and succinyl-CoA sitting in entities.proteins",
+      "observed_in": {
+        "run": "2026-07-28_2122",
+        "paper_ids": ["PMC12444477", "PMC12856317", "PMC12180156"],
+        "issue_codes": [
+          "gate.protein_coenzyme_a_coa_is_missing_species_organism",
+          "gate.protein_coenzyme_a_coa_is_missing_a_uniprot_or_drugbank_identifi",
+          "gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism",
+          "gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban"
+        ]
+      },
+      "why_it_matters": "The highest-volume post-gate failure class of the night: 8 of the 27 distinct issue codes are one of two cofactors misfiled as a protein. They can never acquire a UniProt ID, so the identity gate fires forever and the real defect - the entity-type decision upstream - is never named by the message.",
+      "rows": [
+        {
+          "name": "coenzyme A (CoA)",
+          "class": "protein",
+          "provenance": "inferred",
+          "confidence": 0.7,
+          "evidence": "the acyl group is transferred from coenzyme A (CoA)"
+        },
+        {
+          "name": "succinyl-coenzyme A (ScoA)",
+          "class": "protein",
+          "provenance": "inferred",
+          "confidence": 0.7,
+          "evidence": "succinyl-coenzyme A (ScoA) condenses with glycine"
+        }
+      ],
+      "expect": {
+        "each_row": {
+          "has_external_identity": false,
+          "has_species_context": false,
+          "is_pathbank_unknown": false
+        },
+        "gate_reasons": [
+          "Protein 'coenzyme A (CoA)' is missing species/organism.",
+          "Protein 'coenzyme A (CoA)' is missing a UniProt or DrugBank identifier.",
+          "Protein 'succinyl-coenzyme A (ScoA)' is missing species/organism.",
+          "Protein 'succinyl-coenzyme A (ScoA)' is missing a UniProt or DrugBank identifier."
+        ]
+      }
+    },
+
+    {
+      "id": "disconnected_mapped_protein",
+      "title": "A fully mapped protein with no edge in the connectivity graph",
+      "observed_in": {
+        "run": "2026-07-28_2122",
+        "paper_id": "PMC12444477",
+        "pointer": "/entities/proteins/16/name",
+        "issue_code": "gate.protein_has_degree_after_normalization",
+        "gate_reason": "Protein has degree 0 after normalization: FabA"
+      },
+      "why_it_matters": "Identity and connectivity are independent. FabA carried a species and an identifier and still failed, because the reactions named its partner FabZ instead. The message named FabA and nothing else; the detail's did_you_mean is what turns it into a fix.",
+      "payload": {
+        "metadata": {"organism": "Escherichia coli"},
+        "entities": {
+          "species": [{"name": "Escherichia coli"}],
+          "compounds": [
+            {"name": "beta-hydroxyacyl-ACP"},
+            {"name": "trans-2-acyl-ACP"}
+          ],
+          "proteins": [
+            {
+              "name": "FabZ",
+              "organism": "Escherichia coli",
+              "species": "Escherichia coli",
+              "mapped_ids": {"uniprot": "P0A6Q6"}
+            },
+            {
+              "name": "FabA",
+              "organism": "Escherichia coli",
+              "species": "Escherichia coli",
+              "mapped_ids": {"uniprot": "P0A6Q3"}
+            }
+          ],
+          "protein_complexes": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "ACP dehydration",
+              "inputs": ["beta-hydroxyacyl-ACP"],
+              "outputs": ["trans-2-acyl-ACP"],
+              "enzymes": [
+                {"entity": "FabZ", "entity_type": "protein", "role": "catalyst"}
+              ]
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "gate_kwargs": {"enforce_all_proteins_connected": true},
+      "expect": {
+        "gate_reason": "Protein has degree 0 after normalization: FabA",
+        "gate_path": "/entities/proteins/1/name",
+        "detail": {
+          "protein": "FabA",
+          "is_complex_component": false,
+          "proteins_degree0": 1,
+          "proteins_total": 2,
+          "did_you_mean": ["FabZ"]
+        }
+      }
+    },
+
+    {
+      "id": "unknown_sentinel_functional_complex",
+      "title": "A functional enzyme name wrapped around the PathBank Unknown protein",
+      "observed_in": {
+        "run": "2026-07-28_2122",
+        "paper_id": "PMC12444477",
+        "pointer": "/entities/protein_complexes/*"
+      },
+      "why_it_matters": "The Stage 6 structural fallback: the complex keeps the biology-bearing name, the component is the known sentinel (PathBank 9659 / UniProt 'Unknown'). It must stay recognisable as a placeholder - a sentinel mistaken for a real mapping is a wrong pathway that passes every gate.",
+      "complex_row": {
+        "name": "beta-hydroxyacyl-ACP dehydratase",
+        "class": "protein_complex",
+        "generated": true,
+        "components": [{"name": "Unknown", "stoichiometry": 1}],
+        "species": "Arabidopsis thaliana",
+        "mapping_meta": {"chosen_rule": "pathbank_unknown_protein_fallback"}
+      },
+      "component_row": {
+        "name": "Unknown",
+        "species": "Arabidopsis thaliana",
+        "organism": "Arabidopsis thaliana",
+        "pathbank_protein_id": 9659,
+        "mapped_ids": {"uniprot": "Unknown", "pathbank_protein_id": 9659},
+        "mapping_meta": {
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_unknown_protein_fallback",
+          "confidence": 0.0,
+          "pathbank_protein_id": 9659,
+          "fallback_used": true,
+          "fallback_reason": "all_normal_protein_identity_strategies_failed",
+          "cross_species_placeholder": true,
+          "resolution": {
+            "status": "fallback",
+            "issue": "pathbank_unknown_sentinel",
+            "order_step": "pathbank_unknown_protein_fallback"
+          }
+        }
+      },
+      "expect": {
+        "component_is_pathbank_unknown": true,
+        "component_has_external_identity": true,
+        "component_has_species_context": true,
+        "complex_is_pathbank_unknown": false,
+        "component_stoichiometry": 1
+      }
+    },
+
+    {
+      "id": "rag_reaction_with_provenance_and_scope",
+      "title": "A RAG-synthesized reaction carrying source provenance and scope membership",
+      "observed_in": {
+        "run": "2026-07-28_2122",
+        "paper_id": "PMC12444477",
+        "pointer": "/processes/reactions/*"
+      },
+      "why_it_matters": "The two additive channels the RAG subsystem must never drop: rag_provenance/source_papers (every element traceable to a chunk) and scope_membership (what the lock manifest is allowed to carry forward). Both are additive, so a gate that starts rejecting them is a stage-separation break.",
+      "payload": {
+        "entities": {
+          "species": [{"name": "Escherichia coli"}],
+          "compounds": [
+            {
+              "name": "UDP-GlcNAc",
+              "source_refs": ["seed_paper"],
+              "rag_provenance": {"source_id": "seed_paper", "chunk_id": "58b23619b9efa7d3"}
+            },
+            {
+              "name": "UDP-3-O-acyl-GlcNAc",
+              "source_refs": ["seed_paper"],
+              "rag_provenance": {"source_id": "seed_paper", "chunk_id": "58b23619b9efa7d3"}
+            }
+          ],
+          "proteins": [
+            {
+              "name": "LpxA",
+              "organism": "Escherichia coli",
+              "species": "Escherichia coli",
+              "mapped_ids": {"uniprot": "P0A722"},
+              "source_refs": ["seed_paper"],
+              "rag_provenance": {
+                "source_id": "seed_paper",
+                "source_title": "lipid A biosynthesis in Escherichia coli",
+                "source_type": "paper",
+                "source_uri": "",
+                "section": "results",
+                "organism": "Escherichia coli",
+                "chunk_id": "d7842fa6da60a324"
+              },
+              "source_papers": [
+                {
+                  "source_id": "seed_paper",
+                  "title": "lipid A biosynthesis in Escherichia coli",
+                  "uri": "",
+                  "source_type": "paper",
+                  "organism": "Escherichia coli"
+                }
+              ],
+              "rag_confidence": 0.88
+            }
+          ],
+          "protein_complexes": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "LpxA reaction",
+              "inputs": ["UDP-GlcNAc"],
+              "outputs": ["UDP-3-O-acyl-GlcNAc"],
+              "enzymes": [{"entity": "LpxA", "entity_type": "protein", "role": "catalyst"}],
+              "evidence": "LpxA catalyses the first step of lipid A biosynthesis",
+              "locked_reaction_id": "rxn_lock_001",
+              "scope_membership": "core",
+              "rag_provenance": {
+                "source_id": "seed_paper",
+                "source_title": "lipid A biosynthesis in Escherichia coli",
+                "source_type": "paper",
+                "source_uri": "",
+                "section": "body",
+                "organism": "Escherichia coli",
+                "chunk_id": "58b23619b9efa7d3"
+              },
+              "source_papers": [
+                {
+                  "source_id": "seed_paper",
+                  "title": "lipid A biosynthesis in Escherichia coli",
+                  "uri": "",
+                  "source_type": "paper",
+                  "organism": "Escherichia coli"
+                }
+              ],
+              "rag_confidence": 0.947059
+            },
+            {
+              "name": "out of scope side reaction",
+              "inputs": ["UDP-GlcNAc"],
+              "outputs": ["UDP-3-O-acyl-GlcNAc"],
+              "scope_membership": "out_of_scope",
+              "source_refs": ["seed_paper"]
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "expect": {
+        "provenance_ok": true,
+        "checked_reactions": 2,
+        "manifest_entry_count": 1,
+        "manifest_excluded_out_of_scope": 1,
+        "scope_membership_kept": "core"
+      }
+    },
+
+    {
+      "id": "curation_removal_orphans_reference",
+      "title": "A curation removal that would strand a reaction input",
+      "observed_in": {
+        "run": "2026-07-27_1623",
+        "paper_id": "PMC13231680",
+        "gate_reason": "/processes/reactions/0/inputs/0 unknown entity: phthalylsulfacetamide (PSA)"
+      },
+      "why_it_matters": "The audit prompt actively solicits duplicate-entity removals, so the dangerous case is routine. Deleting the parenthesised spelling while a reaction still names it turns a clean payload into a Stage 3 gate failure several minutes downstream.",
+      "payload": {
+        "entities": {
+          "species": [{"name": "Escherichia coli"}],
+          "compounds": [
+            {"name": "phthalylsulfacetamide"},
+            {"name": "phthalylsulfacetamide (PSA)"},
+            {"name": "meropenem"},
+            {"name": "hydrolyzed meropenem"}
+          ],
+          "proteins": [
+            {
+              "name": "NDM-1",
+              "organism": "Escherichia coli",
+              "species": "Escherichia coli",
+              "mapped_ids": {"uniprot": "C7C422"}
+            }
+          ],
+          "protein_complexes": []
+        },
+        "processes": {
+          "reactions": [
+            {
+              "name": "Meropenem hydrolysis",
+              "inputs": ["meropenem", "phthalylsulfacetamide (PSA)"],
+              "outputs": ["hydrolyzed meropenem"],
+              "enzymes": [{"entity": "NDM-1", "entity_type": "protein", "role": "catalyst"}]
+            }
+          ],
+          "transports": [],
+          "interactions": []
+        }
+      },
+      "orphaning_removal": {
+        "pointer": "/entities/compounds/1",
+        "name": "phthalylsulfacetamide (PSA)",
+        "stranded_pointer": "/processes/reactions/0/inputs/1"
+      },
+      "safe_removal": {
+        "pointer": "/entities/compounds/0",
+        "name": "phthalylsulfacetamide",
+        "comment": "Referenced by nothing, so the duplicate cleanup must still go through."
+      },
+      "expect": {
+        "registry_valid_before_removal": true,
+        "registry_valid_after_orphaning_removal": false,
+        "registry_valid_after_safe_removal": true
+      }
+    }
+  ]
+}

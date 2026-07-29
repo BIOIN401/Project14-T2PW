@@ -1,0 +1,26 @@
+RESULT: FAIL
+========================================
+paper      : PMC1
+title      : Title 0
+slug       : PMC1__alpha
+mode       : research
+status     : timeout
+stage      : unknown
+wall time  : 0.0s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : timeout
+message      : the child process was still running after 3600s and was killed, so this paper+mode produced nothing
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+The parent kills a stuck child rather than letting it eat the night. Typical causes: an LLM request with no server-side timeout, a wedged PathBank MySQL socket, or a Streamlit rerun that never returns.
+
+--- child stdout (tail) ---
+partial output
+
+FILES WRITTEN
+----------------------------------------
+  (none)

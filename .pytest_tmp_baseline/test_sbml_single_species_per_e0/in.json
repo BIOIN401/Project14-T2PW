@@ -1,0 +1,367 @@
+{
+  "entities": {
+    "compounds": [
+      {
+        "name": "iodide"
+      },
+      {
+        "name": "hydrogen peroxide"
+      },
+      {
+        "name": "2-aminoacrylic acid"
+      },
+      {
+        "name": "liothyronine"
+      },
+      {
+        "name": "thyroxine"
+      },
+      {
+        "name": "iodotyrosine",
+        "class": "compound",
+        "confidence": 0.8,
+        "provenance": "inferred"
+      },
+      {
+        "name": "3,5-diiodo-L-tyrosine",
+        "class": "compound",
+        "confidence": 0.8,
+        "provenance": "inferred"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "thyroid peroxidase",
+        "species": "Homo sapiens",
+        "uniprot": "P07202"
+      },
+      {
+        "name": "pendrin",
+        "species": "Homo sapiens",
+        "uniprot": "O43511"
+      },
+      {
+        "name": "thyroglobulin",
+        "species": "Homo sapiens",
+        "uniprot": "P01266"
+      }
+    ],
+    "protein_complexes": [
+      {
+        "name": "thyroid_peroxidase_complex",
+        "species": "Homo sapiens",
+        "components": [
+          {
+            "name": "thyroid peroxidase",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "name": "thyroglobulin:iodotyrosine",
+        "components": [
+          "thyroglobulin",
+          "iodotyrosine"
+        ],
+        "class": "protein_complex",
+        "confidence": 0.8,
+        "provenance": "inferred"
+      },
+      {
+        "name": "thyroglobulin:3,5-diiodo-L-tyrosine",
+        "components": [
+          "thyroglobulin",
+          "3,5-diiodo-L-tyrosine"
+        ],
+        "class": "protein_complex",
+        "confidence": 0.8,
+        "provenance": "inferred"
+      },
+      {
+        "name": "thyroglobulin:liothyronine",
+        "components": [
+          "thyroglobulin",
+          "liothyronine"
+        ],
+        "class": "protein_complex",
+        "confidence": 0.8,
+        "provenance": "inferred"
+      },
+      {
+        "name": "thyroglobulin:thyroxine",
+        "components": [
+          "thyroglobulin",
+          "thyroxine"
+        ],
+        "class": "protein_complex",
+        "confidence": 0.8,
+        "provenance": "inferred"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "follicular lumen"
+      },
+      {
+        "name": "bloodstream"
+      },
+      {
+        "name": "cell"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "luminal",
+      "subcellular_location": "follicular lumen"
+    },
+    {
+      "name": "blood",
+      "subcellular_location": "bloodstream"
+    },
+    {
+      "name": "__auto_state__",
+      "subcellular_location": "cell"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "iodide",
+        "biological_state": "luminal"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "thyroid peroxidase",
+        "biological_state": "luminal"
+      },
+      {
+        "protein": "pendrin",
+        "biological_state": "luminal",
+        "evidence": "iodide is transported through pendrin"
+      },
+      {
+        "biological_state": "luminal",
+        "protein": "thyroglobulin:iodotyrosine"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "name": "R0",
+        "inputs": [
+          "thyroglobulin",
+          "iodide",
+          "hydrogen peroxide"
+        ],
+        "outputs": [
+          "thyroglobulin:iodotyrosine"
+        ],
+        "evidence": "observed",
+        "enzymes": [
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "modifiers": [
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "name": "R1",
+        "inputs": [
+          "iodide",
+          "hydrogen peroxide"
+        ],
+        "outputs": [
+          "thyroglobulin",
+          "3,5-diiodo-L-tyrosine"
+        ],
+        "evidence": "observed",
+        "enzymes": [
+          {
+            "entity": "thyroglobulin:iodotyrosine",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid_peroxidase_complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted",
+            "evidence": "legacy schema"
+          }
+        ],
+        "modifiers": [
+          {
+            "entity": "thyroglobulin:iodotyrosine",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid_peroxidase_complex",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "legacy schema",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "name": "R2",
+        "inputs": [
+          "hydrogen peroxide"
+        ],
+        "outputs": [
+          "thyroglobulin",
+          "liothyronine",
+          "2-aminoacrylic acid"
+        ],
+        "enzymes": [
+          {
+            "entity": "thyroglobulin:3,5-diiodo-L-tyrosine",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "modifiers": [
+          {
+            "entity": "thyroglobulin:3,5-diiodo-L-tyrosine",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      },
+      {
+        "name": "R3",
+        "inputs": [
+          "thyroglobulin"
+        ],
+        "outputs": [
+          "thyroglobulin:thyroxine"
+        ],
+        "evidence": "thyroglobulin + liothyronine is catalyzed by thyroid peroxidase to produce thyroglobulin + thyroxine",
+        "enzymes": [
+          {
+            "entity": "thyroglobulin:liothyronine",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ],
+        "modifiers": [
+          {
+            "entity": "thyroglobulin:liothyronine",
+            "entity_type": "protein_complex",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          },
+          {
+            "entity": "thyroid peroxidase",
+            "entity_type": "protein",
+            "role": "catalyst",
+            "evidence": "",
+            "confidence": 1.0,
+            "provenance": "extracted"
+          }
+        ]
+      }
+    ],
+    "transports": [
+      {
+        "cargo": "iodide",
+        "from_biological_state": "blood",
+        "to_biological_state": "luminal",
+        "evidence": "thyroglobulin is joined by iodide that has been transported from the blood using pendrin",
+        "transporters": [
+          {
+            "evidence": "legacy schema",
+            "entity": "pendrin",
+            "entity_type": "protein",
+            "protein": "pendrin"
+          },
+          {
+            "evidence": "using pendrin",
+            "entity": "pendrin",
+            "entity_type": "protein",
+            "protein": "pendrin"
+          }
+        ]
+      },
+      {
+        "cargo": null,
+        "from_biological_state": "luminal",
+        "to_biological_state": "luminal",
+        "evidence": "thyroglobulin + liothyronine complex transport",
+        "cargo_complex": "thyroglobulin:liothyronine",
+        "transporters": []
+      }
+    ],
+    "interactions": []
+  }
+}
