@@ -1,0 +1,506 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Lactococcus lactis"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "intracellular",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "name": "extracellular",
+        "evidence": "extracellular DHNA concentration"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DMK",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MK",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "prenyl diphosphate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenG",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "NoxAB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "intracellular state",
+      "species": "Lactococcus lactis",
+      "subcellular_location": "intracellular",
+      "evidence": "intracellular DHNA concentration"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Lactococcus lactis",
+      "subcellular_location": "extracellular",
+      "evidence": "extracellular DHNA concentration"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "chorismate",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate"
+      },
+      {
+        "compound": "isochorismate",
+        "biological_state": "intracellular state",
+        "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate"
+      },
+      {
+        "compound": "SEPHCHC",
+        "biological_state": "intracellular state",
+        "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC"
+      },
+      {
+        "compound": "SHCHC",
+        "biological_state": "intracellular state",
+        "evidence": "d[D]/dt = k_cat^H [MenH] [C]/(K_M^H + [C])"
+      },
+      {
+        "compound": "OSB",
+        "biological_state": "intracellular state",
+        "evidence": "o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions"
+      },
+      {
+        "compound": "OSB-CoA",
+        "biological_state": "intracellular state",
+        "evidence": "d[F]/dt = k_cat^E [MenE] [E]/(K_M^E + [E])"
+      },
+      {
+        "compound": "DHNA-CoA",
+        "biological_state": "intracellular state",
+        "evidence": "d[G]/dt = k_cat^B [MenB] [F]/(K_M^B + [F])"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "intracellular state",
+        "evidence": "intracellular DHNA concentration"
+      },
+      {
+        "compound": "DHNA",
+        "biological_state": "extracellular state",
+        "evidence": "extracellular DHNA concentration"
+      },
+      {
+        "compound": "DMK",
+        "biological_state": "intracellular state",
+        "evidence": "MenA joins DHNA and prenyl diphosphate to produce DMK"
+      },
+      {
+        "compound": "MK",
+        "biological_state": "intracellular state",
+        "evidence": "MenG demethylates DMK to generate MK"
+      },
+      {
+        "compound": "prenyl diphosphate",
+        "biological_state": "intracellular state",
+        "evidence": "MenA joins DHNA and prenyl diphosphate"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "MenF",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF"
+      },
+      {
+        "protein": "MenD",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenD"
+      },
+      {
+        "protein": "MenH",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenH"
+      },
+      {
+        "protein": "MenC",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenC"
+      },
+      {
+        "protein": "MenE",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenE"
+      },
+      {
+        "protein": "MenB",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenB"
+      },
+      {
+        "protein": "MenI",
+        "biological_state": "intracellular state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenI"
+      },
+      {
+        "protein": "MenA",
+        "biological_state": "intracellular state",
+        "evidence": "MenA joins DHNA and prenyl diphosphate to produce DMK"
+      },
+      {
+        "protein": "MenG",
+        "biological_state": "intracellular state",
+        "evidence": "MenG demethylates DMK to generate MK"
+      },
+      {
+        "protein": "NoxAB",
+        "biological_state": "intracellular state",
+        "evidence": "noxAB encodes for NADH:quinone oxidoreductases"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_006",
+        "name": "MenF reaction",
+        "enzymes": [
+          {
+            "protein": "MenF",
+            "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "MenF catalyzes a reversible reaction converting chorismate to isochorismate",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "MenD facilitates the conversion of isochorismate to SEPHCHC",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SEPHCHC"
+        ],
+        "outputs": [
+          "SHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_008",
+        "name": "MenH reaction",
+        "enzymes": [
+          {
+            "protein": "MenH",
+            "evidence": "d[D]/dt = k_cat^H [MenH] [C]/(K_M^H + [C])",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "d[D]/dt = k_cat^H [MenH] [C]/(K_M^H + [C])",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SHCHC"
+        ],
+        "outputs": [
+          "OSB"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "MenC reaction",
+        "enzymes": [
+          {
+            "protein": "MenC",
+            "evidence": "o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "o-succinylbenzoate synthase MenC catalyzes one of the intermediate reactions",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB"
+        ],
+        "outputs": [
+          "OSB-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "MenE reaction",
+        "enzymes": [
+          {
+            "protein": "MenE",
+            "evidence": "d[F]/dt = k_cat^E [MenE] [E]/(K_M^E + [E])",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "d[F]/dt = k_cat^E [MenE] [E]/(K_M^E + [E])",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB-CoA"
+        ],
+        "outputs": [
+          "DHNA-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "MenB reaction",
+        "enzymes": [
+          {
+            "protein": "MenB",
+            "evidence": "d[G]/dt = k_cat^B [MenB] [F]/(K_M^B + [F])",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "d[G]/dt = k_cat^B [MenB] [F]/(K_M^B + [F])",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "DHNA-CoA"
+        ],
+        "outputs": [
+          "DHNA"
+        ],
+        "locked_reaction_id": "rxn_lock_009",
+        "name": "MenI reaction",
+        "enzymes": [
+          {
+            "protein": "MenI",
+            "evidence": "d[DHNA]_in/dt = k_cat^I [MenI] [G]/(K_M^I + [G])",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "d[DHNA]_in/dt = k_cat^I [MenI] [G]/(K_M^I + [G])",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "DHNA",
+          "prenyl diphosphate"
+        ],
+        "outputs": [
+          "DMK"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MenA reaction",
+        "enzymes": [
+          {
+            "protein": "MenA",
+            "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "MenA joins DHNA and prenyl diphosphate to produce demethylmenaquinone",
+        "scope_membership": "cataplerotic"
+      },
+      {
+        "inputs": [
+          "DMK"
+        ],
+        "outputs": [
+          "MK"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "MenG reaction",
+        "enzymes": [
+          {
+            "protein": "MenG",
+            "evidence": "MenG demethylates DMK to generate MK",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "intracellular state",
+        "evidence": "MenG demethylates DMK to generate MK",
+        "scope_membership": "cataplerotic"
+      }
+    ],
+    "transports": [
+      {
+        "name": "DHNA secretion",
+        "cargo": "DHNA",
+        "from_biological_state": "intracellular state",
+        "to_biological_state": "extracellular state",
+        "elements_with_states": [
+          {
+            "element": "DHNA",
+            "side": "left",
+            "biological_state": "intracellular state",
+            "evidence": "DHNA secreted by L. lactis"
+          },
+          {
+            "element": "DHNA",
+            "side": "right",
+            "biological_state": "extracellular state",
+            "evidence": "DHNA secreted by L. lactis"
+          }
+        ],
+        "evidence": "DHNA secreted by L. lactis"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "DHNA",
+        "entity_2": "MenD",
+        "name": "DHNA inhibition of MenD",
+        "relationship": "inhibits",
+        "biological_state": "intracellular state",
+        "evidence": "allosteric inhibition of MenD by DHNA"
+      }
+    ]
+  }
+}

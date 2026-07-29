@@ -1,0 +1,72 @@
+{
+  "entities": {
+    "cell_types": [
+      {
+        "name": "erythroid cells"
+      }
+    ],
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "iron",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Homo sapiens",
+      "species": "Homo sapiens",
+      "evidence": "The human sideroflexin (SFXN) gene family"
+    }
+  ],
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "evidence": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+      }
+    ]
+  }
+}

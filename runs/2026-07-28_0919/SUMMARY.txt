@@ -1,0 +1,290 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-07-28T09:19:08
+finished : 2026-07-28T11:49:05
+papers attempted : 3
+strict PWML      : 2 pass / 1 fail
+research relaxed : 0 pass / 2 fail
+timeouts         : 0
+skipped          : 0
+pass, no deliv.  : 2  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 5 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+!! RESEARCH-MODE DEFECT !!
+Research mode is fail-open by design: it relaxes FORMAT rules and records review flags instead of
+stopping. Therefore ANY research failure is a code defect, not a data problem. Fix these before
+anything else.
+papers affected: 2
+
+  PMC12444477 -- The regulation of lipid A biosynthesis.
+    class=research-defect
+    research: FAIL at stage=post_pipeline after 2777.8s (46m17s)
+    failure_kind: contract
+      message: post-pipeline validation failed: 30 blocking issue(s) at
+               post_normalization_hard_gates
+      codes: gate.registry_validation_failed, gate.protein_has_degree_after_normalization,
+             gate.unknown_protein_modifier_reference
+
+  PMC13278307 -- An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+    class=research-defect
+    research: FAIL at stage=stage1 after 137.1s (2m17s)
+    failure_kind: contract
+      message: Extraction boundary failed: Payload must include a processes object.
+      codes: processes_required
+
+----------------------------------------------------------------------------------------------------
+
+!! PASSED BUT PRODUCED NO DELIVERABLE !!
+These runs did not fail -- the pipeline ran to completion -- but the folder has no deliverable in
+it. This is NOT a clean night. Check whether the missing output was expected before treating it as
+green.
+runs affected: 2
+
+  PMC12444477 [strict] -- The regulation of lipid A biosynthesis.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/43/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/43/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+  PMC13278307 [strict] -- An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative
+  Bacilli.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @
+      /entities/compounds/19/mapping_meta/resolution: Mapping metadata must include a resolution
+      object.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+----------------------------------------------------------------------------------------------------
+research-defect   2  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+    PMC12444477, PMC13278307
+broken            0  (strict FAIL + research FAIL -- real bug, also a research defect)
+format-blocked    0  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+incomplete        1  (a mode is missing, skipped or unrecognised)
+    PMC13231680
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] The regulation of lipid A biosynthesis. -> research-defect !! RESEARCH-MODE DEFECT !!
+    id     : PMC12444477
+    slug   : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+    uri    : https://doi.org/10.1016/j.jbc.2025.110556
+    topic  : lipid A biosynthesis
+
+    strict   : PASS (no research deliverable) | stage=pwml_export | time=2988.2s (49m48s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/43/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/43/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        counts       : reactions=27 entities=93 proteins=22 compounds=44 gate_errors=0
+                       pwml.compounds=43 pwml.edges=268 pwml.proteins=22 pwml.reactions=27
+                       pwml_bytes=432878 runtime_schema_findings=4 transports=2
+        files        : 11
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/contract_reports.jso
+              n (7.3 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_mapped.json
+              (6.5 MB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/merged_payload.json
+              (4.5 MB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/pathway.pwml (422.7
+              kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/pwml_ir.json (369.7
+              kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/pwml_ir_report.json
+              (25.5 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/pwml_ir_validation.j
+              son (239 B)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/pwml_qa.json (1.2
+              kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/pwml_required_field_
+              gate_report.json (20.7 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/pwml_validation_repo
+              rt.json (19.1 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/stage1_payload.json
+              (16.1 kB)
+
+    research : FAIL | stage=post_pipeline | time=2777.8s (46m17s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error
+                       @ /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report] runtime_schema_value_error
+                       @ /entities/protein_complexes/1/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/protein_complexes/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] runtime_schema_value_error @
+                       /entities/protein_complexes/0/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] runtime_schema_value_error @
+                       /entities/protein_complexes/1/generation_reason: Expected a
+                       'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @
+                       /entities/protein_complexes/0/generation_reason: Generated wrapper rows must
+                       use the supported generation reason.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_enrichment_runtime_schema_report] generated_wrapper_reason_invalid @
+                       /entities/protein_complexes/1/generation_reason: Generated wrapper rows must
+                       use the supported generation reason.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       runtime_schema_value_error @ /entities/protein_complexes/0/generation_reason:
+                       Expected a 'single_protein_pathwhiz_wrapper'.
+        warning      : runtime-schema finding (informational, not blocking): and 12 more finding(s);
+                       all of them are in contract_reports.json
+        failure_kind : contract
+        message      : post-pipeline validation failed: 30 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.registry_validation_failed, gate.protein_has_degree_after_normalization,
+                       gate.unknown_protein_modifier_reference
+        counts       : reactions=22 entities=74 proteins=25 compounds=41 gate_errors=30
+                       runtime_schema_findings=22 transports=2
+        files        : 5
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/contract_reports.j
+              son (23.9 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/final_stage3_gate_
+              report.json (9.0 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/gate_fail_report.j
+              son (3.0 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/merged_payload.jso
+              n (5.5 MB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/stage1_payload.jso
+              n (15.7 kB)
+
+----------------------------------------------------------------------------------------------------
+[2] An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli. ->
+research-defect !! RESEARCH-MODE DEFECT !!
+    id     : PMC13278307
+    slug   : PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g
+    uri    : https://doi.org/10.7759/cureus.109203
+    topic  : lipid A biosynthesis
+
+    strict   : PASS (no research deliverable) | stage=pwml_export | time=2098.2s (34m58s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/compounds/19/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=14 entities=45 proteins=11 compounds=20 gate_errors=0
+                       pwml.compounds=20 pwml.edges=111 pwml.proteins=11 pwml.reactions=14
+                       pwml_bytes=200266 runtime_schema_findings=3 transports=0
+        files        : 11
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/contract_re
+              ports.json (6.7 kB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/final_mappe
+              d.json (2.3 MB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/merged_payl
+              oad.json (1.4 MB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/pathway.pwm
+              l (195.6 kB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/pwml_ir.jso
+              n (183.6 kB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/pwml_ir_rep
+              ort.json (13.4 kB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/pwml_ir_val
+              idation.json (238 B)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/pwml_qa.jso
+              n (578 B)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/pwml_requir
+              ed_field_gate_report.json (12.1 kB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/pwml_valida
+              tion_report.json (19.1 kB)
+            - papers/PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g/strict/stage1_payl
+              oad.json (2.8 kB)
+
+    research : FAIL | stage=stage1 | time=137.1s (2m17s)
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[3] Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal
+activity in NDM-1-positive Escherichia coli. -> incomplete
+    id     : PMC13231680
+    slug   : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+    uri    : https://doi.org/10.1186/s12866-026-05073-w
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=54.7s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     - PMC12444477: post_pipeline -- gate.registry_validation_failed,
+       gate.protein_has_degree_after_normalization, gate.unknown_protein_modifier_reference
+     - PMC13278307: stage1 -- processes_required
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     (none)
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     (none)
+
+====================================================================================================

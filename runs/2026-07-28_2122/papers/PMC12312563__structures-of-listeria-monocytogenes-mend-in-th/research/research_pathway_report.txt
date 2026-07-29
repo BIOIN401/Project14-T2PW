@@ -1,0 +1,407 @@
+================================================================================
+MENAQUINONE BIOSYNTHESIS (MEND STEP)
+Candidate pathway · export mode: research · NOT an importable PWML file
+================================================================================
+
+HOW TO READ THIS
+  Tier A  DB-grounded
+          an external database ID was found (UniProt / DrugBank / PathBank)
+  Tier B  corroborated by a second paper (no identifier)
+          no ID, but two independent sources state it, each with its own quote
+  Tier C  single-source (review)
+          only ONE source states this. Read the quote and decide.
+  Tier D  UNSOURCED (review)
+          NOTHING backs this. Check these first.
+
+  Every claim below is traced to a source. Nothing here is invented:
+  if a source or a page is missing, it says so rather than guessing.
+
+AT A GLANCE
+  Reactions            4
+  Entities             10
+  Distinct sources     1
+  Tiers                A=2   B=0   C=12   D=0
+  NEEDS REVIEW         12 element(s) are Tier C or D
+  Review flags         0
+  Format rules skipped 0
+
+================================================================================
+THE PATHWAY, STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+REACTION 1 of 4   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  MenD reaction
+
+  IN    α-ketoglutarate
+      + isochorismate
+
+  OUT   SEPHCHC
+
+  ENZYME  MenD
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] menaquinone biosynthesis (MenD step) (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.9153
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 2 of 4   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  decarboxylation of 2-oxoglutarate
+
+  IN    α-ketoglutarate
+
+  OUT   intermediate I
+
+  ENZYME  MenD
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] menaquinone biosynthesis (MenD step) (seed paper)
+        section: introduction   ·   best retrieval score for this source: 0.9153
+        "Introduction Menaquinones, a family of related redox-active molecules,
+         play vital functions in electron transport and energy generation in
+         mycobacteria, Gram-positive and some anaerobically respiring Gram-
+         negative bacteria (Nowicka & Kruk, 2010 ▸ ; Boersch et al. , 2018 ▸ ;
+         Kurosu & Begari, 2010 ▸ ). These molecules have been implicated in
+         other roles, such as in redox-state monitoring, influencing membrane
+         fluidity, biofilm formation and virulence (Johnston & Bulloch, 2020 ▸
+         ; Flegler et al. , 2021 ▸ ; Mashruwala et al. , 2017 ▸ ; Honaker et
+         al. , 2010 ▸ ; Upadhyay et al. , 2015 ▸ ). These roles, combined with
+         the absence of menaquinone-biosynthesis pathways in humans, have made
+         the bacterial menaquinone-biosynthesis enzymes of interest as
+         potential drug targets (Boersch et al. , 2018 ▸ ). An important player
+         in menaquinone production is the thiamine diphosphate (ThDP)-dependent
+         decarboxylase MenD
+         [2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate
+         (SEPHCHC) synthase] (Johnston & Bulloch, 2020 ▸ ). MenD catalyses the
+         first irreversible step of the classical menaquinone-biosynthesis
+         pathway (Supplementary Fig. S1) via two covalent ThDP intermediates;
+         decarboxylation of 2-oxoglutarate produces intermediate I, with
+         subsequent addition of isochorismate generating intermediate II and
+         breakdown to release SEPHCHC (Fig. 1 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Frank et al. , 2007 ▸ ; Dawson et al. , 2008 ▸ ). Like other members
+         of the ThDP-dependent decarboxylase superfamily, MenD enzymes have a
+         common fold consisting of the catalytic aminopyrimidine-binding (PYR)
+         and pyrophosphate-binding (PP) domains, separated by the more
+         divergent transhydro­genase III (TH3) domain (Vogel & Pleiss, 2014 ▸ ;
+         Duggleby, 2006 ▸ ). All MenD structures reported to date have a
+         tetrameric ‘dimer-of-dimers’ arrangement, and oligomerization appears
+         to be catalytically important, with active-site formation involving
+         the PYR and PP domains from two different monomers in each dimer
+         (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ; Vogel &
+         Pleiss, 2014 ▸ ; Duggleby, 2006 ▸ ). The function of the TH3 domain in
+         MenD is poorly understood. In Mycobacterium tuberculosis MenD ( Mtb
+         MenD), 1,4-dihydroxy-2-naphthoic acid (DHNA), the last cytosolic
+         metabolite of the pathway, can bind to the TH3 domain and inhibit
+         activity (Bashiri et al. , 2020 ▸ ). Further, DHNA inhibition, albeit
+         less potent and without crystallographic capturing, has been reported
+         for Staphylococcus aureus and Bacillus subtilis MenD ( Sau MenD and
+         Bsu MenD; Stanborough et al. , 2023 ▸ ; Huang et al. , 2024 ▸ ).
+         However, due to low sequence conservation, particularly for the
+         putative allosteric sites, it remains unclear how widespread feedback
+         inhibition is amongst homologs (Stanborough et al. , 2023 ▸ ; Bashiri
+         et al. , 2020 ▸ ). Here, we report two structures of MenD from the
+         Gram-positive pathogen Listeria monocytogenes ( Lmo MenD); one with
+         ThDP bound and a second with intermediate I bound, as well as their
+         oligomeric states in solution and functional characterization. An
+         existing apo Lmo MenD structure in the PDB (PDB entry 3lq1 ; New York
+         Structural Genomics Research Consortium, unpublished work) is
+         incomplete, showing regions of disorder around the active site and
+         C-terminus. The liganded structures from this study are more complete,
+         revealing that several of the previously disordered regions contribute
+         to ligand interactions and/or closing of the active site.
+         Interestingly, in L. monocytogenes , DHNA is known to fulfil
+         respiration-independent functions in virulence and pathogenic survival
+         (Chen et al. , 2019 ▸ ; Smith et al. , 2021 ▸ ), but the effect of
+         DHNA on Lmo MenD enzyme activity had not been explored. This study has
+         enabled us to demonstrate that while DHNA has some ability to inhibit
+         the activity of Lmo MenD, this inhibition is modest. 2."
+
+
+--------------------------------------------------------------------------------
+REACTION 3 of 4   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  addition of isochorismate to intermediate I
+
+  IN    intermediate I
+      + isochorismate
+
+  OUT   intermediate II
+
+  ENZYME  MenD
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] menaquinone biosynthesis (MenD step) (seed paper)
+        section: introduction   ·   best retrieval score for this source: 0.9153
+        "Introduction Menaquinones, a family of related redox-active molecules,
+         play vital functions in electron transport and energy generation in
+         mycobacteria, Gram-positive and some anaerobically respiring Gram-
+         negative bacteria (Nowicka & Kruk, 2010 ▸ ; Boersch et al. , 2018 ▸ ;
+         Kurosu & Begari, 2010 ▸ ). These molecules have been implicated in
+         other roles, such as in redox-state monitoring, influencing membrane
+         fluidity, biofilm formation and virulence (Johnston & Bulloch, 2020 ▸
+         ; Flegler et al. , 2021 ▸ ; Mashruwala et al. , 2017 ▸ ; Honaker et
+         al. , 2010 ▸ ; Upadhyay et al. , 2015 ▸ ). These roles, combined with
+         the absence of menaquinone-biosynthesis pathways in humans, have made
+         the bacterial menaquinone-biosynthesis enzymes of interest as
+         potential drug targets (Boersch et al. , 2018 ▸ ). An important player
+         in menaquinone production is the thiamine diphosphate (ThDP)-dependent
+         decarboxylase MenD
+         [2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate
+         (SEPHCHC) synthase] (Johnston & Bulloch, 2020 ▸ ). MenD catalyses the
+         first irreversible step of the classical menaquinone-biosynthesis
+         pathway (Supplementary Fig. S1) via two covalent ThDP intermediates;
+         decarboxylation of 2-oxoglutarate produces intermediate I, with
+         subsequent addition of isochorismate generating intermediate II and
+         breakdown to release SEPHCHC (Fig. 1 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Frank et al. , 2007 ▸ ; Dawson et al. , 2008 ▸ ). Like other members
+         of the ThDP-dependent decarboxylase superfamily, MenD enzymes have a
+         common fold consisting of the catalytic aminopyrimidine-binding (PYR)
+         and pyrophosphate-binding (PP) domains, separated by the more
+         divergent transhydro­genase III (TH3) domain (Vogel & Pleiss, 2014 ▸ ;
+         Duggleby, 2006 ▸ ). All MenD structures reported to date have a
+         tetrameric ‘dimer-of-dimers’ arrangement, and oligomerization appears
+         to be catalytically important, with active-site formation involving
+         the PYR and PP domains from two different monomers in each dimer
+         (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ; Vogel &
+         Pleiss, 2014 ▸ ; Duggleby, 2006 ▸ ). The function of the TH3 domain in
+         MenD is poorly understood. In Mycobacterium tuberculosis MenD ( Mtb
+         MenD), 1,4-dihydroxy-2-naphthoic acid (DHNA), the last cytosolic
+         metabolite of the pathway, can bind to the TH3 domain and inhibit
+         activity (Bashiri et al. , 2020 ▸ ). Further, DHNA inhibition, albeit
+         less potent and without crystallographic capturing, has been reported
+         for Staphylococcus aureus and Bacillus subtilis MenD ( Sau MenD and
+         Bsu MenD; Stanborough et al. , 2023 ▸ ; Huang et al. , 2024 ▸ ).
+         However, due to low sequence conservation, particularly for the
+         putative allosteric sites, it remains unclear how widespread feedback
+         inhibition is amongst homologs (Stanborough et al. , 2023 ▸ ; Bashiri
+         et al. , 2020 ▸ ). Here, we report two structures of MenD from the
+         Gram-positive pathogen Listeria monocytogenes ( Lmo MenD); one with
+         ThDP bound and a second with intermediate I bound, as well as their
+         oligomeric states in solution and functional characterization. An
+         existing apo Lmo MenD structure in the PDB (PDB entry 3lq1 ; New York
+         Structural Genomics Research Consortium, unpublished work) is
+         incomplete, showing regions of disorder around the active site and
+         C-terminus. The liganded structures from this study are more complete,
+         revealing that several of the previously disordered regions contribute
+         to ligand interactions and/or closing of the active site.
+         Interestingly, in L. monocytogenes , DHNA is known to fulfil
+         respiration-independent functions in virulence and pathogenic survival
+         (Chen et al. , 2019 ▸ ; Smith et al. , 2021 ▸ ), but the effect of
+         DHNA on Lmo MenD enzyme activity had not been explored. This study has
+         enabled us to demonstrate that while DHNA has some ability to inhibit
+         the activity of Lmo MenD, this inhibition is modest. 2."
+
+
+--------------------------------------------------------------------------------
+REACTION 4 of 4   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  breakdown of intermediate II
+
+  IN    intermediate II
+
+  OUT   SEPHCHC
+
+  ENZYME  MenD
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] menaquinone biosynthesis (MenD step) (seed paper)
+        section: introduction   ·   best retrieval score for this source: 0.9153
+        "Introduction Menaquinones, a family of related redox-active molecules,
+         play vital functions in electron transport and energy generation in
+         mycobacteria, Gram-positive and some anaerobically respiring Gram-
+         negative bacteria (Nowicka & Kruk, 2010 ▸ ; Boersch et al. , 2018 ▸ ;
+         Kurosu & Begari, 2010 ▸ ). These molecules have been implicated in
+         other roles, such as in redox-state monitoring, influencing membrane
+         fluidity, biofilm formation and virulence (Johnston & Bulloch, 2020 ▸
+         ; Flegler et al. , 2021 ▸ ; Mashruwala et al. , 2017 ▸ ; Honaker et
+         al. , 2010 ▸ ; Upadhyay et al. , 2015 ▸ ). These roles, combined with
+         the absence of menaquinone-biosynthesis pathways in humans, have made
+         the bacterial menaquinone-biosynthesis enzymes of interest as
+         potential drug targets (Boersch et al. , 2018 ▸ ). An important player
+         in menaquinone production is the thiamine diphosphate (ThDP)-dependent
+         decarboxylase MenD
+         [2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate
+         (SEPHCHC) synthase] (Johnston & Bulloch, 2020 ▸ ). MenD catalyses the
+         first irreversible step of the classical menaquinone-biosynthesis
+         pathway (Supplementary Fig. S1) via two covalent ThDP intermediates;
+         decarboxylation of 2-oxoglutarate produces intermediate I, with
+         subsequent addition of isochorismate generating intermediate II and
+         breakdown to release SEPHCHC (Fig. 1 ▸ ; Jirgis et al. , 2016 ▸ ;
+         Frank et al. , 2007 ▸ ; Dawson et al. , 2008 ▸ ). Like other members
+         of the ThDP-dependent decarboxylase superfamily, MenD enzymes have a
+         common fold consisting of the catalytic aminopyrimidine-binding (PYR)
+         and pyrophosphate-binding (PP) domains, separated by the more
+         divergent transhydro­genase III (TH3) domain (Vogel & Pleiss, 2014 ▸ ;
+         Duggleby, 2006 ▸ ). All MenD structures reported to date have a
+         tetrameric ‘dimer-of-dimers’ arrangement, and oligomerization appears
+         to be catalytically important, with active-site formation involving
+         the PYR and PP domains from two different monomers in each dimer
+         (Dawson et al. , 2008 ▸ , 2010 ▸ ; Jirgis et al. , 2016 ▸ ; Vogel &
+         Pleiss, 2014 ▸ ; Duggleby, 2006 ▸ ). The function of the TH3 domain in
+         MenD is poorly understood. In Mycobacterium tuberculosis MenD ( Mtb
+         MenD), 1,4-dihydroxy-2-naphthoic acid (DHNA), the last cytosolic
+         metabolite of the pathway, can bind to the TH3 domain and inhibit
+         activity (Bashiri et al. , 2020 ▸ ). Further, DHNA inhibition, albeit
+         less potent and without crystallographic capturing, has been reported
+         for Staphylococcus aureus and Bacillus subtilis MenD ( Sau MenD and
+         Bsu MenD; Stanborough et al. , 2023 ▸ ; Huang et al. , 2024 ▸ ).
+         However, due to low sequence conservation, particularly for the
+         putative allosteric sites, it remains unclear how widespread feedback
+         inhibition is amongst homologs (Stanborough et al. , 2023 ▸ ; Bashiri
+         et al. , 2020 ▸ ). Here, we report two structures of MenD from the
+         Gram-positive pathogen Listeria monocytogenes ( Lmo MenD); one with
+         ThDP bound and a second with intermediate I bound, as well as their
+         oligomeric states in solution and functional characterization. An
+         existing apo Lmo MenD structure in the PDB (PDB entry 3lq1 ; New York
+         Structural Genomics Research Consortium, unpublished work) is
+         incomplete, showing regions of disorder around the active site and
+         C-terminus. The liganded structures from this study are more complete,
+         revealing that several of the previously disordered regions contribute
+         to ligand interactions and/or closing of the active site.
+         Interestingly, in L. monocytogenes , DHNA is known to fulfil
+         respiration-independent functions in virulence and pathogenic survival
+         (Chen et al. , 2019 ▸ ; Smith et al. , 2021 ▸ ), but the effect of
+         DHNA on Lmo MenD enzyme activity had not been explored. This study has
+         enabled us to demonstrate that while DHNA has some ability to inhibit
+         the activity of Lmo MenD, this inhibition is modest. 2."
+
+
+================================================================================
+WHAT TO CHECK FIRST
+================================================================================
+
+  [Tier C] entity    MenD
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    MenD
+              stated in a single source; identity rejected: best_effort guess
+              (top candidate accepted unconditionally); identity rejected:
+              mapping rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    MenD
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    MenD
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    MenD
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] reaction  MenD reaction
+              stated in a single source
+  [Tier C] entity    SEPHCHC
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  addition of isochorismate to intermediate I
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  breakdown of intermediate II
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  decarboxylation of 2-oxoglutarate
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    intermediate I
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    intermediate II
+              one identified paper with a cited passage and no second,
+              independent statement
+
+================================================================================
+ENTITIES BY TIER
+================================================================================
+
+Catalysts are listed with their reaction above and not repeated here.
+
+Tier A — DB-grounded   (2)
+  - isochorismate   [pathbank_compound_id: 40741]
+  - α-ketoglutarate   [drugbank: DB02926]
+
+Tier B — corroborated by a second paper (no identifier)   (0)
+  (none)
+
+Tier C — single-source (review)   (4)
+  - intermediate I
+  - intermediate II
+  - SEPHCHC
+  - MenD
+
+Tier D — UNSOURCED (review)   (0)
+  (none)
+
+================================================================================
+SOURCES CITED
+================================================================================
+
+  seed paper (uploaded)
+    menaquinone biosynthesis (MenD step)
+
+================================================================================
+KNOWN LIMITATIONS — READ BEFORE CITING THIS
+================================================================================
+
+  1.
+     A review that CITES the seed paper cannot be distinguished from an
+     independent corroboration. Reference sections are discarded at ingest and
+     CandidatePaper carries no DOI, so there is no citation graph to check. When
+     a review corroborates a step, treat it as 'possibly the same claim
+     restated', never as a second independent finding.
+
+  2.
+     No page numbers exist in this pipeline. Chunk positions are hashed away at
+     ingest, so every citation below gives the section plus the verbatim quoted
+     passage and nothing more. Any page reference you need must be looked up in
+     the source paper by hand.
+
+  3.
+     rag_confidence is an internal heuristic (the top retrieval score, or 0.5 +
+     0.1 per provenance pointer when no score exists). It is NOT a probability
+     and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval
+     score'.
+
+  4.
+     A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is
+     corroborated but still has no external identifier, and a Tier A identifier
+     was accepted only when it was a genuine match (best-effort guesses and the
+     PathBank Unknown sentinel are refused).
+
+  5.
+     Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no
+     PWML. This report is a review artifact, not an import-ready pathway.

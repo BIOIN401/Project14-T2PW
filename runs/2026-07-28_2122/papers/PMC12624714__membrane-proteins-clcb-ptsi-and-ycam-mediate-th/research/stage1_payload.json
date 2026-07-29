@@ -1,0 +1,201 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "outer membrane",
+        "evidence": "cell outer membrane"
+      },
+      {
+        "name": "inner membrane",
+        "evidence": "inner membrane"
+      },
+      {
+        "name": "cytoplasmic membrane",
+        "evidence": "cytoplasmic membrane"
+      },
+      {
+        "name": "extracellular",
+        "evidence": "extracellular milieu"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "colistin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipopolysaccharide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Ca2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Mg2+",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ClcB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "PtsI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "YcaM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "outer membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "cell outer membrane"
+    },
+    {
+      "name": "inner membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane",
+      "evidence": "inner membrane"
+    },
+    {
+      "name": "extracellular state",
+      "species": "Escherichia coli",
+      "subcellular_location": "extracellular",
+      "evidence": "extracellular milieu"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "colistin",
+        "biological_state": "outer membrane state",
+        "evidence": "binds lipid A in the lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "compound": "colistin",
+        "biological_state": "inner membrane state",
+        "evidence": "colistin also reaches the cytoplasmic side of the inner membrane"
+      },
+      {
+        "compound": "lipid A",
+        "biological_state": "outer membrane state",
+        "evidence": "lipid A in the lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "compound": "lipopolysaccharide",
+        "biological_state": "outer membrane state",
+        "evidence": "lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "compound": "Ca2+",
+        "biological_state": "outer membrane state",
+        "evidence": "displaces the divalent cations calcium (Ca2+)"
+      },
+      {
+        "compound": "Mg2+",
+        "biological_state": "outer membrane state",
+        "evidence": "displaces the divalent cations magnesium (Mg2+)"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "ClcB",
+        "biological_state": "inner membrane state",
+        "evidence": "the chloride channel ClcB, the sugar transport system component PtsI and the hypothetical glutamate:GABA antiporter YcaM"
+      },
+      {
+        "protein": "PtsI",
+        "biological_state": "inner membrane state",
+        "evidence": "PtsI localizes to the inner surface of the cytoplasmic membrane"
+      },
+      {
+        "protein": "YcaM",
+        "biological_state": "inner membrane state",
+        "evidence": "the chloride channel ClcB, the sugar transport system component PtsI and the hypothetical glutamate:GABA antiporter YcaM"
+      }
+    ]
+  },
+  "processes": {
+    "transports": [
+      {
+        "name": "colistin movement from outer membrane to inner membrane",
+        "cargo": "colistin",
+        "from_biological_state": "outer membrane state",
+        "to_biological_state": "inner membrane state",
+        "elements_with_states": [
+          {
+            "element": "colistin",
+            "side": "left",
+            "biological_state": "outer membrane state",
+            "evidence": "movement of colistin beyond the OM"
+          },
+          {
+            "element": "colistin",
+            "side": "right",
+            "biological_state": "inner membrane state",
+            "evidence": "colistin also reaches the cytoplasmic side of the inner membrane"
+          }
+        ],
+        "evidence": "movement of colistin beyond the OM and colistin also reaches the cytoplasmic side of the inner membrane"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "colistin",
+        "entity_2": "lipid A",
+        "name": "colistin binds lipid A",
+        "relationship": "binds",
+        "biological_state": "outer membrane state",
+        "evidence": "Colistin is a polycation that binds lipid A in the lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "entity_1": "colistin",
+        "entity_2": "Ca2+",
+        "name": "colistin displaces Ca2+",
+        "relationship": "displaces",
+        "biological_state": "outer membrane state",
+        "evidence": "displaces the divalent cations calcium (Ca2+) and magnesium (Mg2+)"
+      },
+      {
+        "entity_1": "colistin",
+        "entity_2": "Mg2+",
+        "name": "colistin displaces Mg2+",
+        "relationship": "displaces",
+        "biological_state": "outer membrane state",
+        "evidence": "displaces the divalent cations calcium (Ca2+) and magnesium (Mg2+)"
+      }
+    ]
+  }
+}

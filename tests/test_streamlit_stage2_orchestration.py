@@ -33,6 +33,7 @@ from t2pw.pipeline.export_mode import (  # noqa: E402
     review_flags,
 )
 from t2pw.pipeline.stage_contracts import run_stage_contract  # noqa: E402
+from t2pw.pipeline.failure_detail import headline as detail_headline  # noqa: E402
 
 
 def _source_tree() -> ast.Module:
@@ -664,6 +665,7 @@ def test_stage_contract_failure_renderer_exposes_complete_structured_report() ->
             self.infos: list[str] = []
             self.writes: list[Any] = []
             self.json_reports: list[Any] = []
+            self.captions: list[str] = []
             self.downloads: list[dict[str, Any]] = []
 
         def error(self, value: str) -> None:
@@ -675,8 +677,13 @@ def test_stage_contract_failure_renderer_exposes_complete_structured_report() ->
         def write(self, value: Any) -> None:
             self.writes.append(value)
 
-        def json(self, value: Any) -> None:
+        def json(self, value: Any, **kwargs: Any) -> None:
+            # ``expanded=False`` is how a detail renders collapsed; accepting
+            # kwargs keeps the recorder honest about the real call signature.
             self.json_reports.append(value)
+
+        def caption(self, value: str) -> None:
+            self.captions.append(value)
 
         def download_button(self, label: str, **kwargs: Any) -> None:
             self.downloads.append({"label": label, **kwargs})
@@ -699,6 +706,14 @@ def test_stage_contract_failure_renderer_exposes_complete_structured_report() ->
                 "code": "entity_missing_name",
                 "path": "/entities/proteins/1/name",
                 "message": "Entity name is missing.",
+                # The renderer must surface the captured value alongside the
+                # message; a detail that reaches the report but not the screen is
+                # the defect this channel exists to prevent.
+                "detail": {
+                    "found_type": "NoneType",
+                    "uniprot": "P0A725",
+                    "evidence": "139576 chars elided",
+                },
             },
         ],
         "warnings": [
@@ -720,7 +735,11 @@ def test_stage_contract_failure_renderer_exposes_complete_structured_report() ->
         "st": recorder,
         "_safe_dict": lambda value: value if isinstance(value, dict) else {},
         "_safe_list": lambda value: value if isinstance(value, list) else [],
+        "detail_headline": detail_headline,
     }
+    # The renderer delegates per-issue detail; load the collaborator into the
+    # same namespace so this exercises the real call, not a stub of it.
+    _load_function("_render_issue_detail", namespace)
     render_failure = _load_function("_render_stage_contract_failure", namespace)
 
     render_failure(
@@ -774,7 +793,20 @@ def test_stage_contract_failure_renderer_exposes_complete_structured_report() ->
             "message": "Source metadata has an unexpected shape.",
         },
     ]
-    assert recorder.json_reports == [report]
+    # The issue's captured detail is rendered next to it, and the full report
+    # still follows -- the detail supplements the report, it does not replace it.
+    assert recorder.json_reports == [
+        {
+            "found_type": "NoneType",
+            "uniprot": "P0A725",
+            "evidence": "139576 chars elided",
+        },
+        report,
+    ]
+    # The decisive field is on the collapsed line so it costs no click, and the
+    # elided count rides along instead of 139,576 characters of source text.
+    assert recorder.captions == ["found_type=NoneType"]
+    assert all("chars elided" in str(value) or "139576" not in str(value) for value in recorder.writes)
     assert len(recorder.downloads) == 1
     assert recorder.downloads[0]["file_name"] == "stage_contract_error_report.json"
     assert recorder.downloads[0]["mime"] == "application/json"

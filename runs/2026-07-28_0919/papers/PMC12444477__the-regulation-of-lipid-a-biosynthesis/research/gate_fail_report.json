@@ -1,0 +1,97 @@
+{
+  "status": "failed",
+  "stage": "post_normalization_hard_gates",
+  "error": "Hard-gate validation failed after normalization.",
+  "errors": [
+    {
+      "path": "/processes",
+      "reason": "Registry validation failed: Registry validation failed:\n/processes/interactions/4/entity_2 unknown entity: LapB-FtsH proteolysis"
+    },
+    {
+      "path": "/entities/proteins/21/name",
+      "reason": "Protein has degree 0 after normalization: GutQ"
+    },
+    {
+      "path": "/entities/proteins/5/name",
+      "reason": "Protein has degree 0 after normalization: LpxG"
+    },
+    {
+      "path": "/entities/proteins/4/name",
+      "reason": "Protein has degree 0 after normalization: LpxI"
+    },
+    {
+      "path": "/entities/proteins/22/name",
+      "reason": "Protein has degree 0 after normalization: kdsD"
+    }
+  ],
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 0,
+    "entities_added_as_compounds": 0,
+    "entities_added_as_proteins": 0,
+    "catalysts_promoted_to_enzymes": 0,
+    "interaction_enzymes_promoted": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "ACC complex",
+      "acetyl-CoA carboxylase enzyme complex"
+    ],
+    "n_autostate_created": 1,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "enzymes_attached_from_reaction_evidence": 0,
+    "modifier_refs_canonicalized": 293,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 2,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 2,
+    "dedupe_removed_total": 2,
+    "no_op_removed_count": 1,
+    "no_op_quarantined_count": 1,
+    "locked_no_op_quarantined_count": 1,
+    "evidenced_no_op_quarantined_count": 0,
+    "unsupported_no_op_dropped_count": 0,
+    "duplicate_locked_reactions_quarantined_count": 1,
+    "n_same_as_groups": 0,
+    "n_aliases_rewritten": 0,
+    "n_entities_deduped": 0,
+    "n_single_protein_complexes_removed": 0,
+    "complex_named_proteins_relocated": 2,
+    "unresolved_complex_components_dropped": 0,
+    "component_only_proteins_removed": 0,
+    "pruned_disconnected_proteins": [],
+    "pruned_disconnected_proteins_count": 0,
+    "alias_example_mappings": [],
+    "n_reactions_compartment_backfilled": 0,
+    "non_protein_catalysts_dropped": 0,
+    "research_mode_relaxations": 1,
+    "alias_canonicalization": {
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": []
+    },
+    "gate_error_count": 5
+  },
+  "connectivity": {
+    "n_reactions": 22,
+    "n_transports": 2,
+    "n_interactions": 5,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 101,
+    "n_edges": 242,
+    "n_components": 1,
+    "main_component_size": 101,
+    "largest_component_pct": 100.0,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 6,
+    "proteins_attached_pct": 77.78
+  }
+}

@@ -1,0 +1,49 @@
+RESULT: FAIL
+========================================
+paper      : PMC12657337
+title      : High-level production of vitamin K2 in &lt;i&gt;Escherichia coli&lt;/i&gt; via modular molecular engineering.
+slug       : PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 2563.3s (42m43s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 13 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_heppps_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_has_degree_after_normalization, gate.entity_pyruvate_oxidase_is_declared_as_both_a_protein_and_a_prot
+
+DETAIL / TRACEBACK
+----------------------------------------
+Mapped pathway still fails the pre-export Stage 3 revalidation. Refinement review was not opened.
+[post_normalization_contract_report] gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0: Protein 'BsHepPPS' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'EcMenA' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'BsUbiE' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein 'EcIdi' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_heppps_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/12: Protein 'HepPPS' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_has_degree_after_normalization @ /entities/proteins/9/name: Protein has degree 0 after normalization: MetK
+
+COUNTS
+----------------------------------------
+  compounds = 22
+  contract_errors = 6
+  entities = 55
+  gate_errors = 7
+  proteins = 12
+  reactions = 21
+  runtime_schema_findings = 2
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (12679 B)
+  - final_stage3_gate_report.json  (2905 B)
+  - gate_fail_report.json  (5113 B)
+  - merged_payload.json  (156196 B)
+  - stage1_payload.json  (11797 B)

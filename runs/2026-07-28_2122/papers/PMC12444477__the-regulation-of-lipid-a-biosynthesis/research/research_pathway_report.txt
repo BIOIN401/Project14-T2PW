@@ -1,0 +1,2490 @@
+================================================================================
+LIPID A BIOSYNTHESIS
+Candidate pathway · export mode: research · NOT an importable PWML file
+================================================================================
+
+HOW TO READ THIS
+  Tier A  DB-grounded
+          an external database ID was found (UniProt / DrugBank / PathBank)
+  Tier B  corroborated by a second paper (no identifier)
+          no ID, but two independent sources state it, each with its own quote
+  Tier C  single-source (review)
+          only ONE source states this. Read the quote and decide.
+  Tier D  UNSOURCED (review)
+          NOTHING backs this. Check these first.
+
+  Every claim below is traced to a source. Nothing here is invented:
+  if a source or a page is missing, it says so rather than guessing.
+
+AT A GLANCE
+  Reactions            29
+  Entities             91
+  Distinct sources     3
+  Tiers                A=41   B=2   C=77   D=0
+  NEEDS REVIEW         77 element(s) are Tier C or D
+  Review flags         2
+  Format rules skipped 0
+
+================================================================================
+THE PATHWAY, STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+REACTION 1 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  acylation of UDP-GlcNAc
+
+  IN    UDP-GlcNAc
+      + β-hydroxyacyl-ACP
+
+  OUT   LpxA product
+
+  ENZYME  LpxA
+          Tier A - DB-grounded [uniprot: P0A722]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: body   ·   best retrieval score for this source: 0.8838
+        "pmc J Biol Chem J Biol Chem 567 jbc The Journal of Biological
+         Chemistry 0021-9258 1083-351X American Society for Biochemistry and
+         Molecular Biology PMC12444477 PMC12444477.1 12444477 12444477 40752575
+         10.1016/j.jbc.2025.110556 S0021-9258(25)02407-X 110556 1 JBC Reviews
+         The regulation of lipid A biosynthesis Hummels Katherine R.
+         katherine.hummels@uga.edu ∗ Department of Microbiology, University of
+         Georgia, Athens, Georgia, USA ∗ For correspondence: Katherine R.
+         Hummels katherine.hummels@uga.edu 9 2025 31 7 2025 301 9 495267 110556
+         31 5 2025 24 7 2025 31 07 2025 19 09 2025 19 09 2025 © 2025 The
+         Authors 2025 https://creativecommons.org/licenses/by/4.0/ This is an
+         open access article under the CC BY license
+         (http://creativecommons.org/licenses/by/4.0/). Gram-negative bacteria
+         surround their inner membrane and cell wall with an asymmetric outer
+         membrane which contains lipopolysaccharide (LPS) in its outer leaflet.
+         In addition to serving as a potent permeability barrier, the LPS-rich
+         outer membrane also contributes to the structural integrity of the
+         cell envelope and, thus, the ability to synthesize LPS is essential in
+         most Gram-negative bacteria. Although the cell must make enough LPS to
+         support growth, its biosynthesis must be tightly regulated as
+         overproduction of the acylated disaccharide domain of LPS, lipid A, is
+         deleterious to bacterial viability. The committed enzyme of the lipid
+         A biosynthetic pathway, LpxC, serves as a major regulatory node to
+         control flux through the pathway and ensure that the cell has enough,
+         but not too much, LPS. The regulation of LpxC in the model organism
+         Escherichia coli has been the subject of immense study, which has led
+         to a detailed understanding of the regulation of LPS biogenesis that
+         has served as a paradigm for other organisms. Recent work, however,
+         has revealed diverse mechanisms used by different species to regulate
+         LpxC and highlights that regulation at alternative points in the LPS
+         biosynthetic pathway have the potential to influence LPS production.
+         Here, the discovery and subsequent molecular dissection of the varied
+         strategies used to regulate LPS biosynthesis are reviewed as well as
+         the physiological consequences of LPS dysregulation. Keywords
+         lipopolysaccharide lipid A lipid synthesis cellular regulation outer
+         membrane LpxC cell envelope pmc-status-qastatus 0 pmc-status-live yes
+         pmc-status-embargo no pmc-status-released yes pmc-prop-open-access yes
+         pmc-prop-olf no pmc-prop-manuscript no pmc-prop-legally-suppressed no
+         pmc-prop-has-pdf yes pmc-prop-has-supplement no pmc-prop-pdf-only no
+         pmc-prop-suppress-copyright no pmc-prop-is-real-version no pmc-prop-
+         is-scanned-article no pmc-prop-preprint no pmc-prop-in-epmc yes
+         Abbreviations ACP acyl carrier protein CoA Coenzyme A FAS II type II
+         fatty acid synthesis GPL glycerophospholipid IM inner membrane Kdo
+         3-deoxy-D-manno-oct-2-ulosonic acid LapB lipopolysaccharide assembly
+         protein B LPS lipopolysaccharide Lpt lipopolysaccharide transport OM
+         outer membrane PG peptidoglycan UDP-GlcNAc uridine diphosphate-N-
+         acetyl-glucosamine Reviewed by members of the JBC Editorial Board.
+         Edited by Chris Whitfield The Gram-negative cell envelope is a complex
+         structure comprised of three concentric layers: an inner membrane (IM)
+         composed of glycerophospholipids (GPLs), a cell wall made up of
+         peptidoglycan (PG), and an asymmetric outer membrane (OM) with GPLs on
+         the inner leaflet and an outer leaflet largely composed of
+         lipopolysaccharide (LPS) ( 1 ). The permeability barrier imposed by
+         this structure, due in large part to the presence of LPS in the OM, is
+         a major driver of intrinsic antibiotic resistance observed in Gram-
+         negative bacteria ( 2 ). LPS is an amphipathic molecule made up of
+         three main structural domains: lipid A, core, and O-antigen. Lipid A
+         is an acylated glucosamine-based disaccharide that anchors LPS in the
+         lipid bilayer and is ligated to a series of outward-facing sugar
+         residues that compose the core and O-antigen domains of LPS ( 3 ).
+         Lipid A along with the first sugar(s) of the core, 3-deoxy-D- manno
+         -oct-2-ulosonic acid (Kdo), collectively called Kdo-lipid A ( Fig. 1 A
+         ), is considered essential in most Gram-negative bacteria and the
+         enzymes responsible for its production are highly conserved ( 4 ).
+         Figure 1 Lipid A biosynthesis. A , chemical structure of Kdo-lipid A
+         from Escherichia coli . B , depiction of the Kdo-lipid A biosynthesis
+         pathway. LpxA, the first enzyme in the lipid A biosynthesis pathway,
+         catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived
+         β-hydroxyacyl-ACP molecules, metabolic precursors shared with the PG
+         and GPL biosynthetic pathways, respectively. The LpxA product is
+         deacetylated by the committed enzyme in the lipid A biosynthetic
+         pathway, LpxC. Following LpxC catalysis, lipid A production is
+         completed by a series of chemical reactions catalyzed by LpxD,
+         LpxH/I/G, LpxB, LpxK, WaaA, LpxL, and LpxM. See main text for details.
+         LpxC (highlighted in red ) serves as the best characterized regulatory
+         node in the LPS biosynthesis pathway, but other enzymes in the pathway
+         (highlighted in blue ) have also been implicated in controlling the
+         production of LPS. Other relevant enzymes in the PG and FAS II
+         synthesis pathways are presented in gray . Kdo, 3-deoxy-D- manno
+         -oct-2-ulosonic acid; LPS, lipopolysaccharide; GPL,
+         glycerophospholipid; PG, peptidoglycan; UDP-GlcNAc, uridine
+         diphosphate-N-acetyl-glucosamine; ACP, acyl carrier protein; FAS II,
+         type II fatty acid synthesis. Kdo-lipid A is synthesized in the
+         bacterial cytoplasm from a series of"
+
+
+--------------------------------------------------------------------------------
+REACTION 2 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxC reaction
+
+  IN    LpxA product
+
+  OUT   LpxC product
+
+  ENZYME  LpxC
+          Tier A - DB-grounded [uniprot: P0A725]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.8838
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 3 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxD reaction
+
+  IN    LpxC product
+      + β-hydroxyacyl-ACP
+
+  OUT   LpxD product
+
+  ENZYME  LpxD
+          Tier A - DB-grounded [uniprot: P21645]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.8838
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 4 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxH reaction
+
+  IN    LpxD product
+
+  OUT   LpxH product
+
+  ENZYME  LpxH
+          Tier A - DB-grounded [uniprot: P43341]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.8838
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 5 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxB reaction
+
+  IN    LpxH product
+
+  OUT   tetra-acylated disaccharide intermediate
+
+  ENZYME  LpxB
+          Tier A - DB-grounded [uniprot: P10441]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.8838
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 6 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxK reaction
+
+  IN    tetra-acylated disaccharide intermediate
+
+  OUT   lipid IVA
+
+  ENZYME  LpxK
+          Tier A - DB-grounded [uniprot: P27300]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.8838
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 7 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  WaaA reaction
+
+  IN    lipid IVA
+      + Kdo
+
+  OUT   Kdo-lipid IVA
+
+  ENZYME  WaaA
+          Tier A - DB-grounded [uniprot: P0AC75]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.8838
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 8 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxL reaction
+
+  IN    Kdo-lipid IVA
+      + β-hydroxyacyl-ACP
+
+  OUT   Kdo-lipid A
+
+  ENZYME  LpxL
+          Tier C - single-source (review)
+  ENZYME  LpxM
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: not recorded   ·   best retrieval score for this source: 0.8838
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 9 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  removal of UMP
+
+  IN    LpxC product
+
+  OUT   UMP
+
+  ENZYME  LpxH
+          Tier A - DB-grounded [uniprot: P43341]
+  ENZYME  LpxI
+          Tier C - single-source (review)
+  ENZYME  LpxG
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: body   ·   best retrieval score for this source: 0.8838
+        "FAS II-derived β-hydroxyacyl-ACP molecules, metabolic precursors
+         shared with the PG and GPL biosynthetic pathways, respectively. The
+         LpxA product is deacetylated by the committed enzyme in the lipid A
+         biosynthetic pathway, LpxC. Following LpxC catalysis, lipid A
+         production is completed by a series of chemical reactions catalyzed by
+         LpxD, LpxH/I/G, LpxB, LpxK, WaaA, LpxL, and LpxM. See main text for
+         details. LpxC (highlighted in red ) serves as the best characterized
+         regulatory node in the LPS biosynthesis pathway, but other enzymes in
+         the pathway (highlighted in blue ) have also been implicated in
+         controlling the production of LPS. Other relevant enzymes in the PG
+         and FAS II synthesis pathways are presented in gray . Kdo, 3-deoxy-D-
+         manno -oct-2-ulosonic acid; LPS, lipopolysaccharide; GPL,
+         glycerophospholipid; PG, peptidoglycan; UDP-GlcNAc, uridine
+         diphosphate-N-acetyl-glucosamine; ACP, acyl carrier protein; FAS II,
+         type II fatty acid synthesis. Kdo-lipid A is synthesized in the
+         bacterial cytoplasm from a series of catalytic reactions that make up
+         the Raetz pathway, named after Christian Raetz whose group pioneered
+         the identification and characterization of the nine enzymes that make
+         up the pathway (reviewed in ( 3 , 5 , 6 ) ( Fig. 1 B ). The first
+         enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate- N
+         -acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier
+         protein (ACP) substrate made by the type II fatty acid synthesis
+         pathway (FAS II) ( 7 ). The reaction catalyzed by LpxA is
+         thermodynamically unfavorable, and it is the second enzyme in the
+         pathway, LpxC, that catalyzes the first irreversible and committed
+         step in lipid A biosynthesis ( 8 , 9 ). LpxC is a deacetylase that
+         removes the acetyl group from the GlcNAc moiety to allow for the
+         addition of the next acyl group by LpxD and subsequent removal of UMP
+         by LpxH, LpxI, or LpxG depending on the organism ( Fig. 1 B ) ( 10 ,
+         11 , 12 , 13 ). LpxB then catalyzes the formation of a tetra-acylated
+         disaccharide intermediate, which is phosphorylated by LpxK to produce
+         lipid IV A ( 14 , 15 ) ( Fig. 1 B ). Next, WaaA adds a number of Kdo
+         residues that depends on the organism to form the first sugar(s) of
+         the core, resulting in Kdo-lipid IV A which is sequentially acylated
+         by LpxL and LpxM to finally form Kdo-lipid A ( 16 , 17 , 18 ) ( Fig. 1
+         B ). The nine steps in the Raetz pathway as well as the subsequent
+         addition of the core sugars are catalyzed in the cytoplasm or the
+         cytoplasmic leaflet of the IM, but the resulting core-lipid A must
+         ultimately be transported to the OM. Transport is achieved in two
+         steps. In the first, core-lipid A is flipped from the cytoplasmic
+         leaflet to the periplasmic leaflet of the IM by the flippase MsbA
+         (reviewed in ( 19 )). Once facing the periplasm, O-antigen can be
+         ligated onto core-lipid A prior to its transport to the OM by the
+         lipopolysaccharide transport (Lpt) system (reviewed in ( 20 )). The
+         synthesis of lipid A and its subsequent assembly into the OM have
+         long-been viewed as ideal targets for antibiotics, as it is essential
+         and unique to Gram-negative bacteria. From numerous drug discovery
+         endeavors, small molecules that inhibit the Raetz pathway enzymes and
+         LPS transporters have been identified, a subset of which have
+         progressed to clinical trials ( 21 , 22 ). The physiological
+         consequences associated with impaired LPS synthesis and assembly are
+         vast, consistent with the essentiality of LPS. Intriguingly,
+         overproduction of LPS"
+
+
+--------------------------------------------------------------------------------
+REACTION 10 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  formation of a tetra-acylated disaccharide intermediate
+
+  IN    LpxC product
+
+  OUT   tetra-acylated disaccharide intermediate
+
+  ENZYME  LpxB
+          Tier A - DB-grounded [uniprot: P10441]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: body   ·   best retrieval score for this source: 0.8838
+        "FAS II-derived β-hydroxyacyl-ACP molecules, metabolic precursors
+         shared with the PG and GPL biosynthetic pathways, respectively. The
+         LpxA product is deacetylated by the committed enzyme in the lipid A
+         biosynthetic pathway, LpxC. Following LpxC catalysis, lipid A
+         production is completed by a series of chemical reactions catalyzed by
+         LpxD, LpxH/I/G, LpxB, LpxK, WaaA, LpxL, and LpxM. See main text for
+         details. LpxC (highlighted in red ) serves as the best characterized
+         regulatory node in the LPS biosynthesis pathway, but other enzymes in
+         the pathway (highlighted in blue ) have also been implicated in
+         controlling the production of LPS. Other relevant enzymes in the PG
+         and FAS II synthesis pathways are presented in gray . Kdo, 3-deoxy-D-
+         manno -oct-2-ulosonic acid; LPS, lipopolysaccharide; GPL,
+         glycerophospholipid; PG, peptidoglycan; UDP-GlcNAc, uridine
+         diphosphate-N-acetyl-glucosamine; ACP, acyl carrier protein; FAS II,
+         type II fatty acid synthesis. Kdo-lipid A is synthesized in the
+         bacterial cytoplasm from a series of catalytic reactions that make up
+         the Raetz pathway, named after Christian Raetz whose group pioneered
+         the identification and characterization of the nine enzymes that make
+         up the pathway (reviewed in ( 3 , 5 , 6 ) ( Fig. 1 B ). The first
+         enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate- N
+         -acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier
+         protein (ACP) substrate made by the type II fatty acid synthesis
+         pathway (FAS II) ( 7 ). The reaction catalyzed by LpxA is
+         thermodynamically unfavorable, and it is the second enzyme in the
+         pathway, LpxC, that catalyzes the first irreversible and committed
+         step in lipid A biosynthesis ( 8 , 9 ). LpxC is a deacetylase that
+         removes the acetyl group from the GlcNAc moiety to allow for the
+         addition of the next acyl group by LpxD and subsequent removal of UMP
+         by LpxH, LpxI, or LpxG depending on the organism ( Fig. 1 B ) ( 10 ,
+         11 , 12 , 13 ). LpxB then catalyzes the formation of a tetra-acylated
+         disaccharide intermediate, which is phosphorylated by LpxK to produce
+         lipid IV A ( 14 , 15 ) ( Fig. 1 B ). Next, WaaA adds a number of Kdo
+         residues that depends on the organism to form the first sugar(s) of
+         the core, resulting in Kdo-lipid IV A which is sequentially acylated
+         by LpxL and LpxM to finally form Kdo-lipid A ( 16 , 17 , 18 ) ( Fig. 1
+         B ). The nine steps in the Raetz pathway as well as the subsequent
+         addition of the core sugars are catalyzed in the cytoplasm or the
+         cytoplasmic leaflet of the IM, but the resulting core-lipid A must
+         ultimately be transported to the OM. Transport is achieved in two
+         steps. In the first, core-lipid A is flipped from the cytoplasmic
+         leaflet to the periplasmic leaflet of the IM by the flippase MsbA
+         (reviewed in ( 19 )). Once facing the periplasm, O-antigen can be
+         ligated onto core-lipid A prior to its transport to the OM by the
+         lipopolysaccharide transport (Lpt) system (reviewed in ( 20 )). The
+         synthesis of lipid A and its subsequent assembly into the OM have
+         long-been viewed as ideal targets for antibiotics, as it is essential
+         and unique to Gram-negative bacteria. From numerous drug discovery
+         endeavors, small molecules that inhibit the Raetz pathway enzymes and
+         LPS transporters have been identified, a subset of which have
+         progressed to clinical trials ( 21 , 22 ). The physiological
+         consequences associated with impaired LPS synthesis and assembly are
+         vast, consistent with the essentiality of LPS. Intriguingly,
+         overproduction of LPS"
+
+
+--------------------------------------------------------------------------------
+REACTION 11 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  phosphorylation of tetra-acylated disaccharide intermediate
+
+  IN    tetra-acylated disaccharide intermediate
+
+  OUT   lipid IV A
+
+  ENZYME  LpxK
+          Tier A - DB-grounded [uniprot: P27300]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: body   ·   best retrieval score for this source: 0.8838
+        "FAS II-derived β-hydroxyacyl-ACP molecules, metabolic precursors
+         shared with the PG and GPL biosynthetic pathways, respectively. The
+         LpxA product is deacetylated by the committed enzyme in the lipid A
+         biosynthetic pathway, LpxC. Following LpxC catalysis, lipid A
+         production is completed by a series of chemical reactions catalyzed by
+         LpxD, LpxH/I/G, LpxB, LpxK, WaaA, LpxL, and LpxM. See main text for
+         details. LpxC (highlighted in red ) serves as the best characterized
+         regulatory node in the LPS biosynthesis pathway, but other enzymes in
+         the pathway (highlighted in blue ) have also been implicated in
+         controlling the production of LPS. Other relevant enzymes in the PG
+         and FAS II synthesis pathways are presented in gray . Kdo, 3-deoxy-D-
+         manno -oct-2-ulosonic acid; LPS, lipopolysaccharide; GPL,
+         glycerophospholipid; PG, peptidoglycan; UDP-GlcNAc, uridine
+         diphosphate-N-acetyl-glucosamine; ACP, acyl carrier protein; FAS II,
+         type II fatty acid synthesis. Kdo-lipid A is synthesized in the
+         bacterial cytoplasm from a series of catalytic reactions that make up
+         the Raetz pathway, named after Christian Raetz whose group pioneered
+         the identification and characterization of the nine enzymes that make
+         up the pathway (reviewed in ( 3 , 5 , 6 ) ( Fig. 1 B ). The first
+         enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate- N
+         -acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier
+         protein (ACP) substrate made by the type II fatty acid synthesis
+         pathway (FAS II) ( 7 ). The reaction catalyzed by LpxA is
+         thermodynamically unfavorable, and it is the second enzyme in the
+         pathway, LpxC, that catalyzes the first irreversible and committed
+         step in lipid A biosynthesis ( 8 , 9 ). LpxC is a deacetylase that
+         removes the acetyl group from the GlcNAc moiety to allow for the
+         addition of the next acyl group by LpxD and subsequent removal of UMP
+         by LpxH, LpxI, or LpxG depending on the organism ( Fig. 1 B ) ( 10 ,
+         11 , 12 , 13 ). LpxB then catalyzes the formation of a tetra-acylated
+         disaccharide intermediate, which is phosphorylated by LpxK to produce
+         lipid IV A ( 14 , 15 ) ( Fig. 1 B ). Next, WaaA adds a number of Kdo
+         residues that depends on the organism to form the first sugar(s) of
+         the core, resulting in Kdo-lipid IV A which is sequentially acylated
+         by LpxL and LpxM to finally form Kdo-lipid A ( 16 , 17 , 18 ) ( Fig. 1
+         B ). The nine steps in the Raetz pathway as well as the subsequent
+         addition of the core sugars are catalyzed in the cytoplasm or the
+         cytoplasmic leaflet of the IM, but the resulting core-lipid A must
+         ultimately be transported to the OM. Transport is achieved in two
+         steps. In the first, core-lipid A is flipped from the cytoplasmic
+         leaflet to the periplasmic leaflet of the IM by the flippase MsbA
+         (reviewed in ( 19 )). Once facing the periplasm, O-antigen can be
+         ligated onto core-lipid A prior to its transport to the OM by the
+         lipopolysaccharide transport (Lpt) system (reviewed in ( 20 )). The
+         synthesis of lipid A and its subsequent assembly into the OM have
+         long-been viewed as ideal targets for antibiotics, as it is essential
+         and unique to Gram-negative bacteria. From numerous drug discovery
+         endeavors, small molecules that inhibit the Raetz pathway enzymes and
+         LPS transporters have been identified, a subset of which have
+         progressed to clinical trials ( 21 , 22 ). The physiological
+         consequences associated with impaired LPS synthesis and assembly are
+         vast, consistent with the essentiality of LPS. Intriguingly,
+         overproduction of LPS"
+
+
+--------------------------------------------------------------------------------
+REACTION 12 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  addition of Kdo residues
+
+  IN    lipid IV A
+      + Kdo residues
+
+  OUT   Kdo-lipid IV A
+
+  ENZYME  WaaA
+          Tier A - DB-grounded [uniprot: P0AC75]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: body   ·   best retrieval score for this source: 0.8838
+        "FAS II-derived β-hydroxyacyl-ACP molecules, metabolic precursors
+         shared with the PG and GPL biosynthetic pathways, respectively. The
+         LpxA product is deacetylated by the committed enzyme in the lipid A
+         biosynthetic pathway, LpxC. Following LpxC catalysis, lipid A
+         production is completed by a series of chemical reactions catalyzed by
+         LpxD, LpxH/I/G, LpxB, LpxK, WaaA, LpxL, and LpxM. See main text for
+         details. LpxC (highlighted in red ) serves as the best characterized
+         regulatory node in the LPS biosynthesis pathway, but other enzymes in
+         the pathway (highlighted in blue ) have also been implicated in
+         controlling the production of LPS. Other relevant enzymes in the PG
+         and FAS II synthesis pathways are presented in gray . Kdo, 3-deoxy-D-
+         manno -oct-2-ulosonic acid; LPS, lipopolysaccharide; GPL,
+         glycerophospholipid; PG, peptidoglycan; UDP-GlcNAc, uridine
+         diphosphate-N-acetyl-glucosamine; ACP, acyl carrier protein; FAS II,
+         type II fatty acid synthesis. Kdo-lipid A is synthesized in the
+         bacterial cytoplasm from a series of catalytic reactions that make up
+         the Raetz pathway, named after Christian Raetz whose group pioneered
+         the identification and characterization of the nine enzymes that make
+         up the pathway (reviewed in ( 3 , 5 , 6 ) ( Fig. 1 B ). The first
+         enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate- N
+         -acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier
+         protein (ACP) substrate made by the type II fatty acid synthesis
+         pathway (FAS II) ( 7 ). The reaction catalyzed by LpxA is
+         thermodynamically unfavorable, and it is the second enzyme in the
+         pathway, LpxC, that catalyzes the first irreversible and committed
+         step in lipid A biosynthesis ( 8 , 9 ). LpxC is a deacetylase that
+         removes the acetyl group from the GlcNAc moiety to allow for the
+         addition of the next acyl group by LpxD and subsequent removal of UMP
+         by LpxH, LpxI, or LpxG depending on the organism ( Fig. 1 B ) ( 10 ,
+         11 , 12 , 13 ). LpxB then catalyzes the formation of a tetra-acylated
+         disaccharide intermediate, which is phosphorylated by LpxK to produce
+         lipid IV A ( 14 , 15 ) ( Fig. 1 B ). Next, WaaA adds a number of Kdo
+         residues that depends on the organism to form the first sugar(s) of
+         the core, resulting in Kdo-lipid IV A which is sequentially acylated
+         by LpxL and LpxM to finally form Kdo-lipid A ( 16 , 17 , 18 ) ( Fig. 1
+         B ). The nine steps in the Raetz pathway as well as the subsequent
+         addition of the core sugars are catalyzed in the cytoplasm or the
+         cytoplasmic leaflet of the IM, but the resulting core-lipid A must
+         ultimately be transported to the OM. Transport is achieved in two
+         steps. In the first, core-lipid A is flipped from the cytoplasmic
+         leaflet to the periplasmic leaflet of the IM by the flippase MsbA
+         (reviewed in ( 19 )). Once facing the periplasm, O-antigen can be
+         ligated onto core-lipid A prior to its transport to the OM by the
+         lipopolysaccharide transport (Lpt) system (reviewed in ( 20 )). The
+         synthesis of lipid A and its subsequent assembly into the OM have
+         long-been viewed as ideal targets for antibiotics, as it is essential
+         and unique to Gram-negative bacteria. From numerous drug discovery
+         endeavors, small molecules that inhibit the Raetz pathway enzymes and
+         LPS transporters have been identified, a subset of which have
+         progressed to clinical trials ( 21 , 22 ). The physiological
+         consequences associated with impaired LPS synthesis and assembly are
+         vast, consistent with the essentiality of LPS. Intriguingly,
+         overproduction of LPS"
+
+
+--------------------------------------------------------------------------------
+REACTION 13 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  acylation of Kdo-lipid IV A
+
+  IN    Kdo-lipid IV A
+
+  OUT   Kdo-lipid A
+
+  ENZYME  LpxL
+          Tier C - single-source (review)
+  ENZYME  LpxM
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: body   ·   best retrieval score for this source: 0.8838
+        "FAS II-derived β-hydroxyacyl-ACP molecules, metabolic precursors
+         shared with the PG and GPL biosynthetic pathways, respectively. The
+         LpxA product is deacetylated by the committed enzyme in the lipid A
+         biosynthetic pathway, LpxC. Following LpxC catalysis, lipid A
+         production is completed by a series of chemical reactions catalyzed by
+         LpxD, LpxH/I/G, LpxB, LpxK, WaaA, LpxL, and LpxM. See main text for
+         details. LpxC (highlighted in red ) serves as the best characterized
+         regulatory node in the LPS biosynthesis pathway, but other enzymes in
+         the pathway (highlighted in blue ) have also been implicated in
+         controlling the production of LPS. Other relevant enzymes in the PG
+         and FAS II synthesis pathways are presented in gray . Kdo, 3-deoxy-D-
+         manno -oct-2-ulosonic acid; LPS, lipopolysaccharide; GPL,
+         glycerophospholipid; PG, peptidoglycan; UDP-GlcNAc, uridine
+         diphosphate-N-acetyl-glucosamine; ACP, acyl carrier protein; FAS II,
+         type II fatty acid synthesis. Kdo-lipid A is synthesized in the
+         bacterial cytoplasm from a series of catalytic reactions that make up
+         the Raetz pathway, named after Christian Raetz whose group pioneered
+         the identification and characterization of the nine enzymes that make
+         up the pathway (reviewed in ( 3 , 5 , 6 ) ( Fig. 1 B ). The first
+         enzyme in the Raetz pathway, LpxA, acylates uridine diphosphate- N
+         -acetyl-glucosamine (UDP-GlcNAc) using a β-hydroxyacyl-acyl carrier
+         protein (ACP) substrate made by the type II fatty acid synthesis
+         pathway (FAS II) ( 7 ). The reaction catalyzed by LpxA is
+         thermodynamically unfavorable, and it is the second enzyme in the
+         pathway, LpxC, that catalyzes the first irreversible and committed
+         step in lipid A biosynthesis ( 8 , 9 ). LpxC is a deacetylase that
+         removes the acetyl group from the GlcNAc moiety to allow for the
+         addition of the next acyl group by LpxD and subsequent removal of UMP
+         by LpxH, LpxI, or LpxG depending on the organism ( Fig. 1 B ) ( 10 ,
+         11 , 12 , 13 ). LpxB then catalyzes the formation of a tetra-acylated
+         disaccharide intermediate, which is phosphorylated by LpxK to produce
+         lipid IV A ( 14 , 15 ) ( Fig. 1 B ). Next, WaaA adds a number of Kdo
+         residues that depends on the organism to form the first sugar(s) of
+         the core, resulting in Kdo-lipid IV A which is sequentially acylated
+         by LpxL and LpxM to finally form Kdo-lipid A ( 16 , 17 , 18 ) ( Fig. 1
+         B ). The nine steps in the Raetz pathway as well as the subsequent
+         addition of the core sugars are catalyzed in the cytoplasm or the
+         cytoplasmic leaflet of the IM, but the resulting core-lipid A must
+         ultimately be transported to the OM. Transport is achieved in two
+         steps. In the first, core-lipid A is flipped from the cytoplasmic
+         leaflet to the periplasmic leaflet of the IM by the flippase MsbA
+         (reviewed in ( 19 )). Once facing the periplasm, O-antigen can be
+         ligated onto core-lipid A prior to its transport to the OM by the
+         lipopolysaccharide transport (Lpt) system (reviewed in ( 20 )). The
+         synthesis of lipid A and its subsequent assembly into the OM have
+         long-been viewed as ideal targets for antibiotics, as it is essential
+         and unique to Gram-negative bacteria. From numerous drug discovery
+         endeavors, small molecules that inhibit the Raetz pathway enzymes and
+         LPS transporters have been identified, a subset of which have
+         progressed to clinical trials ( 21 , 22 ). The physiological
+         consequences associated with impaired LPS synthesis and assembly are
+         vast, consistent with the essentiality of LPS. Intriguingly,
+         overproduction of LPS"
+
+
+--------------------------------------------------------------------------------
+REACTION 14 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  elongation of (R)-3-hydroxymyristoyl-ACP to palmitate
+
+  IN    (R)-3-hydroxymyristoyl-ACP
+
+  OUT   palmitate
+
+  ENZYME  (none recorded)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Checkpoints That Regulate Balanced Biosynthesis of Lipopolysaccharide
+        and Its Essentiality in <i>Escherichia coli</i>. (PMC8745692)
+        section: figure   ·   best retrieval score for this source: 0.75
+        "Figure 1 ) [ 2 , 26 ]. In this essential process, ( R
+         )-3-hydroxymyristoyl-ACP is situated at another important biosynthetic
+         branch point since it can be elongated to palmitate in order to be
+         incorporated into glycerophospholipids instead of recruited into lipid
+         A biosynthesis [ 14 ]. As LPS and pho"
+        https://doi.org/10.3390/ijms23010189
+
+
+--------------------------------------------------------------------------------
+REACTION 15 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  acylation of UDP-GlcNAc
+
+  IN    UDP-GlcNAc
+      + β-hydroxyacyl-ACP
+
+  OUT   UDP-GlcNAc
+
+  ENZYME  LpxA
+          Tier A - DB-grounded [uniprot: P0A722]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: figure   ·   best retrieval score for this source: 0.8838
+        "Figure 1 Lipid A biosynthesis. A , chemical structure of Kdo-lipid A
+         from Escherichia coli . B , depiction of the Kdo-lipid A biosynthesis
+         pathway. LpxA, the first enzyme in the lipid A biosynthesis pathway,
+         catalyzes the reversible acylation of UDP-GlcNAc using FAS II-derived
+         β-hydroxyacyl-ACP mole"
+
+
+--------------------------------------------------------------------------------
+REACTION 16 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  lipid IV A -> (Kdo)-lipid IV A
+
+  IN    lipid IV A
+
+  OUT   (Kdo)-lipid IV A
+
+  ENZYME  waaA
+          Tier A - DB-grounded [uniprot: P0AC75]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Checkpoints That Regulate Balanced Biosynthesis of Lipopolysaccharide
+        and Its Essentiality in <i>Escherichia coli</i>. (PMC8745692)
+        section: results   ·   best retrieval score for this source: 0.75
+        "these two essential components of the cell envelope [ 14 , 36 ]. This
+         is achieved by the regulation of the LpxC amount and FabZ dehydratase
+         activity to maintain a flux of a common metabolic precursor in the
+         utilization of LPS and phospholipid biosynthesis. Thus, the study of
+         LpxC-mediated regulation has become an intense topic of investigation
+         in recent years [ 37 , 38 , 39 ]. Table 1 Genes whose products are
+         involved in Kdo 2 -lipid A biosynthesis. Gene EC Number Product lpxA
+         2.3.1.129 acyl-[acyl-carrier-protein]-UDP- N -acetyloglucosamine O
+         -acyltransferase lpxB 2.4.1.182 lipid A disaccharide synthase lpxC
+         3.5.1.108 UDP-3- O -acyl N -acetylglucosamine deacetylase lpxD
+         2.3.1.191 UDP-3- O -(3-hydroxyacyl)-glucosamine N -acyltransferase
+         lpxH 3.6.1.54 UDP-2,3-diacylglucosamine diphosphatase lpxK 2.7.1.130
+         tetraacyldisaccharide A 4′-kinase lpxL 2.3.1.241 Kdo 2 -lipid IV A
+         acyltransferase lpxM 2.3.1.243 acyl-Kdo 2 -lipid IV A acyltransferase
+         lpxP 2.3.1.242 Kdo 2 -lipid IV A palmitoleoyltransferase lpxT 2.7.4.29
+         Kdo 2 -lipid IV A phosphotransferase waaA 2.4.99.12/ 2.4.99.13 lipid
+         IV A 3-deoxy-α-D- manno -octulosonic acid transferase/ (Kdo)-lipid IV
+         A 3-deoxy-α-D- manno -octulosonic acid transferase 3. FtsH-Mediated
+         Control of LpxC Turnover Early studies hinted that the overproduction
+         of LpxC cannot be maintained due to its toxicity, although the reasons
+         for this phenomenon were not understood [ 40 ]. This can now be
+         explained by the diversion of ( R )-3-hydroxymyristoyl-ACP to lipid A
+         biosynthesis at the expense of phospholipid synthesis, resulting in
+         the depletion of glycerophospholipids and/or UDP-GlcNAc, which can be
+         lethal. During seminal studies by Raetz laboratory that led to initial
+         discoveries of the lipid A biosynthetic pathway, it was observed that
+         the deacetylase activity provided by LpxC is elevated when lipid A
+         biosynthesis is inhibited using either lpxA or lpxD mutants [ 27 ].
+         These findings suggested that LpxC is subjected to regulation in
+         response to the lipid A content and/or synthesis rate. In a further
+         extension of this work, it was shown that the inhibition of either the
+         acyltransferase activity (LpxA-dependent) or the deacetylase results
+         in a 5–10-fold increase in LpxC activity, which does not accompany any
+         increase in the transcription of the lpxC gene, but there is an
+         increase in the accumulation of LpxC [ 41 ]. Thus, these authors
+         proposed two models invoking either a control at a translational level
+         or proteolytic turnover of LpxC upon the accumulation of the
+         disaccharide bisphosphate precursors of lipid A [ 41 ]. Indeed, our
+         current level of understanding supports both models, although most of
+         the attention has focused on proteolytic turnover ( Figure 1 ) [ 21 ].
+         An important breakthrough was provided when FtsH was identified as the
+         protease that mediates LpxC turnover and how this step of regulation
+         establishes a critical checkpoint to have balanced biosynthesis of
+         phospholipids and LPS [ 14 ]. These authors, while studying the
+         essentiality of the ftsH gene, isolated a suppressor mutation called
+         sfhC (for suppressor of ftsH ), which suppresses the lethality of the
+         ftsH mutation. FtsH is an essential AAA + metalloprotease, which also
+         regulates the turnover of many substrates that include the RpoH heat
+         shock sigma factor [ 14 ]. Further characterization of the s fhC21
+         mutation revealed it has a mutation in the fabZ gene [ 14 ]. The fabZ
+         gene encodes for the ( R )-3-hydroxyacyl-ACP dehydratase, and the
+         encoded enzyme also uses ( R )-3-hydroxymyristoyl-ACP [ 13 , 42 ],
+         which, as mentioned above, is situated at an important branch point in
+         the synthesis of lipid A and phospholipids. Besides establishing that
+         LpxC is a substrate of FtsH, these studies also showed that ftsH
+         mutations cause a 5–10-fold increase in the accumulation of LpxC
+         deacetylase, resulting in the increased synthesis of LPS, which leads
+         to the lethality and, thus, the essentiality of FtsH [ 14 ]. The
+         rationale of suppressing ftsH mutations by sfhC21 is explained by
+         enhanced FabZ dehydratase activity, thereby compensating for high
+         levels of deacetylase when FtsH is absent. So far as the mechanism of
+         LpxC recognition is concerned, it has been shown that six non-polar
+         residues in its C-terminal tail of about 20 amino acids are critical
+         for degradation by FtsH [ 43 ]. This proteolysis of LpxC is controlled
+         by the cellular growth rate and levels of alarmone ppGpp [ 44 ]. Thus,
+         LpxC is rapidly degraded under slow-growth conditions and is
+         relatively more stable under fast-growth conditions, and this
+         phenomenon is reversed when ppGpp is absent [ 44 ]. However, how FtsH
+         activity is regulated in response to the accumulation of LPS remained
+         unknown until the discovery of LPS assembly proteins LapA/LapB and
+         LapC [ 15 , 38 ]. 4. LapB Functions to Regulate FtsH-Mediated
+         Proteolysis of LpxC and Determine the Major Checkpoint of Regulating
+         LPS Biosynthesis in Concert with FtsH To identify any additional
+         factors that regulate the LPS content, mutations that cause a
+         constitutive induction of the RpoE sigma factor,"
+        https://doi.org/10.3390/ijms23010189
+
+
+--------------------------------------------------------------------------------
+REACTION 17 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  proteolysis of Ec LpxC
+
+  IN    Ec LpxC
+
+  OUT   Ec LpxC
+
+  ENZYME  FtsH
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: results   ·   best retrieval score for this source: 0.8838
+        "a model in which YejM inhibits LapB-FtsH mediated proteolysis of Ec
+         LpxC unless LPS accumulates in the periplasmic leaflet of the
+         cytoplasmic membrane ( 27 , 30 , 31 , 67 ). Consistent with this,
+         subsequent biochemical and structural analyses showed that YejM
+         directly interacted with LapB, that the LPS and LapB binding sites of
+         YejM overlapped, and that the addition of LPS to YejM reduced its
+         capacity to interact with LapB ( 62 ). Further, YejM sequestered the
+         same region of LapB used to interact with FtsH ( 62 ). Thus, a series
+         of partner switching events elegantly explains the ability of Ec LpxC
+         levels to respond to changes in LPS production ( Fig. 3 ). Under
+         conditions in which LPS levels are relatively low, YejM sequesters
+         LapB, preventing FtsH-mediated proteolysis of Ec LpxC ( Fig. 3 A ). In
+         contrast, when LPS levels are relatively high, LPS intermediates
+         accumulate in the periplasmic leaflet of the IM as they await
+         transport and bind to YejM ( Fig. 3 B ). When YejM is bound to LPS,
+         LapB is freed to inhibit Ec LpxC and subsequently direct it to FtsH
+         for proteolysis to reduce lipid A biosynthesis ( Fig. 3 B ). Figure 3
+         Regulation of LpxC in Escherichia coli . A , when LPS levels are low,
+         YejM binds to LapB, preventing it from promoting FtsH-mediated
+         proteolysis of LpxC. B , under conditions in which LPS levels are
+         high, YejM binds to LPS molecules that accumulate in the outer leaflet
+         of the IM, allowing LapB to bind LpxC and direct it for proteolysis by
+         FtsH. Lipid A is depicted in purple and the core and O-antigen domains
+         of LPS are depicted in blue . LPS, lipopolysaccharide; IM, inner
+         membrane; LapB, lipopolysaccharide assembly protein B. Alternative
+         signals modulating Ec LpxC abundance Although the picture of how LpxC
+         is regulated in E. coli is becoming clearer, there are many
+         observations that suggest additional complexity may exist in the
+         control of lipid A biosynthesis. Stimuli that control Ec LpxC levels
+         have been reported that, at first glance, are not accounted for with
+         our current understanding of the YejM-LapB-FtsH system. In particular,
+         several studies have highlighted the influence of perturbations to OM
+         asymmetry on Ec LpxC regulation. In E. coli , OM asymmetry is
+         maintained through the action of multiple systems, including the
+         phospholipase PldA that degrades GPLs localized in the outer leaflet
+         of the OM to produce lysophospholipids and fatty acids ( 68 , 69 ).
+         Under conditions in which GPLs accumulate in the outer leaflet of the
+         OM, PldA activity has been shown to stabilize LpxC and increase LPS
+         biosynthesis ( 70 ). This function of PldA was dependent on the
+         presence of FadD, which imports exogenous fatty acids and
+         simultaneously activates them with coenzyme A (CoA) to produce
+         cytosolic acyl-CoA species ( 70 , 71 , 72 ). Similarly, strains with
+         mutations in yhcB , which encodes a transmembrane protein that has
+         been shown to copurify with LapB, exhibit altered Ec LpxC abundance in
+         addition to many pleiotropic phenotypes often associated with defects
+         in cell envelope integrity ( 73 , 74 ). However, a recent report
+         indicated that the effects of YhcB on Ec LpxC are likely indirect due
+         to its modulation of fatty acid biosynthesis to alter GPL production (
+         75 ). In the absence of YhcB, the ratio of GPLs to lipid A elevates,
+         presumably causing an accumulation of mislocalized GPLs in the outer
+         leaflet of the OM that serve as substrates for PldA to indirectly
+         impact Ec LpxC levels ( 75 ). These results support an attractive
+         model whereby an increase in mislocalized GPLs that result from
+         reduced LPS biosynthesis, increased GPL biosynthesis, or other OM
+         perturbations may be sensed to inform the cytosolic production of
+         lipid A. The mechanism by which acyl-CoA species might influence Ec
+         LpxC is unknown but addition of exogenous palmitate to growing E. coli
+         cultures has similarly been shown to stabilize Ec LpxC ( 76 ). It is
+         notable that palmitoyl-CoA has been reported to inhibit the activity
+         of the essential FAS II enzyme FabI, and a reduction in FabI activity
+         has, in turn, been reported to increase Ec LpxC levels, perhaps
+         explaining why Ec LpxC might be sensitive to palmitoyl-CoA ( 39 , 77
+         ). Alternatively, long-chain acyl-CoA species derived from exogenous
+         fatty acids have been recently suggested to indirectly increase long-
+         chain acyl-ACP species, which reduces the production of nascent acyl-
+         ACPs through the inhibition of acetyl-CoA carboxylase ( 78 , 79 ).
+         Thus, the addition of exogenous long-chain fatty acids to E. coli led
+         to a rapid and dramatic remodeling of the acyl-ACP chemical landscape,
+         including a reduction in the LpxA substrate R -3-hydroxymyristoyl-ACP
+         ( 78 ). Perhaps consistent with this, exogenous addition of oleate to
+         growing cultures has been shown"
+
+
+--------------------------------------------------------------------------------
+REACTION 18 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  degrades GPLs to produce lysophospholipids and fatty acids
+
+  IN    GPLs
+
+  OUT   lysophospholipids
+      + fatty acids
+
+  ENZYME  PldA
+          Tier A - DB-grounded [uniprot: P0A921]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: results   ·   best retrieval score for this source: 0.8838
+        "a model in which YejM inhibits LapB-FtsH mediated proteolysis of Ec
+         LpxC unless LPS accumulates in the periplasmic leaflet of the
+         cytoplasmic membrane ( 27 , 30 , 31 , 67 ). Consistent with this,
+         subsequent biochemical and structural analyses showed that YejM
+         directly interacted with LapB, that the LPS and LapB binding sites of
+         YejM overlapped, and that the addition of LPS to YejM reduced its
+         capacity to interact with LapB ( 62 ). Further, YejM sequestered the
+         same region of LapB used to interact with FtsH ( 62 ). Thus, a series
+         of partner switching events elegantly explains the ability of Ec LpxC
+         levels to respond to changes in LPS production ( Fig. 3 ). Under
+         conditions in which LPS levels are relatively low, YejM sequesters
+         LapB, preventing FtsH-mediated proteolysis of Ec LpxC ( Fig. 3 A ). In
+         contrast, when LPS levels are relatively high, LPS intermediates
+         accumulate in the periplasmic leaflet of the IM as they await
+         transport and bind to YejM ( Fig. 3 B ). When YejM is bound to LPS,
+         LapB is freed to inhibit Ec LpxC and subsequently direct it to FtsH
+         for proteolysis to reduce lipid A biosynthesis ( Fig. 3 B ). Figure 3
+         Regulation of LpxC in Escherichia coli . A , when LPS levels are low,
+         YejM binds to LapB, preventing it from promoting FtsH-mediated
+         proteolysis of LpxC. B , under conditions in which LPS levels are
+         high, YejM binds to LPS molecules that accumulate in the outer leaflet
+         of the IM, allowing LapB to bind LpxC and direct it for proteolysis by
+         FtsH. Lipid A is depicted in purple and the core and O-antigen domains
+         of LPS are depicted in blue . LPS, lipopolysaccharide; IM, inner
+         membrane; LapB, lipopolysaccharide assembly protein B. Alternative
+         signals modulating Ec LpxC abundance Although the picture of how LpxC
+         is regulated in E. coli is becoming clearer, there are many
+         observations that suggest additional complexity may exist in the
+         control of lipid A biosynthesis. Stimuli that control Ec LpxC levels
+         have been reported that, at first glance, are not accounted for with
+         our current understanding of the YejM-LapB-FtsH system. In particular,
+         several studies have highlighted the influence of perturbations to OM
+         asymmetry on Ec LpxC regulation. In E. coli , OM asymmetry is
+         maintained through the action of multiple systems, including the
+         phospholipase PldA that degrades GPLs localized in the outer leaflet
+         of the OM to produce lysophospholipids and fatty acids ( 68 , 69 ).
+         Under conditions in which GPLs accumulate in the outer leaflet of the
+         OM, PldA activity has been shown to stabilize LpxC and increase LPS
+         biosynthesis ( 70 ). This function of PldA was dependent on the
+         presence of FadD, which imports exogenous fatty acids and
+         simultaneously activates them with coenzyme A (CoA) to produce
+         cytosolic acyl-CoA species ( 70 , 71 , 72 ). Similarly, strains with
+         mutations in yhcB , which encodes a transmembrane protein that has
+         been shown to copurify with LapB, exhibit altered Ec LpxC abundance in
+         addition to many pleiotropic phenotypes often associated with defects
+         in cell envelope integrity ( 73 , 74 ). However, a recent report
+         indicated that the effects of YhcB on Ec LpxC are likely indirect due
+         to its modulation of fatty acid biosynthesis to alter GPL production (
+         75 ). In the absence of YhcB, the ratio of GPLs to lipid A elevates,
+         presumably causing an accumulation of mislocalized GPLs in the outer
+         leaflet of the OM that serve as substrates for PldA to indirectly
+         impact Ec LpxC levels ( 75 ). These results support an attractive
+         model whereby an increase in mislocalized GPLs that result from
+         reduced LPS biosynthesis, increased GPL biosynthesis, or other OM
+         perturbations may be sensed to inform the cytosolic production of
+         lipid A. The mechanism by which acyl-CoA species might influence Ec
+         LpxC is unknown but addition of exogenous palmitate to growing E. coli
+         cultures has similarly been shown to stabilize Ec LpxC ( 76 ). It is
+         notable that palmitoyl-CoA has been reported to inhibit the activity
+         of the essential FAS II enzyme FabI, and a reduction in FabI activity
+         has, in turn, been reported to increase Ec LpxC levels, perhaps
+         explaining why Ec LpxC might be sensitive to palmitoyl-CoA ( 39 , 77
+         ). Alternatively, long-chain acyl-CoA species derived from exogenous
+         fatty acids have been recently suggested to indirectly increase long-
+         chain acyl-ACP species, which reduces the production of nascent acyl-
+         ACPs through the inhibition of acetyl-CoA carboxylase ( 78 , 79 ).
+         Thus, the addition of exogenous long-chain fatty acids to E. coli led
+         to a rapid and dramatic remodeling of the acyl-ACP chemical landscape,
+         including a reduction in the LpxA substrate R -3-hydroxymyristoyl-ACP
+         ( 78 ). Perhaps consistent with this, exogenous addition of oleate to
+         growing cultures has been shown"
+
+
+--------------------------------------------------------------------------------
+REACTION 19 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  activates exogenous fatty acids with coenzyme A to produce cytosolic acyl-CoA species
+
+  IN    exogenous fatty acids
+      + CoA-SH
+
+  OUT   cytosolic acyl-CoA species
+
+  ENZYME  FadD
+          Tier A - DB-grounded [uniprot: P69451]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: results   ·   best retrieval score for this source: 0.8838
+        "a model in which YejM inhibits LapB-FtsH mediated proteolysis of Ec
+         LpxC unless LPS accumulates in the periplasmic leaflet of the
+         cytoplasmic membrane ( 27 , 30 , 31 , 67 ). Consistent with this,
+         subsequent biochemical and structural analyses showed that YejM
+         directly interacted with LapB, that the LPS and LapB binding sites of
+         YejM overlapped, and that the addition of LPS to YejM reduced its
+         capacity to interact with LapB ( 62 ). Further, YejM sequestered the
+         same region of LapB used to interact with FtsH ( 62 ). Thus, a series
+         of partner switching events elegantly explains the ability of Ec LpxC
+         levels to respond to changes in LPS production ( Fig. 3 ). Under
+         conditions in which LPS levels are relatively low, YejM sequesters
+         LapB, preventing FtsH-mediated proteolysis of Ec LpxC ( Fig. 3 A ). In
+         contrast, when LPS levels are relatively high, LPS intermediates
+         accumulate in the periplasmic leaflet of the IM as they await
+         transport and bind to YejM ( Fig. 3 B ). When YejM is bound to LPS,
+         LapB is freed to inhibit Ec LpxC and subsequently direct it to FtsH
+         for proteolysis to reduce lipid A biosynthesis ( Fig. 3 B ). Figure 3
+         Regulation of LpxC in Escherichia coli . A , when LPS levels are low,
+         YejM binds to LapB, preventing it from promoting FtsH-mediated
+         proteolysis of LpxC. B , under conditions in which LPS levels are
+         high, YejM binds to LPS molecules that accumulate in the outer leaflet
+         of the IM, allowing LapB to bind LpxC and direct it for proteolysis by
+         FtsH. Lipid A is depicted in purple and the core and O-antigen domains
+         of LPS are depicted in blue . LPS, lipopolysaccharide; IM, inner
+         membrane; LapB, lipopolysaccharide assembly protein B. Alternative
+         signals modulating Ec LpxC abundance Although the picture of how LpxC
+         is regulated in E. coli is becoming clearer, there are many
+         observations that suggest additional complexity may exist in the
+         control of lipid A biosynthesis. Stimuli that control Ec LpxC levels
+         have been reported that, at first glance, are not accounted for with
+         our current understanding of the YejM-LapB-FtsH system. In particular,
+         several studies have highlighted the influence of perturbations to OM
+         asymmetry on Ec LpxC regulation. In E. coli , OM asymmetry is
+         maintained through the action of multiple systems, including the
+         phospholipase PldA that degrades GPLs localized in the outer leaflet
+         of the OM to produce lysophospholipids and fatty acids ( 68 , 69 ).
+         Under conditions in which GPLs accumulate in the outer leaflet of the
+         OM, PldA activity has been shown to stabilize LpxC and increase LPS
+         biosynthesis ( 70 ). This function of PldA was dependent on the
+         presence of FadD, which imports exogenous fatty acids and
+         simultaneously activates them with coenzyme A (CoA) to produce
+         cytosolic acyl-CoA species ( 70 , 71 , 72 ). Similarly, strains with
+         mutations in yhcB , which encodes a transmembrane protein that has
+         been shown to copurify with LapB, exhibit altered Ec LpxC abundance in
+         addition to many pleiotropic phenotypes often associated with defects
+         in cell envelope integrity ( 73 , 74 ). However, a recent report
+         indicated that the effects of YhcB on Ec LpxC are likely indirect due
+         to its modulation of fatty acid biosynthesis to alter GPL production (
+         75 ). In the absence of YhcB, the ratio of GPLs to lipid A elevates,
+         presumably causing an accumulation of mislocalized GPLs in the outer
+         leaflet of the OM that serve as substrates for PldA to indirectly
+         impact Ec LpxC levels ( 75 ). These results support an attractive
+         model whereby an increase in mislocalized GPLs that result from
+         reduced LPS biosynthesis, increased GPL biosynthesis, or other OM
+         perturbations may be sensed to inform the cytosolic production of
+         lipid A. The mechanism by which acyl-CoA species might influence Ec
+         LpxC is unknown but addition of exogenous palmitate to growing E. coli
+         cultures has similarly been shown to stabilize Ec LpxC ( 76 ). It is
+         notable that palmitoyl-CoA has been reported to inhibit the activity
+         of the essential FAS II enzyme FabI, and a reduction in FabI activity
+         has, in turn, been reported to increase Ec LpxC levels, perhaps
+         explaining why Ec LpxC might be sensitive to palmitoyl-CoA ( 39 , 77
+         ). Alternatively, long-chain acyl-CoA species derived from exogenous
+         fatty acids have been recently suggested to indirectly increase long-
+         chain acyl-ACP species, which reduces the production of nascent acyl-
+         ACPs through the inhibition of acetyl-CoA carboxylase ( 78 , 79 ).
+         Thus, the addition of exogenous long-chain fatty acids to E. coli led
+         to a rapid and dramatic remodeling of the acyl-ACP chemical landscape,
+         including a reduction in the LpxA substrate R -3-hydroxymyristoyl-ACP
+         ( 78 ). Perhaps consistent with this, exogenous addition of oleate to
+         growing cultures has been shown"
+
+
+--------------------------------------------------------------------------------
+REACTION 20 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  GPL donor -> LPL
+
+  IN    GPL donor
+      + lipoprotein
+
+  OUT   LPL
+
+  ENZYME  Lnt
+          Tier A - DB-grounded [uniprot: P23930]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Lysophospholipid signaling coordinates outer membrane homeostasis in
+        &lt;i&gt;Escherichia coli&lt;/i&gt;. (PMC13170283)
+        section: introduction   ·   best retrieval score for this source: 0.4899
+        "40 ng/mL PF for 1 h, and LPS abundance was assessed by SDS-PAGE. Data
+         are representative of a minimum of three biological replicates. LPS
+         synthesis pathway showing LpxC inhibition by PF-5081090.
+         Lysophospholipid recycling gene disruptions confer resistance. Growth
+         assays and LPS gel analysis confirm that mutants maintain LPS
+         production despite inhibitor treatment. Although the core-
+         oligosaccharide and O-antigen domains of LPS are dispensable,
+         synthesis of the lipid A anchor is essential in most organisms. The
+         first step of synthesis is reversible, and the second step, catalyzed
+         by the deacetylase LpxC ( Fig. 2A ), serves as the committed step ( 8
+         ). Following the reaction of LpxC, seven additional steps are required
+         to produce Kdo 2 -lipid A—the most basic structure of LPS required for
+         functionality ( 4 , 9 ). LpxC activity drives the consumption of R
+         -3-hydroxymyristoyl-ACP, a fatty-acid intermediate that is also
+         required by the enzyme FabZ for fatty acid elongation and downstream
+         GPL synthesis ( Fig. 2A ). Because both pathways compete for this
+         shared resource, changes in LpxC activity directly influence the
+         balance of LPS and GPL production. Perturbations in this balance alter
+         OM composition, thereby impacting barrier function ( 10 ). In E. coli
+         , LpxC levels are modulated by proteolysis through the LapB-FtsH
+         complex, which itself is regulated by the essential membrane protein
+         YejM. During logarithmic growth, when LPS biosynthesis is required,
+         the accessory protein YejM binds to LapB (YciM) and inhibits the
+         recruitment of LpxC to the FtsH protease for degradation. When LPS
+         accumulates in the outer leaflet of the IM and binds to YejM, LapB is
+         released to stimulate LpxC degradation ( 11 – 15 ). LapB has also been
+         shown to directly bind to LpxC, inhibiting enzymatic function ( 16 ).
+         This regulatory network maintains the proper balance of LPS and GPLs
+         for OM integrity. The conserved structure and essential function of
+         LpxC make it an attractive target for antimicrobial development ( 17
+         ). Inhibition of LpxC not only blocks the production of an essential
+         cell envelope component but also destabilizes the OM, rendering the
+         cells hypersensitive to a wide range of antibiotics and to components
+         of the mammalian immune system ( 18 ). Several generations of LpxC
+         inhibitors, such as CHIR-090 and PF-5081090 (PF) ( Fig. 2A ), show
+         potent, broad-spectrum activity against species such as Pseudomonas
+         aeruginosa and E. coli ( 19 ). Investigating how resistance is
+         acquired to LpxC inhibitors has advanced our understanding of cell
+         envelope homeostasis. Mutations that increase drug efflux are critical
+         for resistance to PF in P. aeruginosa ( 19 ). In E. coli , suppressor
+         mutations that confer resistance to CHIR-090 reduce the activity of
+         FabZ, thereby slowing GPL synthesis ( Fig. 2A ) and restoring the GPL-
+         to-LPS ratio in the OM ( 20 ). To uncover additional pathways that
+         alter fitness when LPS synthesis is decreased, we performed a genome-
+         wide transposon sequencing (Tn-seq) screen in E. coli K-12 strain
+         W3110 in the absence and presence of the antibiotic PF. Consistent
+         with prior work, insertions that disrupted drug efflux systems or
+         reduced GPL synthesis affected bacterial fitness. Surprisingly,
+         disruption of the aas-lplT operon, which encodes the lysophospholipid
+         (LPL) recycling system, markedly increased fitness during LpxC
+         inhibition. The enrichment of these mutants suggested that LPL
+         metabolism influences the cellular response to reduced LPS synthesis.
+         This finding raised the possibility that the accumulation or altered
+         processing of LPLs may signal adjustments in lipid biosynthesis that
+         help restore membrane balance during LpxC inhibition. GPLs are the
+         major structural lipids of bacterial membranes, whereas LPLs are mono-
+         acylated byproducts generated during envelope remodeling. LPLs can
+         arise through several enzymatic reactions across the cell envelope. At
+         the IM, LPLs are generated during lipoprotein maturation, where the
+         enzyme Lnt transfers an acyl chain from the sn -1 position of a GPL
+         donor to a lipoprotein ( 21 ) ( Fig. 1 ). In the OM, the phospholipase
+         PldA and palmitoyltransferase PagP utilize mislocalized GPLs that have
+         flipped to the outer leaflet as substrate and release LPLs as
+         byproducts. While PldA cleaves GPLs into LPLs and fatty acids, PagP
+         functions as an acyltransferase that transfers a palmitate from a GPL
+         to lipid A to produce hepta-acylated LPS and an LPL ( 22 – 24 ) ( Fig.
+         1 ). Like Lnt, both enzymes exhibit sn -1 position preference and
+         generate a 2-acyl LPL. Because the accumulation of LPLs perturbs
+         membrane curvature and integrity ( 25 ), many bacteria possess a
+         dedicated LPL recycling system comprised of an LPL transporter (LplT)
+         and acyltransferase/acyl-ACP synthetase (Aas) ( 26 ) ( Fig. 1 ). In
+         vitro , LplT transports lyso-forms of the three major GPLs in E. coli
+         —phosphatidylethanolamine (PE), phosphatidylglycerol (PG), and
+         cardiolipin (CL)—from the outer to the inner surface of spheroplasts (
+         27 ). An “alternating-access” mechanism of LplT is proposed as"
+        https://doi.org/10.1128/mbio.00567-26
+
+
+--------------------------------------------------------------------------------
+REACTION 21 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  GPLs -> LPLs
+
+  IN    GPLs
+
+  OUT   LPLs
+      + fatty acids
+
+  ENZYME  PldA
+          Tier A - DB-grounded [uniprot: P0A921]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Lysophospholipid signaling coordinates outer membrane homeostasis in
+        &lt;i&gt;Escherichia coli&lt;/i&gt;. (PMC13170283)
+        section: introduction   ·   best retrieval score for this source: 0.4899
+        "40 ng/mL PF for 1 h, and LPS abundance was assessed by SDS-PAGE. Data
+         are representative of a minimum of three biological replicates. LPS
+         synthesis pathway showing LpxC inhibition by PF-5081090.
+         Lysophospholipid recycling gene disruptions confer resistance. Growth
+         assays and LPS gel analysis confirm that mutants maintain LPS
+         production despite inhibitor treatment. Although the core-
+         oligosaccharide and O-antigen domains of LPS are dispensable,
+         synthesis of the lipid A anchor is essential in most organisms. The
+         first step of synthesis is reversible, and the second step, catalyzed
+         by the deacetylase LpxC ( Fig. 2A ), serves as the committed step ( 8
+         ). Following the reaction of LpxC, seven additional steps are required
+         to produce Kdo 2 -lipid A—the most basic structure of LPS required for
+         functionality ( 4 , 9 ). LpxC activity drives the consumption of R
+         -3-hydroxymyristoyl-ACP, a fatty-acid intermediate that is also
+         required by the enzyme FabZ for fatty acid elongation and downstream
+         GPL synthesis ( Fig. 2A ). Because both pathways compete for this
+         shared resource, changes in LpxC activity directly influence the
+         balance of LPS and GPL production. Perturbations in this balance alter
+         OM composition, thereby impacting barrier function ( 10 ). In E. coli
+         , LpxC levels are modulated by proteolysis through the LapB-FtsH
+         complex, which itself is regulated by the essential membrane protein
+         YejM. During logarithmic growth, when LPS biosynthesis is required,
+         the accessory protein YejM binds to LapB (YciM) and inhibits the
+         recruitment of LpxC to the FtsH protease for degradation. When LPS
+         accumulates in the outer leaflet of the IM and binds to YejM, LapB is
+         released to stimulate LpxC degradation ( 11 – 15 ). LapB has also been
+         shown to directly bind to LpxC, inhibiting enzymatic function ( 16 ).
+         This regulatory network maintains the proper balance of LPS and GPLs
+         for OM integrity. The conserved structure and essential function of
+         LpxC make it an attractive target for antimicrobial development ( 17
+         ). Inhibition of LpxC not only blocks the production of an essential
+         cell envelope component but also destabilizes the OM, rendering the
+         cells hypersensitive to a wide range of antibiotics and to components
+         of the mammalian immune system ( 18 ). Several generations of LpxC
+         inhibitors, such as CHIR-090 and PF-5081090 (PF) ( Fig. 2A ), show
+         potent, broad-spectrum activity against species such as Pseudomonas
+         aeruginosa and E. coli ( 19 ). Investigating how resistance is
+         acquired to LpxC inhibitors has advanced our understanding of cell
+         envelope homeostasis. Mutations that increase drug efflux are critical
+         for resistance to PF in P. aeruginosa ( 19 ). In E. coli , suppressor
+         mutations that confer resistance to CHIR-090 reduce the activity of
+         FabZ, thereby slowing GPL synthesis ( Fig. 2A ) and restoring the GPL-
+         to-LPS ratio in the OM ( 20 ). To uncover additional pathways that
+         alter fitness when LPS synthesis is decreased, we performed a genome-
+         wide transposon sequencing (Tn-seq) screen in E. coli K-12 strain
+         W3110 in the absence and presence of the antibiotic PF. Consistent
+         with prior work, insertions that disrupted drug efflux systems or
+         reduced GPL synthesis affected bacterial fitness. Surprisingly,
+         disruption of the aas-lplT operon, which encodes the lysophospholipid
+         (LPL) recycling system, markedly increased fitness during LpxC
+         inhibition. The enrichment of these mutants suggested that LPL
+         metabolism influences the cellular response to reduced LPS synthesis.
+         This finding raised the possibility that the accumulation or altered
+         processing of LPLs may signal adjustments in lipid biosynthesis that
+         help restore membrane balance during LpxC inhibition. GPLs are the
+         major structural lipids of bacterial membranes, whereas LPLs are mono-
+         acylated byproducts generated during envelope remodeling. LPLs can
+         arise through several enzymatic reactions across the cell envelope. At
+         the IM, LPLs are generated during lipoprotein maturation, where the
+         enzyme Lnt transfers an acyl chain from the sn -1 position of a GPL
+         donor to a lipoprotein ( 21 ) ( Fig. 1 ). In the OM, the phospholipase
+         PldA and palmitoyltransferase PagP utilize mislocalized GPLs that have
+         flipped to the outer leaflet as substrate and release LPLs as
+         byproducts. While PldA cleaves GPLs into LPLs and fatty acids, PagP
+         functions as an acyltransferase that transfers a palmitate from a GPL
+         to lipid A to produce hepta-acylated LPS and an LPL ( 22 – 24 ) ( Fig.
+         1 ). Like Lnt, both enzymes exhibit sn -1 position preference and
+         generate a 2-acyl LPL. Because the accumulation of LPLs perturbs
+         membrane curvature and integrity ( 25 ), many bacteria possess a
+         dedicated LPL recycling system comprised of an LPL transporter (LplT)
+         and acyltransferase/acyl-ACP synthetase (Aas) ( 26 ) ( Fig. 1 ). In
+         vitro , LplT transports lyso-forms of the three major GPLs in E. coli
+         —phosphatidylethanolamine (PE), phosphatidylglycerol (PG), and
+         cardiolipin (CL)—from the outer to the inner surface of spheroplasts (
+         27 ). An “alternating-access” mechanism of LplT is proposed as"
+        https://doi.org/10.1128/mbio.00567-26
+
+
+--------------------------------------------------------------------------------
+REACTION 22 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  GPL -> hepta-acylated LPS
+
+  IN    GPL
+      + lipid A
+
+  OUT   hepta-acylated LPS
+      + LPL
+
+  ENZYME  PagP
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Lysophospholipid signaling coordinates outer membrane homeostasis in
+        &lt;i&gt;Escherichia coli&lt;/i&gt;. (PMC13170283)
+        section: introduction   ·   best retrieval score for this source: 0.4899
+        "40 ng/mL PF for 1 h, and LPS abundance was assessed by SDS-PAGE. Data
+         are representative of a minimum of three biological replicates. LPS
+         synthesis pathway showing LpxC inhibition by PF-5081090.
+         Lysophospholipid recycling gene disruptions confer resistance. Growth
+         assays and LPS gel analysis confirm that mutants maintain LPS
+         production despite inhibitor treatment. Although the core-
+         oligosaccharide and O-antigen domains of LPS are dispensable,
+         synthesis of the lipid A anchor is essential in most organisms. The
+         first step of synthesis is reversible, and the second step, catalyzed
+         by the deacetylase LpxC ( Fig. 2A ), serves as the committed step ( 8
+         ). Following the reaction of LpxC, seven additional steps are required
+         to produce Kdo 2 -lipid A—the most basic structure of LPS required for
+         functionality ( 4 , 9 ). LpxC activity drives the consumption of R
+         -3-hydroxymyristoyl-ACP, a fatty-acid intermediate that is also
+         required by the enzyme FabZ for fatty acid elongation and downstream
+         GPL synthesis ( Fig. 2A ). Because both pathways compete for this
+         shared resource, changes in LpxC activity directly influence the
+         balance of LPS and GPL production. Perturbations in this balance alter
+         OM composition, thereby impacting barrier function ( 10 ). In E. coli
+         , LpxC levels are modulated by proteolysis through the LapB-FtsH
+         complex, which itself is regulated by the essential membrane protein
+         YejM. During logarithmic growth, when LPS biosynthesis is required,
+         the accessory protein YejM binds to LapB (YciM) and inhibits the
+         recruitment of LpxC to the FtsH protease for degradation. When LPS
+         accumulates in the outer leaflet of the IM and binds to YejM, LapB is
+         released to stimulate LpxC degradation ( 11 – 15 ). LapB has also been
+         shown to directly bind to LpxC, inhibiting enzymatic function ( 16 ).
+         This regulatory network maintains the proper balance of LPS and GPLs
+         for OM integrity. The conserved structure and essential function of
+         LpxC make it an attractive target for antimicrobial development ( 17
+         ). Inhibition of LpxC not only blocks the production of an essential
+         cell envelope component but also destabilizes the OM, rendering the
+         cells hypersensitive to a wide range of antibiotics and to components
+         of the mammalian immune system ( 18 ). Several generations of LpxC
+         inhibitors, such as CHIR-090 and PF-5081090 (PF) ( Fig. 2A ), show
+         potent, broad-spectrum activity against species such as Pseudomonas
+         aeruginosa and E. coli ( 19 ). Investigating how resistance is
+         acquired to LpxC inhibitors has advanced our understanding of cell
+         envelope homeostasis. Mutations that increase drug efflux are critical
+         for resistance to PF in P. aeruginosa ( 19 ). In E. coli , suppressor
+         mutations that confer resistance to CHIR-090 reduce the activity of
+         FabZ, thereby slowing GPL synthesis ( Fig. 2A ) and restoring the GPL-
+         to-LPS ratio in the OM ( 20 ). To uncover additional pathways that
+         alter fitness when LPS synthesis is decreased, we performed a genome-
+         wide transposon sequencing (Tn-seq) screen in E. coli K-12 strain
+         W3110 in the absence and presence of the antibiotic PF. Consistent
+         with prior work, insertions that disrupted drug efflux systems or
+         reduced GPL synthesis affected bacterial fitness. Surprisingly,
+         disruption of the aas-lplT operon, which encodes the lysophospholipid
+         (LPL) recycling system, markedly increased fitness during LpxC
+         inhibition. The enrichment of these mutants suggested that LPL
+         metabolism influences the cellular response to reduced LPS synthesis.
+         This finding raised the possibility that the accumulation or altered
+         processing of LPLs may signal adjustments in lipid biosynthesis that
+         help restore membrane balance during LpxC inhibition. GPLs are the
+         major structural lipids of bacterial membranes, whereas LPLs are mono-
+         acylated byproducts generated during envelope remodeling. LPLs can
+         arise through several enzymatic reactions across the cell envelope. At
+         the IM, LPLs are generated during lipoprotein maturation, where the
+         enzyme Lnt transfers an acyl chain from the sn -1 position of a GPL
+         donor to a lipoprotein ( 21 ) ( Fig. 1 ). In the OM, the phospholipase
+         PldA and palmitoyltransferase PagP utilize mislocalized GPLs that have
+         flipped to the outer leaflet as substrate and release LPLs as
+         byproducts. While PldA cleaves GPLs into LPLs and fatty acids, PagP
+         functions as an acyltransferase that transfers a palmitate from a GPL
+         to lipid A to produce hepta-acylated LPS and an LPL ( 22 – 24 ) ( Fig.
+         1 ). Like Lnt, both enzymes exhibit sn -1 position preference and
+         generate a 2-acyl LPL. Because the accumulation of LPLs perturbs
+         membrane curvature and integrity ( 25 ), many bacteria possess a
+         dedicated LPL recycling system comprised of an LPL transporter (LplT)
+         and acyltransferase/acyl-ACP synthetase (Aas) ( 26 ) ( Fig. 1 ). In
+         vitro , LplT transports lyso-forms of the three major GPLs in E. coli
+         —phosphatidylethanolamine (PE), phosphatidylglycerol (PG), and
+         cardiolipin (CL)—from the outer to the inner surface of spheroplasts (
+         27 ). An “alternating-access” mechanism of LplT is proposed as"
+        https://doi.org/10.1128/mbio.00567-26
+
+
+--------------------------------------------------------------------------------
+REACTION 23 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  LpxA-catalyzed reaction
+
+  IN    UDP-GlcNAc
+      + ( R )-3-hydroxy moiety of the fatty acyl-ACP
+
+  OUT   UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc
+
+  ENZYME  LpxA
+          Tier A - DB-grounded [uniprot: P0A722]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Checkpoints That Regulate Balanced Biosynthesis of Lipopolysaccharide
+        and Its Essentiality in <i>Escherichia coli</i>. (PMC8745692)
+        section: results   ·   best retrieval score for this source: 0.75
+        "results in the accumulation of LPS at the periplasmic side of IM and
+         is often modified by the M-antigen [ 17 ]. However, the Lpt system
+         does not discriminate between the incompletely synthesized LPS and
+         fully mature LPS. To ensure that the completely synthesized LPS is
+         delivered to the Lpt system, the essential LapB protein provides an
+         additional checkpoint by linking the LPS synthesis to its transport by
+         acting as a scaffold for LPS biosynthetic proteins, ensuring that only
+         the completely synthesized LPS is delivered to the Lpt complex [ 15 ].
+         Furthermore, to ensure that products of genes that are involved in the
+         biosynthesis of the LPS core oligosaccharide are available, the
+         transcription of the major waaQ operon, which encodes many of these
+         proteins, requires the RfaH transcriptional factor [ 23 ]. RfaH
+         reduces polymerase by pausing at a specific site in front of waaQ gene
+         and thereby overcoming the premature transcriptional termination,
+         which is critical for the expression of such operons as they lack the
+         canonical ribosome-binding site [ 24 ]. The activity of RfaH is,
+         however, inhibited by the interaction with a non-coding sRNA RirA,
+         providing another checkpoint to prevent the accumulation of excessive
+         LPS to maintain its balanced biosynthesis [ 23 ]. It is pertinent to
+         point out that although LPS is essential for the majority of Gram-
+         negative bacteria, there are few exceptions where some bacteria can
+         survive without LPS (reviewed in [ 3 ]). In this review, we will
+         discuss these processes in E . coli , with a particular emphasis on
+         the regulation of the first committed step in LPS biosynthesis by LpxC
+         as it is a topic of more recent studies with the discovery of the
+         critical role played by the essential IM-anchored LPS assembly protein
+         LapC, the identification of additional proteolytic control mechanisms
+         exerted by HslUV protease at high temperatures and the regulation by
+         the GcvB regulatory RNA ( Figure 1 ). 2. Regulation of the Balance
+         between LPS and Phospholipid Biosynthesis Flux of the Common Metabolic
+         Precursor ( R )-3-hydroxymyristate in Two Pathways In E . coli , the
+         first step in lipid A biosynthesis is catalyzed by the LpxA enzyme.
+         LpxA mediates the transfer of a single acyl chain to UDP-GlcNAc,
+         resulting in the synthesis of UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc [
+         2 , 3 , 25 , 26 ]. The identification of LpxA as a UDP-GlcNAc
+         acyltransferase revealed that UDP-GlcNAc is situated at an early
+         branch point, leading to the synthesis of either peptidoglycan or
+         lipid A ( Figure 1 , Table 1 ) [ 5 , 27 ]. This LpxA-catalyzed
+         reaction requires an ( R )-3-hydroxy moiety of the fatty acyl-ACP as a
+         substrate and, in E . coli , is selective for 14 carbon substrates [
+         28 ]. This selectivity is a result of the LpxA active site performing
+         a hydrocarbon ruler function that preferentially incorporates 14
+         carbon substrates [ 29 , 30 ]. The most remarkable aspect of LpxA’s
+         acyltransferase activity is its unfavorable equilibrium constant [ 27
+         ]. Hence, the second irreversible reaction becomes the first committed
+         step in lipid A biosynthesis, catalyzed by Zn ++ -dependent
+         deacetylase LpxC, leading to the deacetylation of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcNAc for the synthesis of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcN, which in turn serves as a substrate for
+         LpxD to yield UDP-2,3-diacylglucosamine [ 31 , 32 , 33 , 34 , 35 ].
+         This intermediate is then converted to the lipid IV A precursor by the
+         further action of LpxH, LpxB and LpxK ( Figure 1 ) [ 2 , 26 ]. In this
+         essential process, ( R )-3-hydroxymyristoyl-ACP is situated at another
+         important biosynthetic branch point since it can be elongated to
+         palmitate in order to be incorporated into glycerophospholipids
+         instead of recruited into lipid A biosynthesis [ 14 ]. As LPS and
+         phospholipids share ( R )-3-hydroxymyristate as a common metabolic
+         precursor, a tight balance is maintained in the amounts of these two
+         essential components of the cell envelope [ 14 , 36 ]. This is
+         achieved by the regulation of the LpxC amount and FabZ dehydratase
+         activity to maintain a flux of a common metabolic precursor in the
+         utilization of LPS and phospholipid biosynthesis. Thus, the study of
+         LpxC-mediated regulation has become an intense topic of investigation
+         in recent years [ 37 , 38 , 39 ]. Table 1 Genes whose products are
+         involved in Kdo 2 -lipid A biosynthesis. Gene EC Number Product lpxA
+         2.3.1.129 acyl-[acyl-carrier-protein]-UDP- N -acetyloglucosamine O
+         -acyltransferase lpxB 2.4.1.182 lipid A disaccharide synthase lpxC
+         3.5.1.108 UDP-3- O -acyl N -acetylglucosamine deacetylase lpxD
+         2.3.1.191 UDP-3- O -(3-hydroxyacyl)-glucosamine N -acyltransferase
+         lpxH 3.6.1.54 UDP-2,3-diacylglucosamine diphosphatase lpxK 2.7.1.130
+         tetraacyldisaccharide A 4′-kinase lpxL 2.3.1.241 Kdo 2 -lipid IV A
+         acyltransferase lpxM 2.3.1.243 acyl-Kdo 2 -lipid IV A acyltransferase
+         lpxP 2.3.1.242 Kdo 2 -lipid IV A palmitoleoyltransferase lpxT 2.7.4.29
+         Kdo 2 -lipid"
+        https://doi.org/10.3390/ijms23010189
+
+
+--------------------------------------------------------------------------------
+REACTION 24 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  deacetylation of UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc
+
+  IN    UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc
+
+  OUT   UDP-3- O -[(3R)-3-hydroxyacyl]-GlcN
+
+  ENZYME  LpxC
+          Tier A - DB-grounded [uniprot: P0A725]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Checkpoints That Regulate Balanced Biosynthesis of Lipopolysaccharide
+        and Its Essentiality in <i>Escherichia coli</i>. (PMC8745692)
+        section: results   ·   best retrieval score for this source: 0.75
+        "results in the accumulation of LPS at the periplasmic side of IM and
+         is often modified by the M-antigen [ 17 ]. However, the Lpt system
+         does not discriminate between the incompletely synthesized LPS and
+         fully mature LPS. To ensure that the completely synthesized LPS is
+         delivered to the Lpt system, the essential LapB protein provides an
+         additional checkpoint by linking the LPS synthesis to its transport by
+         acting as a scaffold for LPS biosynthetic proteins, ensuring that only
+         the completely synthesized LPS is delivered to the Lpt complex [ 15 ].
+         Furthermore, to ensure that products of genes that are involved in the
+         biosynthesis of the LPS core oligosaccharide are available, the
+         transcription of the major waaQ operon, which encodes many of these
+         proteins, requires the RfaH transcriptional factor [ 23 ]. RfaH
+         reduces polymerase by pausing at a specific site in front of waaQ gene
+         and thereby overcoming the premature transcriptional termination,
+         which is critical for the expression of such operons as they lack the
+         canonical ribosome-binding site [ 24 ]. The activity of RfaH is,
+         however, inhibited by the interaction with a non-coding sRNA RirA,
+         providing another checkpoint to prevent the accumulation of excessive
+         LPS to maintain its balanced biosynthesis [ 23 ]. It is pertinent to
+         point out that although LPS is essential for the majority of Gram-
+         negative bacteria, there are few exceptions where some bacteria can
+         survive without LPS (reviewed in [ 3 ]). In this review, we will
+         discuss these processes in E . coli , with a particular emphasis on
+         the regulation of the first committed step in LPS biosynthesis by LpxC
+         as it is a topic of more recent studies with the discovery of the
+         critical role played by the essential IM-anchored LPS assembly protein
+         LapC, the identification of additional proteolytic control mechanisms
+         exerted by HslUV protease at high temperatures and the regulation by
+         the GcvB regulatory RNA ( Figure 1 ). 2. Regulation of the Balance
+         between LPS and Phospholipid Biosynthesis Flux of the Common Metabolic
+         Precursor ( R )-3-hydroxymyristate in Two Pathways In E . coli , the
+         first step in lipid A biosynthesis is catalyzed by the LpxA enzyme.
+         LpxA mediates the transfer of a single acyl chain to UDP-GlcNAc,
+         resulting in the synthesis of UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc [
+         2 , 3 , 25 , 26 ]. The identification of LpxA as a UDP-GlcNAc
+         acyltransferase revealed that UDP-GlcNAc is situated at an early
+         branch point, leading to the synthesis of either peptidoglycan or
+         lipid A ( Figure 1 , Table 1 ) [ 5 , 27 ]. This LpxA-catalyzed
+         reaction requires an ( R )-3-hydroxy moiety of the fatty acyl-ACP as a
+         substrate and, in E . coli , is selective for 14 carbon substrates [
+         28 ]. This selectivity is a result of the LpxA active site performing
+         a hydrocarbon ruler function that preferentially incorporates 14
+         carbon substrates [ 29 , 30 ]. The most remarkable aspect of LpxA’s
+         acyltransferase activity is its unfavorable equilibrium constant [ 27
+         ]. Hence, the second irreversible reaction becomes the first committed
+         step in lipid A biosynthesis, catalyzed by Zn ++ -dependent
+         deacetylase LpxC, leading to the deacetylation of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcNAc for the synthesis of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcN, which in turn serves as a substrate for
+         LpxD to yield UDP-2,3-diacylglucosamine [ 31 , 32 , 33 , 34 , 35 ].
+         This intermediate is then converted to the lipid IV A precursor by the
+         further action of LpxH, LpxB and LpxK ( Figure 1 ) [ 2 , 26 ]. In this
+         essential process, ( R )-3-hydroxymyristoyl-ACP is situated at another
+         important biosynthetic branch point since it can be elongated to
+         palmitate in order to be incorporated into glycerophospholipids
+         instead of recruited into lipid A biosynthesis [ 14 ]. As LPS and
+         phospholipids share ( R )-3-hydroxymyristate as a common metabolic
+         precursor, a tight balance is maintained in the amounts of these two
+         essential components of the cell envelope [ 14 , 36 ]. This is
+         achieved by the regulation of the LpxC amount and FabZ dehydratase
+         activity to maintain a flux of a common metabolic precursor in the
+         utilization of LPS and phospholipid biosynthesis. Thus, the study of
+         LpxC-mediated regulation has become an intense topic of investigation
+         in recent years [ 37 , 38 , 39 ]. Table 1 Genes whose products are
+         involved in Kdo 2 -lipid A biosynthesis. Gene EC Number Product lpxA
+         2.3.1.129 acyl-[acyl-carrier-protein]-UDP- N -acetyloglucosamine O
+         -acyltransferase lpxB 2.4.1.182 lipid A disaccharide synthase lpxC
+         3.5.1.108 UDP-3- O -acyl N -acetylglucosamine deacetylase lpxD
+         2.3.1.191 UDP-3- O -(3-hydroxyacyl)-glucosamine N -acyltransferase
+         lpxH 3.6.1.54 UDP-2,3-diacylglucosamine diphosphatase lpxK 2.7.1.130
+         tetraacyldisaccharide A 4′-kinase lpxL 2.3.1.241 Kdo 2 -lipid IV A
+         acyltransferase lpxM 2.3.1.243 acyl-Kdo 2 -lipid IV A acyltransferase
+         lpxP 2.3.1.242 Kdo 2 -lipid IV A palmitoleoyltransferase lpxT 2.7.4.29
+         Kdo 2 -lipid"
+        https://doi.org/10.3390/ijms23010189
+
+
+--------------------------------------------------------------------------------
+REACTION 25 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  UDP-3- O -[(3R)-3-hydroxyacyl]-GlcN -> UDP-2,3-diacylglucosamine
+
+  IN    UDP-3- O -[(3R)-3-hydroxyacyl]-GlcN
+
+  OUT   UDP-2,3-diacylglucosamine
+
+  ENZYME  LpxD
+          Tier A - DB-grounded [uniprot: P21645]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Checkpoints That Regulate Balanced Biosynthesis of Lipopolysaccharide
+        and Its Essentiality in <i>Escherichia coli</i>. (PMC8745692)
+        section: results   ·   best retrieval score for this source: 0.75
+        "results in the accumulation of LPS at the periplasmic side of IM and
+         is often modified by the M-antigen [ 17 ]. However, the Lpt system
+         does not discriminate between the incompletely synthesized LPS and
+         fully mature LPS. To ensure that the completely synthesized LPS is
+         delivered to the Lpt system, the essential LapB protein provides an
+         additional checkpoint by linking the LPS synthesis to its transport by
+         acting as a scaffold for LPS biosynthetic proteins, ensuring that only
+         the completely synthesized LPS is delivered to the Lpt complex [ 15 ].
+         Furthermore, to ensure that products of genes that are involved in the
+         biosynthesis of the LPS core oligosaccharide are available, the
+         transcription of the major waaQ operon, which encodes many of these
+         proteins, requires the RfaH transcriptional factor [ 23 ]. RfaH
+         reduces polymerase by pausing at a specific site in front of waaQ gene
+         and thereby overcoming the premature transcriptional termination,
+         which is critical for the expression of such operons as they lack the
+         canonical ribosome-binding site [ 24 ]. The activity of RfaH is,
+         however, inhibited by the interaction with a non-coding sRNA RirA,
+         providing another checkpoint to prevent the accumulation of excessive
+         LPS to maintain its balanced biosynthesis [ 23 ]. It is pertinent to
+         point out that although LPS is essential for the majority of Gram-
+         negative bacteria, there are few exceptions where some bacteria can
+         survive without LPS (reviewed in [ 3 ]). In this review, we will
+         discuss these processes in E . coli , with a particular emphasis on
+         the regulation of the first committed step in LPS biosynthesis by LpxC
+         as it is a topic of more recent studies with the discovery of the
+         critical role played by the essential IM-anchored LPS assembly protein
+         LapC, the identification of additional proteolytic control mechanisms
+         exerted by HslUV protease at high temperatures and the regulation by
+         the GcvB regulatory RNA ( Figure 1 ). 2. Regulation of the Balance
+         between LPS and Phospholipid Biosynthesis Flux of the Common Metabolic
+         Precursor ( R )-3-hydroxymyristate in Two Pathways In E . coli , the
+         first step in lipid A biosynthesis is catalyzed by the LpxA enzyme.
+         LpxA mediates the transfer of a single acyl chain to UDP-GlcNAc,
+         resulting in the synthesis of UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc [
+         2 , 3 , 25 , 26 ]. The identification of LpxA as a UDP-GlcNAc
+         acyltransferase revealed that UDP-GlcNAc is situated at an early
+         branch point, leading to the synthesis of either peptidoglycan or
+         lipid A ( Figure 1 , Table 1 ) [ 5 , 27 ]. This LpxA-catalyzed
+         reaction requires an ( R )-3-hydroxy moiety of the fatty acyl-ACP as a
+         substrate and, in E . coli , is selective for 14 carbon substrates [
+         28 ]. This selectivity is a result of the LpxA active site performing
+         a hydrocarbon ruler function that preferentially incorporates 14
+         carbon substrates [ 29 , 30 ]. The most remarkable aspect of LpxA’s
+         acyltransferase activity is its unfavorable equilibrium constant [ 27
+         ]. Hence, the second irreversible reaction becomes the first committed
+         step in lipid A biosynthesis, catalyzed by Zn ++ -dependent
+         deacetylase LpxC, leading to the deacetylation of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcNAc for the synthesis of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcN, which in turn serves as a substrate for
+         LpxD to yield UDP-2,3-diacylglucosamine [ 31 , 32 , 33 , 34 , 35 ].
+         This intermediate is then converted to the lipid IV A precursor by the
+         further action of LpxH, LpxB and LpxK ( Figure 1 ) [ 2 , 26 ]. In this
+         essential process, ( R )-3-hydroxymyristoyl-ACP is situated at another
+         important biosynthetic branch point since it can be elongated to
+         palmitate in order to be incorporated into glycerophospholipids
+         instead of recruited into lipid A biosynthesis [ 14 ]. As LPS and
+         phospholipids share ( R )-3-hydroxymyristate as a common metabolic
+         precursor, a tight balance is maintained in the amounts of these two
+         essential components of the cell envelope [ 14 , 36 ]. This is
+         achieved by the regulation of the LpxC amount and FabZ dehydratase
+         activity to maintain a flux of a common metabolic precursor in the
+         utilization of LPS and phospholipid biosynthesis. Thus, the study of
+         LpxC-mediated regulation has become an intense topic of investigation
+         in recent years [ 37 , 38 , 39 ]. Table 1 Genes whose products are
+         involved in Kdo 2 -lipid A biosynthesis. Gene EC Number Product lpxA
+         2.3.1.129 acyl-[acyl-carrier-protein]-UDP- N -acetyloglucosamine O
+         -acyltransferase lpxB 2.4.1.182 lipid A disaccharide synthase lpxC
+         3.5.1.108 UDP-3- O -acyl N -acetylglucosamine deacetylase lpxD
+         2.3.1.191 UDP-3- O -(3-hydroxyacyl)-glucosamine N -acyltransferase
+         lpxH 3.6.1.54 UDP-2,3-diacylglucosamine diphosphatase lpxK 2.7.1.130
+         tetraacyldisaccharide A 4′-kinase lpxL 2.3.1.241 Kdo 2 -lipid IV A
+         acyltransferase lpxM 2.3.1.243 acyl-Kdo 2 -lipid IV A acyltransferase
+         lpxP 2.3.1.242 Kdo 2 -lipid IV A palmitoleoyltransferase lpxT 2.7.4.29
+         Kdo 2 -lipid"
+        https://doi.org/10.3390/ijms23010189
+
+
+--------------------------------------------------------------------------------
+REACTION 26 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  UDP-2,3-diacylglucosamine -> lipid IV A precursor
+
+  IN    UDP-2,3-diacylglucosamine
+
+  OUT   lipid IV A precursor
+
+  ENZYME  LpxH
+          Tier A - DB-grounded [uniprot: P43341]
+  ENZYME  LpxB
+          Tier A - DB-grounded [uniprot: P10441]
+  ENZYME  LpxK
+          Tier A - DB-grounded [uniprot: P27300]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] Checkpoints That Regulate Balanced Biosynthesis of Lipopolysaccharide
+        and Its Essentiality in <i>Escherichia coli</i>. (PMC8745692)
+        section: results   ·   best retrieval score for this source: 0.75
+        "results in the accumulation of LPS at the periplasmic side of IM and
+         is often modified by the M-antigen [ 17 ]. However, the Lpt system
+         does not discriminate between the incompletely synthesized LPS and
+         fully mature LPS. To ensure that the completely synthesized LPS is
+         delivered to the Lpt system, the essential LapB protein provides an
+         additional checkpoint by linking the LPS synthesis to its transport by
+         acting as a scaffold for LPS biosynthetic proteins, ensuring that only
+         the completely synthesized LPS is delivered to the Lpt complex [ 15 ].
+         Furthermore, to ensure that products of genes that are involved in the
+         biosynthesis of the LPS core oligosaccharide are available, the
+         transcription of the major waaQ operon, which encodes many of these
+         proteins, requires the RfaH transcriptional factor [ 23 ]. RfaH
+         reduces polymerase by pausing at a specific site in front of waaQ gene
+         and thereby overcoming the premature transcriptional termination,
+         which is critical for the expression of such operons as they lack the
+         canonical ribosome-binding site [ 24 ]. The activity of RfaH is,
+         however, inhibited by the interaction with a non-coding sRNA RirA,
+         providing another checkpoint to prevent the accumulation of excessive
+         LPS to maintain its balanced biosynthesis [ 23 ]. It is pertinent to
+         point out that although LPS is essential for the majority of Gram-
+         negative bacteria, there are few exceptions where some bacteria can
+         survive without LPS (reviewed in [ 3 ]). In this review, we will
+         discuss these processes in E . coli , with a particular emphasis on
+         the regulation of the first committed step in LPS biosynthesis by LpxC
+         as it is a topic of more recent studies with the discovery of the
+         critical role played by the essential IM-anchored LPS assembly protein
+         LapC, the identification of additional proteolytic control mechanisms
+         exerted by HslUV protease at high temperatures and the regulation by
+         the GcvB regulatory RNA ( Figure 1 ). 2. Regulation of the Balance
+         between LPS and Phospholipid Biosynthesis Flux of the Common Metabolic
+         Precursor ( R )-3-hydroxymyristate in Two Pathways In E . coli , the
+         first step in lipid A biosynthesis is catalyzed by the LpxA enzyme.
+         LpxA mediates the transfer of a single acyl chain to UDP-GlcNAc,
+         resulting in the synthesis of UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc [
+         2 , 3 , 25 , 26 ]. The identification of LpxA as a UDP-GlcNAc
+         acyltransferase revealed that UDP-GlcNAc is situated at an early
+         branch point, leading to the synthesis of either peptidoglycan or
+         lipid A ( Figure 1 , Table 1 ) [ 5 , 27 ]. This LpxA-catalyzed
+         reaction requires an ( R )-3-hydroxy moiety of the fatty acyl-ACP as a
+         substrate and, in E . coli , is selective for 14 carbon substrates [
+         28 ]. This selectivity is a result of the LpxA active site performing
+         a hydrocarbon ruler function that preferentially incorporates 14
+         carbon substrates [ 29 , 30 ]. The most remarkable aspect of LpxA’s
+         acyltransferase activity is its unfavorable equilibrium constant [ 27
+         ]. Hence, the second irreversible reaction becomes the first committed
+         step in lipid A biosynthesis, catalyzed by Zn ++ -dependent
+         deacetylase LpxC, leading to the deacetylation of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcNAc for the synthesis of UDP-3- O
+         -[(3R)-3-hydroxyacyl]-GlcN, which in turn serves as a substrate for
+         LpxD to yield UDP-2,3-diacylglucosamine [ 31 , 32 , 33 , 34 , 35 ].
+         This intermediate is then converted to the lipid IV A precursor by the
+         further action of LpxH, LpxB and LpxK ( Figure 1 ) [ 2 , 26 ]. In this
+         essential process, ( R )-3-hydroxymyristoyl-ACP is situated at another
+         important biosynthetic branch point since it can be elongated to
+         palmitate in order to be incorporated into glycerophospholipids
+         instead of recruited into lipid A biosynthesis [ 14 ]. As LPS and
+         phospholipids share ( R )-3-hydroxymyristate as a common metabolic
+         precursor, a tight balance is maintained in the amounts of these two
+         essential components of the cell envelope [ 14 , 36 ]. This is
+         achieved by the regulation of the LpxC amount and FabZ dehydratase
+         activity to maintain a flux of a common metabolic precursor in the
+         utilization of LPS and phospholipid biosynthesis. Thus, the study of
+         LpxC-mediated regulation has become an intense topic of investigation
+         in recent years [ 37 , 38 , 39 ]. Table 1 Genes whose products are
+         involved in Kdo 2 -lipid A biosynthesis. Gene EC Number Product lpxA
+         2.3.1.129 acyl-[acyl-carrier-protein]-UDP- N -acetyloglucosamine O
+         -acyltransferase lpxB 2.4.1.182 lipid A disaccharide synthase lpxC
+         3.5.1.108 UDP-3- O -acyl N -acetylglucosamine deacetylase lpxD
+         2.3.1.191 UDP-3- O -(3-hydroxyacyl)-glucosamine N -acyltransferase
+         lpxH 3.6.1.54 UDP-2,3-diacylglucosamine diphosphatase lpxK 2.7.1.130
+         tetraacyldisaccharide A 4′-kinase lpxL 2.3.1.241 Kdo 2 -lipid IV A
+         acyltransferase lpxM 2.3.1.243 acyl-Kdo 2 -lipid IV A acyltransferase
+         lpxP 2.3.1.242 Kdo 2 -lipid IV A palmitoleoyltransferase lpxT 2.7.4.29
+         Kdo 2 -lipid"
+        https://doi.org/10.3390/ijms23010189
+
+
+--------------------------------------------------------------------------------
+REACTION 27 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  FtsH-mediated proteolysis of Ec LpxC
+
+  IN    Ec LpxC
+
+  OUT   degraded Ec LpxC
+
+  ENZYME  FtsH
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: results   ·   best retrieval score for this source: 0.8838
+        "through elevating the availability of R -3-hydroxymyristoyl-ACP ( 52
+         ). Thus, Ogura et al reasoned that the essential function of FtsH may
+         be through modulation of membrane lipid biosynthesis. Subsequent
+         analysis of GPL and LPS production revealed that, although GPL levels
+         were largely unchanged, LPS accumulated approximately 50% more when
+         FtsH was inactivated compared to the permissive conditions ( 39 ).
+         Furthermore, the accumulation of LPS in the absence of FtsH was
+         suppressed by the sfhC21 allele, suggesting that the hyperproduction
+         of LPS was related to the essential function of FtsH ( 39 ). With the
+         knowledge that FtsH modulates LPS biosynthesis in hand, Ogura et al
+         wondered if FtsH was the post transcriptional regulator of LpxC that
+         had been previously reported. Indeed, they found that the specific
+         activity of LpxC increased in ftsH mutant lysates and observed a
+         concomitant accumulation of LpxC protein ( 39 ). Furthermore, in vitro
+         biochemical characterization showed that FtsH was able to directly
+         degrade LpxC, confirming FtsH as the first example of a direct
+         regulator of lipid A biosynthesis ( 39 ). This seminal study not only
+         explained how Ec LpxC was specifically regulated but also emphasized
+         several themes in the regulation of cell envelope synthesis that have
+         greatly influenced the field. Namely, hyperaccumulation of LPS is
+         detrimental to cells and balancing LPS biosynthesis with the
+         production of other cell envelope components is critical. FtsH-
+         mediated proteolysis of Ec LpxC is controlled by LapB and YejM FtsH is
+         responsible for the degradation of numerous protein substrates in
+         addition to LpxC, including the heat-shock sigma factor σ 32 , the
+         lambda regulator cII, and diverse membrane proteins ( 54 , 55 , 56 ,
+         57 , 58 , 59 ). It seemed clear that FtsH was able to discriminate
+         among its substrates in response to specific signals, however, as
+         altered LPS biosynthesis specifically impacted the ability of FtsH to
+         degrade Ec LpxC and not another proteolytic target, σ 32 ( 39 ). It
+         was subsequently shown that Ec LpxC contains a C-terminal degron
+         sequence composed of six nonpolar residues (LAXXXXXAVLA) that is
+         critical for its ability to be recognized by FtsH ( 60 , 61 ).
+         Notably, this degron sequence is distinct from other FtsH substrates (
+         48 , 60 ), but it was unclear how FtsH recognized such diverse
+         substrates and specifically singled out LpxC for degradation under
+         conditions in which LPS production was high. In 2014, several groups
+         independently reported the involvement of a heat shock responsive IM-
+         protein LapB (lipopolysaccharide assembly protein B; formerly called
+         YciM) in cell envelope integrity ( 41 , 45 , 46 ). Specifically, it
+         was shown that lapB mutation was only tolerated in a subset of E. coli
+         strains and that those strains in which lapB was mutated exhibited
+         hypersensitivity to antibiotics, elevated cell envelope stress
+         response pathways, and filamentous cellular morphology similar to that
+         observed upon overexpression of Ec LpxC ( 41 , 45 , 46 , 61 ). Two of
+         these initial studies took advantage of the dramatic phenotypes
+         associated with lapB deletion and isolated mutants that restored
+         growth under nonpermissive conditions, many of which mapped to the Ec
+         lpxC gene ( 41 , 45 ). Furthermore, Ec LpxC levels increased in the
+         absence of LapB, resulting in an accumulation of LPS ( 41 , 45 ).
+         Importantly, lapB deletion did not affect the stability of σ 32 ,
+         another FtsH substrate, leading one group to propose that LapB might
+         serve as an adapter that facilitated regulated proteolysis of Ec LpxC
+         by FtsH ( 45 ). In support of this model, LapB was shown to copurify
+         with FtsH ( 41 ). The role of LapB as an adaptor protein was later
+         confirmed by biochemical studies in which LapB addition dramatically
+         elevated the rate in which FtsH degraded Ec LpxC ( 62 ). Detailed
+         enzymatic characterization revealed that the increased FtsH-mediated
+         degradation of Ec LpxC observed in the presence of LapB was likely a
+         result of enhanced binding affinity for Ec LpxC ( 62 ). In further
+         support of LapB serving as an adaptor, it was shown to interact
+         directly with both FtsH (through its transmembrane helix) and Ec LpxC
+         (through tetratricopeptide repeats in its cytosolic domain) ( 62 ).
+         More recently, structural analysis of LapB- Ec LpxC interaction has
+         revealed that LapB makes extensive contacts with the N terminal and
+         central regions of the Ec LpxC degron, bringing the C terminal tail in
+         close proximity to the membrane where it would be readily accessible
+         to the FtsH active site ( 63 ). Intriguingly, LapB also makes
+         extensive contacts near the hydrophobic tunnel of Ec LpxC that
+         accommodates substrate binding and, consistent with this, LapB binding
+         is sufficient to reduce Ec LpxC activity by approximately 80% in vitro
+         ( 63 ). Thus, LapB appears to regulate Ec LpxC"
+
+
+--------------------------------------------------------------------------------
+REACTION 28 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  FtsH-mediated degradation of heat-shock sigma factor σ 32
+
+  IN    σ 32
+
+  OUT   degraded σ 32
+
+  ENZYME  FtsH
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: results   ·   best retrieval score for this source: 0.8838
+        "through elevating the availability of R -3-hydroxymyristoyl-ACP ( 52
+         ). Thus, Ogura et al reasoned that the essential function of FtsH may
+         be through modulation of membrane lipid biosynthesis. Subsequent
+         analysis of GPL and LPS production revealed that, although GPL levels
+         were largely unchanged, LPS accumulated approximately 50% more when
+         FtsH was inactivated compared to the permissive conditions ( 39 ).
+         Furthermore, the accumulation of LPS in the absence of FtsH was
+         suppressed by the sfhC21 allele, suggesting that the hyperproduction
+         of LPS was related to the essential function of FtsH ( 39 ). With the
+         knowledge that FtsH modulates LPS biosynthesis in hand, Ogura et al
+         wondered if FtsH was the post transcriptional regulator of LpxC that
+         had been previously reported. Indeed, they found that the specific
+         activity of LpxC increased in ftsH mutant lysates and observed a
+         concomitant accumulation of LpxC protein ( 39 ). Furthermore, in vitro
+         biochemical characterization showed that FtsH was able to directly
+         degrade LpxC, confirming FtsH as the first example of a direct
+         regulator of lipid A biosynthesis ( 39 ). This seminal study not only
+         explained how Ec LpxC was specifically regulated but also emphasized
+         several themes in the regulation of cell envelope synthesis that have
+         greatly influenced the field. Namely, hyperaccumulation of LPS is
+         detrimental to cells and balancing LPS biosynthesis with the
+         production of other cell envelope components is critical. FtsH-
+         mediated proteolysis of Ec LpxC is controlled by LapB and YejM FtsH is
+         responsible for the degradation of numerous protein substrates in
+         addition to LpxC, including the heat-shock sigma factor σ 32 , the
+         lambda regulator cII, and diverse membrane proteins ( 54 , 55 , 56 ,
+         57 , 58 , 59 ). It seemed clear that FtsH was able to discriminate
+         among its substrates in response to specific signals, however, as
+         altered LPS biosynthesis specifically impacted the ability of FtsH to
+         degrade Ec LpxC and not another proteolytic target, σ 32 ( 39 ). It
+         was subsequently shown that Ec LpxC contains a C-terminal degron
+         sequence composed of six nonpolar residues (LAXXXXXAVLA) that is
+         critical for its ability to be recognized by FtsH ( 60 , 61 ).
+         Notably, this degron sequence is distinct from other FtsH substrates (
+         48 , 60 ), but it was unclear how FtsH recognized such diverse
+         substrates and specifically singled out LpxC for degradation under
+         conditions in which LPS production was high. In 2014, several groups
+         independently reported the involvement of a heat shock responsive IM-
+         protein LapB (lipopolysaccharide assembly protein B; formerly called
+         YciM) in cell envelope integrity ( 41 , 45 , 46 ). Specifically, it
+         was shown that lapB mutation was only tolerated in a subset of E. coli
+         strains and that those strains in which lapB was mutated exhibited
+         hypersensitivity to antibiotics, elevated cell envelope stress
+         response pathways, and filamentous cellular morphology similar to that
+         observed upon overexpression of Ec LpxC ( 41 , 45 , 46 , 61 ). Two of
+         these initial studies took advantage of the dramatic phenotypes
+         associated with lapB deletion and isolated mutants that restored
+         growth under nonpermissive conditions, many of which mapped to the Ec
+         lpxC gene ( 41 , 45 ). Furthermore, Ec LpxC levels increased in the
+         absence of LapB, resulting in an accumulation of LPS ( 41 , 45 ).
+         Importantly, lapB deletion did not affect the stability of σ 32 ,
+         another FtsH substrate, leading one group to propose that LapB might
+         serve as an adapter that facilitated regulated proteolysis of Ec LpxC
+         by FtsH ( 45 ). In support of this model, LapB was shown to copurify
+         with FtsH ( 41 ). The role of LapB as an adaptor protein was later
+         confirmed by biochemical studies in which LapB addition dramatically
+         elevated the rate in which FtsH degraded Ec LpxC ( 62 ). Detailed
+         enzymatic characterization revealed that the increased FtsH-mediated
+         degradation of Ec LpxC observed in the presence of LapB was likely a
+         result of enhanced binding affinity for Ec LpxC ( 62 ). In further
+         support of LapB serving as an adaptor, it was shown to interact
+         directly with both FtsH (through its transmembrane helix) and Ec LpxC
+         (through tetratricopeptide repeats in its cytosolic domain) ( 62 ).
+         More recently, structural analysis of LapB- Ec LpxC interaction has
+         revealed that LapB makes extensive contacts with the N terminal and
+         central regions of the Ec LpxC degron, bringing the C terminal tail in
+         close proximity to the membrane where it would be readily accessible
+         to the FtsH active site ( 63 ). Intriguingly, LapB also makes
+         extensive contacts near the hydrophobic tunnel of Ec LpxC that
+         accommodates substrate binding and, consistent with this, LapB binding
+         is sufficient to reduce Ec LpxC activity by approximately 80% in vitro
+         ( 63 ). Thus, LapB appears to regulate Ec LpxC"
+
+
+--------------------------------------------------------------------------------
+REACTION 29 of 29   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  FtsH-mediated degradation of lambda regulator cII
+
+  IN    lambda regulator cII
+
+  OUT   degraded lambda regulator cII
+
+  ENZYME  FtsH
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] lipid A biosynthesis (seed paper)
+        section: results   ·   best retrieval score for this source: 0.8838
+        "through elevating the availability of R -3-hydroxymyristoyl-ACP ( 52
+         ). Thus, Ogura et al reasoned that the essential function of FtsH may
+         be through modulation of membrane lipid biosynthesis. Subsequent
+         analysis of GPL and LPS production revealed that, although GPL levels
+         were largely unchanged, LPS accumulated approximately 50% more when
+         FtsH was inactivated compared to the permissive conditions ( 39 ).
+         Furthermore, the accumulation of LPS in the absence of FtsH was
+         suppressed by the sfhC21 allele, suggesting that the hyperproduction
+         of LPS was related to the essential function of FtsH ( 39 ). With the
+         knowledge that FtsH modulates LPS biosynthesis in hand, Ogura et al
+         wondered if FtsH was the post transcriptional regulator of LpxC that
+         had been previously reported. Indeed, they found that the specific
+         activity of LpxC increased in ftsH mutant lysates and observed a
+         concomitant accumulation of LpxC protein ( 39 ). Furthermore, in vitro
+         biochemical characterization showed that FtsH was able to directly
+         degrade LpxC, confirming FtsH as the first example of a direct
+         regulator of lipid A biosynthesis ( 39 ). This seminal study not only
+         explained how Ec LpxC was specifically regulated but also emphasized
+         several themes in the regulation of cell envelope synthesis that have
+         greatly influenced the field. Namely, hyperaccumulation of LPS is
+         detrimental to cells and balancing LPS biosynthesis with the
+         production of other cell envelope components is critical. FtsH-
+         mediated proteolysis of Ec LpxC is controlled by LapB and YejM FtsH is
+         responsible for the degradation of numerous protein substrates in
+         addition to LpxC, including the heat-shock sigma factor σ 32 , the
+         lambda regulator cII, and diverse membrane proteins ( 54 , 55 , 56 ,
+         57 , 58 , 59 ). It seemed clear that FtsH was able to discriminate
+         among its substrates in response to specific signals, however, as
+         altered LPS biosynthesis specifically impacted the ability of FtsH to
+         degrade Ec LpxC and not another proteolytic target, σ 32 ( 39 ). It
+         was subsequently shown that Ec LpxC contains a C-terminal degron
+         sequence composed of six nonpolar residues (LAXXXXXAVLA) that is
+         critical for its ability to be recognized by FtsH ( 60 , 61 ).
+         Notably, this degron sequence is distinct from other FtsH substrates (
+         48 , 60 ), but it was unclear how FtsH recognized such diverse
+         substrates and specifically singled out LpxC for degradation under
+         conditions in which LPS production was high. In 2014, several groups
+         independently reported the involvement of a heat shock responsive IM-
+         protein LapB (lipopolysaccharide assembly protein B; formerly called
+         YciM) in cell envelope integrity ( 41 , 45 , 46 ). Specifically, it
+         was shown that lapB mutation was only tolerated in a subset of E. coli
+         strains and that those strains in which lapB was mutated exhibited
+         hypersensitivity to antibiotics, elevated cell envelope stress
+         response pathways, and filamentous cellular morphology similar to that
+         observed upon overexpression of Ec LpxC ( 41 , 45 , 46 , 61 ). Two of
+         these initial studies took advantage of the dramatic phenotypes
+         associated with lapB deletion and isolated mutants that restored
+         growth under nonpermissive conditions, many of which mapped to the Ec
+         lpxC gene ( 41 , 45 ). Furthermore, Ec LpxC levels increased in the
+         absence of LapB, resulting in an accumulation of LPS ( 41 , 45 ).
+         Importantly, lapB deletion did not affect the stability of σ 32 ,
+         another FtsH substrate, leading one group to propose that LapB might
+         serve as an adapter that facilitated regulated proteolysis of Ec LpxC
+         by FtsH ( 45 ). In support of this model, LapB was shown to copurify
+         with FtsH ( 41 ). The role of LapB as an adaptor protein was later
+         confirmed by biochemical studies in which LapB addition dramatically
+         elevated the rate in which FtsH degraded Ec LpxC ( 62 ). Detailed
+         enzymatic characterization revealed that the increased FtsH-mediated
+         degradation of Ec LpxC observed in the presence of LapB was likely a
+         result of enhanced binding affinity for Ec LpxC ( 62 ). In further
+         support of LapB serving as an adaptor, it was shown to interact
+         directly with both FtsH (through its transmembrane helix) and Ec LpxC
+         (through tetratricopeptide repeats in its cytosolic domain) ( 62 ).
+         More recently, structural analysis of LapB- Ec LpxC interaction has
+         revealed that LapB makes extensive contacts with the N terminal and
+         central regions of the Ec LpxC degron, bringing the C terminal tail in
+         close proximity to the membrane where it would be readily accessible
+         to the FtsH active site ( 63 ). Intriguingly, LapB also makes
+         extensive contacts near the hydrophobic tunnel of Ec LpxC that
+         accommodates substrate binding and, consistent with this, LapB binding
+         is sufficient to reduce Ec LpxC activity by approximately 80% in vitro
+         ( 63 ). Thus, LapB appears to regulate Ec LpxC"
+
+
+================================================================================
+WHAT TO CHECK FIRST
+================================================================================
+
+  [Tier C] entity    ( R )-3-hydroxy moiety of the fatty acyl-ACP
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    (R)-3-hydroxymyristoyl-ACP
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Ec LpxC
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    FtsH
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    FtsH
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    FtsH
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    FtsH
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    FtsH
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] reaction  FtsH-mediated degradation of heat-shock sigma factor σ 32
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  FtsH-mediated degradation of lambda regulator cII
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  FtsH-mediated proteolysis of Ec LpxC
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    GPL
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  GPL -> hepta-acylated LPS
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    GPL donor
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  GPL donor -> LPL
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  GPLs -> LPLs
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Kdo residues
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Kdo-lipid A
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Kdo-lipid IV A
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Kdo-lipid IVA
+              stated in a single source
+  [Tier C] entity    LPL
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    LPLs
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    LpxA product
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  LpxA-catalyzed reaction
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  LpxB reaction
+              stated in a single source
+  [Tier C] entity    LpxC product
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  LpxC reaction
+              stated in a single source
+  [Tier C] entity    LpxD product
+              stated in a single source
+  [Tier C] reaction  LpxD reaction
+              stated in a single source
+  [Tier C] entity    LpxG
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    LpxG
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    LpxH product
+              stated in a single source
+  [Tier C] reaction  LpxH reaction
+              stated in a single source
+  [Tier C] entity    LpxI
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] entity    LpxI
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally); identity rejected: mapping
+              rule best_effort_fallback is a guess, not a match
+  [Tier C] reaction  LpxK reaction
+              stated in a single source
+  [Tier C] entity    LpxL
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] entity    LpxL
+              stated in a single source; identity rejected: best_effort guess
+              (top candidate accepted unconditionally)
+  [Tier C] entity    LpxL
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] reaction  LpxL reaction
+              stated in a single source
+  [Tier C] entity    LpxM
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] entity    LpxM
+              stated in a single source; identity rejected: best_effort guess
+              (top candidate accepted unconditionally)
+  [Tier C] entity    LpxM
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] entity    PagP
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] entity    PagP
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] entity    UDP-2,3-diacylglucosamine
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  UDP-2,3-diacylglucosamine -> lipid IV A precursor
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    UDP-3- O -[(3R)-3-hydroxyacyl]-GlcN
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  UDP-3- O -[(3R)-3-hydroxyacyl]-GlcN -> UDP-2,3-diacylglucosamine
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  WaaA reaction
+              stated in a single source
+  [Tier C] reaction  activates exogenous fatty acids with coenzyme A to produce cytosolic acyl-CoA species
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  acylation of Kdo-lipid IV A
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  acylation of UDP-GlcNAc
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  acylation of UDP-GlcNAc
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  addition of Kdo residues
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    cytosolic acyl-CoA species
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  deacetylation of UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    degraded Ec LpxC
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    degraded lambda regulator cII
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    degraded σ 32
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  degrades GPLs to produce lysophospholipids and fatty acids
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  elongation of (R)-3-hydroxymyristoyl-ACP to palmitate
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    exogenous fatty acids
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  formation of a tetra-acylated disaccharide intermediate
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    hepta-acylated LPS
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    lambda regulator cII
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  lipid IV A -> (Kdo)-lipid IV A
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    lipid IV A precursor
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    lysophospholipids
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    palmitate
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  phosphorylation of tetra-acylated disaccharide intermediate
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  proteolysis of Ec LpxC
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  removal of UMP
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    tetra-acylated disaccharide intermediate
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    β-hydroxyacyl-ACP
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    σ 32
+              one identified paper with a cited passage and no second,
+              independent statement
+
+================================================================================
+ENTITIES BY TIER
+================================================================================
+
+Catalysts are listed with their reaction above and not repeated here.
+
+Tier A — DB-grounded   (18)
+  - lipoprotein   [uniprot: P04846]
+  - CoA-SH   [pathbank_compound_id: 282377]
+  - UDP-GlcNAc   [pathbank_compound_id: 196]
+  - UMP   [pathbank_compound_id: 41234]
+  - lipid A   [pathbank_compound_id: 8270]
+  - lipid IVA   [pathbank_compound_id: 40982]
+  - Kdo   [pathbank_compound_id: 57926]
+  - fatty acids   [pathbank_compound_id: 113283]
+  - FadD   [uniprot: P69451]
+  - Lnt   [uniprot: P23930]
+  - LpxA   [uniprot: P0A722]
+  - LpxB   [uniprot: P10441]
+  - LpxC   [uniprot: P0A725]
+  - LpxD   [uniprot: P21645]
+  - LpxH   [uniprot: P43341]
+  - LpxK   [uniprot: P27300]
+  - PldA   [uniprot: P0A921]
+  - WaaA   [uniprot: P0AC75]
+
+Tier B — corroborated by a second paper (no identifier)   (2)
+  - GPLs
+  - lipid IV A
+
+Tier C — single-source (review)   (37)
+  - σ 32
+  - ( R )-3-hydroxy moiety of the fatty acyl-ACP
+  - cytosolic acyl-CoA species
+  - degraded σ 32
+  - degraded Ec LpxC
+  - degraded lambda regulator cII
+  - Ec LpxC
+  - exogenous fatty acids
+  - GPL
+  - GPL donor
+  - hepta-acylated LPS
+  - β-hydroxyacyl-ACP
+  - Kdo residues
+  - Kdo-lipid A
+  - Kdo-lipid IV A
+  - Kdo-lipid IVA
+  - lambda regulator cII
+  - lipid IV A precursor
+  - LPL
+  - LPLs
+  - LpxA product
+  - LpxC product
+  - LpxD product
+  - LpxH product
+  - lysophospholipids
+  - palmitate
+  - (R)-3-hydroxymyristoyl-ACP
+  - tetra-acylated disaccharide intermediate
+  - UDP-2,3-diacylglucosamine
+  - UDP-3- O -[(3R)-3-hydroxyacyl]-GlcN
+  - UDP-3- O -[(3R)-3-hydroxyacyl]-GlcNAc
+  - FtsH
+  - LpxG
+  - LpxI
+  - LpxL
+  - LpxM
+  - PagP
+
+Tier D — UNSOURCED (review)   (0)
+  (none)
+
+================================================================================
+SOURCES CITED
+================================================================================
+
+  PMC13170283
+    Lysophospholipid signaling coordinates outer membrane homeostasis in
+    &lt;i&gt;Escherichia coli&lt;/i&gt;.
+    https://doi.org/10.1128/mbio.00567-26
+
+  PMC8745692
+    Checkpoints That Regulate Balanced Biosynthesis of Lipopolysaccharide and
+    Its Essentiality in <i>Escherichia coli</i>.
+    https://doi.org/10.3390/ijms23010189
+
+  seed paper (uploaded)
+    lipid A biosynthesis
+
+================================================================================
+WHAT THE PIPELINE DID NOT ENFORCE
+================================================================================
+
+Biology / provenance flags (2)
+  These would have STOPPED a strict run. They did not stop this one.
+  - [(no code)] /entities/proteins/21
+      Protein 'lipoprotein' is missing species/organism.
+  - [(no code)] /entities/proteins/21
+      Protein 'lipoprotein' is missing species/organism.
+
+================================================================================
+KNOWN LIMITATIONS — READ BEFORE CITING THIS
+================================================================================
+
+  1.
+     A review that CITES the seed paper cannot be distinguished from an
+     independent corroboration. Reference sections are discarded at ingest and
+     CandidatePaper carries no DOI, so there is no citation graph to check. When
+     a review corroborates a step, treat it as 'possibly the same claim
+     restated', never as a second independent finding.
+
+  2.
+     No page numbers exist in this pipeline. Chunk positions are hashed away at
+     ingest, so every citation below gives the section plus the verbatim quoted
+     passage and nothing more. Any page reference you need must be looked up in
+     the source paper by hand.
+
+  3.
+     rag_confidence is an internal heuristic (the top retrieval score, or 0.5 +
+     0.1 per provenance pointer when no score exists). It is NOT a probability
+     and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval
+     score'.
+
+  4.
+     A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is
+     corroborated but still has no external identifier, and a Tier A identifier
+     was accepted only when it was a genuine match (best-effort guesses and the
+     PathBank Unknown sentinel are refused).
+
+  5.
+     Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no
+     PWML. This report is a review artifact, not an import-ready pathway.

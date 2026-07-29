@@ -1,67 +1,43 @@
 === PATHWAY: Unnamed Pathway ===
 Organism: Unknown Organism
 
-REACTION 1: MenD-catalyzed decarboxylation of 2-oxoglutarate to intermediate I
-  Reactants: 2-oxoglutarate [cytosolic state]
-  Products:  intermediate I [cytosolic state]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 1: ALAS2-catalyzed condensation of glycine and succinyl-CoA
+  Reactants: glycine [mitochondrial matrix state], succinyl-CoA [mitochondrial matrix state]
+  Products:  aminolevulinic acid [mitochondrial matrix state]
+  Modifier:  ALAS2 [mitochondrial matrix state] (role=catalyst, confidence=1.0), 5-aminolevulinic acid synthase [unknown] (role=catalyst, confidence=1.0), ALAS [unknown] (role=catalyst, confidence=1.0), aminolevulinic acid synthase (ALAS) [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 2: MenD-catalyzed addition of isochorismate to intermediate I forming intermediate II
-  Reactants: intermediate I [cytosolic state], isochorismate [cytosolic state]
-  Products:  intermediate II [cytosolic state]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 2: glycine -> 5-aminolevulinate (ALA)
+  Reactants: glycine [mitochondrial matrix state], succinyl-Coenzyme A (SCoA) [unknown]
+  Products:  5-aminolevulinate (ALA) [unknown], carbon dioxide [unknown], CoA-SH [unknown]
+  Modifier:  5-Aminolevulinate synthase (ALAS) [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 3: MenD-catalyzed breakdown of intermediate II to SEPHCHC
-  Reactants: intermediate II [cytosolic state]
-  Products:  SEPHCHC [cytosolic state]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 3: ferrous iron insertion into protoporphyrin IX
+  Reactants: ferrous iron [unknown], protoporphyrin IX [unknown]
+  Products:  heme [mitochondrial matrix state]
+  Modifier:  ferrochelatase [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 4: MenD-catalyzed decarboxylation of 2-oxoglutarate to intermediate I
-  Reactants: α-ketoglutarate [unknown]
-  Products:  intermediate I [cytosolic state]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 4: succinyl-CoA -> δALA
+  Reactants: succinyl-CoA [mitochondrial matrix state], glycine [mitochondrial matrix state]
+  Products:  δALA [unknown]
+  Modifier:  MISSING
   QA flags:  none
 
-REACTION 5: α-ketoglutarate -> SEPHCHC
-  Reactants: α-ketoglutarate [unknown], isochorismate [cytosolic state]
-  Products:  SEPHCHC [cytosolic state]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
+REACTION 5: heme production
+  Reactants: PLP [unknown]
+  Products:  heme [mitochondrial matrix state]
+  Modifier:  ALAS2 [mitochondrial matrix state] (role=catalyst, confidence=1.0)
   QA flags:  none
 
-REACTION 6: ThDP ylide -> pre-decarboxylation intermediate
-  Reactants: ThDP ylide [unknown], α-ketoglutarate [unknown]
-  Products:  pre-decarboxylation intermediate [unknown]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 7: decarboxylation of pre-decarboxylation intermediate to form intermediate I
-  Reactants: pre-decarboxylation intermediate [unknown]
-  Products:  intermediate I [cytosolic state]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 8: protonation of intermediate I
-  Reactants: intermediate I [cytosolic state]
-  Products:  protonated intermediate I [unknown]
-  Modifier:  MenD [cytosolic state] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 9: o -succinylbenzoyl-CoA synthetase acetylation
-  Reactants: Bs MenE [unknown]
-  Products:  acetylated Bs MenE [unknown]
-  Modifier:  Bs AcuA acetyltransferase [unknown] (role=catalyst, confidence=1.0), MenD [cytosolic state] (role=catalyst, confidence=1.0), Bs SrtN deacylase [unknown] (role=catalyst, confidence=1.0)
-  QA flags:  none
-
-REACTION 10: deacetylation of Bs MenE
-  Reactants: acetylated Bs MenE [unknown]
-  Products:  Bs MenE [unknown]
-  Modifier:  Bs SrtN deacylase [unknown] (role=catalyst, confidence=1.0), MenD [cytosolic state] (role=catalyst, confidence=1.0), Bs AcuA acetyltransferase [unknown] (role=catalyst, confidence=1.0)
+REACTION 6: ALAS-catalyzed reaction
+  Reactants: ALA [unknown]
+  Products:  porphyrin [unknown]
+  Modifier:  ALAS [unknown] (role=catalyst, confidence=1.0)
   QA flags:  none
 
 LOCKED REACTION FILTER
-3 locked reactions found
-3 exported
+1 locked reaction found
+1 exported
 0 quarantined reactions due to unresolved compound reference

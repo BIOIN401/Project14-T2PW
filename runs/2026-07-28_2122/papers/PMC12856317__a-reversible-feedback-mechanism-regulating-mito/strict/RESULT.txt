@@ -1,0 +1,49 @@
+RESULT: FAIL
+========================================
+paper      : PMC12856317
+title      : A reversible feedback mechanism regulating mitochondrial heme synthesis.
+slug       : PMC12856317__a-reversible-feedback-mechanism-regulating-mito
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1609.0s (26m48s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/9/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/9/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 8 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o, gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism, gate.protein_coenzyme_a_is_missing_species_organism, gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban, gate.protein_coenzyme_a_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+64 QA issues need review.
+[post_normalization_contract_report] gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @ /entities/proteins/5: Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism @ /entities/proteins/8: Protein 'succinyl-Coenzyme A (SCoA)' is missing species/organism.
+[post_normalization_contract_report] gate.protein_coenzyme_a_is_missing_species_organism @ /entities/proteins/9: Protein 'Coenzyme A' is missing species/organism.
+
+COUNTS
+----------------------------------------
+  compounds = 18
+  contract_errors = 3
+  entities = 39
+  gate_errors = 5
+  proteins = 9
+  reactions = 11
+  runtime_schema_findings = 6
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (12690 B)
+  - gate_fail_report.json  (3144 B)
+  - merged_payload.json  (141737 B)
+  - stage1_payload.json  (3613 B)

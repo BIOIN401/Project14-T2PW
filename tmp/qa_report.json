@@ -1,41 +1,69 @@
 {
   "summary": {
-    "total_species": 17,
-    "total_reactions": 10,
+    "total_species": 21,
+    "total_reactions": 6,
     "completeness_score": 0.0
   },
   "flags": {
     "missing_compartments": [
       {
-        "entity": "acetylated Bs MenE",
+        "entity": "5-aminolevulinate (ALA)",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Bs MenE",
+        "entity": "δALA",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "pre-decarboxylation intermediate",
+        "entity": "ferrous iron",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "protonated intermediate I",
+        "entity": "porphyrin",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "α-ketoglutarate",
+        "entity": "succinyl-Coenzyme A (SCoA)",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "ThDP ylide",
+        "entity": "CoA-SH",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Bs AcuA acetyltransferase",
+        "entity": "carbon dioxide",
         "reason": "no subcellular location recorded"
       },
       {
-        "entity": "Bs SrtN deacylase",
+        "entity": "PLP",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "protoporphyrin IX",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "5-Aminolevulinate synthase (ALAS)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "5-aminolevulinic acid synthase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ALAS",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "aminolevulinic acid synthase (ALAS)",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ferrochelatase",
+        "reason": "no subcellular location recorded"
+      },
+      {
+        "entity": "ALA",
         "reason": "no subcellular location recorded"
       }
     ],
@@ -45,96 +73,94 @@
     "orphan_nodes": [],
     "missing_ids": [
       {
-        "entity": "thiamine diphosphate",
+        "entity": "heme",
         "type": "compound"
       },
       {
-        "entity": "2-oxoglutarate",
+        "entity": "aminolevulinic acid",
         "type": "compound"
       },
       {
-        "entity": "isochorismate",
+        "entity": "glycine",
         "type": "compound"
       },
       {
-        "entity": "SEPHCHC",
+        "entity": "succinyl-CoA",
         "type": "compound"
       },
       {
-        "entity": "intermediate I",
+        "entity": "pyridoxal 5-phosphate",
         "type": "compound"
       },
       {
-        "entity": "intermediate II",
+        "entity": "5-aminolevulinate (ALA)",
         "type": "compound"
       },
       {
-        "entity": "1,4-dihydroxy-2-naphthoic acid",
+        "entity": "δALA",
         "type": "compound"
       },
       {
-        "entity": "Mg2+",
+        "entity": "ferrous iron",
         "type": "compound"
       },
       {
-        "entity": "acetylated Bs MenE",
+        "entity": "porphyrin",
         "type": "compound"
       },
       {
-        "entity": "Bs MenE",
+        "entity": "succinyl-Coenzyme A (SCoA)",
         "type": "compound"
       },
       {
-        "entity": "intermediate I",
+        "entity": "CoA-SH",
         "type": "compound"
       },
       {
-        "entity": "intermediate II",
+        "entity": "carbon dioxide",
         "type": "compound"
       },
       {
-        "entity": "isochorismate",
+        "entity": "PLP",
         "type": "compound"
       },
       {
-        "entity": "pre-decarboxylation intermediate",
+        "entity": "protoporphyrin IX",
         "type": "compound"
       },
       {
-        "entity": "protonated intermediate I",
-        "type": "compound"
-      },
-      {
-        "entity": "SEPHCHC",
-        "type": "compound"
-      },
-      {
-        "entity": "α-ketoglutarate",
-        "type": "compound"
-      },
-      {
-        "entity": "ThDP ylide",
-        "type": "compound"
-      },
-      {
-        "entity": "MenD",
+        "entity": "ALAS2",
         "type": "protein"
       },
       {
-        "entity": "Bs AcuA acetyltransferase",
+        "entity": "5-Aminolevulinate synthase (ALAS)",
         "type": "protein"
       },
       {
-        "entity": "Bs SrtN deacylase",
+        "entity": "5-aminolevulinic acid synthase",
         "type": "protein"
       },
       {
-        "entity": "MenD",
+        "entity": "ALAS",
+        "type": "protein"
+      },
+      {
+        "entity": "aminolevulinic acid synthase (ALAS)",
+        "type": "protein"
+      },
+      {
+        "entity": "ferrochelatase",
         "type": "protein"
       }
     ],
     "empty_reactions": [],
-    "duplicate_species": [],
+    "duplicate_species": [
+      {
+        "entity_a": "δALA",
+        "entity_b": "ALA",
+        "reason": "normalized label collision"
+      }
+    ],
     "inconsistent_class": []
   }
 }

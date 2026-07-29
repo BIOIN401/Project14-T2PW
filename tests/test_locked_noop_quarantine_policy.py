@@ -240,12 +240,23 @@ def test_strict_gate_blocks_unaccounted_locks_at_stable_pointer() -> None:
     else:  # pragma: no cover - the assertion below documents a hard boundary
         raise AssertionError("unaccounted locked reaction did not fail the strict gate")
 
-    assert {
-        "path": "/locked_reaction_filter_report/unaccounted_locked_reactions",
-        "reason": (
-            "Locked reaction accounting failed: 1 locked reaction(s) are neither active nor quarantined."
-        ),
-    } in errors
+    # Matched on (path, reason) rather than whole-dict equality: a gate error may
+    # also carry a structured ``detail``, and this test is about the stable
+    # pointer and wording, not about the error having exactly two keys.
+    assert (
+        "/locked_reaction_filter_report/unaccounted_locked_reactions",
+        "Locked reaction accounting failed: 1 locked reaction(s) are neither active nor quarantined.",
+    ) in [(error.get("path"), error.get("reason")) for error in errors]
+
+    # The accounting report itself rides along, because "1 unaccounted" is not
+    # actionable without knowing which side of the ledger came up short.
+    unaccounted_error = next(
+        error
+        for error in errors
+        if error.get("path") == "/locked_reaction_filter_report/unaccounted_locked_reactions"
+    )
+    assert unaccounted_error["detail"]["unaccounted"] == 1
+    assert unaccounted_error["detail"]["lock_report"]["locked_reactions_found"] == 2
 
 
 def test_strict_gate_accepts_active_plus_quarantined_lock_accounting() -> None:

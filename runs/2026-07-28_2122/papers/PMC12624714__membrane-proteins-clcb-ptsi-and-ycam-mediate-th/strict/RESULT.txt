@@ -1,0 +1,32 @@
+RESULT: FAIL
+========================================
+paper      : PMC12624714
+title      : Membrane Proteins ClcB, PtsI, and YcaM Mediate the Bactericidal Effects of Colistin in &lt;i&gt;Escherichia coli&lt;/i&gt;.
+slug       : PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th
+mode       : strict
+status     : fail
+stage      : stage1
+wall time  : 1260.6s (21m00s)
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : no_reactions
+message      : the pipeline produced a pathway with no reactions and no transports
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Multi-paper RAG produced no additional usable reactions (no evidence retrieved — check that the embeddings endpoint is running and papers were fetched). Keeping the single-paper extraction.
+
+COUNTS
+----------------------------------------
+  compounds = 5
+  entities = 13
+  proteins = 3
+  reactions = 0
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - merged_payload.json  (5782 B)
+  - stage1_payload.json  (4785 B)

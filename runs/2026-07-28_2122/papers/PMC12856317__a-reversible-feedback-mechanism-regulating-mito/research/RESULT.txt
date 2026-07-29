@@ -1,0 +1,51 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12856317
+title      : A reversible feedback mechanism regulating mitochondrial heme synthesis.
+slug       : PMC12856317__a-reversible-feedback-mechanism-regulating-mito
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 1330.3s (22m10s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @ /entities/proteins/4: Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism @ /entities/proteins/6: Protein 'succinyl-Coenzyme A (SCoA)' is missing species/organism.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban @ /entities/proteins/6: Protein 'succinyl-Coenzyme A (SCoA)' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 5
+  compounds = 11
+  entities = 22
+  gate_errors = 4
+  gate_errors_not_blocking = 4
+  gate_review_flags = 4
+  normalization_actions = 2
+  proteins = 7
+  reactions = 6
+  review_flags = 4
+  runtime_schema_findings = 4
+  skipped_format_rules = 0
+  tier = {'a': 18, 'b': 5, 'c': 10, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (12771 B)
+  - final_stage3_gate_report.json  (2343 B)
+  - gate_fail_report.json  (3264 B)
+  - merged_payload.json  (97116 B)
+  - research_pathway_citations.json  (728656 B)
+  - research_pathway_elements.csv  (304835 B)
+  - research_pathway_report.txt  (53453 B)
+  - review_flags.json  (3352 B)
+  - stage1_payload.json  (3991 B)

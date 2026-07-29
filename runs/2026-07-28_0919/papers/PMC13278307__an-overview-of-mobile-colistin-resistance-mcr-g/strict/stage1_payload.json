@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "outer membrane",
+        "evidence": "modify lipid A in the bacterial outer membrane"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "phosphoethanolamine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "colistin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipopolysaccharide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "PEtN-lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MCR-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "E. coli outer membrane state",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "modify lipid A in the bacterial outer membrane"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "lipid A",
+        "biological_state": "E. coli outer membrane state",
+        "evidence": "lipid A in the lipopolysaccharide (LPS) layer"
+      },
+      {
+        "compound": "phosphoethanolamine",
+        "biological_state": "E. coli outer membrane state",
+        "evidence": "transfer of PEtN to the phosphate groups of lipid A"
+      },
+      {
+        "compound": "lipopolysaccharide",
+        "biological_state": "E. coli outer membrane state",
+        "evidence": "lipid A in the lipopolysaccharide (LPS) layer"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "MCR-1",
+        "biological_state": "E. coli outer membrane state",
+        "evidence": "These genes, ranging from mcr-1 to mcr-10, encode PEtN transferases"
+      }
+    ]
+  },
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "lipid A",
+          "phosphoethanolamine"
+        ],
+        "outputs": [
+          "PEtN-lipid A"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MCR-1-mediated PEtN transfer to lipid A",
+        "enzymes": [
+          {
+            "protein": "MCR-1",
+            "evidence": "These enzymes catalyze the transfer of PEtN to the phosphate groups of lipid A"
+          }
+        ],
+        "biological_state": "E. coli outer membrane state",
+        "evidence": "These enzymes catalyze the transfer of PEtN to the phosphate groups of lipid A"
+      }
+    ]
+  }
+}

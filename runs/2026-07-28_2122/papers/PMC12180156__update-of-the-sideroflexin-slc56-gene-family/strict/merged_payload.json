@@ -1,0 +1,978 @@
+{
+  "entities": {
+    "cell_types": [
+      {
+        "name": "erythroid cells"
+      }
+    ],
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondrial matrix",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      },
+      {
+        "name": "cytosol",
+        "evidence": "serine transport from cytosol into the mitochondrial matrix"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "iron",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "succinyl-CoA",
+        "class": "compound",
+        "evidence": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+        "confidence": 0.95,
+        "provenance": "inferred",
+        "source_refs": [
+          "condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+        ]
+      },
+      {
+        "name": "aminolevulinic acid",
+        "class": "compound",
+        "evidence": "condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+        "confidence": 0.95,
+        "provenance": "inferred",
+        "source_refs": [
+          "condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+        ]
+      },
+      {
+        "name": "[2Fe–2 S] cluster",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "name": "[4Fe–4 S] form",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "name": "5,10-methylene-THF",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "name": "δALA",
+        "rag_provenance": {
+          "source_id": "PMC10886707",
+          "source_title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.3390/biom14020241",
+          "section": "figure",
+          "organism": "Homo sapiens",
+          "chunk_id": "200de1a3d77e3a485cd992889ff400ed"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC10886707",
+            "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+            "uri": "https://doi.org/10.3390/biom14020241",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC10886707"
+        ],
+        "rag_confidence": 0.735294
+      },
+      {
+        "name": "cysteine",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "name": "formate",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "name": "glutamate-1-semi-aldehyde (GSA, or better G1SA)",
+        "rag_provenance": {
+          "source_id": "PMC10886707",
+          "source_title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.3390/biom14020241",
+          "section": "introduction",
+          "organism": "Homo sapiens",
+          "chunk_id": "40aba4e59961d15e1f5b99939c8716de"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC10886707",
+            "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+            "uri": "https://doi.org/10.3390/biom14020241",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC10886707"
+        ],
+        "rag_confidence": 0.608723
+      },
+      {
+        "name": "ISCU scaffold",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "name": "persulfide intermediate",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper"
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "name": "serine",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "conclusion",
+          "organism": "Homo sapiens",
+          "chunk_id": "9810461f1e5de298cadb7121f4dc3274"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          },
+          {
+            "source_id": "PMC12180156",
+            "title": "Update of the sideroflexin (SLC56) gene family.",
+            "uri": "https://doi.org/10.1186/s40246-025-00779-w",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper",
+          "PMC12180156"
+        ],
+        "rag_confidence": 0.791698
+      },
+      {
+        "name": "succinyl coenzyme A",
+        "rag_provenance": {
+          "source_id": "PMC5025666",
+          "source_title": "Characterization of Human and Yeast Mitochondrial Glycine Carriers with Implications for Heme Biosynthesis and Anemia.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1074/jbc.m116.736876",
+          "section": "abstract",
+          "organism": "Homo sapiens",
+          "chunk_id": "495e8e88fdf2144fe3c6d0c98794b826"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC5025666",
+            "title": "Characterization of Human and Yeast Mitochondrial Glycine Carriers with Implications for Heme Biosynthesis and Anemia.",
+            "uri": "https://doi.org/10.1074/jbc.m116.736876",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC5025666"
+        ],
+        "rag_confidence": 0.589066
+      },
+      {
+        "name": "PLP",
+        "rag_provenance": {
+          "source_id": "PMC12856317",
+          "source_title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+          "section": "discussion",
+          "organism": "Homo sapiens",
+          "chunk_id": "97e46ad361709f93c0739eeeda6f36c7"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12856317",
+            "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+            "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC12856317"
+        ],
+        "rag_confidence": 0.914286
+      },
+      {
+        "name": "citrate",
+        "rag_provenance": {
+          "source_id": "PMC12180156",
+          "source_title": "Update of the sideroflexin (SLC56) gene family.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1186/s40246-025-00779-w",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "eeb8d2c8071466c4b6c7230d9d478aa1"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12180156",
+            "title": "Update of the sideroflexin (SLC56) gene family.",
+            "uri": "https://doi.org/10.1186/s40246-025-00779-w",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC12180156"
+        ],
+        "rag_confidence": 1.0
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ferrochelatase",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ALAS2",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SFXN4",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "ALAS",
+        "rag_provenance": {
+          "source_id": "PMC10886707",
+          "source_title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.3390/biom14020241",
+          "section": "figure",
+          "organism": "Homo sapiens",
+          "chunk_id": "200de1a3d77e3a485cd992889ff400ed"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC10886707",
+            "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+            "uri": "https://doi.org/10.3390/biom14020241",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC10886707"
+        ],
+        "rag_confidence": 0.735294,
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "aminolevulinic acid synthase (ALAS)",
+        "rag_provenance": {
+          "source_id": "PMC12856317",
+          "source_title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+          "section": "body",
+          "organism": "Homo sapiens",
+          "chunk_id": "7fb8bf8f0ef5d7fa44e8379bb0b84833"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12856317",
+            "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+            "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC12856317"
+        ],
+        "rag_confidence": 0.854124,
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "HemL",
+        "rag_provenance": {
+          "source_id": "PMC10886707",
+          "source_title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.3390/biom14020241",
+          "section": "introduction",
+          "organism": "Homo sapiens",
+          "chunk_id": "40aba4e59961d15e1f5b99939c8716de"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC10886707",
+            "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+            "uri": "https://doi.org/10.3390/biom14020241",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC10886707"
+        ],
+        "rag_confidence": 0.608723,
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SHMT2",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "conclusion",
+          "organism": "Homo sapiens",
+          "chunk_id": "9810461f1e5de298cadb7121f4dc3274"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          },
+          {
+            "source_id": "PMC12180156",
+            "title": "Update of the sideroflexin (SLC56) gene family.",
+            "uri": "https://doi.org/10.1186/s40246-025-00779-w",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "seed_paper",
+          "PMC12180156"
+        ],
+        "rag_confidence": 0.791698,
+        "organism": "Homo sapiens"
+      },
+      {
+        "name": "SLC25A1/CIC",
+        "rag_provenance": {
+          "source_id": "PMC12180156",
+          "source_title": "Update of the sideroflexin (SLC56) gene family.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1186/s40246-025-00779-w",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "eeb8d2c8071466c4b6c7230d9d478aa1"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12180156",
+            "title": "Update of the sideroflexin (SLC56) gene family.",
+            "uri": "https://doi.org/10.1186/s40246-025-00779-w",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "source_refs": [
+          "PMC12180156"
+        ],
+        "rag_confidence": 1.0,
+        "organism": "Homo sapiens"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial matrix state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondrial matrix",
+      "evidence": "serine transport from cytosol into the mitochondrial matrix"
+    },
+    {
+      "name": "cytosolic state",
+      "species": "Homo sapiens",
+      "subcellular_location": "cytosol",
+      "evidence": "serine transport from cytosol into the mitochondrial matrix"
+    }
+  ],
+  "element_locations": {
+    "protein_locations": [
+      {
+        "protein": "SFXN4",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 is important for mitochondrial iron utilization"
+      },
+      {
+        "protein": "ALAS2",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "ALAS2 is a mature mitochondrial matrix enzyme"
+      },
+      {
+        "protein": "ferrochelatase",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      }
+    ],
+    "compound_locations": [
+      {
+        "compound": "heme",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels"
+      },
+      {
+        "compound": "iron",
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "Iron delivered by frataxin"
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ALAS2",
+        "name": "SFXN4 inhibits ALAS2 translation",
+        "relationship": "inhibits",
+        "evidence": "inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2)"
+      },
+      {
+        "entity_1": "SFXN4",
+        "entity_2": "ferrochelatase",
+        "name": "SFXN4 modulates ferrochelatase levels",
+        "relationship": "interaction",
+        "evidence": "modulating ferrochelatase levels"
+      }
+    ],
+    "reactions": [
+      {
+        "inputs": [
+          "glycine",
+          "succinyl-CoA"
+        ],
+        "outputs": [
+          "aminolevulinic acid"
+        ],
+        "name": "ALAS2 reaction",
+        "enzymes": [
+          {
+            "protein": "ALAS2",
+            "evidence": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid",
+            "provenance": "inferred",
+            "confidence": 0.95
+          },
+          {
+            "protein": "aminolevulinic acid synthase (ALAS)",
+            "evidence": "567 jbc The Journal of Biological Chemistry J Biol Chem American Society for Biochemistry and Molecular Biology PMC12856317 12856317 12856317 41443426 10.1016/j.jbc.2025.111089 A reversible feedback mechanism regulating mitochondrial heme synthesis Chitrakar Iva 1 Roberson Alexis B 1 2 Ayres-Galhardo Pedro H 1 Brown Breann L 1 3 ∗ 1 Department of Biochemistry, Vanderbilt University School of Medicine, Nashville, Tennessee, USA 2 Department of Chemistry, Fisk University, Nashville, Tennessee, USA 3 Center for Structural Biology, Vanderbilt University School of Medicine, Nashville, Tennessee, USA ∗ For correspondence: Breann L. Brown breann.brown@vanderbilt.edu 22 12 2025 302 2 111089 111089 31 1 2026 © 2025 The Authors This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/). Previous version available: This article is based on a previously available preprint posted on bioRxiv on September 9, 2025: \" A reversible feedback mechanism regulating mitochondrial heme synthesis \". Abstract Proper heme biosynthesis is essential for numerous cellular functions across nearly all life forms. In humans, dysregulated heme metabolism is linked to multiple blood diseases, neurodegeneration, cardiovascular disease, and metabolic disorders. Erythroid heme production begins with the rate-limiting enzyme aminolevulinic acid synthase 2 (ALAS2) in the mitochondrion. Although prior studies discuss the regulation of ALAS2 in the cytoplasm, its modulation as a mature mitochondrial matrix enzyme remains poorly understood. We report that heme binds mature human ALAS2 with high affinity, acting as a reversible mixed inhibitor that reduces enzymatic activity. Structural modeling supports the hypothesis that two flexible regions of ALAS2 interact with heme, locking the enzyme in an inactive conformation and occluding the active site. Our work reveals a negative feedback mechanism for heme synthesis, offering insights into the spatial regulation of ALAS2 and the maturation of the essential heme cofactor. Keywords: heme, enzyme inhibition, erythropoiesis, aminolevulinic acid, pyridoxal 5-phosphate, heme regulatory motif, protein structure and function, enzymology status released display-pdf yes is-olf no is-manuscript no is-preprint no is-journal-matter no is-scanned no is-retracted no Received 2025 Sep 23; Revised 2025 Dec 9; Collection date 2026 Feb. Our knowledge of cellular metabolism continues to expand with our understanding of the role of metabolites as cell signaling effectors (reviewed in ( 1 )). Consequently, metabolic processes, which form the foundation of organismal biology, are studied in a new context to reveal critical insights into chemical and cellular signaling. Heme metabolism is central to multiple biological processes, as it is a vital cofactor supporting oxygen transport, transcriptional regulation, and drug detoxification, among others ( 2 , 3 , 4 ). Heme production must be tightly controlled due to the toxicity associated with heme deficiency or excessive amounts of porphyrin precursors, which produce reactive oxygen species and free radicals ( 5 , 6 , 7 , 8 ). The enzyme that catalyzes the rate-limiting step for heme biosynthesis in many organisms is aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent homodimer enzyme that mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid ( 11 , 12 ). Humans contain two ALAS isoforms, ALAS1 and ALAS2 ( 13 , 14 , 15 ). ALAS1 is a ubiquitously expressed housekeeping enzyme ( 13 , 14 ), and ALAS2 is the erythroid-specific isoform that governs the synthesis of 85 to 90% of the total body heme pool ( 5 , 16 ). The high demand for heme to produce hemoglobin implies that erythroid heme synthesis is not tightly regulated. However, the fact that multiple blood disorders arise from dysfunctional heme biosynthesis indicates otherwise. Current clinical reports have identified over 95 human ALAS2 mutations that result in the loss-of-function disease X-linked sideroblastic anemia (XLSA) ( 17 , 18 , 19 ). or the gain-of-function disease X-linked protoporphyria (XLPP) ( 20 , 21 ). Compelling new evidence reveals that ALAS2 is also expressed in nonerythroid cells ( 22 ), underscoring our critical need to understand ALAS2 enzyme regulation for metabolic processes beyond erythropoiesis. Previous research primarily focused on the nuclear and cytosolic regulation of ALAS expression and trafficking ( 23 , 24 , 25 , 26 , 27 , 28 , 29 , 30 , 31 , 32 , 33 ). For example, heme binds directly to the ALAS mitochondrial targeting sequence, preventing protein translocation into the matrix ( 23 , 24 , 34 , 35 , 36 ). However, little is known about the enzymatic modulation of ALAS within the mitochondrial matrix, which is the cellular compartment where heme biosynthesis is initiated and terminated. Human ALAS paralogs contain multiple putative heme-binding motifs in the mature enzyme, which lacks the mitochondrial targeting sequence (reviewed in ( 37 )). Various reports established that the interaction between heme and mitochondrial ALAS1"
+          }
+        ],
+        "biological_state": "mitochondrial matrix state",
+        "evidence": "mediates the condensation of glycine and succinyl-CoA to produce aminolevulinic acid"
+      },
+      {
+        "inputs": [
+          "PLP"
+        ],
+        "outputs": [
+          "heme"
+        ],
+        "name": "heme production",
+        "enzymes": [
+          {
+            "protein": "ALAS2",
+            "evidence": "Discussion The heme biosynthetic enzyme ALAS2 serves as a critical node, governing the first and rate-limiting step of this essential metabolic pathway. Key differences in ALAS2, including tissue expression, protein interactions, and disease manifestation, necessitate examining this isoform separately from ALAS1. The interaction between heme and mitochondrial human ALAS2 has long been debated but lacked evidence. Here, we provide insights into the interaction between heme and the mature human ALAS2 isoform. Our investigation reveals a molecular mechanism of action in which heme acts as a potent metabolic inhibitor, effectively decreasing the enzymatic activity of ALAS2. Although labile heme concentrations are difficult to measure directly, estimates range from less than 1 μM ( 52 ) to greater than 20 μM in humans under nonpathogenic conditions ( 53 ). This upper estimate is commensurate with the IC 50 values we report for mitochondrial ALAS2-heme inhibition, connecting our in vitro research to a plausible cellular state. Critically, this unique mode of inhibition is specific to the enzyme as it localizes to the mitochondrial matrix, where little is known about how ALAS2 responds to chemical cues, but where it primarily operates. Remarkably, heme binding to ALAS2 exhibits several distinctive traits, including redundancy, reversibility, and allostery. This study supports a model by which multiple motifs act in concert to form a single heme-binding site. Our in vitro reconstitution uncovered a process that would otherwise be difficult to identify in cells, due to the pleiotropic effects of heme on transcriptional programs and erythropoiesis. The presence of multiple heme-binding sites within the enzyme likely serves as a fail-safe mechanism, ensuring the responsiveness of ALAS2 to heme even if one of the binding sites is compromised. For example, truncations of the ALAS2 C-terminal extension lead to the gain-of-function disease XLP ( 20 , 21 , 54 ), which would affect the enzyme’s ability to respond to heme stress if only one allosteric site were present. However, the presence of multiple nonequivalent heme-binding sites across the ALAS2 homodimer makes their isolation and identification difficult, as compensatory changes may occur with enzyme mutagenesis. A redundant mechanism for tuning ALAS2 activity in response to cellular heme levels confers a fitness advantage, and future studies aim to elucidate the unique allosteric properties of different HRMs. Structural modeling and analysis support the hypothesis that heme functions as an allosteric effector by potentially inducing a conformational change in ALAS2 that prevents substrate binding and, consequently, enzymatic activity. A recent report proposed that heme-bound ALAS2 recruits the CLPXP protease via an adaptor protein to trigger degradation ( 55 ). Similarly, heme binding to the ALAS1 isoform also results in degradation ( 27 , 38 , 39 , 56 ). Furthermore, our study indicates that heme binding may also influence the interactions of ALAS2 with proteins in the proposed heme synthesis metabolon, a complex of heme biosynthetic enzymes and other mitochondrial proteins that enhance metabolic efficiency ( 57 , 58 , 59 ). This potential modulation of the metabolon would serve as an additional layer of regulation, further influencing the overall efficiency and dynamics of heme production. Intriguingly, this heme-mediated inhibition discovered in our current work can coexist with a slower, irreversible means of heme-triggered ALAS2 degradation, providing the cell with a multifaceted mechanism to fine-tune heme production in response to various physiological demands ( Fig. 5 ). Combined with previous studies of ALAS homologs in bacteria or other tissues ( 41 , 42 , 60 , 61 , 62 , 63 ), our work reveals a conserved role in heme-mediated inhibition that has evolved to meet organism and tissue-specific needs. The tight control of heme biosynthesis is paramount, as heme plays a central role in a wide range of cellular processes, including oxygen transport, electron transport, and metabolic systems such as iron homeostasis and lipid metabolism ( 64 , 65 , 66 , 67 , 68 , 69 , 70 ). Given the pivotal role of heme in multiple processes, its dysregulation would also impact physiological functions dependent on other cofactors like FAD and cobalamin, exacerbating disease phenotypes such as anemia, neurotoxicity, oxidative stress, and metabolic dysfunction ( 66 , 67 , 68 ). Therefore, by supporting hemoprotein maturation and integrating with key cellular pathways, the intricate regulation of heme production is crucial for maintaining cellular homeostasis in response to environmental and metabolic demands. Figure 5 Model of heme-mediated negative feedback inhibition of mitochondrial ALAS2. Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres ). In the case of toxic heme accumulation, heme binds to ALAS2, with potentially multiple outcomes. We discovered a mechanism where heme binding results in a conformational change that excludes substrate binding ( purple box ). In addition, heme binding may recruit mitochondrial proteases, such as CLPXP, of heme in multiple processes, its dysregulation would also impact physiological functions dependent on other cofactors like FAD and cobalamin, exacerbating disease phenotypes such as anemia, neurotoxicity, oxidative stress, and metabolic dysfunction ( 66 , 67 , 68 ). Therefore, by supporting hemoprotein maturation and integrating with key cellular pathways, the intricate regulation of heme production is crucial for maintaining cellular homeostasis in response to environmental and metabolic demands. Figure 5 Model of heme-mediated negative feedback inhibition of mitochondrial ALAS2. Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres ). In the case of toxic heme accumulation, heme binds to ALAS2, with potentially multiple outcomes. We discovered a mechanism where heme binding results in a conformational change that excludes substrate binding ( purple box ). In addition, heme binding may recruit mitochondrial proteases, such as CLPXP, for enzyme degradation. ALAS, aminolevulinic acid synthase."
+          }
+        ],
+        "evidence": "Discussion The heme biosynthetic enzyme ALAS2 serves as a critical node, governing the first and rate-limiting step of this essential metabolic pathway. Key differences in ALAS2, including tissue expression, protein interactions, and disease manifestation, necessitate examining this isoform separately from ALAS1. The interaction between heme and mitochondrial human ALAS2 has long been debated but lacked evidence. Here, we provide insights into the interaction between heme and the mature human ALAS2 isoform. Our investigation reveals a molecular mechanism of action in which heme acts as a potent metabolic inhibitor, effectively decreasing the enzymatic activity of ALAS2. Although labile heme concentrations are difficult to measure directly, estimates range from less than 1 μM ( 52 ) to greater than 20 μM in humans under nonpathogenic conditions ( 53 ). This upper estimate is commensurate with the IC 50 values we report for mitochondrial ALAS2-heme inhibition, connecting our in vitro research to a plausible cellular state. Critically, this unique mode of inhibition is specific to the enzyme as it localizes to the mitochondrial matrix, where little is known about how ALAS2 responds to chemical cues, but where it primarily operates. Remarkably, heme binding to ALAS2 exhibits several distinctive traits, including redundancy, reversibility, and allostery. This study supports a model by which multiple motifs act in concert to form a single heme-binding site. Our in vitro reconstitution uncovered a process that would otherwise be difficult to identify in cells, due to the pleiotropic effects of heme on transcriptional programs and erythropoiesis. The presence of multiple heme-binding sites within the enzyme likely serves as a fail-safe mechanism, ensuring the responsiveness of ALAS2 to heme even if one of the binding sites is compromised. For example, truncations of the ALAS2 C-terminal extension lead to the gain-of-function disease XLP ( 20 , 21 , 54 ), which would affect the enzyme’s ability to respond to heme stress if only one allosteric site were present. However, the presence of multiple nonequivalent heme-binding sites across the ALAS2 homodimer makes their isolation and identification difficult, as compensatory changes may occur with enzyme mutagenesis. A redundant mechanism for tuning ALAS2 activity in response to cellular heme levels confers a fitness advantage, and future studies aim to elucidate the unique allosteric properties of different HRMs. Structural modeling and analysis support the hypothesis that heme functions as an allosteric effector by potentially inducing a conformational change in ALAS2 that prevents substrate binding and, consequently, enzymatic activity. A recent report proposed that heme-bound ALAS2 recruits the CLPXP protease via an adaptor protein to trigger degradation ( 55 ). Similarly, heme binding to the ALAS1 isoform also results in degradation ( 27 , 38 , 39 , 56 ). Furthermore, our study indicates that heme binding may also influence the interactions of ALAS2 with proteins in the proposed heme synthesis metabolon, a complex of heme biosynthetic enzymes and other mitochondrial proteins that enhance metabolic efficiency ( 57 , 58 , 59 ). This potential modulation of the metabolon would serve as an additional layer of regulation, further influencing the overall efficiency and dynamics of heme production. Intriguingly, this heme-mediated inhibition discovered in our current work can coexist with a slower, irreversible means of heme-triggered ALAS2 degradation, providing the cell with a multifaceted mechanism to fine-tune heme production in response to various physiological demands ( Fig. 5 ). Combined with previous studies of ALAS homologs in bacteria or other tissues ( 41 , 42 , 60 , 61 , 62 , 63 ), our work reveals a conserved role in heme-mediated inhibition that has evolved to meet organism and tissue-specific needs. The tight control of heme biosynthesis is paramount, as heme plays a central role in a wide range of cellular processes, including oxygen transport, electron transport, and metabolic systems such as iron homeostasis and lipid metabolism ( 64 , 65 , 66 , 67 , 68 , 69 , 70 ). Given the pivotal role of heme in multiple processes, its dysregulation would also impact physiological functions dependent on other cofactors like FAD and cobalamin, exacerbating disease phenotypes such as anemia, neurotoxicity, oxidative stress, and metabolic dysfunction ( 66 , 67 , 68 ). Therefore, by supporting hemoprotein maturation and integrating with key cellular pathways, the intricate regulation of heme production is crucial for maintaining cellular homeostasis in response to environmental and metabolic demands. Figure 5 Model of heme-mediated negative feedback inhibition of mitochondrial ALAS2. Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres ). In the case of toxic heme accumulation, heme binds to ALAS2, with potentially multiple outcomes. We discovered a mechanism where heme binding results in a conformational change that excludes substrate binding ( purple box ). In addition, heme binding may recruit mitochondrial proteases, such as CLPXP, of heme in multiple processes, its dysregulation would also impact physiological functions dependent on other cofactors like FAD and cobalamin, exacerbating disease phenotypes such as anemia, neurotoxicity, oxidative stress, and metabolic dysfunction ( 66 , 67 , 68 ). Therefore, by supporting hemoprotein maturation and integrating with key cellular pathways, the intricate regulation of heme production is crucial for maintaining cellular homeostasis in response to environmental and metabolic demands. Figure 5 Model of heme-mediated negative feedback inhibition of mitochondrial ALAS2. Under basal conditions, the ALAS2 homodimer ( gray ovals ) binds PLP ( yellow sphere ) to subsequently produce heme ( red spheres ). In the case of toxic heme accumulation, heme binds to ALAS2, with potentially multiple outcomes. We discovered a mechanism where heme binding results in a conformational change that excludes substrate binding ( purple box ). In addition, heme binding may recruit mitochondrial proteases, such as CLPXP, for enzyme degradation. ALAS, aminolevulinic acid synthase.",
+        "rag_provenance": {
+          "source_id": "PMC12856317",
+          "source_title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+          "section": "discussion",
+          "organism": "Homo sapiens",
+          "chunk_id": "97e46ad361709f93c0739eeeda6f36c7"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12856317",
+            "title": "A reversible feedback mechanism regulating mitochondrial heme synthesis.",
+            "uri": "https://doi.org/10.1016/j.jbc.2025.111089",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.914286
+      },
+      {
+        "inputs": [
+          "succinyl-CoA",
+          "glycine"
+        ],
+        "outputs": [
+          "δALA"
+        ],
+        "name": "biosynthesis pathway involving the five-carbon (C5) compound δALA",
+        "enzymes": [
+          {
+            "protein": "ALAS",
+            "evidence": "Figure 1 ). This biosynthesis pathway involving the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine (as described by Shemin and coworkers [ 20 ]) is predominant in animals, fungi, protozoa, and alphaproteobacteria (ancestors of mitochondria). A more ancient the administration of δALA [ 16 ]. In Homo sapiens , mutations in CLPX trigger hematological disorders due to errors in heme biosynthesis [ 17 , 18 ]. ALAS1 degradation within human mitochondria was found to depend on heme binding and the CLPXP complex [ 19 ]. ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine (see Figure 1 ). This biosynthesis pathway involving the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine (as described by Shemin and coworkers [ 20 ]) is predominant in animals, fungi, protozoa, and alphaproteobacteria (ancestors of mitochondria). A more ancient mechanism for δALA biosynthesis (defined by Beale and coworkers [ 21 ], see Figure 1 ) uses C5 acids (alpha-ketoglutarate or rather its transaminated form, glutamate). This pathway is prominent in archaea, most bacteria, algae, and plants. Several microorganisms use both C4 and C5 substrates [ 22 , 23 ]. In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase). There are no HemA orthologs in animals, so δALA production from glutamyl-tRNA cannot occur; therefore, it has been argued that the C5/Beale pathway is not used by eukaryotes. Indeed, the nitrogen from glycine is used for heme biosynthesis in mammals under normal conditions rather than glutamate/GSA according to isotope-labeled metabolism studies [ 20 ], but this does not exclude that a pathological overactivation of δALA production due to an excess of CLPX might recruit additional nitrogen sources such as GSA. It is conceivable that HemA became unnecessary in eukaryotes because GSA can be produced from other sources and can be converted to δALA by a homolog of HemL. Bacterial HemL has significant sequence homology in P. anserina (PODANS) with PODANS_5_6860 (GSA 2,1-aminomutase), but also PODANS_7_10880 (ornithine delta-aminotransferase or OAT), the aminotransferases PODANS_6_1290, PODANS_7_5560, and PODANS_3_9430, according to the STRING Heidelberg webserver [ 24 ]. In mice, the closest HemL homolog is OAT, but it also has significant homology with PHYKPL (5-phosphohydroxy-L-lysine phospholyase), ETNPPL (ethanolamine-phosphate phospholyase), AGXT2 (alanine-glyoxylate aminotransferase 2), and ABAT (4-aminobutyrate aminotransferase), all of which require PLP as a cofactor. We might, therefore, hypothesize that in mammals, OAT-PLP facilitates the production of δALA via GSA that is derived directly from ornithine/arginine rather than more indirectly from glutamate/alpha-ketoglutarate (see Figure 1 ). Recently, members of our Frankfurt team reported that endogenous OAT and CLPX interact based on coimmunoprecipitation analyses of CLPP-mutant cells and observed a pathological accumulation of iron and cobalt in these cells [ 25 ]. Therefore, OAT might be unfolded by CLPX to use PLP in an analogous manner to ALAS, contributing to the excessive production of heme (in eukaryotes) and cobalamin (in archaea/bacteria). What is PLP needed for? Coexisting with RNA since the prebiotic world [ 26 ], PLP became useful in the optimized biosynthesis and degradation of amino acids via its protein association, first as a chaperone [ 27 ] and then as a cofactor of enzymes. It is required for all transaminations, some decarboxylations, dehydrations, and racemizations, but it can also modulate desulfurizations [ 28 ]. The main role of PLP in the metabolism of cognate proteinogenic amino acids with their amino group at the alpha-carbon position does not appear to depend on CLPX unfolding functions. However, PLP also acts as a key cofactor in the metabolism of non-cognate amino acids that are derived from arginine, e.g., its blood pressure signaling derivatives like alpha-keto-delta-( N , N -dimethylguanidino)-valeric acid, its non-proteinogenic precursors citrulline/ornithine, and its non-proteinogenic analogue homoarginine. Furthermore, PLP is a cofactor in the generation of non-canonical amino acids that act as (i) detoxifiers (like cystathionine, glutathione, and the polyamines putrescine, spermidine, and spermine, with their derivative hypusine that is required for ribosomal fidelity during translation elongation across poly-proline sequences [ 29 , 30 ]); (ii) messengers (like gamma-amino-butyric acid or GABA); and (iii) toxins (like ibotenic acid) [ 31 , 32 ]. All such metabolites are derived from classical amino acids but have an amino group that is distant from the carboxylic acid group at the delta or gamma position. Therefore, the aminotransferase domain with bound PLP would need to act at a δ- or γ-carbon (see Figure 1 for Arg, Orn amino groups, and for the change of the amino group from the α-carbon in G1SA to the δ-carbon in δALA which would require an aminomutase function). Any enzyme that acts as a transaminase or aminomutase at δ-carbons may need CLPX-mediated unfolding, if it is docked at the carboxy group, to reach across this distance [ 33 ]. In Caenorhabditis elegans nematode worms, CLPP depletion was observed to have a prominent impact on the"
+          }
+        ],
+        "evidence": "Figure 1 ). This biosynthesis pathway involving the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine (as described by Shemin and coworkers [ 20 ]) is predominant in animals, fungi, protozoa, and alphaproteobacteria (ancestors of mitochondria). A more ancient the administration of δALA [ 16 ]. In Homo sapiens , mutations in CLPX trigger hematological disorders due to errors in heme biosynthesis [ 17 , 18 ]. ALAS1 degradation within human mitochondria was found to depend on heme binding and the CLPXP complex [ 19 ]. ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine (see Figure 1 ). This biosynthesis pathway involving the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine (as described by Shemin and coworkers [ 20 ]) is predominant in animals, fungi, protozoa, and alphaproteobacteria (ancestors of mitochondria). A more ancient mechanism for δALA biosynthesis (defined by Beale and coworkers [ 21 ], see Figure 1 ) uses C5 acids (alpha-ketoglutarate or rather its transaminated form, glutamate). This pathway is prominent in archaea, most bacteria, algae, and plants. Several microorganisms use both C4 and C5 substrates [ 22 , 23 ]. In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase). There are no HemA orthologs in animals, so δALA production from glutamyl-tRNA cannot occur; therefore, it has been argued that the C5/Beale pathway is not used by eukaryotes. Indeed, the nitrogen from glycine is used for heme biosynthesis in mammals under normal conditions rather than glutamate/GSA according to isotope-labeled metabolism studies [ 20 ], but this does not exclude that a pathological overactivation of δALA production due to an excess of CLPX might recruit additional nitrogen sources such as GSA. It is conceivable that HemA became unnecessary in eukaryotes because GSA can be produced from other sources and can be converted to δALA by a homolog of HemL. Bacterial HemL has significant sequence homology in P. anserina (PODANS) with PODANS_5_6860 (GSA 2,1-aminomutase), but also PODANS_7_10880 (ornithine delta-aminotransferase or OAT), the aminotransferases PODANS_6_1290, PODANS_7_5560, and PODANS_3_9430, according to the STRING Heidelberg webserver [ 24 ]. In mice, the closest HemL homolog is OAT, but it also has significant homology with PHYKPL (5-phosphohydroxy-L-lysine phospholyase), ETNPPL (ethanolamine-phosphate phospholyase), AGXT2 (alanine-glyoxylate aminotransferase 2), and ABAT (4-aminobutyrate aminotransferase), all of which require PLP as a cofactor. We might, therefore, hypothesize that in mammals, OAT-PLP facilitates the production of δALA via GSA that is derived directly from ornithine/arginine rather than more indirectly from glutamate/alpha-ketoglutarate (see Figure 1 ). Recently, members of our Frankfurt team reported that endogenous OAT and CLPX interact based on coimmunoprecipitation analyses of CLPP-mutant cells and observed a pathological accumulation of iron and cobalt in these cells [ 25 ]. Therefore, OAT might be unfolded by CLPX to use PLP in an analogous manner to ALAS, contributing to the excessive production of heme (in eukaryotes) and cobalamin (in archaea/bacteria). What is PLP needed for? Coexisting with RNA since the prebiotic world [ 26 ], PLP became useful in the optimized biosynthesis and degradation of amino acids via its protein association, first as a chaperone [ 27 ] and then as a cofactor of enzymes. It is required for all transaminations, some decarboxylations, dehydrations, and racemizations, but it can also modulate desulfurizations [ 28 ]. The main role of PLP in the metabolism of cognate proteinogenic amino acids with their amino group at the alpha-carbon position does not appear to depend on CLPX unfolding functions. However, PLP also acts as a key cofactor in the metabolism of non-cognate amino acids that are derived from arginine, e.g., its blood pressure signaling derivatives like alpha-keto-delta-( N , N -dimethylguanidino)-valeric acid, its non-proteinogenic precursors citrulline/ornithine, and its non-proteinogenic analogue homoarginine. Furthermore, PLP is a cofactor in the generation of non-canonical amino acids that act as (i) detoxifiers (like cystathionine, glutathione, and the polyamines putrescine, spermidine, and spermine, with their derivative hypusine that is required for ribosomal fidelity during translation elongation across poly-proline sequences [ 29 , 30 ]); (ii) messengers (like gamma-amino-butyric acid or GABA); and (iii) toxins (like ibotenic acid) [ 31 , 32 ]. All such metabolites are derived from classical amino acids but have an amino group that is distant from the carboxylic acid group at the delta or gamma position. Therefore, the aminotransferase domain with bound PLP would need to act at a δ- or γ-carbon (see Figure 1 for Arg, Orn amino groups, and for the change of the amino group from the α-carbon in G1SA to the δ-carbon in δALA which would require an aminomutase function). Any enzyme that acts as a transaminase or aminomutase at δ-carbons may need CLPX-mediated unfolding, if it is docked at the carboxy group, to reach across this distance [ 33 ]. In Caenorhabditis elegans nematode worms, CLPP depletion was observed to have a prominent impact on the",
+        "rag_provenance": {
+          "source_id": "PMC10886707",
+          "source_title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.3390/biom14020241",
+          "section": "figure",
+          "organism": "Homo sapiens",
+          "chunk_id": "200de1a3d77e3a485cd992889ff400ed"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC10886707",
+            "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+            "uri": "https://doi.org/10.3390/biom14020241",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.735294
+      },
+      {
+        "inputs": [
+          "glutamate-1-semi-aldehyde (GSA, or better G1SA)"
+        ],
+        "outputs": [
+          "\u0011ALA"
+        ],
+        "name": "\u0011ALA biosynthesis (C5 pathway)",
+        "enzymes": [
+          {
+            "protein": "HemL",
+            "evidence": "the administration of δALA [ 16 ]. In Homo sapiens , mutations in CLPX trigger hematological disorders due to errors in heme biosynthesis [ 17 , 18 ]. ALAS1 degradation within human mitochondria was found to depend on heme binding and the CLPXP complex [ 19 ]. ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine (see Figure 1 ). This biosynthesis pathway involving the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine (as described by Shemin and coworkers [ 20 ]) is predominant in animals, fungi, protozoa, and alphaproteobacteria (ancestors of mitochondria). A more ancient mechanism for δALA biosynthesis (defined by Beale and coworkers [ 21 ], see Figure 1 ) uses C5 acids (alpha-ketoglutarate or rather its transaminated form, glutamate). This pathway is prominent in archaea, most bacteria, algae, and plants. Several microorganisms use both C4 and C5 substrates [ 22 , 23 ]. In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase). There are no HemA orthologs in animals, so δALA production from glutamyl-tRNA cannot occur; therefore, it has been argued that the C5/Beale pathway is not used by eukaryotes. Indeed, the nitrogen from glycine is used for heme biosynthesis in mammals under normal conditions rather than glutamate/GSA according to isotope-labeled metabolism studies [ 20 ], but this does not exclude that a pathological overactivation of δALA production due to an excess of CLPX might recruit additional nitrogen sources such as GSA. It is conceivable that HemA became unnecessary in eukaryotes because GSA can be produced from other sources and can be converted to δALA by a homolog of HemL. Bacterial HemL has significant sequence homology in P. anserina (PODANS) with PODANS_5_6860 (GSA 2,1-aminomutase), but also PODANS_7_10880 (ornithine delta-aminotransferase or OAT), the aminotransferases PODANS_6_1290, PODANS_7_5560, and PODANS_3_9430, according to the STRING Heidelberg webserver [ 24 ]. In mice, the closest HemL homolog is OAT, but it also has significant homology with PHYKPL (5-phosphohydroxy-L-lysine phospholyase), ETNPPL (ethanolamine-phosphate phospholyase), AGXT2 (alanine-glyoxylate aminotransferase 2), and ABAT (4-aminobutyrate aminotransferase), all of which require PLP as a cofactor. We might, therefore, hypothesize that in mammals, OAT-PLP facilitates the production of δALA via GSA that is derived directly from ornithine/arginine rather than more indirectly from glutamate/alpha-ketoglutarate (see Figure 1 ). Recently, members of our Frankfurt team reported that endogenous OAT and CLPX interact based on coimmunoprecipitation analyses of CLPP-mutant cells and observed a pathological accumulation of iron and cobalt in these cells [ 25 ]. Therefore, OAT might be unfolded by CLPX to use PLP in an analogous manner to ALAS, contributing to the excessive production of heme (in eukaryotes) and cobalamin (in archaea/bacteria). What is PLP needed for? Coexisting with RNA since the prebiotic world [ 26 ], PLP became useful in the optimized biosynthesis and degradation of amino acids via its protein association, first as a chaperone [ 27 ] and then as a cofactor of enzymes. It is required for all transaminations, some decarboxylations, dehydrations, and racemizations, but it can also modulate desulfurizations [ 28 ]. The main role of PLP in the metabolism of cognate proteinogenic amino acids with their amino group at the alpha-carbon position does not appear to depend on CLPX unfolding functions. However, PLP also acts as a key cofactor in the metabolism of non-cognate amino acids that are derived from arginine, e.g., its blood pressure signaling derivatives like alpha-keto-delta-( N , N -dimethylguanidino)-valeric acid, its non-proteinogenic precursors citrulline/ornithine, and its non-proteinogenic analogue homoarginine. Furthermore, PLP is a cofactor in the generation of non-canonical amino acids that act as (i) detoxifiers (like cystathionine, glutathione, and the polyamines putrescine, spermidine, and spermine, with their derivative hypusine that is required for ribosomal fidelity during translation elongation across poly-proline sequences [ 29 , 30 ]); (ii) messengers (like gamma-amino-butyric acid or GABA); and (iii) toxins (like ibotenic acid) [ 31 , 32 ]. All such metabolites are derived from classical amino acids but have an amino group that is distant from the carboxylic acid group at the delta or gamma position. Therefore, the aminotransferase domain with bound PLP would need to act at a δ- or γ-carbon (see Figure 1 for Arg, Orn amino groups, and for the change of the amino group from the α-carbon in G1SA to the δ-carbon in δALA which would require an aminomutase function). Any enzyme that acts as a transaminase or aminomutase at δ-carbons may need CLPX-mediated unfolding, if it is docked at the carboxy group, to reach across this distance [ 33 ]. In Caenorhabditis elegans nematode worms, CLPP depletion was observed to have a prominent impact on the"
+          }
+        ],
+        "evidence": "the administration of δALA [ 16 ]. In Homo sapiens , mutations in CLPX trigger hematological disorders due to errors in heme biosynthesis [ 17 , 18 ]. ALAS1 degradation within human mitochondria was found to depend on heme binding and the CLPXP complex [ 19 ]. ALAS synthesizes the non-proteinogenic δALA from succinyl-coenzyme A (succinyl-CoA) and the proteinogenic amino acid glycine (see Figure 1 ). This biosynthesis pathway involving the five-carbon (C5) compound δALA from the four-carbon (C4) source succinyl-CoA plus glycine (as described by Shemin and coworkers [ 20 ]) is predominant in animals, fungi, protozoa, and alphaproteobacteria (ancestors of mitochondria). A more ancient mechanism for δALA biosynthesis (defined by Beale and coworkers [ 21 ], see Figure 1 ) uses C5 acids (alpha-ketoglutarate or rather its transaminated form, glutamate). This pathway is prominent in archaea, most bacteria, algae, and plants. Several microorganisms use both C4 and C5 substrates [ 22 , 23 ]. In this C5 pathway, δALA is produced by a chain of three enzymes (GltX, HemA, and HemL), with the final step converting glutamate-1-semi-aldehyde (GSA, or better G1SA) being performed by the PLP-activated enzyme HemL (also known as GSA 2,1-aminomutase, or GSA aminotransferase). There are no HemA orthologs in animals, so δALA production from glutamyl-tRNA cannot occur; therefore, it has been argued that the C5/Beale pathway is not used by eukaryotes. Indeed, the nitrogen from glycine is used for heme biosynthesis in mammals under normal conditions rather than glutamate/GSA according to isotope-labeled metabolism studies [ 20 ], but this does not exclude that a pathological overactivation of δALA production due to an excess of CLPX might recruit additional nitrogen sources such as GSA. It is conceivable that HemA became unnecessary in eukaryotes because GSA can be produced from other sources and can be converted to δALA by a homolog of HemL. Bacterial HemL has significant sequence homology in P. anserina (PODANS) with PODANS_5_6860 (GSA 2,1-aminomutase), but also PODANS_7_10880 (ornithine delta-aminotransferase or OAT), the aminotransferases PODANS_6_1290, PODANS_7_5560, and PODANS_3_9430, according to the STRING Heidelberg webserver [ 24 ]. In mice, the closest HemL homolog is OAT, but it also has significant homology with PHYKPL (5-phosphohydroxy-L-lysine phospholyase), ETNPPL (ethanolamine-phosphate phospholyase), AGXT2 (alanine-glyoxylate aminotransferase 2), and ABAT (4-aminobutyrate aminotransferase), all of which require PLP as a cofactor. We might, therefore, hypothesize that in mammals, OAT-PLP facilitates the production of δALA via GSA that is derived directly from ornithine/arginine rather than more indirectly from glutamate/alpha-ketoglutarate (see Figure 1 ). Recently, members of our Frankfurt team reported that endogenous OAT and CLPX interact based on coimmunoprecipitation analyses of CLPP-mutant cells and observed a pathological accumulation of iron and cobalt in these cells [ 25 ]. Therefore, OAT might be unfolded by CLPX to use PLP in an analogous manner to ALAS, contributing to the excessive production of heme (in eukaryotes) and cobalamin (in archaea/bacteria). What is PLP needed for? Coexisting with RNA since the prebiotic world [ 26 ], PLP became useful in the optimized biosynthesis and degradation of amino acids via its protein association, first as a chaperone [ 27 ] and then as a cofactor of enzymes. It is required for all transaminations, some decarboxylations, dehydrations, and racemizations, but it can also modulate desulfurizations [ 28 ]. The main role of PLP in the metabolism of cognate proteinogenic amino acids with their amino group at the alpha-carbon position does not appear to depend on CLPX unfolding functions. However, PLP also acts as a key cofactor in the metabolism of non-cognate amino acids that are derived from arginine, e.g., its blood pressure signaling derivatives like alpha-keto-delta-( N , N -dimethylguanidino)-valeric acid, its non-proteinogenic precursors citrulline/ornithine, and its non-proteinogenic analogue homoarginine. Furthermore, PLP is a cofactor in the generation of non-canonical amino acids that act as (i) detoxifiers (like cystathionine, glutathione, and the polyamines putrescine, spermidine, and spermine, with their derivative hypusine that is required for ribosomal fidelity during translation elongation across poly-proline sequences [ 29 , 30 ]); (ii) messengers (like gamma-amino-butyric acid or GABA); and (iii) toxins (like ibotenic acid) [ 31 , 32 ]. All such metabolites are derived from classical amino acids but have an amino group that is distant from the carboxylic acid group at the delta or gamma position. Therefore, the aminotransferase domain with bound PLP would need to act at a δ- or γ-carbon (see Figure 1 for Arg, Orn amino groups, and for the change of the amino group from the α-carbon in G1SA to the δ-carbon in δALA which would require an aminomutase function). Any enzyme that acts as a transaminase or aminomutase at δ-carbons may need CLPX-mediated unfolding, if it is docked at the carboxy group, to reach across this distance [ 33 ]. In Caenorhabditis elegans nematode worms, CLPP depletion was observed to have a prominent impact on the",
+        "rag_provenance": {
+          "source_id": "PMC10886707",
+          "source_title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.3390/biom14020241",
+          "section": "introduction",
+          "organism": "Homo sapiens",
+          "chunk_id": "40aba4e59961d15e1f5b99939c8716de"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC10886707",
+            "title": "CLPP-Null Eukaryotes with Excess Heme Biosynthesis Show Reduced L-arginine Levels, Probably via CLPX-Mediated OAT Activation.",
+            "uri": "https://doi.org/10.3390/biom14020241",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.608723
+      },
+      {
+        "inputs": [
+          "glycine",
+          "succinyl coenzyme A"
+        ],
+        "outputs": [
+          "δ-aminolevulinic acid"
+        ],
+        "name": "synthesis of δ-aminolevulinic acid",
+        "evidence": "Heme is an essential molecule in many biological processes, such as transport and storage of oxygen and electron transfer as well as a structural component of hemoproteins. Defects of heme biosynthesis in developing erythroblasts have profound medical implications, as represented by sideroblastic anemia. The synthesis of heme requires the uptake of glycine into the mitochondrial matrix where glycine is condensed with succinyl coenzyme A to yield δ-aminolevulinic acid. Herein we describe the biochemical and molecular characterization of yeast Hem25p and human SLC25A38, providing evidence that they are mitochondrial carriers for glycine. In particular, the hem25Δ mutant manifests a defect in the biosynthesis of δ-aminolevulinic acid and displays reduced levels of downstream heme and mitochondrial cytochromes. The observed defects are rescued by complementation with yeast HEM25 or human SLC25A38 genes. Our results identify new proteins in the heme biosynthetic pathway and demonstrate that Hem25p and its human orthologue SLC25A38 are the main mitochondrial glycine transporters required for heme synthesis, providing definitive evidence of their previously proposed glycine transport function. Furthermore, our work may suggest new therapeutic approaches for the treatment of congenital sideroblastic anemia.",
+        "rag_provenance": {
+          "source_id": "PMC5025666",
+          "source_title": "Characterization of Human and Yeast Mitochondrial Glycine Carriers with Implications for Heme Biosynthesis and Anemia.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1074/jbc.m116.736876",
+          "section": "abstract",
+          "organism": "Homo sapiens",
+          "chunk_id": "495e8e88fdf2144fe3c6d0c98794b826"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC5025666",
+            "title": "Characterization of Human and Yeast Mitochondrial Glycine Carriers with Implications for Heme Biosynthesis and Anemia.",
+            "uri": "https://doi.org/10.1074/jbc.m116.736876",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.589066
+      },
+      {
+        "inputs": [
+          "5,10-methylene-THF"
+        ],
+        "outputs": [
+          "formate"
+        ],
+        "name": "5,10-methylene-THF -> formate",
+        "evidence": "5,10-methylene-THF; the later is further metabolized to yield formate. Formate is exported to the cytosol where it fuels the folate cycle linked to thymidylate and purine synthesis as well as methylation reactions, which are critical for DNA, RNA, and protein regulation (Fig. 4 ) [ 13 , 15 , 30 , 32 ]. Of note, oxidation of folate-bound one-carbon groups can also generate NADPH thus contributing to the energy production [ 33 ]. This dynamic flow of one-carbon units integrates amino acid catabolism with nucleotide biosynthesis, redox balance, and epigenetic control — functions that are essential for supporting cell growth and proliferation [ 13 , 30 ]. Absence of SFXN1 leads to serine deficiency, which limits cell proliferation in knockout (KO) cell models; however, this defect can be rescued with formate supplementation [ 14 ]. In addition, SFXN1 deficiency disrupts central carbon metabolism by depleting tricarboxylic acid (TCA) cycle intermediates, decreasing glutamate dehydrogenase activity, and altering NAD + /NADH ratios, as reported by Acoba and colleagues [ 14 ]. While radiolabel and reconstituted-proteoliposome assays confirmed serine as the preferred substrate, Kory et al. also observed lower-affinity transport of alanine, cysteine and glycine, indicating that SFXN1 is a serine-favoured but not serine-exclusive carrier [ 13 ]. Nonetheless, while originally characterized as a serine transporter, SFXN1 has since been implicated in the biogenesis, assembly, and functional regulation of mitochondrial respiratory complex III [ 13 , 14 , 34 ]. Loss or dysfunction of SFXN1 leads to selective destabilization of complex III, lowering its subunit abundance, disrupting dimerization, and suppressing enzymatic activity, but without substantially affecting the integrity of the other oxidative phosphorylation complexes [ 13 , 14 , 34 ]. SFXN1 also influences mitochondrial iron homeostasis indirectly by boosting glycine production. Glycine is the direct precursor for heme and, through its involvement in one-carbon metabolism, indirectly supports Fe–S-cluster biogenesis [ 13 ]. Mitochondria assemble Fe–S clusters through a tightly regulated, multistep process. Iron delivered by frataxin and sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate for incorporation into nascent Fe-S clusters are combined on the Iron-Sulfur Cluster assembly protein (ISCU) scaffold to form an initial [2Fe–2 S] cluster [ 35 ]. Ferredoxin provides the necessary electrons, and the ISA1–ISA2–IBA57 complex can remodel two small clusters into a [4Fe–4 S] form essential for respiratory-chain, TCA-cycle, and DNA-repair enzymes [ 36 , 37 ]. Computational analyses also suggest the presence of heme-binding motifs in SFXN1, although their functional significance remains to be determined [ 12 ]. SFXN2 Although SFXN2’s contribution to serine transport remains unclear, it is hypothesized to contribute to mitochondrial iron homeostasis [ 12 , 13 , 38 ]. Studies have shown that SFXN2 KO cells exhibit increased mitochondrial iron content, suggesting that SFXN2 may be involved in iron export from mitochondria, or in regulating iron utilization within the organelle [ 38 ]. However, to date, there is no evidence showing SFXN2 (or any other SFXN) to function directly as an Fe 2+ or Fe 3+ transporter. Increases in mitochondrial iron in SFXN2 KO cells do not result in proportional increases in heme synthesis. Instead — heme levels are decreased in these cells, and this lowering correlates with decreased activity of heme-dependent enzymes (which rely on heme as a cofactor) [ 38 ]. Interestingly, ISC-dependent enzyme activities appear unaffected in these knockout models, suggesting a selective impact on heme biosynthesis rather than broad disruptions in ISC function. Consistent with involvement in iron handling, Chen et al. [ 39 ] demonstrated that elevated SFXN2 expression in multiple-myeloma cells limited mitochondrial autophagy, enhanced iron-driven oxidative phosphorylation, and thereby promoted tumor proliferation, further underscoring the importance of SFXN2 in mitochondrial iron utilization and energy metabolism. The mechanisms underlying these changes remain unexplored, highlighting the need for further research on SFXN2’s contribution to iron and heme homeostasis [ 38 , 39 ]. SFXN3 SFXN3 is thought to be involved in serine transport (similar to that of SFXN1) [ 13 ], although its exact molecular function is not fully understood. Absence of SFXN3 in SFXN3-KO mice affects the levels of certain ISC proteins, such as the Rieske protein, leading to increased mitochondrial iron content [ 40 ]. This finding suggests that SFXN3 impacts mitochondrial iron homeostasis and ISC biogenesis. Recent work by Mi et al. [ 41 ] demonstrated that SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20, thereby providing a pathway for iron entry into mitochondria and reinforcing its involvement in mitochondrial iron metabolism. However, the exact mechanisms underlying SFXN3’s regulatory function and its overall impact on mitochondrial iron metabolism remain to be fully elucidated [ 40 , 41 ]. SFXN4 SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis. These processes are essential for mitochondrial oxidative metabolism and DNA synthesis [ 16",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "inputs": [
+          "cysteine"
+        ],
+        "outputs": [
+          "persulfide intermediate"
+        ],
+        "name": "cysteine -> persulfide intermediate",
+        "evidence": "5,10-methylene-THF; the later is further metabolized to yield formate. Formate is exported to the cytosol where it fuels the folate cycle linked to thymidylate and purine synthesis as well as methylation reactions, which are critical for DNA, RNA, and protein regulation (Fig. 4 ) [ 13 , 15 , 30 , 32 ]. Of note, oxidation of folate-bound one-carbon groups can also generate NADPH thus contributing to the energy production [ 33 ]. This dynamic flow of one-carbon units integrates amino acid catabolism with nucleotide biosynthesis, redox balance, and epigenetic control — functions that are essential for supporting cell growth and proliferation [ 13 , 30 ]. Absence of SFXN1 leads to serine deficiency, which limits cell proliferation in knockout (KO) cell models; however, this defect can be rescued with formate supplementation [ 14 ]. In addition, SFXN1 deficiency disrupts central carbon metabolism by depleting tricarboxylic acid (TCA) cycle intermediates, decreasing glutamate dehydrogenase activity, and altering NAD + /NADH ratios, as reported by Acoba and colleagues [ 14 ]. While radiolabel and reconstituted-proteoliposome assays confirmed serine as the preferred substrate, Kory et al. also observed lower-affinity transport of alanine, cysteine and glycine, indicating that SFXN1 is a serine-favoured but not serine-exclusive carrier [ 13 ]. Nonetheless, while originally characterized as a serine transporter, SFXN1 has since been implicated in the biogenesis, assembly, and functional regulation of mitochondrial respiratory complex III [ 13 , 14 , 34 ]. Loss or dysfunction of SFXN1 leads to selective destabilization of complex III, lowering its subunit abundance, disrupting dimerization, and suppressing enzymatic activity, but without substantially affecting the integrity of the other oxidative phosphorylation complexes [ 13 , 14 , 34 ]. SFXN1 also influences mitochondrial iron homeostasis indirectly by boosting glycine production. Glycine is the direct precursor for heme and, through its involvement in one-carbon metabolism, indirectly supports Fe–S-cluster biogenesis [ 13 ]. Mitochondria assemble Fe–S clusters through a tightly regulated, multistep process. Iron delivered by frataxin and sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate for incorporation into nascent Fe-S clusters are combined on the Iron-Sulfur Cluster assembly protein (ISCU) scaffold to form an initial [2Fe–2 S] cluster [ 35 ]. Ferredoxin provides the necessary electrons, and the ISA1–ISA2–IBA57 complex can remodel two small clusters into a [4Fe–4 S] form essential for respiratory-chain, TCA-cycle, and DNA-repair enzymes [ 36 , 37 ]. Computational analyses also suggest the presence of heme-binding motifs in SFXN1, although their functional significance remains to be determined [ 12 ]. SFXN2 Although SFXN2’s contribution to serine transport remains unclear, it is hypothesized to contribute to mitochondrial iron homeostasis [ 12 , 13 , 38 ]. Studies have shown that SFXN2 KO cells exhibit increased mitochondrial iron content, suggesting that SFXN2 may be involved in iron export from mitochondria, or in regulating iron utilization within the organelle [ 38 ]. However, to date, there is no evidence showing SFXN2 (or any other SFXN) to function directly as an Fe 2+ or Fe 3+ transporter. Increases in mitochondrial iron in SFXN2 KO cells do not result in proportional increases in heme synthesis. Instead — heme levels are decreased in these cells, and this lowering correlates with decreased activity of heme-dependent enzymes (which rely on heme as a cofactor) [ 38 ]. Interestingly, ISC-dependent enzyme activities appear unaffected in these knockout models, suggesting a selective impact on heme biosynthesis rather than broad disruptions in ISC function. Consistent with involvement in iron handling, Chen et al. [ 39 ] demonstrated that elevated SFXN2 expression in multiple-myeloma cells limited mitochondrial autophagy, enhanced iron-driven oxidative phosphorylation, and thereby promoted tumor proliferation, further underscoring the importance of SFXN2 in mitochondrial iron utilization and energy metabolism. The mechanisms underlying these changes remain unexplored, highlighting the need for further research on SFXN2’s contribution to iron and heme homeostasis [ 38 , 39 ]. SFXN3 SFXN3 is thought to be involved in serine transport (similar to that of SFXN1) [ 13 ], although its exact molecular function is not fully understood. Absence of SFXN3 in SFXN3-KO mice affects the levels of certain ISC proteins, such as the Rieske protein, leading to increased mitochondrial iron content [ 40 ]. This finding suggests that SFXN3 impacts mitochondrial iron homeostasis and ISC biogenesis. Recent work by Mi et al. [ 41 ] demonstrated that SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20, thereby providing a pathway for iron entry into mitochondria and reinforcing its involvement in mitochondrial iron metabolism. However, the exact mechanisms underlying SFXN3’s regulatory function and its overall impact on mitochondrial iron metabolism remain to be fully elucidated [ 40 , 41 ]. SFXN4 SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis. These processes are essential for mitochondrial oxidative metabolism and DNA synthesis [ 16",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "inputs": [
+          "Iron",
+          "persulfide intermediate",
+          "ISCU scaffold"
+        ],
+        "outputs": [
+          "[2Fe–2 S] cluster"
+        ],
+        "name": "Iron -> [2Fe–2 S] cluster",
+        "evidence": "5,10-methylene-THF; the later is further metabolized to yield formate. Formate is exported to the cytosol where it fuels the folate cycle linked to thymidylate and purine synthesis as well as methylation reactions, which are critical for DNA, RNA, and protein regulation (Fig. 4 ) [ 13 , 15 , 30 , 32 ]. Of note, oxidation of folate-bound one-carbon groups can also generate NADPH thus contributing to the energy production [ 33 ]. This dynamic flow of one-carbon units integrates amino acid catabolism with nucleotide biosynthesis, redox balance, and epigenetic control — functions that are essential for supporting cell growth and proliferation [ 13 , 30 ]. Absence of SFXN1 leads to serine deficiency, which limits cell proliferation in knockout (KO) cell models; however, this defect can be rescued with formate supplementation [ 14 ]. In addition, SFXN1 deficiency disrupts central carbon metabolism by depleting tricarboxylic acid (TCA) cycle intermediates, decreasing glutamate dehydrogenase activity, and altering NAD + /NADH ratios, as reported by Acoba and colleagues [ 14 ]. While radiolabel and reconstituted-proteoliposome assays confirmed serine as the preferred substrate, Kory et al. also observed lower-affinity transport of alanine, cysteine and glycine, indicating that SFXN1 is a serine-favoured but not serine-exclusive carrier [ 13 ]. Nonetheless, while originally characterized as a serine transporter, SFXN1 has since been implicated in the biogenesis, assembly, and functional regulation of mitochondrial respiratory complex III [ 13 , 14 , 34 ]. Loss or dysfunction of SFXN1 leads to selective destabilization of complex III, lowering its subunit abundance, disrupting dimerization, and suppressing enzymatic activity, but without substantially affecting the integrity of the other oxidative phosphorylation complexes [ 13 , 14 , 34 ]. SFXN1 also influences mitochondrial iron homeostasis indirectly by boosting glycine production. Glycine is the direct precursor for heme and, through its involvement in one-carbon metabolism, indirectly supports Fe–S-cluster biogenesis [ 13 ]. Mitochondria assemble Fe–S clusters through a tightly regulated, multistep process. Iron delivered by frataxin and sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate for incorporation into nascent Fe-S clusters are combined on the Iron-Sulfur Cluster assembly protein (ISCU) scaffold to form an initial [2Fe–2 S] cluster [ 35 ]. Ferredoxin provides the necessary electrons, and the ISA1–ISA2–IBA57 complex can remodel two small clusters into a [4Fe–4 S] form essential for respiratory-chain, TCA-cycle, and DNA-repair enzymes [ 36 , 37 ]. Computational analyses also suggest the presence of heme-binding motifs in SFXN1, although their functional significance remains to be determined [ 12 ]. SFXN2 Although SFXN2’s contribution to serine transport remains unclear, it is hypothesized to contribute to mitochondrial iron homeostasis [ 12 , 13 , 38 ]. Studies have shown that SFXN2 KO cells exhibit increased mitochondrial iron content, suggesting that SFXN2 may be involved in iron export from mitochondria, or in regulating iron utilization within the organelle [ 38 ]. However, to date, there is no evidence showing SFXN2 (or any other SFXN) to function directly as an Fe 2+ or Fe 3+ transporter. Increases in mitochondrial iron in SFXN2 KO cells do not result in proportional increases in heme synthesis. Instead — heme levels are decreased in these cells, and this lowering correlates with decreased activity of heme-dependent enzymes (which rely on heme as a cofactor) [ 38 ]. Interestingly, ISC-dependent enzyme activities appear unaffected in these knockout models, suggesting a selective impact on heme biosynthesis rather than broad disruptions in ISC function. Consistent with involvement in iron handling, Chen et al. [ 39 ] demonstrated that elevated SFXN2 expression in multiple-myeloma cells limited mitochondrial autophagy, enhanced iron-driven oxidative phosphorylation, and thereby promoted tumor proliferation, further underscoring the importance of SFXN2 in mitochondrial iron utilization and energy metabolism. The mechanisms underlying these changes remain unexplored, highlighting the need for further research on SFXN2’s contribution to iron and heme homeostasis [ 38 , 39 ]. SFXN3 SFXN3 is thought to be involved in serine transport (similar to that of SFXN1) [ 13 ], although its exact molecular function is not fully understood. Absence of SFXN3 in SFXN3-KO mice affects the levels of certain ISC proteins, such as the Rieske protein, leading to increased mitochondrial iron content [ 40 ]. This finding suggests that SFXN3 impacts mitochondrial iron homeostasis and ISC biogenesis. Recent work by Mi et al. [ 41 ] demonstrated that SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20, thereby providing a pathway for iron entry into mitochondria and reinforcing its involvement in mitochondrial iron metabolism. However, the exact mechanisms underlying SFXN3’s regulatory function and its overall impact on mitochondrial iron metabolism remain to be fully elucidated [ 40 , 41 ]. SFXN4 SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis. These processes are essential for mitochondrial oxidative metabolism and DNA synthesis [ 16",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "inputs": [
+          "[2Fe–2 S] cluster"
+        ],
+        "outputs": [
+          "[4Fe–4 S] form"
+        ],
+        "name": "[2Fe–2 S] cluster -> [4Fe–4 S] form",
+        "evidence": "5,10-methylene-THF; the later is further metabolized to yield formate. Formate is exported to the cytosol where it fuels the folate cycle linked to thymidylate and purine synthesis as well as methylation reactions, which are critical for DNA, RNA, and protein regulation (Fig. 4 ) [ 13 , 15 , 30 , 32 ]. Of note, oxidation of folate-bound one-carbon groups can also generate NADPH thus contributing to the energy production [ 33 ]. This dynamic flow of one-carbon units integrates amino acid catabolism with nucleotide biosynthesis, redox balance, and epigenetic control — functions that are essential for supporting cell growth and proliferation [ 13 , 30 ]. Absence of SFXN1 leads to serine deficiency, which limits cell proliferation in knockout (KO) cell models; however, this defect can be rescued with formate supplementation [ 14 ]. In addition, SFXN1 deficiency disrupts central carbon metabolism by depleting tricarboxylic acid (TCA) cycle intermediates, decreasing glutamate dehydrogenase activity, and altering NAD + /NADH ratios, as reported by Acoba and colleagues [ 14 ]. While radiolabel and reconstituted-proteoliposome assays confirmed serine as the preferred substrate, Kory et al. also observed lower-affinity transport of alanine, cysteine and glycine, indicating that SFXN1 is a serine-favoured but not serine-exclusive carrier [ 13 ]. Nonetheless, while originally characterized as a serine transporter, SFXN1 has since been implicated in the biogenesis, assembly, and functional regulation of mitochondrial respiratory complex III [ 13 , 14 , 34 ]. Loss or dysfunction of SFXN1 leads to selective destabilization of complex III, lowering its subunit abundance, disrupting dimerization, and suppressing enzymatic activity, but without substantially affecting the integrity of the other oxidative phosphorylation complexes [ 13 , 14 , 34 ]. SFXN1 also influences mitochondrial iron homeostasis indirectly by boosting glycine production. Glycine is the direct precursor for heme and, through its involvement in one-carbon metabolism, indirectly supports Fe–S-cluster biogenesis [ 13 ]. Mitochondria assemble Fe–S clusters through a tightly regulated, multistep process. Iron delivered by frataxin and sulfur extracted from cysteine by cysteine desulfurases (NFS1) via a persulfide intermediate for incorporation into nascent Fe-S clusters are combined on the Iron-Sulfur Cluster assembly protein (ISCU) scaffold to form an initial [2Fe–2 S] cluster [ 35 ]. Ferredoxin provides the necessary electrons, and the ISA1–ISA2–IBA57 complex can remodel two small clusters into a [4Fe–4 S] form essential for respiratory-chain, TCA-cycle, and DNA-repair enzymes [ 36 , 37 ]. Computational analyses also suggest the presence of heme-binding motifs in SFXN1, although their functional significance remains to be determined [ 12 ]. SFXN2 Although SFXN2’s contribution to serine transport remains unclear, it is hypothesized to contribute to mitochondrial iron homeostasis [ 12 , 13 , 38 ]. Studies have shown that SFXN2 KO cells exhibit increased mitochondrial iron content, suggesting that SFXN2 may be involved in iron export from mitochondria, or in regulating iron utilization within the organelle [ 38 ]. However, to date, there is no evidence showing SFXN2 (or any other SFXN) to function directly as an Fe 2+ or Fe 3+ transporter. Increases in mitochondrial iron in SFXN2 KO cells do not result in proportional increases in heme synthesis. Instead — heme levels are decreased in these cells, and this lowering correlates with decreased activity of heme-dependent enzymes (which rely on heme as a cofactor) [ 38 ]. Interestingly, ISC-dependent enzyme activities appear unaffected in these knockout models, suggesting a selective impact on heme biosynthesis rather than broad disruptions in ISC function. Consistent with involvement in iron handling, Chen et al. [ 39 ] demonstrated that elevated SFXN2 expression in multiple-myeloma cells limited mitochondrial autophagy, enhanced iron-driven oxidative phosphorylation, and thereby promoted tumor proliferation, further underscoring the importance of SFXN2 in mitochondrial iron utilization and energy metabolism. The mechanisms underlying these changes remain unexplored, highlighting the need for further research on SFXN2’s contribution to iron and heme homeostasis [ 38 , 39 ]. SFXN3 SFXN3 is thought to be involved in serine transport (similar to that of SFXN1) [ 13 ], although its exact molecular function is not fully understood. Absence of SFXN3 in SFXN3-KO mice affects the levels of certain ISC proteins, such as the Rieske protein, leading to increased mitochondrial iron content [ 40 ]. This finding suggests that SFXN3 impacts mitochondrial iron homeostasis and ISC biogenesis. Recent work by Mi et al. [ 41 ] demonstrated that SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20, thereby providing a pathway for iron entry into mitochondria and reinforcing its involvement in mitochondrial iron metabolism. However, the exact mechanisms underlying SFXN3’s regulatory function and its overall impact on mitochondrial iron metabolism remain to be fully elucidated [ 40 , 41 ]. SFXN4 SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis. These processes are essential for mitochondrial oxidative metabolism and DNA synthesis [ 16",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "70b2cebdc26d75631d4bebd900628874"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.539227
+      },
+      {
+        "inputs": [
+          "citrate"
+        ],
+        "outputs": [
+          "citrate"
+        ],
+        "name": "citrate transport by SLC25A1/CIC",
+        "enzymes": [
+          {
+            "protein": "SLC25A1/CIC",
+            "evidence": "(similar to that of SFXN1) [ 13 ], although its exact molecular function is not fully understood. Absence of SFXN3 in SFXN3-KO mice affects the levels of certain ISC proteins, such as the Rieske protein, leading to increased mitochondrial iron content [ 40 ]. This finding suggests that SFXN3 impacts mitochondrial iron homeostasis and ISC biogenesis. Recent work by Mi et al. [ 41 ] demonstrated that SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20, thereby providing a pathway for iron entry into mitochondria and reinforcing its involvement in mitochondrial iron metabolism. However, the exact mechanisms underlying SFXN3’s regulatory function and its overall impact on mitochondrial iron metabolism remain to be fully elucidated [ 40 , 41 ]. SFXN4 SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis. These processes are essential for mitochondrial oxidative metabolism and DNA synthesis [ 16 , 18 , 42 ]. SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway — encoded by the ALAS2 gene and expressed exclusively in erythroid cells [ 16 ]. In addition, SFXN4 influences ISC biosynthesis by regulating the cytosolic aconitase-iron-responsive element-binding protein 1 (IRP1) switch, thereby facilitating the redistribution of iron from the cytosol to the mitochondrial matrix [ 10 ]. It is noteworthy that a recent study identified SFXN4 as a complex I assembly factor, interacting with components of the mitochondrial complex I intermediate assembly (MCIA) complex [ 17 ]. This interaction suggests that SFXN4 might participate in stabilizing and coordinating complex I integration within the mitochondrial respiratory chain [ 16 , 18 , 34 ]. SFXN5 SFXN5 is primarily expressed in the brain, with high levels detected across various regions, including the cerebellum, cerebral cortex, and hippocampus [ 8 ]. Whereas its precise function remains under investigation, SFXN5 has been proposed to modulate cytosolic citrate, possibly by exporting citrate from the mitochondrion [ 29 , 43 ]. In most mammalian cells citrate is produced in the tricarboxylic acid cycle and exported to the cytosol by SLC25A1/CIC, providing acetyl-CoA for lipid synthesis [ 44 ]. Of note, while the export from mitochondria is viewed as the main direction of citrate transport, the entry of citrate to mitochondria through the reverse action of SLC25A1/CIC has been shown [ 44 ]. Apparently, this mechanism could direct the surplus of cytosolic citrate back to mitochondria for the energy production through the TCA cycle. Currently, however, there is no strong evidence for a dedicated mitochondrial citrate importer, but the observed reduction in cytosolic citrate in SFXN5-deficient neutrophils suggests a function for SFXN5 in modulating citrate homeostasis, potentially through export, recycling, or exchange mechanisms [ 29 ]. This hypothesis remains speculative, as the substrate specificity, transport dynamics and the directionality of SFXN5 are not yet defined. Importantly, decreased cytosolic citrate is believed to impair actin polymerization and PI [ 4 , 5 ]P₂ synthesis, processes essential for proper neutrophil function [ 29 ]. The clarification of whether SFXN5 operates as a unidirectional transporter or as part of a bidirectional exchange system, as well as the participation of the transporter in balancing cytosolic and mitochondrial citrate, will require further investigation. Tissue distribution of SFXNs The expression of SFXNs varies across different tissues, reflecting their distinct roles in mitochondrial metabolism. According to the Human Protein Atlas (HPA), SFXN1 is expressed in most tissues but is enriched in liver, kidney, bone marrow and small intestine, all of which have high one-carbon–metabolism demand [ 13 , 45 ]. SFXN2, while ubiquitously expressed, shows higher levels in bone-marrow-derived and other hematopoietic tissues, consistent with its involvement in iron homeostasis and heme biosynthesis [ 39 , 45 ]. SFXN3 is predominantly expressed in neural tissues, with peak levels in cortex, hippocampus, and retina, supporting its proposed function in iron regulation in the central nervous system [ 40 , 45 ]. SFXN4 exhibits high expression in tissues with high oxidative metabolism (including liver, kidney, heart and bone marrow); this corresponds to SFXN4’s function in ISC assembly and heme biosynthesis [ 16 , 45 ]. Finally, SFXN5 is primarily expressed in brain, with highest expression in cerebral cortex and cerebellum, reinforcing its proposed involvement in neuronal citrate/iron metabolism [ 8 , 45 ]. Clinical importance SFXN1 SFXN1 appears to be involved in both neurodegenerative diseases, anemia, and cancer. Impaired iron regulation due to SFXN1 dysfunction is thought to contribute to anemia, because diminished iron availability disrupts hemoglobin synthesis, thereby decreasing red blood cell production and function [ 7 , 18 ]. SFXN1 has been identified as a potential therapeutic target in cancer therapy [ 12 ]. Increased SFXN1 expression has been linked to breast cancer, gliomas, and lung adenocarcinoma, suggesting its involvement in tumor progression"
+          }
+        ],
+        "evidence": "(similar to that of SFXN1) [ 13 ], although its exact molecular function is not fully understood. Absence of SFXN3 in SFXN3-KO mice affects the levels of certain ISC proteins, such as the Rieske protein, leading to increased mitochondrial iron content [ 40 ]. This finding suggests that SFXN3 impacts mitochondrial iron homeostasis and ISC biogenesis. Recent work by Mi et al. [ 41 ] demonstrated that SFXN3 can form a complex with poly(rC)-binding protein 2 (PCBP2) via TOM20, thereby providing a pathway for iron entry into mitochondria and reinforcing its involvement in mitochondrial iron metabolism. However, the exact mechanisms underlying SFXN3’s regulatory function and its overall impact on mitochondrial iron metabolism remain to be fully elucidated [ 40 , 41 ]. SFXN4 SFXN4 is important for mitochondrial iron utilization by affecting both heme and ISC biosynthesis. These processes are essential for mitochondrial oxidative metabolism and DNA synthesis [ 16 , 18 , 42 ]. SFXN4 regulates heme biosynthesis by modulating ferrochelatase levels and inhibiting the translation of erythroid δ-aminolevulinic acid synthase (ALAS2), a key enzyme in the heme synthesis pathway — encoded by the ALAS2 gene and expressed exclusively in erythroid cells [ 16 ]. In addition, SFXN4 influences ISC biosynthesis by regulating the cytosolic aconitase-iron-responsive element-binding protein 1 (IRP1) switch, thereby facilitating the redistribution of iron from the cytosol to the mitochondrial matrix [ 10 ]. It is noteworthy that a recent study identified SFXN4 as a complex I assembly factor, interacting with components of the mitochondrial complex I intermediate assembly (MCIA) complex [ 17 ]. This interaction suggests that SFXN4 might participate in stabilizing and coordinating complex I integration within the mitochondrial respiratory chain [ 16 , 18 , 34 ]. SFXN5 SFXN5 is primarily expressed in the brain, with high levels detected across various regions, including the cerebellum, cerebral cortex, and hippocampus [ 8 ]. Whereas its precise function remains under investigation, SFXN5 has been proposed to modulate cytosolic citrate, possibly by exporting citrate from the mitochondrion [ 29 , 43 ]. In most mammalian cells citrate is produced in the tricarboxylic acid cycle and exported to the cytosol by SLC25A1/CIC, providing acetyl-CoA for lipid synthesis [ 44 ]. Of note, while the export from mitochondria is viewed as the main direction of citrate transport, the entry of citrate to mitochondria through the reverse action of SLC25A1/CIC has been shown [ 44 ]. Apparently, this mechanism could direct the surplus of cytosolic citrate back to mitochondria for the energy production through the TCA cycle. Currently, however, there is no strong evidence for a dedicated mitochondrial citrate importer, but the observed reduction in cytosolic citrate in SFXN5-deficient neutrophils suggests a function for SFXN5 in modulating citrate homeostasis, potentially through export, recycling, or exchange mechanisms [ 29 ]. This hypothesis remains speculative, as the substrate specificity, transport dynamics and the directionality of SFXN5 are not yet defined. Importantly, decreased cytosolic citrate is believed to impair actin polymerization and PI [ 4 , 5 ]P₂ synthesis, processes essential for proper neutrophil function [ 29 ]. The clarification of whether SFXN5 operates as a unidirectional transporter or as part of a bidirectional exchange system, as well as the participation of the transporter in balancing cytosolic and mitochondrial citrate, will require further investigation. Tissue distribution of SFXNs The expression of SFXNs varies across different tissues, reflecting their distinct roles in mitochondrial metabolism. According to the Human Protein Atlas (HPA), SFXN1 is expressed in most tissues but is enriched in liver, kidney, bone marrow and small intestine, all of which have high one-carbon–metabolism demand [ 13 , 45 ]. SFXN2, while ubiquitously expressed, shows higher levels in bone-marrow-derived and other hematopoietic tissues, consistent with its involvement in iron homeostasis and heme biosynthesis [ 39 , 45 ]. SFXN3 is predominantly expressed in neural tissues, with peak levels in cortex, hippocampus, and retina, supporting its proposed function in iron regulation in the central nervous system [ 40 , 45 ]. SFXN4 exhibits high expression in tissues with high oxidative metabolism (including liver, kidney, heart and bone marrow); this corresponds to SFXN4’s function in ISC assembly and heme biosynthesis [ 16 , 45 ]. Finally, SFXN5 is primarily expressed in brain, with highest expression in cerebral cortex and cerebellum, reinforcing its proposed involvement in neuronal citrate/iron metabolism [ 8 , 45 ]. Clinical importance SFXN1 SFXN1 appears to be involved in both neurodegenerative diseases, anemia, and cancer. Impaired iron regulation due to SFXN1 dysfunction is thought to contribute to anemia, because diminished iron availability disrupts hemoglobin synthesis, thereby decreasing red blood cell production and function [ 7 , 18 ]. SFXN1 has been identified as a potential therapeutic target in cancer therapy [ 12 ]. Increased SFXN1 expression has been linked to breast cancer, gliomas, and lung adenocarcinoma, suggesting its involvement in tumor progression",
+        "rag_provenance": {
+          "source_id": "PMC12180156",
+          "source_title": "Update of the sideroflexin (SLC56) gene family.",
+          "source_type": "paper",
+          "source_uri": "https://doi.org/10.1186/s40246-025-00779-w",
+          "section": "results",
+          "organism": "Homo sapiens",
+          "chunk_id": "eeb8d2c8071466c4b6c7230d9d478aa1"
+        },
+        "source_papers": [
+          {
+            "source_id": "PMC12180156",
+            "title": "Update of the sideroflexin (SLC56) gene family.",
+            "uri": "https://doi.org/10.1186/s40246-025-00779-w",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 1.0
+      },
+      {
+        "inputs": [
+          "serine"
+        ],
+        "outputs": [
+          "glycine"
+        ],
+        "name": "folate-dependent conversion to glycine",
+        "enzymes": [
+          {
+            "protein": "SHMT2",
+            "evidence": "Clustal Omega v1.2.4 (default parameters) via the UniProtKB/Swiss-Prot alignment tool [ 59 ]. Abbreviations: Hsa: Homo sapiens , Smo: Selaginella moellendorffii , Ppa: Physcomitrium patens . The figure was created using Biorender ( https://BioRender.com ) Fig. 3 Phylogenetic comparison of human and mouse SFXNs. The evolutionary history was inferred by using the Maximum Likelihood method and JTT matrix-based model [ 61 ]. The tree with the highest log likelihood (-4427.25) is shown. Initial tree(s) for the heuristic search were obtained automatically by applying Neighbor-Join and BioNJ algorithms to a matrix of pairwise distances estimated using the JTT model, and then selecting the topology with superior log likelihood value. The tree is drawn to scale, with branch lengths measured in the number of substitutions per site. A distance scale of 0.50 indicates 0.5 substitutions per site. This analysis involved 10 amino acid sequences. There was a total of 350 positions in the final dataset. Evolutionary analyses were conducted in MEGA11 [ 60 ]. Abbreviations: Hsa: Homo sapiens , Mmu: Mus musculus Fig. 4 Proposed roles for SFXNs. SFXNs transport serine or citrate to mitochondria. Whereas citrate feeds the TCA cycle for energy production, serine has multiple functions. Its main pathway is folate-dependent conversion to glycine catalyzed by SHMT2. This reaction feeds one-carbon groups to mitochondrial folate metabolism (OCM, one-carbon metabolism). These groups can be: (i) oxidized to CO2 to produce energy in the form of NADPH; (ii) converted to formate, which is exported from mitochondria to feed the cytosolic folate metabolism; and (iii) directed to formylation of Met-tRNA, which is a required (initiation) step in mitochondrial protein biosynthesis. Both serine and serine-derived glycine are also required for protein biosynthesis in mitochondria. Glycine is also required for the rate-limiting step in heme biosynthesis. Surplus glycine can be exported from mitochondria for utilization in cytosolic reactions. Proposed model also considers the putative function for SFXNs in exporting citrate from mitochondria Fig. 5 Mitochondrial localization of the predicted 3-dimensional structures of sideroflexins. SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM). SFXN2 is found in either the IMM or the outer mitochondrial membrane (OMM); thus, SFXN2 is depicted in both locations. A structural model for SFXN5 is available; however, due to the lack of localization data, SFXN5 is not included in the figure. The orientation of the SFXNs in the membranes remains to be determined; therefore, they are depicted in both possible configurations. Colors on the SFXN molecules indicate the distinct secondary structures as follows: alpha-helices ( magenta ), beta-sheets ( yellow ), and loops ( white ). All predicted 3-dimensional structures were obtained from AlphaFold Protein Structure Database [ 62 – 64 ]. The figure is based on Tifoun et al. [ 12 ] and was created using Biorender ( https://BioRender.com ) Publisher’s note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations."
+          }
+        ],
+        "evidence": "Clustal Omega v1.2.4 (default parameters) via the UniProtKB/Swiss-Prot alignment tool [ 59 ]. Abbreviations: Hsa: Homo sapiens , Smo: Selaginella moellendorffii , Ppa: Physcomitrium patens . The figure was created using Biorender ( https://BioRender.com ) Fig. 3 Phylogenetic comparison of human and mouse SFXNs. The evolutionary history was inferred by using the Maximum Likelihood method and JTT matrix-based model [ 61 ]. The tree with the highest log likelihood (-4427.25) is shown. Initial tree(s) for the heuristic search were obtained automatically by applying Neighbor-Join and BioNJ algorithms to a matrix of pairwise distances estimated using the JTT model, and then selecting the topology with superior log likelihood value. The tree is drawn to scale, with branch lengths measured in the number of substitutions per site. A distance scale of 0.50 indicates 0.5 substitutions per site. This analysis involved 10 amino acid sequences. There was a total of 350 positions in the final dataset. Evolutionary analyses were conducted in MEGA11 [ 60 ]. Abbreviations: Hsa: Homo sapiens , Mmu: Mus musculus Fig. 4 Proposed roles for SFXNs. SFXNs transport serine or citrate to mitochondria. Whereas citrate feeds the TCA cycle for energy production, serine has multiple functions. Its main pathway is folate-dependent conversion to glycine catalyzed by SHMT2. This reaction feeds one-carbon groups to mitochondrial folate metabolism (OCM, one-carbon metabolism). These groups can be: (i) oxidized to CO2 to produce energy in the form of NADPH; (ii) converted to formate, which is exported from mitochondria to feed the cytosolic folate metabolism; and (iii) directed to formylation of Met-tRNA, which is a required (initiation) step in mitochondrial protein biosynthesis. Both serine and serine-derived glycine are also required for protein biosynthesis in mitochondria. Glycine is also required for the rate-limiting step in heme biosynthesis. Surplus glycine can be exported from mitochondria for utilization in cytosolic reactions. Proposed model also considers the putative function for SFXNs in exporting citrate from mitochondria Fig. 5 Mitochondrial localization of the predicted 3-dimensional structures of sideroflexins. SFXN1, SFXN3 and SFXN4 are embedded in the inner mitochondrial membrane (IMM). SFXN2 is found in either the IMM or the outer mitochondrial membrane (OMM); thus, SFXN2 is depicted in both locations. A structural model for SFXN5 is available; however, due to the lack of localization data, SFXN5 is not included in the figure. The orientation of the SFXNs in the membranes remains to be determined; therefore, they are depicted in both possible configurations. Colors on the SFXN molecules indicate the distinct secondary structures as follows: alpha-helices ( magenta ), beta-sheets ( yellow ), and loops ( white ). All predicted 3-dimensional structures were obtained from AlphaFold Protein Structure Database [ 62 – 64 ]. The figure is based on Tifoun et al. [ 12 ] and was created using Biorender ( https://BioRender.com ) Publisher’s note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.",
+        "rag_provenance": {
+          "source_id": "seed_paper",
+          "source_title": "heme biosynthesis",
+          "source_type": "paper",
+          "source_uri": "",
+          "section": "conclusion",
+          "organism": "Homo sapiens",
+          "chunk_id": "9810461f1e5de298cadb7121f4dc3274"
+        },
+        "source_papers": [
+          {
+            "source_id": "seed_paper",
+            "title": "heme biosynthesis",
+            "uri": "",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          },
+          {
+            "source_id": "PMC12180156",
+            "title": "Update of the sideroflexin (SLC56) gene family.",
+            "uri": "https://doi.org/10.1186/s40246-025-00779-w",
+            "source_type": "paper",
+            "organism": "Homo sapiens"
+          }
+        ],
+        "rag_confidence": 0.791698
+      }
+    ]
+  }
+}

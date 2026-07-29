@@ -1,0 +1,42 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC13231680
+title      : Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal activity in NDM-1-positive Escherichia coli.
+slug       : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 936.7s (15m36s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 2
+  compounds = 7
+  entities = 11
+  gate_errors = 0
+  normalization_actions = 1
+  proteins = 2
+  reactions = 4
+  review_flags = 0
+  runtime_schema_findings = 2
+  skipped_format_rules = 0
+  tier = {'a': 1, 'b': 2, 'c': 4, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (7202 B)
+  - merged_payload.json  (161078 B)
+  - research_pathway_citations.json  (138089 B)
+  - research_pathway_elements.csv  (53978 B)
+  - research_pathway_report.txt  (30665 B)
+  - review_flags.json  (425 B)
+  - stage1_payload.json  (1488 B)

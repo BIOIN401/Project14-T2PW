@@ -1,0 +1,2967 @@
+================================================================================
+HEME BIOSYNTHESIS
+Candidate pathway · export mode: research · NOT an importable PWML file
+================================================================================
+
+HOW TO READ THIS
+  Tier A  DB-grounded
+          an external database ID was found (UniProt / DrugBank / PathBank)
+  Tier B  corroborated by a second paper (no identifier)
+          no ID, but two independent sources state it, each with its own quote
+  Tier C  single-source (review)
+          only ONE source states this. Read the quote and decide.
+  Tier D  UNSOURCED (review)
+          NOTHING backs this. Check these first.
+
+  Every claim below is traced to a source. Nothing here is invented:
+  if a source or a page is missing, it says so rather than guessing.
+
+AT A GLANCE
+  Reactions            30
+  Entities             109
+  Distinct sources     4
+  Tiers                A=58   B=7   C=74   D=0
+  NEEDS REVIEW         74 element(s) are Tier C or D
+  Review flags         17
+  Format rules skipped 0
+
+================================================================================
+THE PATHWAY, STEP BY STEP
+================================================================================
+
+--------------------------------------------------------------------------------
+REACTION 1 of 30   ·   Tier B - corroborated by a second paper (no identifier)
+--------------------------------------------------------------------------------
+  ALAS1 reaction
+
+  IN    glycine
+      + succinyl-CoA
+
+  OUT   5-aminolevulinic acid
+
+  ENZYME  ALAS1
+          Tier A - DB-grounded [uniprot: P13196]
+  ENZYME  ALA synthase (ALAS)
+          Tier B - corroborated by a second paper (no identifier)
+  ENZYME  aminolevulinic acid synthase (ALAS)
+          Tier B - corroborated by a second paper (no identifier)
+
+  WHY THIS TIER
+    stated in 2 identified papers, each with its own cited passage: A reversible
+    feedback mechanism regulating mitochondrial heme synthesis., From Synthesis
+    to Utilization: The Ins and Outs of Mitochondrial Heme.
+
+  EVIDENCE
+    [1] A reversible feedback mechanism regulating mitochondrial heme synthesis.
+        (PMC12856317)
+        section: body   ·   best retrieval score for this source: 0.6961
+        "567 jbc The Journal of Biological Chemistry J Biol Chem American
+         Society for Biochemistry and Molecular Biology PMC12856317 12856317
+         12856317 41443426 10.1016/j.jbc.2025.111089 A reversible feedback
+         mechanism regulating mitochondrial heme synthesis Chitrakar Iva 1
+         Roberson Alexis B 1 2 Ayres-Galhardo Pedro H 1 Brown Breann L 1 3 ∗ 1
+         Department of Biochemistry, Vanderbilt University School of Medicine,
+         Nashville, Tennessee, USA 2 Department of Chemistry, Fisk University,
+         Nashville, Tennessee, USA 3 Center for Structural Biology, Vanderbilt
+         University School of Medicine, Nashville, Tennessee, USA ∗ For
+         correspondence: Breann L. Brown breann.brown@vanderbilt.edu 22 12 2025
+         302 2 111089 111089 31 1 2026 © 2025 The Authors This is an open
+         access article under the CC BY license
+         (http://creativecommons.org/licenses/by/4.0/). Previous version
+         available: This article is based on a previously available preprint
+         posted on bioRxiv on September 9, 2025: " A reversible feedback
+         mechanism regulating mitochondrial heme synthesis ". Abstract Proper
+         heme biosynthesis is essential for numerous cellular functions across
+         nearly all life forms. In humans, dysregulated heme metabolism is
+         linked to multiple blood diseases, neurodegeneration, cardiovascular
+         disease, and metabolic disorders. Erythroid heme production begins
+         with the rate-limiting enzyme aminolevulinic acid synthase 2 (ALAS2)
+         in the mitochondrion. Although prior studies discuss the regulation of
+         ALAS2 in the cytoplasm, its modulation as a mature mitochondrial
+         matrix enzyme remains poorly understood. We report that heme binds
+         mature human ALAS2 with high affinity, acting as a reversible mixed
+         inhibitor that reduces enzymatic activity. Structural modeling
+         supports the hypothesis that two flexible regions of ALAS2 interact
+         with heme, locking the enzyme in an inactive conformation and
+         occluding the active site. Our work reveals a negative feedback
+         mechanism for heme synthesis, offering insights into the spatial
+         regulation of ALAS2 and the maturation of the essential heme cofactor.
+         Keywords: heme, enzyme inhibition, erythropoiesis, aminolevulinic
+         acid, pyridoxal 5-phosphate, heme regulatory motif, protein structure
+         and function, enzymology status released display-pdf yes is-olf no is-
+         manuscript no is-preprint no is-journal-matter no is-scanned no is-
+         retracted no Received 2025 Sep 23; Revised 2025 Dec 9; Collection date
+         2026 Feb. Our knowledge of cellular metabolism continues to expand
+         with our understanding of the role of metabolites as cell signaling
+         effectors (reviewed in ( 1 )). Consequently, metabolic processes,
+         which form the foundation of organismal biology, are studied in a new
+         context to reveal critical insights into chemical and cellular
+         signaling. Heme metabolism is central to multiple biological
+         processes, as it is a vital cofactor supporting oxygen transport,
+         transcriptional regulation, and drug detoxification, among others ( 2
+         , 3 , 4 ). Heme production must be tightly controlled due to the
+         toxicity associated with heme deficiency or excessive amounts of
+         porphyrin precursors, which produce reactive oxygen species and free
+         radicals ( 5 , 6 , 7 , 8 ). The enzyme that catalyzes the rate-
+         limiting step for heme biosynthesis in many organisms is
+         aminolevulinic acid synthase (ALAS) ( 9 , 10 ), a PLP-dependent
+         homodimer enzyme that mediates the condensation of glycine and
+         succinyl-CoA to produce aminolevulinic acid ( 11 , 12 ). Humans
+         contain two ALAS isoforms, ALAS1 and ALAS2 ( 13 , 14 , 15 ). ALAS1 is
+         a ubiquitously expressed housekeeping enzyme ( 13 , 14 ), and ALAS2 is
+         the erythroid-specific isoform that governs the synthesis of 85 to 90%
+         of the total body heme pool ( 5 , 16 ). The high demand for heme to
+         produce hemoglobin implies that erythroid heme synthesis is not
+         tightly regulated. However, the fact that multiple blood disorders
+         arise from dysfunctional heme biosynthesis indicates otherwise.
+         Current clinical reports have identified over 95 human ALAS2 mutations
+         that result in the loss-of-function disease X-linked sideroblastic
+         anemia (XLSA) ( 17 , 18 , 19 ). or the gain-of-function disease
+         X-linked protoporphyria (XLPP) ( 20 , 21 ). Compelling new evidence
+         reveals that ALAS2 is also expressed in nonerythroid cells ( 22 ),
+         underscoring our critical need to understand ALAS2 enzyme regulation
+         for metabolic processes beyond erythropoiesis. Previous research
+         primarily focused on the nuclear and cytosolic regulation of ALAS
+         expression and trafficking ( 23 , 24 , 25 , 26 , 27 , 28 , 29 , 30 ,
+         31 , 32 , 33 ). For example, heme binds directly to the ALAS
+         mitochondrial targeting sequence, preventing protein translocation
+         into the matrix ( 23 , 24 , 34 , 35 , 36 ). However, little is known
+         about the enzymatic modulation of ALAS within the mitochondrial
+         matrix, which is the cellular compartment where heme biosynthesis is
+         initiated and terminated. Human ALAS paralogs contain multiple
+         putative heme-binding motifs in the mature enzyme, which lacks the
+         mitochondrial targeting sequence (reviewed in ( 37 )). Various reports
+         established that the interaction between heme and mitochondrial ALAS1"
+        https://doi.org/10.1016/j.jbc.2025.111089
+
+    [2] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+    [3] heme biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 2 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  ALAD reaction
+
+  IN    5-aminolevulinic acid
+
+  OUT   porphobilinogen
+
+  ENZYME  ALAD
+          Tier A - DB-grounded [uniprot: P13716]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] heme biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 3 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  UROS reaction
+
+  IN    porphobilinogen
+
+  OUT   uroporphyrinogen III
+
+  ENZYME  UROS
+          Tier A - DB-grounded [uniprot: P10746]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] heme biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 4 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  CPOX reaction
+
+  IN    uroporphyrinogen III
+
+  OUT   coproporphyrinogen III
+
+  ENZYME  CPOX
+          Tier A - DB-grounded [uniprot: P36551]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] heme biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 5 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  FECH reaction
+
+  IN    protoporphyrin IX
+
+  OUT   heme
+
+  ENZYME  FECH
+          Tier A - DB-grounded [uniprot: P22830]
+
+  WHY THIS TIER
+    stated in a single source
+    - stated in the uploaded seed paper; no retrieved paper corroborates it
+
+  EVIDENCE
+    [1] heme biosynthesis (seed paper)
+        section: not recorded
+        (no quoted passage: the seed paper is not chunked into the
+         evidence store, so only the reaction claim is recorded)
+
+
+--------------------------------------------------------------------------------
+REACTION 6 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  condensates two molecules of ALA into porphobilinogen (PBG)
+
+  IN    2.0 ALA
+
+  OUT   porphobilinogen (PBG)
+
+  ENZYME  Porphobilinogen synthase (PBGS)
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 7 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  PBG -> hydroxymethylbilane (HMB)
+
+  IN    4.0 PBG
+
+  OUT   hydroxymethylbilane (HMB)
+
+  ENZYME  hydroxymethylbilane synthase (HMBS)
+          Tier A - DB-grounded [uniprot: P08397]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 8 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  Uroporphyrinogen III (UPgen III) is synthesized from HMB by uroporphyrinogen synthase (UROS)
+
+  IN    HMB
+
+  OUT   Uroporphyrinogen III (UPgen III)
+
+  ENZYME  uroporphyrinogen synthase (UROS)
+          Tier A - DB-grounded [uniprot: P10746]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 9 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by uroporphyrinogen decarboxylase (UROD)
+
+  IN    UPG III
+
+  OUT   Coproporphyrinogen III (CPgenIII)
+
+  ENZYME  uroporphyrinogen decarboxylase (UROD)
+          Tier A - DB-grounded [uniprot: P06132]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 10 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  CPgenIII -> protoporphyrinogen IX (PPgen IX)
+
+  IN    CPgenIII
+
+  OUT   protoporphyrinogen IX (PPgen IX)
+
+  ENZYME  CPgen oxidase (CPOX)
+          Tier A - DB-grounded [uniprot: P36551]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 11 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  PPgen IX is oxidized into protoporphyrin IX (PPIX) by PPgen oxidase (PPOX)
+
+  IN    PPgen IX
+
+  OUT   protoporphyrin IX (PPIX)
+
+  ENZYME  PPgen oxidase (PPOX)
+          Tier A - DB-grounded [uniprot: P50336]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 12 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  insertion of ferrous iron into the porphyrin ring, resulting in heme b
+
+  IN    PPIX
+      + ferrous iron
+
+  OUT   heme b
+
+  ENZYME  ferrochelatase (FECH)
+          Tier A - DB-grounded [uniprot: P22830]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacteria make heme via the C 4 (Shemin) pathway, whereas
+         plants, archaea and other bacteria utilize the C 5 (glutamate) pathway
+         [ 26 ]. Here, we focus on the former, which requires eight enzymes to
+         construct heme from glycine, succinyl-CoA, molecular oxygen (O 2 ) and
+         iron (Fe) [ 12 , 27 , 28 ]. The first and last three enzymes of the
+         heme synthesis pathway in animal and fungi are localized to the
+         mitochondria and the remaining four enzymes reside in the cytosol.
+         Heme synthesis can therefore be controlled at multiple levels,
+         including substrate availability, partitioning of heme synthetic
+         intermediates between the mitochondria and cytosol and direct
+         regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] ( Figure 2
+         ). In this section we examine each of the enzymes involved in heme
+         synthesis, focusing on their regulation and thus their ability to
+         control heme availability. Table 1 Conservation of heme homeostatic
+         factors between yeast, worm and man. Heme Homeostatic Process Enzyme
+         Saccharomyces cerevisiae Caenorhabditis elegans Homo sapiens Heme
+         Synthesis 5-aminolevulinic acid synthase Hem1 ✖ ALAS1/ALAS2
+         Porphobilinogen synthase Hem2 ✖ PBGS Hydroxymethylbilane synthase Hem3
+         ✖ HMBS Uroporphyrinogen synthase Hem4 ✖ UROS Uroporphyrinogen
+         decarboxylase Hem12 ✖ UROD Coproporphyrinogen oxidase Hem13 ✖ CPOX
+         Protoporphyrinogen oxidase Hem14 ✖ PPOX Ferrochelatase Hem15 fecl-1
+         FECH Heme Degradation Heme oxygenase Hmx1 ? Hmox1/Hmox2 Heme Import
+         FLVCR2 ✖ ✔ ✔ HRG4 ✖ ✔ ✖ Heme Export FLVCR1 ✖ ✖ ✔ MRP5 ✖ mrp-5 ABCC5
+         Pug1 ✔ ✖ ✖ HRG3 ✖ ✔ ✖ Heme Trafficking PGRMC1/2 Dap1 vem-1 PGRMC1/2
+         GAPDH Tdh1/2/3 gpd1/2/3/4 GAPDH HRG1 ✖ ✔ ✔ Figure 2 Structures and
+         enzymes involved in heme synthesis shown where they are localized.
+         Glycine is transported into the intermembrane space of the
+         mitochondria (IMS) through an unknown mechanism and is transported
+         across the inner mitochondrial membrane (IMM) by SLC25A38. Succinyl-
+         CoA is synthesized within the matrix. Glycine and Succinyl-CoA are
+         condensed into 5-aminolevulunic acid (5-ALA) by ALA synthase (ALAS).
+         The 5-ALA is transported from the matrix to the cytosol by unknown
+         mechanisms, where Porphobilinogen synthase (PBGS) condensates two
+         molecules of ALA into porphobilinogen (PBG). Four molecules of PBG are
+         combined to form a linear tetrapyrrole hydroxymethylbilane (HMB) by
+         hydroxymethylbilane synthase (HMBS). Uroporphyrinogen III (UPgen III)
+         is synthesized from HMB by uroporphyrinogen synthase (UROS).
+         Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by
+         uroporphyrinogen decarboxylase (UROD). CPgenIII is transported by an
+         unknown mechanism into the IMS. Within the IMS CPgenIII is made into
+         protoporphyrinogen IX (PPgen IX) through catalysis by CPgen oxidase
+         (CPOX). Next, PPgen IX is oxidized into protoporphyrin IX (PPIX) by
+         PPgen oxidase (PPOX). For the final step PPIX is transported into the
+         matrix, where ferrochelatase (FECH) catalyzes the insertion of ferrous
+         iron into the porphyrin ring, resulting in heme b. 2.1. ALA Production
+         The first committed step of heme biosynthesis in non-plant eukaryotes
+         occurs with the pyridoxal 5’-phosphate (PLP)-dependent condensation of
+         glycine and succinyl-CoA to form aminolevulinic acid (ALA) by ALA
+         synthase (ALAS) in the mitochondrial matrix ( Figure 2 ). ALAS is
+         conserved from bacteria to metazoans [ 31 ] and is the universal
+         precursor for all tetrapyrroles including chlorophylls, cobalamin,
+         siroheme and coenzyme F 430 [ 31 , 32 ]. The supply of glycine from
+         the cytosol into the matrix of the mitochondria for ALA production
+         likely occurs by passive diffusion across the highly porous outer
+         mitochondrial membrane (OMM) and then through the inner mitochondrial
+         membrane (IMM) by Solute Carrier (SLC) family 25A38 (Hem25 in yeast) [
+         33 , 34 ]. In yeast, one secondary glycine transporter, Ymc1 (another
+         SLC family member), has been determined, but it is currently not known
+         whether this protein has a homolog in humans [ 35 ]. The other ALAS
+         substrate, succinyl-CoA, is synthesized in the mitochondrial matrix,
+         primarily from either α-ketoglutarate (α-KG) via α-KG dehydrogenase or
+         succinate via succinyl-CoA synthetase in a cell-specific manner [ 36 ,
+         37 , 38 , 39 ]. ALAS structures obtained from α-proteobacterium [ 40 ]
+         and yeast [ 41 ], both with a high degree of sequence homology to the
+         human ALAS core, indicate a tightly bound homodimer. Specifically,
+         each monomer consists of three domains that all participate in
+         dimerization: a variable N-terminal region, a highly conserved
+         catalytic center with a PLP-lysine Schiff base in the active site and
+         a regulatory C-terminal domain. Eukaryotic ALAS proteins contain a
+         cleavable mitochondrial-targeting sequence (MTS) at the N-terminus and
+         a well-conserved extension of the bacterial C-terminal domain that
+         putatively influences substrate binding [ 41 ] and ALA product release
+         [ 42 ]. Multiple heme regulatory motifs (HRMs) have been identified in
+         the N-terminal domain of eukaryotic ALAS, including in the MTS, with
+         the notable exception of yeast [ 43 , 44 , 45 ]. Perhaps not
+         coincidentally, ALA synthesis is the rate-limiting step in mammalian
+         heme synthesis [ 28 ] but not in yeast"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 13 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  metallation of PP IX
+
+  IN    PP IX
+
+  OUT   protoheme
+
+  ENZYME  FECH
+          Tier A - DB-grounded [uniprot: P22830]
+  ENZYME  ferrochelatase (FECH)
+          Tier A - DB-grounded [uniprot: P22830]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: results   ·   best retrieval score for this source: 0.8024
+        "thus, the pathophysiology of the anemias and porphyrias. 3. From Heme
+         b to Hemes c , o and a All mitochondrial heme species are generated
+         from the heme b produced by FECH ( Figure 1 ). Each of the different
+         heme species is necessary for a specific function and is generated by
+         its own diverging pathway. While much is known regarding heme
+         synthesis, less is known about heme modification and distribution and
+         most available information has been largely elucidated in yeast
+         studies. Since the heme b product release by FECH is rate-limiting [
+         100 ], the interaction between FECH and heme chaperone is likely what
+         regulates and distributes heme throughout the cell [ 12 ]. This
+         protein-mediated shuttling of heme is the probable means of
+         distribution, as “free” heme is inherently toxic and can catalyze the
+         formation of harmful reactive oxygen species [ 12 , 101 ]. These
+         predictions are in line with a recent report estimating that less than
+         one molecule of exchange-labile heme is available in the mitochondrial
+         matrix compartment [ 92 ]. As noted above, all other species of heme
+         are generated from heme b , including hemes a , heme o and heme c .
+         These different species of heme diverge from one another due to
+         various modifications of the porphyrin ring. Heme c is the only heme
+         that is covalently bonded to the protein in which it is assembled. The
+         two vinyl (C=C) side chains of heme c are covalently attached to the
+         cysteine sulfhydryl residues of the apoprotein ( Figure 1 ). Two
+         examples of heme c containing proteins are the cytochromes c and c 1 .
+         Heme o and heme a are formed in a two-step consecutive process by the
+         proteins Heme o Synthase (Cox10) and Heme a Synthase (Cox15),
+         respectively. Heme o is modified from heme b by the farnesylation of a
+         vinyl group at the C 2 position of the porphyrin ring [ 6 , 102 ] and
+         heme a has the C 8 methyl substituent oxidized to an aldehyde group on
+         top of this [ 103 , 104 , 105 , 106 ] ( Figure 1 ). In all cases, heme
+         b must be mobilized from FECH via currently unknown mechanisms to be
+         converted into these other heme types. In eukaryotes, heme o exists
+         only as long as it takes to convert it to heme a . In some bacteria,
+         however, heme o can be used as a prosthetic group in some terminal
+         oxidases, such as cytochrome o -containing bo 3 oxidase—one of two
+         terminal ubiquinol oxidases in Escherichia coli [ 107 ]. The bo 3
+         oxidase is both structurally and functionally related to cytochrome c
+         oxidase (CcO) of mitochondria and bacteria, except that heme o cannot
+         function as a prosthetic group in these other species [ 108 ]. Heme a
+         is utilized in the active site of Cox1, the central core subunit of
+         CcO, or Complex IV, of the electron transport chain (ETC). CcO harbors
+         two heme a molecules—heme a and heme a 3 —the distinction between the
+         two being their coordination geometries within the protein. Heme a is
+         a 6 coordinate, low spin, cofactor and heme a 3 is a 5 coordinate,
+         high spin, cofactor, giving two identical molecules with significantly
+         different physical and chemical properties within CcO. This is the
+         only known physiological function of heme a [ 6 , 108 ]. In the
+         following sections of this review, we will summarize currently
+         available information regarding mitochondrial hemoproteins and
+         highlight gaps in our knowledge related to the distribution of
+         different heme species to these proteins. 3.1. Mitochondrial Heme b
+         Pathways Heme b (aka Protoheme IX) is utilized as a cofactor by
+         several mitochondrial proteins/complexes ( Figure 3 ). These include
+         mitochondrial matrix-localized flavohemoglobin Yhb1 (neuroglobin in
+         mammals) [ 6 , 109 ], IMM-anchored ETC enzymes ubiquinol-cytochrome c
+         oxidoreductase (complex III, bc 1 complex) [ 110 ] and succinate
+         dehydrogenase (complex II) [ 6 , 111 , 112 ]. Additionally, yeast
+         mitochondria harbor several fungi-specific hemoproteins such as CcO
+         assembly factor Mss51 [ 113 ], cytochrome c peroxidase Ccp1 [ 114 ]
+         and L -lactate cytochrome c oxidoreductase Cyb2 [ 115 ]. Remarkably
+         little is known about how heme b is transported to these targets. As
+         exemplified by studies on hemylation of complex III, formation of heme
+         b catalytic centers is an early post-translational event in the
+         assembly of these molecules [ 6 , 116 ]. Such setting likely assures
+         an effective heme-dependent regulatory mechanism, thereby reducing
+         potential negative effects of cofactor’s exposure. Figure 3
+         Mitochondrial heme routes. Mitochondrial enzyme ferrochelatase (FECH)
+         metallates PP IX, yielding protoheme that is routed to several
+         suborganellar locales, wherein heme b is sequentially modified and/or
+         inserted into the indicated hemoproteins. SDH, succinate
+         dehydrogenase; CcO, cytochrome c oxidase; OMM, outer mitochondrial
+         membrane; IMS,"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 14 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  heme b -> heme o
+
+  IN    heme b
+
+  OUT   heme o
+
+  ENZYME  Heme o Synthase (Cox10)
+          Tier A - DB-grounded [uniprot: Q12887]
+  ENZYME  heme o synthase
+          Tier C - single-source (review)
+  ENZYME  Cox10
+          Tier A - DB-grounded [uniprot: Q12887]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: results   ·   best retrieval score for this source: 0.8024
+        "thus, the pathophysiology of the anemias and porphyrias. 3. From Heme
+         b to Hemes c , o and a All mitochondrial heme species are generated
+         from the heme b produced by FECH ( Figure 1 ). Each of the different
+         heme species is necessary for a specific function and is generated by
+         its own diverging pathway. While much is known regarding heme
+         synthesis, less is known about heme modification and distribution and
+         most available information has been largely elucidated in yeast
+         studies. Since the heme b product release by FECH is rate-limiting [
+         100 ], the interaction between FECH and heme chaperone is likely what
+         regulates and distributes heme throughout the cell [ 12 ]. This
+         protein-mediated shuttling of heme is the probable means of
+         distribution, as “free” heme is inherently toxic and can catalyze the
+         formation of harmful reactive oxygen species [ 12 , 101 ]. These
+         predictions are in line with a recent report estimating that less than
+         one molecule of exchange-labile heme is available in the mitochondrial
+         matrix compartment [ 92 ]. As noted above, all other species of heme
+         are generated from heme b , including hemes a , heme o and heme c .
+         These different species of heme diverge from one another due to
+         various modifications of the porphyrin ring. Heme c is the only heme
+         that is covalently bonded to the protein in which it is assembled. The
+         two vinyl (C=C) side chains of heme c are covalently attached to the
+         cysteine sulfhydryl residues of the apoprotein ( Figure 1 ). Two
+         examples of heme c containing proteins are the cytochromes c and c 1 .
+         Heme o and heme a are formed in a two-step consecutive process by the
+         proteins Heme o Synthase (Cox10) and Heme a Synthase (Cox15),
+         respectively. Heme o is modified from heme b by the farnesylation of a
+         vinyl group at the C 2 position of the porphyrin ring [ 6 , 102 ] and
+         heme a has the C 8 methyl substituent oxidized to an aldehyde group on
+         top of this [ 103 , 104 , 105 , 106 ] ( Figure 1 ). In all cases, heme
+         b must be mobilized from FECH via currently unknown mechanisms to be
+         converted into these other heme types. In eukaryotes, heme o exists
+         only as long as it takes to convert it to heme a . In some bacteria,
+         however, heme o can be used as a prosthetic group in some terminal
+         oxidases, such as cytochrome o -containing bo 3 oxidase—one of two
+         terminal ubiquinol oxidases in Escherichia coli [ 107 ]. The bo 3
+         oxidase is both structurally and functionally related to cytochrome c
+         oxidase (CcO) of mitochondria and bacteria, except that heme o cannot
+         function as a prosthetic group in these other species [ 108 ]. Heme a
+         is utilized in the active site of Cox1, the central core subunit of
+         CcO, or Complex IV, of the electron transport chain (ETC). CcO harbors
+         two heme a molecules—heme a and heme a 3 —the distinction between the
+         two being their coordination geometries within the protein. Heme a is
+         a 6 coordinate, low spin, cofactor and heme a 3 is a 5 coordinate,
+         high spin, cofactor, giving two identical molecules with significantly
+         different physical and chemical properties within CcO. This is the
+         only known physiological function of heme a [ 6 , 108 ]. In the
+         following sections of this review, we will summarize currently
+         available information regarding mitochondrial hemoproteins and
+         highlight gaps in our knowledge related to the distribution of
+         different heme species to these proteins. 3.1. Mitochondrial Heme b
+         Pathways Heme b (aka Protoheme IX) is utilized as a cofactor by
+         several mitochondrial proteins/complexes ( Figure 3 ). These include
+         mitochondrial matrix-localized flavohemoglobin Yhb1 (neuroglobin in
+         mammals) [ 6 , 109 ], IMM-anchored ETC enzymes ubiquinol-cytochrome c
+         oxidoreductase (complex III, bc 1 complex) [ 110 ] and succinate
+         dehydrogenase (complex II) [ 6 , 111 , 112 ]. Additionally, yeast
+         mitochondria harbor several fungi-specific hemoproteins such as CcO
+         assembly factor Mss51 [ 113 ], cytochrome c peroxidase Ccp1 [ 114 ]
+         and L -lactate cytochrome c oxidoreductase Cyb2 [ 115 ]. Remarkably
+         little is known about how heme b is transported to these targets. As
+         exemplified by studies on hemylation of complex III, formation of heme
+         b catalytic centers is an early post-translational event in the
+         assembly of these molecules [ 6 , 116 ]. Such setting likely assures
+         an effective heme-dependent regulatory mechanism, thereby reducing
+         potential negative effects of cofactor’s exposure. Figure 3
+         Mitochondrial heme routes. Mitochondrial enzyme ferrochelatase (FECH)
+         metallates PP IX, yielding protoheme that is routed to several
+         suborganellar locales, wherein heme b is sequentially modified and/or
+         inserted into the indicated hemoproteins. SDH, succinate
+         dehydrogenase; CcO, cytochrome c oxidase; OMM, outer mitochondrial
+         membrane; IMS,"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 15 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  oxidation of the C 8 methyl substituent to an aldehyde group
+
+  IN    heme o
+
+  OUT   heme a
+
+  ENZYME  Heme a Synthase (Cox15)
+          Tier A - DB-grounded [uniprot: Q7KZN9]
+  ENZYME  heme a synthase
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: results   ·   best retrieval score for this source: 0.8024
+        "thus, the pathophysiology of the anemias and porphyrias. 3. From Heme
+         b to Hemes c , o and a All mitochondrial heme species are generated
+         from the heme b produced by FECH ( Figure 1 ). Each of the different
+         heme species is necessary for a specific function and is generated by
+         its own diverging pathway. While much is known regarding heme
+         synthesis, less is known about heme modification and distribution and
+         most available information has been largely elucidated in yeast
+         studies. Since the heme b product release by FECH is rate-limiting [
+         100 ], the interaction between FECH and heme chaperone is likely what
+         regulates and distributes heme throughout the cell [ 12 ]. This
+         protein-mediated shuttling of heme is the probable means of
+         distribution, as “free” heme is inherently toxic and can catalyze the
+         formation of harmful reactive oxygen species [ 12 , 101 ]. These
+         predictions are in line with a recent report estimating that less than
+         one molecule of exchange-labile heme is available in the mitochondrial
+         matrix compartment [ 92 ]. As noted above, all other species of heme
+         are generated from heme b , including hemes a , heme o and heme c .
+         These different species of heme diverge from one another due to
+         various modifications of the porphyrin ring. Heme c is the only heme
+         that is covalently bonded to the protein in which it is assembled. The
+         two vinyl (C=C) side chains of heme c are covalently attached to the
+         cysteine sulfhydryl residues of the apoprotein ( Figure 1 ). Two
+         examples of heme c containing proteins are the cytochromes c and c 1 .
+         Heme o and heme a are formed in a two-step consecutive process by the
+         proteins Heme o Synthase (Cox10) and Heme a Synthase (Cox15),
+         respectively. Heme o is modified from heme b by the farnesylation of a
+         vinyl group at the C 2 position of the porphyrin ring [ 6 , 102 ] and
+         heme a has the C 8 methyl substituent oxidized to an aldehyde group on
+         top of this [ 103 , 104 , 105 , 106 ] ( Figure 1 ). In all cases, heme
+         b must be mobilized from FECH via currently unknown mechanisms to be
+         converted into these other heme types. In eukaryotes, heme o exists
+         only as long as it takes to convert it to heme a . In some bacteria,
+         however, heme o can be used as a prosthetic group in some terminal
+         oxidases, such as cytochrome o -containing bo 3 oxidase—one of two
+         terminal ubiquinol oxidases in Escherichia coli [ 107 ]. The bo 3
+         oxidase is both structurally and functionally related to cytochrome c
+         oxidase (CcO) of mitochondria and bacteria, except that heme o cannot
+         function as a prosthetic group in these other species [ 108 ]. Heme a
+         is utilized in the active site of Cox1, the central core subunit of
+         CcO, or Complex IV, of the electron transport chain (ETC). CcO harbors
+         two heme a molecules—heme a and heme a 3 —the distinction between the
+         two being their coordination geometries within the protein. Heme a is
+         a 6 coordinate, low spin, cofactor and heme a 3 is a 5 coordinate,
+         high spin, cofactor, giving two identical molecules with significantly
+         different physical and chemical properties within CcO. This is the
+         only known physiological function of heme a [ 6 , 108 ]. In the
+         following sections of this review, we will summarize currently
+         available information regarding mitochondrial hemoproteins and
+         highlight gaps in our knowledge related to the distribution of
+         different heme species to these proteins. 3.1. Mitochondrial Heme b
+         Pathways Heme b (aka Protoheme IX) is utilized as a cofactor by
+         several mitochondrial proteins/complexes ( Figure 3 ). These include
+         mitochondrial matrix-localized flavohemoglobin Yhb1 (neuroglobin in
+         mammals) [ 6 , 109 ], IMM-anchored ETC enzymes ubiquinol-cytochrome c
+         oxidoreductase (complex III, bc 1 complex) [ 110 ] and succinate
+         dehydrogenase (complex II) [ 6 , 111 , 112 ]. Additionally, yeast
+         mitochondria harbor several fungi-specific hemoproteins such as CcO
+         assembly factor Mss51 [ 113 ], cytochrome c peroxidase Ccp1 [ 114 ]
+         and L -lactate cytochrome c oxidoreductase Cyb2 [ 115 ]. Remarkably
+         little is known about how heme b is transported to these targets. As
+         exemplified by studies on hemylation of complex III, formation of heme
+         b catalytic centers is an early post-translational event in the
+         assembly of these molecules [ 6 , 116 ]. Such setting likely assures
+         an effective heme-dependent regulatory mechanism, thereby reducing
+         potential negative effects of cofactor’s exposure. Figure 3
+         Mitochondrial heme routes. Mitochondrial enzyme ferrochelatase (FECH)
+         metallates PP IX, yielding protoheme that is routed to several
+         suborganellar locales, wherein heme b is sequentially modified and/or
+         inserted into the indicated hemoproteins. SDH, succinate
+         dehydrogenase; CcO, cytochrome c oxidase; OMM, outer mitochondrial
+         membrane; IMS,"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 16 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  heme c synthesis
+
+  IN    heme b
+
+  OUT   heme c
+
+  ENZYME  cytochrome c lyases
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "Introduction Heme b , or iron protoporphyrin IX (Fe-PPIX), is an
+         essential but potentially cytotoxic protein prosthetic group and
+         signaling molecule. The paramount importance of this metallocofactor
+         is highlighted by the plethora of hemoproteins present in virtually
+         every subcellular compartment that fill vital roles within the
+         eukaryotic cell. As a cofactor, heme is essential for mediating gas
+         synthesis, storage and transport; electron transfer; and chemical
+         catalysis [ 1 , 2 , 3 , 4 , 5 , 6 ]. As a signaling molecule, heme
+         binding to a number of cellular factors including transcription
+         factors, kinases, ion channels and micro RNA processing proteins [ 5 ,
+         7 , 8 , 9 ] or its catabolism to the signaling molecule, carbon
+         monoxide (CO), collectively regulate diverse physiological processes
+         that include oxygen sensing, iron homeostasis, the oxidative stress
+         response, mitochondrial respiration and biogenesis, mitophagy,
+         apoptosis, circadian rhythms, cell cycle progression and proliferation
+         [ 1 , 7 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , 19 ]. Another
+         vital role for heme b is to act as a precursor for the synthesis of
+         other heme types important for eukaryotic physiology, including hemes
+         c , o and a ( Figure 1 ). Figure 1 Chemical structures of the various
+         heme types in eukaryotes. Starting with the heme b precursor
+         (protoheme), heme c is made through covalent attachment to the
+         sulfhydryl moieties of either cytochrome c or complex III subunit
+         cytochrome c 1 ; this process is assisted by the cytochrome c lyases.
+         Heme a is synthesized from heme b through the sequential action of
+         heme o synthase and heme a synthase enzymes, going through the
+         intermediate, heme o . All of the aforementioned heme-dependent
+         processes require that heme is dynamically mobilized from its site of
+         synthesis on the matrix side of the mitochondrial inner membrane to
+         heme-dependent proteins throughout the cell [ 2 , 3 ]. However, since
+         heme is a hydrophobic and cytotoxic species [ 20 , 21 ], cells are
+         challenged to mitigate heme toxicity by appropriately regulating
+         cellular heme concentration and bioavailability. The concentration of
+         heme is dictated by the relative rates of its synthesis and
+         degradation [ 2 , 3 ]. Despite the fact that all of the proteins
+         involved in the synthesis and degradation of heme have been
+         structurally characterized to atomic resolution and detailed kinetic
+         studies have revealed their mechanisms of action [ 2 , 3 ], our
+         understanding of how the relative rates of heme synthesis are
+         regulated remains far from clear. Furthermore, the bioavailability of
+         heme is governed by its transport and trafficking; yet, the molecules
+         and mechanisms that mediate these processes are poorly understood.
+         Herein, we review the “ins and outs” of heme synthesis, trafficking
+         and utilization, both inside and outside the mitochondria. In
+         particular, we will first discuss the biosynthesis of heme and how it
+         may be regulated to affect heme bioavailability. Next, we will discuss
+         the mechanisms underlying how protoheme IX, or heme b , is trafficked
+         and converted to alternative heme types, including hemes c , o and a
+         and how it can exit the mitochondria and be mobilized for use in
+         hemoproteins throughout the cell. Finally, we discuss the latest
+         approaches and technologies that can be utilized to characterize heme
+         transport and trafficking mechanisms. Where appropriate, we will
+         highlight open questions regarding heme homeostatic mechanisms. The
+         mobilization of heme for trafficking and signaling, of which little is
+         understood, represents a challenging frontier in heme cell biology. A
+         better understanding of heme transport is essential for treating
+         numerous diseases associated with defects in heme homeostasis,
+         including certain cancers, cardiovascular diseases and
+         neurodegenerative disorders [ 19 , 22 , 23 , 24 , 25 ]. 2. Heme
+         Biosynthesis Cells mitigate the toxicity of heme in part by
+         coordinating heme synthesis (see Table 1 ) with heme utilization [ 1
+         ]. Animals, fungi and α-proteobacteria make heme via the C 4 (Shemin)
+         pathway, whereas plants, archaea and other bacteria utilize the C 5
+         (glutamate) pathway [ 26 ]. Here, we focus on the former, which
+         requires eight enzymes to construct heme from glycine, succinyl-CoA,
+         molecular oxygen (O 2 ) and iron (Fe) [ 12 , 27 , 28 ]. The first and
+         last three enzymes of the heme synthesis pathway in animal and fungi
+         are localized to the mitochondria and the remaining four enzymes
+         reside in the cytosol. Heme synthesis can therefore be controlled at
+         multiple levels, including substrate availability, partitioning of
+         heme synthetic intermediates between the mitochondria and cytosol and
+         direct regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] (
+         Figure 2 ). In this section we examine each of the enzymes involved in
+         heme synthesis, focusing on their regulation and thus their ability to
+         control heme availability."
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 17 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  heme synthesis
+
+  IN    glycine
+      + succinyl-CoA
+      + molecular oxygen (O 2 )
+      + iron (Fe)
+
+  OUT   heme
+
+  ENZYME  (none recorded)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "Introduction Heme b , or iron protoporphyrin IX (Fe-PPIX), is an
+         essential but potentially cytotoxic protein prosthetic group and
+         signaling molecule. The paramount importance of this metallocofactor
+         is highlighted by the plethora of hemoproteins present in virtually
+         every subcellular compartment that fill vital roles within the
+         eukaryotic cell. As a cofactor, heme is essential for mediating gas
+         synthesis, storage and transport; electron transfer; and chemical
+         catalysis [ 1 , 2 , 3 , 4 , 5 , 6 ]. As a signaling molecule, heme
+         binding to a number of cellular factors including transcription
+         factors, kinases, ion channels and micro RNA processing proteins [ 5 ,
+         7 , 8 , 9 ] or its catabolism to the signaling molecule, carbon
+         monoxide (CO), collectively regulate diverse physiological processes
+         that include oxygen sensing, iron homeostasis, the oxidative stress
+         response, mitochondrial respiration and biogenesis, mitophagy,
+         apoptosis, circadian rhythms, cell cycle progression and proliferation
+         [ 1 , 7 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , 19 ]. Another
+         vital role for heme b is to act as a precursor for the synthesis of
+         other heme types important for eukaryotic physiology, including hemes
+         c , o and a ( Figure 1 ). Figure 1 Chemical structures of the various
+         heme types in eukaryotes. Starting with the heme b precursor
+         (protoheme), heme c is made through covalent attachment to the
+         sulfhydryl moieties of either cytochrome c or complex III subunit
+         cytochrome c 1 ; this process is assisted by the cytochrome c lyases.
+         Heme a is synthesized from heme b through the sequential action of
+         heme o synthase and heme a synthase enzymes, going through the
+         intermediate, heme o . All of the aforementioned heme-dependent
+         processes require that heme is dynamically mobilized from its site of
+         synthesis on the matrix side of the mitochondrial inner membrane to
+         heme-dependent proteins throughout the cell [ 2 , 3 ]. However, since
+         heme is a hydrophobic and cytotoxic species [ 20 , 21 ], cells are
+         challenged to mitigate heme toxicity by appropriately regulating
+         cellular heme concentration and bioavailability. The concentration of
+         heme is dictated by the relative rates of its synthesis and
+         degradation [ 2 , 3 ]. Despite the fact that all of the proteins
+         involved in the synthesis and degradation of heme have been
+         structurally characterized to atomic resolution and detailed kinetic
+         studies have revealed their mechanisms of action [ 2 , 3 ], our
+         understanding of how the relative rates of heme synthesis are
+         regulated remains far from clear. Furthermore, the bioavailability of
+         heme is governed by its transport and trafficking; yet, the molecules
+         and mechanisms that mediate these processes are poorly understood.
+         Herein, we review the “ins and outs” of heme synthesis, trafficking
+         and utilization, both inside and outside the mitochondria. In
+         particular, we will first discuss the biosynthesis of heme and how it
+         may be regulated to affect heme bioavailability. Next, we will discuss
+         the mechanisms underlying how protoheme IX, or heme b , is trafficked
+         and converted to alternative heme types, including hemes c , o and a
+         and how it can exit the mitochondria and be mobilized for use in
+         hemoproteins throughout the cell. Finally, we discuss the latest
+         approaches and technologies that can be utilized to characterize heme
+         transport and trafficking mechanisms. Where appropriate, we will
+         highlight open questions regarding heme homeostatic mechanisms. The
+         mobilization of heme for trafficking and signaling, of which little is
+         understood, represents a challenging frontier in heme cell biology. A
+         better understanding of heme transport is essential for treating
+         numerous diseases associated with defects in heme homeostasis,
+         including certain cancers, cardiovascular diseases and
+         neurodegenerative disorders [ 19 , 22 , 23 , 24 , 25 ]. 2. Heme
+         Biosynthesis Cells mitigate the toxicity of heme in part by
+         coordinating heme synthesis (see Table 1 ) with heme utilization [ 1
+         ]. Animals, fungi and α-proteobacteria make heme via the C 4 (Shemin)
+         pathway, whereas plants, archaea and other bacteria utilize the C 5
+         (glutamate) pathway [ 26 ]. Here, we focus on the former, which
+         requires eight enzymes to construct heme from glycine, succinyl-CoA,
+         molecular oxygen (O 2 ) and iron (Fe) [ 12 , 27 , 28 ]. The first and
+         last three enzymes of the heme synthesis pathway in animal and fungi
+         are localized to the mitochondria and the remaining four enzymes
+         reside in the cytosol. Heme synthesis can therefore be controlled at
+         multiple levels, including substrate availability, partitioning of
+         heme synthetic intermediates between the mitochondria and cytosol and
+         direct regulation of the heme biosynthetic enzymes [ 1 , 29 , 30 ] (
+         Figure 2 ). In this section we examine each of the enzymes involved in
+         heme synthesis, focusing on their regulation and thus their ability to
+         control heme availability."
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 18 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  heme b precursor (protoheme) -> heme c
+
+  IN    heme b precursor (protoheme)
+      + cytochrome c
+
+  OUT   heme c
+
+  ENZYME  cytochrome c lyas
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: figure   ·   best retrieval score for this source: 0.8024
+        "Figure 1 Chemical structures of the various heme types in eukaryotes.
+         Starting with the heme b precursor (protoheme), heme c is made through
+         covalent attachment to the sulfhydryl moieties of either cytochrome c
+         or complex III subunit cytochrome c 1 ; this process is assisted by
+         the cytochrome c lyas"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 19 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  heme b precursor (protoheme) -> heme c
+
+  IN    heme b precursor (protoheme)
+      + complex III subunit cytochrome c 1
+
+  OUT   heme c
+
+  ENZYME  cytochrome c lyas
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: figure   ·   best retrieval score for this source: 0.8024
+        "Figure 1 Chemical structures of the various heme types in eukaryotes.
+         Starting with the heme b precursor (protoheme), heme c is made through
+         covalent attachment to the sulfhydryl moieties of either cytochrome c
+         or complex III subunit cytochrome c 1 ; this process is assisted by
+         the cytochrome c lyas"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 20 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  insertion of ferrous iron into protoporphyrin IX (PPIX)
+
+  IN    ferrous iron
+      + protoporphyrin IX (PPIX)
+
+  OUT   heme
+
+  ENZYME  ferrochelatase (FECH)
+          Tier A - DB-grounded [uniprot: P22830]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] The immunometabolite itaconate inhibits heme synthesis and remodels
+        cellular metabolism in erythroid precursors. (PMC9153040)
+        section: introduction   ·   best retrieval score for this source: 0.5543
+        "Introduction Induction of heme biosynthesis is a critical process in
+         differentiating erythroid cell precursors and is ultimately
+         responsible for the production of >400 billion hemoglobin molecules
+         per second in adult human bone marrow. 1 In metazoans, heme production
+         in the erythroid compartment is a committed pathway that consists of 8
+         enzymatic steps. Erythroid heme synthesis begins with production of
+         5-aminolevulinic acid (ALA) via the rate-limiting enzyme ALA synthase
+         2 (ALAS2) and concludes with the insertion of ferrous iron into
+         protoporphyrin IX (PPIX) by ferrochelatase (FECH) 2,3 ( Figure 1 ).
+         ALAS2 is upregulated by erythroid-specific factors such as GATA
+         binding factor 1 (GATA1), nuclear factor, erythroid 2 (NFE2), and
+         erythroid Krüppel-like factor (EKLF) 4,5 in the proerythroblast and
+         basophilic stages of development in mice and humans, respectively, 6
+         and it subsequently governs the remaining steps of erythroid
+         differentiation. 7-9 Notably, ALAS2 induction occurs after intimate
+         contacts between a red cell progenitor and central macrophage (CM) are
+         established in an erythroblastic island. 10-12 The CM assists in
+         erythroblast development by inhibiting apoptosis, 13 facilitating iron
+         delivery, 14-16 and enhancing enucleation by pyrenocytolysis. 12,17
+         Figure 1. Heme biosynthesis and the erythroblastic island. The
+         terminal steps of erythroid development occur while erythroblasts are
+         closely associated with a CM via αβ integrins, VCAM1, erythroblast
+         macrophage protein (EMP), and ICAM4. Heme synthesis in this context is
+         fully activated by the basophilic erythroblast (BasoEB) stage of
+         development. CD163 and CD169 are macrophage-specific cell surface
+         markers. Heme synthesis enzymes are in bold green text. CFU-E, colony
+         forming unit–erythroid; CPOX, coproporphyrinogen III oxidase; HMBS,
+         hydroxymethylbilane synthase; HSC, hematopoietic stem cell; OrthoEB,
+         orthochromatic erythroblast; PBGS, porphobilinogen synthase; PolyEB,
+         polychromatic erythroblast; PPOX, protoporphyrinogen oxidase; ProEB,
+         proerythroblasts; RBC, red blood cell; SCoA, succinyl-CoA; UROD, URO
+         decarboxylase; UROS, uroporphyrinogen III synthase. The inability to
+         produce sufficient numbers of normal erythrocytes"
+        https://doi.org/10.1182/bloodadvances.2021004750
+
+
+--------------------------------------------------------------------------------
+REACTION 21 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  production of itaconyl-CoA using succinyl-CoA
+
+  IN    succinyl-CoA
+
+  OUT   itaconyl-CoA
+
+  ENZYME  SUGCT
+          Tier A - DB-grounded [uniprot: Q9HAC7]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] The immunometabolite itaconate inhibits heme synthesis and remodels
+        cellular metabolism in erythroid precursors. (PMC9153040)
+        section: methods   ·   best retrieval score for this source: 0.5543
+        "a bioinformatics approach, we found that mammalian SUGCT (encoded by
+         the C7ORF10 gene) is a homologue of the P aeruginosa PaIct ( Figure 5A
+         ). Others have reported SUGCT activity with the canonical substrate
+         glutaryl-CoA. 52 We cloned, expressed, and purified SUGCT and
+         determined that it effectively catalyzes the production of itaconyl-
+         CoA using succinyl-CoA ( Figure 5B ). In agreement with transcript
+         data in MEL cells, 55 immunoblotting showed that SUGCT protein is
+         present in mitochondria isolated from induced and uninduced MEL cells
+         ( Figure 5C ). Thus, SUGCT is likely responsible for itaconyl-CoA
+         synthesis in developing erythrocytes. Figure 5. SUGCT converts
+         itaconate to itaconyl-CoA. (A) Human SUGCT is homologous to the P
+         aeruginosa itaconyl-CoA transferase (PaIct). Black and gray boxes
+         highlight identical residues and conservative substitutions,
+         respectively. (B) Discontinuous high-performance liquid chromatography
+         (HPLC) assays showed that SUGCT generates itaconyl-CoA from succinyl-
+         CoA and itaconate in vitro. (C) Immunoblotting of MEL mitochondria
+         from cells treated with and without 2.5 mM itaconate and dimethyl
+         sulfoxide (DMSO) for 72 hours. MEL mitochondrial lysates were probed
+         with anti-ALAS2, anti-FECH, and anti-SUGCT primary antibodies. HPLC
+         assays were performed on a C18 reverse-phase column with UV detection
+         (mAU = milli-absorbance units at 254 nm). Optimal autoexposure within
+         the linear dynamic range was performed for each immunoblot on the
+         ChemiDoc imaging system (Bio-Rad). The HPLC chromatogram (B) and
+         western blot (C) shown are representative of n = 2 biological
+         replicates. Itaconyl-CoA inhibits, but is not a substrate of, ALAS2
+         Itaconyl-CoA (supplemental Figure 1C) is a close analogue of succinyl-
+         CoA (supplemental Figure 1D) and may affect ALAS2 enzyme activity.
+         Although itaconate does not affect ALAS2 activity (supplemental Figure
+         8A), discontinuous kinetic assays revealed itaconyl-CoA to be a
+         competitive inhibitor of recombinant ALAS2 with an inhibitory constant
+         of 100 ± 20 μM ( Figure 6 ). We measured the Michaelis constant of
+         succinyl-CoA to be 10 ± 2 μM for the uninhibited enzyme, which agrees
+         with the literature for the mammalian enzyme. 65-69 Thus, itaconyl-CoA
+         could be partially responsible for the observed increase in succinyl-
+         CoA in induced MEL cells ( Figure 3D ). Continuous coupled ALAS assays
+         were also performed because ALA derivatives synthesized from other
+         acyl-CoA substrates have shown unpredictable stability in the
+         α-aminoketone formed via reaction with acetylacetone in the
+         discontinuous assay protocol. 66 The results of the coupled assays
+         verify that itaconyl-CoA is not an alternative ALAS2 substrate even at
+         millimolar concentrations (supplemental Figure 8B). This finding
+         explains the alterations in heme precursor levels ( Figure 2 ) and the
+         global alterations in metabolites. Figure 6. ALAS2 inhibition by
+         itaconyl-CoA. Kinetic progress curves (A) and Lineweaver-Burk plot (B)
+         indicating competitive inhibition of ALAS2 with an inhibitory constant
+         = 100 ± 20 μM (mean ± 1 standard deviation) for itaconyl-CoA.
+         Michaelis constant = 10 ± 2 μM (mean ± 1 standard deviation) for
+         succinyl-CoA. Discontinuous colorimetric assays were conducted for n =
+         3 biological replicates (separate protein preparations)."
+        https://doi.org/10.1182/bloodadvances.2021004750
+
+
+--------------------------------------------------------------------------------
+REACTION 22 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  SUGCT converts itaconate to itaconyl-CoA
+
+  IN    itaconate
+      + succinyl-CoA
+
+  OUT   itaconyl-CoA
+
+  ENZYME  SUGCT
+          Tier A - DB-grounded [uniprot: Q9HAC7]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] The immunometabolite itaconate inhibits heme synthesis and remodels
+        cellular metabolism in erythroid precursors. (PMC9153040)
+        section: methods   ·   best retrieval score for this source: 0.5543
+        "a bioinformatics approach, we found that mammalian SUGCT (encoded by
+         the C7ORF10 gene) is a homologue of the P aeruginosa PaIct ( Figure 5A
+         ). Others have reported SUGCT activity with the canonical substrate
+         glutaryl-CoA. 52 We cloned, expressed, and purified SUGCT and
+         determined that it effectively catalyzes the production of itaconyl-
+         CoA using succinyl-CoA ( Figure 5B ). In agreement with transcript
+         data in MEL cells, 55 immunoblotting showed that SUGCT protein is
+         present in mitochondria isolated from induced and uninduced MEL cells
+         ( Figure 5C ). Thus, SUGCT is likely responsible for itaconyl-CoA
+         synthesis in developing erythrocytes. Figure 5. SUGCT converts
+         itaconate to itaconyl-CoA. (A) Human SUGCT is homologous to the P
+         aeruginosa itaconyl-CoA transferase (PaIct). Black and gray boxes
+         highlight identical residues and conservative substitutions,
+         respectively. (B) Discontinuous high-performance liquid chromatography
+         (HPLC) assays showed that SUGCT generates itaconyl-CoA from succinyl-
+         CoA and itaconate in vitro. (C) Immunoblotting of MEL mitochondria
+         from cells treated with and without 2.5 mM itaconate and dimethyl
+         sulfoxide (DMSO) for 72 hours. MEL mitochondrial lysates were probed
+         with anti-ALAS2, anti-FECH, and anti-SUGCT primary antibodies. HPLC
+         assays were performed on a C18 reverse-phase column with UV detection
+         (mAU = milli-absorbance units at 254 nm). Optimal autoexposure within
+         the linear dynamic range was performed for each immunoblot on the
+         ChemiDoc imaging system (Bio-Rad). The HPLC chromatogram (B) and
+         western blot (C) shown are representative of n = 2 biological
+         replicates. Itaconyl-CoA inhibits, but is not a substrate of, ALAS2
+         Itaconyl-CoA (supplemental Figure 1C) is a close analogue of succinyl-
+         CoA (supplemental Figure 1D) and may affect ALAS2 enzyme activity.
+         Although itaconate does not affect ALAS2 activity (supplemental Figure
+         8A), discontinuous kinetic assays revealed itaconyl-CoA to be a
+         competitive inhibitor of recombinant ALAS2 with an inhibitory constant
+         of 100 ± 20 μM ( Figure 6 ). We measured the Michaelis constant of
+         succinyl-CoA to be 10 ± 2 μM for the uninhibited enzyme, which agrees
+         with the literature for the mammalian enzyme. 65-69 Thus, itaconyl-CoA
+         could be partially responsible for the observed increase in succinyl-
+         CoA in induced MEL cells ( Figure 3D ). Continuous coupled ALAS assays
+         were also performed because ALA derivatives synthesized from other
+         acyl-CoA substrates have shown unpredictable stability in the
+         α-aminoketone formed via reaction with acetylacetone in the
+         discontinuous assay protocol. 66 The results of the coupled assays
+         verify that itaconyl-CoA is not an alternative ALAS2 substrate even at
+         millimolar concentrations (supplemental Figure 8B). This finding
+         explains the alterations in heme precursor levels ( Figure 2 ) and the
+         global alterations in metabolites. Figure 6. ALAS2 inhibition by
+         itaconyl-CoA. Kinetic progress curves (A) and Lineweaver-Burk plot (B)
+         indicating competitive inhibition of ALAS2 with an inhibitory constant
+         = 100 ± 20 μM (mean ± 1 standard deviation) for itaconyl-CoA.
+         Michaelis constant = 10 ± 2 μM (mean ± 1 standard deviation) for
+         succinyl-CoA. Discontinuous colorimetric assays were conducted for n =
+         3 biological replicates (separate protein preparations)."
+        https://doi.org/10.1182/bloodadvances.2021004750
+
+
+--------------------------------------------------------------------------------
+REACTION 23 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  hemylation of apo-Cyc1
+
+  IN    reduced Fe-PPIX
+      + apocytochrome c
+
+  OUT   hemylated cytochrome
+
+  ENZYME  CCHL (Cyc3)
+          Tier C - single-source (review)
+  ENZYME  CC 1 HL (Cyt2)
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: results   ·   best retrieval score for this source: 0.8024
+        "succinate dehydrogenase (complex II) [ 6 , 111 , 112 ]. Additionally,
+         yeast mitochondria harbor several fungi-specific hemoproteins such as
+         CcO assembly factor Mss51 [ 113 ], cytochrome c peroxidase Ccp1 [ 114
+         ] and L -lactate cytochrome c oxidoreductase Cyb2 [ 115 ]. Remarkably
+         little is known about how heme b is transported to these targets. As
+         exemplified by studies on hemylation of complex III, formation of heme
+         b catalytic centers is an early post-translational event in the
+         assembly of these molecules [ 6 , 116 ]. Such setting likely assures
+         an effective heme-dependent regulatory mechanism, thereby reducing
+         potential negative effects of cofactor’s exposure. Figure 3
+         Mitochondrial heme routes. Mitochondrial enzyme ferrochelatase (FECH)
+         metallates PP IX, yielding protoheme that is routed to several
+         suborganellar locales, wherein heme b is sequentially modified and/or
+         inserted into the indicated hemoproteins. SDH, succinate
+         dehydrogenase; CcO, cytochrome c oxidase; OMM, outer mitochondrial
+         membrane; IMS, intermembrane space; IMM, inner mitochondrial membrane.
+         3.2. Heme c Pathway Unlike the other heme types, heme c needs to be
+         covalently attached to its client proteins—cytochrome c (Cyc1) and
+         complex III subunit cytochrome c 1 (Cyt1). In each case, hemylation of
+         these proteins involves the formation of two stereospecific thioether
+         bonds between two cysteine residues of protein’s conserved Cys-X-X-
+         Cys-His motif and two vinyl groups of the protoheme. The histidine
+         residue is an axial ligand to heme iron. The covalent attachment of
+         heme to c -type apo-cytochromes is critical for their stability and
+         subsequent maturation and has been extensively studied [ 6 , 117 , 118
+         ]. In yeast, hemylation of apo-Cyc1 and apo-Cyt1 is mediated by either
+         of the two IMS-localized cytochrome c heme lyases—CCHL (Cyc3) and CC 1
+         HL (Cyt2) [ 117 , 119 ]. In mammals, a single enzyme, holocytochrome c
+         synthase (HCCS), is responsible for the covalent heme attachment. All
+         mitochondrial CCHL proteins appear to use the following modus operandi
+         : IMM-bound lyase binds reduced Fe-PPIX, which is followed by binding
+         of apocytochrome c or c 1 and subsequent formation of covalent
+         thioether bonds and release of hemylated cytochrome [ 120 ]. Although
+         heme binding to CCHL proteins is well characterized [ 120 ], how
+         reduced heme is transported to CCHL proteins across IMM remains to be
+         determined. In vitro analyses indicate that c -heme lyases can
+         directly catalyze the formation of a thioether bond within the
+         CCHL–ferrous heme-apocytochrome c / c 1 complex, wherein apocytochrome
+         provides the second histidinyl ligand to this complex with the first
+         axial ligand being supplied by invariant histidine residue of CCHL.
+         However, a scenario whereby CCHL proteins merely serve as
+         stereospecificity-assuring chaperones allowing for spontaneous
+         thioether bond formation is also possible. Likewise, it remains to be
+         determined whether any additional proteins may be facilitating this
+         process in vivo. For instance, studies in yeast identified the IMS-
+         residing flavoprotein Cyc2 that might function as a heme reductase or
+         redox modulator of heme lyase reactions [ 121 , 122 ]. Because Cyc2 is
+         not absolutely required for CCHL function and is not conserved outside
+         fungi, its physiological significance remains somewhat unclear.
+         Nevertheless, these findings suggest that additional factors may be
+         involved in the maturation of c -type cytochromes in vivo. Once heme
+         is covalently ligated, the resulting holocytochrome c / c 1 is
+         released from heme lyase. The release is facilitated by several
+         factors including conformational distortion of the heme molecule upon
+         its covalent biding to cytochrome c / c 1 [ 120 , 123 ] and
+         holocytochrome’s axial ligand-mediated dwindling of heme-CCHL adducts
+         [ 118 , 120 ]. Interestingly, the heme lyase’s residues that have been
+         implicated in heme coordination also appear to contribute to its
+         release [ 120 ]. Upon its hemylation the stabilized cytochrome c is
+         further folded into its functional conformation and cytochrome c 1 is
+         conveyed for further incorporation into maturing bc 1 complex. It will
+         be interesting to test whether hemylation of cytochromes b and Cyt1
+         are coordinated molecular events. 3.3. Heme a Pathway Heme a is a
+         modified Fe-PPIX uniquely used by CcO, a key heme-copper enzyme of the
+         ETC [ 6 , 124 ]. Two heme a molecules with different coordination
+         geometries—designated a and a 3 —reside in the Cox1 core subunit of
+         CcO and are essential for catalysis and the stability/folding of Cox1
+         [ 6 , 125 ]. Hemylation of Cox1 is a sequential post-translational
+         process [ 6 , 126 , 127 ]. Heme a synthesis requires the shuttling of
+         the compound’s precursors—hemes b and o— between heme a biosynthetic
+         factors, and the subsequent shuttling of mature heme a to maturing
+         CcO. This process is mediated by a number of different assembly
+         factors [ 128 , 129 , 130 , 131 ], but much remains to be elucidated
+         in terms of the molecular mechanisms at work. 3.3.1. Heme o Synthase
+         As discussed earlier, heme o"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 24 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  hemylation of apo-Cyt1
+
+  IN    reduced Fe-PPIX
+      + apocytochrome c 1
+
+  OUT   hemylated cytochrome c 1
+
+  ENZYME  CCHL (Cyc3)
+          Tier C - single-source (review)
+  ENZYME  CC 1 HL (Cyt2)
+          Tier C - single-source (review)
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: results   ·   best retrieval score for this source: 0.8024
+        "succinate dehydrogenase (complex II) [ 6 , 111 , 112 ]. Additionally,
+         yeast mitochondria harbor several fungi-specific hemoproteins such as
+         CcO assembly factor Mss51 [ 113 ], cytochrome c peroxidase Ccp1 [ 114
+         ] and L -lactate cytochrome c oxidoreductase Cyb2 [ 115 ]. Remarkably
+         little is known about how heme b is transported to these targets. As
+         exemplified by studies on hemylation of complex III, formation of heme
+         b catalytic centers is an early post-translational event in the
+         assembly of these molecules [ 6 , 116 ]. Such setting likely assures
+         an effective heme-dependent regulatory mechanism, thereby reducing
+         potential negative effects of cofactor’s exposure. Figure 3
+         Mitochondrial heme routes. Mitochondrial enzyme ferrochelatase (FECH)
+         metallates PP IX, yielding protoheme that is routed to several
+         suborganellar locales, wherein heme b is sequentially modified and/or
+         inserted into the indicated hemoproteins. SDH, succinate
+         dehydrogenase; CcO, cytochrome c oxidase; OMM, outer mitochondrial
+         membrane; IMS, intermembrane space; IMM, inner mitochondrial membrane.
+         3.2. Heme c Pathway Unlike the other heme types, heme c needs to be
+         covalently attached to its client proteins—cytochrome c (Cyc1) and
+         complex III subunit cytochrome c 1 (Cyt1). In each case, hemylation of
+         these proteins involves the formation of two stereospecific thioether
+         bonds between two cysteine residues of protein’s conserved Cys-X-X-
+         Cys-His motif and two vinyl groups of the protoheme. The histidine
+         residue is an axial ligand to heme iron. The covalent attachment of
+         heme to c -type apo-cytochromes is critical for their stability and
+         subsequent maturation and has been extensively studied [ 6 , 117 , 118
+         ]. In yeast, hemylation of apo-Cyc1 and apo-Cyt1 is mediated by either
+         of the two IMS-localized cytochrome c heme lyases—CCHL (Cyc3) and CC 1
+         HL (Cyt2) [ 117 , 119 ]. In mammals, a single enzyme, holocytochrome c
+         synthase (HCCS), is responsible for the covalent heme attachment. All
+         mitochondrial CCHL proteins appear to use the following modus operandi
+         : IMM-bound lyase binds reduced Fe-PPIX, which is followed by binding
+         of apocytochrome c or c 1 and subsequent formation of covalent
+         thioether bonds and release of hemylated cytochrome [ 120 ]. Although
+         heme binding to CCHL proteins is well characterized [ 120 ], how
+         reduced heme is transported to CCHL proteins across IMM remains to be
+         determined. In vitro analyses indicate that c -heme lyases can
+         directly catalyze the formation of a thioether bond within the
+         CCHL–ferrous heme-apocytochrome c / c 1 complex, wherein apocytochrome
+         provides the second histidinyl ligand to this complex with the first
+         axial ligand being supplied by invariant histidine residue of CCHL.
+         However, a scenario whereby CCHL proteins merely serve as
+         stereospecificity-assuring chaperones allowing for spontaneous
+         thioether bond formation is also possible. Likewise, it remains to be
+         determined whether any additional proteins may be facilitating this
+         process in vivo. For instance, studies in yeast identified the IMS-
+         residing flavoprotein Cyc2 that might function as a heme reductase or
+         redox modulator of heme lyase reactions [ 121 , 122 ]. Because Cyc2 is
+         not absolutely required for CCHL function and is not conserved outside
+         fungi, its physiological significance remains somewhat unclear.
+         Nevertheless, these findings suggest that additional factors may be
+         involved in the maturation of c -type cytochromes in vivo. Once heme
+         is covalently ligated, the resulting holocytochrome c / c 1 is
+         released from heme lyase. The release is facilitated by several
+         factors including conformational distortion of the heme molecule upon
+         its covalent biding to cytochrome c / c 1 [ 120 , 123 ] and
+         holocytochrome’s axial ligand-mediated dwindling of heme-CCHL adducts
+         [ 118 , 120 ]. Interestingly, the heme lyase’s residues that have been
+         implicated in heme coordination also appear to contribute to its
+         release [ 120 ]. Upon its hemylation the stabilized cytochrome c is
+         further folded into its functional conformation and cytochrome c 1 is
+         conveyed for further incorporation into maturing bc 1 complex. It will
+         be interesting to test whether hemylation of cytochromes b and Cyt1
+         are coordinated molecular events. 3.3. Heme a Pathway Heme a is a
+         modified Fe-PPIX uniquely used by CcO, a key heme-copper enzyme of the
+         ETC [ 6 , 124 ]. Two heme a molecules with different coordination
+         geometries—designated a and a 3 —reside in the Cox1 core subunit of
+         CcO and are essential for catalysis and the stability/folding of Cox1
+         [ 6 , 125 ]. Hemylation of Cox1 is a sequential post-translational
+         process [ 6 , 126 , 127 ]. Heme a synthesis requires the shuttling of
+         the compound’s precursors—hemes b and o— between heme a biosynthetic
+         factors, and the subsequent shuttling of mature heme a to maturing
+         CcO. This process is mediated by a number of different assembly
+         factors [ 128 , 129 , 130 , 131 ], but much remains to be elucidated
+         in terms of the molecular mechanisms at work. 3.3.1. Heme o Synthase
+         As discussed earlier, heme o"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 25 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  covalent heme attachment to c -type apo-cytochromes
+
+  IN    heme
+      + c -type apo-cytochromes
+
+  OUT   holocytochrome c
+
+  ENZYME  HCCS
+          Tier A - DB-grounded [uniprot: P53701]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: results   ·   best retrieval score for this source: 0.8024
+        "succinate dehydrogenase (complex II) [ 6 , 111 , 112 ]. Additionally,
+         yeast mitochondria harbor several fungi-specific hemoproteins such as
+         CcO assembly factor Mss51 [ 113 ], cytochrome c peroxidase Ccp1 [ 114
+         ] and L -lactate cytochrome c oxidoreductase Cyb2 [ 115 ]. Remarkably
+         little is known about how heme b is transported to these targets. As
+         exemplified by studies on hemylation of complex III, formation of heme
+         b catalytic centers is an early post-translational event in the
+         assembly of these molecules [ 6 , 116 ]. Such setting likely assures
+         an effective heme-dependent regulatory mechanism, thereby reducing
+         potential negative effects of cofactor’s exposure. Figure 3
+         Mitochondrial heme routes. Mitochondrial enzyme ferrochelatase (FECH)
+         metallates PP IX, yielding protoheme that is routed to several
+         suborganellar locales, wherein heme b is sequentially modified and/or
+         inserted into the indicated hemoproteins. SDH, succinate
+         dehydrogenase; CcO, cytochrome c oxidase; OMM, outer mitochondrial
+         membrane; IMS, intermembrane space; IMM, inner mitochondrial membrane.
+         3.2. Heme c Pathway Unlike the other heme types, heme c needs to be
+         covalently attached to its client proteins—cytochrome c (Cyc1) and
+         complex III subunit cytochrome c 1 (Cyt1). In each case, hemylation of
+         these proteins involves the formation of two stereospecific thioether
+         bonds between two cysteine residues of protein’s conserved Cys-X-X-
+         Cys-His motif and two vinyl groups of the protoheme. The histidine
+         residue is an axial ligand to heme iron. The covalent attachment of
+         heme to c -type apo-cytochromes is critical for their stability and
+         subsequent maturation and has been extensively studied [ 6 , 117 , 118
+         ]. In yeast, hemylation of apo-Cyc1 and apo-Cyt1 is mediated by either
+         of the two IMS-localized cytochrome c heme lyases—CCHL (Cyc3) and CC 1
+         HL (Cyt2) [ 117 , 119 ]. In mammals, a single enzyme, holocytochrome c
+         synthase (HCCS), is responsible for the covalent heme attachment. All
+         mitochondrial CCHL proteins appear to use the following modus operandi
+         : IMM-bound lyase binds reduced Fe-PPIX, which is followed by binding
+         of apocytochrome c or c 1 and subsequent formation of covalent
+         thioether bonds and release of hemylated cytochrome [ 120 ]. Although
+         heme binding to CCHL proteins is well characterized [ 120 ], how
+         reduced heme is transported to CCHL proteins across IMM remains to be
+         determined. In vitro analyses indicate that c -heme lyases can
+         directly catalyze the formation of a thioether bond within the
+         CCHL–ferrous heme-apocytochrome c / c 1 complex, wherein apocytochrome
+         provides the second histidinyl ligand to this complex with the first
+         axial ligand being supplied by invariant histidine residue of CCHL.
+         However, a scenario whereby CCHL proteins merely serve as
+         stereospecificity-assuring chaperones allowing for spontaneous
+         thioether bond formation is also possible. Likewise, it remains to be
+         determined whether any additional proteins may be facilitating this
+         process in vivo. For instance, studies in yeast identified the IMS-
+         residing flavoprotein Cyc2 that might function as a heme reductase or
+         redox modulator of heme lyase reactions [ 121 , 122 ]. Because Cyc2 is
+         not absolutely required for CCHL function and is not conserved outside
+         fungi, its physiological significance remains somewhat unclear.
+         Nevertheless, these findings suggest that additional factors may be
+         involved in the maturation of c -type cytochromes in vivo. Once heme
+         is covalently ligated, the resulting holocytochrome c / c 1 is
+         released from heme lyase. The release is facilitated by several
+         factors including conformational distortion of the heme molecule upon
+         its covalent biding to cytochrome c / c 1 [ 120 , 123 ] and
+         holocytochrome’s axial ligand-mediated dwindling of heme-CCHL adducts
+         [ 118 , 120 ]. Interestingly, the heme lyase’s residues that have been
+         implicated in heme coordination also appear to contribute to its
+         release [ 120 ]. Upon its hemylation the stabilized cytochrome c is
+         further folded into its functional conformation and cytochrome c 1 is
+         conveyed for further incorporation into maturing bc 1 complex. It will
+         be interesting to test whether hemylation of cytochromes b and Cyt1
+         are coordinated molecular events. 3.3. Heme a Pathway Heme a is a
+         modified Fe-PPIX uniquely used by CcO, a key heme-copper enzyme of the
+         ETC [ 6 , 124 ]. Two heme a molecules with different coordination
+         geometries—designated a and a 3 —reside in the Cox1 core subunit of
+         CcO and are essential for catalysis and the stability/folding of Cox1
+         [ 6 , 125 ]. Hemylation of Cox1 is a sequential post-translational
+         process [ 6 , 126 , 127 ]. Heme a synthesis requires the shuttling of
+         the compound’s precursors—hemes b and o— between heme a biosynthetic
+         factors, and the subsequent shuttling of mature heme a to maturing
+         CcO. This process is mediated by a number of different assembly
+         factors [ 128 , 129 , 130 , 131 ], but much remains to be elucidated
+         in terms of the molecular mechanisms at work. 3.3.1. Heme o Synthase
+         As discussed earlier, heme o"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 26 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  conversion of CPgen III to PPgen IX
+
+  IN    CPgen III
+
+  OUT   PPgen IX
+
+  ENZYME  coproporphyrinogen oxidase (CPOX)
+          Tier A - DB-grounded [uniprot: P36551]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "Oxidase (CPOX) and Protoporphyrinogen Oxidase (PPOX) Once generated,
+         CPgen III is then transported by a currently unknown mechanism into
+         the intermembrane space of the mitochondria (IMS) ( Figure 2 ). One
+         study posited that OMM ATP-dependent transporter ABCB6 has a role in
+         this process [ 66 ]. However this postulate has been debated based on
+         the cellular localization of ABCB6 [ 66 , 67 ], with biochemical
+         studies which demonstrated binding and transport of porphyrins and not
+         porphyrinogens [ 66 , 68 , 69 ] and findings from animal studies [ 68
+         , 69 ]. Thus, additional studies are necessary to further investigate
+         the role of ABCB6 as a CPgen III transporter in heme synthesis. Once
+         CPgen III is in the IMS, the enzyme coproporphyrinogen oxidase (CPOX)
+         converts it to PPgen IX followed by conversion to protoporphyrin IX
+         (PPIX) by protoporphyrinogen oxidase (PPOX), a reaction that requires
+         three molecules of oxygen and generates three molecules of hydrogen
+         peroxide (H 2 O 2 ) [ 12 ]. A recent study employing proximity
+         labeling, mass spectrometry and electron microscopy showed that PPOX
+         localizes to the matrix-facing side of IMM [ 70 ]. These data suggest
+         that PPgen IX rather than PPIX traverses the IMM ( Figure 2 ). The
+         N-terminal moiety of CPOX is anchored in the IMM, so the direct
+         transfer via lipid bilayer is one possible scenario. Alternatively,
+         the transfer could involve a transporter. It was shown that in yeast,
+         heme and some of its precursors may associate specifically with the
+         adenine nucleotide translocator (ANT) and that this binding is
+         inhibited by the ANT substrate ADP [ 71 ]. Additionally, Azuma et al.
+         [ 71 ] found that disruption of the ANT genes in yeast ( AAC1 , PET9
+         and AAC3 ) resulted in a reduction of heme biosynthesis via blockage
+         of precursors from entering the matrix. These transporters may
+         therefore play certain role in tetrapyrroles transport to PPOX and/or
+         FECH. These findings also suggest that ATP:ADP ratios, mitochondrial
+         protonmotive force and cellular energy status may regulate heme
+         synthesis in response to changes in metabolic demand thus further
+         studies are warranted to elucidate this issue. Another recently
+         identified protein which may function in PPgen IX transport is the
+         protein TMEM14C. This protein was originally identified in a large-
+         scale gene expression analysis [ 64 ] and shown to be important for
+         erythropoiesis in zebrafish. Yien et al., [ 72 ] expanded these
+         studies and their data demonstrate that TMEM14C is important for
+         porphyrin precursor homeostasis thus supporting TMEM14C as a PPgen IX
+         transporter. 2.4. Ferrochelatase The final step of heme synthesis
+         involves the insertion of ferrous iron into the PP IX molecule to
+         produce protoheme by the enzyme ferrochelatase (FECH or Hem15) on the
+         matrix side of the inner membrane ( Figure 2 ). Iron appears to be
+         delivered to FECH via the transporters mitoferrin 1 (MFN1 or SLC25A37)
+         and mitoferrin 2 (MFN2 or SLC25A28) in mammals [ 73 ]. A number of
+         recent outstanding reviews focusing on iron delivery to mitochondria
+         can be found elsewhere [ 74 , 75 , 76 , 77 ]. FECH functions by
+         removing two protons from PP IX and inserting Fe 2+ . Mammalian FECH
+         functions as a homodimer where each subunit contains a [2Fe-2S]
+         cluster [ 78 ]. While the [2Fe-2S] cluster is necessary for enzyme
+         activity [ 79 , 80 ], there is no evidence to support its role in
+         catalysis. Work by Shah et al., [ 81 ] indicates that it may be
+         serving as a sensor for the redox or membrane potential in the
+         mitochondrial matrix. Thus, redox signals may serve to integrate
+         energy metabolism with control of heme synthesis. Recent biochemical
+         and mass spectrometry-based studies have suggested that the heme
+         biosynthetic machinery forms a large complex, termed the mitochondrial
+         heme metabolon [ 39 , 82 , 83 , 84 ]. Indeed, FECH was found to be a
+         component of a multimeric assembly that included the first and seventh
+         enzymes in the heme synthesis pathway, ALAS and PPOX, respectively. In
+         addition, α-ketoglutarate dehydrogenase (KDH) and succinyl-CoA
+         synthase (SUCLA2), which synthesize the heme precursor succinyl-CoA,
+         and TMEM14C, a porphyrinogen transporter [ 39 , 82 ], were also
+         observed in the complex. Independent studies have also shown
+         mitoferrin, a mitochondrial iron importer [ 84 ], as well as two ATP
+         binding cassette proteins, ABCB7 [ 85 , 86 ] and ABCB10 [ 84 , 86 ]
+         are protein partners of FECH. These"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 27 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  conversion of PPgen IX to protoporphyrin IX (PPIX)
+
+  IN    PPgen IX
+      + 3.0 oxygen
+
+  OUT   protoporphyrin IX (PPIX)
+      + 3.0 hydrogen peroxide (H 2 O 2 )
+
+  ENZYME  protoporphyrinogen oxidase (PPOX)
+          Tier A - DB-grounded [uniprot: P50336]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "Oxidase (CPOX) and Protoporphyrinogen Oxidase (PPOX) Once generated,
+         CPgen III is then transported by a currently unknown mechanism into
+         the intermembrane space of the mitochondria (IMS) ( Figure 2 ). One
+         study posited that OMM ATP-dependent transporter ABCB6 has a role in
+         this process [ 66 ]. However this postulate has been debated based on
+         the cellular localization of ABCB6 [ 66 , 67 ], with biochemical
+         studies which demonstrated binding and transport of porphyrins and not
+         porphyrinogens [ 66 , 68 , 69 ] and findings from animal studies [ 68
+         , 69 ]. Thus, additional studies are necessary to further investigate
+         the role of ABCB6 as a CPgen III transporter in heme synthesis. Once
+         CPgen III is in the IMS, the enzyme coproporphyrinogen oxidase (CPOX)
+         converts it to PPgen IX followed by conversion to protoporphyrin IX
+         (PPIX) by protoporphyrinogen oxidase (PPOX), a reaction that requires
+         three molecules of oxygen and generates three molecules of hydrogen
+         peroxide (H 2 O 2 ) [ 12 ]. A recent study employing proximity
+         labeling, mass spectrometry and electron microscopy showed that PPOX
+         localizes to the matrix-facing side of IMM [ 70 ]. These data suggest
+         that PPgen IX rather than PPIX traverses the IMM ( Figure 2 ). The
+         N-terminal moiety of CPOX is anchored in the IMM, so the direct
+         transfer via lipid bilayer is one possible scenario. Alternatively,
+         the transfer could involve a transporter. It was shown that in yeast,
+         heme and some of its precursors may associate specifically with the
+         adenine nucleotide translocator (ANT) and that this binding is
+         inhibited by the ANT substrate ADP [ 71 ]. Additionally, Azuma et al.
+         [ 71 ] found that disruption of the ANT genes in yeast ( AAC1 , PET9
+         and AAC3 ) resulted in a reduction of heme biosynthesis via blockage
+         of precursors from entering the matrix. These transporters may
+         therefore play certain role in tetrapyrroles transport to PPOX and/or
+         FECH. These findings also suggest that ATP:ADP ratios, mitochondrial
+         protonmotive force and cellular energy status may regulate heme
+         synthesis in response to changes in metabolic demand thus further
+         studies are warranted to elucidate this issue. Another recently
+         identified protein which may function in PPgen IX transport is the
+         protein TMEM14C. This protein was originally identified in a large-
+         scale gene expression analysis [ 64 ] and shown to be important for
+         erythropoiesis in zebrafish. Yien et al., [ 72 ] expanded these
+         studies and their data demonstrate that TMEM14C is important for
+         porphyrin precursor homeostasis thus supporting TMEM14C as a PPgen IX
+         transporter. 2.4. Ferrochelatase The final step of heme synthesis
+         involves the insertion of ferrous iron into the PP IX molecule to
+         produce protoheme by the enzyme ferrochelatase (FECH or Hem15) on the
+         matrix side of the inner membrane ( Figure 2 ). Iron appears to be
+         delivered to FECH via the transporters mitoferrin 1 (MFN1 or SLC25A37)
+         and mitoferrin 2 (MFN2 or SLC25A28) in mammals [ 73 ]. A number of
+         recent outstanding reviews focusing on iron delivery to mitochondria
+         can be found elsewhere [ 74 , 75 , 76 , 77 ]. FECH functions by
+         removing two protons from PP IX and inserting Fe 2+ . Mammalian FECH
+         functions as a homodimer where each subunit contains a [2Fe-2S]
+         cluster [ 78 ]. While the [2Fe-2S] cluster is necessary for enzyme
+         activity [ 79 , 80 ], there is no evidence to support its role in
+         catalysis. Work by Shah et al., [ 81 ] indicates that it may be
+         serving as a sensor for the redox or membrane potential in the
+         mitochondrial matrix. Thus, redox signals may serve to integrate
+         energy metabolism with control of heme synthesis. Recent biochemical
+         and mass spectrometry-based studies have suggested that the heme
+         biosynthetic machinery forms a large complex, termed the mitochondrial
+         heme metabolon [ 39 , 82 , 83 , 84 ]. Indeed, FECH was found to be a
+         component of a multimeric assembly that included the first and seventh
+         enzymes in the heme synthesis pathway, ALAS and PPOX, respectively. In
+         addition, α-ketoglutarate dehydrogenase (KDH) and succinyl-CoA
+         synthase (SUCLA2), which synthesize the heme precursor succinyl-CoA,
+         and TMEM14C, a porphyrinogen transporter [ 39 , 82 ], were also
+         observed in the complex. Independent studies have also shown
+         mitoferrin, a mitochondrial iron importer [ 84 ], as well as two ATP
+         binding cassette proteins, ABCB7 [ 85 , 86 ] and ABCB10 [ 84 , 86 ]
+         are protein partners of FECH. These"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 28 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  insertion of ferrous iron into the PP IX molecule to produce protoheme
+
+  IN    ferrous iron
+      + PP IX
+
+  OUT   protoheme
+
+  ENZYME  ferrochelatase (FECH or Hem15)
+          Tier A - DB-grounded [uniprot: Q53FU1]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "Oxidase (CPOX) and Protoporphyrinogen Oxidase (PPOX) Once generated,
+         CPgen III is then transported by a currently unknown mechanism into
+         the intermembrane space of the mitochondria (IMS) ( Figure 2 ). One
+         study posited that OMM ATP-dependent transporter ABCB6 has a role in
+         this process [ 66 ]. However this postulate has been debated based on
+         the cellular localization of ABCB6 [ 66 , 67 ], with biochemical
+         studies which demonstrated binding and transport of porphyrins and not
+         porphyrinogens [ 66 , 68 , 69 ] and findings from animal studies [ 68
+         , 69 ]. Thus, additional studies are necessary to further investigate
+         the role of ABCB6 as a CPgen III transporter in heme synthesis. Once
+         CPgen III is in the IMS, the enzyme coproporphyrinogen oxidase (CPOX)
+         converts it to PPgen IX followed by conversion to protoporphyrin IX
+         (PPIX) by protoporphyrinogen oxidase (PPOX), a reaction that requires
+         three molecules of oxygen and generates three molecules of hydrogen
+         peroxide (H 2 O 2 ) [ 12 ]. A recent study employing proximity
+         labeling, mass spectrometry and electron microscopy showed that PPOX
+         localizes to the matrix-facing side of IMM [ 70 ]. These data suggest
+         that PPgen IX rather than PPIX traverses the IMM ( Figure 2 ). The
+         N-terminal moiety of CPOX is anchored in the IMM, so the direct
+         transfer via lipid bilayer is one possible scenario. Alternatively,
+         the transfer could involve a transporter. It was shown that in yeast,
+         heme and some of its precursors may associate specifically with the
+         adenine nucleotide translocator (ANT) and that this binding is
+         inhibited by the ANT substrate ADP [ 71 ]. Additionally, Azuma et al.
+         [ 71 ] found that disruption of the ANT genes in yeast ( AAC1 , PET9
+         and AAC3 ) resulted in a reduction of heme biosynthesis via blockage
+         of precursors from entering the matrix. These transporters may
+         therefore play certain role in tetrapyrroles transport to PPOX and/or
+         FECH. These findings also suggest that ATP:ADP ratios, mitochondrial
+         protonmotive force and cellular energy status may regulate heme
+         synthesis in response to changes in metabolic demand thus further
+         studies are warranted to elucidate this issue. Another recently
+         identified protein which may function in PPgen IX transport is the
+         protein TMEM14C. This protein was originally identified in a large-
+         scale gene expression analysis [ 64 ] and shown to be important for
+         erythropoiesis in zebrafish. Yien et al., [ 72 ] expanded these
+         studies and their data demonstrate that TMEM14C is important for
+         porphyrin precursor homeostasis thus supporting TMEM14C as a PPgen IX
+         transporter. 2.4. Ferrochelatase The final step of heme synthesis
+         involves the insertion of ferrous iron into the PP IX molecule to
+         produce protoheme by the enzyme ferrochelatase (FECH or Hem15) on the
+         matrix side of the inner membrane ( Figure 2 ). Iron appears to be
+         delivered to FECH via the transporters mitoferrin 1 (MFN1 or SLC25A37)
+         and mitoferrin 2 (MFN2 or SLC25A28) in mammals [ 73 ]. A number of
+         recent outstanding reviews focusing on iron delivery to mitochondria
+         can be found elsewhere [ 74 , 75 , 76 , 77 ]. FECH functions by
+         removing two protons from PP IX and inserting Fe 2+ . Mammalian FECH
+         functions as a homodimer where each subunit contains a [2Fe-2S]
+         cluster [ 78 ]. While the [2Fe-2S] cluster is necessary for enzyme
+         activity [ 79 , 80 ], there is no evidence to support its role in
+         catalysis. Work by Shah et al., [ 81 ] indicates that it may be
+         serving as a sensor for the redox or membrane potential in the
+         mitochondrial matrix. Thus, redox signals may serve to integrate
+         energy metabolism with control of heme synthesis. Recent biochemical
+         and mass spectrometry-based studies have suggested that the heme
+         biosynthetic machinery forms a large complex, termed the mitochondrial
+         heme metabolon [ 39 , 82 , 83 , 84 ]. Indeed, FECH was found to be a
+         component of a multimeric assembly that included the first and seventh
+         enzymes in the heme synthesis pathway, ALAS and PPOX, respectively. In
+         addition, α-ketoglutarate dehydrogenase (KDH) and succinyl-CoA
+         synthase (SUCLA2), which synthesize the heme precursor succinyl-CoA,
+         and TMEM14C, a porphyrinogen transporter [ 39 , 82 ], were also
+         observed in the complex. Independent studies have also shown
+         mitoferrin, a mitochondrial iron importer [ 84 ], as well as two ATP
+         binding cassette proteins, ABCB7 [ 85 , 86 ] and ABCB10 [ 84 , 86 ]
+         are protein partners of FECH. These"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 29 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  HMB -> uroporphyrinogen III
+
+  IN    HMB
+
+  OUT   uroporphyrinogen III
+
+  ENZYME  hydroxymethylbilane synthase (HMBS)
+          Tier A - DB-grounded [uniprot: P08397]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacterium [ 40 ] and yeast [ 41 ], both with a high degree of
+         sequence homology to the human ALAS core, indicate a tightly bound
+         homodimer. Specifically, each monomer consists of three domains that
+         all participate in dimerization: a variable N-terminal region, a
+         highly conserved catalytic center with a PLP-lysine Schiff base in the
+         active site and a regulatory C-terminal domain. Eukaryotic ALAS
+         proteins contain a cleavable mitochondrial-targeting sequence (MTS) at
+         the N-terminus and a well-conserved extension of the bacterial
+         C-terminal domain that putatively influences substrate binding [ 41 ]
+         and ALA product release [ 42 ]. Multiple heme regulatory motifs (HRMs)
+         have been identified in the N-terminal domain of eukaryotic ALAS,
+         including in the MTS, with the notable exception of yeast [ 43 , 44 ,
+         45 ]. Perhaps not coincidentally, ALA synthesis is the rate-limiting
+         step in mammalian heme synthesis [ 28 ] but not in yeast [ 46 ]. Two
+         highly conserved forms of ALAS, ALAS1 and ALAS2 are expressed in
+         mammals [ 47 ]. ALAS1 is ubiquitously expressed, while ALAS2 is
+         specific to erythroid cells [ 48 ]. In nonerythroid tissue, feedback
+         inhibition by heme negatively regulates ALAS1 transcription [ 49 ],
+         translation [ 50 , 51 ], mRNA stability [ 52 ], protein stability in
+         the mitochondria [ 53 ] and mitochondrial import via the MTS [ 54 ] to
+         avoid free heme accumulation and toxicity. In contrast, ALAS2, which
+         operates in erythroid cells that are obligated to make upwards of ~80
+         mM heme or ~5 × 10 9 molecules of heme per cell for hemoglobin
+         assembly [ 55 ], is not inhibited by heme at any level. ALAS2
+         synthesis is modulated transcriptionally by GATA-1 and other heme-
+         independent factors [ 56 , 57 ] and downregulated post-
+         transcriptionally by microRNA [ 58 ] and iron regulatory proteins
+         (IRPs) [ 59 ]. Interestingly, the inhibitory effect of IRP1 and IRP2
+         via interaction with an ALAS2-specific 5’-iron regulatory element
+         (IRE) is abrogated by iron and/or heme [ 60 , 61 ], suggesting that
+         heme could indirectly stimulate ALAS2 translation. Unlike in ALAS1,
+         N-terminal HRMs present in ALAS2 protein do not render mitochondrial
+         import sensitive to heme [ 54 ]. Post-translational events that impact
+         enzyme activity include the binding of ALAS2 and the AAA+ unfoldase,
+         CLPX, a complex which facilitates both PLP binding and ALAS2
+         degradation [ 62 ], as well as hydroxylation of the ALAS2 C-terminal
+         extension and the associated proteosomal degradation of the protein [
+         63 ]. 2.2. CPgenIII Formation After formation of ALA by ALAS, ALA is
+         transported out of the mitochondria back into the cytosol by unknown
+         mechanisms ( Figure 2 ). Proposed ALA transporters include SLC25A38 [
+         33 ] and SLC25A39 [ 64 ], though these transporters have been
+         implicated in glycine transport [ 34 ] and iron-sulfur cluster
+         biogenesis [ 64 ] and direct evidence of ALA transport via either is
+         lacking. For transport of ALA from the IMS to the cytosol, it is
+         possible that ALA may simply diffuse across the OMM given the
+         permeability of this membrane to small molecules. Once in the cytosol,
+         ALA is converted in four consecutive steps into CPgen III ( Figure 2
+         ). These steps include condensation of two ALA molecules into a single
+         monopyrrole, porphobilinogen (PBG), by the enzyme porphobilinogen
+         synthase (PBGS) ((previously known as ALA dehydratase (ALAD)); the
+         head-to-tail synthesis of four PBG molecules to form the linear
+         tetrapyrrole, hydroxymethylbilane (HMB), by the enzyme
+         hydroxymethylbilane synthase (HMBS) (previously called porphobilinogen
+         deaminase (PBGD)); the spiro inversion and cyclization of HMB to form
+         uroporphyrinogen III by uroporphyrinogen synthase (UROS); and the
+         decarboxylation of the four pyrrole acetic acid side chains by
+         uroporphyrinogen decarboxylase (UROD) to yield the final product CPgen
+         III and four molecules of carbon dioxide [ 12 , 65 ]. In contrast to
+         other eukaryotes, PBGS and HMBS (not ALAS) reactions are rate limiting
+         in yeast heme biosynthesis [ 46 ]. 2.3. Coproporphyrinogen Oxidase
+         (CPOX) and Protoporphyrinogen Oxidase (PPOX) Once generated, CPgen III
+         is then transported by a currently unknown mechanism into the
+         intermembrane space of the mitochondria (IMS) ( Figure 2 ). One study
+         posited that OMM ATP-dependent transporter ABCB6 has a role in this
+         process [ 66 ]. However this postulate has been debated based on the
+         cellular localization of ABCB6 [ 66 , 67 ], with biochemical studies
+         which demonstrated binding and transport of porphyrins and not
+         porphyrinogens [ 66 , 68 , 69 ] and findings from animal studies [ 68
+         , 69 ]. Thus, additional studies are necessary to further investigate
+         the role of ABCB6 as a CPgen III transporter in heme synthesis. Once
+         CPgen III is in the IMS, the enzyme coproporphyrinogen oxidase (CPOX)
+         converts it to PPgen IX followed by conversion to protoporphyrin IX
+         (PPIX) by protoporphyrinogen oxidase (PPOX), a reaction that requires
+         three molecules of"
+        https://doi.org/10.3390/cells9030579
+
+
+--------------------------------------------------------------------------------
+REACTION 30 of 30   ·   Tier C - single-source (review)
+    ! SINGLE-SOURCE - REVIEW REQUIRED
+--------------------------------------------------------------------------------
+  uroporphyrinogen III -> CPgen III
+
+  IN    uroporphyrinogen III
+
+  OUT   CPgen III
+      + 4.0 carbon dioxide
+
+  ENZYME  uroporphyrinogen synthase (UROS)
+          Tier A - DB-grounded [uniprot: P10746]
+
+  WHY THIS TIER
+    one identified paper with a cited passage and no second, independent
+    statement
+
+  EVIDENCE
+    [1] From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+        (PMC7140478)
+        section: introduction   ·   best retrieval score for this source: 0.8024
+        "α-proteobacterium [ 40 ] and yeast [ 41 ], both with a high degree of
+         sequence homology to the human ALAS core, indicate a tightly bound
+         homodimer. Specifically, each monomer consists of three domains that
+         all participate in dimerization: a variable N-terminal region, a
+         highly conserved catalytic center with a PLP-lysine Schiff base in the
+         active site and a regulatory C-terminal domain. Eukaryotic ALAS
+         proteins contain a cleavable mitochondrial-targeting sequence (MTS) at
+         the N-terminus and a well-conserved extension of the bacterial
+         C-terminal domain that putatively influences substrate binding [ 41 ]
+         and ALA product release [ 42 ]. Multiple heme regulatory motifs (HRMs)
+         have been identified in the N-terminal domain of eukaryotic ALAS,
+         including in the MTS, with the notable exception of yeast [ 43 , 44 ,
+         45 ]. Perhaps not coincidentally, ALA synthesis is the rate-limiting
+         step in mammalian heme synthesis [ 28 ] but not in yeast [ 46 ]. Two
+         highly conserved forms of ALAS, ALAS1 and ALAS2 are expressed in
+         mammals [ 47 ]. ALAS1 is ubiquitously expressed, while ALAS2 is
+         specific to erythroid cells [ 48 ]. In nonerythroid tissue, feedback
+         inhibition by heme negatively regulates ALAS1 transcription [ 49 ],
+         translation [ 50 , 51 ], mRNA stability [ 52 ], protein stability in
+         the mitochondria [ 53 ] and mitochondrial import via the MTS [ 54 ] to
+         avoid free heme accumulation and toxicity. In contrast, ALAS2, which
+         operates in erythroid cells that are obligated to make upwards of ~80
+         mM heme or ~5 × 10 9 molecules of heme per cell for hemoglobin
+         assembly [ 55 ], is not inhibited by heme at any level. ALAS2
+         synthesis is modulated transcriptionally by GATA-1 and other heme-
+         independent factors [ 56 , 57 ] and downregulated post-
+         transcriptionally by microRNA [ 58 ] and iron regulatory proteins
+         (IRPs) [ 59 ]. Interestingly, the inhibitory effect of IRP1 and IRP2
+         via interaction with an ALAS2-specific 5’-iron regulatory element
+         (IRE) is abrogated by iron and/or heme [ 60 , 61 ], suggesting that
+         heme could indirectly stimulate ALAS2 translation. Unlike in ALAS1,
+         N-terminal HRMs present in ALAS2 protein do not render mitochondrial
+         import sensitive to heme [ 54 ]. Post-translational events that impact
+         enzyme activity include the binding of ALAS2 and the AAA+ unfoldase,
+         CLPX, a complex which facilitates both PLP binding and ALAS2
+         degradation [ 62 ], as well as hydroxylation of the ALAS2 C-terminal
+         extension and the associated proteosomal degradation of the protein [
+         63 ]. 2.2. CPgenIII Formation After formation of ALA by ALAS, ALA is
+         transported out of the mitochondria back into the cytosol by unknown
+         mechanisms ( Figure 2 ). Proposed ALA transporters include SLC25A38 [
+         33 ] and SLC25A39 [ 64 ], though these transporters have been
+         implicated in glycine transport [ 34 ] and iron-sulfur cluster
+         biogenesis [ 64 ] and direct evidence of ALA transport via either is
+         lacking. For transport of ALA from the IMS to the cytosol, it is
+         possible that ALA may simply diffuse across the OMM given the
+         permeability of this membrane to small molecules. Once in the cytosol,
+         ALA is converted in four consecutive steps into CPgen III ( Figure 2
+         ). These steps include condensation of two ALA molecules into a single
+         monopyrrole, porphobilinogen (PBG), by the enzyme porphobilinogen
+         synthase (PBGS) ((previously known as ALA dehydratase (ALAD)); the
+         head-to-tail synthesis of four PBG molecules to form the linear
+         tetrapyrrole, hydroxymethylbilane (HMB), by the enzyme
+         hydroxymethylbilane synthase (HMBS) (previously called porphobilinogen
+         deaminase (PBGD)); the spiro inversion and cyclization of HMB to form
+         uroporphyrinogen III by uroporphyrinogen synthase (UROS); and the
+         decarboxylation of the four pyrrole acetic acid side chains by
+         uroporphyrinogen decarboxylase (UROD) to yield the final product CPgen
+         III and four molecules of carbon dioxide [ 12 , 65 ]. In contrast to
+         other eukaryotes, PBGS and HMBS (not ALAS) reactions are rate limiting
+         in yeast heme biosynthesis [ 46 ]. 2.3. Coproporphyrinogen Oxidase
+         (CPOX) and Protoporphyrinogen Oxidase (PPOX) Once generated, CPgen III
+         is then transported by a currently unknown mechanism into the
+         intermembrane space of the mitochondria (IMS) ( Figure 2 ). One study
+         posited that OMM ATP-dependent transporter ABCB6 has a role in this
+         process [ 66 ]. However this postulate has been debated based on the
+         cellular localization of ABCB6 [ 66 , 67 ], with biochemical studies
+         which demonstrated binding and transport of porphyrins and not
+         porphyrinogens [ 66 , 68 , 69 ] and findings from animal studies [ 68
+         , 69 ]. Thus, additional studies are necessary to further investigate
+         the role of ABCB6 as a CPgen III transporter in heme synthesis. Once
+         CPgen III is in the IMS, the enzyme coproporphyrinogen oxidase (CPOX)
+         converts it to PPgen IX followed by conversion to protoporphyrin IX
+         (PPIX) by protoporphyrinogen oxidase (PPOX), a reaction that requires
+         three molecules of"
+        https://doi.org/10.3390/cells9030579
+
+
+================================================================================
+WHAT TO CHECK FIRST
+================================================================================
+
+  [Tier C] entity    ALA
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  ALAD reaction
+              stated in a single source
+  [Tier C] entity    CC 1 HL (Cyt2)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    CC 1 HL (Cyt2)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    CC 1 HL (Cyt2)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    CCHL (Cyc3)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    CCHL (Cyc3)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    CCHL (Cyc3)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  CPOX reaction
+              stated in a single source
+  [Tier C] entity    CPgen III
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    CPgenIII
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  CPgenIII -> protoporphyrinogen IX (PPgen IX)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Coproporphyrinogen III (CPgenIII)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  Coproporphyrinogen III (CPgenIII) is synthesized from UPG III by uroporphyrinogen decarboxylase (UROD)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  FECH reaction
+              stated in a single source
+  [Tier C] reaction  HMB -> uroporphyrinogen III
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  PBG -> hydroxymethylbilane (HMB)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    PP IX
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    PPIX
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    PPgen IX
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  PPgen IX is oxidized into protoporphyrin IX (PPIX) by PPgen oxidase (PPOX)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Porphobilinogen synthase (PBGS)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    Porphobilinogen synthase (PBGS)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  SUGCT converts itaconate to itaconyl-CoA
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    UPG III
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  UROS reaction
+              stated in a single source
+  [Tier C] entity    Uroporphyrinogen III (UPgen III)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  Uroporphyrinogen III (UPgen III) is synthesized from HMB by uroporphyrinogen synthase (UROS)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    apocytochrome c
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    apocytochrome c 1
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    c -type apo-cytochromes
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    carbon dioxide
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    complex III subunit cytochrome c 1
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  condensates two molecules of ALA into porphobilinogen (PBG)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  conversion of CPgen III to PPgen IX
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  conversion of PPgen IX to protoporphyrin IX (PPIX)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  covalent heme attachment to c -type apo-cytochromes
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    cytochrome c
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    cytochrome c lyas
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    cytochrome c lyas
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    cytochrome c lyas
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    cytochrome c lyases
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    cytochrome c lyases
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    heme a synthase
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] entity    heme a synthase
+              one identified paper with a cited passage and no second,
+              independent statement; identity rejected: best_effort guess (top
+              candidate accepted unconditionally)
+  [Tier C] entity    heme b
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  heme b -> heme o
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    heme b precursor (protoheme)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  heme b precursor (protoheme) -> heme c
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  heme b precursor (protoheme) -> heme c
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  heme c synthesis
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    heme o synthase
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    heme o synthase
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  heme synthesis
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    hemylated cytochrome
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    hemylated cytochrome c 1
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  hemylation of apo-Cyc1
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  hemylation of apo-Cyt1
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    holocytochrome c
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    hydrogen peroxide (H 2 O 2 )
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    hydroxymethylbilane (HMB)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  insertion of ferrous iron into protoporphyrin IX (PPIX)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  insertion of ferrous iron into the PP IX molecule to produce protoheme
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  insertion of ferrous iron into the porphyrin ring, resulting in heme b
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    iron (Fe)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  metallation of PP IX
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    molecular oxygen (O 2 )
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  oxidation of the C 8 methyl substituent to an aldehyde group
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    porphobilinogen (PBG)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  production of itaconyl-CoA using succinyl-CoA
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    protoheme
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    protoporphyrinogen IX (PPgen IX)
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] entity    reduced Fe-PPIX
+              one identified paper with a cited passage and no second,
+              independent statement
+  [Tier C] reaction  uroporphyrinogen III -> CPgen III
+              one identified paper with a cited passage and no second,
+              independent statement
+
+================================================================================
+ENTITIES BY TIER
+================================================================================
+
+Catalysts are listed with their reaction above and not repeated here.
+
+Tier A — DB-grounded   (33)
+  - coproporphyrinogen III   [pathbank_compound_id: 974]
+  - heme a   [pathbank_compound_id: 3003]
+  - heme c   [pathbank_compound_id: 41679]
+  - heme o   [pathbank_compound_id: 900]
+  - HMB   [pathbank_compound_id: 602]
+  - itaconyl-CoA   [pathbank_compound_id: 1866]
+  - PBG   [pathbank_compound_id: 166]
+  - porphobilinogen   [pathbank_compound_id: 166]
+  - succinyl-CoA   [pathbank_compound_id: 808]
+  - 5-aminolevulinic acid   [drugbank: DB00855]
+  - heme   [drugbank: DB02577]
+  - protoporphyrin IX   [drugbank: DB02285]
+  - itaconate   [pathbank_compound_id: 113282]
+  - uroporphyrinogen III   [pathbank_compound_id: 854]
+  - ALAD   [uniprot: P13716]
+  - ALAS1   [uniprot: P13196]
+  - coproporphyrinogen oxidase (CPOX)   [uniprot: P36551]
+  - Cox10   [uniprot: Q12887]
+  - CPgen oxidase (CPOX)   [uniprot: P36551]
+  - CPOX   [uniprot: P36551]
+  - FECH   [uniprot: P22830]
+  - ferrochelatase (FECH)   [uniprot: P22830]
+  - ferrochelatase (FECH or Hem15)   [uniprot: Q53FU1]
+  - HCCS   [uniprot: P53701]
+  - Heme a Synthase (Cox15)   [uniprot: Q7KZN9]
+  - Heme o Synthase (Cox10)   [uniprot: Q12887]
+  - hydroxymethylbilane synthase (HMBS)   [uniprot: P08397]
+  - PPgen oxidase (PPOX)   [uniprot: P50336]
+  - protoporphyrinogen oxidase (PPOX)   [uniprot: P50336]
+  - SUGCT   [uniprot: Q9HAC7]
+  - uroporphyrinogen decarboxylase (UROD)   [uniprot: P06132]
+  - uroporphyrinogen synthase (UROS)   [uniprot: P10746]
+  - UROS   [uniprot: P10746]
+
+Tier B — corroborated by a second paper (no identifier)   (4)
+  - ferrous iron
+  - glycine
+  - ALA synthase (ALAS)
+  - aminolevulinic acid synthase (ALAS)
+
+Tier C — single-source (review)   (35)
+  - ALA
+  - apocytochrome c
+  - apocytochrome c 1
+  - c -type apo-cytochromes
+  - complex III subunit cytochrome c 1
+  - Coproporphyrinogen III (CPgenIII)
+  - CPgen III
+  - CPgenIII
+  - cytochrome c
+  - heme b
+  - heme b precursor (protoheme)
+  - hemylated cytochrome
+  - hemylated cytochrome c 1
+  - holocytochrome c
+  - hydroxymethylbilane (HMB)
+  - porphobilinogen (PBG)
+  - PP IX
+  - PPgen IX
+  - PPIX
+  - protoheme
+  - protoporphyrinogen IX (PPgen IX)
+  - reduced Fe-PPIX
+  - hydrogen peroxide (H 2 O 2 )
+  - molecular oxygen (O 2 )
+  - carbon dioxide
+  - iron (Fe)
+  - UPG III
+  - Uroporphyrinogen III (UPgen III)
+  - CC 1 HL (Cyt2)
+  - CCHL (Cyc3)
+  - cytochrome c lyas
+  - cytochrome c lyases
+  - heme a synthase
+  - heme o synthase
+  - Porphobilinogen synthase (PBGS)
+
+Tier D — UNSOURCED (review)   (0)
+  (none)
+
+================================================================================
+SOURCES CITED
+================================================================================
+
+  PMC12856317
+    A reversible feedback mechanism regulating mitochondrial heme synthesis.
+    https://doi.org/10.1016/j.jbc.2025.111089
+
+  PMC7140478
+    From Synthesis to Utilization: The Ins and Outs of Mitochondrial Heme.
+    https://doi.org/10.3390/cells9030579
+
+  PMC9153040
+    The immunometabolite itaconate inhibits heme synthesis and remodels cellular
+    metabolism in erythroid precursors.
+    https://doi.org/10.1182/bloodadvances.2021004750
+
+  seed paper (uploaded)
+    heme biosynthesis
+
+================================================================================
+WHAT THE PIPELINE DID NOT ENFORCE
+================================================================================
+
+Biology / provenance flags (17)
+  These would have STOPPED a strict run. They did not stop this one.
+  - [(no code)] /entities/proteins/5
+      Protein 'ALA synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/6
+      Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or
+      DrugBank identifier.
+  - [(no code)] /entities/proteins/7
+      Protein 'CC 1 HL (Cyt2)' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/8
+      Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/12
+      Protein 'cytochrome c lyas' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/13
+      Protein 'cytochrome c lyases' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/19
+      Protein 'heme o synthase' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/22
+      Protein 'Porphobilinogen synthase (PBGS)' is missing a UniProt or DrugBank
+      identifier.
+  - [(no code)] /entities/proteins/5
+      Protein 'ALA synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/6
+      Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or
+      DrugBank identifier.
+  - [(no code)] /entities/proteins/7
+      Protein 'CC 1 HL (Cyt2)' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/8
+      Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/12
+      Protein 'cytochrome c lyas' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/13
+      Protein 'cytochrome c lyases' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/19
+      Protein 'heme o synthase' is missing a UniProt or DrugBank identifier.
+  - [(no code)] /entities/proteins/22
+      Protein 'Porphobilinogen synthase (PBGS)' is missing a UniProt or DrugBank
+      identifier.
+  - [(no code)] /entities/proteins/23/name
+      Protein has degree 0 after normalization: PPgen oxidase (PPOX)
+
+================================================================================
+KNOWN LIMITATIONS — READ BEFORE CITING THIS
+================================================================================
+
+  1.
+     A review that CITES the seed paper cannot be distinguished from an
+     independent corroboration. Reference sections are discarded at ingest and
+     CandidatePaper carries no DOI, so there is no citation graph to check. When
+     a review corroborates a step, treat it as 'possibly the same claim
+     restated', never as a second independent finding.
+
+  2.
+     No page numbers exist in this pipeline. Chunk positions are hashed away at
+     ingest, so every citation below gives the section plus the verbatim quoted
+     passage and nothing more. Any page reference you need must be looked up in
+     the source paper by hand.
+
+  3.
+     rag_confidence is an internal heuristic (the top retrieval score, or 0.5 +
+     0.1 per provenance pointer when no score exists). It is NOT a probability
+     and NOT a percentage; 0.6 usually just means 'one pointer, no retrieval
+     score'.
+
+  4.
+     A tier is a claim about EVIDENCE, not about IDENTITY. A Tier B element is
+     corroborated but still has no external identifier, and a Tier A identifier
+     was accepted only when it was a genuine match (best-effort guesses and the
+     PathBank Unknown sentinel are refused).
+
+  5.
+     Research mode relaxed the PathWhiz FORMAT rules listed above and emitted no
+     PWML. This report is a review artifact, not an import-ready pathway.

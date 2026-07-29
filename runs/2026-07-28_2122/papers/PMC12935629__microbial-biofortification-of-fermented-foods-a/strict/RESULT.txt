@@ -1,0 +1,73 @@
+RESULT: FAIL
+========================================
+paper      : PMC12935629
+title      : Microbial biofortification of fermented foods: a review of probiotic-mediated nutrient enhancement.
+slug       : PMC12935629__microbial-biofortification-of-fermented-foods-a
+mode       : strict
+status     : fail
+stage      : stage1
+wall time  : 57.4s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : ambiguous_review_scope
+message      : multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.
+issue codes  : ambiguous_review_scope
+
+DETAIL / TRACEBACK
+----------------------------------------
+{
+  "status": "ambiguous_review_scope",
+  "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+  "candidate_examples": [
+    {
+      "name": "riboflavin (vitamin B2) biosynthesis by lactic acid bacteria",
+      "organism": "Lactobacillus plantarum, Lactobacillus reuteri",
+      "key_compounds": [
+        "riboflavin",
+        "FAD",
+        "FMN"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Probiotic microorganisms enhance the nutritional value... including riboflavin (vitamin B2)... lactic acid bacteria fermentation increases riboflavin contents of cereals and legumes by 2.5–5 mg/kg"
+    },
+    {
+      "name": "folate (vitamin B9) biosynthesis by bifidobacteria",
+      "organism": "Bifidobacterium",
+      "key_compounds": [
+        "folate"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Bifidobacterium species synthesize the vitamin like folate"
+    },
+    {
+      "name": "cobalamin (vitamin B12) biosynthesis by Propionibacterium freudenreichii",
+      "organism": "Propionibacterium freudenreichii",
+      "key_compounds": [
+        "cobalamin"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Propionibacterium freudenreichii synthesize vitamin B12 in soy or cereal at 0.95–3.2 μg/100 grams"
+    },
+    {
+      "name": "menaquinone (vitamin K2) biosynthesis by Bacillus subtilis natto",
+      "organism": "Bacillus subtilis natto",
+      "key_compounds": [
+        "menaquinone",
+        "vitamin K2"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Bacillus subtilis natto, which produces up to 50–100 μg/100 grams of soybean consumers Vitamin K2"
+    }
+  ]
+}
+Ambiguous review scope: this looks like a multi-example review, but no target example was selected. Name the example you want in the "Optional extraction focus / task context" box above (one of the candidate example names below works), then re-run. Re-running without naming a target will produce this same result.
+Review paper detected with multiple examples but no target example specified. candidate_examples populated; downstream stages should select one.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

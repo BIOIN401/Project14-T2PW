@@ -1,0 +1,55 @@
+RESULT: FAIL
+========================================
+paper      : PMC12444477
+title      : The regulation of lipid A biosynthesis.
+slug       : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 3421.4s (57m01s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/53/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/54/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/55/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/21/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/53/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/54/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/55/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/22/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): and 1 more finding(s); all of them are in contract_reports.json
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 10 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_species_, gate.protein_coenzyme_a_coa_is_missing_species_organism, gate.protein_has_degree_after_normalization, gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_a_unipro, gate.protein_coenzyme_a_coa_is_missing_a_uniprot_or_drugbank_identifi, gate.unknown_protein_modifier_reference
+
+DETAIL / TRACEBACK
+----------------------------------------
+Mapped pathway still fails the pre-export Stage 3 revalidation. Refinement review was not opened.
+[post_normalization_contract_report] gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_species_ @ /entities/proteins/22: Protein 'β-hydroxyacyl-acyl carrier protein (ACP)' is missing species/organism.
+[post_normalization_contract_report] gate.protein_coenzyme_a_coa_is_missing_species_organism @ /entities/proteins/23: Protein 'coenzyme A (CoA)' is missing species/organism.
+[post_normalization_contract_report] gate.protein_has_degree_after_normalization @ /entities/proteins/16/name: Protein has degree 0 after normalization: FabA
+
+COUNTS
+----------------------------------------
+  compounds = 58
+  contract_errors = 3
+  entities = 110
+  gate_errors = 7
+  proteins = 23
+  reactions = 37
+  runtime_schema_findings = 11
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (16608 B)
+  - final_stage3_gate_report.json  (3331 B)
+  - gate_fail_report.json  (3520 B)
+  - merged_payload.json  (303424 B)
+  - stage1_payload.json  (18306 B)

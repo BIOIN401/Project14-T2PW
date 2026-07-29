@@ -1,0 +1,457 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'PEtN-lipid A' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/4",
+      "entity_type": "compound",
+      "raw_name": "PEtN-lipid A",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'L-4AraN' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/7",
+      "entity_type": "compound",
+      "raw_name": "L-4AraN",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'lipid A modified with L-Ara4N' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/8",
+      "entity_type": "compound",
+      "raw_name": "lipid A modified with L-Ara4N",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'lipid A modified with PEtN' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/9",
+      "entity_type": "compound",
+      "raw_name": "lipid A modified with PEtN",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'lipid A with PEtN' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/10",
+      "entity_type": "compound",
+      "raw_name": "lipid A with PEtN",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'modified Lipid A' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/12",
+      "entity_type": "compound",
+      "raw_name": "modified Lipid A",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'PEtN group' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/13",
+      "entity_type": "compound",
+      "raw_name": "PEtN group",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'phosphate groups of lipid A' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/15",
+      "entity_type": "compound",
+      "raw_name": "phosphate groups of lipid A",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'phosphorylated PhoP' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/16",
+      "entity_type": "compound",
+      "raw_name": "phosphorylated PhoP",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'Phospohoethanolamine' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/17",
+      "entity_type": "compound",
+      "raw_name": "Phospohoethanolamine",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    },
+    {
+      "code": "compound_db_resolution_failed",
+      "message": "Compound 'pmrHFIJKLM operon' did not resolve to a confident PathWhiz DB row.",
+      "pointer": "/entities/compounds/18",
+      "entity_type": "compound",
+      "raw_name": "pmrHFIJKLM operon",
+      "status": "unmatched",
+      "reason": "No PathWhiz DB match by IDs or name",
+      "chosen_rule": "",
+      "confidence": 0.0,
+      "candidates": []
+    }
+  ],
+  "warnings": [
+    {
+      "code": "component_inferred_from_biological_state",
+      "message": "Added missing subcellular_locations component 'Cytosol' from biological_state context.",
+      "pointer": "/biological_states/2",
+      "component_type": "subcellular_locations",
+      "name": "Cytosol"
+    }
+  ],
+  "db_resolution": {
+    "compounds": [
+      {
+        "raw_name": "lipid A",
+        "status": "legacy_id_unverified",
+        "db_id": 8270,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "PEtN",
+        "status": "legacy_id_unverified",
+        "db_id": 149,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "colistin",
+        "status": "legacy_id_unverified",
+        "db_id": 9267,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "lipopolysaccharide",
+        "status": "legacy_id_unverified",
+        "db_id": 104587,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 1.0,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "PEtN-lipid A",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "raw_name": "4-amino-4-deoxy-L-arabinose",
+        "status": "legacy_id_unverified",
+        "db_id": 41668,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "raw_name": "4-amino-4-deoxy-L-arabinose (L-Ara4N)",
+        "status": "legacy_id_unverified",
+        "db_id": 41668,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "L-4AraN",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "lipid A modified with L-Ara4N",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "lipid A modified with PEtN",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "lipid A with PEtN",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "raw_name": "LPS",
+        "status": "legacy_id_unverified",
+        "db_id": 8387,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "modified Lipid A",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "PEtN group",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "raw_name": "PhoP",
+        "status": "legacy_id_unverified",
+        "db_id": 721,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "reason": "payload_pathwhiz_id"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "phosphate groups of lipid A",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "phosphorylated PhoP",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "Phospohoethanolamine",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "status": "unmatched",
+        "raw_name": "pmrHFIJKLM operon",
+        "chosen": null,
+        "candidates": [],
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "reason": "No PathWhiz DB match by IDs or name"
+      },
+      {
+        "raw_name": "Phosphoethanolamine",
+        "status": "legacy_id_unverified",
+        "db_id": 149,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "reason": "payload_pathwhiz_id"
+      }
+    ],
+    "available": true
+  },
+  "unresolved": {
+    "db_identities": [
+      {
+        "entity_type": "compound",
+        "raw_name": "PEtN-lipid A",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "L-4AraN",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "lipid A modified with L-Ara4N",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "lipid A modified with PEtN",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "lipid A with PEtN",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "modified Lipid A",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "PEtN group",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "phosphate groups of lipid A",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "phosphorylated PhoP",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "Phospohoethanolamine",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      },
+      {
+        "entity_type": "compound",
+        "raw_name": "pmrHFIJKLM operon",
+        "status": "unmatched",
+        "reason": "No PathWhiz DB match by IDs or name",
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "candidates": []
+      }
+    ],
+    "entity_references": [],
+    "biological_state_references": []
+  },
+  "counts": {
+    "species": 1,
+    "subcellular_locations": 3,
+    "biological_states": 3,
+    "compounds": 20,
+    "proteins": 11,
+    "reactions": 14,
+    "transports": 0,
+    "locations": 56,
+    "edges": 111,
+    "process_visualizations": 14
+  },
+  "generated_default_state": false,
+  "name_canonicalization": {
+    "species": []
+  },
+  "ir_validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "counts": {
+      "entities": 42,
+      "biological_states": 3,
+      "processes": 16,
+      "process_members": 111,
+      "locations": 56,
+      "edges": 111,
+      "process_visualizations": 14
+    }
+  }
+}

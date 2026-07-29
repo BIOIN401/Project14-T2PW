@@ -1,0 +1,48 @@
+RESULT: FAIL
+========================================
+paper      : PMC12421875
+title      : The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory mechanism and substrate limitations.
+slug       : PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 3123.7s (52m03s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/21/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/22/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/21/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/22/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 3 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_noxab_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+Mapped pathway still fails the pre-export Stage 3 revalidation. Refinement review was not opened.
+[post_normalization_contract_report] gate.protein_noxab_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein 'NoxAB' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  compounds = 23
+  contract_errors = 1
+  entities = 48
+  gate_errors = 2
+  proteins = 11
+  reactions = 16
+  runtime_schema_findings = 6
+  transports = 1
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (11780 B)
+  - final_stage3_gate_report.json  (2546 B)
+  - gate_fail_report.json  (2574 B)
+  - merged_payload.json  (129054 B)
+  - stage1_payload.json  (14204 B)

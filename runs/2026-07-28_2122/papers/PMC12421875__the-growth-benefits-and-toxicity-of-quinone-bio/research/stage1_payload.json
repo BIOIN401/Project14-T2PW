@@ -1,0 +1,274 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Lactococcus lactis"
+      },
+      {
+        "name": "L. lactis subsp. lactis KF147"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "chorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isochorismate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SEPHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "SHCHC",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "OSB-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "DHNA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "MenF",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MenI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Lactococcus lactis state",
+      "species": "Lactococcus lactis",
+      "evidence": "Lactococcus lactis"
+    }
+  ],
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "chorismate"
+        ],
+        "outputs": [
+          "isochorismate"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "MenF reaction",
+        "enzymes": [
+          {
+            "protein": "MenF",
+            "evidence": "MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MenF catalyzes a reversible reaction converting chorismate (A) to isochorismate (B)",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isochorismate"
+        ],
+        "outputs": [
+          "SEPHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "MenD reaction",
+        "enzymes": [
+          {
+            "protein": "MenD",
+            "evidence": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MenD facilitates the conversion of isochorismate (B) to 2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylate (SEPHCHC, C)",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SEPHCHC"
+        ],
+        "outputs": [
+          "SHCHC"
+        ],
+        "locked_reaction_id": "rxn_lock_006",
+        "name": "MenH reaction",
+        "enzymes": [
+          {
+            "protein": "MenH",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "SHCHC"
+        ],
+        "outputs": [
+          "OSB"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "MenC reaction",
+        "enzymes": [
+          {
+            "protein": "MenC",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB"
+        ],
+        "outputs": [
+          "OSB-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "MenE reaction",
+        "enzymes": [
+          {
+            "protein": "MenE",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "OSB-CoA"
+        ],
+        "outputs": [
+          "DHNA-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "MenB reaction",
+        "enzymes": [
+          {
+            "protein": "MenB",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "DHNA-CoA"
+        ],
+        "outputs": [
+          "DHNA"
+        ],
+        "locked_reaction_id": "rxn_lock_007",
+        "name": "MenI reaction",
+        "enzymes": [
+          {
+            "protein": "MenI",
+            "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MK biosynthesis starts from chorismate and proceeds through a seven-enzyme pathway consisting of MenF, MenD, MenH, MenC, MenE, MenB, and MenI to produce DHNA",
+        "scope_membership": "core"
+      }
+    ],
+    "interactions": [
+      {
+        "entity_1": "DHNA",
+        "entity_2": "MenD",
+        "name": "DHNA inhibits MenD",
+        "relationship": "inhibits",
+        "biological_state": "Lactococcus lactis state",
+        "evidence": "MenD can be allosterically inhibited by DHNA"
+      }
+    ]
+  }
+}

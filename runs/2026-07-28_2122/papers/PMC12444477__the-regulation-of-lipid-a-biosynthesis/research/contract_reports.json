@@ -1,0 +1,436 @@
+{
+  "post_extraction_contract_report": {
+    "stage": "post_extraction",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_extraction",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report": {
+    "stage": "post_mapping",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_mapping",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_normalization_contract_report": {
+    "stage": "post_normalization",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_normalization",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/5/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/proteins/21/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 2,
+        "warning_count": 0
+      }
+    },
+    "gate_report": {
+      "ok": false,
+      "normalization_stats": {
+        "complexes_created": 0,
+        "composites_rewritten": 0,
+        "reactions_rewritten": 0,
+        "scaffold_split_reactions": 0,
+        "entities_moved_out_of_compounds": 1,
+        "entities_added_as_compounds": 0,
+        "entities_added_as_proteins": 1,
+        "catalysts_promoted_to_enzymes": 1,
+        "interaction_enzymes_promoted": 5,
+        "scaffold_inputs_added": 0,
+        "scaffold_in_modifiers_count": 0,
+        "n_plus_tokens_remaining": 0,
+        "complexes_list": [
+          "Lpt system"
+        ],
+        "n_autostate_created": 1,
+        "n_entities_assigned_to_autostate": 0,
+        "transporters_attached": 0,
+        "enzymes_attached_from_reaction_evidence": 0,
+        "modifier_refs_canonicalized": 76,
+        "modifier_refs_dropped": 0,
+        "forbidden_complexes_removed": 0,
+        "dedupe_removed_reactions": 2,
+        "dedupe_removed_transports": 0,
+        "dedupe_removed": 2,
+        "dedupe_removed_total": 2,
+        "no_op_removed_count": 2,
+        "no_op_quarantined_count": 2,
+        "locked_no_op_quarantined_count": 0,
+        "evidenced_no_op_quarantined_count": 2,
+        "unsupported_no_op_dropped_count": 0,
+        "duplicate_locked_reactions_quarantined_count": 0,
+        "n_same_as_groups": 1,
+        "n_aliases_rewritten": 5,
+        "n_entities_deduped": 1,
+        "n_single_protein_complexes_removed": 0,
+        "complex_named_proteins_relocated": 0,
+        "nucleic_acid_named_entities_relocated": 0,
+        "entity_type_mismatches_flagged": 0,
+        "unresolved_complex_components_dropped": 0,
+        "component_only_proteins_removed": 0,
+        "pruned_disconnected_proteins": [],
+        "pruned_disconnected_proteins_count": 0,
+        "alias_example_mappings": [
+          {
+            "alias": "R-3-hydroxymyristoyl-ACP",
+            "canonical": "β-hydroxyacyl-ACP"
+          }
+        ],
+        "n_reactions_compartment_backfilled": 0,
+        "non_protein_catalysts_dropped": 0,
+        "research_mode_relaxations": 2,
+        "alias_canonicalization": {
+          "n_same_as_groups": 1,
+          "n_aliases_rewritten": 5,
+          "n_entities_deduped": 1,
+          "n_single_protein_complexes_removed": 0,
+          "example_mappings": [
+            {
+              "alias": "R-3-hydroxymyristoyl-ACP",
+              "canonical": "β-hydroxyacyl-ACP"
+            }
+          ]
+        },
+        "gate_error_count": 2
+      },
+      "connectivity": {
+        "n_reactions": 29,
+        "n_transports": 2,
+        "n_interactions": 7,
+        "n_reaction_coupled_transports": 0,
+        "n_nodes": 117,
+        "n_edges": 170,
+        "n_components": 2,
+        "main_component_size": 107,
+        "largest_component_pct": 91.45,
+        "n_isolated_nodes": 0,
+        "proteins_degree0": 0,
+        "proteins_attached_pct": 100.0
+      },
+      "errors": [
+        {
+          "path": "/entities/proteins/21",
+          "reason": "Protein 'lipoprotein' is missing species/organism."
+        },
+        {
+          "path": "/entities/proteins/21",
+          "reason": "Protein 'lipoprotein' is missing a UniProt or DrugBank identifier."
+        }
+      ]
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/5/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/proteins/21/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "path": "/entities/proteins/21",
+        "reason": "Protein 'lipoprotein' is missing species/organism.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": true,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 1,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 3
+    }
+  },
+  "post_normalization_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_normalization",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/5/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/proteins/21/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 2,
+      "warning_count": 0
+    }
+  },
+  "post_audit_contract_report": {
+    "stage": "post_audit",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_audit",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/5/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/proteins/21/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 2,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/5/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/proteins/21/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 2
+    }
+  },
+  "post_audit_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_audit",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/5/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/proteins/21/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 2,
+      "warning_count": 0
+    }
+  },
+  "post_remap_contract_report": {
+    "stage": "post_remap",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_remap",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_remap_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_remap",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_enrichment_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_enrichment",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "pre_export_runtime_schema_report": {
+    "ok": true,
+    "boundary": "pre_export",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  }
+}

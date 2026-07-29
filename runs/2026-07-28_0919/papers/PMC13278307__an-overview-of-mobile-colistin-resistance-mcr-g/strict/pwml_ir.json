@@ -1,0 +1,6620 @@
+{
+  "pathway": {
+    "key": "pathway_1",
+    "name": "Generated Pathway",
+    "subject": "Metabolic",
+    "width": 3200,
+    "height": 1400,
+    "description": ""
+  },
+  "species": [
+    {
+      "key": "sp_1",
+      "name": "Escherichia coli",
+      "pathwhiz_id": 3,
+      "taxonomy_id": "562",
+      "classification": "Prokaryote"
+    }
+  ],
+  "subcellular_locations": [
+    {
+      "key": "scl_1",
+      "name": "outer membrane"
+    },
+    {
+      "key": "scl_2",
+      "name": "cell",
+      "aliases": [
+        "cell"
+      ],
+      "ontology_id": "GO:0005623"
+    },
+    {
+      "key": "scl_3",
+      "name": "Cytosol"
+    }
+  ],
+  "cell_types": [],
+  "tissues": [],
+  "biological_states": [
+    {
+      "key": "bs_1",
+      "name": "E. coli outer membrane state",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_1",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_2",
+      "name": "__auto_state__",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_2",
+      "cell_type_key": null,
+      "tissue_key": null
+    },
+    {
+      "key": "bs_3",
+      "name": "AutoState_escherichia_colicytosol",
+      "species_key": "sp_1",
+      "subcellular_location_key": "scl_3",
+      "cell_type_key": null,
+      "tissue_key": null
+    }
+  ],
+  "entities": {
+    "compounds": [
+      {
+        "key": "cmp_1",
+        "name": "lipid A",
+        "pathwhiz_id": 8270,
+        "pathbank_compound_id": 8270,
+        "mapped_ids": {
+          "hmdb": "HMDB0013244",
+          "kegg": "C13908",
+          "chebi": "47040",
+          "pubchem": "9877306",
+          "biocyc": "CPD0-1283",
+          "chemspider": "8052983",
+          "pathbank_compound_id": "8270"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 8270,
+              "name": "Lipid A",
+              "short_name": "Lipid A",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0013244",
+                "kegg": "C13908",
+                "chebi": "CHEBI:47040",
+                "pubchem": "9877306",
+                "biocyc": "CPD0-1283",
+                "chemspider": "8052983",
+                "pathbank_compound_id": "8270"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 8270
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 8270,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper",
+          "PMC12844150",
+          "PMC13278307"
+        ],
+        "hmdb_id": "HMDB0013244",
+        "kegg_id": "C13908",
+        "chebi_id": "47040",
+        "pubchem_cid": "9877306"
+      },
+      {
+        "key": "cmp_2",
+        "name": "PEtN",
+        "pathwhiz_id": 149,
+        "pathbank_compound_id": 149,
+        "mapped_ids": {
+          "hmdb": "HMDB0000224",
+          "kegg": "C00346",
+          "chebi": "17553",
+          "pubchem": "1015",
+          "cas": "1071-23-4",
+          "biocyc": "PHOSPHORYL-ETHANOLAMINE",
+          "chemspider": "990",
+          "pathbank_compound_id": "149"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "PEtN"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 149,
+              "name": "O-Phosphoethanolamine",
+              "short_name": "Ethamp",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000224",
+                "kegg": "C00346",
+                "chebi": "CHEBI:17553",
+                "pubchem": "1015",
+                "cas": "1071-23-4",
+                "biocyc": "PHOSPHORYL-ETHANOLAMINE",
+                "chemspider": "990",
+                "pathbank_compound_id": "149"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 149
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 149,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper",
+          "PMC12844150",
+          "PMC13278307"
+        ],
+        "hmdb_id": "HMDB0000224",
+        "kegg_id": "C00346",
+        "chebi_id": "17553",
+        "pubchem_cid": "1015"
+      },
+      {
+        "key": "cmp_3",
+        "name": "colistin",
+        "pathwhiz_id": 9267,
+        "pathbank_compound_id": 9267,
+        "mapped_ids": {
+          "hmdb": "HMDB0014941",
+          "kegg": "C13768",
+          "pubchem": "5311054",
+          "cas": "1264-72-8",
+          "chemspider": "4470591",
+          "drugbank": "DB00803",
+          "pathbank_compound_id": "9267"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "colistin"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 9267,
+              "name": "Colistin",
+              "short_name": "Colisti",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0014941",
+                "kegg": "C13768",
+                "pubchem": "5311054",
+                "cas": "1264-72-8",
+                "chemspider": "4470591",
+                "drugbank": "DB00803",
+                "pathbank_compound_id": "9267"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 9267
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 9267,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "hmdb_id": "HMDB0014941",
+        "kegg_id": "C13768",
+        "pubchem_cid": "5311054"
+      },
+      {
+        "key": "cmp_4",
+        "name": "lipopolysaccharide",
+        "pathwhiz_id": 104587,
+        "pathbank_compound_id": 104587,
+        "mapped_ids": {
+          "chebi": "16412",
+          "pubchem": "11970143",
+          "pathbank_compound_id": "104587"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "lipopolysaccharide"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 104587,
+              "name": "Lipopolysaccharide",
+              "short_name": "Lipopol",
+              "score": 1.0,
+              "mapped_ids": {
+                "chebi": "CHEBI:16412",
+                "pubchem": "11970143",
+                "pathbank_compound_id": "104587"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 104587
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 104587,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "chebi_id": "16412",
+        "pubchem_cid": "11970143"
+      },
+      {
+        "key": "cmp_5",
+        "name": "PEtN-lipid A",
+        "mapped_ids": {
+          "kegg": "C21995"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "PEtN-lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          },
+          "provider": "CompoundAPI"
+        },
+        "raw_name": "PEtN-lipid A",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "PEtN-lipid A",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "class": "compound",
+        "confidence": 0.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper"
+        ],
+        "kegg_id": "C21995"
+      },
+      {
+        "key": "cmp_6",
+        "name": "4-amino-4-deoxy-L-arabinose",
+        "pathwhiz_id": 41668,
+        "pathbank_compound_id": 41668,
+        "mapped_ids": {
+          "pubchem": "17756769",
+          "pathbank_compound_id": "41668"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "4-amino-4-deoxy-L-arabinose"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 41668,
+              "name": "4-Amino-4-deoxy-L-arabinose",
+              "short_name": "4A4DLAB",
+              "score": 1.0,
+              "mapped_ids": {
+                "pubchem": "17756769",
+                "pathbank_compound_id": "41668"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 41668
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 41668,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "pubchem_cid": "17756769"
+      },
+      {
+        "key": "cmp_7",
+        "name": "4-amino-4-deoxy-L-arabinose (L-Ara4N)",
+        "pathwhiz_id": 41668,
+        "pathbank_compound_id": 41668,
+        "mapped_ids": {
+          "pubchem": "17756769",
+          "pathbank_compound_id": "41668"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "4-amino-4-deoxy-L-arabinose (L-Ara4N)"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 41668,
+              "name": "4-Amino-4-deoxy-L-arabinose",
+              "short_name": "4A4DLAB",
+              "score": 1.0,
+              "mapped_ids": {
+                "pubchem": "17756769",
+                "pathbank_compound_id": "41668"
+              }
+            }
+          ],
+          "chosen_rule": "pathbank_compound_id",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_compound_id"
+          },
+          "pathbank_compound_id": 41668
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 41668,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "pubchem_cid": "17756769"
+      },
+      {
+        "key": "cmp_8",
+        "name": "L-4AraN",
+        "mapping_meta": {
+          "query": {
+            "name": "L-4AraN"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "L-4AraN",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "L-4AraN",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC12844150"
+        ]
+      },
+      {
+        "key": "cmp_9",
+        "name": "lipid A modified with L-Ara4N",
+        "mapping_meta": {
+          "query": {
+            "name": "lipid A modified with L-Ara4N"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "lipid A modified with L-Ara4N",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "lipid A modified with L-Ara4N",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC12844150"
+        ]
+      },
+      {
+        "key": "cmp_10",
+        "name": "lipid A modified with PEtN",
+        "mapping_meta": {
+          "query": {
+            "name": "lipid A modified with PEtN"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "lipid A modified with PEtN",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "lipid A modified with PEtN",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "seed_paper",
+          "PMC12844150"
+        ]
+      },
+      {
+        "key": "cmp_11",
+        "name": "lipid A with PEtN",
+        "mapping_meta": {
+          "query": {
+            "name": "lipid A with PEtN"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "lipid A with PEtN",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "lipid A with PEtN",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC13278307"
+        ]
+      },
+      {
+        "key": "cmp_12",
+        "name": "LPS",
+        "pathwhiz_id": 8387,
+        "pathbank_compound_id": 8387,
+        "mapped_ids": {
+          "kegg": "C00338",
+          "hmdb": "HMDB0013470",
+          "chebi": "16412",
+          "pubchem": "53481793",
+          "biocyc": "CPD0-2294",
+          "pathbank_compound_id": "8387"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "LPS"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 8387,
+              "name": "LPS with O-antigen",
+              "short_name": "Lps",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0013470",
+                "kegg": "C00338",
+                "chebi": "CHEBI:16412",
+                "pubchem": "53481793",
+                "biocyc": "CPD0-2294"
+              }
+            }
+          ],
+          "chosen_rule": "direct_id_match:kegg",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "provider": "ChEBI/KEGG/HMDB",
+          "pathbank_compound_id": 8387
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 8387,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "source_refs": [
+          "PMC13278307"
+        ],
+        "hmdb_id": "HMDB0013470",
+        "kegg_id": "C00338",
+        "chebi_id": "16412",
+        "pubchem_cid": "53481793"
+      },
+      {
+        "key": "cmp_13",
+        "name": "modified Lipid A",
+        "mapped_ids": {
+          "kegg": "C22003"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "modified Lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          },
+          "provider": "CompoundAPI"
+        },
+        "raw_name": "modified Lipid A",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "modified Lipid A",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "kegg_id": "C22003"
+      },
+      {
+        "key": "cmp_14",
+        "name": "PEtN group",
+        "mapping_meta": {
+          "query": {
+            "name": "PEtN group"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "PEtN group",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "PEtN group",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC12844150"
+        ]
+      },
+      {
+        "key": "cmp_15",
+        "name": "PhoP",
+        "pathwhiz_id": 721,
+        "pathbank_compound_id": 721,
+        "mapped_ids": {
+          "kegg": "C00003",
+          "hmdb": "HMDB0000902",
+          "chebi": "15846",
+          "pubchem": "5893",
+          "cas": "53-84-9",
+          "biocyc": "NAD",
+          "chemspider": "5682",
+          "pathbank_compound_id": "721"
+        },
+        "mapping_meta": {
+          "query": {
+            "name": "PhoP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_compound_id": 721,
+              "name": "NAD",
+              "short_name": "NAD",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000902",
+                "kegg": "C00003",
+                "chebi": "CHEBI:15846",
+                "pubchem": "5893",
+                "cas": "53-84-9",
+                "biocyc": "NAD",
+                "chemspider": "5682"
+              }
+            }
+          ],
+          "chosen_rule": "direct_id_match:kegg",
+          "confidence": 1.0,
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "provider": "CompoundAPI",
+          "pathbank_compound_id": 721
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 721,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "hmdb_id": "HMDB0000902",
+        "kegg_id": "C00003",
+        "chebi_id": "15846",
+        "pubchem_cid": "5893"
+      },
+      {
+        "key": "cmp_16",
+        "name": "phosphate groups of lipid A",
+        "mapping_meta": {
+          "query": {
+            "name": "phosphate groups of lipid A"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "phosphate groups of lipid A",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "phosphate groups of lipid A",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "seed_paper"
+        ]
+      },
+      {
+        "key": "cmp_17",
+        "name": "phosphorylated PhoP",
+        "mapping_meta": {
+          "query": {
+            "name": "phosphorylated PhoP"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "phosphorylated PhoP",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "phosphorylated PhoP",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC12844150"
+        ]
+      },
+      {
+        "key": "cmp_18",
+        "name": "Phospohoethanolamine",
+        "mapping_meta": {
+          "query": {
+            "name": "Phospohoethanolamine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "Phospohoethanolamine",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "Phospohoethanolamine",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC12844150"
+        ]
+      },
+      {
+        "key": "cmp_19",
+        "name": "pmrHFIJKLM operon",
+        "mapping_meta": {
+          "query": {
+            "name": "pmrHFIJKLM operon"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "source": "db",
+          "candidates": [],
+          "chosen_rule": "novel_compound",
+          "confidence": 0.0,
+          "resolution": {
+            "status": "novel",
+            "issue": "no_db_candidates",
+            "order_step": "novel_compound"
+          }
+        },
+        "raw_name": "pmrHFIJKLM operon",
+        "db_status": "unmatched",
+        "db_match": {
+          "status": "unmatched",
+          "raw_name": "pmrHFIJKLM operon",
+          "chosen": null,
+          "candidates": [],
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "reason": "No PathWhiz DB match by IDs or name"
+        },
+        "chosen_rule": "",
+        "confidence": 0.0,
+        "source_refs": [
+          "PMC12844150"
+        ]
+      },
+      {
+        "key": "cmp_20",
+        "name": "Phosphoethanolamine",
+        "pathwhiz_id": 149,
+        "pathbank_compound_id": 149,
+        "mapped_ids": {
+          "kegg": "C00346",
+          "hmdb": "HMDB0000224",
+          "chebi": "17553",
+          "pubchem": "1015",
+          "cas": "1071-23-4",
+          "biocyc": "PHOSPHORYL-ETHANOLAMINE",
+          "chemspider": "990",
+          "pathbank_compound_id": "149"
+        },
+        "mapping_meta": {
+          "provider": "ChEBI/KEGG/HMDB",
+          "source": "db",
+          "confidence": 1.0,
+          "chosen_rule": "direct_id_match:kegg",
+          "query": {
+            "name": "Phosphoethanolamine"
+          },
+          "route": "compound",
+          "route_reason": "default_compound_route",
+          "providers": [
+            "PathBankDB"
+          ],
+          "candidates": [
+            {
+              "pathbank_compound_id": 149,
+              "name": "O-Phosphoethanolamine",
+              "short_name": "Ethamp",
+              "matched_on": "kegg",
+              "score": 1.0,
+              "mapped_ids": {
+                "hmdb": "HMDB0000224",
+                "kegg": "C00346",
+                "chebi": "CHEBI:17553",
+                "pubchem": "1015",
+                "cas": "1071-23-4",
+                "biocyc": "PHOSPHORYL-ETHANOLAMINE",
+                "chemspider": "990"
+              }
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "external_id:direct_id_match:kegg"
+          },
+          "pathbank_compound_id": 149
+        },
+        "db_status": "legacy_id_unverified",
+        "db_id": 149,
+        "chosen_rule": "legacy_pathwhiz_id_unverified",
+        "confidence": 0.85,
+        "hmdb_id": "HMDB0000224",
+        "kegg_id": "C00346",
+        "chebi_id": "17553",
+        "pubchem_cid": "1015"
+      }
+    ],
+    "proteins": [
+      {
+        "key": "prot_1",
+        "name": "MCR-1",
+        "mapped_ids": {
+          "uniprot": "A0A0R6L508"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "MCR-1",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "A0A0R6L508",
+              "protein_name": "Phosphatidylethanolamine transferase Mcr-1",
+              "gene_names": [
+                "mcr-1",
+                "mcr1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": true,
+              "score": 1.0,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A2U7N1R5",
+              "protein_name": "Mcr-1",
+              "gene_names": [
+                "mcr-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A2C9PIR5",
+              "protein_name": "Mcr-1.11",
+              "gene_names": [
+                "mcr-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A6D1NZU5",
+              "protein_name": "Phosphoethanolamine--lipid A transferase MCR-1.24",
+              "gene_names": [
+                "mcr-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A2Z5V8V3",
+              "protein_name": "Phosphoethanolamine--lipid A transferase MCR-1.12",
+              "gene_names": [
+                "mcr-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A516EYX3",
+              "protein_name": "Phosphoethanolamine--lipid A transferase MCR-1.22",
+              "gene_names": [
+                "mcr-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A1L5IUP7",
+              "protein_name": "Phosphoethanolamine--lipid A transferase MCR-1.5",
+              "gene_names": [
+                "mcr-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A411PZG7",
+              "protein_name": "Phosphoethanolamine--lipid A transferase MCR-1.17",
+              "gene_names": [
+                "mcr-1"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.97,
+              "matched_query": "MCR-1",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "top_unique_candidate",
+          "confidence": 1.0,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "alias_source": "primary_name",
+          "resolved_name": "Phosphatidylethanolamine transferase Mcr-1",
+          "queries_tried": [
+            "(protein_name:\"MCR-1\" OR gene:\"MCR-1\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"MCR 1\" OR gene:\"MCR 1\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"MCR-1\" OR gene:\"MCR-1\")",
+            "(protein_name:\"MCR 1\" OR gene:\"MCR 1\")"
+          ]
+        },
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted",
+        "source_refs": [
+          "seed_paper"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_2",
+        "name": "arnBCADTEF",
+        "mapped_ids": {
+          "uniprot": "P30843"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "arnBCADTEF",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P30843",
+              "protein_name": "Transcriptional regulatory protein BasR",
+              "gene_names": [
+                "basR",
+                "pmrA"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.3,
+              "matched_query": "arnBCADTEF",
+              "alias_source": "gene_name",
+              "matched_alias": "arnBCADTEF"
+            },
+            {
+              "accession": "P36556",
+              "protein_name": "Transcriptional regulatory protein BasR",
+              "gene_names": [
+                "basR",
+                "parA",
+                "pmrA"
+              ],
+              "organism": "Salmonella typhimurium (strain LT2 / SGSC1412 / ATCC 700720)",
+              "reviewed": true,
+              "score": 0.01,
+              "matched_query": "arnBCADTEF",
+              "alias_source": "gene_name",
+              "matched_alias": "arnBCADTEF"
+            },
+            {
+              "accession": "Q9HUT5",
+              "protein_name": "Transcriptional regulator BrlR",
+              "gene_names": [
+                "brlR"
+              ],
+              "organism": "Pseudomonas aeruginosa (strain ATCC 15692 / DSM 22644 / CIP 104116 / JCM 14847 / LMG 12228 / 1C / PRS 101 / PAO1)",
+              "reviewed": true,
+              "score": 0.01,
+              "matched_query": "arnBCADTEF",
+              "alias_source": "gene_name",
+              "matched_alias": "arnBCADTEF"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.3,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Transcriptional regulatory protein BasR",
+          "queries_tried": [
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\")",
+            "(protein_name:\"pmrHFIJKLM\" OR gene:\"pmrHFIJKLM\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrHFIJKLM\" OR gene:\"pmrHFIJKLM\")",
+            "\"pmrHFIJKLM\" AND organism_name:\"Escherichia coli\"",
+            "\"pmrHFIJKLM\"",
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\")",
+            "\"arnBCADTEF\" AND organism_name:\"Escherichia coli\"",
+            "\"arnBCADTEF\"",
+            "(protein_name:\"arn operon\" OR gene:\"arn operon\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arn operon\" OR gene:\"arn operon\")",
+            "\"arn operon\" AND organism_name:\"Escherichia coli\"",
+            "\"arn operon\""
+          ],
+          "literature_aliases": [
+            {
+              "alias": "pmrHFIJKLM",
+              "source": "literature_alias"
+            },
+            {
+              "alias": "arnBCADTEF",
+              "source": "gene_name"
+            },
+            {
+              "alias": "arn operon",
+              "source": "synonym"
+            }
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_3",
+        "name": "arnBCADTEF operon",
+        "mapped_ids": {
+          "uniprot": "P30843"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "arnBCADTEF operon",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P30843",
+              "protein_name": "Transcriptional regulatory protein BasR",
+              "gene_names": [
+                "basR",
+                "pmrA"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.3,
+              "matched_query": "arnBCADTEF",
+              "alias_source": "gene_name",
+              "matched_alias": "arnBCADTEF"
+            },
+            {
+              "accession": "P36556",
+              "protein_name": "Transcriptional regulatory protein BasR",
+              "gene_names": [
+                "basR",
+                "parA",
+                "pmrA"
+              ],
+              "organism": "Salmonella typhimurium (strain LT2 / SGSC1412 / ATCC 700720)",
+              "reviewed": true,
+              "score": 0.01,
+              "matched_query": "arnBCADTEF",
+              "alias_source": "gene_name",
+              "matched_alias": "arnBCADTEF"
+            },
+            {
+              "accession": "Q9HUT5",
+              "protein_name": "Transcriptional regulator BrlR",
+              "gene_names": [
+                "brlR"
+              ],
+              "organism": "Pseudomonas aeruginosa (strain ATCC 15692 / DSM 22644 / CIP 104116 / JCM 14847 / LMG 12228 / 1C / PRS 101 / PAO1)",
+              "reviewed": true,
+              "score": 0.01,
+              "matched_query": "arnBCADTEF",
+              "alias_source": "gene_name",
+              "matched_alias": "arnBCADTEF"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.3,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Transcriptional regulatory protein BasR",
+          "queries_tried": [
+            "(protein_name:\"arnBCADTEF operon\" OR gene:\"arnBCADTEF operon\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arnBCADTEF operon\" OR gene:\"arnBCADTEF operon\")",
+            "(protein_name:\"pmrHFIJKLM\" OR gene:\"pmrHFIJKLM\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrHFIJKLM\" OR gene:\"pmrHFIJKLM\")",
+            "\"pmrHFIJKLM\" AND organism_name:\"Escherichia coli\"",
+            "\"pmrHFIJKLM\"",
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\")",
+            "\"arnBCADTEF\" AND organism_name:\"Escherichia coli\"",
+            "\"arnBCADTEF\"",
+            "(protein_name:\"arn operon\" OR gene:\"arn operon\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arn operon\" OR gene:\"arn operon\")",
+            "\"arn operon\" AND organism_name:\"Escherichia coli\"",
+            "\"arn operon\"",
+            "(protein_name:\"arn operon products\" OR gene:\"arn operon products\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arn operon products\" OR gene:\"arn operon products\")",
+            "\"arn operon products\" AND organism_name:\"Escherichia coli\"",
+            "\"arn operon products\""
+          ],
+          "literature_aliases": [
+            {
+              "alias": "pmrHFIJKLM",
+              "source": "literature_alias"
+            },
+            {
+              "alias": "arnBCADTEF",
+              "source": "gene_name"
+            },
+            {
+              "alias": "arn operon",
+              "source": "synonym"
+            },
+            {
+              "alias": "arn operon products",
+              "source": "synonym"
+            }
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_4",
+        "name": "mcr genes",
+        "mapped_ids": {
+          "uniprot": "P08235"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "mcr genes",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P24200",
+              "protein_name": "Type IV methyl-directed restriction enzyme EcoKMcrA",
+              "gene_names": [
+                "mcrA",
+                "rglA"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "mcrA",
+              "alias_source": "synonym",
+              "matched_alias": "mcrA"
+            },
+            {
+              "accession": "P15005",
+              "protein_name": "Type IV methyl-directed restriction enzyme EcoKMcrB subunit",
+              "gene_names": [
+                "mcrB",
+                "rglB"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "mcrB",
+              "alias_source": "synonym",
+              "matched_alias": "mcrB"
+            },
+            {
+              "accession": "P15006",
+              "protein_name": "Type IV methyl-directed restriction enzyme EcoKMcrBC",
+              "gene_names": [
+                "mcrC"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "mcrC",
+              "alias_source": "synonym",
+              "matched_alias": "mcrC"
+            },
+            {
+              "accession": "P39393",
+              "protein_name": "Putative uncharacterized protein YjiV",
+              "gene_names": [
+                "mcrD",
+                "yjiV"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "mcrD",
+              "alias_source": "synonym",
+              "matched_alias": "mcrD"
+            },
+            {
+              "accession": "Q47375",
+              "protein_name": "McrB protein",
+              "gene_names": [
+                "mcrB"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "mcrB",
+              "alias_source": "synonym",
+              "matched_alias": "mcrB"
+            },
+            {
+              "accession": "P08235",
+              "protein_name": "Mineralocorticoid receptor",
+              "gene_names": [
+                "MCR",
+                "MLR",
+                "NR3C2"
+              ],
+              "organism": "Homo sapiens",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "mcr",
+              "alias_source": "gene_name",
+              "matched_alias": "mcr"
+            },
+            {
+              "accession": "O06543",
+              "protein_name": "Alpha-methylacyl-CoA racemase",
+              "gene_names": [
+                "mcr"
+              ],
+              "organism": "Mycobacterium tuberculosis (strain ATCC 25618 / H37Rv)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "mcr",
+              "alias_source": "gene_name",
+              "matched_alias": "mcr"
+            },
+            {
+              "accession": "Q96YK1",
+              "protein_name": "Malonyl-CoA reductase",
+              "gene_names": [
+                "mcr",
+                "scr"
+              ],
+              "organism": "Sulfurisphaera tokodaii (strain DSM 16993 / JCM 10545 / NBRC 100140 / 7)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "mcr",
+              "alias_source": "gene_name",
+              "matched_alias": "mcr"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.85,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Type IV methyl-directed restriction enzyme EcoKMcrA",
+          "queries_tried": [
+            "(protein_name:\"mcr genes\" OR gene:\"mcr genes\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"mcr genes\" OR gene:\"mcr genes\")",
+            "(protein_name:\"mcr\" OR gene:\"mcr\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"mcr\" OR gene:\"mcr\")",
+            "\"mcr\" AND organism_name:\"Escherichia coli\"",
+            "\"mcr\"",
+            "(protein_name:\"methyl-coenzyme M reductase\" OR gene:\"methyl-coenzyme M reductase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"methyl-coenzyme M reductase\" OR gene:\"methyl-coenzyme M reductase\")",
+            "\"methyl-coenzyme M reductase\" AND organism_name:\"Escherichia coli\"",
+            "\"methyl-coenzyme M reductase\"",
+            "(protein_name:\"methyl coenzyme M reductase\" OR gene:\"methyl coenzyme M reductase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"methyl coenzyme M reductase\" OR gene:\"methyl coenzyme M reductase\")",
+            "\"methyl coenzyme M reductase\" AND organism_name:\"Escherichia coli\"",
+            "\"methyl coenzyme M reductase\"",
+            "(protein_name:\"mcrA\" OR gene:\"mcrA\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"mcrA\" OR gene:\"mcrA\")",
+            "\"mcrA\" AND organism_name:\"Escherichia coli\"",
+            "\"mcrA\"",
+            "(protein_name:\"mcrB\" OR gene:\"mcrB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"mcrB\" OR gene:\"mcrB\")",
+            "\"mcrB\" AND organism_name:\"Escherichia coli\"",
+            "\"mcrB\"",
+            "(protein_name:\"mcrC\" OR gene:\"mcrC\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"mcrC\" OR gene:\"mcrC\")",
+            "\"mcrC\" AND organism_name:\"Escherichia coli\"",
+            "\"mcrC\"",
+            "(protein_name:\"mcrD\" OR gene:\"mcrD\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"mcrD\" OR gene:\"mcrD\")",
+            "\"mcrD\" AND organism_name:\"Escherichia coli\"",
+            "\"mcrD\""
+          ],
+          "literature_aliases": [
+            {
+              "alias": "mcr",
+              "source": "gene_name"
+            },
+            {
+              "alias": "methyl-coenzyme M reductase",
+              "source": "synonym"
+            },
+            {
+              "alias": "mcrA",
+              "source": "synonym"
+            },
+            {
+              "alias": "mcrB",
+              "source": "synonym"
+            },
+            {
+              "alias": "mcrC",
+              "source": "synonym"
+            },
+            {
+              "alias": "mcrD",
+              "source": "synonym"
+            }
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "seed_paper",
+          "PMC12844150",
+          "PMC13278307"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_5",
+        "name": "PEtN transferase",
+        "mapped_ids": {
+          "uniprot": "P79281"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "PEtN transferase",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P30845",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pmrC",
+                "yjdB"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "A0A0H3JML2",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pmrC"
+              ],
+              "organism": "Escherichia coli O157:H7",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "B7LB56",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli (strain 55989 / EAEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "B7MJY8",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli O45:K1 (strain S88 / ExPEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "B7UPT7",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli O127:H6 (strain E2348/69 / EPEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "Q8XAG5",
+              "protein_name": "Membrane-associated metal-dependent hydrolase",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli O157:H7",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "P36555",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pagB",
+                "pmrC"
+              ],
+              "organism": "Salmonella typhimurium (strain LT2 / SGSC1412 / ATCC 700720)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "O24867",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Helicobacter pylori (strain ATCC 700392 / 26695)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.85,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Phosphoethanolamine transferase EptA",
+          "queries_tried": [
+            "(protein_name:\"PEtN transferase\" OR gene:\"PEtN transferase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"PEtN transferase\" OR gene:\"PEtN transferase\")",
+            "(protein_name:\"eptA\" OR gene:\"eptA\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"eptA\" OR gene:\"eptA\")",
+            "\"eptA\" AND organism_name:\"Escherichia coli\"",
+            "\"eptA\"",
+            "(protein_name:\"phosphoethanolamine transferase\" OR gene:\"phosphoethanolamine transferase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"phosphoethanolamine transferase\" OR gene:\"phosphoethanolamine transferase\")",
+            "\"phosphoethanolamine transferase\" AND organism_name:\"Escherichia coli\"",
+            "\"phosphoethanolamine transferase\"",
+            "(protein_name:\"ethanolamine transferase\" OR gene:\"ethanolamine transferase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"ethanolamine transferase\" OR gene:\"ethanolamine transferase\")",
+            "\"ethanolamine transferase\" AND organism_name:\"Escherichia coli\"",
+            "\"ethanolamine transferase\""
+          ],
+          "literature_aliases": [
+            {
+              "alias": "eptA",
+              "source": "gene_name"
+            },
+            {
+              "alias": "phosphoethanolamine transferase",
+              "source": "synonym"
+            },
+            {
+              "alias": "ethanolamine transferase",
+              "source": "synonym"
+            }
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "seed_paper",
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_6",
+        "name": "PEtN transferases",
+        "mapped_ids": {
+          "uniprot": "Q9UBM1"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "PEtN transferases",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P30845",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pmrC",
+                "yjdB"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "A0A0H3JML2",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pmrC"
+              ],
+              "organism": "Escherichia coli O157:H7",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "B7LB56",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli (strain 55989 / EAEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "B7MJY8",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli O45:K1 (strain S88 / ExPEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "B7UPT7",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli O127:H6 (strain E2348/69 / EPEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "Q8XAG5",
+              "protein_name": "Membrane-associated metal-dependent hydrolase",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Escherichia coli O157:H7",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "P36555",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pagB",
+                "pmrC"
+              ],
+              "organism": "Salmonella typhimurium (strain LT2 / SGSC1412 / ATCC 700720)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            },
+            {
+              "accession": "O24867",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA"
+              ],
+              "organism": "Helicobacter pylori (strain ATCC 700392 / 26695)",
+              "reviewed": true,
+              "score": 0.56,
+              "matched_query": "eptA",
+              "alias_source": "gene_name",
+              "matched_alias": "eptA"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.85,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Phosphoethanolamine transferase EptA",
+          "queries_tried": [
+            "(protein_name:\"PEtN transferases\" OR gene:\"PEtN transferases\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"PEtN transferases\" OR gene:\"PEtN transferases\")",
+            "(protein_name:\"eptA\" OR gene:\"eptA\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"eptA\" OR gene:\"eptA\")",
+            "\"eptA\" AND organism_name:\"Escherichia coli\"",
+            "\"eptA\"",
+            "(protein_name:\"phosphoethanolamine transferase\" OR gene:\"phosphoethanolamine transferase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"phosphoethanolamine transferase\" OR gene:\"phosphoethanolamine transferase\")",
+            "\"phosphoethanolamine transferase\" AND organism_name:\"Escherichia coli\"",
+            "\"phosphoethanolamine transferase\"",
+            "(protein_name:\"ethanolamine transferase\" OR gene:\"ethanolamine transferase\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"ethanolamine transferase\" OR gene:\"ethanolamine transferase\")",
+            "\"ethanolamine transferase\" AND organism_name:\"Escherichia coli\"",
+            "\"ethanolamine transferase\""
+          ],
+          "literature_aliases": [
+            {
+              "alias": "eptA",
+              "source": "gene_name"
+            },
+            {
+              "alias": "phosphoethanolamine transferase",
+              "source": "synonym"
+            },
+            {
+              "alias": "ethanolamine transferase",
+              "source": "synonym"
+            }
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "seed_paper",
+          "PMC13278307"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_7",
+        "name": "PhoQ",
+        "pathwhiz_id": 6420,
+        "pathbank_protein_id": 6420,
+        "mapped_ids": {
+          "uniprot": "P23837",
+          "pathbank_protein_id": "6420",
+          "gene_name": "phoQ"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "PhoQ",
+            "organism": "Escherichia coli"
+          },
+          "provider": "PathBankDB",
+          "source": "db",
+          "candidates": [
+            {
+              "pathbank_protein_id": 6420,
+              "name": "Sensor protein phoQ",
+              "uniprot": "P23837",
+              "gene_name": "phoQ",
+              "species_id": 3,
+              "score": 1.0
+            }
+          ],
+          "chosen_rule": "pathbank_protein_id",
+          "confidence": 1.0,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_id"
+          },
+          "pathbank_protein_id": 6420
+        },
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_8",
+        "name": "phoQ / phoP",
+        "mapped_ids": {
+          "uniprot": "A0A4R2FU95"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "phoQ / phoP",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "A0A4R2FU95",
+              "protein_name": "DNA-binding response regulator in two-component regulatory system with PhoQ, PhoP",
+              "gene_names": [],
+              "organism": "Vibrio crassostreae",
+              "reviewed": false,
+              "score": 0.03,
+              "matched_query": "phoQ / phoP",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.03,
+          "reviewed": false,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "DNA-binding response regulator in two-component regulatory system with PhoQ, PhoP",
+          "queries_tried": [
+            "(protein_name:\"phoQ / phoP\" OR gene:\"phoQ / phoP\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"phoQ phoP\" OR gene:\"phoQ phoP\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"phoQ / phoP\" OR gene:\"phoQ / phoP\")",
+            "(protein_name:\"phoQ phoP\" OR gene:\"phoQ phoP\")"
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_9",
+        "name": "pmrCAB operon",
+        "mapped_ids": {
+          "uniprot": "P30843"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "pmrCAB operon",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P30843",
+              "protein_name": "Transcriptional regulatory protein BasR",
+              "gene_names": [
+                "basR",
+                "pmrA"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "pmrA",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrA"
+            },
+            {
+              "accession": "P30844",
+              "protein_name": "Sensor protein BasS",
+              "gene_names": [
+                "basS",
+                "pmrB"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "pmrB",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrB"
+            },
+            {
+              "accession": "P30845",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pmrC",
+                "yjdB"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "pmrC",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrC"
+            },
+            {
+              "accession": "A0A0H3JML2",
+              "protein_name": "Phosphoethanolamine transferase EptA",
+              "gene_names": [
+                "eptA",
+                "pmrC"
+              ],
+              "organism": "Escherichia coli O157:H7",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "pmrC",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrC"
+            },
+            {
+              "accession": "P37590",
+              "protein_name": "Signal transduction protein PmrD",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "pmrD",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrD"
+            },
+            {
+              "accession": "J7QJK0",
+              "protein_name": "DNA-binding transcriptional regulator BasR",
+              "gene_names": [
+                "basR",
+                "pmrA"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrA",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrA"
+            },
+            {
+              "accession": "A0A066T2B6",
+              "protein_name": "DNA-binding transcriptional regulator BasR",
+              "gene_names": [
+                "basR",
+                "pmrA"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrA",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrA"
+            },
+            {
+              "accession": "C3SGU2",
+              "protein_name": "2-component regulatory system regulatory protein BasR",
+              "gene_names": [
+                "basR",
+                "pmrA"
+              ],
+              "organism": "Escherichia coli",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrA",
+              "alias_source": "gene_name",
+              "matched_alias": "pmrA"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.85,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Transcriptional regulatory protein BasR",
+          "queries_tried": [
+            "(protein_name:\"pmrCAB operon\" OR gene:\"pmrCAB operon\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrCAB operon\" OR gene:\"pmrCAB operon\")",
+            "(protein_name:\"pmrA\" OR gene:\"pmrA\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrA\" OR gene:\"pmrA\")",
+            "\"pmrA\" AND organism_name:\"Escherichia coli\"",
+            "\"pmrA\"",
+            "(protein_name:\"pmrB\" OR gene:\"pmrB\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrB\" OR gene:\"pmrB\")",
+            "\"pmrB\" AND organism_name:\"Escherichia coli\"",
+            "\"pmrB\"",
+            "(protein_name:\"pmrC\" OR gene:\"pmrC\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrC\" OR gene:\"pmrC\")",
+            "\"pmrC\" AND organism_name:\"Escherichia coli\"",
+            "\"pmrC\"",
+            "(protein_name:\"pmrD\" OR gene:\"pmrD\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrD\" OR gene:\"pmrD\")",
+            "\"pmrD\" AND organism_name:\"Escherichia coli\"",
+            "\"pmrD\"",
+            "(protein_name:\"pmr operon\" OR gene:\"pmr operon\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmr operon\" OR gene:\"pmr operon\")",
+            "\"pmr operon\" AND organism_name:\"Escherichia coli\"",
+            "\"pmr operon\""
+          ],
+          "literature_aliases": [
+            {
+              "alias": "pmrA",
+              "source": "gene_name"
+            },
+            {
+              "alias": "pmrB",
+              "source": "gene_name"
+            },
+            {
+              "alias": "pmrC",
+              "source": "gene_name"
+            },
+            {
+              "alias": "pmrD",
+              "source": "gene_name"
+            },
+            {
+              "alias": "pmr operon",
+              "source": "synonym"
+            }
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "seed_paper",
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_10",
+        "name": "pmrD",
+        "mapped_ids": {
+          "uniprot": "P37590"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "pmrD",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P37590",
+              "protein_name": "Signal transduction protein PmrD",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.85,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A0H2Z1E9",
+              "protein_name": "Polymyxin B resistance protein PmrD",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli O1:K1 / APEC",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A0A0H2VAI7",
+              "protein_name": "Polymyxin B resistance protein pmrD",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli O6:H1 (strain CFT073 / ATCC 700928 / UPEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "A7ZP78",
+              "protein_name": "Polymyxin B resistance protein pmrD",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli O139:H28 (strain E24377A / ETEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "Q8XDY6",
+              "protein_name": "Inactive two-component system connector protein",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli O157:H7",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "B7LAS5",
+              "protein_name": "Polymyxin resistance protein B",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli (strain 55989 / EAEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "B7MG27",
+              "protein_name": "Polymyxin resistance protein B",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli O45:K1 (strain S88 / ExPEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            },
+            {
+              "accession": "B7UFS2",
+              "protein_name": "Polymyxin resistance protein B",
+              "gene_names": [
+                "pmrD"
+              ],
+              "organism": "Escherichia coli O127:H6 (strain E2348/69 / EPEC)",
+              "reviewed": false,
+              "score": 0.8,
+              "matched_query": "pmrD",
+              "alias_source": "primary_name"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.85,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Signal transduction protein PmrD",
+          "queries_tried": [
+            "(protein_name:\"pmrD\" OR gene:\"pmrD\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrD\" OR gene:\"pmrD\")"
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      },
+      {
+        "key": "prot_11",
+        "name": "pmrHFIJKLM",
+        "mapped_ids": {
+          "uniprot": "P03023"
+        },
+        "mapping_meta": {
+          "species_resolution": {
+            "name": "Escherichia coli",
+            "pathbank_species_id": 3,
+            "species_id": 3,
+            "taxonomy_id": "562",
+            "source": "explicit_entity_species",
+            "status": "matched",
+            "confidence": 1.0
+          },
+          "query": {
+            "name": "pmrHFIJKLM",
+            "organism": "Escherichia coli"
+          },
+          "provider": "UniProt",
+          "source": "api",
+          "candidates": [
+            {
+              "accession": "P03023",
+              "protein_name": "Lactose operon repressor",
+              "gene_names": [
+                "lacI"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.4167,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            },
+            {
+              "accession": "P0ACS9",
+              "protein_name": "HTH-type transcriptional regulator AcrR",
+              "gene_names": [
+                "acrR",
+                "ybaH"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.4167,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            },
+            {
+              "accession": "P17410",
+              "protein_name": "HTH-type transcriptional regulator ChbR",
+              "gene_names": [
+                "celD",
+                "chbR"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.4167,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            },
+            {
+              "accession": "P37344",
+              "protein_name": "Psp operon transcriptional activator",
+              "gene_names": [
+                "pspF",
+                "ycjB"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.3875,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            },
+            {
+              "accession": "P0A9E0",
+              "protein_name": "Arabinose operon regulatory protein",
+              "gene_names": [
+                "araC"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.3875,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            },
+            {
+              "accession": "P0AAM7",
+              "protein_name": "Hydrogenase maturation factor HybG",
+              "gene_names": [
+                "hybG"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.3875,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            },
+            {
+              "accession": "P31460",
+              "protein_name": "Galactonate operon transcriptional repressor",
+              "gene_names": [
+                "dgoR",
+                "yidW"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.3875,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            },
+            {
+              "accession": "P15067",
+              "protein_name": "Glycogen debranching enzyme",
+              "gene_names": [
+                "glgX",
+                "glyX"
+              ],
+              "organism": "Escherichia coli (strain K12)",
+              "reviewed": true,
+              "score": 0.3875,
+              "matched_query": "operon",
+              "alias_source": "literature_alias",
+              "matched_alias": "operon"
+            }
+          ],
+          "chosen_rule": "best_effort_fallback",
+          "confidence": 0.4167,
+          "reviewed": true,
+          "resolution": {
+            "status": "matched",
+            "order_step": "api_uniprot"
+          },
+          "resolved_name": "Lactose operon repressor",
+          "queries_tried": [
+            "(protein_name:\"pmrHFIJKLM\" OR gene:\"pmrHFIJKLM\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"pmrHFIJKLM\" OR gene:\"pmrHFIJKLM\")",
+            "(protein_name:\"operon\" OR gene:\"operon\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"operon\" OR gene:\"operon\")",
+            "\"operon\" AND organism_name:\"Escherichia coli\"",
+            "\"operon\"",
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\") AND organism_name:\"Escherichia coli\"",
+            "(protein_name:\"arnBCADTEF\" OR gene:\"arnBCADTEF\")",
+            "\"arnBCADTEF\" AND organism_name:\"Escherichia coli\"",
+            "\"arnBCADTEF\""
+          ],
+          "literature_aliases": [
+            {
+              "alias": "operon",
+              "source": "literature_alias"
+            },
+            {
+              "alias": "arnBCADTEF",
+              "source": "literature_alias"
+            }
+          ],
+          "best_effort": true
+        },
+        "source_refs": [
+          "PMC12844150"
+        ],
+        "species": "Escherichia coli",
+        "taxonomy_id": "562",
+        "species_ref": {
+          "name": "Escherichia coli",
+          "pathbank_species_id": 3,
+          "species_id": 3,
+          "taxonomy_id": "562",
+          "source": "explicit_entity_species",
+          "status": "matched",
+          "confidence": 1.0
+        },
+        "organism": "Escherichia coli",
+        "species_id": 3,
+        "pathbank_species_id": 3
+      }
+    ],
+    "nucleic_acids": [],
+    "element_collections": [],
+    "protein_complexes": [
+      {
+        "key": "pc_1",
+        "name": "MCR-1 complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "MCR-1 complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "MCR-1",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_1",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_2",
+        "name": "arnBCADTEF complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "arnBCADTEF complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "arnBCADTEF",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_9",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_3",
+        "name": "mcr genes complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "mcr genes complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "mcr genes",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_4",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_4",
+        "name": "PhoQ sensory histidine kinase - phosphorylated",
+        "pathwhiz_id": 13897,
+        "pathbank_complex_id": 13897,
+        "mapping_meta": {
+          "pathbank_complex_id": 13897,
+          "pathbank_protein_complex_id": 13897,
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "pathbank_protein_complex_id",
+          "confidence": 1.0,
+          "candidates": [
+            {
+              "pathbank_complex_id": 13897,
+              "pathbank_protein_complex_id": 13897,
+              "name": "Sensor protein PhoQ",
+              "species_id": 3,
+              "score": 1.0,
+              "component_count": 1
+            }
+          ],
+          "resolution": {
+            "status": "matched",
+            "order_step": "pathbank_protein_complex_id"
+          },
+          "route": "complex",
+          "query": {
+            "name": "PhoQ sensory histidine kinase - phosphorylated",
+            "organism": "Escherichia coli"
+          },
+          "issues": []
+        },
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_7",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_5",
+        "name": "phoQ / phoP complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "phoQ / phoP complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "phoQ / phoP",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_8",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_6",
+        "name": "pmrD complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "pmrD complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "pmrD",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_10",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_7",
+        "name": "pmrHFIJKLM complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "pmrHFIJKLM complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "pmrHFIJKLM",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_11",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_8",
+        "name": "pmrCAB operon complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "pmrCAB operon complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "arnBCADTEF",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_9",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_9",
+        "name": "PEtN transferase complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "PEtN transferase complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "PEtN transferase",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_5",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_10",
+        "name": "arnBCADTEF operon complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "arnBCADTEF operon complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "arnBCADTEF",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_9",
+            "stoichiometry": 1
+          }
+        ]
+      },
+      {
+        "key": "pc_11",
+        "name": "PEtN transferases complex",
+        "mapping_meta": {
+          "species_id": 3,
+          "provider": "PathBankDB",
+          "source": "db",
+          "chosen_rule": "",
+          "confidence": 0.0,
+          "candidates": [],
+          "resolution": {
+            "status": "unresolved",
+            "issue": "component_proteins_unresolved"
+          },
+          "route": "complex",
+          "query": {
+            "name": "PEtN transferases complex",
+            "organism": "Escherichia coli"
+          },
+          "issues": [
+            {
+              "issue": "component_protein_unresolved",
+              "component": "PEtN transferases",
+              "component_index": 0,
+              "reason": "no_db_match"
+            }
+          ]
+        },
+        "generated": true,
+        "generation_reason": "single_protein_pathwhiz_wrapper",
+        "species": "Escherichia coli",
+        "species_id": 3,
+        "components": [
+          {
+            "protein_key": "prot_6",
+            "stoichiometry": 1
+          }
+        ]
+      }
+    ],
+    "bounds": []
+  },
+  "processes": {
+    "reactions": [
+      {
+        "key": "rxn_1",
+        "type": "reaction",
+        "name": "MCR-1-mediated PEtN transfer to lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_1_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_1_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_1_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_5",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_1_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_2",
+        "type": "reaction",
+        "name": "modification of lipid A by L-4AraN",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_2_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_8",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_2_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_2_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_13",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_2_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_2_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_2_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_2_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_2_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_5",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_2_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_6",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_2_enzyme_7",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_3",
+        "type": "reaction",
+        "name": "modification of lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_3_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_6",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_3_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_18",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_3_left_3",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_3_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_13",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_3_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_5",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_3_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_3_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_3_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_3_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_3_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_6",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_3_enzyme_7",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_4",
+        "type": "reaction",
+        "name": "modification of lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_4_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_19",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_4_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_13",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_4_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_4_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_4_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_4_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_4_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_4_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_5",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_4_enzyme_7",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_6",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_5",
+        "type": "reaction",
+        "name": "modification of lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_5_left_1",
+            "entity_type": "protein",
+            "entity_key": "prot_10",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_5_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_13",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_5_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_6",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_5_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_5_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_5_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_5_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_5_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_5",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_5_enzyme_7",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_6",
+        "type": "reaction",
+        "name": "4-amino-4-deoxy-L-arabinose -> lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_6_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_6",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_6_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_6_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_6_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_6_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_6_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_6_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_5",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_6_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_7",
+        "type": "reaction",
+        "name": "Phosphoethanolamine -> lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_7_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_20",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_7_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_7_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_7_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_7_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_7_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_7_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_5",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_7_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_8",
+        "type": "reaction",
+        "name": "addition of PEtN to lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_8_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_8_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_8_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_10",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_8_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_8",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_9",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_10",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_7",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_11",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_8",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_9",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_6",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_8_enzyme_10",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_9",
+        "type": "reaction",
+        "name": "addition of PEtN to lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_9_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_9_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_9_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_12",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_9_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_9_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_9_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_9",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_9_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_11",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_10",
+        "type": "reaction",
+        "name": "addition of 4-amino-4-deoxy-L-arabinose (L-Ara4N) to lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_10_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_7",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_10_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_10_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_9",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_10_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_10",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_2",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_4",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_5",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_9",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_6",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_11",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_7",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_8",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_8",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_9",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_6",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_10_enzyme_10",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_7",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_11",
+        "type": "reaction",
+        "name": "lipid A -> modified lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_11_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_11_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_13",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_11_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_1",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_11_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_9",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_12",
+        "type": "reaction",
+        "name": "transfer of PEtN to the phosphate groups of lipid A",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_12_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          },
+          {
+            "key": "rxn_12_left_2",
+            "entity_type": "compound",
+            "entity_key": "cmp_16",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_12_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_1",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_12_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_11",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_12_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_12_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_9",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_13",
+        "type": "reaction",
+        "name": "PEtN -> lipid A with PEtN",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_13_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_2",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_13_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_11",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_13_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_11",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_13_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_13_enzyme_3",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_9",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      },
+      {
+        "key": "rxn_14",
+        "type": "reaction",
+        "name": "phosphorylation of PhoP",
+        "direction": ">",
+        "biological_state_key": "bs_1",
+        "left": [
+          {
+            "key": "rxn_14_left_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_15",
+            "stoichiometry": 1
+          }
+        ],
+        "right": [
+          {
+            "key": "rxn_14_right_1",
+            "entity_type": "compound",
+            "entity_key": "cmp_17",
+            "stoichiometry": 1
+          }
+        ],
+        "enzymes": [
+          {
+            "key": "rxn_14_enzyme_1",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_4",
+            "role": "catalyst"
+          },
+          {
+            "key": "rxn_14_enzyme_2",
+            "entity_type": "protein_complex",
+            "entity_key": "pc_3",
+            "role": "catalyst"
+          }
+        ],
+        "spontaneous": false
+      }
+    ],
+    "reaction_coupled_transports": [],
+    "transports": [],
+    "interactions": [
+      {
+        "key": "int_1",
+        "type": "interaction",
+        "name": "colistin binds to lipid A",
+        "interaction_type": "BINDS_TO",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_3"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_1"
+        }
+      },
+      {
+        "key": "int_2",
+        "type": "interaction",
+        "name": "lipid A component of LPS",
+        "interaction_type": "component_of",
+        "biological_state_key": "bs_1",
+        "left": {
+          "entity_type": "compound",
+          "entity_key": "cmp_1"
+        },
+        "right": {
+          "entity_type": "compound",
+          "entity_key": "cmp_4"
+        }
+      }
+    ],
+    "sub_pathways": []
+  },
+  "locations": [
+    {
+      "key": "cl_1",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_1",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 412,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_2",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_2",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 507,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_3",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_5",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_1",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_4",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_1",
+      "x": 600,
+      "y": 412,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_5",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_13",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_2",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_3",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_4",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_5",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_5",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_6",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_6",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_7",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_7",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_6",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_6",
+      "biological_state_key": "bs_1",
+      "x": 1140,
+      "y": 364,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_7",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_18",
+      "biological_state_key": "bs_1",
+      "x": 1140,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_8",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_19",
+      "biological_state_key": "bs_1",
+      "x": 1680,
+      "y": 459,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pl_1",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_10",
+      "biological_state_key": "bs_1",
+      "x": 60,
+      "y": 699,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_9",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_20",
+      "biological_state_key": "bs_1",
+      "x": 1140,
+      "y": 699,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_10",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_10",
+      "biological_state_key": "bs_1",
+      "x": 2160,
+      "y": 699,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pcl_8",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_8",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_9",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_9",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_10",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_10",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pcl_11",
+      "type": "protein_complex_location",
+      "entity_type": "protein_complex",
+      "entity_key": "pc_11",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "cl_11",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_12",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 939,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_12",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_7",
+      "biological_state_key": "bs_1",
+      "x": 600,
+      "y": 892,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_13",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_9",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 939,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_14",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_16",
+      "biological_state_key": "bs_1",
+      "x": 1680,
+      "y": 987,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_15",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_11",
+      "biological_state_key": "bs_1",
+      "x": 540,
+      "y": 1179,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_16",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_15",
+      "biological_state_key": "bs_1",
+      "x": 600,
+      "y": 1179,
+      "zindex": 10,
+      "visualization_template_id": 59,
+      "hidden": false
+    },
+    {
+      "key": "cl_17",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_17",
+      "biological_state_key": "bs_1",
+      "x": 1080,
+      "y": 1179,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_18",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_4",
+      "biological_state_key": "bs_1",
+      "x": 240,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_19",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_3",
+      "biological_state_key": "bs_2",
+      "x": 440,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 157,
+      "hidden": false
+    },
+    {
+      "key": "cl_20",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_6",
+      "biological_state_key": "bs_2",
+      "x": 640,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_21",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_7",
+      "biological_state_key": "bs_2",
+      "x": 840,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_22",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_8",
+      "biological_state_key": "bs_2",
+      "x": 1040,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_23",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_9",
+      "biological_state_key": "bs_2",
+      "x": 1240,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_24",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_10",
+      "biological_state_key": "bs_2",
+      "x": 1440,
+      "y": 1050,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_25",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_11",
+      "biological_state_key": "bs_2",
+      "x": 40,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_26",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_12",
+      "biological_state_key": "bs_2",
+      "x": 240,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_27",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_13",
+      "biological_state_key": "bs_2",
+      "x": 440,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_28",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_14",
+      "biological_state_key": "bs_2",
+      "x": 640,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_29",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_15",
+      "biological_state_key": "bs_2",
+      "x": 840,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 59,
+      "hidden": false
+    },
+    {
+      "key": "cl_30",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_16",
+      "biological_state_key": "bs_2",
+      "x": 1040,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_31",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_17",
+      "biological_state_key": "bs_2",
+      "x": 1240,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_32",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_18",
+      "biological_state_key": "bs_2",
+      "x": 1440,
+      "y": 1150,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_33",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_19",
+      "biological_state_key": "bs_2",
+      "x": 40,
+      "y": 1250,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "cl_34",
+      "type": "compound_location",
+      "entity_type": "compound",
+      "entity_key": "cmp_20",
+      "biological_state_key": "bs_2",
+      "x": 240,
+      "y": 1250,
+      "zindex": 10,
+      "visualization_template_id": 81,
+      "hidden": false
+    },
+    {
+      "key": "pl_2",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_1",
+      "biological_state_key": "bs_1",
+      "x": 440,
+      "y": 1250,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_3",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_2",
+      "biological_state_key": "bs_2",
+      "x": 640,
+      "y": 1250,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_4",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_3",
+      "biological_state_key": "bs_2",
+      "x": 840,
+      "y": 1250,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_5",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_4",
+      "biological_state_key": "bs_2",
+      "x": 1040,
+      "y": 1250,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_6",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_5",
+      "biological_state_key": "bs_2",
+      "x": 1240,
+      "y": 1250,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_7",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_6",
+      "biological_state_key": "bs_2",
+      "x": 1440,
+      "y": 1250,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_8",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_7",
+      "biological_state_key": "bs_3",
+      "x": 40,
+      "y": 1350,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_9",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_9",
+      "biological_state_key": "bs_2",
+      "x": 240,
+      "y": 1350,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_10",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_10",
+      "biological_state_key": "bs_2",
+      "x": 440,
+      "y": 1350,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    },
+    {
+      "key": "pl_11",
+      "type": "protein_location",
+      "entity_type": "protein",
+      "entity_key": "prot_11",
+      "biological_state_key": "bs_2",
+      "x": 640,
+      "y": 1350,
+      "zindex": 8,
+      "visualization_template_id": 2,
+      "hidden": false
+    }
+  ],
+  "protein_complex_visualizations": [
+    {
+      "key": "pcv_1",
+      "entity_key": "pc_1",
+      "biological_state_key": "bs_1",
+      "x": 280,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_1",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_2",
+      "entity_key": "pc_2",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_2",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_3",
+      "entity_key": "pc_3",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_3",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_4",
+      "entity_key": "pc_4",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_4",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_5",
+      "entity_key": "pc_5",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_5",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_6",
+      "entity_key": "pc_6",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_6",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_7",
+      "entity_key": "pc_7",
+      "biological_state_key": "bs_1",
+      "x": 820,
+      "y": 309,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_7",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_8",
+      "entity_key": "pc_8",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_8",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_9",
+      "entity_key": "pc_9",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_9",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_10",
+      "entity_key": "pc_10",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_10",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    },
+    {
+      "key": "pcv_11",
+      "entity_key": "pc_11",
+      "biological_state_key": "bs_1",
+      "x": 1900,
+      "y": 549,
+      "zindex": 8,
+      "hidden": false,
+      "visualization_template_id": 2,
+      "location_key": "pcl_11",
+      "protein_member_location_keys": [],
+      "compound_member_location_keys": []
+    }
+  ],
+  "bound_visualizations": [
+    {
+      "key": "bv_1",
+      "biological_state_key": "bs_1",
+      "x": 0,
+      "y": 0,
+      "width": 3200,
+      "height": 466,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_2",
+      "biological_state_key": "bs_2",
+      "x": 0,
+      "y": 466,
+      "width": 3200,
+      "height": 466,
+      "zindex": 1,
+      "hidden": false
+    },
+    {
+      "key": "bv_3",
+      "biological_state_key": "bs_3",
+      "x": 0,
+      "y": 933,
+      "width": 3200,
+      "height": 466,
+      "zindex": 1,
+      "hidden": false
+    }
+  ],
+  "edges": [
+    {
+      "key": "edge_1",
+      "path": "M220 442 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_2",
+      "path": "M220 537 L380 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_3",
+      "path": "M380 489 L540 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_4",
+      "path": "M380 369 L380 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_5",
+      "path": "M760 442 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_6",
+      "path": "M220 442 L920 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_7",
+      "path": "M920 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_8",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_9",
+      "path": "M380 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_10",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_11",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_12",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_13",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_14",
+      "path": "M920 369 L920 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_15",
+      "path": "M1300 394 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_16",
+      "path": "M1300 489 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_17",
+      "path": "M220 442 L1460 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_18",
+      "path": "M1460 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_19",
+      "path": "M920 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_20",
+      "path": "M380 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_21",
+      "path": "M920 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_22",
+      "path": "M920 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_23",
+      "path": "M920 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_24",
+      "path": "M920 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_25",
+      "path": "M920 369 L1460 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_26",
+      "path": "M1840 489 L2000 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_27",
+      "path": "M2000 489 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_28",
+      "path": "M920 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_29",
+      "path": "M380 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_30",
+      "path": "M920 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_31",
+      "path": "M920 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_32",
+      "path": "M920 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_33",
+      "path": "M920 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_34",
+      "path": "M920 369 L2000 489",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_35",
+      "path": "M220 729 L380 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_36",
+      "path": "M380 729 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_37",
+      "path": "M920 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_38",
+      "path": "M380 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_39",
+      "path": "M920 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_40",
+      "path": "M920 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_41",
+      "path": "M920 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_42",
+      "path": "M920 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_43",
+      "path": "M920 369 L380 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_44",
+      "path": "M1300 394 L920 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_45",
+      "path": "M920 729 L60 442",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_46",
+      "path": "M380 369 L920 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_47",
+      "path": "M920 369 L920 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_48",
+      "path": "M920 369 L920 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_49",
+      "path": "M920 369 L920 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_50",
+      "path": "M920 369 L920 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_51",
+      "path": "M920 369 L920 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_52",
+      "path": "M1300 729 L1460 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_53",
+      "path": "M1460 729 L60 442",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_54",
+      "path": "M380 369 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_55",
+      "path": "M920 369 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_56",
+      "path": "M920 369 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_57",
+      "path": "M920 369 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_58",
+      "path": "M920 369 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_59",
+      "path": "M920 369 L1460 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_60",
+      "path": "M220 537 L2000 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_61",
+      "path": "M220 442 L2000 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_62",
+      "path": "M2000 729 L2160 729",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_63",
+      "path": "M920 369 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_64",
+      "path": "M2000 609 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_65",
+      "path": "M2000 609 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_66",
+      "path": "M380 369 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_67",
+      "path": "M920 369 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_68",
+      "path": "M2000 609 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_69",
+      "path": "M2000 609 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_70",
+      "path": "M920 369 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_71",
+      "path": "M920 369 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_72",
+      "path": "M920 369 L2000 729",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_73",
+      "path": "M220 537 L380 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_74",
+      "path": "M220 442 L380 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_75",
+      "path": "M380 969 L540 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_76",
+      "path": "M920 369 L380 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_77",
+      "path": "M380 369 L380 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_78",
+      "path": "M2000 609 L380 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_79",
+      "path": "M2000 609 L380 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_80",
+      "path": "M760 922 L920 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_81",
+      "path": "M220 442 L920 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_82",
+      "path": "M920 969 L1080 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_83",
+      "path": "M2000 609 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_84",
+      "path": "M380 369 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_85",
+      "path": "M920 369 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_86",
+      "path": "M920 369 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_87",
+      "path": "M2000 609 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_88",
+      "path": "M2000 609 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_89",
+      "path": "M920 369 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_90",
+      "path": "M2000 609 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_91",
+      "path": "M920 369 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_92",
+      "path": "M920 369 L920 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_93",
+      "path": "M220 442 L1460 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_94",
+      "path": "M1460 969 L1080 489",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_95",
+      "path": "M380 369 L1460 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_96",
+      "path": "M2000 609 L1460 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_97",
+      "path": "M220 537 L2000 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_98",
+      "path": "M1840 1017 L2000 969",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_99",
+      "path": "M2000 969 L60 442",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_100",
+      "path": "M2000 609 L2000 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_101",
+      "path": "M920 369 L2000 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_102",
+      "path": "M2000 609 L2000 969",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_103",
+      "path": "M220 537 L380 1209",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_104",
+      "path": "M380 1209 L540 1209",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_105",
+      "path": "M2000 609 L380 1209",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_106",
+      "path": "M920 369 L380 1209",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_107",
+      "path": "M2000 609 L380 1209",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_108",
+      "path": "M760 1209 L920 1209",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_109",
+      "path": "M920 1209 L1080 1209",
+      "visualization_template_id": 5,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_110",
+      "path": "M920 369 L920 1209",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    },
+    {
+      "key": "edge_111",
+      "path": "M920 369 L920 1209",
+      "visualization_template_id": 83,
+      "zindex": 18,
+      "hidden": false
+    }
+  ],
+  "process_visualizations": [
+    {
+      "key": "rv_1",
+      "type": "reaction_visualization",
+      "process_key": "rxn_1",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_1_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_1"
+        },
+        {
+          "process_member_key": "rxn_1_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_2"
+        },
+        {
+          "process_member_key": "rxn_1_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_3",
+          "edge_key": "edge_3"
+        },
+        {
+          "process_member_key": "rxn_1_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_4"
+        }
+      ]
+    },
+    {
+      "key": "rv_2",
+      "type": "reaction_visualization",
+      "process_key": "rxn_2",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_2_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_4",
+          "edge_key": "edge_5"
+        },
+        {
+          "process_member_key": "rxn_2_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_6"
+        },
+        {
+          "process_member_key": "rxn_2_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_7"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_8"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_9"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_10"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_11"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_5",
+          "edge_key": "edge_12"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_6",
+          "edge_key": "edge_13"
+        },
+        {
+          "process_member_key": "rxn_2_enzyme_7",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_14"
+        }
+      ]
+    },
+    {
+      "key": "rv_3",
+      "type": "reaction_visualization",
+      "process_key": "rxn_3",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_3_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_6",
+          "edge_key": "edge_15"
+        },
+        {
+          "process_member_key": "rxn_3_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_7",
+          "edge_key": "edge_16"
+        },
+        {
+          "process_member_key": "rxn_3_left_3",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_17"
+        },
+        {
+          "process_member_key": "rxn_3_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_18"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_5",
+          "edge_key": "edge_19"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_20"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_21"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_22"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_23"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_6",
+          "edge_key": "edge_24"
+        },
+        {
+          "process_member_key": "rxn_3_enzyme_7",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_25"
+        }
+      ]
+    },
+    {
+      "key": "rv_4",
+      "type": "reaction_visualization",
+      "process_key": "rxn_4",
+      "biological_state_key": "bs_1",
+      "x": 2000,
+      "y": 489,
+      "members": [
+        {
+          "process_member_key": "rxn_4_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_8",
+          "edge_key": "edge_26"
+        },
+        {
+          "process_member_key": "rxn_4_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_27"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_28"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_29"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_30"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_31"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_32"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_5",
+          "edge_key": "edge_33"
+        },
+        {
+          "process_member_key": "rxn_4_enzyme_7",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_6",
+          "edge_key": "edge_34"
+        }
+      ]
+    },
+    {
+      "key": "rv_5",
+      "type": "reaction_visualization",
+      "process_key": "rxn_5",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_5_left_1",
+          "role": "left",
+          "member_type": "protein",
+          "location_key": "pl_1",
+          "edge_key": "edge_35"
+        },
+        {
+          "process_member_key": "rxn_5_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_36"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_6",
+          "edge_key": "edge_37"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_38"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_39"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_40"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_41"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_5",
+          "edge_key": "edge_42"
+        },
+        {
+          "process_member_key": "rxn_5_enzyme_7",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_43"
+        }
+      ]
+    },
+    {
+      "key": "rv_6",
+      "type": "reaction_visualization",
+      "process_key": "rxn_6",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_6_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_6",
+          "edge_key": "edge_44"
+        },
+        {
+          "process_member_key": "rxn_6_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_45"
+        },
+        {
+          "process_member_key": "rxn_6_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_46"
+        },
+        {
+          "process_member_key": "rxn_6_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_47"
+        },
+        {
+          "process_member_key": "rxn_6_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_48"
+        },
+        {
+          "process_member_key": "rxn_6_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_49"
+        },
+        {
+          "process_member_key": "rxn_6_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_5",
+          "edge_key": "edge_50"
+        },
+        {
+          "process_member_key": "rxn_6_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_51"
+        }
+      ]
+    },
+    {
+      "key": "rv_7",
+      "type": "reaction_visualization",
+      "process_key": "rxn_7",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_7_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_9",
+          "edge_key": "edge_52"
+        },
+        {
+          "process_member_key": "rxn_7_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_53"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_54"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_55"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_56"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_57"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_5",
+          "edge_key": "edge_58"
+        },
+        {
+          "process_member_key": "rxn_7_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_59"
+        }
+      ]
+    },
+    {
+      "key": "rv_8",
+      "type": "reaction_visualization",
+      "process_key": "rxn_8",
+      "biological_state_key": "bs_1",
+      "x": 2000,
+      "y": 729,
+      "members": [
+        {
+          "process_member_key": "rxn_8_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_60"
+        },
+        {
+          "process_member_key": "rxn_8_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_61"
+        },
+        {
+          "process_member_key": "rxn_8_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_10",
+          "edge_key": "edge_62"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_63"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_8",
+          "edge_key": "edge_64"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_9",
+          "edge_key": "edge_65"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_66"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_67"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_10",
+          "edge_key": "edge_68"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_7",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_11",
+          "edge_key": "edge_69"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_8",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_70"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_9",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_6",
+          "edge_key": "edge_71"
+        },
+        {
+          "process_member_key": "rxn_8_enzyme_10",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_72"
+        }
+      ]
+    },
+    {
+      "key": "rv_9",
+      "type": "reaction_visualization",
+      "process_key": "rxn_9",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 969,
+      "members": [
+        {
+          "process_member_key": "rxn_9_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_73"
+        },
+        {
+          "process_member_key": "rxn_9_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_74"
+        },
+        {
+          "process_member_key": "rxn_9_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_11",
+          "edge_key": "edge_75"
+        },
+        {
+          "process_member_key": "rxn_9_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_76"
+        },
+        {
+          "process_member_key": "rxn_9_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_77"
+        },
+        {
+          "process_member_key": "rxn_9_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_9",
+          "edge_key": "edge_78"
+        },
+        {
+          "process_member_key": "rxn_9_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_11",
+          "edge_key": "edge_79"
+        }
+      ]
+    },
+    {
+      "key": "rv_10",
+      "type": "reaction_visualization",
+      "process_key": "rxn_10",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 969,
+      "members": [
+        {
+          "process_member_key": "rxn_10_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_12",
+          "edge_key": "edge_80"
+        },
+        {
+          "process_member_key": "rxn_10_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_81"
+        },
+        {
+          "process_member_key": "rxn_10_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_13",
+          "edge_key": "edge_82"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_10",
+          "edge_key": "edge_83"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_84"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_2",
+          "edge_key": "edge_85"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_4",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_86"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_5",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_9",
+          "edge_key": "edge_87"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_6",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_11",
+          "edge_key": "edge_88"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_7",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_89"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_8",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_8",
+          "edge_key": "edge_90"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_9",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_6",
+          "edge_key": "edge_91"
+        },
+        {
+          "process_member_key": "rxn_10_enzyme_10",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_7",
+          "edge_key": "edge_92"
+        }
+      ]
+    },
+    {
+      "key": "rv_11",
+      "type": "reaction_visualization",
+      "process_key": "rxn_11",
+      "biological_state_key": "bs_1",
+      "x": 1460,
+      "y": 969,
+      "members": [
+        {
+          "process_member_key": "rxn_11_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_93"
+        },
+        {
+          "process_member_key": "rxn_11_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_5",
+          "edge_key": "edge_94"
+        },
+        {
+          "process_member_key": "rxn_11_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_1",
+          "edge_key": "edge_95"
+        },
+        {
+          "process_member_key": "rxn_11_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_9",
+          "edge_key": "edge_96"
+        }
+      ]
+    },
+    {
+      "key": "rv_12",
+      "type": "reaction_visualization",
+      "process_key": "rxn_12",
+      "biological_state_key": "bs_1",
+      "x": 2000,
+      "y": 969,
+      "members": [
+        {
+          "process_member_key": "rxn_12_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_97"
+        },
+        {
+          "process_member_key": "rxn_12_left_2",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_14",
+          "edge_key": "edge_98"
+        },
+        {
+          "process_member_key": "rxn_12_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_1",
+          "edge_key": "edge_99"
+        },
+        {
+          "process_member_key": "rxn_12_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_11",
+          "edge_key": "edge_100"
+        },
+        {
+          "process_member_key": "rxn_12_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_101"
+        },
+        {
+          "process_member_key": "rxn_12_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_9",
+          "edge_key": "edge_102"
+        }
+      ]
+    },
+    {
+      "key": "rv_13",
+      "type": "reaction_visualization",
+      "process_key": "rxn_13",
+      "biological_state_key": "bs_1",
+      "x": 380,
+      "y": 1209,
+      "members": [
+        {
+          "process_member_key": "rxn_13_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_2",
+          "edge_key": "edge_103"
+        },
+        {
+          "process_member_key": "rxn_13_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_15",
+          "edge_key": "edge_104"
+        },
+        {
+          "process_member_key": "rxn_13_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_11",
+          "edge_key": "edge_105"
+        },
+        {
+          "process_member_key": "rxn_13_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_106"
+        },
+        {
+          "process_member_key": "rxn_13_enzyme_3",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_9",
+          "edge_key": "edge_107"
+        }
+      ]
+    },
+    {
+      "key": "rv_14",
+      "type": "reaction_visualization",
+      "process_key": "rxn_14",
+      "biological_state_key": "bs_1",
+      "x": 920,
+      "y": 1209,
+      "members": [
+        {
+          "process_member_key": "rxn_14_left_1",
+          "role": "left",
+          "member_type": "compound",
+          "location_key": "cl_16",
+          "edge_key": "edge_108"
+        },
+        {
+          "process_member_key": "rxn_14_right_1",
+          "role": "right",
+          "member_type": "compound",
+          "location_key": "cl_17",
+          "edge_key": "edge_109"
+        },
+        {
+          "process_member_key": "rxn_14_enzyme_1",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_4",
+          "edge_key": "edge_110"
+        },
+        {
+          "process_member_key": "rxn_14_enzyme_2",
+          "role": "enzyme",
+          "member_type": "protein_complex",
+          "location_key": "pcl_3",
+          "edge_key": "edge_111"
+        }
+      ]
+    }
+  ]
+}

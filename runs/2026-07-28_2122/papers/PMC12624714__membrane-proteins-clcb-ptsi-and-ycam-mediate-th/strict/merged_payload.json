@@ -1,0 +1,193 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "outer membrane",
+        "evidence": "cell outer membrane (OM) of Gram-negative bacteria"
+      },
+      {
+        "name": "inner membrane",
+        "evidence": "inner membrane (cell membrane)"
+      },
+      {
+        "name": "cytoplasmic membrane",
+        "evidence": "inner surface of the cytoplasmic membrane"
+      },
+      {
+        "name": "cytoplasm",
+        "evidence": "cytoplasmic side of the inner membrane"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "colistin",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipopolysaccharide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "lipid A",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Ca2+",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "Mg2+",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ClcB",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "PtsI",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "YcaM",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "E. coli outer membrane",
+      "species": "Escherichia coli",
+      "subcellular_location": "outer membrane",
+      "evidence": "cell outer membrane (OM) of Gram-negative bacteria"
+    },
+    {
+      "name": "E. coli inner membrane",
+      "species": "Escherichia coli",
+      "subcellular_location": "inner membrane",
+      "evidence": "inner membrane (cell membrane)"
+    },
+    {
+      "name": "E. coli cytoplasm",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasm",
+      "evidence": "cytoplasmic side of the inner membrane"
+    },
+    {
+      "name": "E. coli cytoplasmic membrane",
+      "species": "Escherichia coli",
+      "subcellular_location": "cytoplasmic membrane",
+      "evidence": "inner surface of the cytoplasmic membrane"
+    }
+  ],
+  "element_locations": {
+    "compound_locations": [
+      {
+        "compound": "colistin",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "binds lipid A in the lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "compound": "lipopolysaccharide",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "binds lipid A in the lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "compound": "lipid A",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "binds lipid A in the lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "compound": "Ca2+",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "displaces the divalent cations calcium (Ca2+) and magnesium (Mg2+)"
+      },
+      {
+        "compound": "Mg2+",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "displaces the divalent cations calcium (Ca2+) and magnesium (Mg2+)"
+      },
+      {
+        "compound": "colistin",
+        "biological_state": "E. coli inner membrane",
+        "evidence": "Colistin also reaches the cytoplasmic side of the inner membrane"
+      }
+    ],
+    "protein_locations": [
+      {
+        "protein": "PtsI",
+        "biological_state": "E. coli cytoplasmic membrane",
+        "evidence": "PtsI localizes to the inner surface of the cytoplasmic membrane"
+      },
+      {
+        "protein": "ClcB",
+        "biological_state": "E. coli cytoplasmic membrane",
+        "evidence": "the dysregulation of PtsI, ClcB and YcaM provides evidence for specific membrane protein dysgenesis"
+      },
+      {
+        "protein": "YcaM",
+        "biological_state": "E. coli cytoplasmic membrane",
+        "evidence": "the dysregulation of PtsI, ClcB and YcaM provides evidence for specific membrane protein dysgenesis"
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "colistin",
+        "entity_2": "lipid A",
+        "name": "Colistin binds lipid A",
+        "relationship": "binds",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "binds lipid A in the lipopolysaccharide (LPS) fraction of the cell outer membrane"
+      },
+      {
+        "entity_1": "colistin",
+        "entity_2": "Ca2+",
+        "name": "Colistin displaces Ca2+",
+        "relationship": "displaces",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "displaces the divalent cations calcium (Ca2+) and magnesium (Mg2+)"
+      },
+      {
+        "entity_1": "colistin",
+        "entity_2": "Mg2+",
+        "name": "Colistin displaces Mg2+",
+        "relationship": "displaces",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "displaces the divalent cations calcium (Ca2+) and magnesium (Mg2+)"
+      },
+      {
+        "entity_1": "colistin",
+        "entity_2": "lipopolysaccharide",
+        "name": "Colistin binds lipopolysaccharide",
+        "relationship": "binds",
+        "biological_state": "E. coli outer membrane",
+        "evidence": "interactions of polymyxins with the cell membranes, mainly with the LPS fraction"
+      }
+    ],
+    "reactions": []
+  }
+}

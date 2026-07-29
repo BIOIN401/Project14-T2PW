@@ -1,0 +1,203 @@
+RESULT: FAIL
+========================================
+paper      : PMC13278307
+title      : An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+slug       : PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g
+mode       : strict
+status     : fail
+stage      : stage1
+wall time  : 22.2s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : ambiguous_review_scope
+message      : multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.
+issue codes  : ambiguous_review_scope
+
+DETAIL / TRACEBACK
+----------------------------------------
+{
+  "status": "ambiguous_review_scope",
+  "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+  "candidate_examples": [
+    {
+      "name": "mcr-1",
+      "organism": "Escherichia coli, Klebsiella pneumoniae",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-1 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "reduction of net negative charge of LPS",
+        "decreased colistin binding"
+      ],
+      "evidence": "mcr-1, first reported in 2015 in China from E. coli isolated from animals, food sources, and humans, remains the most widely distributed and clinically significant mcr variant."
+    },
+    {
+      "name": "mcr-2",
+      "organism": "Escherichia coli",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-2 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification"
+      ],
+      "evidence": "mcr-2 is mainly associated with livestock and is most commonly detected in E. coli isolates from pigs."
+    },
+    {
+      "name": "mcr-3",
+      "organism": "Escherichia coli, Salmonella, Aeromonas",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-3 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification"
+      ],
+      "evidence": "mcr-3 has been identified in multiple studies from both human and animal samples, particularly in Asian regions."
+    },
+    {
+      "name": "mcr-4",
+      "organism": "Salmonella, Escherichia coli",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-4 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification"
+      ],
+      "evidence": "mcr-4 was first described in 2017 in Italy and Spain, mainly in Salmonella isolates."
+    },
+    {
+      "name": "mcr-5",
+      "organism": "Salmonella, Escherichia coli",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-5 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification"
+      ],
+      "evidence": "mcr-5 has been reported in environmental, animal, and some clinical samples, indicating its presence across a wide range of settings."
+    },
+    {
+      "name": "mcr-6",
+      "organism": "Moraxella spp.",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-6 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification"
+      ],
+      "evidence": "mcr-6 is genetically related to mcr-2 and has mainly been detected in Moraxella species rather than common Enterobacteriaceae."
+    },
+    {
+      "name": "mcr-7",
+      "organism": "Klebsiella pneumoniae",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-7 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification"
+      ],
+      "evidence": "mcr-7 has been reported in a limited number of studies and is mainly associated with K. pneumoniae, particularly in clinical isolates."
+    },
+    {
+      "name": "mcr-8",
+      "organism": "Klebsiella pneumoniae",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-8 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification"
+      ],
+      "evidence": "mcr-8 was first identified in 2018 in China and has since been increasingly reported, particularly in hospital settings."
+    },
+    {
+      "name": "mcr-9",
+      "organism": "Salmonella, Enterobacter, Escherichia coli",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-9 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification",
+        "inducible expression"
+      ],
+      "evidence": "mcr-9 has been detected in Salmonella, Enterobacter, and E. coli, and several studies suggest that it is widely distributed."
+    },
+    {
+      "name": "mcr-10",
+      "organism": "Enterobacter spp.",
+      "key_compounds": [
+        "lipid A",
+        "phosphoethanolamine (PEtN)",
+        "colistin"
+      ],
+      "key_proteins": [
+        "MCR-10 (PEtN transferase)"
+      ],
+      "main_subprocesses": [
+        "PEtN transfer to lipid A",
+        "lipid A modification",
+        "expression-dependent resistance"
+      ],
+      "evidence": "mcr-10 has been detected in both clinical and environmental isolates, indicating its presence across diverse settings."
+    }
+  ]
+}
+Ambiguous review scope: this looks like a multi-example review, but no target example was selected. Name the example you want in the "Optional extraction focus / task context" box above (one of the candidate example names below works), then re-run. Re-running without naming a target will produce this same result.
+Review paper detected with multiple examples but no target example specified. candidate_examples populated; downstream stages should select one.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

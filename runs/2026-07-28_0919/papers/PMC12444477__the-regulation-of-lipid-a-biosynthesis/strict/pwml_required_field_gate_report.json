@@ -1,0 +1,422 @@
+{
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "pathway_missing_pw_id",
+      "message": "Pathway has no pw_id / pathbank_pathway_id.",
+      "pointer": "/metadata/pw_id"
+    },
+    {
+      "code": "component_stoichiometry_unstated",
+      "message": "Component[0] in complex 'FtsH-LapB complex' has no stated stoichiometry; exporting it blank.",
+      "pointer": "/entities/protein_complexes/0/components/0",
+      "complex_name": "FtsH-LapB complex",
+      "component_name": "FtsH"
+    },
+    {
+      "code": "component_stoichiometry_unstated",
+      "message": "Component[1] in complex 'FtsH-LapB complex' has no stated stoichiometry; exporting it blank.",
+      "pointer": "/entities/protein_complexes/0/components/1",
+      "complex_name": "FtsH-LapB complex",
+      "component_name": "LapB"
+    },
+    {
+      "code": "component_protein_unresolved",
+      "message": "Component 'Phosphatidylglycerophosphatase B' in complex 'phosphatidylglycerophosphatase' does not reference an existing protein.",
+      "pointer": "/entities/protein_complexes/20/components/0",
+      "complex_name": "phosphatidylglycerophosphatase",
+      "component_name": "Phosphatidylglycerophosphatase B"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxA reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/0",
+      "reaction_name": "LpxA reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxA reaction' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/inputs/1",
+      "reaction_name": "LpxA reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxA reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/0/outputs/0",
+      "reaction_name": "LpxA reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxC reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/1/inputs/0",
+      "reaction_name": "LpxC reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxC reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/1/outputs/0",
+      "reaction_name": "LpxC reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxD reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/inputs/0",
+      "reaction_name": "LpxD reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxD reaction' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/inputs/1",
+      "reaction_name": "LpxD reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxD reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/2/outputs/0",
+      "reaction_name": "LpxD reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxH reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/3/inputs/0",
+      "reaction_name": "LpxH reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxH reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/3/outputs/0",
+      "reaction_name": "LpxH reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxH reaction' outputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/3/outputs/1",
+      "reaction_name": "LpxH reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxB reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/4/inputs/0",
+      "reaction_name": "LpxB reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxB reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/4/outputs/0",
+      "reaction_name": "LpxB reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxK reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/5/inputs/0",
+      "reaction_name": "LpxK reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxK reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/5/outputs/0",
+      "reaction_name": "LpxK reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'WaaA reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/6/inputs/0",
+      "reaction_name": "WaaA reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'WaaA reaction' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/6/inputs/1",
+      "reaction_name": "WaaA reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'WaaA reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/6/outputs/0",
+      "reaction_name": "WaaA reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxL reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/7/inputs/0",
+      "reaction_name": "LpxL reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxL reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/7/outputs/0",
+      "reaction_name": "LpxL reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxM reaction' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/8/inputs/0",
+      "reaction_name": "LpxM reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'LpxM reaction' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/8/outputs/0",
+      "reaction_name": "LpxM reaction"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'lipid IV A -> lipid A precursor' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/9/inputs/0",
+      "reaction_name": "lipid IV A -> lipid A precursor"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'lipid IV A -> lipid A precursor' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/9/outputs/0",
+      "reaction_name": "lipid IV A -> lipid A precursor"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Acetyl-CoA -> malonyl-CoA' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/10/inputs/0",
+      "reaction_name": "Acetyl-CoA -> malonyl-CoA"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Acetyl-CoA -> malonyl-CoA' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/10/outputs/0",
+      "reaction_name": "Acetyl-CoA -> malonyl-CoA"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'sn -glycerol-3-phosphate (G3P) -> 1-acyl-G3P' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/11/inputs/0",
+      "reaction_name": "sn -glycerol-3-phosphate (G3P) -> 1-acyl-G3P"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'sn -glycerol-3-phosphate (G3P) -> 1-acyl-G3P' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/11/outputs/0",
+      "reaction_name": "sn -glycerol-3-phosphate (G3P) -> 1-acyl-G3P"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction '1-acyl-G3P -> Phosphatidic acid (PA)' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/12/inputs/0",
+      "reaction_name": "1-acyl-G3P -> Phosphatidic acid (PA)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction '1-acyl-G3P -> Phosphatidic acid (PA)' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/12/outputs/0",
+      "reaction_name": "1-acyl-G3P -> Phosphatidic acid (PA)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Phosphatidic acid (PA) -> cytidine diphosphate-diacylglycerol (CDP-DAG)' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/13/inputs/0",
+      "reaction_name": "Phosphatidic acid (PA) -> cytidine diphosphate-diacylglycerol (CDP-DAG)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'Phosphatidic acid (PA) -> cytidine diphosphate-diacylglycerol (CDP-DAG)' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/13/outputs/0",
+      "reaction_name": "Phosphatidic acid (PA) -> cytidine diphosphate-diacylglycerol (CDP-DAG)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'CDP-DAG -> PG' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/14/inputs/0",
+      "reaction_name": "CDP-DAG -> PG"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'CDP-DAG -> PG' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/14/outputs/0",
+      "reaction_name": "CDP-DAG -> PG"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'CDP-DAG -> phosphatidylserine' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/15/inputs/0",
+      "reaction_name": "CDP-DAG -> phosphatidylserine"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'CDP-DAG -> phosphatidylserine' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/15/outputs/0",
+      "reaction_name": "CDP-DAG -> phosphatidylserine"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PG -> CL' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/16/inputs/0",
+      "reaction_name": "PG -> CL"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PG -> CL' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/16/outputs/0",
+      "reaction_name": "PG -> CL"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PE -> CL' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/17/inputs/0",
+      "reaction_name": "PE -> CL"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PE -> CL' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/17/outputs/0",
+      "reaction_name": "PE -> CL"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PA to CDP-DAG conversion' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/18/inputs/0",
+      "reaction_name": "PA to CDP-DAG conversion"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PA to CDP-DAG conversion' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/18/outputs/0",
+      "reaction_name": "PA to CDP-DAG conversion"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'CDP-DAG reaction with sn-glycerol 3-phosphate to form PG' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/19/inputs/0",
+      "reaction_name": "CDP-DAG reaction with sn-glycerol 3-phosphate to form PG"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'CDP-DAG reaction with sn-glycerol 3-phosphate to form PG' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/19/inputs/1",
+      "reaction_name": "CDP-DAG reaction with sn-glycerol 3-phosphate to form PG"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'CDP-DAG reaction with sn-glycerol 3-phosphate to form PG' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/19/outputs/0",
+      "reaction_name": "CDP-DAG reaction with sn-glycerol 3-phosphate to form PG"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'condensation of CDP-DAG with G3P to form the intermediate PG phosphate (PGP)' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/20/inputs/0",
+      "reaction_name": "condensation of CDP-DAG with G3P to form the intermediate PG phosphate (PGP)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'condensation of CDP-DAG with G3P to form the intermediate PG phosphate (PGP)' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/20/inputs/1",
+      "reaction_name": "condensation of CDP-DAG with G3P to form the intermediate PG phosphate (PGP)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'condensation of CDP-DAG with G3P to form the intermediate PG phosphate (PGP)' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/20/outputs/0",
+      "reaction_name": "condensation of CDP-DAG with G3P to form the intermediate PG phosphate (PGP)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'dephosphorylation of PGP to produce PG' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/21/inputs/0",
+      "reaction_name": "dephosphorylation of PGP to produce PG"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'dephosphorylation of PGP to produce PG' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/21/outputs/0",
+      "reaction_name": "dephosphorylation of PGP to produce PG"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'phosphatidic acid generation' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/22/inputs/0",
+      "reaction_name": "phosphatidic acid generation"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'phosphatidic acid generation' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/22/outputs/0",
+      "reaction_name": "phosphatidic acid generation"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PG synthesis' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/23/inputs/0",
+      "reaction_name": "PG synthesis"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PG synthesis' inputs[1] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/23/inputs/1",
+      "reaction_name": "PG synthesis"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PG synthesis' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/23/outputs/0",
+      "reaction_name": "PG synthesis"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PG formation' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/24/inputs/0",
+      "reaction_name": "PG formation"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'PG formation' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/24/outputs/0",
+      "reaction_name": "PG formation"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'UDP-3-O-(R-3-hydroxylmyristoyl)-N-acetylglucosamine (myr-UDP-GlcNAc) -> UDP-3-O-(R-3-hydroxylmyristoyl)-glucosamine (myr-UDP-GlcN)' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/25/inputs/0",
+      "reaction_name": "UDP-3-O-(R-3-hydroxylmyristoyl)-N-acetylglucosamine (myr-UDP-GlcNAc) -> UDP-3-O-(R-3-hydroxylmyristoyl)-glucosamine (myr-UDP-GlcN)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'UDP-3-O-(R-3-hydroxylmyristoyl)-N-acetylglucosamine (myr-UDP-GlcNAc) -> UDP-3-O-(R-3-hydroxylmyristoyl)-glucosamine (myr-UDP-GlcN)' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/25/outputs/0",
+      "reaction_name": "UDP-3-O-(R-3-hydroxylmyristoyl)-N-acetylglucosamine (myr-UDP-GlcNAc) -> UDP-3-O-(R-3-hydroxylmyristoyl)-glucosamine (myr-UDP-GlcN)"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'first committed step in phospholipid biosynthesis' inputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/26/inputs/0",
+      "reaction_name": "first committed step in phospholipid biosynthesis"
+    },
+    {
+      "code": "reaction_participant_missing_stoichiometry",
+      "message": "Reaction 'first committed step in phospholipid biosynthesis' outputs[0] is a bare string with no explicit stoichiometry (defaults to 1).",
+      "pointer": "/processes/reactions/26/outputs/0",
+      "reaction_name": "first committed step in phospholipid biosynthesis"
+    }
+  ],
+  "summary": {
+    "error_count": 0,
+    "warning_count": 65,
+    "error_codes": [],
+    "warning_codes": [
+      "component_protein_unresolved",
+      "component_stoichiometry_unstated",
+      "pathway_missing_pw_id",
+      "reaction_participant_missing_stoichiometry"
+    ],
+    "checked_as": "payload",
+    "strict_db": true
+  },
+  "stage": "required_field_gate",
+  "pipeline_order": [
+    "audit_normalize",
+    "db_hydration",
+    "api_enrichment",
+    "llm_gap_resolver_with_tools",
+    "required_field_gate",
+    "pwml_ir_build",
+    "pwml_writer",
+    "pwml_qa"
+  ]
+}

@@ -1,0 +1,44 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12444477
+title      : The regulation of lipid A biosynthesis.
+slug       : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 2988.2s (49m48s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/43/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/43/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.pwml is 432878 bytes
+
+COUNTS
+----------------------------------------
+  compounds = 44
+  entities = 93
+  gate_errors = 0
+  proteins = 22
+  pwml = {'compounds': 43, 'proteins': 22, 'reactions': 27, 'edges': 268}
+  pwml_bytes = 432878
+  reactions = 27
+  runtime_schema_findings = 4
+  transports = 2
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (7480 B)
+  - final_mapped.json  (6840785 B)
+  - merged_payload.json  (4704601 B)
+  - pathway.pwml  (432878 B)
+  - pwml_ir.json  (378548 B)
+  - pwml_ir_report.json  (26076 B)
+  - pwml_ir_validation.json  (239 B)
+  - pwml_qa.json  (1250 B)
+  - pwml_required_field_gate_report.json  (21242 B)
+  - pwml_validation_report.json  (19586 B)
+  - stage1_payload.json  (16452 B)

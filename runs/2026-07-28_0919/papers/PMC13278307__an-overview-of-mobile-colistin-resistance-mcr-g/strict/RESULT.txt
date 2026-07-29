@@ -1,0 +1,43 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC13278307
+title      : An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+slug       : PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g
+mode       : strict
+status     : pass
+stage      : pwml_export
+wall time  : 2098.2s (34m58s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/compounds/19/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+message    : strict run completed; pathway.pwml is 200266 bytes
+
+COUNTS
+----------------------------------------
+  compounds = 20
+  entities = 45
+  gate_errors = 0
+  proteins = 11
+  pwml = {'compounds': 20, 'proteins': 11, 'reactions': 14, 'edges': 111}
+  pwml_bytes = 200266
+  reactions = 14
+  runtime_schema_findings = 3
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (6829 B)
+  - final_mapped.json  (2434705 B)
+  - merged_payload.json  (1467976 B)
+  - pathway.pwml  (200266 B)
+  - pwml_ir.json  (187956 B)
+  - pwml_ir_report.json  (13724 B)
+  - pwml_ir_validation.json  (238 B)
+  - pwml_qa.json  (578 B)
+  - pwml_required_field_gate_report.json  (12391 B)
+  - pwml_validation_report.json  (19586 B)
+  - stage1_payload.json  (2884 B)

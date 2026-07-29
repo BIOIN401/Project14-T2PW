@@ -1,0 +1,67 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "phthalylsulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "meropenem",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "zinc ion",
+        "class": "ion",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "sulfacetamide",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "NDM-1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "LpxC",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "processes": {
+    "interactions": [
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "NDM-1",
+        "name": "phthalylsulfacetamide inhibits NDM-1",
+        "relationship": "inhibits",
+        "evidence": "PSA dose-dependently inhibited NDM-1"
+      },
+      {
+        "entity_1": "phthalylsulfacetamide",
+        "entity_2": "LpxC",
+        "name": "phthalylsulfacetamide binds LpxC",
+        "relationship": "binds",
+        "evidence": "PSA may potentially interact with LpxC"
+      }
+    ]
+  }
+}

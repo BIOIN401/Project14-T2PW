@@ -1,0 +1,275 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Escherichia coli"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "acetate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "acetyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "isopentenyl pyrophosphate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "farnesyl pyrophosphate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "heptaprenyl pyrophosphate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "1,4-dihydroxy-2-naphthoate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "demethylmenaquinone-7",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "menaquinone-7",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "3-hydroxy-3-methyl-glutaryl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "mevalonate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "S-adenosyl-L-methionine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "S-adenosyl-L-homocysteine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "dimethylallyl pyrophosphate",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "EcMenA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "BsUbiE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "BsHepPPS",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ECidi",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EfmvaE",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "EfmvaS",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MmmvK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ScpmK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ScmvD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "MetK",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "acs",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ispA",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "Escherichia coli state",
+      "species": "Escherichia coli",
+      "evidence": "Escherichia coli is the host organism"
+    }
+  ],
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "acetate"
+        ],
+        "outputs": [
+          "acetyl-CoA"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "Acs reaction",
+        "enzymes": [
+          {
+            "protein": "acs",
+            "evidence": "overexpressed acetyl-CoA synthetase (acs), an enzyme that converts acetate into acetyl-CoA",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "overexpressed acetyl-CoA synthetase (acs), an enzyme that converts acetate into acetyl-CoA",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "isopentenyl pyrophosphate"
+        ],
+        "outputs": [
+          "farnesyl pyrophosphate"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "ECidi reaction",
+        "enzymes": [
+          {
+            "protein": "ECidi",
+            "evidence": "The enzyme Idi, which converts IPP to farnesyl pyrophosphate (FPP)",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "The enzyme Idi, which converts IPP to farnesyl pyrophosphate (FPP)",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "farnesyl pyrophosphate"
+        ],
+        "outputs": [
+          "heptaprenyl pyrophosphate"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "BsHepPPS reaction",
+        "enzymes": [
+          {
+            "protein": "BsHepPPS",
+            "evidence": "catalyzes the conversion of farnesyl pyrophosphate to heptaprenyl pyrophosphate",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "catalyzes the conversion of farnesyl pyrophosphate to heptaprenyl pyrophosphate",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "heptaprenyl pyrophosphate",
+          "1,4-dihydroxy-2-naphthoate"
+        ],
+        "outputs": [
+          "demethylmenaquinone-7"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "EcMenA reaction",
+        "enzymes": [
+          {
+            "protein": "EcMenA",
+            "evidence": "catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "catalyzes the conjugation of heptaprenyl pyrophosphate with DHNA to form demethylmenaquinone",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "demethylmenaquinone-7"
+        ],
+        "outputs": [
+          "menaquinone-7"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "BsUbiE reaction",
+        "enzymes": [
+          {
+            "protein": "BsUbiE",
+            "evidence": "catalyzes the methylation of demethylmenaquinone to produce MK-7",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "evidence": "catalyzes the methylation of demethylmenaquinone to produce MK-7",
+        "scope_membership": "core"
+      }
+    ]
+  }
+}

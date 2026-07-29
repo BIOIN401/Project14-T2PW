@@ -1,0 +1,225 @@
+{
+  "entities": {
+    "species": [
+      {
+        "name": "Homo sapiens"
+      }
+    ],
+    "subcellular_locations": [
+      {
+        "name": "mitochondria",
+        "evidence": "heme biosynthesis"
+      },
+      {
+        "name": "cytosol",
+        "evidence": "heme biosynthesis"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "glycine",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "succinyl-CoA",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "5-aminolevulinic acid",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "porphobilinogen",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "uroporphyrinogen III",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "coproporphyrinogen III",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "protoporphyrin IX",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "heme",
+        "class": "compound",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ],
+    "proteins": [
+      {
+        "name": "ALAS1",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "ALAD",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "UROS",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "CPOX",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      },
+      {
+        "name": "FECH",
+        "class": "protein",
+        "confidence": 1.0,
+        "provenance": "extracted"
+      }
+    ]
+  },
+  "biological_states": [
+    {
+      "name": "mitochondrial state",
+      "species": "Homo sapiens",
+      "subcellular_location": "mitochondria",
+      "evidence": "heme biosynthesis"
+    },
+    {
+      "name": "cytosolic state",
+      "species": "Homo sapiens",
+      "subcellular_location": "cytosol",
+      "evidence": "heme biosynthesis"
+    }
+  ],
+  "processes": {
+    "reactions": [
+      {
+        "inputs": [
+          "glycine",
+          "succinyl-CoA"
+        ],
+        "outputs": [
+          "5-aminolevulinic acid"
+        ],
+        "locked_reaction_id": "rxn_lock_002",
+        "name": "ALAS1 reaction",
+        "enzymes": [
+          {
+            "protein": "ALAS1",
+            "evidence": "ALAS1",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "ALAS1",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "5-aminolevulinic acid"
+        ],
+        "outputs": [
+          "porphobilinogen"
+        ],
+        "locked_reaction_id": "rxn_lock_001",
+        "name": "ALAD reaction",
+        "enzymes": [
+          {
+            "protein": "ALAD",
+            "evidence": "ALAD",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "ALAD",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "porphobilinogen"
+        ],
+        "outputs": [
+          "uroporphyrinogen III"
+        ],
+        "locked_reaction_id": "rxn_lock_005",
+        "name": "UROS reaction",
+        "enzymes": [
+          {
+            "protein": "UROS",
+            "evidence": "UROS",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "cytosolic state",
+        "evidence": "UROS",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "uroporphyrinogen III"
+        ],
+        "outputs": [
+          "coproporphyrinogen III"
+        ],
+        "locked_reaction_id": "rxn_lock_003",
+        "name": "CPOX reaction",
+        "enzymes": [
+          {
+            "protein": "CPOX",
+            "evidence": "CPOX",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "CPOX",
+        "scope_membership": "core"
+      },
+      {
+        "inputs": [
+          "protoporphyrin IX"
+        ],
+        "outputs": [
+          "heme"
+        ],
+        "locked_reaction_id": "rxn_lock_004",
+        "name": "FECH reaction",
+        "enzymes": [
+          {
+            "protein": "FECH",
+            "evidence": "FECH",
+            "provenance": "extracted",
+            "confidence": 1.0
+          }
+        ],
+        "biological_state": "mitochondrial state",
+        "evidence": "FECH",
+        "scope_membership": "core"
+      }
+    ]
+  }
+}

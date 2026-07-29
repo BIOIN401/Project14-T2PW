@@ -1,0 +1,54 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12421875
+title      : The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory mechanism and substrate limitations.
+slug       : PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 2158.6s (35m58s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/45/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/46/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/45/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/46/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_geranyltranstransferase_is_missing_a_uniprot_or_drugbank @ /entities/proteins/12: Protein 'geranyltranstransferase' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_geranyltranstransferase_ispa_is_missing_a_uniprot_or_dru @ /entities/proteins/13: Protein 'geranyltranstransferase ( ispA )' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_llmg_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/22: Protein 'llmg_0196' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_mendhceb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/24: Protein 'menDHCEB' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 6
+  compounds = 47
+  entities = 82
+  gate_errors = 8
+  gate_errors_not_blocking = 8
+  gate_review_flags = 8
+  normalization_actions = 2
+  proteins = 32
+  reactions = 29
+  review_flags = 11
+  runtime_schema_findings = 6
+  skipped_format_rules = 0
+  tier = {'a': 18, 'b': 30, 'c': 111, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (14473 B)
+  - final_stage3_gate_report.json  (2762 B)
+  - gate_fail_report.json  (3025 B)
+  - merged_payload.json  (376457 B)
+  - research_pathway_citations.json  (1893942 B)
+  - research_pathway_elements.csv  (746378 B)
+  - research_pathway_report.txt  (174614 B)
+  - review_flags.json  (6613 B)
+  - stage1_payload.json  (8188 B)

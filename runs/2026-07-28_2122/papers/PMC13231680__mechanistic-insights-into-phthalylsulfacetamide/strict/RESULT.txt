@@ -1,0 +1,44 @@
+RESULT: FAIL
+========================================
+paper      : PMC13231680
+title      : Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal activity in NDM-1-positive Escherichia coli.
+slug       : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 2065.5s (34m25s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/14/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 3 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_lipoprotein_is_missing_species_organism, gate.protein_lipoprotein_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+67 QA issues need review.
+[post_normalization_contract_report] gate.protein_lipoprotein_is_missing_species_organism @ /entities/proteins/14: Protein 'lipoprotein' is missing species/organism.
+
+COUNTS
+----------------------------------------
+  compounds = 28
+  contract_errors = 1
+  entities = 60
+  gate_errors = 2
+  proteins = 15
+  reactions = 14
+  runtime_schema_findings = 3
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (10088 B)
+  - gate_fail_report.json  (2890 B)
+  - merged_payload.json  (193161 B)
+  - stage1_payload.json  (1031 B)

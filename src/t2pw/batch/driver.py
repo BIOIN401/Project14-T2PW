@@ -83,6 +83,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from t2pw.paths import PACKAGE_ROOT
 from t2pw.pipeline.export_mode import STRUCTURAL_GUARD_CODES
+from t2pw.pipeline.failure_detail import headline as _detail_headline
 
 # ── Export-mode radio labels, exactly as the app spells them ───────────────
 STRICT = "Strict PWML"
@@ -784,21 +785,23 @@ def _research_gate_flags(gate_errors: List[Any]) -> Tuple[List[Dict[str, str]], 
         data = _safe_dict(issue)
         code = _issue_code(issue) or "(no code)"
         pointer = _issue_pointer(issue) or "(no pointer)"
-        message = (
-            _text(data.get("reason"))
-            or _text(data.get("message"))
-            or _text(data.get("detail"))
-            or _text(issue)
-        )
-        flags.append(
-            {
-                "code": code,
-                "pointer": pointer,
-                "message": message,
-                "research_category": "format",
-                "source": "strict_post_normalization_gate",
-            }
-        )
+        # ``detail`` is a structured dict since gate errors began carrying the
+        # value they rejected, so it can no longer stand in for the message --
+        # _text() would splat a dict repr into review_flags.json. It is summarized
+        # onto its own ``found`` key instead, and survives in full in
+        # gate_fail_report.json.
+        message = _text(data.get("reason")) or _text(data.get("message")) or _text(issue)
+        flag: Dict[str, str] = {
+            "code": code,
+            "pointer": pointer,
+            "message": message,
+            "research_category": "format",
+            "source": "strict_post_normalization_gate",
+        }
+        found = _detail_headline(data.get("detail"))
+        if found:
+            flag["found"] = found
+        flags.append(flag)
         line = f"{WARN_RESEARCH_GATE_PREFIX}{code} @ {pointer}: {message}"
         if line in lines:
             # Byte-identical: the same rule on the same pointer, so it is collapsed

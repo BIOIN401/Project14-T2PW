@@ -1,0 +1,734 @@
+{
+  "post_extraction_contract_report": {
+    "stage": "post_extraction",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_extraction",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report": {
+    "stage": "post_mapping",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_mapping",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_normalization_contract_report": {
+    "stage": "post_normalization",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_normalization",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "runtime_schema_value_error",
+          "pointer": "/entities/protein_complexes/0/generation_reason",
+          "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+          "expected": "'single_protein_pathwhiz_wrapper'",
+          "received": "string"
+        },
+        {
+          "code": "runtime_schema_value_error",
+          "pointer": "/entities/protein_complexes/1/generation_reason",
+          "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+          "expected": "'single_protein_pathwhiz_wrapper'",
+          "received": "string"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/4/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/protein_complexes/0/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/protein_complexes/1/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 5,
+        "warning_count": 0
+      }
+    },
+    "gate_report": {
+      "ok": false,
+      "normalization_stats": {
+        "complexes_created": 0,
+        "composites_rewritten": 0,
+        "reactions_rewritten": 0,
+        "scaffold_split_reactions": 0,
+        "entities_moved_out_of_compounds": 0,
+        "entities_added_as_compounds": 0,
+        "entities_added_as_proteins": 0,
+        "catalysts_promoted_to_enzymes": 0,
+        "interaction_enzymes_promoted": 0,
+        "scaffold_inputs_added": 0,
+        "scaffold_in_modifiers_count": 0,
+        "n_plus_tokens_remaining": 0,
+        "complexes_list": [
+          "ACC complex",
+          "acetyl-CoA carboxylase enzyme complex"
+        ],
+        "n_autostate_created": 1,
+        "n_entities_assigned_to_autostate": 0,
+        "transporters_attached": 0,
+        "enzymes_attached_from_reaction_evidence": 0,
+        "modifier_refs_canonicalized": 293,
+        "modifier_refs_dropped": 0,
+        "forbidden_complexes_removed": 0,
+        "dedupe_removed_reactions": 2,
+        "dedupe_removed_transports": 0,
+        "dedupe_removed": 2,
+        "dedupe_removed_total": 2,
+        "no_op_removed_count": 1,
+        "no_op_quarantined_count": 1,
+        "locked_no_op_quarantined_count": 1,
+        "evidenced_no_op_quarantined_count": 0,
+        "unsupported_no_op_dropped_count": 0,
+        "duplicate_locked_reactions_quarantined_count": 1,
+        "n_same_as_groups": 0,
+        "n_aliases_rewritten": 0,
+        "n_entities_deduped": 0,
+        "n_single_protein_complexes_removed": 0,
+        "complex_named_proteins_relocated": 2,
+        "unresolved_complex_components_dropped": 0,
+        "component_only_proteins_removed": 0,
+        "pruned_disconnected_proteins": [],
+        "pruned_disconnected_proteins_count": 0,
+        "alias_example_mappings": [],
+        "n_reactions_compartment_backfilled": 0,
+        "non_protein_catalysts_dropped": 0,
+        "research_mode_relaxations": 1,
+        "alias_canonicalization": {
+          "n_same_as_groups": 0,
+          "n_aliases_rewritten": 0,
+          "n_entities_deduped": 0,
+          "n_single_protein_complexes_removed": 0,
+          "example_mappings": []
+        },
+        "gate_error_count": 5
+      },
+      "connectivity": {
+        "n_reactions": 22,
+        "n_transports": 2,
+        "n_interactions": 5,
+        "n_reaction_coupled_transports": 0,
+        "n_nodes": 101,
+        "n_edges": 242,
+        "n_components": 1,
+        "main_component_size": 101,
+        "largest_component_pct": 100.0,
+        "n_isolated_nodes": 0,
+        "proteins_degree0": 6,
+        "proteins_attached_pct": 77.78
+      },
+      "errors": [
+        {
+          "path": "/processes",
+          "reason": "Registry validation failed: Registry validation failed:\n/processes/interactions/4/entity_2 unknown entity: LapB-FtsH proteolysis"
+        },
+        {
+          "path": "/entities/proteins/21/name",
+          "reason": "Protein has degree 0 after normalization: GutQ"
+        },
+        {
+          "path": "/entities/proteins/5/name",
+          "reason": "Protein has degree 0 after normalization: LpxG"
+        },
+        {
+          "path": "/entities/proteins/4/name",
+          "reason": "Protein has degree 0 after normalization: LpxI"
+        },
+        {
+          "path": "/entities/proteins/22/name",
+          "reason": "Protein has degree 0 after normalization: kdsD"
+        }
+      ]
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/4/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "path": "/processes",
+        "reason": "Registry validation failed: Registry validation failed:\n/processes/interactions/4/entity_2 unknown entity: LapB-FtsH proteolysis",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/21/name",
+        "reason": "Protein has degree 0 after normalization: GutQ",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/5/name",
+        "reason": "Protein has degree 0 after normalization: LpxG",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/4/name",
+        "reason": "Protein has degree 0 after normalization: LpxI",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/22/name",
+        "reason": "Protein has degree 0 after normalization: kdsD",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": true,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 5,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 10
+    }
+  },
+  "post_normalization_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_normalization",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/4/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 5,
+      "warning_count": 0
+    }
+  },
+  "post_audit_contract_report": {
+    "stage": "post_audit",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_audit",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "runtime_schema_value_error",
+          "pointer": "/entities/protein_complexes/0/generation_reason",
+          "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+          "expected": "'single_protein_pathwhiz_wrapper'",
+          "received": "string"
+        },
+        {
+          "code": "runtime_schema_value_error",
+          "pointer": "/entities/protein_complexes/1/generation_reason",
+          "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+          "expected": "'single_protein_pathwhiz_wrapper'",
+          "received": "string"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/4/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/protein_complexes/0/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/protein_complexes/1/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 5,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/4/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 5
+    }
+  },
+  "post_audit_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_audit",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/4/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/protein_complexes/1/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 5,
+      "warning_count": 0
+    }
+  },
+  "post_remap_contract_report": {
+    "stage": "post_remap",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_remap",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "runtime_schema_value_error",
+          "pointer": "/entities/protein_complexes/0/generation_reason",
+          "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+          "expected": "'single_protein_pathwhiz_wrapper'",
+          "received": "string"
+        },
+        {
+          "code": "runtime_schema_value_error",
+          "pointer": "/entities/protein_complexes/1/generation_reason",
+          "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+          "expected": "'single_protein_pathwhiz_wrapper'",
+          "received": "string"
+        },
+        {
+          "code": "generated_wrapper_reason_invalid",
+          "pointer": "/entities/protein_complexes/0/generation_reason",
+          "message": "Generated wrapper rows must use the supported generation reason.",
+          "expected": "single_protein_pathwhiz_wrapper",
+          "received": "string"
+        },
+        {
+          "code": "generated_wrapper_reason_invalid",
+          "pointer": "/entities/protein_complexes/1/generation_reason",
+          "message": "Generated wrapper rows must use the supported generation reason.",
+          "expected": "single_protein_pathwhiz_wrapper",
+          "received": "string"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 4,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 4
+    }
+  },
+  "post_remap_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_remap",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 4,
+      "warning_count": 0
+    }
+  },
+  "post_enrichment_runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_enrichment",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 4,
+      "warning_count": 0
+    }
+  },
+  "pre_export_runtime_schema_report": {
+    "ok": false,
+    "boundary": "pre_export",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "runtime_schema_value_error",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Expected a 'single_protein_pathwhiz_wrapper'.",
+        "expected": "'single_protein_pathwhiz_wrapper'",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/0/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      },
+      {
+        "code": "generated_wrapper_reason_invalid",
+        "pointer": "/entities/protein_complexes/1/generation_reason",
+        "message": "Generated wrapper rows must use the supported generation reason.",
+        "expected": "single_protein_pathwhiz_wrapper",
+        "received": "string"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 4,
+      "warning_count": 0
+    }
+  }
+}

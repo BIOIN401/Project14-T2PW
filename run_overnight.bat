@@ -13,6 +13,15 @@ REM resumable so the remainder finishes the next time this is launched.
 REM
 REM PAUSE at the end is deliberate: a double-click opens its own window, and
 REM without it the window would vanish with the result in it.
+REM
+REM EXIT CODES (kept in step with scripts\batch_run.py and docs\batch_runner.md
+REM section 2d). 3 is handled separately below and that separation is
+REM load-bearing, not cosmetic: on a preflight refusal NO run directory is
+REM created, so the generic "read SUMMARY.txt in the newest runs\ folder" line
+REM would send the operator to the PREVIOUS night's summary and invite them to
+REM debug a pipeline that never ran. That is the exact confusion -- a failed
+REM night that looks like a night that happened -- the preflight was added to
+REM prevent, and this window's last line is what the morning actually reads.
 REM ---------------------------------------------------------------------------
 setlocal
 
@@ -41,6 +50,11 @@ echo.
 echo ===========================================================================
 if "%EXITCODE%"=="0" (
     echo DONE -- every paper+mode run passed.
+) else if "%EXITCODE%"=="3" (
+    echo STOPPED BEFORE STARTING -- exit code 3: preflight failed.
+    echo NOTHING was fetched and NO run folder was created, so there is no new
+    echo SUMMARY.txt to read and nothing in runs\ changed. The message above
+    echo names what could not be imported and the exact command to rerun with.
 ) else (
     echo DONE -- exit code %EXITCODE%: something did not pass.
     echo Read SUMMARY.txt and failures_by_code.txt in the newest runs\ folder.

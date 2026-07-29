@@ -1,0 +1,610 @@
+{
+  "post_extraction_contract_report": {
+    "stage": "post_extraction",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_extraction",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_extraction_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_extraction",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report": {
+    "stage": "post_mapping",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_mapping",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "stage2_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_mapping",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_normalization_contract_report": {
+    "stage": "post_normalization",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_normalization",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/compounds/102/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/0/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 2,
+        "warning_count": 0
+      }
+    },
+    "gate_report": {
+      "ok": false,
+      "normalization_stats": {
+        "complexes_created": 0,
+        "composites_rewritten": 0,
+        "reactions_rewritten": 0,
+        "scaffold_split_reactions": 0,
+        "entities_moved_out_of_compounds": 0,
+        "entities_added_as_compounds": 1,
+        "entities_added_as_proteins": 0,
+        "catalysts_promoted_to_enzymes": 0,
+        "interaction_enzymes_promoted": 0,
+        "scaffold_inputs_added": 0,
+        "scaffold_in_modifiers_count": 0,
+        "n_plus_tokens_remaining": 0,
+        "complexes_list": [],
+        "n_autostate_created": 1,
+        "n_entities_assigned_to_autostate": 0,
+        "transporters_attached": 0,
+        "enzymes_attached_from_reaction_evidence": 0,
+        "modifier_refs_canonicalized": 128,
+        "modifier_refs_dropped": 0,
+        "forbidden_complexes_removed": 0,
+        "dedupe_removed_reactions": 0,
+        "dedupe_removed_transports": 0,
+        "dedupe_removed": 0,
+        "dedupe_removed_total": 0,
+        "no_op_removed_count": 0,
+        "no_op_quarantined_count": 0,
+        "locked_no_op_quarantined_count": 0,
+        "evidenced_no_op_quarantined_count": 0,
+        "unsupported_no_op_dropped_count": 0,
+        "duplicate_locked_reactions_quarantined_count": 0,
+        "n_same_as_groups": 1,
+        "n_aliases_rewritten": 1,
+        "n_entities_deduped": 0,
+        "n_single_protein_complexes_removed": 0,
+        "complex_named_proteins_relocated": 0,
+        "nucleic_acid_named_entities_relocated": 0,
+        "entity_type_mismatches_flagged": 0,
+        "unresolved_complex_components_dropped": 0,
+        "component_only_proteins_removed": 0,
+        "pruned_disconnected_proteins": [],
+        "pruned_disconnected_proteins_count": 0,
+        "alias_example_mappings": [
+          {
+            "alias": "SAM",
+            "canonical": "S-adenosyl-L-methionine"
+          }
+        ],
+        "n_reactions_compartment_backfilled": 0,
+        "non_protein_catalysts_dropped": 0,
+        "research_mode_relaxations": 2,
+        "alias_canonicalization": {
+          "n_same_as_groups": 1,
+          "n_aliases_rewritten": 1,
+          "n_entities_deduped": 0,
+          "n_single_protein_complexes_removed": 0,
+          "example_mappings": [
+            {
+              "alias": "SAM",
+              "canonical": "S-adenosyl-L-methionine"
+            }
+          ]
+        },
+        "gate_error_count": 16
+      },
+      "connectivity": {
+        "n_reactions": 58,
+        "n_transports": 0,
+        "n_interactions": 0,
+        "n_reaction_coupled_transports": 0,
+        "n_nodes": 212,
+        "n_edges": 211,
+        "n_components": 20,
+        "main_component_size": 56,
+        "largest_component_pct": 26.42,
+        "n_isolated_nodes": 0,
+        "proteins_degree0": 10,
+        "proteins_attached_pct": 84.62
+      },
+      "errors": [
+        {
+          "path": "/entities/proteins/0",
+          "reason": "Protein 'EcMenA' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/1",
+          "reason": "Protein 'BsUbiE' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/2",
+          "reason": "Protein 'BsHepPPS' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/3",
+          "reason": "Protein 'ECidi' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/4",
+          "reason": "Protein 'EfmvaE' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/5",
+          "reason": "Protein 'EfmvaS' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/6",
+          "reason": "Protein 'MmmvK' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/7",
+          "reason": "Protein 'ScpmK' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/8",
+          "reason": "Protein 'ScmvD' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/16",
+          "reason": "Protein '4-amino-4-deoxychorismate (ADC) synthase' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/24",
+          "reason": "Protein 'AroD-encoded shikimate 5-dehydrogenase' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/33",
+          "reason": "Protein 'DAHP synthase' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/35",
+          "reason": "Protein 'dihydroxyacetone phosphate mutase' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/38",
+          "reason": "Protein 'EPSP synthase' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/42",
+          "reason": "Protein 'glucose kinase (GlcK)' is missing a UniProt or DrugBank identifier."
+        },
+        {
+          "path": "/entities/proteins/46",
+          "reason": "Protein 'HepPPS' is missing a UniProt or DrugBank identifier."
+        }
+      ]
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/compounds/102/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "path": "/entities/proteins/0",
+        "reason": "Protein 'EcMenA' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/1",
+        "reason": "Protein 'BsUbiE' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/2",
+        "reason": "Protein 'BsHepPPS' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/3",
+        "reason": "Protein 'ECidi' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/4",
+        "reason": "Protein 'EfmvaE' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/5",
+        "reason": "Protein 'EfmvaS' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/6",
+        "reason": "Protein 'MmmvK' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/7",
+        "reason": "Protein 'ScpmK' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/8",
+        "reason": "Protein 'ScmvD' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/16",
+        "reason": "Protein '4-amino-4-deoxychorismate (ADC) synthase' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/24",
+        "reason": "Protein 'AroD-encoded shikimate 5-dehydrogenase' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/33",
+        "reason": "Protein 'DAHP synthase' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/35",
+        "reason": "Protein 'dihydroxyacetone phosphate mutase' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/38",
+        "reason": "Protein 'EPSP synthase' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/42",
+        "reason": "Protein 'glucose kinase (GlcK)' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      },
+      {
+        "path": "/entities/proteins/46",
+        "reason": "Protein 'HepPPS' is missing a UniProt or DrugBank identifier.",
+        "research_mode": "review_flag",
+        "research_category": "BIOLOGY/PROVENANCE",
+        "was_blocking": true,
+        "stage": "post_normalization"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": true,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 16,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 18
+    }
+  },
+  "post_normalization_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_normalization",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/compounds/102/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 2,
+      "warning_count": 0
+    }
+  },
+  "post_audit_contract_report": {
+    "stage": "post_audit",
+    "contract_type": "structural",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": false,
+      "boundary": "post_audit",
+      "mode": "report",
+      "errors": [
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/compounds/102/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        },
+        {
+          "code": "entity_missing_mapping_meta",
+          "pointer": "/entities/subcellular_locations/0/mapping_meta",
+          "message": "Mapped entity with a name is missing mapping_meta.",
+          "expected": "object"
+        }
+      ],
+      "warnings": [],
+      "summary": {
+        "error_count": 2,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/compounds/102/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 2
+    }
+  },
+  "post_audit_contract_report.runtime_schema_report": {
+    "ok": false,
+    "boundary": "post_audit",
+    "mode": "report",
+    "errors": [
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/compounds/102/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      },
+      {
+        "code": "entity_missing_mapping_meta",
+        "pointer": "/entities/subcellular_locations/0/mapping_meta",
+        "message": "Mapped entity with a name is missing mapping_meta.",
+        "expected": "object"
+      }
+    ],
+    "warnings": [],
+    "summary": {
+      "error_count": 2,
+      "warning_count": 0
+    }
+  },
+  "post_remap_contract_report": {
+    "stage": "post_remap",
+    "contract_type": "semantic",
+    "effect_on_failure": "annotate_only",
+    "runtime_schema_report": {
+      "ok": true,
+      "boundary": "post_remap",
+      "mode": "report",
+      "errors": [],
+      "warnings": [],
+      "summary": {
+        "error_count": 0,
+        "warning_count": 0
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "ok": true,
+    "export_mode": "research",
+    "research_blocked": [],
+    "research_review_required": false,
+    "research_summary": {
+      "format_skipped": 0,
+      "review_flagged": 0,
+      "still_blocking": 0
+    },
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_remap_contract_report.runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_remap",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "post_enrichment_runtime_schema_report": {
+    "ok": true,
+    "boundary": "post_enrichment",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  },
+  "pre_export_runtime_schema_report": {
+    "ok": true,
+    "boundary": "pre_export",
+    "mode": "report",
+    "errors": [],
+    "warnings": [],
+    "summary": {
+      "error_count": 0,
+      "warning_count": 0
+    }
+  }
+}

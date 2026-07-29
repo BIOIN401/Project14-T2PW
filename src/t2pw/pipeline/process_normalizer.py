@@ -5,7 +5,7 @@ import json
 import re
 from collections import defaultdict
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Optional, Sequence, Set, Tuple
+from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Set, Tuple
 
 from t2pw.pipeline.entity_identity import (
     has_protein_external_identity,
@@ -24,6 +24,12 @@ from t2pw.pipeline.export_mode import (
     RESEARCH,
     ExportMode,
     is_research,
+)
+from t2pw.pipeline.failure_detail import (
+    closest_names,
+    detail as build_detail,
+    row_digest,
+    scrub_detail,
 )
 
 
@@ -4173,6 +4179,35 @@ def prune_disconnected_proteins(
     return pruned
 
 
+def _unknown_reference_detail(
+    actor: Any,
+    actor_name: str,
+    registry_names: Mapping[str, str],
+) -> Dict[str, Any]:
+    """Detail for an actor that is not in the protein/complex registry.
+
+    "Unknown protein/modifier reference: X" is the gate's highest-volume error
+    and says the least. X is almost never absent from the payload -- it is
+    present under a spelling the registry normalized differently, which the
+    message cannot show because normalization happens on both sides of a
+    membership test that then reports neither. So record both forms of the
+    reference, the nearest declared names, and the size of the set it missed:
+    an empty registry is a normalization bug upstream, a registry of 40 with no
+    close match is a genuinely undeclared protein, and a registry with one
+    near-miss is a name to fix.
+    """
+
+    normalized = _normalize(actor_name)
+    return build_detail(
+        actor_name=actor_name,
+        actor_normalized=normalized,
+        actor_row=row_digest(actor),
+        did_you_mean=closest_names(actor_name, registry_names.values()),
+        registry_size=len(registry_names),
+        registry_sample=sorted(registry_names.values())[:10],
+    )
+
+
 def run_strict_post_normalization_gates(
     payload: Dict[str, Any],
     *,
@@ -4182,7 +4217,9 @@ def run_strict_post_normalization_gates(
 ) -> Dict[str, Any]:
     rep = report if isinstance(report, dict) else _new_report()
     stats = compute_normalization_stats(payload, rep)
-    errors: List[Dict[str, str]] = []
+    # Dict[str, Any] rather than Dict[str, str]: an error may now carry a
+    # structured ``detail`` alongside its two string fields.
+    errors: List[Dict[str, Any]] = []
     forbidden_norms = {
         _normalize(_canonical(name))
         for name in (forbidden_complexes or ["thyroglobulin:2-aminoacrylic acid"])
@@ -4205,6 +4242,15 @@ def run_strict_post_normalization_gates(
         if isinstance(row, dict) and _canonical(str(row.get("name", "")))
     }
     protein_registry_norms = _entity_name_norms(proteins) | _entity_name_norms(complexes)
+    # The same registry keyed for humans. ``protein_registry_norms`` holds
+    # normalized keys, which are what the membership test needs and the worst
+    # thing to show a reviewer -- a suggestion has to be pasteable back into the
+    # payload, so it must be the declared display name.
+    protein_registry_names: Dict[str, str] = {
+        _normalize(_canonical(str(row.get("name", "")))): _canonical(str(row.get("name", "")))
+        for row in [*proteins, *complexes]
+        if isinstance(row, dict) and _canonical(str(row.get("name", "")))
+    }
     generated_complex_norms = {
         _normalize(_canonical(str(row.get("name", ""))))
         for row in complexes
@@ -4221,12 +4267,45 @@ def run_strict_post_normalization_gates(
         if isinstance(row, dict) and protein_external_identity(row)
     }
 
-    def _add_error(path: str, reason: str) -> None:
-        errors.append({"path": path, "reason": reason})
+    def _add_error(
+        path: str,
+        reason: str,
+        detail: Optional[Mapping[str, Any]] = None,
+    ) -> None:
+        """Record a gate failure, optionally with the value that failed.
 
-    def _check_forbidden(path: str, token: str) -> None:
+        ``path`` says where and ``reason`` says which rule; neither says what
+        the row actually held, and that is the question every gate failure
+        prompts. ``detail`` closes it. It rides the error dict into
+        ``GateValidationError.details``, and from there into the app and
+        ``gate_fail_report.json`` unchanged -- no second channel to keep in
+        sync, and nothing that only exists in a log the browser cannot show.
+
+        Bounded by :func:`scrub_detail` on the way in: rows carry ``evidence``
+        blobs that have reached six figures of characters, and ``st.json`` of
+        one of those is a hung tab. The key is omitted when empty, so errors
+        without detail keep the exact ``{"path", "reason"}`` shape that
+        ``batch.driver`` and the audit-retry prompts already read.
+        """
+
+        error: Dict[str, Any] = {"path": path, "reason": reason}
+        scrubbed = scrub_detail(detail)
+        if scrubbed:
+            error["detail"] = scrubbed
+        errors.append(error)
+
+    def _check_forbidden(path: str, token: str, row: Any = None) -> None:
         if _normalize(_canonical(token)) in forbidden_norms:
-            _add_error(path, f"Forbidden complex reference detected: {token}")
+            _add_error(
+                path,
+                f"Forbidden complex reference detected: {token}",
+                build_detail(
+                    token=token,
+                    normalized=_normalize(_canonical(token)),
+                    forbidden_rules=sorted(forbidden_norms),
+                    row=row,
+                ),
+            )
 
     def _has_positive_component_stoichiometry(component: Any) -> bool:
         if isinstance(component, str):
@@ -4248,6 +4327,10 @@ def run_strict_post_normalization_gates(
             _add_error(
                 "/locked_reaction_filter_report",
                 "Locked reaction accounting report must be an object.",
+                build_detail(
+                    found_type=type(lock_report).__name__,
+                    found_value=lock_report,
+                ),
             )
         elif "unaccounted_locked_reactions" in lock_report:
             unaccounted = lock_report.get("unaccounted_locked_reactions")
@@ -4256,11 +4339,23 @@ def run_strict_post_normalization_gates(
                     lock_pointer,
                     "Locked reaction accounting is malformed: "
                     "unaccounted_locked_reactions must be a non-negative integer.",
+                    build_detail(
+                        found_type=type(unaccounted).__name__,
+                        found_value=unaccounted,
+                        lock_report=lock_report,
+                    ),
                 )
             elif unaccounted > 0:
                 _add_error(
                     lock_pointer,
                     f"Locked reaction accounting failed: {unaccounted} locked reaction(s) are neither active nor quarantined.",
+                    # The report's own tallies say whether the shortfall is on
+                    # the active or the quarantined side -- the whole question
+                    # this error raises and never answered.
+                    build_detail(
+                        unaccounted=unaccounted,
+                        lock_report=lock_report,
+                    ),
                 )
 
     for duplicate_norm in sorted(set(protein_pointer_by_norm) & set(complex_pointer_by_norm)):
@@ -4271,24 +4366,46 @@ def run_strict_post_normalization_gates(
             and _normalize(_canonical(str(row.get("name", "")))) == duplicate_norm
         )
         duplicate_name = _canonical(str(protein_row.get("name", "")))
+        duplicate_complex_row = next(
+            (
+                row
+                for row in complexes
+                if isinstance(row, dict)
+                and _normalize(_canonical(str(row.get("name", "")))) == duplicate_norm
+            ),
+            None,
+        )
         _add_error(
             protein_pointer_by_norm[duplicate_norm],
             f"Entity '{duplicate_name}' is declared as both a protein and a protein_complex; "
             f"entity types must be disjoint (complex declaration: {complex_pointer_by_norm[duplicate_norm]}).",
+            # Both rows, because the fix is to delete one of them and only their
+            # contents say which is the duplicate and which is the real entity.
+            build_detail(
+                normalized=duplicate_norm,
+                protein_row=row_digest(protein_row, pointer=protein_pointer_by_norm[duplicate_norm]),
+                protein_complex_row=row_digest(
+                    duplicate_complex_row, pointer=complex_pointer_by_norm[duplicate_norm]
+                ),
+            ),
         )
 
     if int(stats.get("n_plus_tokens_remaining", 0)) != 0:
         _add_error(
             "/normalization_stats/n_plus_tokens_remaining",
             f"Expected 0 plus tokens, found {int(stats.get('n_plus_tokens_remaining', 0))}.",
+            build_detail(
+                n_plus_tokens_remaining=int(stats.get("n_plus_tokens_remaining", 0)),
+                normalization_stats=stats,
+            ),
         )
 
     for idx, row in enumerate(_safe_list(entities.get("compounds"))):
         if isinstance(row, dict):
-            _check_forbidden(f"/entities/compounds/{idx}/name", str(row.get("name", "")))
+            _check_forbidden(f"/entities/compounds/{idx}/name", str(row.get("name", "")), row)
     for idx, row in enumerate(_safe_list(entities.get("proteins"))):
         if isinstance(row, dict):
-            _check_forbidden(f"/entities/proteins/{idx}/name", str(row.get("name", "")))
+            _check_forbidden(f"/entities/proteins/{idx}/name", str(row.get("name", "")), row)
     for idx, row in enumerate(_safe_list(entities.get("proteins"))):
         if not isinstance(row, dict):
             continue
@@ -4300,23 +4417,38 @@ def run_strict_post_normalization_gates(
             _add_error(
                 f"/entities/proteins/{idx}",
                 f"Generated protein complex wrapper '{pname}' must be listed under protein_complexes, not proteins.",
+                # Two independent triggers share this message: the name collides
+                # with a generated wrapper, or it merely ends in " complex". They
+                # need different fixes (delete the duplicate vs. relocate the
+                # row), so record which one fired.
+                build_detail(
+                    name=pname,
+                    matched_generated_wrapper=pnorm in generated_complex_norms,
+                    name_ends_with_complex=pname.casefold().endswith(" complex"),
+                    row=row_digest(row),
+                ),
             )
         species = protein_species_context(row)
         if not species:
             _add_error(
                 f"/entities/proteins/{idx}",
                 f"Protein '{pname}' is missing species/organism.",
+                # protein_species_context reads several keys; showing the row
+                # tells the reviewer whether the species is absent or merely
+                # sitting under a key this resolver does not consult.
+                row_digest(row),
             )
         ext_id = protein_external_identity(row)
         if not ext_id:
             _add_error(
                 f"/entities/proteins/{idx}",
                 f"Protein '{pname}' is missing a UniProt or DrugBank identifier.",
+                row_digest(row),
             )
     for idx, row in enumerate(_safe_list(entities.get("protein_complexes"))):
         if not isinstance(row, dict):
             continue
-        _check_forbidden(f"/entities/protein_complexes/{idx}/name", str(row.get("name", "")))
+        _check_forbidden(f"/entities/protein_complexes/{idx}/name", str(row.get("name", "")), row)
         if not is_generated_complex_wrapper(row):
             continue
         pcname = str(row.get("name") or idx).strip()
@@ -4324,12 +4456,17 @@ def run_strict_post_normalization_gates(
             _add_error(
                 f"/entities/protein_complexes/{idx}",
                 f"Generated protein complex '{pcname}' is missing species/organism.",
+                row_digest(row),
             )
         components = _safe_list(row.get("components"))
         if not components:
             _add_error(
                 f"/entities/protein_complexes/{idx}/components",
                 f"Generated protein complex '{pcname}' must include at least one protein component.",
+                build_detail(
+                    found_type=type(row.get("components")).__name__,
+                    row=row_digest(row),
+                ),
             )
             continue
         for cidx, component in enumerate(components):
@@ -4339,6 +4476,16 @@ def run_strict_post_normalization_gates(
                 _add_error(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
                     f"Generated protein complex '{pcname}' component '{cname or cidx}' is missing positive stoichiometry.",
+                    build_detail(
+                        component_name=cname,
+                        stoichiometry=(
+                            component.get("stoichiometry") if isinstance(component, dict) else None
+                        ),
+                        stoichiometry_type=type(
+                            component.get("stoichiometry") if isinstance(component, dict) else None
+                        ).__name__,
+                        component=component,
+                    ),
                 )
             match = proteins_by_norm.get(_normalize(_canonical(cname))) if cname else None
             if match is None and comp_identity:
@@ -4347,17 +4494,36 @@ def run_strict_post_normalization_gates(
                 _add_error(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
                     f"Generated protein complex '{pcname}' component '{cname or cidx}' does not resolve to a declared protein.",
+                    # This is the gate's most common failure and the most opaque:
+                    # the message names a component but not what the registry
+                    # holds, so the reviewer cannot tell a typo from a genuinely
+                    # undeclared protein. Both lookup keys and the near misses.
+                    build_detail(
+                        component_name=cname,
+                        component_normalized=_normalize(_canonical(cname)) if cname else "",
+                        component_identity=comp_identity,
+                        did_you_mean=closest_names(
+                            cname,
+                            (str(declared.get("name", "")) for declared in proteins_by_norm.values()),
+                        ),
+                        declared_protein_count=len(proteins_by_norm),
+                        component=component,
+                    ),
                 )
                 continue
             if not protein_species_context(match):
                 _add_error(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
                     f"Generated protein complex '{pcname}' component protein '{match.get('name')}' is missing species/organism.",
+                    # The failing row is the declared protein, not the component
+                    # that pointed at it -- so show the protein that must be fixed.
+                    row_digest(match, pointer=protein_pointer_by_norm.get(_normalize(_canonical(cname)), "")),
                 )
             if not protein_external_identity(match):
                 _add_error(
                     f"/entities/protein_complexes/{idx}/components/{cidx}",
                     f"Generated protein complex '{pcname}' component protein '{match.get('name')}' is missing a UniProt or DrugBank identifier.",
+                    row_digest(match, pointer=protein_pointer_by_norm.get(_normalize(_canonical(cname)), "")),
                 )
 
     for ridx, reaction in enumerate(_safe_list(processes.get("reactions"))):
@@ -4366,7 +4532,7 @@ def run_strict_post_normalization_gates(
         for side in ["inputs", "outputs"]:
             for tidx, token in enumerate(_safe_list(reaction.get(side))):
                 if isinstance(token, str):
-                    _check_forbidden(f"/processes/reactions/{ridx}/{side}/{tidx}", token)
+                    _check_forbidden(f"/processes/reactions/{ridx}/{side}/{tidx}", token, reaction)
         for key in ["enzymes", "modifiers"]:
             for midx, actor in enumerate(_safe_list(reaction.get(key))):
                 if not isinstance(actor, dict):
@@ -4374,11 +4540,12 @@ def run_strict_post_normalization_gates(
                 actor_name = _actor_name_from_row(actor)
                 if not actor_name:
                     continue
-                _check_forbidden(f"/processes/reactions/{ridx}/{key}/{midx}", actor_name)
+                _check_forbidden(f"/processes/reactions/{ridx}/{key}/{midx}", actor_name, actor)
                 if _normalize(actor_name) not in protein_registry_norms:
                     _add_error(
                         f"/processes/reactions/{ridx}/{key}/{midx}",
                         f"Unknown protein/modifier reference: {actor_name}",
+                        _unknown_reference_detail(actor, actor_name, protein_registry_names),
                     )
 
     for tidx, transport in enumerate(_safe_list(processes.get("transports"))):
@@ -4387,32 +4554,46 @@ def run_strict_post_normalization_gates(
         for field in ["cargo_complex", "cargo"]:
             token = transport.get(field)
             if isinstance(token, str):
-                _check_forbidden(f"/processes/transports/{tidx}/{field}", token)
+                _check_forbidden(f"/processes/transports/{tidx}/{field}", token, transport)
         for tridx, actor in enumerate(_safe_list(transport.get("transporters"))):
             if not isinstance(actor, dict):
                 continue
             actor_name = _actor_name_from_row(actor)
             if not actor_name:
                 continue
-            _check_forbidden(f"/processes/transports/{tidx}/transporters/{tridx}", actor_name)
+            _check_forbidden(f"/processes/transports/{tidx}/transporters/{tridx}", actor_name, actor)
             if _normalize(actor_name) not in protein_registry_norms:
                 _add_error(
                     f"/processes/transports/{tidx}/transporters/{tridx}",
                     f"Unknown transporter reference: {actor_name}",
+                    _unknown_reference_detail(actor, actor_name, protein_registry_names),
                 )
 
-    try:
-        validate_no_composites(payload)
-    except Exception as exc:  # noqa: BLE001
-        _add_error("/processes", f"Composite validation failed: {exc}")
-    try:
-        validate_registry_references(payload)
-    except Exception as exc:  # noqa: BLE001
-        _add_error("/processes", f"Registry validation failed: {exc}")
-    try:
-        validate_no_scaffold_modifiers(payload, report=rep)
-    except Exception as exc:  # noqa: BLE001
-        _add_error("/processes/reactions/*/enzymes", f"Scaffold modifier validation failed: {exc}")
+    # These three catch bare ``Exception``, so a genuine bug in a validator and a
+    # legitimate validation failure produce the same one-line error. The
+    # exception class separates them: a ValueError is the validator rejecting the
+    # payload, anything else is the validator itself breaking.
+    for validator, pointer, label in (
+        (lambda: validate_no_composites(payload), "/processes", "Composite"),
+        (lambda: validate_registry_references(payload), "/processes", "Registry"),
+        (
+            lambda: validate_no_scaffold_modifiers(payload, report=rep),
+            "/processes/reactions/*/enzymes",
+            "Scaffold modifier",
+        ),
+    ):
+        try:
+            validator()
+        except Exception as exc:  # noqa: BLE001
+            _add_error(
+                pointer,
+                f"{label} validation failed: {exc}",
+                build_detail(
+                    exception_type=type(exc).__name__,
+                    exception_message=str(exc),
+                    validator=label,
+                ),
+            )
 
     from t2pw.pipeline.qa_graph import build_graph, connected_components, degrees, get_entities, node
 
@@ -4458,6 +4639,23 @@ def run_strict_post_normalization_gates(
             _add_error(
                 located_norm_to_pointers[norm][0],
                 f"Located protein is isolated in connectivity graph: {protein_name}",
+                # A protein given a subcellular location but no edge means its
+                # reactions reference it under a different spelling. The near
+                # misses among nodes that DO have edges are the candidates.
+                build_detail(
+                    protein=protein_name,
+                    normalized=norm,
+                    location_pointers=located_norm_to_pointers[norm],
+                    degree=deg.get(pnode, 0),
+                    did_you_mean=closest_names(
+                        protein_name,
+                        (
+                            other
+                            for other in ents.get("proteins", set())
+                            if deg.get(node("protein", other), 0) > 0
+                        ),
+                    ),
+                ),
             )
 
     # Proteins declared as components of any protein_complex are degree-0 by design:
@@ -4479,6 +4677,25 @@ def run_strict_post_normalization_gates(
                 _add_error(
                     protein_pointer_by_norm.get(pnorm, f"/entities/proteins/{protein_name}"),
                     f"Protein has degree 0 after normalization: {protein_name}",
+                    build_detail(
+                        protein=protein_name,
+                        normalized=pnorm,
+                        # Stated explicitly because the exemption above is the
+                        # first thing to check: a component of a declared complex
+                        # is degree-0 by design and is skipped, so a protein that
+                        # reaches this error is NOT one.
+                        is_complex_component=pnorm in _complex_component_norms,
+                        proteins_degree0=proteins_degree0,
+                        proteins_total=proteins_total,
+                        did_you_mean=closest_names(
+                            protein_name,
+                            (
+                                other
+                                for other in ents.get("proteins", set())
+                                if deg.get(node("protein", other), 0) > 0
+                            ),
+                        ),
+                    ),
                 )
 
     details = {

@@ -1,0 +1,141 @@
+RESULT: FAIL
+========================================
+paper      : PMC12935629
+title      : Microbial biofortification of fermented foods: a review of probiotic-mediated nutrient enhancement.
+slug       : PMC12935629__microbial-biofortification-of-fermented-foods-a
+mode       : research
+status     : fail
+stage      : stage1
+wall time  : 43.6s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : ambiguous_review_scope
+message      : multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.
+issue codes  : ambiguous_review_scope
+
+DETAIL / TRACEBACK
+----------------------------------------
+{
+  "status": "ambiguous_review_scope",
+  "message": "multi_example_review detected with no selected_example. Extraction skipped to prevent mixed-pathway output.",
+  "candidate_examples": [
+    {
+      "name": "menaquinone (vitamin K2) biosynthesis in Bacillus subtilis natto",
+      "organism": "Bacillus subtilis natto",
+      "key_compounds": [
+        "menaquinone",
+        "vitamin K2"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Bacillus subtilis natto, which produces up to 50–100 μg/100 grams of soybean consumers Vitamin K2"
+    },
+    {
+      "name": "folate (vitamin B9) biosynthesis by Lactobacillus plantarum",
+      "organism": "Lactobacillus plantarum",
+      "key_compounds": [
+        "folate",
+        "vitamin B9"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Lactobacillus plantarum ... produce folate"
+    },
+    {
+      "name": "riboflavin (vitamin B2) biosynthesis by Lactococcus lactis",
+      "organism": "Lactococcus lactis",
+      "key_compounds": [
+        "riboflavin",
+        "vitamin B2"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Lactococcus lactis N8 ... biofortification of riboflavin"
+    },
+    {
+      "name": "cobalamin (vitamin B12) biosynthesis by Propionibacterium freudenreichii",
+      "organism": "Propionibacterium freudenreichii",
+      "key_compounds": [
+        "cobalamin",
+        "vitamin B12"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Propionibacterium freudenreichii synthesize vitamin B12 in soy or cereal at 0.95–3.2 μg/100 grams"
+    },
+    {
+      "name": "vitamin K2 biosynthesis by Lactobacillus plantarum in vegetable ferments",
+      "organism": "Lactobacillus plantarum",
+      "key_compounds": [
+        "vitamin K2",
+        "menaquinone"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Fermenting cabbages or cucumbers with Lactobacillus plantarum and increases vitamin K2 to 50–80 μg/100 g of cabbage"
+    },
+    {
+      "name": "folate biosynthesis by Bifidobacterium",
+      "organism": "Bifidobacterium",
+      "key_compounds": [
+        "folate",
+        "vitamin B9"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Mice colonized with the folateproducing Bifidobacterium had more folate in the blood and tissue"
+    },
+    {
+      "name": "riboflavin biosynthesis by Lactobacillus reuteri",
+      "organism": "Lactobacillus reuteri",
+      "key_compounds": [
+        "riboflavin",
+        "vitamin B2"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Lactobacillus reuteri ... contain the enzymatic pathway that is required to synthesize ... riboflavin"
+    },
+    {
+      "name": "cobalamin biosynthesis by Propionibacterium shermanii",
+      "organism": "Propionibacterium shermanii",
+      "key_compounds": [
+        "cobalamin",
+        "vitamin B12"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Fermentative production of vitamin B12 by Propionibacterium shermanii"
+    },
+    {
+      "name": "vitamin K2 biosynthesis by cheese microbiota",
+      "organism": "",
+      "key_compounds": [
+        "vitamin K2",
+        "menaquinone"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Certain types of cheese naturally have a high enrichment in vitamin K2 (menaquinone) in amounts of up to 50–100 μg/100 g"
+    },
+    {
+      "name": "folate biosynthesis by Streptococcus thermophilus",
+      "organism": "Streptococcus thermophilus",
+      "key_compounds": [
+        "folate",
+        "vitamin B9"
+      ],
+      "key_proteins": [],
+      "main_subprocesses": [],
+      "evidence": "Streptococcus thermophilus ... are highly renowned sources of B-group vitamins (i.e., riboflavin, folate and occasionally cobalamin)"
+    }
+  ]
+}
+Ambiguous review scope: this looks like a multi-example review, but no target example was selected. Name the example you want in the "Optional extraction focus / task context" box above (one of the candidate example names below works), then re-run. Re-running without naming a target will produce this same result.
+**Research mode — relaxed.** PathWhiz formatting rules are skipped and biology/provenance problems are reported as review flags instead of stopping the run. The output is a *candidate* pathway for human review, not an importable PWML file. Read the Review flags panel before trusting it.
+Review paper detected with multiple examples but no target example specified. candidate_examples populated; downstream stages should select one.
+
+FILES WRITTEN
+----------------------------------------
+  (none)

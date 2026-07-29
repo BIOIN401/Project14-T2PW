@@ -1,0 +1,28 @@
+RESULT: FAIL
+========================================
+paper      : PMC12993329
+title      : CD79A/CD40 intracellular domain uses a 4-1BB-like metabolic pathway driven by cholesterol biosynthesis.
+slug       : PMC12993329__cd79a-cd40-intracellular-domain-uses-a-4-1bb-li
+mode       : strict
+status     : error
+stage      : init
+wall time  : 0.0s
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : crash
+message      : batch driver crashed before it could judge the run
+issue codes  : (none reported)
+
+DETAIL / TRACEBACK
+----------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\batch\driver.py", line 1021, in run_one
+    _drive(paper, mode_label, outcome, budget, app_path)
+  File "C:\Users\Angad\Desktop\SummerBIOIN\Project14-T2PW\src\t2pw\batch\driver.py", line 1074, in _drive
+    from streamlit.testing.v1 import AppTest
+ModuleNotFoundError: No module named 'streamlit'
+
+FILES WRITTEN
+----------------------------------------
+  (none)

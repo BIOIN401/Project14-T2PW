@@ -80,6 +80,7 @@ from t2pw.pipeline.pipeline import (
     run_stage_two_with_feedback_loop,
     run_stage_one_with_chunking,
 )
+from t2pw.pipeline.failure_detail import headline as detail_headline
 from t2pw.pipeline.draft_graph import build_draft_graph
 from t2pw.pipeline.qa_graph import generate_qa_report
 from t2pw.pipeline.reaction_summary import generate_reaction_summary
@@ -1048,6 +1049,7 @@ def _render_stage_contract_failure(
             if issue.get(optional_field) not in (None, ""):
                 displayed_issue[optional_field] = issue[optional_field]
         st.write(displayed_issue)
+        _render_issue_detail(issue.get("detail"))
 
     st.write("Full stage contract report")
     st.json(report)
@@ -1058,6 +1060,31 @@ def _render_stage_contract_failure(
         mime="application/json",
         key=download_key,
     )
+
+
+def _render_issue_detail(detail: Any) -> None:
+    """Render a failure ``detail`` beneath the issue it explains.
+
+    Uses a collapsed ``st.json`` rather than an ``st.expander``: every gate-error
+    list in this app is already rendered inside an expander, and Streamlit raises
+    on a nested one. ``st.json(..., expanded=False)`` gives the same
+    click-to-open behaviour with no nesting constraint, so one helper works at
+    every call site.
+
+    The detail arrives already bounded by ``t2pw.pipeline.failure_detail`` --
+    evidence censused, scalars clipped -- so this renders it wholesale without
+    re-checking sizes. That split is deliberate: if the app truncated too, the
+    batch artifacts (which never pass through here) would carry a different,
+    larger detail than the UI, and the two would disagree about what the run saw.
+    """
+
+    data = _safe_dict(detail)
+    if not data:
+        return
+    summary = detail_headline(data)
+    if summary:
+        st.caption(summary)
+    st.json(data, expanded=False)
 
 
 def _research_flag_rows(issues: Any) -> List[Dict[str, Any]]:
@@ -1072,7 +1099,12 @@ def _research_flag_rows(issues: Any) -> List[Dict[str, Any]]:
                 "code": str(issue.get("code") or ""),
                 "where": str(issue.get("pointer") or issue.get("path") or ""),
                 "stage": str(issue.get("stage") or ""),
+                # NB: this column has always held the human message, not the
+                # structured ``detail`` key -- which is why the value that was
+                # actually rejected gets its own "found" column rather than
+                # being folded in here.
                 "detail": str(issue.get("message") or issue.get("reason") or ""),
+                "found": detail_headline(issue.get("detail")) or str(issue.get("found") or ""),
             }
         )
     return rows
@@ -4267,6 +4299,7 @@ if st.session_state.get("pipeline_ready"):
                     for _ge in _gate_errors:
                         if isinstance(_ge, dict):
                             st.markdown(f"- **`{_ge.get('path', '?')}`**: {_ge.get('reason', _ge)}")
+                            _render_issue_detail(_ge.get("detail"))
                         else:
                             st.markdown(f"- {_ge}")
         elif normalization_gate_failed:
@@ -4851,6 +4884,7 @@ if st.session_state.get("pipeline_ready"):
                                             st.markdown(
                                                 f"- `{_gate_err.get('path', '')}` — {_gate_err.get('reason', _gate_err)}"
                                             )
+                                            _render_issue_detail(_gate_err.get("detail"))
                                         else:
                                             st.markdown(f"- {_gate_err}")
                                 else:
@@ -4990,6 +5024,7 @@ if st.session_state.get("pipeline_ready"):
                             _ptr = _issue.get("pointer", "")
                             _msg = _issue.get("message", "")
                             st.markdown(f"- `{_ptr}` - {_msg}" if _ptr else f"- {_msg}")
+                            _render_issue_detail(_issue.get("detail"))
                 st.download_button(
                     "Download required-field gate report",
                     data=json.dumps(_gate_report, indent=2),

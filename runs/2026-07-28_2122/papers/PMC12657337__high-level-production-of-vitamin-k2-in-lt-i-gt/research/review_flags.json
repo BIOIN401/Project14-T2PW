@@ -1,0 +1,329 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/0",
+      "reason": "Protein 'EcMenA' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/1",
+      "reason": "Protein 'BsUbiE' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/2",
+      "reason": "Protein 'BsHepPPS' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/3",
+      "reason": "Protein 'ECidi' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/4",
+      "reason": "Protein 'EfmvaE' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'EfmvaS' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'MmmvK' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/7",
+      "reason": "Protein 'ScpmK' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'ScmvD' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/16",
+      "reason": "Protein '4-amino-4-deoxychorismate (ADC) synthase' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/24",
+      "reason": "Protein 'AroD-encoded shikimate 5-dehydrogenase' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/33",
+      "reason": "Protein 'DAHP synthase' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/35",
+      "reason": "Protein 'dihydroxyacetone phosphate mutase' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/38",
+      "reason": "Protein 'EPSP synthase' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/42",
+      "reason": "Protein 'glucose kinase (GlcK)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/46",
+      "reason": "Protein 'HepPPS' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'EfmvaS' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    }
+  ],
+  "strict_gate_errors_not_blocking": [
+    {
+      "code": "gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/0",
+      "message": "Protein 'EcMenA' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/1",
+      "message": "Protein 'BsUbiE' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/2",
+      "message": "Protein 'BsHepPPS' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/3",
+      "message": "Protein 'ECidi' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_efmvae_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/4",
+      "message": "Protein 'EfmvaE' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_efmvas_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/5",
+      "message": "Protein 'EfmvaS' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_mmmvk_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/6",
+      "message": "Protein 'MmmvK' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_scpmk_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/7",
+      "message": "Protein 'ScpmK' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_scmvd_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/8",
+      "message": "Protein 'ScmvD' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_amino_deoxychorismate_adc_synthase_is_missing_a_uniprot_",
+      "pointer": "/entities/proteins/16",
+      "message": "Protein '4-amino-4-deoxychorismate (ADC) synthase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_arod_encoded_shikimate_dehydrogenase_is_missing_a_unipro",
+      "pointer": "/entities/proteins/24",
+      "message": "Protein 'AroD-encoded shikimate 5-dehydrogenase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_dahp_synthase_is_missing_a_uniprot_or_drugbank_identifie",
+      "pointer": "/entities/proteins/33",
+      "message": "Protein 'DAHP synthase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_dihydroxyacetone_phosphate_mutase_is_missing_a_uniprot_o",
+      "pointer": "/entities/proteins/35",
+      "message": "Protein 'dihydroxyacetone phosphate mutase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_epsp_synthase_is_missing_a_uniprot_or_drugbank_identifie",
+      "pointer": "/entities/proteins/38",
+      "message": "Protein 'EPSP synthase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_glucose_kinase_glck_is_missing_a_uniprot_or_drugbank_ide",
+      "pointer": "/entities/proteins/42",
+      "message": "Protein 'glucose kinase (GlcK)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_heppps_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/46",
+      "message": "Protein 'HepPPS' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/1",
+      "message": "Protein 'BsUbiE' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/3",
+      "message": "Protein 'ECidi' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_efmvas_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/5",
+      "message": "Protein 'EfmvaS' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_mmmvk_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/6",
+      "message": "Protein 'MmmvK' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_scpmk_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/7",
+      "message": "Protein 'ScpmK' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_scmvd_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/8",
+      "message": "Protein 'ScmvD' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_amino_deoxychorismate_adc_synthase_is_missing_a_uniprot_",
+      "pointer": "/entities/proteins/16",
+      "message": "Protein '4-amino-4-deoxychorismate (ADC) synthase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_dihydroxyacetone_phosphate_mutase_is_missing_a_uniprot_o",
+      "pointer": "/entities/proteins/35",
+      "message": "Protein 'dihydroxyacetone phosphate mutase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    }
+  ]
+}

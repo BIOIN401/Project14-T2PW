@@ -1,0 +1,171 @@
+{
+  "ok": false,
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 0,
+    "entities_added_as_compounds": 0,
+    "entities_added_as_proteins": 0,
+    "catalysts_promoted_to_enzymes": 0,
+    "interaction_enzymes_promoted": 0,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "ACC complex",
+      "acetyl-CoA carboxylase enzyme complex"
+    ],
+    "n_autostate_created": 0,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "enzymes_attached_from_reaction_evidence": 0,
+    "modifier_refs_canonicalized": 0,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 0,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 0,
+    "dedupe_removed_total": 0,
+    "no_op_removed_count": 0,
+    "no_op_quarantined_count": 0,
+    "locked_no_op_quarantined_count": 0,
+    "evidenced_no_op_quarantined_count": 0,
+    "unsupported_no_op_dropped_count": 0,
+    "duplicate_locked_reactions_quarantined_count": 0,
+    "n_same_as_groups": 0,
+    "n_aliases_rewritten": 0,
+    "n_entities_deduped": 0,
+    "n_single_protein_complexes_removed": 0,
+    "complex_named_proteins_relocated": 0,
+    "unresolved_complex_components_dropped": 0,
+    "component_only_proteins_removed": 0,
+    "pruned_disconnected_proteins": [],
+    "pruned_disconnected_proteins_count": 0,
+    "alias_example_mappings": [],
+    "alias_canonicalization": {
+      "n_same_as_groups": 0,
+      "n_aliases_rewritten": 0,
+      "n_entities_deduped": 0,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": []
+    }
+  },
+  "connectivity": {
+    "n_reactions": 22,
+    "n_transports": 2,
+    "n_interactions": 5,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 108,
+    "n_edges": 255,
+    "n_components": 1,
+    "main_component_size": 108,
+    "largest_component_pct": 100.0,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 0,
+    "proteins_attached_pct": 100.0
+  },
+  "errors": [
+    {
+      "path": "/processes/reactions/8/enzymes/7",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/8/enzymes/8",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/8/modifiers/7",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/8/modifiers/8",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/9/enzymes/1",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/9/enzymes/12",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/9/modifiers/1",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/9/modifiers/12",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/10/enzymes/11",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/10/enzymes/12",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/10/modifiers/11",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/10/modifiers/12",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/11/enzymes/11",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/11/enzymes/12",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/11/modifiers/11",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/11/modifiers/12",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/12/enzymes/2",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/12/enzymes/13",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/12/modifiers/2",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/12/modifiers/13",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/15/enzymes/8",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/15/enzymes/9",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes/reactions/15/modifiers/8",
+      "reason": "Unknown protein/modifier reference: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)"
+    },
+    {
+      "path": "/processes/reactions/15/modifiers/9",
+      "reason": "Unknown protein/modifier reference: acyltransferases PlsB and PlsC"
+    },
+    {
+      "path": "/processes",
+      "reason": "Registry validation failed: Registry validation failed:\n/processes/reactions/8/enzymes/7 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/8/enzymes/8 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/8/modifiers/7 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/8/modifiers/8 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/9/enzymes/1 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/9/enzymes/12 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/9/modifiers/1 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/9/modifiers/12 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/10/enzymes/11 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/10/enzymes/12 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/10/modifiers/11 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/10/modifiers/12 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/11/enzymes/11 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/11/enzymes/12 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/11/modifiers/11 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/11/modifiers/12 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/12/enzymes/2 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/12/enzymes/13 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/12/modifiers/2 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/12/modifiers/13 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/15/enzymes/8 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/15/enzymes/9 unknown modifier: acyltransferases PlsB and PlsC\n/processes/reactions/15/modifiers/8 unknown modifier: acetyl-CoA carboxylase enzyme complex (comprising AccA, B, C, and D components)\n/processes/reactions/15/modifiers/9 unknown modifier: acyltransferases PlsB and PlsC\n/processes/interactions/4/entity_2 unknown entity: LapB-FtsH proteolysis"
+    }
+  ]
+}

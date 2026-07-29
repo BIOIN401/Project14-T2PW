@@ -1,0 +1,860 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-07-27T21:35:49
+finished : 2026-07-27T21:36:13
+papers attempted : 28
+strict PWML      : 0 pass / 28 fail
+research relaxed : 0 pass / 28 fail
+timeouts         : 0
+skipped          : 0
+pass, no deliv.  : 0  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 56 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+!! RESEARCH-MODE DEFECT !!
+Research mode is fail-open by design: it relaxes FORMAT rules and records review flags instead of
+stopping. Therefore ANY research failure is a code defect, not a data problem. Fix these before
+anything else.
+papers affected: 28
+
+  PMC12444477 -- The regulation of lipid A biosynthesis.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC13278307 -- An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC13231680 -- Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem
+  bactericidal activity in NDM-1-positive Escherichia coli.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12624714 -- Membrane Proteins ClcB, PtsI, and YcaM Mediate the Bactericidal Effects of Colistin
+  in &lt;i&gt;Escherichia coli&lt;/i&gt;.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12971581 -- Ochrobactrum anthropi Causing Fournier's Gangrene: A Report of a Rare Case.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC13139079 -- Environmental resistome of culturable gram-negative bacilli from the Yaque del
+  Norte River: baseline genomic evidence for one health surveillance.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12312563 -- Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured
+  intermediate I-bound forms.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12657337 -- High-level production of vitamin K2 in &lt;i&gt;Escherichia coli&lt;/i&gt; via
+  modular molecular engineering.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12935629 -- Microbial biofortification of fermented foods: a review of probiotic-mediated
+  nutrient enhancement.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12421875 -- The growth benefits and toxicity of quinone biosynthesis are balanced by a dual
+  regulatory mechanism and substrate limitations.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC11946230 -- A High-Throughput Screening Strategy for &lt;i&gt;Bacillus subtilis&lt;/i&gt;
+  Producing Menaquinone-7 Based on Fluorescence-Activated Cell Sorting.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC13264790 -- Comprehensive bioinformatics and experimental analysis of PPOX reveals its
+  carcinogenic effect in clear cell renal cell carcinoma.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12180156 -- Update of the sideroflexin (SLC56) gene family.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC13233763 -- Glycine: The missing link between carbohydrate and xenobiotic metabolism in the
+  maturing human hepatocyte.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12898691 -- CladeOScope-GSA: Revealing Evolutionary Associations Across Gene Sets.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12856317 -- A reversible feedback mechanism regulating mitochondrial heme synthesis.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12797059 -- Association of gender and main comorbidities with expression of lncRNAs and mRNAs
+  in COVID-19 patients
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12452463 -- Enterobactin: A key player in bacterial iron acquisition and virulence and its
+  implications for vaccine development and antimicrobial strategies.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12649316 -- Genotypic Characterization of Virulence Factors in Extended-Spectrum Beta-Lactamase
+  (ESBL)-Producing &lt;i&gt;Escherichia coli&lt;/i&gt; Strains from Chickens in Hungary.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12096016 -- The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoic acid is a
+  competitive inhibitor of the Escherichia coli isochorismatase EntB.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC13010160 -- Despite inducing antioxidant regulation, superoxide dismutase deficiency makes
+  &lt;i&gt;Escherichia coli&lt;/i&gt; more sensitive to hydrogen peroxide.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12737783 -- Virulence Gene Profiles of Extended-Spectrum β-Lactamase (ESBL)-Producing
+  &lt;i&gt;Escherichia coli&lt;/i&gt; Isolated from Turkeys in Hungary: A Whole-Genome Sequencing
+  Study.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12113831 -- In Vitro Evaluation of the Healing Potential and Proteomic Study of
+  &lt;i&gt;Quercus robur&lt;/i&gt; L. Leaf Extracts in Human Keratinocytes.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12993329 -- CD79A/CD40 intracellular domain uses a 4-1BB-like metabolic pathway driven by
+  cholesterol biosynthesis.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12428349 -- Cholesterol Regulates Airway Epithelial Cell Differentiation by Inhibiting p53
+  Nuclear Translocation.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12782028 -- Cholesterol and steroid synthesis pathways may be involved in the inhibition of
+  osteosarcoma cell viability by calcium-sensing receptor antagonism.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC11385646 -- A multi-layered integrative analysis reveals a cholesterol metabolic program in
+  outer radial glia with implications for human brain evolution.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+  PMC12705669 -- Histone methyltransferase PRDM9 promotes survival of drug-tolerant persister cells
+  in glioblastoma.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=init after 0.0s
+    failure_kind: crash
+      message: batch driver crashed before it could judge the run
+
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken           28  (strict FAIL + research FAIL -- real bug, also a research defect)
+    PMC12444477, PMC13278307, PMC13231680, PMC12624714, PMC12971581, PMC13139079, PMC12312563,
+    PMC12657337, PMC12935629, PMC12421875, PMC11946230, PMC13264790, PMC12180156, PMC13233763,
+    PMC12898691, PMC12856317, PMC12797059, PMC12452463, PMC12649316, PMC12096016, PMC13010160,
+    PMC12737783, PMC12113831, PMC12993329, PMC12428349, PMC12782028, PMC11385646, PMC12705669
+format-blocked    0  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+incomplete        0  (a mode is missing, skipped or unrecognised)
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] The regulation of lipid A biosynthesis. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12444477
+    slug   : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+    uri    : https://doi.org/10.1016/j.jbc.2025.110556
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[2] An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC13278307
+    slug   : PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g
+    uri    : https://doi.org/10.7759/cureus.109203
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[3] Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal
+activity in NDM-1-positive Escherichia coli. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13231680
+    slug   : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+    uri    : https://doi.org/10.1186/s12866-026-05073-w
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[4] Membrane Proteins ClcB, PtsI, and YcaM Mediate the Bactericidal Effects of Colistin in
+&lt;i&gt;Escherichia coli&lt;/i&gt;. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12624714
+    slug   : PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th
+    uri    : https://doi.org/10.1021/acsinfecdis.5c00566
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[5] Ochrobactrum anthropi Causing Fournier's Gangrene: A Report of a Rare Case. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC12971581
+    slug   : PMC12971581__ochrobactrum-anthropi-causing-fournier-s-gangre
+    uri    : https://doi.org/10.7759/cureus.103181
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[6] Environmental resistome of culturable gram-negative bacilli from the Yaque del Norte River:
+baseline genomic evidence for one health surveillance. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13139079
+    slug   : PMC13139079__environmental-resistome-of-culturable-gram-nega
+    uri    : https://doi.org/10.3389/fmicb.2026.1780969
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[7] Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate
+I-bound forms. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12312563
+    slug   : PMC12312563__structures-of-listeria-monocytogenes-mend-in-th
+    uri    : https://doi.org/10.1107/s2053230x25006181
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[8] High-level production of vitamin K2 in &lt;i&gt;Escherichia coli&lt;/i&gt; via modular molecular
+engineering. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12657337
+    slug   : PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt
+    uri    : https://doi.org/10.1016/j.synbio.2025.11.001
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[9] Microbial biofortification of fermented foods: a review of probiotic-mediated nutrient
+enhancement. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12935629
+    slug   : PMC12935629__microbial-biofortification-of-fermented-foods-a
+    uri    : https://doi.org/10.3389/fnut.2026.1754233
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[10] The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory
+mechanism and substrate limitations. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12421875
+    slug   : PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio
+    uri    : https://doi.org/10.1128/mbio.00887-25
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[11] A High-Throughput Screening Strategy for &lt;i&gt;Bacillus subtilis&lt;/i&gt; Producing
+Menaquinone-7 Based on Fluorescence-Activated Cell Sorting. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC11946230
+    slug   : PMC11946230__a-high-throughput-screening-strategy-for-lt-i-g
+    uri    : https://doi.org/10.3390/microorganisms13030536
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[12] Comprehensive bioinformatics and experimental analysis of PPOX reveals its carcinogenic effect
+in clear cell renal cell carcinoma. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13264790
+    slug   : PMC13264790__comprehensive-bioinformatics-and-experimental-a
+    uri    : https://doi.org/10.21037/tau-2026-1-0024
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[13] Update of the sideroflexin (SLC56) gene family. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12180156
+    slug   : PMC12180156__update-of-the-sideroflexin-slc56-gene-family
+    uri    : https://doi.org/10.1186/s40246-025-00779-w
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[14] Glycine: The missing link between carbohydrate and xenobiotic metabolism in the maturing human
+hepatocyte. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13233763
+    slug   : PMC13233763__glycine-the-missing-link-between-carbohydrate-a
+    uri    : https://doi.org/10.1016/j.isci.2026.116113
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[15] CladeOScope-GSA: Revealing Evolutionary Associations Across Gene Sets. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC12898691
+    slug   : PMC12898691__cladeoscope-gsa-revealing-evolutionary-associat
+    uri    : https://doi.org/10.3390/ijms27031457
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[16] A reversible feedback mechanism regulating mitochondrial heme synthesis. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC12856317
+    slug   : PMC12856317__a-reversible-feedback-mechanism-regulating-mito
+    uri    : https://doi.org/10.1016/j.jbc.2025.111089
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[17] Association of gender and main comorbidities with expression of lncRNAs and mRNAs in COVID-19
+patients -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12797059
+    slug   : PMC12797059__association-of-gender-and-main-comorbidities-wi
+    uri    : https://europepmc.org/article/PMC/PMC12797059
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[18] Enterobactin: A key player in bacterial iron acquisition and virulence and its implications for
+vaccine development and antimicrobial strategies. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12452463
+    slug   : PMC12452463__enterobactin-a-key-player-in-bacterial-iron-acq
+    uri    : https://doi.org/10.1080/21505594.2025.2563018
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[19] Genotypic Characterization of Virulence Factors in Extended-Spectrum Beta-Lactamase
+(ESBL)-Producing &lt;i&gt;Escherichia coli&lt;/i&gt; Strains from Chickens in Hungary. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC12649316
+    slug   : PMC12649316__genotypic-characterization-of-virulence-factors
+    uri    : https://doi.org/10.3390/antibiotics14111083
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[20] The enterobactin biosynthetic intermediate 2,3-dihydroxybenzoic acid is a competitive inhibitor
+of the Escherichia coli isochorismatase EntB. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12096016
+    slug   : PMC12096016__the-enterobactin-biosynthetic-intermediate-2-3
+    uri    : https://doi.org/10.1002/pro.70160
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[21] Despite inducing antioxidant regulation, superoxide dismutase deficiency makes
+&lt;i&gt;Escherichia coli&lt;/i&gt; more sensitive to hydrogen peroxide. -> broken !! RESEARCH-MODE
+DEFECT !!
+    id     : PMC13010160
+    slug   : PMC13010160__despite-inducing-antioxidant-regulation-superox
+    uri    : https://doi.org/10.3389/fmicb.2026.1793871
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[22] Virulence Gene Profiles of Extended-Spectrum β-Lactamase (ESBL)-Producing &lt;i&gt;Escherichia
+coli&lt;/i&gt; Isolated from Turkeys in Hungary: A Whole-Genome Sequencing Study. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC12737783
+    slug   : PMC12737783__virulence-gene-profiles-of-extended-spectrum-la
+    uri    : https://doi.org/10.3390/vetsci12121141
+    topic  : enterobactin biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[23] In Vitro Evaluation of the Healing Potential and Proteomic Study of &lt;i&gt;Quercus
+robur&lt;/i&gt; L. Leaf Extracts in Human Keratinocytes. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12113831
+    slug   : PMC12113831__in-vitro-evaluation-of-the-healing-potential-an
+    uri    : https://doi.org/10.3390/molecules30102152
+    topic  : cholesterol biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[24] CD79A/CD40 intracellular domain uses a 4-1BB-like metabolic pathway driven by cholesterol
+biosynthesis. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12993329
+    slug   : PMC12993329__cd79a-cd40-intracellular-domain-uses-a-4-1bb-li
+    uri    : https://doi.org/10.1136/jitc-2025-012309
+    topic  : cholesterol biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[25] Cholesterol Regulates Airway Epithelial Cell Differentiation by Inhibiting p53 Nuclear
+Translocation. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12428349
+    slug   : PMC12428349__cholesterol-regulates-airway-epithelial-cell-di
+    uri    : https://doi.org/10.3390/ijms26178324
+    topic  : cholesterol biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[26] Cholesterol and steroid synthesis pathways may be involved in the inhibition of osteosarcoma
+cell viability by calcium-sensing receptor antagonism. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12782028
+    slug   : PMC12782028__cholesterol-and-steroid-synthesis-pathways-may
+    uri    : https://doi.org/10.7717/peerj.20546
+    topic  : cholesterol biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[27] A multi-layered integrative analysis reveals a cholesterol metabolic program in outer radial
+glia with implications for human brain evolution. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC11385646
+    slug   : PMC11385646__a-multi-layered-integrative-analysis-reveals-a
+    uri    : https://doi.org/10.1242/dev.202390
+    topic  : cholesterol biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[28] Histone methyltransferase PRDM9 promotes survival of drug-tolerant persister cells in
+glioblastoma. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12705669
+    slug   : PMC12705669__histone-methyltransferase-prdm9-promotes-surviv
+    uri    : https://doi.org/10.1038/s41467-025-65888-5
+    topic  : cholesterol biosynthesis
+
+    strict   : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+    research : FAIL | stage=init | time=0.0s
+        failure_kind : crash
+        message      : batch driver crashed before it could judge the run
+        issue_codes  : (none reported)
+        files        : none recorded
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     - PMC12444477: init -- no codes
+     - PMC13278307: init -- no codes
+     - PMC13231680: init -- no codes
+     - PMC12624714: init -- no codes
+     - PMC12971581: init -- no codes
+     - PMC13139079: init -- no codes
+     - PMC12312563: init -- no codes
+     - PMC12657337: init -- no codes
+     - PMC12935629: init -- no codes
+     - PMC12421875: init -- no codes
+     - PMC11946230: init -- no codes
+     - PMC13264790: init -- no codes
+     - PMC12180156: init -- no codes
+     - PMC13233763: init -- no codes
+     - PMC12898691: init -- no codes
+     - PMC12856317: init -- no codes
+     - PMC12797059: init -- no codes
+     - PMC12452463: init -- no codes
+     - PMC12649316: init -- no codes
+     - PMC12096016: init -- no codes
+     - PMC13010160: init -- no codes
+     - PMC12737783: init -- no codes
+     - PMC12113831: init -- no codes
+     - PMC12993329: init -- no codes
+     - PMC12428349: init -- no codes
+     - PMC12782028: init -- no codes
+     - PMC11385646: init -- no codes
+     - PMC12705669: init -- no codes
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     - PMC12444477: crash
+     - PMC13278307: crash
+     - PMC13231680: crash
+     - PMC12624714: crash
+     - PMC12971581: crash
+     - PMC13139079: crash
+     - PMC12312563: crash
+     - PMC12657337: crash
+     - PMC12935629: crash
+     - PMC12421875: crash
+     - PMC11946230: crash
+     - PMC13264790: crash
+     - PMC12180156: crash
+     - PMC13233763: crash
+     - PMC12898691: crash
+     - PMC12856317: crash
+     - PMC12797059: crash
+     - PMC12452463: crash
+     - PMC12649316: crash
+     - PMC12096016: crash
+     - PMC13010160: crash
+     - PMC12737783: crash
+     - PMC12113831: crash
+     - PMC12993329: crash
+     - PMC12428349: crash
+     - PMC12782028: crash
+     - PMC11385646: crash
+     - PMC12705669: crash
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     (none)
+
+====================================================================================================

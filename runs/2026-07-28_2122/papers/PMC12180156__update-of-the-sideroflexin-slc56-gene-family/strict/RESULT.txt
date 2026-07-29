@@ -1,0 +1,46 @@
+RESULT: FAIL
+========================================
+paper      : PMC12180156
+title      : Update of the sideroflexin (SLC56) gene family.
+slug       : PMC12180156__update-of-the-sideroflexin-slc56-gene-family
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 2080.5s (34m40s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution: Mapping metadata must include a resolution object.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/7/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 5 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o, gate.protein_succinyl_coenzyme_a_is_missing_species_organism, gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide
+
+DETAIL / TRACEBACK
+----------------------------------------
+43 QA issues need review.
+[post_normalization_contract_report] gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @ /entities/proteins/4: Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_succinyl_coenzyme_a_is_missing_species_organism @ /entities/proteins/7: Protein 'succinyl coenzyme A' is missing species/organism.
+
+COUNTS
+----------------------------------------
+  compounds = 17
+  contract_errors = 2
+  entities = 37
+  gate_errors = 3
+  proteins = 8
+  reactions = 10
+  runtime_schema_findings = 4
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (10934 B)
+  - gate_fail_report.json  (2877 B)
+  - merged_payload.json  (110110 B)
+  - stage1_payload.json  (2557 B)

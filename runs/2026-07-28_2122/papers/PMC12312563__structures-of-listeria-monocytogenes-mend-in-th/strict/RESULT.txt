@@ -1,0 +1,46 @@
+RESULT: FAIL
+========================================
+paper      : PMC12312563
+title      : Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate I-bound forms.
+slug       : PMC12312563__structures-of-listeria-monocytogenes-mend-in-th
+mode       : strict
+status     : fail
+stage      : post_pipeline
+wall time  : 1364.8s (22m44s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped entity with a name is missing mapping_meta.
+
+WHAT WENT WRONG
+----------------------------------------
+failure_kind : contract
+message      : post-pipeline validation failed: 4 blocking issue(s) at post_normalization_hard_gates
+issue codes  : gate.protein_eco_mend_is_missing_a_uniprot_or_drugbank_identifier, gate.protein_lmrg_is_missing_a_uniprot_or_drugbank_identifier
+
+DETAIL / TRACEBACK
+----------------------------------------
+32 QA issues need review.
+[post_normalization_contract_report] gate.protein_eco_mend_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1: Protein 'Eco MenD' is missing a UniProt or DrugBank identifier.
+[post_normalization_contract_report] gate.protein_lmrg_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2: Protein 'LMRG_02730' is missing a UniProt or DrugBank identifier.
+
+COUNTS
+----------------------------------------
+  compounds = 14
+  contract_errors = 2
+  entities = 24
+  gate_errors = 2
+  proteins = 3
+  reactions = 9
+  runtime_schema_findings = 4
+  transports = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (11174 B)
+  - gate_fail_report.json  (3102 B)
+  - merged_payload.json  (74610 B)
+  - stage1_payload.json  (5617 B)

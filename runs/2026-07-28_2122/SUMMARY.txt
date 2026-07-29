@@ -1,0 +1,1419 @@
+====================================================================================================
+T2PW OVERNIGHT BATCH RUN -- SUMMARY
+====================================================================================================
+started  : 2026-07-28T21:22:34
+finished : 2026-07-29T07:36:38
+papers attempted : 16
+strict PWML      : 0 pass / 16 fail
+research relaxed : 8 pass / 8 fail
+timeouts         : 0
+skipped          : 0
+pass, no deliv.  : 8  (reported as "PASS (no research deliverable)" below)
+artifact writes  : 0 FAILED
+manifest rows    : 32 (unreadable: 0)
+
+====================================================================================================
+TRIAGE MATRIX
+====================================================================================================
+
+!! RESEARCH-MODE DEFECT !!
+Research mode is fail-open by design: it relaxes FORMAT rules and records review flags instead of
+stopping. Therefore ANY research failure is a code defect, not a data problem. Fix these before
+anything else.
+papers affected: 8
+
+  PMC13278307 -- An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 19.2s
+    failure_kind: ambiguous_review_scope
+      message: multi_example_review detected with no selected_example. Extraction skipped to prevent
+               mixed-pathway output.
+      codes: ambiguous_review_scope
+
+  PMC13231680 -- Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem
+  bactericidal activity in NDM-1-positive Escherichia coli.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 65.7s
+    failure_kind: contract
+      message: Extraction boundary failed: Payload must include a processes object.
+      codes: processes_required
+
+  PMC12971581 -- Ochrobactrum anthropi Causing Fournier's Gangrene: A Report of a Rare Case.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 29.5s
+    failure_kind: contract
+      message: Extraction boundary failed: Payload must include an entities object.
+      codes: entities_required
+
+  PMC13139079 -- Environmental resistome of culturable gram-negative bacilli from the Yaque del
+  Norte River: baseline genomic evidence for one health surveillance.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 44.2s
+    failure_kind: contract
+      message: Extraction boundary failed: Payload must include an entities object.
+      codes: entities_required
+
+  PMC12935629 -- Microbial biofortification of fermented foods: a review of probiotic-mediated
+  nutrient enhancement.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 43.6s
+    failure_kind: ambiguous_review_scope
+      message: multi_example_review detected with no selected_example. Extraction skipped to prevent
+               mixed-pathway output.
+      codes: ambiguous_review_scope
+
+  PMC11946230 -- A High-Throughput Screening Strategy for &lt;i&gt;Bacillus subtilis&lt;/i&gt;
+  Producing Menaquinone-7 Based on Fluorescence-Activated Cell Sorting.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 95.8s (1m35s)
+    failure_kind: contract
+      message: Extraction boundary failed: Payload must include a processes object.
+      codes: processes_required
+
+  PMC13264790 -- Comprehensive bioinformatics and experimental analysis of PPOX reveals its
+  carcinogenic effect in clear cell renal cell carcinoma.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 64.2s
+    failure_kind: contract
+      message: Extraction boundary failed: Payload must include a processes object.
+      codes: processes_required
+
+  PMC12898691 -- CladeOScope-GSA: Revealing Evolutionary Associations Across Gene Sets.
+    class=broken (strict failed too -- fix the shared cause)
+    research: FAIL at stage=stage1 after 41.0s
+    failure_kind: contract
+      message: Extraction boundary failed: Payload must include a processes object.
+      codes: processes_required
+
+----------------------------------------------------------------------------------------------------
+
+!! PASSED BUT PRODUCED NO DELIVERABLE !!
+These runs did not fail -- the pipeline ran to completion -- but the folder has no deliverable in
+it. This is NOT a clean night. Check whether the missing output was expected before treating it as
+green.
+runs affected: 8
+
+  PMC12444477 [research] -- The regulation of lipid A biosynthesis.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/21/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/21/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lipoprotein_is_missing_species_organism @ /entities/proteins/21: Protein
+      'lipoprotein' is missing species/organism.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_lipoprotein_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/21:
+      Protein 'lipoprotein' is missing a UniProt or DrugBank identifier.
+
+  PMC12624714 [research] -- Membrane Proteins ClcB, PtsI, and YcaM Mediate the Bactericidal Effects
+  of Colistin in &lt;i&gt;Escherichia coli&lt;/i&gt;.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/4/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+  PMC12312563 [research] -- Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo
+  captured intermediate I-bound forms.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/1/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+
+  PMC12657337 [research] -- High-level production of vitamin K2 in &lt;i&gt;Escherichia
+  coli&lt;/i&gt; via modular molecular engineering.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/102/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/102/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/0:
+      Protein 'EcMenA' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/1:
+      Protein 'BsUbiE' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/2:
+      Protein 'BsHepPPS' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/3: Protein
+      'ECidi' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_efmvae_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/4:
+      Protein 'EfmvaE' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_efmvas_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/5:
+      Protein 'EfmvaS' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_mmmvk_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/6: Protein
+      'MmmvK' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_scpmk_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7: Protein
+      'ScpmK' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_scmvd_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8: Protein
+      'ScmvD' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_amino_deoxychorismate_adc_synthase_is_missing_a_uniprot_ @ /entities/proteins/16:
+      Protein '4-amino-4-deoxychorismate (ADC) synthase' is missing a UniProt or DrugBank
+      identifier.
+    - strict gate error (research mode: review flag, not blocking): and 7 more gate error(s); all of
+      them are in review_flags.json and the gate report files
+
+  PMC12421875 [research] -- The growth benefits and toxicity of quinone biosynthesis are balanced by
+  a dual regulatory mechanism and substrate limitations.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/45/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/46/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/45/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/46/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_geranyltranstransferase_is_missing_a_uniprot_or_drugbank @ /entities/proteins/12:
+      Protein 'geranyltranstransferase' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_geranyltranstransferase_ispa_is_missing_a_uniprot_or_dru @ /entities/proteins/13:
+      Protein 'geranyltranstransferase ( ispA )' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_llmg_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/22: Protein
+      'llmg_0196' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_mendhceb_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/24:
+      Protein 'menDHCEB' is missing a UniProt or DrugBank identifier.
+
+  PMC12180156 [research] -- Update of the sideroflexin (SLC56) gene family.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/15/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/10/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/11/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/15/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/10/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/11/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @ /entities/proteins/4:
+      Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_gsa_aminotransferase_is_missing_a_uniprot_or_drugbank_id @ /entities/proteins/6:
+      Protein 'GSA aminotransferase' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_slc25a1_cic_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9:
+      Protein 'SLC25A1/CIC' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_succinyl_coenzyme_a_is_missing_species_organism @ /entities/proteins/10: Protein
+      'succinyl-coenzyme A' is missing species/organism.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide @ /entities/proteins/10:
+      Protein 'succinyl-coenzyme A' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_succinyl_coenzyme_a_is_missing_species_organism @ /entities/proteins/11: Protein
+      'succinyl coenzyme A' is missing species/organism.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide @ /entities/proteins/11:
+      Protein 'succinyl coenzyme A' is missing a UniProt or DrugBank identifier.
+
+  PMC13233763 [research] -- Glycine: The missing link between carbohydrate and xenobiotic metabolism
+  in the maturing human hepatocyte.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/43/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/44/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/45/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/43/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/compounds/44/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_ala_synthase_alas_is_missing_a_uniprot_or_drugbank_ident @ /entities/proteins/5:
+      Protein 'ALA synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @ /entities/proteins/6:
+      Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_cc_hl_cyt2_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/7:
+      Protein 'CC 1 HL (Cyt2)' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_cchl_cyc3_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/8:
+      Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_cytochrome_c_lyas_is_missing_a_uniprot_or_drugbank_ident @ /entities/proteins/12:
+      Protein 'cytochrome c lyas' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_cytochrome_c_lyases_is_missing_a_uniprot_or_drugbank_ide @ /entities/proteins/13:
+      Protein 'cytochrome c lyases' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_heme_o_synthase_is_missing_a_uniprot_or_drugbank_identif @ /entities/proteins/19:
+      Protein 'heme o synthase' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_porphobilinogen_synthase_pbgs_is_missing_a_uniprot_or_dr @ /entities/proteins/22:
+      Protein 'Porphobilinogen synthase (PBGS)' is missing a UniProt or DrugBank identifier.
+
+  PMC12856317 [research] -- A reversible feedback mechanism regulating mitochondrial heme synthesis.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/subcellular_locations/2/mapping_meta: Mapped entity with a name is missing
+      mapping_meta.
+    - runtime-schema finding (informational, not blocking):
+      [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @
+      /entities/proteins/6/mapping_meta: Mapped entity with a name is missing mapping_meta.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @ /entities/proteins/4:
+      Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism @ /entities/proteins/6:
+      Protein 'succinyl-Coenzyme A (SCoA)' is missing species/organism.
+    - strict gate error (research mode: review flag, not blocking):
+      gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban @ /entities/proteins/6:
+      Protein 'succinyl-Coenzyme A (SCoA)' is missing a UniProt or DrugBank identifier.
+
+----------------------------------------------------------------------------------------------------
+research-defect   0  (strict PASS + research FAIL -- RESEARCH-MODE DEFECT)
+broken            8  (strict FAIL + research FAIL -- real bug, also a research defect)
+    PMC13278307, PMC13231680, PMC12971581, PMC13139079, PMC12935629, PMC11946230, PMC13264790,
+    PMC12898691
+format-blocked    8  (strict FAIL + research PASS -- a PathWhiz FORMAT rule)
+    PMC12444477, PMC12624714, PMC12312563, PMC12657337, PMC12421875, PMC12180156, PMC13233763,
+    PMC12856317
+incomplete        0  (a mode is missing, skipped or unrecognised)
+ok                0  (strict PASS + research PASS)
+
+====================================================================================================
+PER-PAPER BREAKDOWN
+====================================================================================================
+Ordered worst-first; every artifact written for the paper is named.
+
+----------------------------------------------------------------------------------------------------
+[1] An Overview of Mobile Colistin Resistance (mcr) Genes in Gram-Negative Bacilli. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC13278307
+    slug   : PMC13278307__an-overview-of-mobile-colistin-resistance-mcr-g
+    uri    : https://doi.org/10.7759/cureus.109203
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=22.2s
+        failure_kind : ambiguous_review_scope
+        message      : multi_example_review detected with no selected_example. Extraction skipped to
+                       prevent mixed-pathway output.
+        issue_codes  : ambiguous_review_scope
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=19.2s
+        failure_kind : ambiguous_review_scope
+        message      : multi_example_review detected with no selected_example. Extraction skipped to
+                       prevent mixed-pathway output.
+        issue_codes  : ambiguous_review_scope
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[2] Mechanistic insights into phthalylsulfacetamide-induced restoration of meropenem bactericidal
+activity in NDM-1-positive Escherichia coli. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13231680
+    slug   : PMC13231680__mechanistic-insights-into-phthalylsulfacetamide
+    uri    : https://doi.org/10.1186/s12866-026-05073-w
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=2065.5s (34m25s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/14/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 3 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_lipoprotein_is_missing_species_organism,
+                       gate.protein_lipoprotein_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=14 entities=60 proteins=15 compounds=28 contract_errors=1
+                       gate_errors=2 runtime_schema_findings=3 transports=0
+        files        : 4
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/contract_re
+              ports.json (9.9 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/gate_fail_r
+              eport.json (2.8 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/merged_payl
+              oad.json (188.6 kB)
+            - papers/PMC13231680__mechanistic-insights-into-phthalylsulfacetamide/strict/stage1_payl
+              oad.json (1.0 kB)
+
+    research : FAIL | stage=stage1 | time=65.7s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[3] Ochrobactrum anthropi Causing Fournier's Gangrene: A Report of a Rare Case. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC12971581
+    slug   : PMC12971581__ochrobactrum-anthropi-causing-fournier-s-gangre
+    uri    : https://doi.org/10.7759/cureus.103181
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=38.6s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include an entities object.
+        issue_codes  : entities_required
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=29.5s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include an entities object.
+        issue_codes  : entities_required
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[4] Environmental resistome of culturable gram-negative bacilli from the Yaque del Norte River:
+baseline genomic evidence for one health surveillance. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13139079
+    slug   : PMC13139079__environmental-resistome-of-culturable-gram-nega
+    uri    : https://doi.org/10.3389/fmicb.2026.1780969
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=16.6s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include an entities object.
+        issue_codes  : entities_required
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=44.2s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include an entities object.
+        issue_codes  : entities_required
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[5] Microbial biofortification of fermented foods: a review of probiotic-mediated nutrient
+enhancement. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC12935629
+    slug   : PMC12935629__microbial-biofortification-of-fermented-foods-a
+    uri    : https://doi.org/10.3389/fnut.2026.1754233
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=57.4s
+        failure_kind : ambiguous_review_scope
+        message      : multi_example_review detected with no selected_example. Extraction skipped to
+                       prevent mixed-pathway output.
+        issue_codes  : ambiguous_review_scope
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=43.6s
+        failure_kind : ambiguous_review_scope
+        message      : multi_example_review detected with no selected_example. Extraction skipped to
+                       prevent mixed-pathway output.
+        issue_codes  : ambiguous_review_scope
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[6] A High-Throughput Screening Strategy for &lt;i&gt;Bacillus subtilis&lt;/i&gt; Producing
+Menaquinone-7 Based on Fluorescence-Activated Cell Sorting. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC11946230
+    slug   : PMC11946230__a-high-throughput-screening-strategy-for-lt-i-g
+    uri    : https://doi.org/10.3390/microorganisms13030536
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=62.5s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=95.8s (1m35s)
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[7] Comprehensive bioinformatics and experimental analysis of PPOX reveals its carcinogenic effect
+in clear cell renal cell carcinoma. -> broken !! RESEARCH-MODE DEFECT !!
+    id     : PMC13264790
+    slug   : PMC13264790__comprehensive-bioinformatics-and-experimental-a
+    uri    : https://doi.org/10.21037/tau-2026-1-0024
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=237.2s (3m57s)
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=64.2s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[8] CladeOScope-GSA: Revealing Evolutionary Associations Across Gene Sets. -> broken !!
+RESEARCH-MODE DEFECT !!
+    id     : PMC12898691
+    slug   : PMC12898691__cladeoscope-gsa-revealing-evolutionary-associat
+    uri    : https://doi.org/10.3390/ijms27031457
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=182.5s (3m02s)
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+    research : FAIL | stage=stage1 | time=41.0s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include a processes object.
+        issue_codes  : processes_required
+        files        : none recorded
+
+----------------------------------------------------------------------------------------------------
+[9] The regulation of lipid A biosynthesis. -> format-blocked
+    id     : PMC12444477
+    slug   : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+    uri    : https://doi.org/10.1016/j.jbc.2025.110556
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=3421.4s (57m01s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/compounds/53/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/54/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/55/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/21/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/53/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/54/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/55/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/22/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking): and 1 more finding(s);
+                       all of them are in contract_reports.json
+        failure_kind : contract
+        message      : post-pipeline validation failed: 10 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_species_,
+                       gate.protein_coenzyme_a_coa_is_missing_species_organism,
+                       gate.protein_has_degree_after_normalization,
+                       gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_a_unipro,
+                       gate.protein_coenzyme_a_coa_is_missing_a_uniprot_or_drugbank_identifi,
+                       gate.unknown_protein_modifier_reference
+        counts       : reactions=37 entities=110 proteins=23 compounds=58 contract_errors=3
+                       gate_errors=7 runtime_schema_findings=11 transports=2
+        files        : 5
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/contract_reports.jso
+              n (16.2 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/final_stage3_gate_re
+              port.json (3.3 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/gate_fail_report.jso
+              n (3.4 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/merged_payload.json
+              (296.3 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/strict/stage1_payload.json
+              (17.9 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=2838.5s (47m18s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/21/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/21/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lipoprotein_is_missing_species_organism @ /entities/proteins/21:
+                       Protein 'lipoprotein' is missing species/organism.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_lipoprotein_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/21: Protein 'lipoprotein' is missing a UniProt or DrugBank
+                       identifier.
+        counts       : reactions=29 entities=76 proteins=22 compounds=46 tier.a=41 tier.b=2
+                       tier.c=77 tier.d=0 review_flags=2 skipped_format_rules=0
+                       normalization_actions=2 citations=3 gate_errors=2 gate_errors_not_blocking=2
+                       gate_review_flags=2 runtime_schema_findings=4 transports=2 unsourced=0
+        files        : 8
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/contract_reports.j
+              son (11.8 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/gate_fail_report.j
+              son (2.9 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/merged_payload.jso
+              n (265.9 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/research_pathway_c
+              itations.json (1.2 MB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/research_pathway_e
+              lements.csv (503.1 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/research_pathway_r
+              eport.txt (142.4 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/review_flags.json
+              (1.9 kB)
+            - papers/PMC12444477__the-regulation-of-lipid-a-biosynthesis/research/stage1_payload.jso
+              n (20.6 kB)
+
+----------------------------------------------------------------------------------------------------
+[10] Membrane Proteins ClcB, PtsI, and YcaM Mediate the Bactericidal Effects of Colistin in
+&lt;i&gt;Escherichia coli&lt;/i&gt;. -> format-blocked
+    id     : PMC12624714
+    slug   : PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th
+    uri    : https://doi.org/10.1021/acsinfecdis.5c00566
+    topic  : lipid A biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=1260.6s (21m00s)
+        failure_kind : no_reactions
+        message      : the pipeline produced a pathway with no reactions and no transports
+        issue_codes  : (none reported)
+        counts       : reactions=0 entities=13 proteins=3 compounds=5 transports=0
+        files        : 2
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/strict/merged_payl
+              oad.json (5.6 kB)
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/strict/stage1_payl
+              oad.json (4.7 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=2045.7s (34m05s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/4/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=1 entities=19 proteins=3 compounds=10 tier.a=1 tier.b=0 tier.c=6
+                       tier.d=0 review_flags=0 skipped_format_rules=0 normalization_actions=2
+                       citations=1 gate_errors=0 runtime_schema_findings=2 transports=1 unsourced=0
+        files        : 7
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research/contract_
+              reports.json (7.0 kB)
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research/merged_pa
+              yload.json (17.9 kB)
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research/research_
+              pathway_citations.json (97.2 kB)
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research/research_
+              pathway_elements.csv (37.7 kB)
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research/research_
+              pathway_report.txt (11.4 kB)
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research/review_fl
+              ags.json (836 B)
+            - papers/PMC12624714__membrane-proteins-clcb-ptsi-and-ycam-mediate-th/research/stage1_pa
+              yload.json (5.8 kB)
+
+----------------------------------------------------------------------------------------------------
+[11] Structures of Listeria monocytogenes MenD in ThDP-bound and in-crystallo captured intermediate
+I-bound forms. -> format-blocked
+    id     : PMC12312563
+    slug   : PMC12312563__structures-of-listeria-monocytogenes-mend-in-th
+    uri    : https://doi.org/10.1107/s2053230x25006181
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=1364.8s (22m44s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/13/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 4 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_eco_mend_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_lmrg_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=9 entities=24 proteins=3 compounds=14 contract_errors=2
+                       gate_errors=2 runtime_schema_findings=4 transports=0
+        files        : 4
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/contract_re
+              ports.json (10.9 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/gate_fail_r
+              eport.json (3.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/merged_payl
+              oad.json (72.9 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/strict/stage1_payl
+              oad.json (5.5 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=1305.8s (21m45s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        counts       : reactions=5 entities=12 proteins=1 compounds=8 tier.a=2 tier.b=0 tier.c=12
+                       tier.d=0 review_flags=0 skipped_format_rules=0 normalization_actions=2
+                       citations=1 gate_errors=0 runtime_schema_findings=2 transports=0 unsourced=0
+        files        : 7
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/contract_
+              reports.json (7.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/merged_pa
+              yload.json (33.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/research_
+              pathway_citations.json (132.4 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/research_
+              pathway_elements.csv (50.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/research_
+              pathway_report.txt (22.0 kB)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/review_fl
+              ags.json (836 B)
+            - papers/PMC12312563__structures-of-listeria-monocytogenes-mend-in-th/research/stage1_pa
+              yload.json (2.8 kB)
+
+----------------------------------------------------------------------------------------------------
+[12] High-level production of vitamin K2 in &lt;i&gt;Escherichia coli&lt;/i&gt; via modular
+molecular engineering. -> format-blocked
+    id     : PMC12657337
+    slug   : PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt
+    uri    : https://doi.org/10.1016/j.synbio.2025.11.001
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=2563.3s (42m43s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 13 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_heppps_is_missing_a_uniprot_or_drugbank_identifier,
+                       gate.protein_has_degree_after_normalization,
+                       gate.entity_pyruvate_oxidase_is_declared_as_both_a_protein_and_a_prot
+        counts       : reactions=21 entities=55 proteins=12 compounds=22 contract_errors=6
+                       gate_errors=7 runtime_schema_findings=2 transports=0
+        files        : 5
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict/contract_rep
+              orts.json (12.4 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict/final_stage3
+              _gate_report.json (2.8 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict/gate_fail_re
+              port.json (5.0 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict/merged_paylo
+              ad.json (152.5 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/strict/stage1_paylo
+              ad.json (11.5 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=3323.6s (55m23s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/102/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/102/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/0: Protein 'EcMenA' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/1: Protein 'BsUbiE' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/2: Protein 'BsHepPPS' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/3: Protein 'ECidi' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_efmvae_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/4: Protein 'EfmvaE' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_efmvas_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/5: Protein 'EfmvaS' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_mmmvk_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/6: Protein 'MmmvK' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_scpmk_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/7: Protein 'ScpmK' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_scmvd_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/8: Protein 'ScmvD' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_amino_deoxychorismate_adc_synthase_is_missing_a_uniprot_ @
+                       /entities/proteins/16: Protein '4-amino-4-deoxychorismate (ADC) synthase' is
+                       missing a UniProt or DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking): and 7 more gate
+                       error(s); all of them are in review_flags.json and the gate report files
+        counts       : reactions=58 entities=170 proteins=65 compounds=103 tier.a=115 tier.b=24
+                       tier.c=147 tier.d=0 review_flags=17 skipped_format_rules=0
+                       normalization_actions=2 citations=4 gate_errors=24
+                       gate_errors_not_blocking=24 gate_review_flags=24 runtime_schema_findings=4
+                       transports=0 unsourced=0
+        files        : 9
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/contract_r
+              eports.json (18.4 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/final_stag
+              e3_gate_report.json (3.2 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/gate_fail_
+              report.json (4.8 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/merged_pay
+              load.json (792.0 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/research_p
+              athway_citations.json (4.1 MB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/research_p
+              athway_elements.csv (1.7 MB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/research_p
+              athway_report.txt (506.7 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/review_fla
+              gs.json (13.0 kB)
+            - papers/PMC12657337__high-level-production-of-vitamin-k2-in-lt-i-gt/research/stage1_pay
+              load.json (6.9 kB)
+
+----------------------------------------------------------------------------------------------------
+[13] The growth benefits and toxicity of quinone biosynthesis are balanced by a dual regulatory
+mechanism and substrate limitations. -> format-blocked
+    id     : PMC12421875
+    slug   : PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio
+    uri    : https://doi.org/10.1128/mbio.00887-25
+    topic  : menaquinone biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=3123.7s (52m03s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/21/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/22/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/21/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/22/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 3 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_noxab_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=16 entities=48 proteins=11 compounds=23 contract_errors=1
+                       gate_errors=2 runtime_schema_findings=6 transports=1
+        files        : 5
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict/contract_re
+              ports.json (11.5 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict/final_stage
+              3_gate_report.json (2.5 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict/gate_fail_r
+              eport.json (2.5 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict/merged_payl
+              oad.json (126.0 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/strict/stage1_payl
+              oad.json (13.9 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=2158.6s (35m58s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/45/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/46/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/45/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/46/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_geranyltranstransferase_is_missing_a_uniprot_or_drugbank @
+                       /entities/proteins/12: Protein 'geranyltranstransferase' is missing a UniProt
+                       or DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_geranyltranstransferase_ispa_is_missing_a_uniprot_or_dru @
+                       /entities/proteins/13: Protein 'geranyltranstransferase ( ispA )' is missing
+                       a UniProt or DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_llmg_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/22: Protein 'llmg_0196' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_mendhceb_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/24: Protein 'menDHCEB' is missing a UniProt or DrugBank
+                       identifier.
+        counts       : reactions=29 entities=82 proteins=32 compounds=47 tier.a=18 tier.b=30
+                       tier.c=111 tier.d=0 review_flags=11 skipped_format_rules=0
+                       normalization_actions=2 citations=6 gate_errors=8 gate_errors_not_blocking=8
+                       gate_review_flags=8 runtime_schema_findings=6 transports=0 unsourced=0
+        files        : 9
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/contract_
+              reports.json (14.1 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/final_sta
+              ge3_gate_report.json (2.7 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/gate_fail
+              _report.json (3.0 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/merged_pa
+              yload.json (367.6 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/research_
+              pathway_citations.json (1.8 MB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/research_
+              pathway_elements.csv (728.9 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/research_
+              pathway_report.txt (170.5 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/review_fl
+              ags.json (6.5 kB)
+            - papers/PMC12421875__the-growth-benefits-and-toxicity-of-quinone-bio/research/stage1_pa
+              yload.json (8.0 kB)
+
+----------------------------------------------------------------------------------------------------
+[14] Update of the sideroflexin (SLC56) gene family. -> format-blocked
+    id     : PMC12180156
+    slug   : PMC12180156__update-of-the-sideroflexin-slc56-gene-family
+    uri    : https://doi.org/10.1186/s40246-025-00779-w
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=2080.5s (34m40s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       mapping_resolution_required @ /entities/proteins/7/mapping_meta/resolution:
+                       Mapping metadata must include a resolution object.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/7/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 5 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o,
+                       gate.protein_succinyl_coenzyme_a_is_missing_species_organism,
+                       gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide
+        counts       : reactions=10 entities=37 proteins=8 compounds=17 contract_errors=2
+                       gate_errors=3 runtime_schema_findings=4 transports=0
+        files        : 4
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict/contract_repor
+              ts.json (10.7 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict/gate_fail_repo
+              rt.json (2.8 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict/merged_payload
+              .json (107.5 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/strict/stage1_payload
+              .json (2.5 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=2397.1s (39m57s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/15/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/10/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/11/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/15/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/10/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/11/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @
+                       /entities/proteins/4: Protein 'aminolevulinic acid synthase (ALAS)' is
+                       missing a UniProt or DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_gsa_aminotransferase_is_missing_a_uniprot_or_drugbank_id @
+                       /entities/proteins/6: Protein 'GSA aminotransferase' is missing a UniProt or
+                       DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_slc25a1_cic_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/9: Protein 'SLC25A1/CIC' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_succinyl_coenzyme_a_is_missing_species_organism @
+                       /entities/proteins/10: Protein 'succinyl-coenzyme A' is missing
+                       species/organism.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide @
+                       /entities/proteins/10: Protein 'succinyl-coenzyme A' is missing a UniProt or
+                       DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_succinyl_coenzyme_a_is_missing_species_organism @
+                       /entities/proteins/11: Protein 'succinyl coenzyme A' is missing
+                       species/organism.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide @
+                       /entities/proteins/11: Protein 'succinyl coenzyme A' is missing a UniProt or
+                       DrugBank identifier.
+        counts       : reactions=9 entities=31 proteins=12 compounds=16 tier.a=11 tier.b=2 tier.c=28
+                       tier.d=0 review_flags=11 skipped_format_rules=0 normalization_actions=2
+                       citations=5 gate_errors=10 gate_errors_not_blocking=10 gate_review_flags=10
+                       runtime_schema_findings=8 transports=0 unsourced=0
+        files        : 9
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/contract_rep
+              orts.json (16.2 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/final_stage3
+              _gate_report.json (2.6 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/gate_fail_re
+              port.json (3.4 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/merged_paylo
+              ad.json (100.0 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/research_pat
+              hway_citations.json (541.0 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/research_pat
+              hway_elements.csv (212.4 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/research_pat
+              hway_report.txt (57.5 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/review_flags
+              .json (7.1 kB)
+            - papers/PMC12180156__update-of-the-sideroflexin-slc56-gene-family/research/stage1_paylo
+              ad.json (1.5 kB)
+
+----------------------------------------------------------------------------------------------------
+[15] Glycine: The missing link between carbohydrate and xenobiotic metabolism in the maturing human
+hepatocyte. -> format-blocked
+    id     : PMC13233763
+    slug   : PMC13233763__glycine-the-missing-link-between-carbohydrate-a
+    uri    : https://doi.org/10.1016/j.isci.2026.116113
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=stage1 | time=23.2s
+        failure_kind : contract
+        message      : Extraction boundary failed: Payload must include an entities object.
+        issue_codes  : entities_required
+        files        : none recorded
+
+    research : PASS (no research deliverable) | stage=research_report | time=2883.8s (48m03s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/43/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/44/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/45/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/43/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/compounds/44/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_ala_synthase_alas_is_missing_a_uniprot_or_drugbank_ident @
+                       /entities/proteins/5: Protein 'ALA synthase (ALAS)' is missing a UniProt or
+                       DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @
+                       /entities/proteins/6: Protein 'aminolevulinic acid synthase (ALAS)' is
+                       missing a UniProt or DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_cc_hl_cyt2_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/7: Protein 'CC 1 HL (Cyt2)' is missing a UniProt or
+                       DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_cchl_cyc3_is_missing_a_uniprot_or_drugbank_identifier @
+                       /entities/proteins/8: Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank
+                       identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_cytochrome_c_lyas_is_missing_a_uniprot_or_drugbank_ident @
+                       /entities/proteins/12: Protein 'cytochrome c lyas' is missing a UniProt or
+                       DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_cytochrome_c_lyases_is_missing_a_uniprot_or_drugbank_ide @
+                       /entities/proteins/13: Protein 'cytochrome c lyases' is missing a UniProt or
+                       DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_heme_o_synthase_is_missing_a_uniprot_or_drugbank_identif @
+                       /entities/proteins/19: Protein 'heme o synthase' is missing a UniProt or
+                       DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_porphobilinogen_synthase_pbgs_is_missing_a_uniprot_or_dr @
+                       /entities/proteins/22: Protein 'Porphobilinogen synthase (PBGS)' is missing a
+                       UniProt or DrugBank identifier.
+        counts       : reactions=30 entities=78 proteins=28 compounds=46 tier.a=58 tier.b=7
+                       tier.c=74 tier.d=0 review_flags=17 skipped_format_rules=0
+                       normalization_actions=2 citations=4 gate_errors=16
+                       gate_errors_not_blocking=16 gate_review_flags=16 runtime_schema_findings=7
+                       transports=0 unsourced=0
+        files        : 9
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/contract_
+              reports.json (17.1 kB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/final_sta
+              ge3_gate_report.json (3.3 kB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/gate_fail
+              _report.json (3.9 kB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/merged_pa
+              yload.json (393.1 kB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/research_
+              pathway_citations.json (1.6 MB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/research_
+              pathway_elements.csv (654.6 kB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/research_
+              pathway_report.txt (175.5 kB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/review_fl
+              ags.json (10.8 kB)
+            - papers/PMC13233763__glycine-the-missing-link-between-carbohydrate-a/research/stage1_pa
+              yload.json (5.0 kB)
+
+----------------------------------------------------------------------------------------------------
+[16] A reversible feedback mechanism regulating mitochondrial heme synthesis. -> format-blocked
+    id     : PMC12856317
+    slug   : PMC12856317__a-reversible-feedback-mechanism-regulating-mito
+    uri    : https://doi.org/10.1016/j.jbc.2025.111089
+    topic  : heme biosynthesis
+
+    strict   : FAIL | stage=post_pipeline | time=1609.0s (26m48s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/9/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/1/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/8/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/9/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        failure_kind : contract
+        message      : post-pipeline validation failed: 8 blocking issue(s) at
+                       post_normalization_hard_gates
+        issue_codes  : gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o,
+                       gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism,
+                       gate.protein_coenzyme_a_is_missing_species_organism,
+                       gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban,
+                       gate.protein_coenzyme_a_is_missing_a_uniprot_or_drugbank_identifier
+        counts       : reactions=11 entities=39 proteins=9 compounds=18 contract_errors=3
+                       gate_errors=5 runtime_schema_findings=6 transports=0
+        files        : 4
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict/contract_re
+              ports.json (12.4 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict/gate_fail_r
+              eport.json (3.1 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict/merged_payl
+              oad.json (138.4 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/strict/stage1_payl
+              oad.json (3.5 kB)
+
+    research : PASS (no research deliverable) | stage=research_report | time=1330.3s (22m10s)
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_audit_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/6/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/subcellular_locations/2/mapping_meta:
+                       Mapped entity with a name is missing mapping_meta.
+        warning      : runtime-schema finding (informational, not blocking):
+                       [post_normalization_contract_report.runtime_schema_report]
+                       entity_missing_mapping_meta @ /entities/proteins/6/mapping_meta: Mapped
+                       entity with a name is missing mapping_meta.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @
+                       /entities/proteins/4: Protein 'aminolevulinic acid synthase (ALAS)' is
+                       missing a UniProt or DrugBank identifier.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism @
+                       /entities/proteins/6: Protein 'succinyl-Coenzyme A (SCoA)' is missing
+                       species/organism.
+        warning      : strict gate error (research mode: review flag, not blocking):
+                       gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban @
+                       /entities/proteins/6: Protein 'succinyl-Coenzyme A (SCoA)' is missing a
+                       UniProt or DrugBank identifier.
+        counts       : reactions=6 entities=22 proteins=7 compounds=11 tier.a=18 tier.b=5 tier.c=10
+                       tier.d=0 review_flags=4 skipped_format_rules=0 normalization_actions=2
+                       citations=5 gate_errors=4 gate_errors_not_blocking=4 gate_review_flags=4
+                       runtime_schema_findings=4 transports=0 unsourced=0
+        files        : 9
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/contract_
+              reports.json (12.5 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/final_sta
+              ge3_gate_report.json (2.3 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/gate_fail
+              _report.json (3.2 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/merged_pa
+              yload.json (94.8 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/research_
+              pathway_citations.json (711.6 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/research_
+              pathway_elements.csv (297.7 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/research_
+              pathway_report.txt (52.2 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/review_fl
+              ags.json (3.3 kB)
+            - papers/PMC12856317__a-reversible-feedback-mechanism-regulating-mito/research/stage1_pa
+              yload.json (3.9 kB)
+
+====================================================================================================
+WHAT TO FIX FIRST
+====================================================================================================
+
+1. RESEARCH-MODE DEFECTS -- research mode must never fail. Fix first.
+     - PMC13278307: stage1 -- ambiguous_review_scope
+     - PMC13231680: stage1 -- processes_required
+     - PMC12971581: stage1 -- entities_required
+     - PMC13139079: stage1 -- entities_required
+     - PMC12935629: stage1 -- ambiguous_review_scope
+     - PMC11946230: stage1 -- processes_required
+     - PMC13264790: stage1 -- processes_required
+     - PMC12898691: stage1 -- processes_required
+
+2. BROKEN -- both modes failed: crash / LLM / network / biology.
+     - PMC13278307: ambiguous_review_scope
+     - PMC13231680: contract
+     - PMC12971581: contract
+     - PMC13139079: contract
+     - PMC12935629: ambiguous_review_scope
+     - PMC11946230: contract
+     - PMC13264790: contract
+     - PMC12898691: contract
+
+3. FORMAT-BLOCKED -- strict only, grouped by issue code (research is fine).
+     - gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o (2 paper(s)):
+       PMC12180156, PMC12856317
+     - gate.protein_has_degree_after_normalization (2 paper(s)): PMC12444477, PMC12657337
+     - (no code; failure_kind=no_reactions) (1 paper(s)): PMC12624714
+     - entities_required (1 paper(s)): PMC13233763
+     - gate.entity_pyruvate_oxidase_is_declared_as_both_a_protein_and_a_prot (1 paper(s)):
+       PMC12657337
+     - gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12657337
+     - gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12657337
+     - gate.protein_coenzyme_a_coa_is_missing_a_uniprot_or_drugbank_identifi (1 paper(s)):
+       PMC12444477
+     - gate.protein_coenzyme_a_coa_is_missing_species_organism (1 paper(s)): PMC12444477
+     - gate.protein_coenzyme_a_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12856317
+     - gate.protein_coenzyme_a_is_missing_species_organism (1 paper(s)): PMC12856317
+     - gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12657337
+     - gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12657337
+     - gate.protein_eco_mend_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12312563
+     - gate.protein_heppps_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12657337
+     - gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_a_unipro (1 paper(s)):
+       PMC12444477
+     - gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_species_ (1 paper(s)):
+       PMC12444477
+     - gate.protein_lmrg_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12312563
+     - gate.protein_noxab_is_missing_a_uniprot_or_drugbank_identifier (1 paper(s)): PMC12421875
+     - gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide (1 paper(s)):
+       PMC12180156
+     - gate.protein_succinyl_coenzyme_a_is_missing_species_organism (1 paper(s)): PMC12180156
+     - gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban (1 paper(s)):
+       PMC12856317
+     - gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism (1 paper(s)): PMC12856317
+     - gate.unknown_protein_modifier_reference (1 paper(s)): PMC12444477
+
+====================================================================================================

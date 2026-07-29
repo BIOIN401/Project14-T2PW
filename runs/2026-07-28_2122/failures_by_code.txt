@@ -1,0 +1,131 @@
+====================================================================================================
+FAILURES BY ISSUE CODE -- the ranked fix-list
+====================================================================================================
+Ranked by how many distinct papers hit the code, because a code that blocks six papers is worth more
+than one that blocks a single paper six times.
+
+failing runs: 24   distinct issue codes: 27   uncoded failure kinds: 1
+
+----------------------------------------------------------------------------------------------------
+ISSUE CODES
+----------------------------------------------------------------------------------------------------
+
+1. processes_required
+     papers: 4   runs: 7   modes: research, strict
+     affected: PMC13231680, PMC11946230, PMC13264790, PMC12898691
+
+2. entities_required
+     papers: 3   runs: 5   modes: research, strict
+     affected: PMC12971581, PMC13139079, PMC13233763
+
+3. ambiguous_review_scope
+     papers: 2   runs: 4   modes: research, strict
+     affected: PMC13278307, PMC12935629
+
+4. gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o
+     papers: 2   runs: 2   modes: strict
+     affected: PMC12180156, PMC12856317
+
+5. gate.protein_has_degree_after_normalization
+     papers: 2   runs: 2   modes: strict
+     affected: PMC12444477, PMC12657337
+
+6. gate.entity_pyruvate_oxidase_is_declared_as_both_a_protein_and_a_prot
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12657337
+
+7. gate.protein_bsheppps_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12657337
+
+8. gate.protein_bsubie_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12657337
+
+9. gate.protein_coenzyme_a_coa_is_missing_a_uniprot_or_drugbank_identifi
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12444477
+
+10. gate.protein_coenzyme_a_coa_is_missing_species_organism
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12444477
+
+11. gate.protein_coenzyme_a_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12856317
+
+12. gate.protein_coenzyme_a_is_missing_species_organism
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12856317
+
+13. gate.protein_ecidi_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12657337
+
+14. gate.protein_ecmena_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12657337
+
+15. gate.protein_eco_mend_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12312563
+
+16. gate.protein_heppps_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12657337
+
+17. gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_a_unipro
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12444477
+
+18. gate.protein_hydroxyacyl_acyl_carrier_protein_acp_is_missing_species_
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12444477
+
+19. gate.protein_lipoprotein_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC13231680
+
+20. gate.protein_lipoprotein_is_missing_species_organism
+     papers: 1   runs: 1   modes: strict
+     affected: PMC13231680
+
+21. gate.protein_lmrg_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12312563
+
+22. gate.protein_noxab_is_missing_a_uniprot_or_drugbank_identifier
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12421875
+
+23. gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12180156
+
+24. gate.protein_succinyl_coenzyme_a_is_missing_species_organism
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12180156
+
+25. gate.protein_succinyl_coenzyme_a_scoa_is_missing_a_uniprot_or_drugban
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12856317
+
+26. gate.protein_succinyl_coenzyme_a_scoa_is_missing_species_organism
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12856317
+
+27. gate.unknown_protein_modifier_reference
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12444477
+
+----------------------------------------------------------------------------------------------------
+FAILURES WITH NO ISSUE CODES (grouped by failure_kind)
+----------------------------------------------------------------------------------------------------
+These have no code to group on, so they are listed by kind -- nothing may be invisible in this
+report.
+
+* no_reactions
+     papers: 1   runs: 1   modes: strict
+     affected: PMC12624714
+
+====================================================================================================

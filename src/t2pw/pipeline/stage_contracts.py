@@ -14,6 +14,12 @@ from t2pw.pipeline.export_mode import (
     is_research,
     relax_report,
 )
+from t2pw.pipeline.failure_detail import (
+    closest_names,
+    detail as build_detail,
+    row_digest,
+    scrub_detail,
+)
 from t2pw.pipeline.payload_models import (
     RuntimeSchemaBoundary,
     RuntimeSchemaMode,
@@ -124,6 +130,11 @@ def validate_post_mapping(payload: Any) -> Report:
             "species_required",
             "Mapped payload must include at least one species row.",
             "/entities/species",
+            detail=build_detail(
+                found_type=type(species).__name__,
+                found_size=len(species) if isinstance(species, (list, dict, str)) else None,
+                entity_buckets=sorted(str(name) for name in entities),
+            ),
         )
 
     for bucket, row, idx in _iter_entity_rows(entities):
@@ -139,6 +150,10 @@ def validate_post_mapping(payload: Any) -> Report:
                 pointer,
                 bucket=bucket,
                 name=row.get("name"),
+                # The row shows whether mapping ran and produced nothing, or never
+                # touched this entity at all -- a distinction the message cannot
+                # make and the one that decides where to look upstream.
+                detail=row_digest(row),
             )
             continue
 
@@ -151,6 +166,10 @@ def validate_post_mapping(payload: Any) -> Report:
                 f"{pointer}/resolution",
                 bucket=bucket,
                 name=row.get("name"),
+                detail=build_detail(
+                    found_type=type(resolution).__name__,
+                    mapping_meta=mapping_meta,
+                ),
             )
             continue
 
@@ -163,6 +182,11 @@ def validate_post_mapping(payload: Any) -> Report:
                 f"{pointer}/resolution/status",
                 bucket=bucket,
                 name=row.get("name"),
+                detail=build_detail(
+                    found_type=type(status).__name__,
+                    found_value=status,
+                    resolution=resolution,
+                ),
             )
         for field in ("issue", "order_step"):
             value = resolution.get(field)
@@ -175,6 +199,10 @@ def validate_post_mapping(payload: Any) -> Report:
                     bucket=bucket,
                     name=row.get("name"),
                     field=field,
+                    detail=build_detail(
+                        found_type=type(value).__name__,
+                        found_value=value,
+                    ),
                 )
 
     return _raise_or_return(report)
@@ -239,6 +267,7 @@ def validate_post_remap(payload: Any) -> Report:
                 "generated_wrapper_missing_components",
                 "Generated protein-complex wrapper must declare at least one component.",
                 f"/entities/protein_complexes/{cidx}/components",
+                detail=row_digest(complex_row),
             )
             continue
         for pidx, component in enumerate(components):
@@ -259,6 +288,22 @@ def validate_post_remap(payload: Any) -> Report:
                     "Generated wrapper component must resolve to a declared protein.",
                     pointer,
                     component=component_name,
+                    # Both lookups failed: by normalized name and by external
+                    # identity. Which one was even attempted, and what the
+                    # registry holds that is close, separates a misspelling from
+                    # a protein the extractor never declared.
+                    detail=build_detail(
+                        component_name=component_name,
+                        component_identity=component_identity,
+                        component_row=component_row or None,
+                        # Suggest DISPLAY names, not the normalized keys, so the
+                        # reviewer can paste one straight back into the payload.
+                        did_you_mean=closest_names(
+                            component_name,
+                            (_text(declared_row.get("name")) for declared_row in proteins_by_name.values()),
+                        ),
+                        declared_protein_count=len(proteins_by_name),
+                    ),
                 )
                 continue
             if not protein_species_context(declared):
@@ -268,6 +313,7 @@ def validate_post_remap(payload: Any) -> Report:
                     "Generated wrapper component protein must include species context.",
                     pointer,
                     protein=declared.get("name"),
+                    detail=row_digest(declared, pointer="/entities/proteins (resolved)"),
                 )
             if not has_protein_external_identity(declared):
                 _add_error(
@@ -276,6 +322,7 @@ def validate_post_remap(payload: Any) -> Report:
                     "Generated wrapper component protein must include a UniProt or DrugBank identifier.",
                     pointer,
                     protein=declared.get("name"),
+                    detail=row_digest(declared, pointer="/entities/proteins (resolved)"),
                 )
 
     return _raise_or_return(report)
@@ -380,11 +427,34 @@ def _issue_list(value: Any) -> List[Issue]:
     return [item for item in _safe_list(value) if isinstance(item, dict)]
 
 
-def _add_error(report: Report, code: str, message: str, pointer: str = "", **extra: Any) -> None:
+def _add_error(
+    report: Report,
+    code: str,
+    message: str,
+    pointer: str = "",
+    detail: Mapping[str, Any] | None = None,
+    **extra: Any,
+) -> None:
+    """Record a blocking issue, optionally with the evidence that produced it.
+
+    ``detail`` carries what the ``message`` cannot: the value that was actually
+    checked, the offending row, the set it failed to match. It rides the issue
+    dict, so it reaches the app and ``stage_contract_error_report.json`` by the
+    same route the message already travels. It is bounded by
+    :func:`~t2pw.pipeline.failure_detail.scrub_detail` on the way in -- payload
+    rows carry six-figure-character evidence blobs, and an unbounded detail
+    would wedge the browser tab it is meant to inform.
+
+    Omitted entirely when empty, so issues without detail keep their old shape.
+    """
+
     issue: Issue = {"code": code, "message": message}
     if pointer:
         issue["pointer"] = pointer
     issue.update(extra)
+    scrubbed = scrub_detail(detail)
+    if scrubbed:
+        issue["detail"] = scrubbed
     _add_issue(report, "errors", issue)
     report["ok"] = False
     report["summary"] = _summary(report)
@@ -465,12 +535,35 @@ def _validate_payload_container(payload: Any, report: Report) -> None:
             contract_report=report,
         )
     if not isinstance(payload, dict):
-        _add_error(report, "invalid_payload", "Payload must be a dict.", "/")
+        _add_error(
+            report,
+            "invalid_payload",
+            "Payload must be a dict.",
+            "/",
+            detail={"found_type": type(payload).__name__, "found_value": payload},
+        )
         return
-    if not isinstance(payload.get("entities"), dict):
-        _add_error(report, "entities_required", "Payload must include an entities object.", "/entities")
-    if not isinstance(payload.get("processes"), dict):
-        _add_error(report, "processes_required", "Payload must include a processes object.", "/processes")
+    # "Payload must include an entities object" is true of a payload that omits
+    # the key, one that has it as null, and one that has it as a list -- three
+    # different upstream bugs with one message. The found type plus the keys that
+    # ARE present distinguishes them without opening the payload by hand.
+    for key, code in (("entities", "entities_required"), ("processes", "processes_required")):
+        found = payload.get(key)
+        if isinstance(found, dict):
+            continue
+        _add_error(
+            report,
+            code,
+            f"Payload must include a {key} object.",
+            f"/{key}",
+            detail=build_detail(
+                found_type=type(found).__name__,
+                key_present=key in payload,
+                found_size=len(found) if isinstance(found, (list, dict, str)) else None,
+                payload_keys=sorted(str(name) for name in payload),
+                found_value=found if not isinstance(found, (list, dict)) else None,
+            ),
+        )
 
 
 def _iter_entity_rows(entities: Mapping[str, Any]) -> Iterable[tuple[str, Dict[str, Any], int]]:
@@ -495,15 +588,21 @@ def _validate_named_entities(payload: Mapping[str, Any], report: Report) -> None
                     "Entity rows must be objects.",
                     f"/entities/{bucket}/{idx}",
                     bucket=bucket,
+                    detail=build_detail(found_type=type(row).__name__, found_value=row),
                 )
                 continue
             if not _text(row.get("name")):
+                # A name can be absent, null, blank, or a non-string that _text
+                # collapsed to "". The row itself separates those, and its other
+                # identity fields (uniprot, species) usually say which upstream
+                # stage produced the nameless row.
                 _add_error(
                     report,
                     "entity_missing_name",
                     "Every entity row must have a non-empty name.",
                     f"/entities/{bucket}/{idx}/name",
                     bucket=bucket,
+                    detail=row_digest(row),
                 )
 
 
@@ -522,6 +621,7 @@ def _validate_extracted_processes(payload: Mapping[str, Any], report: Report) ->
                     pointer,
                     bucket=bucket,
                     expected="object",
+                    detail=build_detail(found_type=type(row).__name__, found_value=row),
                 )
                 continue
 
@@ -549,6 +649,11 @@ def _validate_reaction_structure(row: Mapping[str, Any], report: Report, pointer
         pointer,
         bucket="reactions",
         required_any=["inputs", "outputs"],
+        # "no usable participant" covers an empty list, a list of blanks, and a
+        # list of dicts whose name keys are all unrecognised. Only the rows
+        # themselves say which, so they decide whether this is an extraction
+        # miss or a normalization drop.
+        detail=row_digest(row),
     )
 
 
@@ -564,6 +669,7 @@ def _validate_transport_structure(row: Mapping[str, Any], report: Report, pointe
         pointer,
         bucket="transports",
         required_any=["cargo", "elements_with_states[].element"],
+        detail=row_digest(row),
     )
 
 
@@ -583,6 +689,7 @@ def _validate_interaction_structure(row: Mapping[str, Any], report: Report, poin
             ["entity_1", "entity_2"],
             "participants[].{entity,protein,protein_complex,name}",
         ],
+        detail=row_digest(row),
     )
 
 
@@ -604,6 +711,7 @@ def _validate_reaction_coupled_transport_structure(
             ["reaction", "transport"],
             "elements_with_states[].element",
         ],
+        detail=row_digest(row),
     )
 
 
@@ -621,6 +729,7 @@ def _validate_sub_pathway_structure(row: Mapping[str, Any], report: Report, poin
         pointer,
         bucket="sub_pathways",
         required_any=["name", "reference_pathway_id", "alttext"],
+        detail=row_digest(row),
     )
 
 
@@ -639,11 +748,20 @@ def _validate_canonical_actor_rows(payload: Mapping[str, Any], report: Report) -
             for actor_idx, actor in enumerate(_safe_list(process.get(actor_field))):
                 pointer = f"/processes/{process_bucket}/{process_idx}/{actor_field}/{actor_idx}"
                 if not isinstance(actor, dict) or not _text(actor.get("entity")) or not _text(actor.get("entity_type")):
+                    # One code covers "not a dict", "no entity" and "no
+                    # entity_type", and the fix differs for each. The row plus
+                    # the two fields as found names which case fired.
                     _add_error(
                         report,
                         "actor_schema_not_canonical",
                         "Normalized actor rows must include non-empty entity and entity_type fields.",
                         pointer,
+                        detail=build_detail(
+                            found_type=type(actor).__name__,
+                            entity=actor.get("entity") if isinstance(actor, dict) else None,
+                            entity_type=actor.get("entity_type") if isinstance(actor, dict) else None,
+                            actor_row=actor,
+                        ),
                     )
 
 

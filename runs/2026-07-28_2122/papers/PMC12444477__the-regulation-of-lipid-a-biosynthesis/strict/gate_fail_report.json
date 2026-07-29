@@ -1,0 +1,110 @@
+{
+  "status": "failed",
+  "stage": "post_normalization_hard_gates",
+  "error": "Hard-gate validation failed after normalization.",
+  "errors": [
+    {
+      "path": "/entities/proteins/22",
+      "reason": "Protein 'β-hydroxyacyl-acyl carrier protein (ACP)' is missing species/organism."
+    },
+    {
+      "path": "/entities/proteins/22",
+      "reason": "Protein 'β-hydroxyacyl-acyl carrier protein (ACP)' is missing a UniProt or DrugBank identifier."
+    },
+    {
+      "path": "/entities/proteins/23",
+      "reason": "Protein 'coenzyme A (CoA)' is missing species/organism."
+    },
+    {
+      "path": "/entities/proteins/23",
+      "reason": "Protein 'coenzyme A (CoA)' is missing a UniProt or DrugBank identifier."
+    },
+    {
+      "path": "/entities/proteins/16/name",
+      "reason": "Protein has degree 0 after normalization: FabA"
+    }
+  ],
+  "normalization_stats": {
+    "complexes_created": 0,
+    "composites_rewritten": 0,
+    "reactions_rewritten": 0,
+    "scaffold_split_reactions": 0,
+    "entities_moved_out_of_compounds": 2,
+    "entities_added_as_compounds": 3,
+    "entities_added_as_proteins": 2,
+    "catalysts_promoted_to_enzymes": 2,
+    "interaction_enzymes_promoted": 1,
+    "scaffold_inputs_added": 0,
+    "scaffold_in_modifiers_count": 0,
+    "n_plus_tokens_remaining": 0,
+    "complexes_list": [
+      "FtsH/YciM complex",
+      "Lpt system",
+      "tetra-acylated disaccharide"
+    ],
+    "n_autostate_created": 1,
+    "n_entities_assigned_to_autostate": 0,
+    "transporters_attached": 0,
+    "enzymes_attached_from_reaction_evidence": 0,
+    "modifier_refs_canonicalized": 104,
+    "modifier_refs_dropped": 0,
+    "forbidden_complexes_removed": 0,
+    "dedupe_removed_reactions": 7,
+    "dedupe_removed_transports": 0,
+    "dedupe_removed": 7,
+    "dedupe_removed_total": 7,
+    "no_op_removed_count": 7,
+    "no_op_quarantined_count": 7,
+    "locked_no_op_quarantined_count": 4,
+    "evidenced_no_op_quarantined_count": 3,
+    "unsupported_no_op_dropped_count": 0,
+    "duplicate_locked_reactions_quarantined_count": 0,
+    "n_same_as_groups": 1,
+    "n_aliases_rewritten": 2,
+    "n_entities_deduped": 1,
+    "n_single_protein_complexes_removed": 0,
+    "complex_named_proteins_relocated": 0,
+    "nucleic_acid_named_entities_relocated": 0,
+    "entity_type_mismatches_flagged": 0,
+    "unresolved_complex_components_dropped": 0,
+    "component_only_proteins_removed": 0,
+    "pruned_disconnected_proteins": [],
+    "pruned_disconnected_proteins_count": 0,
+    "alias_example_mappings": [
+      {
+        "alias": "R-3-hydroxymyristoyl-ACP",
+        "canonical": "(3R)-hydroxymyristoyl acyl carrier protein"
+      }
+    ],
+    "n_reactions_compartment_backfilled": 0,
+    "non_protein_catalysts_dropped": 0,
+    "orphan_proteins_dropped": 0,
+    "alias_canonicalization": {
+      "n_same_as_groups": 1,
+      "n_aliases_rewritten": 2,
+      "n_entities_deduped": 1,
+      "n_single_protein_complexes_removed": 0,
+      "example_mappings": [
+        {
+          "alias": "R-3-hydroxymyristoyl-ACP",
+          "canonical": "(3R)-hydroxymyristoyl acyl carrier protein"
+        }
+      ]
+    },
+    "gate_error_count": 5
+  },
+  "connectivity": {
+    "n_reactions": 37,
+    "n_transports": 2,
+    "n_interactions": 10,
+    "n_reaction_coupled_transports": 0,
+    "n_nodes": 137,
+    "n_edges": 182,
+    "n_components": 5,
+    "main_component_size": 114,
+    "largest_component_pct": 83.21,
+    "n_isolated_nodes": 0,
+    "proteins_degree0": 1,
+    "proteins_attached_pct": 95.83
+  }
+}

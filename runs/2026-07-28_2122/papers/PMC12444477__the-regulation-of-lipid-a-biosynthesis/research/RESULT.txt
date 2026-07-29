@@ -1,0 +1,49 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12444477
+title      : The regulation of lipid A biosynthesis.
+slug       : PMC12444477__the-regulation-of-lipid-a-biosynthesis
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 2838.5s (47m18s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/21/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/5/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/21/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lipoprotein_is_missing_species_organism @ /entities/proteins/21: Protein 'lipoprotein' is missing species/organism.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_lipoprotein_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/21: Protein 'lipoprotein' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 3
+  compounds = 46
+  entities = 76
+  gate_errors = 2
+  gate_errors_not_blocking = 2
+  gate_review_flags = 2
+  normalization_actions = 2
+  proteins = 22
+  reactions = 29
+  review_flags = 2
+  runtime_schema_findings = 4
+  skipped_format_rules = 0
+  tier = {'a': 41, 'b': 2, 'c': 77, 'd': 0}
+  transports = 2
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (12089 B)
+  - gate_fail_report.json  (2958 B)
+  - merged_payload.json  (272287 B)
+  - research_pathway_citations.json  (1282562 B)
+  - research_pathway_elements.csv  (515223 B)
+  - research_pathway_report.txt  (145803 B)
+  - review_flags.json  (1982 B)
+  - stage1_payload.json  (21055 B)

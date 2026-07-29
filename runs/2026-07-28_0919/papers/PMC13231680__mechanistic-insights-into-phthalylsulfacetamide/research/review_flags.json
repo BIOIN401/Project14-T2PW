@@ -1,0 +1,16 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+RESULT: PASS (with warnings)
+========================================
+paper      : PMC12180156
+title      : Update of the sideroflexin (SLC56) gene family.
+slug       : PMC12180156__update-of-the-sideroflexin-slc56-gene-family
+mode       : research
+status     : pass
+stage      : research_report
+wall time  : 2397.1s (39m57s)
+
+WARNINGS
+----------------------------------------
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/15/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/10/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/11/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_audit_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/compounds/15/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/10/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/proteins/11/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! runtime-schema finding (informational, not blocking): [post_normalization_contract_report.runtime_schema_report] entity_missing_mapping_meta @ /entities/subcellular_locations/0/mapping_meta: Mapped entity with a name is missing mapping_meta.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o @ /entities/proteins/4: Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_gsa_aminotransferase_is_missing_a_uniprot_or_drugbank_id @ /entities/proteins/6: Protein 'GSA aminotransferase' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_slc25a1_cic_is_missing_a_uniprot_or_drugbank_identifier @ /entities/proteins/9: Protein 'SLC25A1/CIC' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_succinyl_coenzyme_a_is_missing_species_organism @ /entities/proteins/10: Protein 'succinyl-coenzyme A' is missing species/organism.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide @ /entities/proteins/10: Protein 'succinyl-coenzyme A' is missing a UniProt or DrugBank identifier.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_succinyl_coenzyme_a_is_missing_species_organism @ /entities/proteins/11: Protein 'succinyl coenzyme A' is missing species/organism.
+  ! strict gate error (research mode: review flag, not blocking): gate.protein_succinyl_coenzyme_a_is_missing_a_uniprot_or_drugbank_ide @ /entities/proteins/11: Protein 'succinyl coenzyme A' is missing a UniProt or DrugBank identifier.
+
+message    : research run completed with a citation report
+
+COUNTS
+----------------------------------------
+  citations = 5
+  compounds = 16
+  entities = 31
+  gate_errors = 10
+  gate_errors_not_blocking = 10
+  gate_review_flags = 10
+  normalization_actions = 2
+  proteins = 12
+  reactions = 9
+  review_flags = 11
+  runtime_schema_findings = 8
+  skipped_format_rules = 0
+  tier = {'a': 11, 'b': 2, 'c': 28, 'd': 0}
+  transports = 0
+  unsourced = 0
+
+FILES WRITTEN
+----------------------------------------
+  - contract_reports.json  (16578 B)
+  - final_stage3_gate_report.json  (2624 B)
+  - gate_fail_report.json  (3435 B)
+  - merged_payload.json  (102416 B)
+  - research_pathway_citations.json  (553965 B)
+  - research_pathway_elements.csv  (217450 B)
+  - research_pathway_report.txt  (58860 B)
+  - review_flags.json  (7228 B)
+  - stage1_payload.json  (1498 B)

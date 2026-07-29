@@ -1,0 +1,273 @@
+{
+  "export_mode": "research",
+  "biology_provenance_flags": [
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'ALA synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/7",
+      "reason": "Protein 'CC 1 HL (Cyt2)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/12",
+      "reason": "Protein 'cytochrome c lyas' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/13",
+      "reason": "Protein 'cytochrome c lyases' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/19",
+      "reason": "Protein 'heme o synthase' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/22",
+      "reason": "Protein 'Porphobilinogen synthase (PBGS)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/5",
+      "reason": "Protein 'ALA synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/6",
+      "reason": "Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/7",
+      "reason": "Protein 'CC 1 HL (Cyt2)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/8",
+      "reason": "Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/12",
+      "reason": "Protein 'cytochrome c lyas' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/13",
+      "reason": "Protein 'cytochrome c lyases' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/19",
+      "reason": "Protein 'heme o synthase' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/22",
+      "reason": "Protein 'Porphobilinogen synthase (PBGS)' is missing a UniProt or DrugBank identifier.",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    },
+    {
+      "path": "/entities/proteins/23/name",
+      "reason": "Protein has degree 0 after normalization: PPgen oxidase (PPOX)",
+      "research_mode": "review_flag",
+      "research_category": "BIOLOGY/PROVENANCE",
+      "was_blocking": true,
+      "stage": "post_normalization"
+    }
+  ],
+  "format_rules_skipped": [],
+  "content_preserved": [
+    {
+      "type": "research_mode_destructive_cleanup_skipped",
+      "export_mode": "research",
+      "passes": [
+        "drop_process_orphan_proteins",
+        "prune_disconnected_proteins"
+      ],
+      "reason": "disconnected/orphan proteins are preserved for review instead of deleted"
+    },
+    {
+      "type": "research_mode_connectivity_gate_not_enforced",
+      "export_mode": "research",
+      "gate": "run_strict_post_normalization_gates.enforce_all_proteins_connected",
+      "reason": "the degree-0 protein rule is the rule the two skipped passes exist to satisfy; enforcing it here would fail the run on exactly the rows this mode chose to keep"
+    }
+  ],
+  "strict_gate_errors_not_blocking": [
+    {
+      "code": "gate.protein_ala_synthase_alas_is_missing_a_uniprot_or_drugbank_ident",
+      "pointer": "/entities/proteins/5",
+      "message": "Protein 'ALA synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o",
+      "pointer": "/entities/proteins/6",
+      "message": "Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cc_hl_cyt2_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/7",
+      "message": "Protein 'CC 1 HL (Cyt2)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cchl_cyc3_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/8",
+      "message": "Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cytochrome_c_lyas_is_missing_a_uniprot_or_drugbank_ident",
+      "pointer": "/entities/proteins/12",
+      "message": "Protein 'cytochrome c lyas' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cytochrome_c_lyases_is_missing_a_uniprot_or_drugbank_ide",
+      "pointer": "/entities/proteins/13",
+      "message": "Protein 'cytochrome c lyases' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_heme_o_synthase_is_missing_a_uniprot_or_drugbank_identif",
+      "pointer": "/entities/proteins/19",
+      "message": "Protein 'heme o synthase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_porphobilinogen_synthase_pbgs_is_missing_a_uniprot_or_dr",
+      "pointer": "/entities/proteins/22",
+      "message": "Protein 'Porphobilinogen synthase (PBGS)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_ala_synthase_alas_is_missing_a_uniprot_or_drugbank_ident",
+      "pointer": "/entities/proteins/5",
+      "message": "Protein 'ALA synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_aminolevulinic_acid_synthase_alas_is_missing_a_uniprot_o",
+      "pointer": "/entities/proteins/6",
+      "message": "Protein 'aminolevulinic acid synthase (ALAS)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cc_hl_cyt2_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/7",
+      "message": "Protein 'CC 1 HL (Cyt2)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cchl_cyc3_is_missing_a_uniprot_or_drugbank_identifier",
+      "pointer": "/entities/proteins/8",
+      "message": "Protein 'CCHL (Cyc3)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cytochrome_c_lyas_is_missing_a_uniprot_or_drugbank_ident",
+      "pointer": "/entities/proteins/12",
+      "message": "Protein 'cytochrome c lyas' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_cytochrome_c_lyases_is_missing_a_uniprot_or_drugbank_ide",
+      "pointer": "/entities/proteins/13",
+      "message": "Protein 'cytochrome c lyases' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_heme_o_synthase_is_missing_a_uniprot_or_drugbank_identif",
+      "pointer": "/entities/proteins/19",
+      "message": "Protein 'heme o synthase' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    },
+    {
+      "code": "gate.protein_porphobilinogen_synthase_pbgs_is_missing_a_uniprot_or_dr",
+      "pointer": "/entities/proteins/22",
+      "message": "Protein 'Porphobilinogen synthase (PBGS)' is missing a UniProt or DrugBank identifier.",
+      "research_category": "format",
+      "source": "strict_post_normalization_gate"
+    }
+  ]
+}
