@@ -12,6 +12,12 @@ out/
 outputs/
 .pytest_tmp/
 .pytest_wt_tmp/
+# Every ad-hoc pytest --basetemp directory. These are run artifacts: one full
+# suite leaves ~160 JSON files under .pytest_tmp_baseline/ alone, and they were
+# being committed. The glob covers the ones already in use
+# (.pytest_tmp_baseline/, .pytest_tmp_unknown/, .pytest_tmp_verify_*/) and any
+# future .pytest_tmp_<label>/ without another .gitignore edit.
+.pytest_tmp*/
 temp_pytest_probe/
 
 # RAG (optional) local, rebuildable evidence index + embedding cache (WP0).
